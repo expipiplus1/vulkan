@@ -6,6 +6,8 @@ module Graphics.Vulkan.Extensions.VK_AMD_buffer_marker  ( cmdWriteBufferMarkerAM
                                                         , pattern AMD_BUFFER_MARKER_EXTENSION_NAME
                                                         ) where
 
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -142,8 +144,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
-cmdWriteBufferMarkerAMD :: CommandBuffer -> PipelineStageFlagBits -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> IO ()
-cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = do
+cmdWriteBufferMarkerAMD :: forall io . MonadIO io => CommandBuffer -> PipelineStageFlagBits -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> io ()
+cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = liftIO $ do
   let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD (pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdWriteBufferMarkerAMD' (commandBufferHandle (commandBuffer)) (pipelineStage) (dstBuffer) (dstOffset) (marker)
   pure $ ()

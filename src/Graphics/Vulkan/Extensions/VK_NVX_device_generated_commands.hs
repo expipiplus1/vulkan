@@ -65,6 +65,7 @@ module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands  ( cmdProcess
 import Control.Exception.Base (bracket)
 import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -87,6 +88,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -219,8 +221,8 @@ foreign import ccall
 --
 -- 'CmdProcessCommandsInfoNVX',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdProcessCommandsNVX :: CommandBuffer -> CmdProcessCommandsInfoNVX -> IO ()
-cmdProcessCommandsNVX commandBuffer processCommandsInfo = evalContT $ do
+cmdProcessCommandsNVX :: forall io . MonadIO io => CommandBuffer -> CmdProcessCommandsInfoNVX -> io ()
+cmdProcessCommandsNVX commandBuffer processCommandsInfo = liftIO . evalContT $ do
   let vkCmdProcessCommandsNVX' = mkVkCmdProcessCommandsNVX (pVkCmdProcessCommandsNVX (deviceCmds (commandBuffer :: CommandBuffer)))
   pProcessCommandsInfo <- ContT $ withCStruct (processCommandsInfo)
   lift $ vkCmdProcessCommandsNVX' (commandBufferHandle (commandBuffer)) pProcessCommandsInfo
@@ -297,8 +299,8 @@ foreign import ccall
 --
 -- 'CmdReserveSpaceForCommandsInfoNVX',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdReserveSpaceForCommandsNVX :: CommandBuffer -> ("reserveSpaceInfo" ::: CmdReserveSpaceForCommandsInfoNVX) -> IO ()
-cmdReserveSpaceForCommandsNVX commandBuffer reserveSpaceInfo = evalContT $ do
+cmdReserveSpaceForCommandsNVX :: forall io . MonadIO io => CommandBuffer -> ("reserveSpaceInfo" ::: CmdReserveSpaceForCommandsInfoNVX) -> io ()
+cmdReserveSpaceForCommandsNVX commandBuffer reserveSpaceInfo = liftIO . evalContT $ do
   let vkCmdReserveSpaceForCommandsNVX' = mkVkCmdReserveSpaceForCommandsNVX (pVkCmdReserveSpaceForCommandsNVX (deviceCmds (commandBuffer :: CommandBuffer)))
   pReserveSpaceInfo <- ContT $ withCStruct (reserveSpaceInfo)
   lift $ vkCmdReserveSpaceForCommandsNVX' (commandBufferHandle (commandBuffer)) pReserveSpaceInfo
@@ -367,8 +369,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'IndirectCommandsLayoutCreateInfoNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
-createIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (IndirectCommandsLayoutNVX)
-createIndirectCommandsLayoutNVX device createInfo allocator = evalContT $ do
+createIndirectCommandsLayoutNVX :: forall io . MonadIO io => Device -> IndirectCommandsLayoutCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io (IndirectCommandsLayoutNVX)
+createIndirectCommandsLayoutNVX device createInfo allocator = liftIO . evalContT $ do
   let vkCreateIndirectCommandsLayoutNVX' = mkVkCreateIndirectCommandsLayoutNVX (pVkCreateIndirectCommandsLayoutNVX (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -384,7 +386,7 @@ createIndirectCommandsLayoutNVX device createInfo allocator = evalContT $ do
 -- 'destroyIndirectCommandsLayoutNVX' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> ((IndirectCommandsLayoutNVX) -> IO r) -> IO r
+withIndirectCommandsLayoutNVX :: forall r . Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> ((IndirectCommandsLayoutNVX) -> IO r) -> IO r
 withIndirectCommandsLayoutNVX device pCreateInfo pAllocator =
   bracket
     (createIndirectCommandsLayoutNVX device pCreateInfo pAllocator)
@@ -446,8 +448,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
-destroyIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyIndirectCommandsLayoutNVX device indirectCommandsLayout allocator = evalContT $ do
+destroyIndirectCommandsLayoutNVX :: forall io . MonadIO io => Device -> IndirectCommandsLayoutNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyIndirectCommandsLayoutNVX device indirectCommandsLayout allocator = liftIO . evalContT $ do
   let vkDestroyIndirectCommandsLayoutNVX' = mkVkDestroyIndirectCommandsLayoutNVX (pVkDestroyIndirectCommandsLayoutNVX (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -513,8 +515,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectTableCreateInfoNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-createObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (ObjectTableNVX)
-createObjectTableNVX device createInfo allocator = evalContT $ do
+createObjectTableNVX :: forall io . MonadIO io => Device -> ObjectTableCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ObjectTableNVX)
+createObjectTableNVX device createInfo allocator = liftIO . evalContT $ do
   let vkCreateObjectTableNVX' = mkVkCreateObjectTableNVX (pVkCreateObjectTableNVX (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -530,7 +532,7 @@ createObjectTableNVX device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> ((ObjectTableNVX) -> IO r) -> IO r
+withObjectTableNVX :: forall r . Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> ((ObjectTableNVX) -> IO r) -> IO r
 withObjectTableNVX device pCreateInfo pAllocator =
   bracket
     (createObjectTableNVX device pCreateInfo pAllocator)
@@ -595,8 +597,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-destroyObjectTableNVX :: Device -> ObjectTableNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyObjectTableNVX device objectTable allocator = evalContT $ do
+destroyObjectTableNVX :: forall io . MonadIO io => Device -> ObjectTableNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyObjectTableNVX device objectTable allocator = liftIO . evalContT $ do
   let vkDestroyObjectTableNVX' = mkVkDestroyObjectTableNVX (pVkDestroyObjectTableNVX (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -682,8 +684,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectTableEntryNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-registerObjectsNVX :: Device -> ObjectTableNVX -> ("objectTableEntries" ::: Vector ObjectTableEntryNVX) -> ("objectIndices" ::: Vector Word32) -> IO ()
-registerObjectsNVX device objectTable objectTableEntries objectIndices = evalContT $ do
+registerObjectsNVX :: forall io . MonadIO io => Device -> ObjectTableNVX -> ("objectTableEntries" ::: Vector ObjectTableEntryNVX) -> ("objectIndices" ::: Vector Word32) -> io ()
+registerObjectsNVX device objectTable objectTableEntries objectIndices = liftIO . evalContT $ do
   let vkRegisterObjectsNVX' = mkVkRegisterObjectsNVX (pVkRegisterObjectsNVX (deviceCmds (device :: Device)))
   let ppObjectTableEntriesLength = Data.Vector.length $ (objectTableEntries)
   let pObjectIndicesLength = Data.Vector.length $ (objectIndices)
@@ -700,7 +702,7 @@ registerObjectsNVX device objectTable objectTableEntries objectIndices = evalCon
 
 -- | A safe wrapper for 'registerObjectsNVX' and 'unregisterObjectsNVX' using
 -- 'bracket_'
-withRegisteredObjectsNVX :: Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
+withRegisteredObjectsNVX :: forall r . Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
 withRegisteredObjectsNVX device objectTable ppObjectTableEntries pObjectIndices pObjectEntryTypes =
   bracket_
     (registerObjectsNVX device objectTable ppObjectTableEntries pObjectIndices)
@@ -781,8 +783,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectEntryTypeNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-unregisterObjectsNVX :: Device -> ObjectTableNVX -> ("objectEntryTypes" ::: Vector ObjectEntryTypeNVX) -> ("objectIndices" ::: Vector Word32) -> IO ()
-unregisterObjectsNVX device objectTable objectEntryTypes objectIndices = evalContT $ do
+unregisterObjectsNVX :: forall io . MonadIO io => Device -> ObjectTableNVX -> ("objectEntryTypes" ::: Vector ObjectEntryTypeNVX) -> ("objectIndices" ::: Vector Word32) -> io ()
+unregisterObjectsNVX device objectTable objectEntryTypes objectIndices = liftIO . evalContT $ do
   let vkUnregisterObjectsNVX' = mkVkUnregisterObjectsNVX (pVkUnregisterObjectsNVX (deviceCmds (device :: Device)))
   let pObjectEntryTypesLength = Data.Vector.length $ (objectEntryTypes)
   let pObjectIndicesLength = Data.Vector.length $ (objectIndices)
@@ -824,8 +826,8 @@ foreign import ccall
 -- 'DeviceGeneratedCommandsFeaturesNVX',
 -- 'DeviceGeneratedCommandsLimitsNVX',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceGeneratedCommandsPropertiesNVX :: PhysicalDevice -> IO (DeviceGeneratedCommandsFeaturesNVX, DeviceGeneratedCommandsLimitsNVX)
-getPhysicalDeviceGeneratedCommandsPropertiesNVX physicalDevice = evalContT $ do
+getPhysicalDeviceGeneratedCommandsPropertiesNVX :: forall io . MonadIO io => PhysicalDevice -> io (DeviceGeneratedCommandsFeaturesNVX, DeviceGeneratedCommandsLimitsNVX)
+getPhysicalDeviceGeneratedCommandsPropertiesNVX physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX' = mkVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX (pVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFeatures <- ContT (withZeroCStruct @DeviceGeneratedCommandsFeaturesNVX)
   pPLimits <- ContT (withZeroCStruct @DeviceGeneratedCommandsLimitsNVX)

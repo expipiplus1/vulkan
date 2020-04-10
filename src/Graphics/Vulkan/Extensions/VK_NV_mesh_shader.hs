@@ -11,9 +11,11 @@ module Graphics.Vulkan.Extensions.VK_NV_mesh_shader  ( cmdDrawMeshTasksNV
                                                      , pattern NV_MESH_SHADER_EXTENSION_NAME
                                                      ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -291,8 +293,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDrawMeshTasksNV :: CommandBuffer -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()
-cmdDrawMeshTasksNV commandBuffer taskCount firstTask = do
+cmdDrawMeshTasksNV :: forall io . MonadIO io => CommandBuffer -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> io ()
+cmdDrawMeshTasksNV commandBuffer taskCount firstTask = liftIO $ do
   let vkCmdDrawMeshTasksNV' = mkVkCmdDrawMeshTasksNV (pVkCmdDrawMeshTasksNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawMeshTasksNV' (commandBufferHandle (commandBuffer)) (taskCount) (firstTask)
   pure $ ()
@@ -588,8 +590,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawMeshTasksIndirectNV :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = do
+cmdDrawMeshTasksIndirectNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectNV' = mkVkCmdDrawMeshTasksIndirectNV (pVkCmdDrawMeshTasksIndirectNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawMeshTasksIndirectNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
   pure $ ()
@@ -904,8 +906,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawMeshTasksIndirectCountNV :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = do
+cmdDrawMeshTasksIndirectCountNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectCountNV' = mkVkCmdDrawMeshTasksIndirectCountNV (pVkCmdDrawMeshTasksIndirectCountNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawMeshTasksIndirectCountNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
   pure $ ()

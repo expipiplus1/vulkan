@@ -51,6 +51,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalD
                                                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -76,6 +77,7 @@ import Control.Monad.Trans.Cont (runContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -218,8 +220,8 @@ foreign import ccall
 --
 -- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> IO (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
-enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = evalContT $ do
+enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
+enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' = mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCounterCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -277,8 +279,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'QueryPoolPerformanceCreateInfoKHR'
-getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: PhysicalDevice -> ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR) -> IO (("numPasses" ::: Word32))
-getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = evalContT $ do
+getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io . MonadIO io => PhysicalDevice -> ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR) -> io (("numPasses" ::: Word32))
+getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' = mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPerformanceQueryCreateInfo <- ContT $ withCStruct (performanceQueryCreateInfo)
   pPNumPasses <- ContT $ bracket (callocBytes @Word32 4) free
@@ -322,8 +324,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'AcquireProfilingLockInfoKHR', 'Graphics.Vulkan.Core10.Handles.Device'
-acquireProfilingLockKHR :: Device -> AcquireProfilingLockInfoKHR -> IO ()
-acquireProfilingLockKHR device info = evalContT $ do
+acquireProfilingLockKHR :: forall io . MonadIO io => Device -> AcquireProfilingLockInfoKHR -> io ()
+acquireProfilingLockKHR device info = liftIO . evalContT $ do
   let vkAcquireProfilingLockKHR' = mkVkAcquireProfilingLockKHR (pVkAcquireProfilingLockKHR (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkAcquireProfilingLockKHR' (deviceHandle (device)) pInfo
@@ -356,8 +358,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-releaseProfilingLockKHR :: Device -> IO ()
-releaseProfilingLockKHR device = do
+releaseProfilingLockKHR :: forall io . MonadIO io => Device -> io ()
+releaseProfilingLockKHR device = liftIO $ do
   let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR (pVkReleaseProfilingLockKHR (deviceCmds (device :: Device)))
   vkReleaseProfilingLockKHR' (deviceHandle (device))
   pure $ ()

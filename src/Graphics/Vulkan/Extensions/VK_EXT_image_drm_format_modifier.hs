@@ -12,6 +12,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDr
                                                                     , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
                                                                     ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -20,6 +21,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -86,8 +88,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'ImageDrmFormatModifierPropertiesEXT'
-getImageDrmFormatModifierPropertiesEXT :: Device -> Image -> IO (ImageDrmFormatModifierPropertiesEXT)
-getImageDrmFormatModifierPropertiesEXT device image = evalContT $ do
+getImageDrmFormatModifierPropertiesEXT :: forall io . MonadIO io => Device -> Image -> io (ImageDrmFormatModifierPropertiesEXT)
+getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
   let vkGetImageDrmFormatModifierPropertiesEXT' = mkVkGetImageDrmFormatModifierPropertiesEXT (pVkGetImageDrmFormatModifierPropertiesEXT (deviceCmds (device :: Device)))
   pPProperties <- ContT (withZeroCStruct @ImageDrmFormatModifierPropertiesEXT)
   _ <- lift $ vkGetImageDrmFormatModifierPropertiesEXT' (deviceHandle (device)) (image) (pPProperties)

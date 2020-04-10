@@ -9,6 +9,7 @@ module Graphics.Vulkan.Core10.Event  ( createEvent
                                      ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -18,6 +19,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -111,8 +113,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event', 'EventCreateInfo'
-createEvent :: Device -> EventCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Event)
-createEvent device createInfo allocator = evalContT $ do
+createEvent :: forall io . MonadIO io => Device -> EventCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Event)
+createEvent device createInfo allocator = liftIO . evalContT $ do
   let vkCreateEvent' = mkVkCreateEvent (pVkCreateEvent (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -127,7 +129,7 @@ createEvent device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createEvent' and 'destroyEvent' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withEvent :: Device -> EventCreateInfo -> Maybe AllocationCallbacks -> ((Event) -> IO r) -> IO r
+withEvent :: forall r . Device -> EventCreateInfo -> Maybe AllocationCallbacks -> ((Event) -> IO r) -> IO r
 withEvent device pCreateInfo pAllocator =
   bracket
     (createEvent device pCreateInfo pAllocator)
@@ -193,8 +195,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-destroyEvent :: Device -> Event -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyEvent device event allocator = evalContT $ do
+destroyEvent :: forall io . MonadIO io => Device -> Event -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyEvent device event allocator = liftIO . evalContT $ do
   let vkDestroyEvent' = mkVkDestroyEvent (pVkDestroyEvent (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -267,8 +269,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-getEventStatus :: Device -> Event -> IO (Result)
-getEventStatus device event = do
+getEventStatus :: forall io . MonadIO io => Device -> Event -> io (Result)
+getEventStatus device event = liftIO $ do
   let vkGetEventStatus' = mkVkGetEventStatus (pVkGetEventStatus (deviceCmds (device :: Device)))
   r <- vkGetEventStatus' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -329,8 +331,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-setEvent :: Device -> Event -> IO ()
-setEvent device event = do
+setEvent :: forall io . MonadIO io => Device -> Event -> io ()
+setEvent device event = liftIO $ do
   let vkSetEvent' = mkVkSetEvent (pVkSetEvent (deviceCmds (device :: Device)))
   r <- vkSetEvent' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -397,8 +399,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-resetEvent :: Device -> Event -> IO ()
-resetEvent device event = do
+resetEvent :: forall io . MonadIO io => Device -> Event -> io ()
+resetEvent device event = liftIO $ do
   let vkResetEvent' = mkVkResetEvent (pVkResetEvent (deviceCmds (device :: Device)))
   r <- vkResetEvent' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))

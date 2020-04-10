@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.Device  ( createDevice
                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -24,6 +25,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -242,8 +244,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'DeviceCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-createDevice :: PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Device)
-createDevice physicalDevice createInfo allocator = evalContT $ do
+createDevice :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Device)
+createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
   let cmds = instanceCmds (physicalDevice :: PhysicalDevice)
   let vkCreateDevice' = mkVkCreateDevice (pVkCreateDevice cmds)
   pCreateInfo <- ContT $ withCStruct (createInfo)
@@ -260,7 +262,7 @@ createDevice physicalDevice createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createDevice' and 'destroyDevice' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDevice :: PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> ((Device) -> IO r) -> IO r
+withDevice :: forall a r . PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> ((Device) -> IO r) -> IO r
 withDevice physicalDevice pCreateInfo pAllocator =
   bracket
     (createDevice physicalDevice pCreateInfo pAllocator)
@@ -332,8 +334,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDevice :: Device -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDevice device allocator = evalContT $ do
+destroyDevice :: forall io . MonadIO io => Device -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDevice device allocator = liftIO . evalContT $ do
   let vkDestroyDevice' = mkVkDestroyDevice (pVkDestroyDevice (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

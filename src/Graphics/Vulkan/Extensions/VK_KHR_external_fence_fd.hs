@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd  ( getFenceFdKHR
                                                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -20,6 +21,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CInt(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CInt)
@@ -116,8 +118,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'FenceGetFdInfoKHR'
-getFenceFdKHR :: Device -> FenceGetFdInfoKHR -> IO (("fd" ::: Int32))
-getFenceFdKHR device getFdInfo = evalContT $ do
+getFenceFdKHR :: forall io . MonadIO io => Device -> FenceGetFdInfoKHR -> io (("fd" ::: Int32))
+getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetFenceFdKHR' = mkVkGetFenceFdKHR (pVkGetFenceFdKHR (deviceCmds (device :: Device)))
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
@@ -169,8 +171,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ImportFenceFdInfoKHR'
-importFenceFdKHR :: Device -> ImportFenceFdInfoKHR -> IO ()
-importFenceFdKHR device importFenceFdInfo = evalContT $ do
+importFenceFdKHR :: forall io . MonadIO io => Device -> ImportFenceFdInfoKHR -> io ()
+importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
   let vkImportFenceFdKHR' = mkVkImportFenceFdKHR (pVkImportFenceFdKHR (deviceCmds (device :: Device)))
   pImportFenceFdInfo <- ContT $ withCStruct (importFenceFdInfo)
   r <- lift $ vkImportFenceFdKHR' (deviceHandle (device)) pImportFenceFdInfo

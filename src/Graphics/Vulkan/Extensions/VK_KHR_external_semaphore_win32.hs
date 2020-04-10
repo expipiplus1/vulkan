@@ -16,6 +16,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32  ( getSemaphor
                                                                    ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -29,6 +30,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -123,8 +125,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'SemaphoreGetWin32HandleInfoKHR'
-getSemaphoreWin32HandleKHR :: Device -> SemaphoreGetWin32HandleInfoKHR -> IO (HANDLE)
-getSemaphoreWin32HandleKHR device getWin32HandleInfo = evalContT $ do
+getSemaphoreWin32HandleKHR :: forall io . MonadIO io => Device -> SemaphoreGetWin32HandleInfoKHR -> io (HANDLE)
+getSemaphoreWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetSemaphoreWin32HandleKHR' = mkVkGetSemaphoreWin32HandleKHR (pVkGetSemaphoreWin32HandleKHR (deviceCmds (device :: Device)))
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
@@ -179,8 +181,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'ImportSemaphoreWin32HandleInfoKHR'
-importSemaphoreWin32HandleKHR :: Device -> ImportSemaphoreWin32HandleInfoKHR -> IO ()
-importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = evalContT $ do
+importSemaphoreWin32HandleKHR :: forall io . MonadIO io => Device -> ImportSemaphoreWin32HandleInfoKHR -> io ()
+importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . evalContT $ do
   let vkImportSemaphoreWin32HandleKHR' = mkVkImportSemaphoreWin32HandleKHR (pVkImportSemaphoreWin32HandleKHR (deviceCmds (device :: Device)))
   pImportSemaphoreWin32HandleInfo <- ContT $ withCStruct (importSemaphoreWin32HandleInfo)
   r <- lift $ vkImportSemaphoreWin32HandleKHR' (deviceHandle (device)) pImportSemaphoreWin32HandleInfo

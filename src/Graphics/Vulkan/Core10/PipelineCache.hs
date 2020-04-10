@@ -8,6 +8,7 @@ module Graphics.Vulkan.Core10.PipelineCache  ( createPipelineCache
                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -22,6 +23,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
@@ -149,8 +151,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache',
 -- 'PipelineCacheCreateInfo'
-createPipelineCache :: Device -> PipelineCacheCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (PipelineCache)
-createPipelineCache device createInfo allocator = evalContT $ do
+createPipelineCache :: forall io . MonadIO io => Device -> PipelineCacheCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (PipelineCache)
+createPipelineCache device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePipelineCache' = mkVkCreatePipelineCache (pVkCreatePipelineCache (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -166,7 +168,7 @@ createPipelineCache device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withPipelineCache :: Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> ((PipelineCache) -> IO r) -> IO r
+withPipelineCache :: forall r . Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> ((PipelineCache) -> IO r) -> IO r
 withPipelineCache device pCreateInfo pAllocator =
   bracket
     (createPipelineCache device pCreateInfo pAllocator)
@@ -231,8 +233,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-destroyPipelineCache :: Device -> PipelineCache -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyPipelineCache device pipelineCache allocator = evalContT $ do
+destroyPipelineCache :: forall io . MonadIO io => Device -> PipelineCache -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPipelineCache device pipelineCache allocator = liftIO . evalContT $ do
   let vkDestroyPipelineCache' = mkVkDestroyPipelineCache (pVkDestroyPipelineCache (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -362,8 +364,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-getPipelineCacheData :: Device -> PipelineCache -> IO (Result, ("data" ::: ByteString))
-getPipelineCacheData device pipelineCache = evalContT $ do
+getPipelineCacheData :: forall io . MonadIO io => Device -> PipelineCache -> io (Result, ("data" ::: ByteString))
+getPipelineCacheData device pipelineCache = liftIO . evalContT $ do
   let vkGetPipelineCacheData' = mkVkGetPipelineCacheData (pVkGetPipelineCacheData (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPDataSize <- ContT $ bracket (callocBytes @CSize 8) free
@@ -452,8 +454,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-mergePipelineCaches :: Device -> ("dstCache" ::: PipelineCache) -> ("srcCaches" ::: Vector PipelineCache) -> IO ()
-mergePipelineCaches device dstCache srcCaches = evalContT $ do
+mergePipelineCaches :: forall io . MonadIO io => Device -> ("dstCache" ::: PipelineCache) -> ("srcCaches" ::: Vector PipelineCache) -> io ()
+mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergePipelineCaches' = mkVkMergePipelineCaches (pVkMergePipelineCaches (deviceCmds (device :: Device)))
   pPSrcCaches <- ContT $ allocaBytesAligned @PipelineCache ((Data.Vector.length (srcCaches)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr PipelineCache) (e)) (srcCaches)

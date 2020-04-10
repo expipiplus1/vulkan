@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_AMD_shader_info  ( getShaderInfoAMD
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -35,6 +36,7 @@ import Data.ByteString (packCStringLen)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -182,8 +184,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline', 'ShaderInfoTypeAMD',
 -- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
-getShaderInfoAMD :: Device -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> IO (Result, ("info" ::: ByteString))
-getShaderInfoAMD device pipeline shaderStage infoType = evalContT $ do
+getShaderInfoAMD :: forall io . MonadIO io => Device -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> io (Result, ("info" ::: ByteString))
+getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
   let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD (pVkGetShaderInfoAMD (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPInfoSize <- ContT $ bracket (callocBytes @CSize 8) free

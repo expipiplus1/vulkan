@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_xlib_surface  ( createXlibSurfaceKHR
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -32,6 +33,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -143,8 +145,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR',
 -- 'XlibSurfaceCreateInfoKHR'
-createXlibSurfaceKHR :: Instance -> XlibSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createXlibSurfaceKHR instance' createInfo allocator = evalContT $ do
+createXlibSurfaceKHR :: forall io . MonadIO io => Instance -> XlibSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createXlibSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateXlibSurfaceKHR' = mkVkCreateXlibSurfaceKHR (pVkCreateXlibSurfaceKHR (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -190,8 +192,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceXlibPresentationSupportKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> ("dpy" ::: Ptr Display) -> VisualID -> IO (Bool)
-getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy visualID = do
+getPhysicalDeviceXlibPresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> ("dpy" ::: Ptr Display) -> VisualID -> io (Bool)
+getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy visualID = liftIO $ do
   let vkGetPhysicalDeviceXlibPresentationSupportKHR' = mkVkGetPhysicalDeviceXlibPresentationSupportKHR (pVkGetPhysicalDeviceXlibPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   r <- vkGetPhysicalDeviceXlibPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (dpy) (visualID)
   pure $ ((bool32ToBool r))

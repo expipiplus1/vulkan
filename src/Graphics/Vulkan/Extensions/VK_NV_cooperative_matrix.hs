@@ -29,6 +29,7 @@ module Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix  ( getPhysicalDeviceC
                                                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -48,6 +49,7 @@ import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -152,8 +154,8 @@ foreign import ccall
 --
 -- 'CooperativeMatrixPropertiesNV',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice -> IO (Result, ("properties" ::: Vector CooperativeMatrixPropertiesNV))
-getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = evalContT $ do
+getPhysicalDeviceCooperativeMatrixPropertiesNV :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector CooperativeMatrixPropertiesNV))
+getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceCooperativeMatrixPropertiesNV' = mkVkGetPhysicalDeviceCooperativeMatrixPropertiesNV (pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free

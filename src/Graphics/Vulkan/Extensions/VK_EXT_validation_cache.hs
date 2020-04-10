@@ -18,6 +18,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_cache  ( createValidationCac
                                                            ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -42,6 +43,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -178,8 +180,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ValidationCacheCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-createValidationCacheEXT :: Device -> ValidationCacheCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (ValidationCacheEXT)
-createValidationCacheEXT device createInfo allocator = evalContT $ do
+createValidationCacheEXT :: forall io . MonadIO io => Device -> ValidationCacheCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ValidationCacheEXT)
+createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
   let vkCreateValidationCacheEXT' = mkVkCreateValidationCacheEXT (pVkCreateValidationCacheEXT (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -195,7 +197,7 @@ createValidationCacheEXT device createInfo allocator = evalContT $ do
 -- 'destroyValidationCacheEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withValidationCacheEXT :: Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> ((ValidationCacheEXT) -> IO r) -> IO r
+withValidationCacheEXT :: forall r . Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> ((ValidationCacheEXT) -> IO r) -> IO r
 withValidationCacheEXT device pCreateInfo pAllocator =
   bracket
     (createValidationCacheEXT device pCreateInfo pAllocator)
@@ -260,8 +262,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-destroyValidationCacheEXT :: Device -> ValidationCacheEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyValidationCacheEXT device validationCache allocator = evalContT $ do
+destroyValidationCacheEXT :: forall io . MonadIO io => Device -> ValidationCacheEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT $ do
   let vkDestroyValidationCacheEXT' = mkVkDestroyValidationCacheEXT (pVkDestroyValidationCacheEXT (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -388,8 +390,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-getValidationCacheDataEXT :: Device -> ValidationCacheEXT -> IO (Result, ("data" ::: ByteString))
-getValidationCacheDataEXT device validationCache = evalContT $ do
+getValidationCacheDataEXT :: forall io . MonadIO io => Device -> ValidationCacheEXT -> io (Result, ("data" ::: ByteString))
+getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
   let vkGetValidationCacheDataEXT' = mkVkGetValidationCacheDataEXT (pVkGetValidationCacheDataEXT (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPDataSize <- ContT $ bracket (callocBytes @CSize 8) free
@@ -480,8 +482,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-mergeValidationCachesEXT :: Device -> ("dstCache" ::: ValidationCacheEXT) -> ("srcCaches" ::: Vector ValidationCacheEXT) -> IO ()
-mergeValidationCachesEXT device dstCache srcCaches = evalContT $ do
+mergeValidationCachesEXT :: forall io . MonadIO io => Device -> ("dstCache" ::: ValidationCacheEXT) -> ("srcCaches" ::: Vector ValidationCacheEXT) -> io ()
+mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergeValidationCachesEXT' = mkVkMergeValidationCachesEXT (pVkMergeValidationCachesEXT (deviceCmds (device :: Device)))
   pPSrcCaches <- ContT $ allocaBytesAligned @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr ValidationCacheEXT) (e)) (srcCaches)

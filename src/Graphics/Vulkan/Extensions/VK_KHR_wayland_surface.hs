@@ -13,6 +13,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_wayland_surface  ( createWaylandSurface
                                                           ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -31,6 +32,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -140,8 +142,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR',
 -- 'WaylandSurfaceCreateInfoKHR'
-createWaylandSurfaceKHR :: Instance -> WaylandSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createWaylandSurfaceKHR instance' createInfo allocator = evalContT $ do
+createWaylandSurfaceKHR :: forall io . MonadIO io => Instance -> WaylandSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createWaylandSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateWaylandSurfaceKHR' = mkVkCreateWaylandSurfaceKHR (pVkCreateWaylandSurfaceKHR (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -183,8 +185,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceWaylandPresentationSupportKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> Ptr Wl_display -> IO (Bool)
-getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = do
+getPhysicalDeviceWaylandPresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> Ptr Wl_display -> io (Bool)
+getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
   let vkGetPhysicalDeviceWaylandPresentationSupportKHR' = mkVkGetPhysicalDeviceWaylandPresentationSupportKHR (pVkGetPhysicalDeviceWaylandPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   r <- vkGetPhysicalDeviceWaylandPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (display)
   pure $ ((bool32ToBool r))

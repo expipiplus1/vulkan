@@ -46,6 +46,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -69,6 +70,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
@@ -282,8 +284,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'SwapchainCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-createSwapchainKHR :: PokeChain a => Device -> SwapchainCreateInfoKHR a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SwapchainKHR)
-createSwapchainKHR device createInfo allocator = evalContT $ do
+createSwapchainKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SwapchainKHR)
+createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSwapchainKHR' = mkVkCreateSwapchainKHR (pVkCreateSwapchainKHR (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -299,7 +301,7 @@ createSwapchainKHR device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSwapchainKHR :: PokeChain a => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> ((SwapchainKHR) -> IO r) -> IO r
+withSwapchainKHR :: forall a r . PokeChain a => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> ((SwapchainKHR) -> IO r) -> IO r
 withSwapchainKHR device pCreateInfo pAllocator =
   bracket
     (createSwapchainKHR device pCreateInfo pAllocator)
@@ -395,8 +397,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-destroySwapchainKHR :: Device -> SwapchainKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySwapchainKHR device swapchain allocator = evalContT $ do
+destroySwapchainKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
   let vkDestroySwapchainKHR' = mkVkDestroySwapchainKHR (pVkDestroySwapchainKHR (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -482,8 +484,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainImagesKHR :: Device -> SwapchainKHR -> IO (Result, ("swapchainImages" ::: Vector Image))
-getSwapchainImagesKHR device swapchain = evalContT $ do
+getSwapchainImagesKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result, ("swapchainImages" ::: Vector Image))
+getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
   let vkGetSwapchainImagesKHR' = mkVkGetSwapchainImagesKHR (pVkGetSwapchainImagesKHR (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPSwapchainImageCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -628,8 +630,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Fence',
 -- 'Graphics.Vulkan.Core10.Handles.Semaphore',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-acquireNextImageKHR :: Device -> SwapchainKHR -> ("timeout" ::: Word64) -> Semaphore -> Fence -> IO (Result, ("imageIndex" ::: Word32))
-acquireNextImageKHR device swapchain timeout semaphore fence = evalContT $ do
+acquireNextImageKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> ("timeout" ::: Word64) -> Semaphore -> Fence -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
   let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR (pVkAcquireNextImageKHR (deviceCmds (device :: Device)))
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkAcquireNextImageKHR' (deviceHandle (device)) (swapchain) (timeout) (semaphore) (fence) (pPImageIndex)
@@ -788,8 +790,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'PresentInfoKHR', 'Graphics.Vulkan.Core10.Handles.Queue'
-queuePresentKHR :: PokeChain a => Queue -> PresentInfoKHR a -> IO (Result)
-queuePresentKHR queue presentInfo = evalContT $ do
+queuePresentKHR :: forall a io . (PokeChain a, MonadIO io) => Queue -> PresentInfoKHR a -> io (Result)
+queuePresentKHR queue presentInfo = liftIO . evalContT $ do
   let vkQueuePresentKHR' = mkVkQueuePresentKHR (pVkQueuePresentKHR (deviceCmds (queue :: Queue)))
   pPresentInfo <- ContT $ withCStruct (presentInfo)
   r <- lift $ vkQueuePresentKHR' (queueHandle (queue)) pPresentInfo
@@ -831,8 +833,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'DeviceGroupPresentCapabilitiesKHR'
-getDeviceGroupPresentCapabilitiesKHR :: Device -> IO (DeviceGroupPresentCapabilitiesKHR)
-getDeviceGroupPresentCapabilitiesKHR device = evalContT $ do
+getDeviceGroupPresentCapabilitiesKHR :: forall io . MonadIO io => Device -> io (DeviceGroupPresentCapabilitiesKHR)
+getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
   let vkGetDeviceGroupPresentCapabilitiesKHR' = mkVkGetDeviceGroupPresentCapabilitiesKHR (pVkGetDeviceGroupPresentCapabilitiesKHR (deviceCmds (device :: Device)))
   pPDeviceGroupPresentCapabilities <- ContT (withZeroCStruct @DeviceGroupPresentCapabilitiesKHR)
   r <- lift $ vkGetDeviceGroupPresentCapabilitiesKHR' (deviceHandle (device)) (pPDeviceGroupPresentCapabilities)
@@ -905,8 +907,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'DeviceGroupPresentModeFlagsKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getDeviceGroupSurfacePresentModesKHR :: Device -> SurfaceKHR -> IO (("modes" ::: DeviceGroupPresentModeFlagsKHR))
-getDeviceGroupSurfacePresentModesKHR device surface = evalContT $ do
+getDeviceGroupSurfacePresentModesKHR :: forall io . MonadIO io => Device -> SurfaceKHR -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
+getDeviceGroupSurfacePresentModesKHR device surface = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModesKHR' = mkVkGetDeviceGroupSurfacePresentModesKHR (pVkGetDeviceGroupSurfacePresentModesKHR (deviceCmds (device :: Device)))
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
   r <- lift $ vkGetDeviceGroupSurfacePresentModesKHR' (deviceHandle (device)) (surface) (pPModes)
@@ -985,8 +987,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'AcquireNextImageInfoKHR', 'Graphics.Vulkan.Core10.Handles.Device'
-acquireNextImage2KHR :: Device -> ("acquireInfo" ::: AcquireNextImageInfoKHR) -> IO (Result, ("imageIndex" ::: Word32))
-acquireNextImage2KHR device acquireInfo = evalContT $ do
+acquireNextImage2KHR :: forall io . MonadIO io => Device -> ("acquireInfo" ::: AcquireNextImageInfoKHR) -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
   let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR (pVkAcquireNextImage2KHR (deviceCmds (device :: Device)))
   pAcquireInfo <- ContT $ withCStruct (acquireInfo)
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
@@ -1079,8 +1081,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDevicePresentRectanglesKHR :: PhysicalDevice -> SurfaceKHR -> IO (Result, ("rects" ::: Vector Rect2D))
-getPhysicalDevicePresentRectanglesKHR physicalDevice surface = evalContT $ do
+getPhysicalDevicePresentRectanglesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("rects" ::: Vector Rect2D))
+getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDevicePresentRectanglesKHR' = mkVkGetPhysicalDevicePresentRectanglesKHR (pVkGetPhysicalDevicePresentRectanglesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPRectCount <- ContT $ bracket (callocBytes @Word32 4) free

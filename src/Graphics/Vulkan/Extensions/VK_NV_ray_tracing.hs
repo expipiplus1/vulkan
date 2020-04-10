@@ -77,6 +77,7 @@ module Graphics.Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                                      ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -102,6 +103,7 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
@@ -239,8 +241,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline'
-compileDeferredNV :: Device -> Pipeline -> ("shader" ::: Word32) -> IO ()
-compileDeferredNV device pipeline shader = do
+compileDeferredNV :: forall io . MonadIO io => Device -> Pipeline -> ("shader" ::: Word32) -> io ()
+compileDeferredNV device pipeline shader = liftIO $ do
   let vkCompileDeferredNV' = mkVkCompileDeferredNV (pVkCompileDeferredNV (deviceCmds (device :: Device)))
   r <- vkCompileDeferredNV' (deviceHandle (device)) (pipeline) (shader)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -316,8 +318,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-createAccelerationStructureNV :: Device -> AccelerationStructureCreateInfoNV -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (AccelerationStructureNV)
-createAccelerationStructureNV device createInfo allocator = evalContT $ do
+createAccelerationStructureNV :: forall io . MonadIO io => Device -> AccelerationStructureCreateInfoNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io (AccelerationStructureNV)
+createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $ do
   let vkCreateAccelerationStructureNV' = mkVkCreateAccelerationStructureNV (pVkCreateAccelerationStructureNV (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -333,7 +335,7 @@ createAccelerationStructureNV device createInfo allocator = evalContT $ do
 -- 'destroyAccelerationStructureNV' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withAccelerationStructureNV :: Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> ((AccelerationStructureNV) -> IO r) -> IO r
+withAccelerationStructureNV :: forall r . Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> ((AccelerationStructureNV) -> IO r) -> IO r
 withAccelerationStructureNV device pCreateInfo pAllocator =
   bracket
     (createAccelerationStructureNV device pCreateInfo pAllocator)
@@ -395,8 +397,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyAccelerationStructureNV :: Device -> AccelerationStructureNV -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyAccelerationStructureNV device accelerationStructure allocator = evalContT $ do
+destroyAccelerationStructureNV :: forall io . MonadIO io => Device -> AccelerationStructureNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyAccelerationStructureNV device accelerationStructure allocator = liftIO . evalContT $ do
   let vkDestroyAccelerationStructureNV' = mkVkDestroyAccelerationStructureNV (pVkDestroyAccelerationStructureNV (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -433,8 +435,8 @@ foreign import ccall
 -- 'AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
-getAccelerationStructureMemoryRequirementsNV :: (PokeChain a, PeekChain a) => Device -> AccelerationStructureMemoryRequirementsInfoNV -> IO (MemoryRequirements2KHR a)
-getAccelerationStructureMemoryRequirementsNV device info = evalContT $ do
+getAccelerationStructureMemoryRequirementsNV :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> AccelerationStructureMemoryRequirementsInfoNV -> io (MemoryRequirements2KHR a)
+getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetAccelerationStructureMemoryRequirementsNV' = mkVkGetAccelerationStructureMemoryRequirementsNV (pVkGetAccelerationStructureMemoryRequirementsNV (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2KHR _))
@@ -479,8 +481,8 @@ foreign import ccall
 --
 -- 'BindAccelerationStructureMemoryInfoNV',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-bindAccelerationStructureMemoryNV :: Device -> ("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoNV) -> IO ()
-bindAccelerationStructureMemoryNV device bindInfos = evalContT $ do
+bindAccelerationStructureMemoryNV :: forall io . MonadIO io => Device -> ("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoNV) -> io ()
+bindAccelerationStructureMemoryNV device bindInfos = liftIO . evalContT $ do
   let vkBindAccelerationStructureMemoryNV' = mkVkBindAccelerationStructureMemoryNV (pVkBindAccelerationStructureMemoryNV (deviceCmds (device :: Device)))
   pPBindInfos <- ContT $ allocaBytesAligned @BindAccelerationStructureMemoryInfoNV ((Data.Vector.length (bindInfos)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (56 * (i)) :: Ptr BindAccelerationStructureMemoryInfoNV) (e) . ($ ())) (bindInfos)
@@ -566,8 +568,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyAccelerationStructureModeNV'
-cmdCopyAccelerationStructureNV :: CommandBuffer -> ("dst" ::: AccelerationStructureNV) -> ("src" ::: AccelerationStructureNV) -> CopyAccelerationStructureModeNV -> IO ()
-cmdCopyAccelerationStructureNV commandBuffer dst src mode = do
+cmdCopyAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> ("dst" ::: AccelerationStructureNV) -> ("src" ::: AccelerationStructureNV) -> CopyAccelerationStructureModeNV -> io ()
+cmdCopyAccelerationStructureNV commandBuffer dst src mode = liftIO $ do
   let vkCmdCopyAccelerationStructureNV' = mkVkCmdCopyAccelerationStructureNV (pVkCmdCopyAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdCopyAccelerationStructureNV' (commandBufferHandle (commandBuffer)) (dst) (src) (mode)
   pure $ ()
@@ -671,8 +673,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool',
 -- 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
-cmdWriteAccelerationStructuresPropertiesNV :: CommandBuffer -> ("accelerationStructures" ::: Vector AccelerationStructureNV) -> QueryType -> QueryPool -> ("firstQuery" ::: Word32) -> IO ()
-cmdWriteAccelerationStructuresPropertiesNV commandBuffer accelerationStructures queryType queryPool firstQuery = evalContT $ do
+cmdWriteAccelerationStructuresPropertiesNV :: forall io . MonadIO io => CommandBuffer -> ("accelerationStructures" ::: Vector AccelerationStructureNV) -> QueryType -> QueryPool -> ("firstQuery" ::: Word32) -> io ()
+cmdWriteAccelerationStructuresPropertiesNV commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
   let vkCmdWriteAccelerationStructuresPropertiesNV' = mkVkCmdWriteAccelerationStructuresPropertiesNV (pVkCmdWriteAccelerationStructuresPropertiesNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
@@ -827,8 +829,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBuildAccelerationStructureNV :: CommandBuffer -> AccelerationStructureInfoNV -> ("instanceData" ::: Buffer) -> ("instanceOffset" ::: DeviceSize) -> ("update" ::: Bool) -> ("dst" ::: AccelerationStructureNV) -> ("src" ::: AccelerationStructureNV) -> ("scratch" ::: Buffer) -> ("scratchOffset" ::: DeviceSize) -> IO ()
-cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = evalContT $ do
+cmdBuildAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> AccelerationStructureInfoNV -> ("instanceData" ::: Buffer) -> ("instanceOffset" ::: DeviceSize) -> ("update" ::: Bool) -> ("dst" ::: AccelerationStructureNV) -> ("src" ::: AccelerationStructureNV) -> ("scratch" ::: Buffer) -> ("scratchOffset" ::: DeviceSize) -> io ()
+cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureNV' = mkVkCmdBuildAccelerationStructureNV (pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pInfo <- ContT $ withCStruct (info)
   lift $ vkCmdBuildAccelerationStructureNV' (commandBufferHandle (commandBuffer)) pInfo (instanceData) (instanceOffset) (boolToBool32 (update)) (dst) (src) (scratch) (scratchOffset)
@@ -1163,8 +1165,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdTraceRaysNV :: CommandBuffer -> ("raygenShaderBindingTableBuffer" ::: Buffer) -> ("raygenShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingTableBuffer" ::: Buffer) -> ("missShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingStride" ::: DeviceSize) -> ("hitShaderBindingTableBuffer" ::: Buffer) -> ("hitShaderBindingOffset" ::: DeviceSize) -> ("hitShaderBindingStride" ::: DeviceSize) -> ("callableShaderBindingTableBuffer" ::: Buffer) -> ("callableShaderBindingOffset" ::: DeviceSize) -> ("callableShaderBindingStride" ::: DeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> IO ()
-cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth = do
+cmdTraceRaysNV :: forall io . MonadIO io => CommandBuffer -> ("raygenShaderBindingTableBuffer" ::: Buffer) -> ("raygenShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingTableBuffer" ::: Buffer) -> ("missShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingStride" ::: DeviceSize) -> ("hitShaderBindingTableBuffer" ::: Buffer) -> ("hitShaderBindingOffset" ::: DeviceSize) -> ("hitShaderBindingStride" ::: DeviceSize) -> ("callableShaderBindingTableBuffer" ::: Buffer) -> ("callableShaderBindingOffset" ::: DeviceSize) -> ("callableShaderBindingStride" ::: DeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> io ()
+cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth = liftIO $ do
   let vkCmdTraceRaysNV' = mkVkCmdTraceRaysNV (pVkCmdTraceRaysNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdTraceRaysNV' (commandBufferHandle (commandBuffer)) (raygenShaderBindingTableBuffer) (raygenShaderBindingOffset) (missShaderBindingTableBuffer) (missShaderBindingOffset) (missShaderBindingStride) (hitShaderBindingTableBuffer) (hitShaderBindingOffset) (hitShaderBindingStride) (callableShaderBindingTableBuffer) (callableShaderBindingOffset) (callableShaderBindingStride) (width) (height) (depth)
   pure $ ()
@@ -1237,8 +1239,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline'
-getRayTracingShaderGroupHandlesNV :: Device -> Pipeline -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> IO ()
-getRayTracingShaderGroupHandlesNV device pipeline firstGroup groupCount dataSize data' = do
+getRayTracingShaderGroupHandlesNV :: forall io . MonadIO io => Device -> Pipeline -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> io ()
+getRayTracingShaderGroupHandlesNV device pipeline firstGroup groupCount dataSize data' = liftIO $ do
   let vkGetRayTracingShaderGroupHandlesNV' = mkVkGetRayTracingShaderGroupHandlesNV (pVkGetRayTracingShaderGroupHandlesNV (deviceCmds (device :: Device)))
   r <- vkGetRayTracingShaderGroupHandlesNV' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data')
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1282,8 +1284,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-getAccelerationStructureHandleNV :: Device -> AccelerationStructureNV -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> IO ()
-getAccelerationStructureHandleNV device accelerationStructure dataSize data' = do
+getAccelerationStructureHandleNV :: forall io . MonadIO io => Device -> AccelerationStructureNV -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> io ()
+getAccelerationStructureHandleNV device accelerationStructure dataSize data' = liftIO $ do
   let vkGetAccelerationStructureHandleNV' = mkVkGetAccelerationStructureHandleNV (pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device)))
   r <- vkGetAccelerationStructureHandleNV' (deviceHandle (device)) (accelerationStructure) (CSize (dataSize)) (data')
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1385,8 +1387,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache',
 -- 'RayTracingPipelineCreateInfoNV'
-createRayTracingPipelinesNV :: PokeChain a => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoNV a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (("pipelines" ::: Vector Pipeline))
-createRayTracingPipelinesNV device pipelineCache createInfos allocator = evalContT $ do
+createRayTracingPipelinesNV :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoNV a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("pipelines" ::: Vector Pipeline))
+createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesNV' = mkVkCreateRayTracingPipelinesNV (pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(RayTracingPipelineCreateInfoNV _) ((Data.Vector.length (createInfos)) * 80) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (80 * (i)) :: Ptr (RayTracingPipelineCreateInfoNV _)) (e) . ($ ())) (createInfos)

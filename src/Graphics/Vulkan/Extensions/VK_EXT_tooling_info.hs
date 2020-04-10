@@ -18,6 +18,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_tooling_info  ( getPhysicalDeviceToolPr
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -36,6 +37,7 @@ import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -134,8 +136,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceToolPropertiesEXT'
-getPhysicalDeviceToolPropertiesEXT :: PhysicalDevice -> IO (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
-getPhysicalDeviceToolPropertiesEXT physicalDevice = evalContT $ do
+getPhysicalDeviceToolPropertiesEXT :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
+getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceToolPropertiesEXT' = mkVkGetPhysicalDeviceToolPropertiesEXT (pVkGetPhysicalDeviceToolPropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPToolCount <- ContT $ bracket (callocBytes @Word32 4) free

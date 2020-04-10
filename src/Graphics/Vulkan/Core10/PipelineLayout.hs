@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.PipelineLayout  ( createPipelineLayout
                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -19,6 +20,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -112,8 +114,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout',
 -- 'PipelineLayoutCreateInfo'
-createPipelineLayout :: Device -> PipelineLayoutCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (PipelineLayout)
-createPipelineLayout device createInfo allocator = evalContT $ do
+createPipelineLayout :: forall io . MonadIO io => Device -> PipelineLayoutCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (PipelineLayout)
+createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePipelineLayout' = mkVkCreatePipelineLayout (pVkCreatePipelineLayout (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -129,7 +131,7 @@ createPipelineLayout device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withPipelineLayout :: Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> ((PipelineLayout) -> IO r) -> IO r
+withPipelineLayout :: forall r . Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> ((PipelineLayout) -> IO r) -> IO r
 withPipelineLayout device pCreateInfo pAllocator =
   bracket
     (createPipelineLayout device pCreateInfo pAllocator)
@@ -198,8 +200,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
-destroyPipelineLayout :: Device -> PipelineLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyPipelineLayout device pipelineLayout allocator = evalContT $ do
+destroyPipelineLayout :: forall io . MonadIO io => Device -> PipelineLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
   let vkDestroyPipelineLayout' = mkVkDestroyPipelineLayout (pVkDestroyPipelineLayout (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

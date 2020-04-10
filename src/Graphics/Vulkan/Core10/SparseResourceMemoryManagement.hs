@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core10.SparseResourceMemoryManagement  ( getImageSparseMe
                                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -27,6 +28,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -173,8 +175,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Image', 'SparseImageMemoryRequirements'
-getImageSparseMemoryRequirements :: Device -> Image -> IO (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
-getImageSparseMemoryRequirements device image = evalContT $ do
+getImageSparseMemoryRequirements :: forall io . MonadIO io => Device -> Image -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
+getImageSparseMemoryRequirements device image = liftIO . evalContT $ do
   let vkGetImageSparseMemoryRequirements' = mkVkGetImageSparseMemoryRequirements (pVkGetImageSparseMemoryRequirements (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPSparseMemoryRequirementCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -297,8 +299,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'SparseImageFormatProperties'
-getPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice -> Format -> ImageType -> ("samples" ::: SampleCountFlagBits) -> ImageUsageFlags -> ImageTiling -> IO (("properties" ::: Vector SparseImageFormatProperties))
-getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = evalContT $ do
+getPhysicalDeviceSparseImageFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ("samples" ::: SampleCountFlagBits) -> ImageUsageFlags -> ImageTiling -> io (("properties" ::: Vector SparseImageFormatProperties))
+getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSparseImageFormatProperties' = mkVkGetPhysicalDeviceSparseImageFormatProperties (pVkGetPhysicalDeviceSparseImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -452,8 +454,8 @@ foreign import ccall
 --
 -- 'BindSparseInfo', 'Graphics.Vulkan.Core10.Handles.Fence',
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-queueBindSparse :: PokeChain a => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> IO ()
-queueBindSparse queue bindInfo fence = evalContT $ do
+queueBindSparse :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> io ()
+queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
   let vkQueueBindSparse' = mkVkQueueBindSparse (pVkQueueBindSparse (deviceCmds (queue :: Queue)))
   pPBindInfo <- ContT $ allocaBytesAligned @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _)) (e) . ($ ())) (bindInfo)

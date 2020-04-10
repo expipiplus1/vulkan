@@ -26,6 +26,7 @@ module Graphics.Vulkan.Core10.Pipeline  ( createGraphicsPipelines
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -45,6 +46,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -277,8 +279,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'GraphicsPipelineCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-createGraphicsPipelines :: PokeChain a => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (("pipelines" ::: Vector Pipeline))
-createGraphicsPipelines device pipelineCache createInfos allocator = evalContT $ do
+createGraphicsPipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("pipelines" ::: Vector Pipeline))
+createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateGraphicsPipelines' = mkVkCreateGraphicsPipelines (pVkCreateGraphicsPipelines (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(GraphicsPipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 144) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (144 * (i)) :: Ptr (GraphicsPipelineCreateInfo _)) (e) . ($ ())) (createInfos)
@@ -295,7 +297,7 @@ createGraphicsPipelines device pipelineCache createInfos allocator = evalContT $
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withGraphicsPipelines :: PokeChain a => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
+withGraphicsPipelines :: forall a r . PokeChain a => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
 withGraphicsPipelines device pipelineCache pCreateInfos pAllocator =
   bracket
     (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
@@ -396,8 +398,8 @@ foreign import ccall
 -- 'ComputePipelineCreateInfo', 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-createComputePipelines :: PokeChain a => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (("pipelines" ::: Vector Pipeline))
-createComputePipelines device pipelineCache createInfos allocator = evalContT $ do
+createComputePipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("pipelines" ::: Vector Pipeline))
+createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateComputePipelines' = mkVkCreateComputePipelines (pVkCreateComputePipelines (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(ComputePipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 96) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (96 * (i)) :: Ptr (ComputePipelineCreateInfo _)) (e) . ($ ())) (createInfos)
@@ -414,7 +416,7 @@ createComputePipelines device pipelineCache createInfos allocator = evalContT $ 
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withComputePipelines :: PokeChain a => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
+withComputePipelines :: forall a r . PokeChain a => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
 withComputePipelines device pipelineCache pCreateInfos pAllocator =
   bracket
     (createComputePipelines device pipelineCache pCreateInfos pAllocator)
@@ -480,8 +482,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline'
-destroyPipeline :: Device -> Pipeline -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyPipeline device pipeline allocator = evalContT $ do
+destroyPipeline :: forall io . MonadIO io => Device -> Pipeline -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPipeline device pipeline allocator = liftIO . evalContT $ do
   let vkDestroyPipeline' = mkVkDestroyPipeline (pVkDestroyPipeline (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core10.CommandBuffer  ( allocateCommandBuffers
 
 import Control.Exception.Base (bracket)
 import Control.Exception.Base (bracket_)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -28,6 +29,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -165,8 +167,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'CommandBufferAllocateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-allocateCommandBuffers :: Device -> CommandBufferAllocateInfo -> IO (("commandBuffers" ::: Vector CommandBuffer))
-allocateCommandBuffers device allocateInfo = evalContT $ do
+allocateCommandBuffers :: forall io . MonadIO io => Device -> CommandBufferAllocateInfo -> io (("commandBuffers" ::: Vector CommandBuffer))
+allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
   let vkAllocateCommandBuffers' = mkVkAllocateCommandBuffers (pVkAllocateCommandBuffers cmds)
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
@@ -182,7 +184,7 @@ allocateCommandBuffers device allocateInfo = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withCommandBuffers :: Device -> CommandBufferAllocateInfo -> ((Vector CommandBuffer) -> IO r) -> IO r
+withCommandBuffers :: forall r . Device -> CommandBufferAllocateInfo -> ((Vector CommandBuffer) -> IO r) -> IO r
 withCommandBuffers device pAllocateInfo =
   bracket
     (allocateCommandBuffers device pAllocateInfo)
@@ -255,8 +257,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-freeCommandBuffers :: Device -> CommandPool -> ("commandBuffers" ::: Vector CommandBuffer) -> IO ()
-freeCommandBuffers device commandPool commandBuffers = evalContT $ do
+freeCommandBuffers :: forall io . MonadIO io => Device -> CommandPool -> ("commandBuffers" ::: Vector CommandBuffer) -> io ()
+freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
   let vkFreeCommandBuffers' = mkVkFreeCommandBuffers (pVkFreeCommandBuffers (deviceCmds (device :: Device)))
   pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
@@ -342,8 +344,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferBeginInfo'
-beginCommandBuffer :: PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO ()
-beginCommandBuffer commandBuffer beginInfo = evalContT $ do
+beginCommandBuffer :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io ()
+beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
   let vkBeginCommandBuffer' = mkVkBeginCommandBuffer (pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   pBeginInfo <- ContT $ withCStruct (beginInfo)
   r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) pBeginInfo
@@ -351,7 +353,7 @@ beginCommandBuffer commandBuffer beginInfo = evalContT $ do
 
 -- | A safe wrapper for 'beginCommandBuffer' and 'endCommandBuffer' using
 -- 'bracket_'
-useCommandBuffer :: PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO r -> IO r
+useCommandBuffer :: forall a r . PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO r -> IO r
 useCommandBuffer commandBuffer pBeginInfo =
   bracket_
     (beginCommandBuffer commandBuffer pBeginInfo)
@@ -438,8 +440,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-endCommandBuffer :: CommandBuffer -> IO ()
-endCommandBuffer commandBuffer = do
+endCommandBuffer :: forall io . MonadIO io => CommandBuffer -> io ()
+endCommandBuffer commandBuffer = liftIO $ do
   let vkEndCommandBuffer' = mkVkEndCommandBuffer (pVkEndCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   r <- vkEndCommandBuffer' (commandBufferHandle (commandBuffer))
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -511,8 +513,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlags'
-resetCommandBuffer :: CommandBuffer -> CommandBufferResetFlags -> IO ()
-resetCommandBuffer commandBuffer flags = do
+resetCommandBuffer :: forall io . MonadIO io => CommandBuffer -> CommandBufferResetFlags -> io ()
+resetCommandBuffer commandBuffer flags = liftIO $ do
   let vkResetCommandBuffer' = mkVkResetCommandBuffer (pVkResetCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   r <- vkResetCommandBuffer' (commandBufferHandle (commandBuffer)) (flags)
   when (r < SUCCESS) (throwIO (VulkanException r))

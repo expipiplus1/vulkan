@@ -62,6 +62,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallba
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -84,6 +85,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CChar(..))
 import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -185,8 +187,8 @@ foreign import ccall
 -- 'DebugReportCallbackCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-createDebugReportCallbackEXT :: Instance -> DebugReportCallbackCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DebugReportCallbackEXT)
-createDebugReportCallbackEXT instance' createInfo allocator = evalContT $ do
+createDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugReportCallbackEXT)
+createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugReportCallbackEXT' = mkVkCreateDebugReportCallbackEXT (pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -202,7 +204,7 @@ createDebugReportCallbackEXT instance' createInfo allocator = evalContT $ do
 -- 'destroyDebugReportCallbackEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDebugReportCallbackEXT :: Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugReportCallbackEXT) -> IO r) -> IO r
+withDebugReportCallbackEXT :: forall r . Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugReportCallbackEXT) -> IO r) -> IO r
 withDebugReportCallbackEXT instance' pCreateInfo pAllocator =
   bracket
     (createDebugReportCallbackEXT instance' pCreateInfo pAllocator)
@@ -269,8 +271,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-destroyDebugReportCallbackEXT :: Instance -> DebugReportCallbackEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDebugReportCallbackEXT instance' callback allocator = evalContT $ do
+destroyDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
   let vkDestroyDebugReportCallbackEXT' = mkVkDestroyDebugReportCallbackEXT (pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -351,8 +353,8 @@ foreign import ccall
 --
 -- 'DebugReportFlagsEXT', 'DebugReportObjectTypeEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-debugReportMessageEXT :: Instance -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: Word64) -> ("messageCode" ::: Int32) -> ("layerPrefix" ::: ByteString) -> ("message" ::: ByteString) -> IO ()
-debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = evalContT $ do
+debugReportMessageEXT :: forall io . MonadIO io => Instance -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: Word64) -> ("messageCode" ::: Int32) -> ("layerPrefix" ::: ByteString) -> ("message" ::: ByteString) -> io ()
+debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
   let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT (pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance)))
   pLayerPrefix <- ContT $ useAsCString (layerPrefix)
   pMessage <- ContT $ useAsCString (message)

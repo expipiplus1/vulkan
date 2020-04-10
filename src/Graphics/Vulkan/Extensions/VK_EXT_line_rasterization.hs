@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_line_rasterization  ( cmdSetLineStipple
                                                              , pattern EXT_LINE_RASTERIZATION_EXTENSION_NAME
                                                              ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -27,6 +28,7 @@ import GHC.Show (showsPrec)
 import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -116,8 +118,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetLineStippleEXT :: CommandBuffer -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ()
-cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = do
+cmdSetLineStippleEXT :: forall io . MonadIO io => CommandBuffer -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> io ()
+cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
   let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT (pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetLineStippleEXT' (commandBufferHandle (commandBuffer)) (lineStippleFactor) (lineStipplePattern)
   pure $ ()

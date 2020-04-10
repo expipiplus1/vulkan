@@ -8,6 +8,7 @@ module Graphics.Vulkan.Core10.Queue  ( getDeviceQueue
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -21,6 +22,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -132,8 +134,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-getDeviceQueue :: Device -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> IO (Queue)
-getDeviceQueue device queueFamilyIndex queueIndex = evalContT $ do
+getDeviceQueue :: forall io . MonadIO io => Device -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> io (Queue)
+getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
   let vkGetDeviceQueue' = mkVkGetDeviceQueue (pVkGetDeviceQueue cmds)
   pPQueue <- ContT $ bracket (callocBytes @(Ptr Queue_T) 8) free
@@ -376,8 +378,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Fence',
 -- 'Graphics.Vulkan.Core10.Handles.Queue', 'SubmitInfo'
-queueSubmit :: PokeChain a => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> IO ()
-queueSubmit queue submits fence = evalContT $ do
+queueSubmit :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> io ()
+queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmit' = mkVkQueueSubmit (pVkQueueSubmit (deviceCmds (queue :: Queue)))
   pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _)) (e) . ($ ())) (submits)
@@ -439,8 +441,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-queueWaitIdle :: Queue -> IO ()
-queueWaitIdle queue = do
+queueWaitIdle :: forall io . MonadIO io => Queue -> io ()
+queueWaitIdle queue = liftIO $ do
   let vkQueueWaitIdle' = mkVkQueueWaitIdle (pVkQueueWaitIdle (deviceCmds (queue :: Queue)))
   r <- vkQueueWaitIdle' (queueHandle (queue))
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -491,8 +493,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-deviceWaitIdle :: Device -> IO ()
-deviceWaitIdle device = do
+deviceWaitIdle :: forall io . MonadIO io => Device -> io ()
+deviceWaitIdle device = liftIO $ do
   let vkDeviceWaitIdle' = mkVkDeviceWaitIdle (pVkDeviceWaitIdle (deviceCmds (device :: Device)))
   r <- vkDeviceWaitIdle' (deviceHandle (device))
   when (r < SUCCESS) (throwIO (VulkanException r))

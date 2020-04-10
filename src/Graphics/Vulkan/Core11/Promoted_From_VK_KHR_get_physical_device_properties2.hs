@@ -19,6 +19,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_propertie
                                                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -31,6 +32,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -232,8 +234,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceFeatures2'
-getPhysicalDeviceFeatures2 :: (PokeChain a, PeekChain a) => PhysicalDevice -> IO (PhysicalDeviceFeatures2 a)
-getPhysicalDeviceFeatures2 physicalDevice = evalContT $ do
+getPhysicalDeviceFeatures2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceFeatures2 a)
+getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFeatures2' = mkVkGetPhysicalDeviceFeatures2 (pVkGetPhysicalDeviceFeatures2 (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFeatures <- ContT (withZeroCStruct @(PhysicalDeviceFeatures2 _))
   lift $ vkGetPhysicalDeviceFeatures2' (physicalDeviceHandle (physicalDevice)) (pPFeatures)
@@ -271,8 +273,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceProperties2'
-getPhysicalDeviceProperties2 :: (PokeChain a, PeekChain a) => PhysicalDevice -> IO (PhysicalDeviceProperties2 a)
-getPhysicalDeviceProperties2 physicalDevice = evalContT $ do
+getPhysicalDeviceProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceProperties2 a)
+getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceProperties2' = mkVkGetPhysicalDeviceProperties2 (pVkGetPhysicalDeviceProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPProperties <- ContT (withZeroCStruct @(PhysicalDeviceProperties2 _))
   lift $ vkGetPhysicalDeviceProperties2' (physicalDeviceHandle (physicalDevice)) (pPProperties)
@@ -313,8 +315,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Enums.Format.Format', 'FormatProperties2',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceFormatProperties2 :: (PokeChain a, PeekChain a) => PhysicalDevice -> Format -> IO (FormatProperties2 a)
-getPhysicalDeviceFormatProperties2 physicalDevice format = evalContT $ do
+getPhysicalDeviceFormatProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> Format -> io (FormatProperties2 a)
+getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFormatProperties2' = mkVkGetPhysicalDeviceFormatProperties2 (pVkGetPhysicalDeviceFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFormatProperties <- ContT (withZeroCStruct @(FormatProperties2 _))
   lift $ vkGetPhysicalDeviceFormatProperties2' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties)
@@ -391,8 +393,8 @@ foreign import ccall
 -- 'ImageFormatProperties2',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceImageFormatInfo2'
-getPhysicalDeviceImageFormatProperties2 :: (PokeChain a, PokeChain b, PeekChain b) => PhysicalDevice -> PhysicalDeviceImageFormatInfo2 a -> IO (ImageFormatProperties2 b)
-getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = evalContT $ do
+getPhysicalDeviceImageFormatProperties2 :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => PhysicalDevice -> PhysicalDeviceImageFormatInfo2 a -> io (ImageFormatProperties2 b)
+getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceImageFormatProperties2' = mkVkGetPhysicalDeviceImageFormatProperties2 (pVkGetPhysicalDeviceImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
   pImageFormatInfo <- ContT $ withCStruct (imageFormatInfo)
   pPImageFormatProperties <- ContT (withZeroCStruct @(ImageFormatProperties2 _))
@@ -448,8 +450,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'QueueFamilyProperties2'
-getPhysicalDeviceQueueFamilyProperties2 :: (PokeChain a, PeekChain a) => PhysicalDevice -> IO (("queueFamilyProperties" ::: Vector (QueueFamilyProperties2 a)))
-getPhysicalDeviceQueueFamilyProperties2 physicalDevice = evalContT $ do
+getPhysicalDeviceQueueFamilyProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (("queueFamilyProperties" ::: Vector (QueueFamilyProperties2 a)))
+getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties2' = mkVkGetPhysicalDeviceQueueFamilyProperties2 (pVkGetPhysicalDeviceQueueFamilyProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -494,8 +496,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceMemoryProperties2'
-getPhysicalDeviceMemoryProperties2 :: (PokeChain a, PeekChain a) => PhysicalDevice -> IO (PhysicalDeviceMemoryProperties2 a)
-getPhysicalDeviceMemoryProperties2 physicalDevice = evalContT $ do
+getPhysicalDeviceMemoryProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceMemoryProperties2 a)
+getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMemoryProperties2' = mkVkGetPhysicalDeviceMemoryProperties2 (pVkGetPhysicalDeviceMemoryProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPMemoryProperties <- ContT (withZeroCStruct @(PhysicalDeviceMemoryProperties2 _))
   lift $ vkGetPhysicalDeviceMemoryProperties2' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties)
@@ -554,8 +556,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceSparseImageFormatInfo2', 'SparseImageFormatProperties2'
-getPhysicalDeviceSparseImageFormatProperties2 :: PhysicalDevice -> PhysicalDeviceSparseImageFormatInfo2 -> IO (("properties" ::: Vector SparseImageFormatProperties2))
-getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = evalContT $ do
+getPhysicalDeviceSparseImageFormatProperties2 :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceSparseImageFormatInfo2 -> io (("properties" ::: Vector SparseImageFormatProperties2))
+getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSparseImageFormatProperties2' = mkVkGetPhysicalDeviceSparseImageFormatProperties2 (pVkGetPhysicalDeviceSparseImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pFormatInfo <- ContT $ withCStruct (formatInfo)

@@ -7,11 +7,13 @@ module Graphics.Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandle
                                                             , pattern NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
                                                             ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -58,8 +60,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'
-getImageViewHandleNVX :: Device -> ImageViewHandleInfoNVX -> IO (Word32)
-getImageViewHandleNVX device info = evalContT $ do
+getImageViewHandleNVX :: forall io . MonadIO io => Device -> ImageViewHandleInfoNVX -> io (Word32)
+getImageViewHandleNVX device info = liftIO . evalContT $ do
   let vkGetImageViewHandleNVX' = mkVkGetImageViewHandleNVX (pVkGetImageViewHandleNVX (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetImageViewHandleNVX' (deviceHandle (device)) pInfo

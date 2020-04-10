@@ -23,6 +23,7 @@ module Graphics.Vulkan.Core10.DescriptorSet  ( createDescriptorSetLayout
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -38,6 +39,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -170,8 +172,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'DescriptorSetLayoutCreateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-createDescriptorSetLayout :: PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DescriptorSetLayout)
-createDescriptorSetLayout device createInfo allocator = evalContT $ do
+createDescriptorSetLayout :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorSetLayout)
+createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorSetLayout' = mkVkCreateDescriptorSetLayout (pVkCreateDescriptorSetLayout (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -187,7 +189,7 @@ createDescriptorSetLayout device createInfo allocator = evalContT $ do
 -- 'destroyDescriptorSetLayout' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorSetLayout :: PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorSetLayout) -> IO r) -> IO r
+withDescriptorSetLayout :: forall a r . PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorSetLayout) -> IO r) -> IO r
 withDescriptorSetLayout device pCreateInfo pAllocator =
   bracket
     (createDescriptorSetLayout device pCreateInfo pAllocator)
@@ -253,8 +255,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDescriptorSetLayout :: Device -> DescriptorSetLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDescriptorSetLayout device descriptorSetLayout allocator = evalContT $ do
+destroyDescriptorSetLayout :: forall io . MonadIO io => Device -> DescriptorSetLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorSetLayout' = mkVkDestroyDescriptorSetLayout (pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -330,8 +332,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'DescriptorPoolCreateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-createDescriptorPool :: PokeChain a => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DescriptorPool)
-createDescriptorPool device createInfo allocator = evalContT $ do
+createDescriptorPool :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorPool)
+createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorPool' = mkVkCreateDescriptorPool (pVkCreateDescriptorPool (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -347,7 +349,7 @@ createDescriptorPool device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorPool :: PokeChain a => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorPool) -> IO r) -> IO r
+withDescriptorPool :: forall a r . PokeChain a => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorPool) -> IO r) -> IO r
 withDescriptorPool device pCreateInfo pAllocator =
   bracket
     (createDescriptorPool device pCreateInfo pAllocator)
@@ -421,8 +423,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDescriptorPool :: Device -> DescriptorPool -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDescriptorPool device descriptorPool allocator = evalContT $ do
+destroyDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorPool' = mkVkDestroyDescriptorPool (pVkDestroyDescriptorPool (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -491,8 +493,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'Graphics.Vulkan.Core10.Enums.DescriptorPoolResetFlags.DescriptorPoolResetFlags',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-resetDescriptorPool :: Device -> DescriptorPool -> DescriptorPoolResetFlags -> IO ()
-resetDescriptorPool device descriptorPool flags = do
+resetDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> DescriptorPoolResetFlags -> io ()
+resetDescriptorPool device descriptorPool flags = liftIO $ do
   let vkResetDescriptorPool' = mkVkResetDescriptorPool (pVkResetDescriptorPool (deviceCmds (device :: Device)))
   _ <- vkResetDescriptorPool' (deviceHandle (device)) (descriptorPool) (flags)
   pure $ ()
@@ -618,8 +620,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet',
 -- 'DescriptorSetAllocateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-allocateDescriptorSets :: PokeChain a => Device -> DescriptorSetAllocateInfo a -> IO (("descriptorSets" ::: Vector DescriptorSet))
-allocateDescriptorSets device allocateInfo = evalContT $ do
+allocateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> io (("descriptorSets" ::: Vector DescriptorSet))
+allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets (pVkAllocateDescriptorSets (deviceCmds (device :: Device)))
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPDescriptorSets <- ContT $ bracket (callocBytes @DescriptorSet ((fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) * 8)) free
@@ -632,7 +634,7 @@ allocateDescriptorSets device allocateInfo = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorSets :: PokeChain a => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> ((Vector DescriptorSet) -> IO r) -> IO r
+withDescriptorSets :: forall a r . PokeChain a => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> ((Vector DescriptorSet) -> IO r) -> IO r
 withDescriptorSets device pAllocateInfo descriptorPool =
   bracket
     (allocateDescriptorSets device pAllocateInfo)
@@ -717,8 +719,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-freeDescriptorSets :: Device -> DescriptorPool -> ("descriptorSets" ::: Vector DescriptorSet) -> IO ()
-freeDescriptorSets device descriptorPool descriptorSets = evalContT $ do
+freeDescriptorSets :: forall io . MonadIO io => Device -> DescriptorPool -> ("descriptorSets" ::: Vector DescriptorSet) -> io ()
+freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
   let vkFreeDescriptorSets' = mkVkFreeDescriptorSets (pVkFreeDescriptorSets (deviceCmds (device :: Device)))
   pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
@@ -813,8 +815,8 @@ foreign import ccall
 --
 -- 'CopyDescriptorSet', 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'WriteDescriptorSet'
-updateDescriptorSets :: PokeChain a => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> IO ()
-updateDescriptorSets device descriptorWrites descriptorCopies = evalContT $ do
+updateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
+updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
   let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets (pVkUpdateDescriptorSets (deviceCmds (device :: Device)))
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)

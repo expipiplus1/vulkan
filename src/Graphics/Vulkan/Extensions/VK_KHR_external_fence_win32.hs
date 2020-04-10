@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32  ( getFenceWin32Ha
                                                                ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -24,6 +25,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -110,8 +112,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'FenceGetWin32HandleInfoKHR'
-getFenceWin32HandleKHR :: Device -> FenceGetWin32HandleInfoKHR -> IO (HANDLE)
-getFenceWin32HandleKHR device getWin32HandleInfo = evalContT $ do
+getFenceWin32HandleKHR :: forall io . MonadIO io => Device -> FenceGetWin32HandleInfoKHR -> io (HANDLE)
+getFenceWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetFenceWin32HandleKHR' = mkVkGetFenceWin32HandleKHR (pVkGetFenceWin32HandleKHR (deviceCmds (device :: Device)))
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
@@ -164,8 +166,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ImportFenceWin32HandleInfoKHR'
-importFenceWin32HandleKHR :: Device -> ImportFenceWin32HandleInfoKHR -> IO ()
-importFenceWin32HandleKHR device importFenceWin32HandleInfo = evalContT $ do
+importFenceWin32HandleKHR :: forall io . MonadIO io => Device -> ImportFenceWin32HandleInfoKHR -> io ()
+importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT $ do
   let vkImportFenceWin32HandleKHR' = mkVkImportFenceWin32HandleKHR (pVkImportFenceWin32HandleKHR (deviceCmds (device :: Device)))
   pImportFenceWin32HandleInfo <- ContT $ withCStruct (importFenceWin32HandleInfo)
   r <- lift $ vkImportFenceWin32HandleKHR' (deviceHandle (device)) pImportFenceWin32HandleInfo

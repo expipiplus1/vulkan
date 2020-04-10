@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.ImageView  ( createImageView
                                          ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -18,6 +19,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -120,8 +122,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.ImageView', 'ImageViewCreateInfo'
-createImageView :: PokeChain a => Device -> ImageViewCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (ImageView)
-createImageView device createInfo allocator = evalContT $ do
+createImageView :: forall a io . (PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ImageView)
+createImageView device createInfo allocator = liftIO . evalContT $ do
   let vkCreateImageView' = mkVkCreateImageView (pVkCreateImageView (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -137,7 +139,7 @@ createImageView device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withImageView :: PokeChain a => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> ((ImageView) -> IO r) -> IO r
+withImageView :: forall a r . PokeChain a => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> ((ImageView) -> IO r) -> IO r
 withImageView device pCreateInfo pAllocator =
   bracket
     (createImageView device pCreateInfo pAllocator)
@@ -203,8 +205,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.ImageView'
-destroyImageView :: Device -> ImageView -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyImageView device imageView allocator = evalContT $ do
+destroyImageView :: forall io . MonadIO io => Device -> ImageView -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyImageView device imageView allocator = liftIO . evalContT $ do
   let vkDestroyImageView' = mkVkDestroyImageView (pVkDestroyImageView (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

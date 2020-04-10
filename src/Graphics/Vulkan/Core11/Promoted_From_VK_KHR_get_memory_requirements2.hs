@@ -12,6 +12,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2  ( g
                                                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -22,6 +23,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -94,8 +96,8 @@ foreign import ccall
 --
 -- 'BufferMemoryRequirementsInfo2',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MemoryRequirements2'
-getBufferMemoryRequirements2 :: (PokeChain a, PeekChain a) => Device -> BufferMemoryRequirementsInfo2 -> IO (MemoryRequirements2 a)
-getBufferMemoryRequirements2 device info = evalContT $ do
+getBufferMemoryRequirements2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> BufferMemoryRequirementsInfo2 -> io (MemoryRequirements2 a)
+getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 (pVkGetBufferMemoryRequirements2 (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
@@ -131,8 +133,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
-getImageMemoryRequirements2 :: (PokeChain a, PokeChain b, PeekChain b) => Device -> ImageMemoryRequirementsInfo2 a -> IO (MemoryRequirements2 b)
-getImageMemoryRequirements2 device info = evalContT $ do
+getImageMemoryRequirements2 :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> ImageMemoryRequirementsInfo2 a -> io (MemoryRequirements2 b)
+getImageMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 (pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
@@ -187,8 +189,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'ImageSparseMemoryRequirementsInfo2', 'SparseImageMemoryRequirements2'
-getImageSparseMemoryRequirements2 :: Device -> ImageSparseMemoryRequirementsInfo2 -> IO (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
-getImageSparseMemoryRequirements2 device info = evalContT $ do
+getImageSparseMemoryRequirements2 :: forall io . MonadIO io => Device -> ImageSparseMemoryRequirementsInfo2 -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
+getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageSparseMemoryRequirements2' = mkVkGetImageSparseMemoryRequirements2 (pVkGetImageSparseMemoryRequirements2 (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pInfo <- ContT $ withCStruct (info)

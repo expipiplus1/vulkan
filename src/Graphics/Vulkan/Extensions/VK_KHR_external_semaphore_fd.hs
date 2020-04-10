@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd  ( getSemaphoreFd
                                                                 ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -20,6 +21,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CInt(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CInt)
@@ -111,8 +113,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'SemaphoreGetFdInfoKHR'
-getSemaphoreFdKHR :: Device -> SemaphoreGetFdInfoKHR -> IO (("fd" ::: Int32))
-getSemaphoreFdKHR device getFdInfo = evalContT $ do
+getSemaphoreFdKHR :: forall io . MonadIO io => Device -> SemaphoreGetFdInfoKHR -> io (("fd" ::: Int32))
+getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetSemaphoreFdKHR' = mkVkGetSemaphoreFdKHR (pVkGetSemaphoreFdKHR (deviceCmds (device :: Device)))
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
@@ -165,8 +167,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ImportSemaphoreFdInfoKHR'
-importSemaphoreFdKHR :: Device -> ImportSemaphoreFdInfoKHR -> IO ()
-importSemaphoreFdKHR device importSemaphoreFdInfo = evalContT $ do
+importSemaphoreFdKHR :: forall io . MonadIO io => Device -> ImportSemaphoreFdInfoKHR -> io ()
+importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
   let vkImportSemaphoreFdKHR' = mkVkImportSemaphoreFdKHR (pVkImportSemaphoreFdKHR (deviceCmds (device :: Device)))
   pImportSemaphoreFdInfo <- ContT $ withCStruct (importSemaphoreFdInfo)
   r <- lift $ vkImportSemaphoreFdKHR' (deviceHandle (device)) pImportSemaphoreFdInfo

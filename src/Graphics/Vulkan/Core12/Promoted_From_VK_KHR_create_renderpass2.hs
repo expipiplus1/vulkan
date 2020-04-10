@@ -17,6 +17,7 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( createR
 import Control.Exception.Base (bracket)
 import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -33,6 +34,7 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -177,8 +179,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.RenderPass', 'RenderPassCreateInfo2'
-createRenderPass2 :: PokeChain a => Device -> RenderPassCreateInfo2 a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (RenderPass)
-createRenderPass2 device createInfo allocator = evalContT $ do
+createRenderPass2 :: forall a io . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo2 a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
+createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPass2' = mkVkCreateRenderPass2 (pVkCreateRenderPass2 (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -395,8 +397,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'SubpassBeginInfo'
-cmdBeginRenderPass2 :: PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> IO ()
-cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = evalContT $ do
+cmdBeginRenderPass2 :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> io ()
+cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . evalContT $ do
   let vkCmdBeginRenderPass2' = mkVkCmdBeginRenderPass2 (pVkCmdBeginRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer)))
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
@@ -405,7 +407,7 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = evalContT $
 
 -- | A safe wrapper for 'cmdBeginRenderPass2' and 'cmdEndRenderPass2' using
 -- 'bracket_'
-cmdWithRenderPass2 :: PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> IO r -> IO r
+cmdWithRenderPass2 :: forall a r . PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> IO r -> IO r
 cmdWithRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo =
   bracket_
     (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo)
@@ -492,8 +494,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'SubpassBeginInfo',
 -- 'SubpassEndInfo'
-cmdNextSubpass2 :: CommandBuffer -> SubpassBeginInfo -> SubpassEndInfo -> IO ()
-cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = evalContT $ do
+cmdNextSubpass2 :: forall io . MonadIO io => CommandBuffer -> SubpassBeginInfo -> SubpassEndInfo -> io ()
+cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalContT $ do
   let vkCmdNextSubpass2' = mkVkCmdNextSubpass2 (pVkCmdNextSubpass2 (deviceCmds (commandBuffer :: CommandBuffer)))
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
@@ -572,8 +574,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'SubpassEndInfo'
-cmdEndRenderPass2 :: CommandBuffer -> SubpassEndInfo -> IO ()
-cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
+cmdEndRenderPass2 :: forall io . MonadIO io => CommandBuffer -> SubpassEndInfo -> io ()
+cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
   let vkCmdEndRenderPass2' = mkVkCmdEndRenderPass2 (pVkCmdEndRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer)))
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
   lift $ vkCmdEndRenderPass2' (commandBufferHandle (commandBuffer)) pSubpassEndInfo

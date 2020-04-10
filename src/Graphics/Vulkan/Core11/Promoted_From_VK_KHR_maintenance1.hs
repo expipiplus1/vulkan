@@ -8,6 +8,8 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance1  ( trimCommandPo
                                                                  , FormatFeatureFlags
                                                                  ) where
 
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Graphics.Vulkan.Core10.Handles (CommandPool)
@@ -104,8 +106,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool',
 -- 'Graphics.Vulkan.Core11.Enums.CommandPoolTrimFlags.CommandPoolTrimFlags',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-trimCommandPool :: Device -> CommandPool -> CommandPoolTrimFlags -> IO ()
-trimCommandPool device commandPool flags = do
+trimCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolTrimFlags -> io ()
+trimCommandPool device commandPool flags = liftIO $ do
   let vkTrimCommandPool' = mkVkTrimCommandPool (pVkTrimCommandPool (deviceCmds (device :: Device)))
   vkTrimCommandPool' (deviceHandle (device)) (commandPool) (flags)
   pure $ ()

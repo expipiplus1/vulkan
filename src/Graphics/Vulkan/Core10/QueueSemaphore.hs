@@ -6,6 +6,7 @@ module Graphics.Vulkan.Core10.QueueSemaphore  ( createSemaphore
                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -17,6 +18,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -112,8 +114,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Semaphore', 'SemaphoreCreateInfo'
-createSemaphore :: PokeChain a => Device -> SemaphoreCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Semaphore)
-createSemaphore device createInfo allocator = evalContT $ do
+createSemaphore :: forall a io . (PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Semaphore)
+createSemaphore device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSemaphore' = mkVkCreateSemaphore (pVkCreateSemaphore (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -129,7 +131,7 @@ createSemaphore device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSemaphore :: PokeChain a => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> ((Semaphore) -> IO r) -> IO r
+withSemaphore :: forall a r . PokeChain a => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> ((Semaphore) -> IO r) -> IO r
 withSemaphore device pCreateInfo pAllocator =
   bracket
     (createSemaphore device pCreateInfo pAllocator)
@@ -195,8 +197,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Semaphore'
-destroySemaphore :: Device -> Semaphore -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySemaphore device semaphore allocator = evalContT $ do
+destroySemaphore :: forall io . MonadIO io => Device -> Semaphore -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySemaphore device semaphore allocator = liftIO . evalContT $ do
   let vkDestroySemaphore' = mkVkDestroySemaphore (pVkDestroySemaphore (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

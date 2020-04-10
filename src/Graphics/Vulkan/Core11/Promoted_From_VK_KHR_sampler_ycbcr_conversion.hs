@@ -24,6 +24,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion  ( c
                                                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -35,6 +36,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -176,8 +178,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'SamplerYcbcrConversionCreateInfo'
-createSamplerYcbcrConversion :: PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SamplerYcbcrConversion)
-createSamplerYcbcrConversion device createInfo allocator = evalContT $ do
+createSamplerYcbcrConversion :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SamplerYcbcrConversion)
+createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSamplerYcbcrConversion' = mkVkCreateSamplerYcbcrConversion (pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -193,7 +195,7 @@ createSamplerYcbcrConversion device createInfo allocator = evalContT $ do
 -- 'destroySamplerYcbcrConversion' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSamplerYcbcrConversion :: PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> ((SamplerYcbcrConversion) -> IO r) -> IO r
+withSamplerYcbcrConversion :: forall a r . PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> ((SamplerYcbcrConversion) -> IO r) -> IO r
 withSamplerYcbcrConversion device pCreateInfo pAllocator =
   bracket
     (createSamplerYcbcrConversion device pCreateInfo pAllocator)
@@ -246,8 +248,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion'
-destroySamplerYcbcrConversion :: Device -> SamplerYcbcrConversion -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySamplerYcbcrConversion device ycbcrConversion allocator = evalContT $ do
+destroySamplerYcbcrConversion :: forall io . MonadIO io => Device -> SamplerYcbcrConversion -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
   let vkDestroySamplerYcbcrConversion' = mkVkDestroySamplerYcbcrConversion (pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

@@ -29,6 +29,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_display_control  ( displayPowerControlE
                                                           ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -47,6 +48,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -141,8 +143,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR', 'DisplayPowerInfoEXT'
-displayPowerControlEXT :: Device -> DisplayKHR -> DisplayPowerInfoEXT -> IO ()
-displayPowerControlEXT device display displayPowerInfo = evalContT $ do
+displayPowerControlEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayPowerInfoEXT -> io ()
+displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
   let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT (pVkDisplayPowerControlEXT (deviceCmds (device :: Device)))
   pDisplayPowerInfo <- ContT $ withCStruct (displayPowerInfo)
   _ <- lift $ vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo
@@ -199,8 +201,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'DeviceEventInfoEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-registerDeviceEventEXT :: Device -> DeviceEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Fence)
-registerDeviceEventEXT device deviceEventInfo allocator = evalContT $ do
+registerDeviceEventEXT :: forall io . MonadIO io => Device -> DeviceEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDeviceEventEXT' = mkVkRegisterDeviceEventEXT (pVkRegisterDeviceEventEXT (deviceCmds (device :: Device)))
   pDeviceEventInfo <- ContT $ withCStruct (deviceEventInfo)
   pAllocator <- case (allocator) of
@@ -272,8 +274,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'DisplayEventInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-registerDisplayEventEXT :: Device -> DisplayKHR -> DisplayEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Fence)
-registerDisplayEventEXT device display displayEventInfo allocator = evalContT $ do
+registerDisplayEventEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDisplayEventEXT' = mkVkRegisterDisplayEventEXT (pVkRegisterDisplayEventEXT (deviceCmds (device :: Device)))
   pDisplayEventInfo <- ContT $ withCStruct (displayEventInfo)
   pAllocator <- case (allocator) of
@@ -351,8 +353,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainCounterEXT :: Device -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> IO (("counterValue" ::: Word64))
-getSwapchainCounterEXT device swapchain counter = evalContT $ do
+getSwapchainCounterEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> io (("counterValue" ::: Word64))
+getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
   let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT (pVkGetSwapchainCounterEXT (deviceCmds (device :: Device)))
   pPCounterValue <- ContT $ bracket (callocBytes @Word64 8) free
   r <- lift $ vkGetSwapchainCounterEXT' (deviceHandle (device)) (swapchain) (counter) (pPCounterValue)

@@ -27,6 +27,7 @@ module Graphics.Vulkan.Core10.DeviceInitialization  ( createInstance
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -46,6 +47,7 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CChar(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -234,8 +236,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance', 'InstanceCreateInfo'
-createInstance :: PokeChain a => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Instance)
-createInstance createInfo allocator = evalContT $ do
+createInstance :: forall a io . (PokeChain a, MonadIO io) => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Instance)
+createInstance createInfo allocator = liftIO . evalContT $ do
   vkCreateInstance' <- lift $ mkVkCreateInstance . castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -252,7 +254,7 @@ createInstance createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withInstance :: PokeChain a => InstanceCreateInfo a -> Maybe AllocationCallbacks -> ((Instance) -> IO r) -> IO r
+withInstance :: forall a r . PokeChain a => InstanceCreateInfo a -> Maybe AllocationCallbacks -> ((Instance) -> IO r) -> IO r
 withInstance pCreateInfo pAllocator =
   bracket
     (createInstance pCreateInfo pAllocator)
@@ -308,8 +310,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-destroyInstance :: Instance -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyInstance instance' allocator = evalContT $ do
+destroyInstance :: forall io . MonadIO io => Instance -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyInstance instance' allocator = liftIO . evalContT $ do
   let vkDestroyInstance' = mkVkDestroyInstance (pVkDestroyInstance (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -387,8 +389,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-enumeratePhysicalDevices :: Instance -> IO (Result, ("physicalDevices" ::: Vector PhysicalDevice))
-enumeratePhysicalDevices instance' = evalContT $ do
+enumeratePhysicalDevices :: forall io . MonadIO io => Instance -> io (Result, ("physicalDevices" ::: Vector PhysicalDevice))
+enumeratePhysicalDevices instance' = liftIO . evalContT $ do
   let cmds = instanceCmds (instance' :: Instance)
   let vkEnumeratePhysicalDevices' = mkVkEnumeratePhysicalDevices (pVkEnumeratePhysicalDevices cmds)
   let instance'' = instanceHandle (instance')
@@ -467,8 +469,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-getDeviceProcAddr :: Device -> ("name" ::: ByteString) -> IO (PFN_vkVoidFunction)
-getDeviceProcAddr device name = evalContT $ do
+getDeviceProcAddr :: forall io . MonadIO io => Device -> ("name" ::: ByteString) -> io (PFN_vkVoidFunction)
+getDeviceProcAddr device name = liftIO . evalContT $ do
   let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr (pVkGetDeviceProcAddr (deviceCmds (device :: Device)))
   pName <- ContT $ useAsCString (name)
   r <- lift $ vkGetDeviceProcAddr' (deviceHandle (device)) pName
@@ -563,8 +565,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-getInstanceProcAddr :: Instance -> ("name" ::: ByteString) -> IO (PFN_vkVoidFunction)
-getInstanceProcAddr instance' name = evalContT $ do
+getInstanceProcAddr :: forall io . MonadIO io => Instance -> ("name" ::: ByteString) -> io (PFN_vkVoidFunction)
+getInstanceProcAddr instance' name = liftIO . evalContT $ do
   let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr (pVkGetInstanceProcAddr (instanceCmds (instance' :: Instance)))
   pName <- ContT $ useAsCString (name)
   r <- lift $ vkGetInstanceProcAddr' (instanceHandle (instance')) pName
@@ -594,8 +596,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceProperties'
-getPhysicalDeviceProperties :: PhysicalDevice -> IO (PhysicalDeviceProperties)
-getPhysicalDeviceProperties physicalDevice = evalContT $ do
+getPhysicalDeviceProperties :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceProperties)
+getPhysicalDeviceProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties (pVkGetPhysicalDeviceProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPProperties <- ContT (withZeroCStruct @PhysicalDeviceProperties)
   lift $ vkGetPhysicalDeviceProperties' (physicalDeviceHandle (physicalDevice)) (pPProperties)
@@ -654,8 +656,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties'
-getPhysicalDeviceQueueFamilyProperties :: PhysicalDevice -> IO (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
-getPhysicalDeviceQueueFamilyProperties physicalDevice = evalContT $ do
+getPhysicalDeviceQueueFamilyProperties :: forall io . MonadIO io => PhysicalDevice -> io (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
+getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties (pVkGetPhysicalDeviceQueueFamilyProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -693,8 +695,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceMemoryProperties'
-getPhysicalDeviceMemoryProperties :: PhysicalDevice -> IO (PhysicalDeviceMemoryProperties)
-getPhysicalDeviceMemoryProperties physicalDevice = evalContT $ do
+getPhysicalDeviceMemoryProperties :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceMemoryProperties)
+getPhysicalDeviceMemoryProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties (pVkGetPhysicalDeviceMemoryProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPMemoryProperties <- ContT (withZeroCStruct @PhysicalDeviceMemoryProperties)
   lift $ vkGetPhysicalDeviceMemoryProperties' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties)
@@ -729,8 +731,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceFeatures'
-getPhysicalDeviceFeatures :: PhysicalDevice -> IO (PhysicalDeviceFeatures)
-getPhysicalDeviceFeatures physicalDevice = evalContT $ do
+getPhysicalDeviceFeatures :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceFeatures)
+getPhysicalDeviceFeatures physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures (pVkGetPhysicalDeviceFeatures (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFeatures <- ContT (withZeroCStruct @PhysicalDeviceFeatures)
   lift $ vkGetPhysicalDeviceFeatures' (physicalDeviceHandle (physicalDevice)) (pPFeatures)
@@ -764,8 +766,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Enums.Format.Format', 'FormatProperties',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceFormatProperties :: PhysicalDevice -> Format -> IO (FormatProperties)
-getPhysicalDeviceFormatProperties physicalDevice format = evalContT $ do
+getPhysicalDeviceFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> io (FormatProperties)
+getPhysicalDeviceFormatProperties physicalDevice format = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties (pVkGetPhysicalDeviceFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFormatProperties <- ContT (withZeroCStruct @FormatProperties)
   lift $ vkGetPhysicalDeviceFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties)
@@ -860,8 +862,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType',
 -- 'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceImageFormatProperties :: PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> IO (ImageFormatProperties)
-getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = evalContT $ do
+getPhysicalDeviceImageFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> io (ImageFormatProperties)
+getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = liftIO . evalContT $ do
   let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties (pVkGetPhysicalDeviceImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPImageFormatProperties <- ContT (withZeroCStruct @ImageFormatProperties)
   r <- lift $ vkGetPhysicalDeviceImageFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (pPImageFormatProperties)

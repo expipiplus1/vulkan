@@ -9,6 +9,7 @@ module Graphics.Vulkan.Core10.Fence  ( createFence
                                      ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -22,6 +23,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -125,8 +127,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Fence', 'FenceCreateInfo'
-createFence :: PokeChain a => Device -> FenceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Fence)
-createFence device createInfo allocator = evalContT $ do
+createFence :: forall a io . (PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+createFence device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFence' = mkVkCreateFence (pVkCreateFence (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -141,7 +143,7 @@ createFence device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createFence' and 'destroyFence' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withFence :: PokeChain a => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> ((Fence) -> IO r) -> IO r
+withFence :: forall a r . PokeChain a => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> ((Fence) -> IO r) -> IO r
 withFence device pCreateInfo pAllocator =
   bracket
     (createFence device pCreateInfo pAllocator)
@@ -208,8 +210,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-destroyFence :: Device -> Fence -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyFence device fence allocator = evalContT $ do
+destroyFence :: forall io . MonadIO io => Device -> Fence -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyFence device fence allocator = liftIO . evalContT $ do
   let vkDestroyFence' = mkVkDestroyFence (pVkDestroyFence (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -290,8 +292,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-resetFences :: Device -> ("fences" ::: Vector Fence) -> IO ()
-resetFences device fences = evalContT $ do
+resetFences :: forall io . MonadIO io => Device -> ("fences" ::: Vector Fence) -> io ()
+resetFences device fences = liftIO . evalContT $ do
   let vkResetFences' = mkVkResetFences (pVkResetFences (deviceCmds (device :: Device)))
   pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
@@ -364,8 +366,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-getFenceStatus :: Device -> Fence -> IO (Result)
-getFenceStatus device fence = do
+getFenceStatus :: forall io . MonadIO io => Device -> Fence -> io (Result)
+getFenceStatus device fence = liftIO $ do
   let vkGetFenceStatus' = mkVkGetFenceStatus (pVkGetFenceStatus (deviceCmds (device :: Device)))
   r <- vkGetFenceStatus' (deviceHandle (device)) (fence)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -469,8 +471,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.BaseType.Bool32',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-waitForFences :: Device -> ("fences" ::: Vector Fence) -> ("waitAll" ::: Bool) -> ("timeout" ::: Word64) -> IO (Result)
-waitForFences device fences waitAll timeout = evalContT $ do
+waitForFences :: forall io . MonadIO io => Device -> ("fences" ::: Vector Fence) -> ("waitAll" ::: Bool) -> ("timeout" ::: Word64) -> io (Result)
+waitForFences device fences waitAll timeout = liftIO . evalContT $ do
   let vkWaitForFences' = mkVkWaitForFences (pVkWaitForFences (deviceCmds (device :: Device)))
   pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)

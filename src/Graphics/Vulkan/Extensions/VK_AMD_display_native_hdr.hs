@@ -10,9 +10,11 @@ module Graphics.Vulkan.Extensions.VK_AMD_display_native_hdr  ( setLocalDimmingAM
                                                              , ColorSpaceKHR(..)
                                                              ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -84,8 +86,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.BaseType.Bool32',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-setLocalDimmingAMD :: Device -> SwapchainKHR -> ("localDimmingEnable" ::: Bool) -> IO ()
-setLocalDimmingAMD device swapChain localDimmingEnable = do
+setLocalDimmingAMD :: forall io . MonadIO io => Device -> SwapchainKHR -> ("localDimmingEnable" ::: Bool) -> io ()
+setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
   let vkSetLocalDimmingAMD' = mkVkSetLocalDimmingAMD (pVkSetLocalDimmingAMD (deviceCmds (device :: Device)))
   vkSetLocalDimmingAMD' (deviceHandle (device)) (swapChain) (boolToBool32 (localDimmingEnable))
   pure $ ()

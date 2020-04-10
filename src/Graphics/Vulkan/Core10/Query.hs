@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.Query  ( createQueryPool
                                      ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -19,6 +20,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CSize)
@@ -124,8 +126,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool', 'QueryPoolCreateInfo'
-createQueryPool :: PokeChain a => Device -> QueryPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (QueryPool)
-createQueryPool device createInfo allocator = evalContT $ do
+createQueryPool :: forall a io . (PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (QueryPool)
+createQueryPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateQueryPool' = mkVkCreateQueryPool (pVkCreateQueryPool (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -141,7 +143,7 @@ createQueryPool device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withQueryPool :: PokeChain a => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> ((QueryPool) -> IO r) -> IO r
+withQueryPool :: forall a r . PokeChain a => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> ((QueryPool) -> IO r) -> IO r
 withQueryPool device pCreateInfo pAllocator =
   bracket
     (createQueryPool device pCreateInfo pAllocator)
@@ -207,8 +209,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-destroyQueryPool :: Device -> QueryPool -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyQueryPool device queryPool allocator = evalContT $ do
+destroyQueryPool :: forall io . MonadIO io => Device -> QueryPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
   let vkDestroyQueryPool' = mkVkDestroyQueryPool (pVkDestroyQueryPool (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -447,8 +449,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool',
 -- 'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
-getQueryPoolResults :: Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> IO (Result)
-getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = do
+getQueryPoolResults :: forall io . MonadIO io => Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> io (Result)
+getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = liftIO $ do
   let vkGetQueryPoolResults' = mkVkGetQueryPoolResults (pVkGetQueryPoolResults (deviceCmds (device :: Device)))
   r <- vkGetQueryPoolResults' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount) (CSize (dataSize)) (data') (stride) (flags)
   when (r < SUCCESS) (throwIO (VulkanException r))

@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_xcb_surface  ( createXcbSurfaceKHR
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -32,6 +33,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -142,8 +144,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR',
 -- 'XcbSurfaceCreateInfoKHR'
-createXcbSurfaceKHR :: Instance -> XcbSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createXcbSurfaceKHR instance' createInfo allocator = evalContT $ do
+createXcbSurfaceKHR :: forall io . MonadIO io => Instance -> XcbSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createXcbSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateXcbSurfaceKHR' = mkVkCreateXcbSurfaceKHR (pVkCreateXcbSurfaceKHR (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -185,8 +187,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceXcbPresentationSupportKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> Ptr Xcb_connection_t -> ("visual_id" ::: Xcb_visualid_t) -> IO (Bool)
-getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id = do
+getPhysicalDeviceXcbPresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> Ptr Xcb_connection_t -> ("visual_id" ::: Xcb_visualid_t) -> io (Bool)
+getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id = liftIO $ do
   let vkGetPhysicalDeviceXcbPresentationSupportKHR' = mkVkGetPhysicalDeviceXcbPresentationSupportKHR (pVkGetPhysicalDeviceXcbPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   r <- vkGetPhysicalDeviceXcbPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (connection) (visual_id)
   pure $ ((bool32ToBool r))

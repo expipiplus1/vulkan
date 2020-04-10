@@ -11,6 +11,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation  ( enum
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -23,6 +24,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -141,8 +143,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'PhysicalDeviceGroupProperties'
-enumeratePhysicalDeviceGroups :: Instance -> IO (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
-enumeratePhysicalDeviceGroups instance' = evalContT $ do
+enumeratePhysicalDeviceGroups :: forall io . MonadIO io => Instance -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
+enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceGroups' = mkVkEnumeratePhysicalDeviceGroups (pVkEnumeratePhysicalDeviceGroups (instanceCmds (instance' :: Instance)))
   let instance'' = instanceHandle (instance')
   pPPhysicalDeviceGroupCount <- ContT $ bracket (callocBytes @Word32 4) free

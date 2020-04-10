@@ -22,6 +22,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalD
                                                                   , SurfaceTransformFlagsKHR
                                                                   ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
@@ -38,6 +39,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -138,8 +140,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'SurfaceCapabilities2EXT',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceCapabilities2EXT :: PhysicalDevice -> SurfaceKHR -> IO (SurfaceCapabilities2EXT)
-getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfaceCapabilities2EXT :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (SurfaceCapabilities2EXT)
+getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2EXT' = mkVkGetPhysicalDeviceSurfaceCapabilities2EXT (pVkGetPhysicalDeviceSurfaceCapabilities2EXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPSurfaceCapabilities <- ContT (withZeroCStruct @SurfaceCapabilities2EXT)
   r <- lift $ vkGetPhysicalDeviceSurfaceCapabilities2EXT' (physicalDeviceHandle (physicalDevice)) (surface) (pPSurfaceCapabilities)

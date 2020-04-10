@@ -35,6 +35,7 @@ module Graphics.Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRate
                                                             , pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME
                                                             ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
@@ -53,6 +54,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -199,8 +201,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Graphics.Vulkan.Core10.Handles.ImageView'
-cmdBindShadingRateImageNV :: CommandBuffer -> ImageView -> ImageLayout -> IO ()
-cmdBindShadingRateImageNV commandBuffer imageView imageLayout = do
+cmdBindShadingRateImageNV :: forall io . MonadIO io => CommandBuffer -> ImageView -> ImageLayout -> io ()
+cmdBindShadingRateImageNV commandBuffer imageView imageLayout = liftIO $ do
   let vkCmdBindShadingRateImageNV' = mkVkCmdBindShadingRateImageNV (pVkCmdBindShadingRateImageNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBindShadingRateImageNV' (commandBufferHandle (commandBuffer)) (imageView) (imageLayout)
   pure $ ()
@@ -291,8 +293,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'ShadingRatePaletteNV'
-cmdSetViewportShadingRatePaletteNV :: CommandBuffer -> ("firstViewport" ::: Word32) -> ("shadingRatePalettes" ::: Vector ShadingRatePaletteNV) -> IO ()
-cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalettes = evalContT $ do
+cmdSetViewportShadingRatePaletteNV :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("shadingRatePalettes" ::: Vector ShadingRatePaletteNV) -> io ()
+cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalettes = liftIO . evalContT $ do
   let vkCmdSetViewportShadingRatePaletteNV' = mkVkCmdSetViewportShadingRatePaletteNV (pVkCmdSetViewportShadingRatePaletteNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pPShadingRatePalettes <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
@@ -382,8 +384,8 @@ foreign import ccall
 --
 -- 'CoarseSampleOrderCustomNV', 'CoarseSampleOrderTypeNV',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetCoarseSampleOrderNV :: CommandBuffer -> CoarseSampleOrderTypeNV -> ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV) -> IO ()
-cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = evalContT $ do
+cmdSetCoarseSampleOrderNV :: forall io . MonadIO io => CommandBuffer -> CoarseSampleOrderTypeNV -> ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV) -> io ()
+cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = liftIO . evalContT $ do
   let vkCmdSetCoarseSampleOrderNV' = mkVkCmdSetCoarseSampleOrderNV (pVkCmdSetCoarseSampleOrderNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pPCustomSampleOrders <- ContT $ allocaBytesAligned @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCustomSampleOrders `plusPtr` (24 * (i)) :: Ptr CoarseSampleOrderCustomNV) (e) . ($ ())) (customSampleOrders)

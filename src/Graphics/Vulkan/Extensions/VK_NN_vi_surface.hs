@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_NN_vi_surface  ( createViSurfaceNN
                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -28,6 +29,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -140,8 +142,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR', 'ViSurfaceCreateInfoNN'
-createViSurfaceNN :: Instance -> ViSurfaceCreateInfoNN -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createViSurfaceNN instance' createInfo allocator = evalContT $ do
+createViSurfaceNN :: forall io . MonadIO io => Instance -> ViSurfaceCreateInfoNN -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateViSurfaceNN' = mkVkCreateViSurfaceNN (pVkCreateViSurfaceNN (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of

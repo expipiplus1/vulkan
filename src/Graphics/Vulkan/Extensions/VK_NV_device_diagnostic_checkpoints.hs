@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( cmdSetC
                                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -18,6 +19,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -98,8 +100,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetCheckpointNV :: CommandBuffer -> ("checkpointMarker" ::: Ptr ()) -> IO ()
-cmdSetCheckpointNV commandBuffer checkpointMarker = do
+cmdSetCheckpointNV :: forall io . MonadIO io => CommandBuffer -> ("checkpointMarker" ::: Ptr ()) -> io ()
+cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
   let vkCmdSetCheckpointNV' = mkVkCmdSetCheckpointNV (pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetCheckpointNV' (commandBufferHandle (commandBuffer)) (checkpointMarker)
   pure $ ()
@@ -159,8 +161,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'CheckpointDataNV', 'Graphics.Vulkan.Core10.Handles.Queue'
-getQueueCheckpointDataNV :: Queue -> IO (("checkpointData" ::: Vector CheckpointDataNV))
-getQueueCheckpointDataNV queue = evalContT $ do
+getQueueCheckpointDataNV :: forall io . MonadIO io => Queue -> io (("checkpointData" ::: Vector CheckpointDataNV))
+getQueueCheckpointDataNV queue = liftIO . evalContT $ do
   let vkGetQueueCheckpointDataNV' = mkVkGetQueueCheckpointDataNV (pVkGetQueueCheckpointDataNV (deviceCmds (queue :: Queue)))
   let queue' = queueHandle (queue)
   pPCheckpointDataCount <- ContT $ bracket (callocBytes @Word32 4) free

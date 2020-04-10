@@ -23,6 +23,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( getPi
                                                                          ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -45,6 +46,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.Trans.Cont (runContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -177,8 +179,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'PipelineExecutablePropertiesKHR', 'PipelineInfoKHR'
-getPipelineExecutablePropertiesKHR :: Device -> PipelineInfoKHR -> IO (Result, ("properties" ::: Vector PipelineExecutablePropertiesKHR))
-getPipelineExecutablePropertiesKHR device pipelineInfo = evalContT $ do
+getPipelineExecutablePropertiesKHR :: forall io . MonadIO io => Device -> PipelineInfoKHR -> io (Result, ("properties" ::: Vector PipelineExecutablePropertiesKHR))
+getPipelineExecutablePropertiesKHR device pipelineInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutablePropertiesKHR' = mkVkGetPipelineExecutablePropertiesKHR (pVkGetPipelineExecutablePropertiesKHR (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPipelineInfo <- ContT $ withCStruct (pipelineInfo)
@@ -277,8 +279,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
 -- 'PipelineExecutableStatisticKHR'
-getPipelineExecutableStatisticsKHR :: Device -> PipelineExecutableInfoKHR -> IO (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
-getPipelineExecutableStatisticsKHR device executableInfo = evalContT $ do
+getPipelineExecutableStatisticsKHR :: forall io . MonadIO io => Device -> PipelineExecutableInfoKHR -> io (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
+getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutableStatisticsKHR' = mkVkGetPipelineExecutableStatisticsKHR (pVkGetPipelineExecutableStatisticsKHR (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)
@@ -387,8 +389,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
 -- 'PipelineExecutableInternalRepresentationKHR'
-getPipelineExecutableInternalRepresentationsKHR :: Device -> PipelineExecutableInfoKHR -> IO (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
-getPipelineExecutableInternalRepresentationsKHR device executableInfo = evalContT $ do
+getPipelineExecutableInternalRepresentationsKHR :: forall io . MonadIO io => Device -> PipelineExecutableInfoKHR -> io (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
+getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutableInternalRepresentationsKHR' = mkVkGetPipelineExecutableInternalRepresentationsKHR (pVkGetPipelineExecutableInternalRepresentationsKHR (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)

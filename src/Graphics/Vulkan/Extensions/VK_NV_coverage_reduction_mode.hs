@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( getPhysicalDe
                                                                  ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -35,6 +36,7 @@ import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -145,8 +147,8 @@ foreign import ccall
 --
 -- 'FramebufferMixedSamplesCombinationNV',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: PhysicalDevice -> IO (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
-getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = evalContT $ do
+getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
+getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' = mkVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCombinationCount <- ContT $ bracket (callocBytes @Word32 4) free

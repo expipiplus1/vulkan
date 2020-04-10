@@ -6,6 +6,7 @@ module Graphics.Vulkan.Core10.Buffer  ( createBuffer
                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -20,6 +21,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -133,8 +135,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Buffer', 'BufferCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-createBuffer :: PokeChain a => Device -> BufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Buffer)
-createBuffer device createInfo allocator = evalContT $ do
+createBuffer :: forall a io . (PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Buffer)
+createBuffer device createInfo allocator = liftIO . evalContT $ do
   let vkCreateBuffer' = mkVkCreateBuffer (pVkCreateBuffer (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -149,7 +151,7 @@ createBuffer device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createBuffer' and 'destroyBuffer' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withBuffer :: PokeChain a => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> ((Buffer) -> IO r) -> IO r
+withBuffer :: forall a r . PokeChain a => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> ((Buffer) -> IO r) -> IO r
 withBuffer device pCreateInfo pAllocator =
   bracket
     (createBuffer device pCreateInfo pAllocator)
@@ -216,8 +218,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyBuffer :: Device -> Buffer -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyBuffer device buffer allocator = evalContT $ do
+destroyBuffer :: forall io . MonadIO io => Device -> Buffer -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyBuffer device buffer allocator = liftIO . evalContT $ do
   let vkDestroyBuffer' = mkVkDestroyBuffer (pVkDestroyBuffer (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

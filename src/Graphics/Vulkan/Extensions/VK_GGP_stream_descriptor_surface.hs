@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface  ( createStre
                                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -29,6 +30,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -130,8 +132,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'StreamDescriptorSurfaceCreateInfoGGP',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createStreamDescriptorSurfaceGGP :: Instance -> StreamDescriptorSurfaceCreateInfoGGP -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createStreamDescriptorSurfaceGGP instance' createInfo allocator = evalContT $ do
+createStreamDescriptorSurfaceGGP :: forall io . MonadIO io => Instance -> StreamDescriptorSurfaceCreateInfoGGP -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateStreamDescriptorSurfaceGGP' = mkVkCreateStreamDescriptorSurfaceGGP (pVkCreateStreamDescriptorSurfaceGGP (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of

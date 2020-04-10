@@ -8,6 +8,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2  ( bindBufferMem
                                                                  , ImageCreateFlags
                                                                  ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
@@ -18,6 +19,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -105,8 +107,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindBufferMemoryInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-bindBufferMemory2 :: PokeChain a => Device -> ("bindInfos" ::: Vector (BindBufferMemoryInfo a)) -> IO ()
-bindBufferMemory2 device bindInfos = evalContT $ do
+bindBufferMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindBufferMemoryInfo a)) -> io ()
+bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 (pVkBindBufferMemory2 (deviceCmds (device :: Device)))
   pPBindInfos <- ContT $ allocaBytesAligned @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _)) (e) . ($ ())) (bindInfos)
@@ -169,8 +171,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindImageMemoryInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-bindImageMemory2 :: PokeChain a => Device -> ("bindInfos" ::: Vector (BindImageMemoryInfo a)) -> IO ()
-bindImageMemory2 device bindInfos = evalContT $ do
+bindImageMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindImageMemoryInfo a)) -> io ()
+bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2' = mkVkBindImageMemory2 (pVkBindImageMemory2 (deviceCmds (device :: Device)))
   pPBindInfos <- ContT $ allocaBytesAligned @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _)) (e) . ($ ())) (bindInfos)

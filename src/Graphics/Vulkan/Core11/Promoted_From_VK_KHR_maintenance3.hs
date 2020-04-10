@@ -5,6 +5,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance3  ( getDescriptor
                                                                  , StructureType(..)
                                                                  ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Ptr (castPtr)
@@ -12,6 +13,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -108,8 +110,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Graphics.Vulkan.Core10.Handles.Device'
-getDescriptorSetLayoutSupport :: (PokeChain a, PokeChain b, PeekChain b) => Device -> DescriptorSetLayoutCreateInfo a -> IO (DescriptorSetLayoutSupport b)
-getDescriptorSetLayoutSupport device createInfo = evalContT $ do
+getDescriptorSetLayoutSupport :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> io (DescriptorSetLayoutSupport b)
+getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport (pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPSupport <- ContT (withZeroCStruct @(DescriptorSetLayoutSupport _))

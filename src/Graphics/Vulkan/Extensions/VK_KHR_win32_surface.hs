@@ -13,6 +13,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_win32_surface  ( createWin32SurfaceKHR
                                                         ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -31,6 +32,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -140,8 +142,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR',
 -- 'Win32SurfaceCreateInfoKHR'
-createWin32SurfaceKHR :: Instance -> Win32SurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createWin32SurfaceKHR instance' createInfo allocator = evalContT $ do
+createWin32SurfaceKHR :: forall io . MonadIO io => Instance -> Win32SurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateWin32SurfaceKHR' = mkVkCreateWin32SurfaceKHR (pVkCreateWin32SurfaceKHR (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -180,8 +182,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceWin32PresentationSupportKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> IO (Bool)
-getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = do
+getPhysicalDeviceWin32PresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> io (Bool)
+getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = liftIO $ do
   let vkGetPhysicalDeviceWin32PresentationSupportKHR' = mkVkGetPhysicalDeviceWin32PresentationSupportKHR (pVkGetPhysicalDeviceWin32PresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   r <- vkGetPhysicalDeviceWin32PresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex)
   pure $ ((bool32ToBool r))

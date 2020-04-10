@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd  ( getMemoryFdKHR
                                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -21,6 +22,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Foreign.C.Types (CInt(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CInt)
@@ -102,8 +104,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MemoryGetFdInfoKHR'
-getMemoryFdKHR :: Device -> MemoryGetFdInfoKHR -> IO (("fd" ::: Int32))
-getMemoryFdKHR device getFdInfo = evalContT $ do
+getMemoryFdKHR :: forall io . MonadIO io => Device -> MemoryGetFdInfoKHR -> io (("fd" ::: Int32))
+getMemoryFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetMemoryFdKHR' = mkVkGetMemoryFdKHR (pVkGetMemoryFdKHR (deviceCmds (device :: Device)))
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
@@ -149,8 +151,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryFdPropertiesKHR'
-getMemoryFdPropertiesKHR :: Device -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: Int32) -> IO (MemoryFdPropertiesKHR)
-getMemoryFdPropertiesKHR device handleType fd = evalContT $ do
+getMemoryFdPropertiesKHR :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: Int32) -> io (MemoryFdPropertiesKHR)
+getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
   let vkGetMemoryFdPropertiesKHR' = mkVkGetMemoryFdPropertiesKHR (pVkGetMemoryFdPropertiesKHR (deviceCmds (device :: Device)))
   pPMemoryFdProperties <- ContT (withZeroCStruct @MemoryFdPropertiesKHR)
   r <- lift $ vkGetMemoryFdPropertiesKHR' (deviceHandle (device)) (handleType) (CInt (fd)) (pPMemoryFdProperties)

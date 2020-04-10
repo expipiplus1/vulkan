@@ -4,9 +4,11 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset  ( resetQuer
                                                                      , StructureType(..)
                                                                      ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -99,8 +101,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-resetQueryPool :: Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
-resetQueryPool device queryPool firstQuery queryCount = do
+resetQueryPool :: forall io . MonadIO io => Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> io ()
+resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
   let vkResetQueryPool' = mkVkResetQueryPool (pVkResetQueryPool (deviceCmds (device :: Device)))
   vkResetQueryPool' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount)
   pure $ ()

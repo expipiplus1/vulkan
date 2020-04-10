@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.Shader  ( createShaderModule
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Bits ((.&.))
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -24,6 +25,7 @@ import Data.ByteString (packCStringLen)
 import Data.ByteString.Unsafe (unsafeUseAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -141,8 +143,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.ShaderModule', 'ShaderModuleCreateInfo'
-createShaderModule :: PokeChain a => Device -> ShaderModuleCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (ShaderModule)
-createShaderModule device createInfo allocator = evalContT $ do
+createShaderModule :: forall a io . (PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ShaderModule)
+createShaderModule device createInfo allocator = liftIO . evalContT $ do
   let vkCreateShaderModule' = mkVkCreateShaderModule (pVkCreateShaderModule (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -158,7 +160,7 @@ createShaderModule device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withShaderModule :: PokeChain a => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> ((ShaderModule) -> IO r) -> IO r
+withShaderModule :: forall a r . PokeChain a => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> ((ShaderModule) -> IO r) -> IO r
 withShaderModule device pCreateInfo pAllocator =
   bracket
     (createShaderModule device pCreateInfo pAllocator)
@@ -227,8 +229,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.ShaderModule'
-destroyShaderModule :: Device -> ShaderModule -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyShaderModule device shaderModule allocator = evalContT $ do
+destroyShaderModule :: forall io . MonadIO io => Device -> ShaderModule -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
   let vkDestroyShaderModule' = mkVkDestroyShaderModule (pVkDestroyShaderModule (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.CommandPool  ( createCommandPool
                                            ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -16,6 +17,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -112,8 +114,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-createCommandPool :: Device -> CommandPoolCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (CommandPool)
-createCommandPool device createInfo allocator = evalContT $ do
+createCommandPool :: forall io . MonadIO io => Device -> CommandPoolCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (CommandPool)
+createCommandPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateCommandPool' = mkVkCreateCommandPool (pVkCreateCommandPool (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -129,7 +131,7 @@ createCommandPool device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withCommandPool :: Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> ((CommandPool) -> IO r) -> IO r
+withCommandPool :: forall r . Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> ((CommandPool) -> IO r) -> IO r
 withCommandPool device pCreateInfo pAllocator =
   bracket
     (createCommandPool device pCreateInfo pAllocator)
@@ -210,8 +212,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyCommandPool :: Device -> CommandPool -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyCommandPool device commandPool allocator = evalContT $ do
+destroyCommandPool :: forall io . MonadIO io => Device -> CommandPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
   let vkDestroyCommandPool' = mkVkDestroyCommandPool (pVkDestroyCommandPool (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -296,8 +298,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool',
 -- 'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlags',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-resetCommandPool :: Device -> CommandPool -> CommandPoolResetFlags -> IO ()
-resetCommandPool device commandPool flags = do
+resetCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolResetFlags -> io ()
+resetCommandPool device commandPool flags = liftIO $ do
   let vkResetCommandPool' = mkVkResetCommandPool (pVkResetCommandPool (deviceCmds (device :: Device)))
   r <- vkResetCommandPool' (deviceHandle (device)) (commandPool) (flags)
   when (r < SUCCESS) (throwIO (VulkanException r))

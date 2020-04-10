@@ -8,6 +8,7 @@ module Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling  ( cmdSetViewportWS
                                                               , pattern NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
                                                               ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
@@ -17,6 +18,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -126,8 +128,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'ViewportWScalingNV'
-cmdSetViewportWScalingNV :: CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewportWScalings" ::: Vector ViewportWScalingNV) -> IO ()
-cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = evalContT $ do
+cmdSetViewportWScalingNV :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewportWScalings" ::: Vector ViewportWScalingNV) -> io ()
+cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO . evalContT $ do
   let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV (pVkCmdSetViewportWScalingNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e) . ($ ())) (viewportWScalings)

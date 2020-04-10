@@ -26,6 +26,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDev
                                                                 ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -45,6 +46,7 @@ import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -179,8 +181,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
-getPhysicalDeviceSurfacePresentModes2EXT :: PokeChain a => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> IO (Result, ("presentModes" ::: Vector PresentModeKHR))
-getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = evalContT $ do
+getPhysicalDeviceSurfacePresentModes2EXT :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT (pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
@@ -247,8 +249,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
-getDeviceGroupSurfacePresentModes2EXT :: PokeChain a => Device -> PhysicalDeviceSurfaceInfo2KHR a -> IO (("modes" ::: DeviceGroupPresentModeFlagsKHR))
-getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = evalContT $ do
+getDeviceGroupSurfacePresentModes2EXT :: forall a io . (PokeChain a, MonadIO io) => Device -> PhysicalDeviceSurfaceInfo2KHR a -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
+getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT (pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device)))
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
@@ -335,8 +337,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-acquireFullScreenExclusiveModeEXT :: Device -> SwapchainKHR -> IO ()
-acquireFullScreenExclusiveModeEXT device swapchain = do
+acquireFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
+acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT (pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
   r <- vkAcquireFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -374,8 +376,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-releaseFullScreenExclusiveModeEXT :: Device -> SwapchainKHR -> IO ()
-releaseFullScreenExclusiveModeEXT device swapchain = do
+releaseFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
+releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT (pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
   r <- vkReleaseFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))

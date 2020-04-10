@@ -8,6 +8,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor  ( cmdPushDescriptorSet
                                                           , pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
                                                           ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -15,6 +16,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -198,8 +200,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
-cmdPushDescriptorSetKHR :: PokeChain a => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("set" ::: Word32) -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> IO ()
-cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = evalContT $ do
+cmdPushDescriptorSetKHR :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("set" ::: Word32) -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> io ()
+cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
   let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR (pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer)))
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)
@@ -344,8 +346,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
-cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer -> DescriptorUpdateTemplate -> PipelineLayout -> ("set" ::: Word32) -> ("data" ::: Ptr ()) -> IO ()
-cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = do
+cmdPushDescriptorSetWithTemplateKHR :: forall io . MonadIO io => CommandBuffer -> DescriptorUpdateTemplate -> PipelineLayout -> ("set" ::: Word32) -> ("data" ::: Ptr ()) -> io ()
+cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = liftIO $ do
   let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR (pVkCmdPushDescriptorSetWithTemplateKHR (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdPushDescriptorSetWithTemplateKHR' (commandBufferHandle (commandBuffer)) (descriptorUpdateTemplate) (layout) (set) (data')
   pure $ ()

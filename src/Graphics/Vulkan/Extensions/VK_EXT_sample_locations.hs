@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_sample_locations  ( cmdSetSampleLocatio
                                                            , pattern EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
                                                            ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -23,6 +24,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -136,8 +138,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'SampleLocationsInfoEXT'
-cmdSetSampleLocationsEXT :: CommandBuffer -> SampleLocationsInfoEXT -> IO ()
-cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = evalContT $ do
+cmdSetSampleLocationsEXT :: forall io . MonadIO io => CommandBuffer -> SampleLocationsInfoEXT -> io ()
+cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT $ do
   let vkCmdSetSampleLocationsEXT' = mkVkCmdSetSampleLocationsEXT (pVkCmdSetSampleLocationsEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pSampleLocationsInfo <- ContT $ withCStruct (sampleLocationsInfo)
   lift $ vkCmdSetSampleLocationsEXT' (commandBufferHandle (commandBuffer)) pSampleLocationsInfo
@@ -173,8 +175,8 @@ foreign import ccall
 -- 'MultisamplePropertiesEXT',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-getPhysicalDeviceMultisamplePropertiesEXT :: PhysicalDevice -> ("samples" ::: SampleCountFlagBits) -> IO (MultisamplePropertiesEXT)
-getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = evalContT $ do
+getPhysicalDeviceMultisamplePropertiesEXT :: forall io . MonadIO io => PhysicalDevice -> ("samples" ::: SampleCountFlagBits) -> io (MultisamplePropertiesEXT)
+getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMultisamplePropertiesEXT' = mkVkGetPhysicalDeviceMultisamplePropertiesEXT (pVkGetPhysicalDeviceMultisamplePropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPMultisampleProperties <- ContT (withZeroCStruct @MultisamplePropertiesEXT)
   lift $ vkGetPhysicalDeviceMultisamplePropertiesEXT' (physicalDeviceHandle (physicalDevice)) (samples) (pPMultisampleProperties)

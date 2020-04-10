@@ -13,6 +13,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles  ( cmdSetDiscardRect
                                                              , pattern EXT_DISCARD_RECTANGLES_EXTENSION_NAME
                                                              ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
@@ -32,6 +33,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Either (Either)
 import Data.String (IsString)
@@ -156,8 +158,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D'
-cmdSetDiscardRectangleEXT :: CommandBuffer -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangles" ::: Vector Rect2D) -> IO ()
-cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = evalContT $ do
+cmdSetDiscardRectangleEXT :: forall io . MonadIO io => CommandBuffer -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangles" ::: Vector Rect2D) -> io ()
+cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
   let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT (pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (discardRectangles)

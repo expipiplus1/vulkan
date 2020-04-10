@@ -44,6 +44,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayProp
                                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -65,6 +66,7 @@ import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -191,8 +193,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DisplayPropertiesKHR', 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPropertiesKHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayPropertiesKHR))
-getPhysicalDeviceDisplayPropertiesKHR physicalDevice = evalContT $ do
+getPhysicalDeviceDisplayPropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPropertiesKHR))
+getPhysicalDeviceDisplayPropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR (pVkGetPhysicalDeviceDisplayPropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -269,8 +271,8 @@ foreign import ccall
 --
 -- 'DisplayPlanePropertiesKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPlanePropertiesKHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
-getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = evalContT $ do
+getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
+getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR (pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -360,8 +362,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneSupportedDisplaysKHR :: PhysicalDevice -> ("planeIndex" ::: Word32) -> IO (Result, ("displays" ::: Vector DisplayKHR))
-getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = evalContT $ do
+getDisplayPlaneSupportedDisplaysKHR :: forall io . MonadIO io => PhysicalDevice -> ("planeIndex" ::: Word32) -> io (Result, ("displays" ::: Vector DisplayKHR))
+getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR (pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPDisplayCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -451,8 +453,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'DisplayModePropertiesKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayModePropertiesKHR :: PhysicalDevice -> DisplayKHR -> IO (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
-getDisplayModePropertiesKHR physicalDevice display = evalContT $ do
+getDisplayModePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
+getDisplayModePropertiesKHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR (pVkGetDisplayModePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -540,8 +542,8 @@ foreign import ccall
 -- 'DisplayModeCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-createDisplayModeKHR :: PhysicalDevice -> DisplayKHR -> DisplayModeCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DisplayModeKHR)
-createDisplayModeKHR physicalDevice display createInfo allocator = evalContT $ do
+createDisplayModeKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> DisplayModeCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DisplayModeKHR)
+createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayModeKHR' = mkVkCreateDisplayModeKHR (pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -611,8 +613,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneCapabilitiesKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneCapabilitiesKHR :: PhysicalDevice -> DisplayModeKHR -> ("planeIndex" ::: Word32) -> IO (DisplayPlaneCapabilitiesKHR)
-getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = evalContT $ do
+getDisplayPlaneCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayModeKHR -> ("planeIndex" ::: Word32) -> io (DisplayPlaneCapabilitiesKHR)
+getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR (pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilitiesKHR)
   r <- lift $ vkGetDisplayPlaneCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (mode) (planeIndex) (pPCapabilities)
@@ -684,8 +686,8 @@ foreign import ccall
 -- 'DisplaySurfaceCreateInfoKHR',
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createDisplayPlaneSurfaceKHR :: Instance -> DisplaySurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createDisplayPlaneSurfaceKHR instance' createInfo allocator = evalContT $ do
+createDisplayPlaneSurfaceKHR :: forall io . MonadIO io => Instance -> DisplaySurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayPlaneSurfaceKHR' = mkVkCreateDisplayPlaneSurfaceKHR (pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of

@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template  (
                                                                                ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -25,6 +26,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CSize)
 import Foreign.C.Types (CSize(CSize))
@@ -137,8 +139,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'DescriptorUpdateTemplateCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-createDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplateCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DescriptorUpdateTemplate)
-createDescriptorUpdateTemplate device createInfo allocator = evalContT $ do
+createDescriptorUpdateTemplate :: forall io . MonadIO io => Device -> DescriptorUpdateTemplateCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorUpdateTemplate)
+createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorUpdateTemplate' = mkVkCreateDescriptorUpdateTemplate (pVkCreateDescriptorUpdateTemplate (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -154,7 +156,7 @@ createDescriptorUpdateTemplate device createInfo allocator = evalContT $ do
 -- 'destroyDescriptorUpdateTemplate' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> ((DescriptorUpdateTemplate) -> IO r) -> IO r
+withDescriptorUpdateTemplate :: forall r . Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> ((DescriptorUpdateTemplate) -> IO r) -> IO r
 withDescriptorUpdateTemplate device pCreateInfo pAllocator =
   bracket
     (createDescriptorUpdateTemplate device pCreateInfo pAllocator)
@@ -222,8 +224,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplate -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = evalContT $ do
+destroyDescriptorUpdateTemplate :: forall io . MonadIO io => Device -> DescriptorUpdateTemplate -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorUpdateTemplate' = mkVkDestroyDescriptorUpdateTemplate (pVkDestroyDescriptorUpdateTemplate (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -370,8 +372,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet',
 -- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-updateDescriptorSetWithTemplate :: Device -> DescriptorSet -> DescriptorUpdateTemplate -> ("data" ::: Ptr ()) -> IO ()
-updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = do
+updateDescriptorSetWithTemplate :: forall io . MonadIO io => Device -> DescriptorSet -> DescriptorUpdateTemplate -> ("data" ::: Ptr ()) -> io ()
+updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
   let vkUpdateDescriptorSetWithTemplate' = mkVkUpdateDescriptorSetWithTemplate (pVkUpdateDescriptorSetWithTemplate (deviceCmds (device :: Device)))
   vkUpdateDescriptorSetWithTemplate' (deviceHandle (device)) (descriptorSet) (descriptorUpdateTemplate) (data')
   pure $ ()

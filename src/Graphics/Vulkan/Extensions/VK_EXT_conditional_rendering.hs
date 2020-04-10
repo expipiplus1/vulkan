@@ -16,6 +16,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginCondit
                                                                 ) where
 
 import Control.Exception.Base (bracket_)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -30,6 +31,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -125,8 +127,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'ConditionalRenderingBeginInfoEXT'
-cmdBeginConditionalRenderingEXT :: CommandBuffer -> ConditionalRenderingBeginInfoEXT -> IO ()
-cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = evalContT $ do
+cmdBeginConditionalRenderingEXT :: forall io . MonadIO io => CommandBuffer -> ConditionalRenderingBeginInfoEXT -> io ()
+cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO . evalContT $ do
   let vkCmdBeginConditionalRenderingEXT' = mkVkCmdBeginConditionalRenderingEXT (pVkCmdBeginConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pConditionalRenderingBegin <- ContT $ withCStruct (conditionalRenderingBegin)
   lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
@@ -134,7 +136,7 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = evalCo
 
 -- | A safe wrapper for 'cmdBeginConditionalRenderingEXT' and
 -- 'cmdEndConditionalRenderingEXT' using 'bracket_'
-cmdWithConditionalRenderingEXT :: CommandBuffer -> ConditionalRenderingBeginInfoEXT -> IO r -> IO r
+cmdWithConditionalRenderingEXT :: forall r . CommandBuffer -> ConditionalRenderingBeginInfoEXT -> IO r -> IO r
 cmdWithConditionalRenderingEXT commandBuffer pConditionalRenderingBegin =
   bracket_
     (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin)
@@ -207,8 +209,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdEndConditionalRenderingEXT :: CommandBuffer -> IO ()
-cmdEndConditionalRenderingEXT commandBuffer = do
+cmdEndConditionalRenderingEXT :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
   let vkCmdEndConditionalRenderingEXT' = mkVkCmdEndConditionalRenderingEXT (pVkCmdEndConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdEndConditionalRenderingEXT' (commandBufferHandle (commandBuffer))
   pure $ ()

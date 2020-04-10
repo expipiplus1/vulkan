@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_bu
                                                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -26,6 +27,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -111,8 +113,8 @@ foreign import ccall
 --
 -- 'AndroidHardwareBufferPropertiesANDROID',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-getAndroidHardwareBufferPropertiesANDROID :: (PokeChain a, PeekChain a) => Device -> Ptr AHardwareBuffer -> IO (AndroidHardwareBufferPropertiesANDROID a)
-getAndroidHardwareBufferPropertiesANDROID device buffer = evalContT $ do
+getAndroidHardwareBufferPropertiesANDROID :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> Ptr AHardwareBuffer -> io (AndroidHardwareBufferPropertiesANDROID a)
+getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
   let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID (pVkGetAndroidHardwareBufferPropertiesANDROID (deviceCmds (device :: Device)))
   pPProperties <- ContT (withZeroCStruct @(AndroidHardwareBufferPropertiesANDROID _))
   r <- lift $ vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (pPProperties)
@@ -173,8 +175,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'MemoryGetAndroidHardwareBufferInfoANDROID'
-getMemoryAndroidHardwareBufferANDROID :: Device -> MemoryGetAndroidHardwareBufferInfoANDROID -> IO (Ptr AHardwareBuffer)
-getMemoryAndroidHardwareBufferANDROID device info = evalContT $ do
+getMemoryAndroidHardwareBufferANDROID :: forall io . MonadIO io => Device -> MemoryGetAndroidHardwareBufferInfoANDROID -> io (Ptr AHardwareBuffer)
+getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
   let vkGetMemoryAndroidHardwareBufferANDROID' = mkVkGetMemoryAndroidHardwareBufferANDROID (pVkGetMemoryAndroidHardwareBufferANDROID (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   pPBuffer <- ContT $ bracket (callocBytes @(Ptr AHardwareBuffer) 8) free

@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_android_surface  ( createAndroidSurface
                                                           ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -29,6 +30,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -159,8 +161,8 @@ foreign import ccall
 -- 'AndroidSurfaceCreateInfoKHR',
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createAndroidSurfaceKHR :: Instance -> AndroidSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createAndroidSurfaceKHR instance' createInfo allocator = evalContT $ do
+createAndroidSurfaceKHR :: forall io . MonadIO io => Instance -> AndroidSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateAndroidSurfaceKHR' = mkVkCreateAndroidSurfaceKHR (pVkCreateAndroidSurfaceKHR (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of

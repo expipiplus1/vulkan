@@ -20,6 +20,7 @@ module Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory  ( get
                                                                            ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -27,6 +28,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -96,8 +98,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'DeviceQueueInfo2',
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-getDeviceQueue2 :: Device -> DeviceQueueInfo2 -> IO (Queue)
-getDeviceQueue2 device queueInfo = evalContT $ do
+getDeviceQueue2 :: forall io . MonadIO io => Device -> DeviceQueueInfo2 -> io (Queue)
+getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
   let vkGetDeviceQueue2' = mkVkGetDeviceQueue2 (pVkGetDeviceQueue2 cmds)
   pQueueInfo <- ContT $ withCStruct (queueInfo)

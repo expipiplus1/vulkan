@@ -19,6 +19,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformF
 
 import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
@@ -37,6 +38,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Either (Either)
 import Data.String (IsString)
@@ -218,8 +220,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBindTransformFeedbackBuffersEXT :: CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Either Word32 (Vector DeviceSize)) -> IO ()
-cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = evalContT $ do
+cmdBindTransformFeedbackBuffersEXT :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
   let vkCmdBindTransformFeedbackBuffersEXT' = mkVkCmdBindTransformFeedbackBuffersEXT (pVkCmdBindTransformFeedbackBuffersEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pBuffersLength = Data.Vector.length $ (buffers)
   let pOffsetsLength = Data.Vector.length $ (offsets)
@@ -376,8 +378,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBeginTransformFeedbackEXT :: CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> IO ()
-cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = evalContT $ do
+cmdBeginTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdBeginTransformFeedbackEXT' = mkVkCmdBeginTransformFeedbackEXT (pVkCmdBeginTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
   let pCounterBufferOffsetsLength = either id (fromIntegral . Data.Vector.length) (counterBufferOffsets)
@@ -396,7 +398,7 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
 
 -- | A safe wrapper for 'cmdBeginTransformFeedbackEXT' and
 -- 'cmdEndTransformFeedbackEXT' using 'bracket_'
-cmdWithTransformFeedbackEXT :: CommandBuffer -> Word32 -> Vector Buffer -> Either Word32 (Vector DeviceSize) -> IO r -> IO r
+cmdWithTransformFeedbackEXT :: forall r . CommandBuffer -> Word32 -> Vector Buffer -> Either Word32 (Vector DeviceSize) -> IO r -> IO r
 cmdWithTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets =
   bracket_
     (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
@@ -523,8 +525,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdEndTransformFeedbackEXT :: CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> IO ()
-cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = evalContT $ do
+cmdEndTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdEndTransformFeedbackEXT' = mkVkCmdEndTransformFeedbackEXT (pVkCmdEndTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
   let pCounterBufferOffsetsLength = either id (fromIntegral . Data.Vector.length) (counterBufferOffsets)
@@ -729,15 +731,15 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdBeginQueryIndexedEXT :: CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> ("index" ::: Word32) -> IO ()
-cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = do
+cmdBeginQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> ("index" ::: Word32) -> io ()
+cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT (pVkCmdBeginQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
   pure $ ()
 
 -- | A safe wrapper for 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT'
 -- using 'bracket_'
-cmdWithQueryIndexedEXT :: CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO r -> IO r
+cmdWithQueryIndexedEXT :: forall r . CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO r -> IO r
 cmdWithQueryIndexedEXT commandBuffer queryPool query flags index =
   bracket_
     (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index)
@@ -840,8 +842,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdEndQueryIndexedEXT :: CommandBuffer -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()
-cmdEndQueryIndexedEXT commandBuffer queryPool query index = do
+cmdEndQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> io ()
+cmdEndQueryIndexedEXT commandBuffer queryPool query index = liftIO $ do
   let vkCmdEndQueryIndexedEXT' = mkVkCmdEndQueryIndexedEXT (pVkCmdEndQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdEndQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (index)
   pure $ ()
@@ -1146,8 +1148,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndirectByteCountEXT :: CommandBuffer -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()
-cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = do
+cmdDrawIndirectByteCountEXT :: forall io . MonadIO io => CommandBuffer -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> io ()
+cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = liftIO $ do
   let vkCmdDrawIndirectByteCountEXT' = mkVkCmdDrawIndirectByteCountEXT (pVkCmdDrawIndirectByteCountEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawIndirectByteCountEXT' (commandBufferHandle (commandBuffer)) (instanceCount) (firstInstance) (counterBuffer) (counterBufferOffset) (counterOffset) (vertexStride)
   pure $ ()

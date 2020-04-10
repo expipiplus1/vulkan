@@ -20,6 +20,7 @@ module Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities  ( getPhysi
                                                                       , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
                                                                       ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
@@ -35,6 +36,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -145,8 +147,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType',
 -- 'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceExternalImageFormatPropertiesNV :: PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV) -> IO (ExternalImageFormatPropertiesNV)
-getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = evalContT $ do
+getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV) -> io (ExternalImageFormatPropertiesNV)
+getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalImageFormatPropertiesNV' = mkVkGetPhysicalDeviceExternalImageFormatPropertiesNV (pVkGetPhysicalDeviceExternalImageFormatPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPExternalImageFormatProperties <- ContT (withZeroCStruct @ExternalImageFormatPropertiesNV)
   r <- lift $ vkGetPhysicalDeviceExternalImageFormatPropertiesNV' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (externalHandleType) (pPExternalImageFormatProperties)

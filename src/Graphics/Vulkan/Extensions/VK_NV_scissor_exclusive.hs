@@ -8,6 +8,7 @@ module Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive  ( cmdSetExclusiveScis
                                                            , pattern NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
                                                            ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
@@ -17,6 +18,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -158,8 +160,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D'
-cmdSetExclusiveScissorNV :: CommandBuffer -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissors" ::: Vector Rect2D) -> IO ()
-cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = evalContT $ do
+cmdSetExclusiveScissorNV :: forall io . MonadIO io => CommandBuffer -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissors" ::: Vector Rect2D) -> io ()
+cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
   let vkCmdSetExclusiveScissorNV' = mkVkCmdSetExclusiveScissorNV (pVkCmdSetExclusiveScissorNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pPExclusiveScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (exclusiveScissors)

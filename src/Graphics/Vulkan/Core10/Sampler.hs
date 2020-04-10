@@ -6,6 +6,7 @@ module Graphics.Vulkan.Core10.Sampler  ( createSampler
                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -17,6 +18,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -124,8 +126,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Sampler', 'SamplerCreateInfo'
-createSampler :: PokeChain a => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Sampler)
-createSampler device createInfo allocator = evalContT $ do
+createSampler :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Sampler)
+createSampler device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSampler' = mkVkCreateSampler (pVkCreateSampler (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -140,7 +142,7 @@ createSampler device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createSampler' and 'destroySampler' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSampler :: PokeChain a => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> ((Sampler) -> IO r) -> IO r
+withSampler :: forall a r . PokeChain a => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> ((Sampler) -> IO r) -> IO r
 withSampler device pCreateInfo pAllocator =
   bracket
     (createSampler device pCreateInfo pAllocator)
@@ -206,8 +208,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Sampler'
-destroySampler :: Device -> Sampler -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySampler device sampler allocator = evalContT $ do
+destroySampler :: forall io . MonadIO io => Device -> Sampler -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySampler device sampler allocator = liftIO . evalContT $ do
   let vkDestroySampler' = mkVkDestroySampler (pVkDestroySampler (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

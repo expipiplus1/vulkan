@@ -15,11 +15,13 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities 
                                                                                  , pattern LUID_SIZE
                                                                                  ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -98,8 +100,8 @@ foreign import ccall
 -- 'ExternalBufferProperties',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalBufferInfo'
-getPhysicalDeviceExternalBufferProperties :: PhysicalDevice -> PhysicalDeviceExternalBufferInfo -> IO (ExternalBufferProperties)
-getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = evalContT $ do
+getPhysicalDeviceExternalBufferProperties :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceExternalBufferInfo -> io (ExternalBufferProperties)
+getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalBufferProperties' = mkVkGetPhysicalDeviceExternalBufferProperties (pVkGetPhysicalDeviceExternalBufferProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pExternalBufferInfo <- ContT $ withCStruct (externalBufferInfo)
   pPExternalBufferProperties <- ContT (withZeroCStruct @ExternalBufferProperties)

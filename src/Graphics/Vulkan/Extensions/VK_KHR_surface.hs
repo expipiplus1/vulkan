@@ -20,6 +20,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -30,6 +31,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -154,8 +156,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-destroySurfaceKHR :: Instance -> SurfaceKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySurfaceKHR instance' surface allocator = evalContT $ do
+destroySurfaceKHR :: forall io . MonadIO io => Instance -> SurfaceKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
   let vkDestroySurfaceKHR' = mkVkDestroySurfaceKHR (pVkDestroySurfaceKHR (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -228,8 +230,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.BaseType.Bool32',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceSupportKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> SurfaceKHR -> IO (("supported" ::: Bool))
-getPhysicalDeviceSurfaceSupportKHR physicalDevice queueFamilyIndex surface = evalContT $ do
+getPhysicalDeviceSurfaceSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> SurfaceKHR -> io (("supported" ::: Bool))
+getPhysicalDeviceSurfaceSupportKHR physicalDevice queueFamilyIndex surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceSupportKHR' = mkVkGetPhysicalDeviceSurfaceSupportKHR (pVkGetPhysicalDeviceSurfaceSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPSupported <- ContT $ bracket (callocBytes @Bool32 4) free
   r <- lift $ vkGetPhysicalDeviceSurfaceSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (surface) (pPSupported)
@@ -292,8 +294,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'SurfaceCapabilitiesKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceCapabilitiesKHR :: PhysicalDevice -> SurfaceKHR -> IO (SurfaceCapabilitiesKHR)
-getPhysicalDeviceSurfaceCapabilitiesKHR physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (SurfaceCapabilitiesKHR)
+getPhysicalDeviceSurfaceCapabilitiesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilitiesKHR' = mkVkGetPhysicalDeviceSurfaceCapabilitiesKHR (pVkGetPhysicalDeviceSurfaceCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPSurfaceCapabilities <- ContT (withZeroCStruct @SurfaceCapabilitiesKHR)
   r <- lift $ vkGetPhysicalDeviceSurfaceCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (surface) (pPSurfaceCapabilities)
@@ -401,8 +403,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceFormatKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice -> SurfaceKHR -> IO (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
-getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfaceFormatsKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
+getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceFormatsKHR' = mkVkGetPhysicalDeviceSurfaceFormatsKHR (pVkGetPhysicalDeviceSurfaceFormatsKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -499,8 +501,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice -> SurfaceKHR -> IO (Result, ("presentModes" ::: Vector PresentModeKHR))
-getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfacePresentModesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModesKHR' = mkVkGetPhysicalDeviceSurfacePresentModesKHR (pVkGetPhysicalDeviceSurfacePresentModesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free

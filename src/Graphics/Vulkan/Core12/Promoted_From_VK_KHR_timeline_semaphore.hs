@@ -16,6 +16,7 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore  ( getSema
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -29,6 +30,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -125,8 +127,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Semaphore'
-getSemaphoreCounterValue :: Device -> Semaphore -> IO (("value" ::: Word64))
-getSemaphoreCounterValue device semaphore = evalContT $ do
+getSemaphoreCounterValue :: forall io . MonadIO io => Device -> Semaphore -> io (("value" ::: Word64))
+getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
   let vkGetSemaphoreCounterValue' = mkVkGetSemaphoreCounterValue (pVkGetSemaphoreCounterValue (deviceCmds (device :: Device)))
   pPValue <- ContT $ bracket (callocBytes @Word64 8) free
   r <- lift $ vkGetSemaphoreCounterValue' (deviceHandle (device)) (semaphore) (pPValue)
@@ -202,8 +204,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'SemaphoreWaitInfo'
-waitSemaphores :: Device -> SemaphoreWaitInfo -> ("timeout" ::: Word64) -> IO (Result)
-waitSemaphores device waitInfo timeout = evalContT $ do
+waitSemaphores :: forall io . MonadIO io => Device -> SemaphoreWaitInfo -> ("timeout" ::: Word64) -> io (Result)
+waitSemaphores device waitInfo timeout = liftIO . evalContT $ do
   let vkWaitSemaphores' = mkVkWaitSemaphores (pVkWaitSemaphores (deviceCmds (device :: Device)))
   pWaitInfo <- ContT $ withCStruct (waitInfo)
   r <- lift $ vkWaitSemaphores' (deviceHandle (device)) pWaitInfo (timeout)
@@ -255,8 +257,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'SemaphoreSignalInfo'
-signalSemaphore :: Device -> SemaphoreSignalInfo -> IO ()
-signalSemaphore device signalInfo = evalContT $ do
+signalSemaphore :: forall io . MonadIO io => Device -> SemaphoreSignalInfo -> io ()
+signalSemaphore device signalInfo = liftIO . evalContT $ do
   let vkSignalSemaphore' = mkVkSignalSemaphore (pVkSignalSemaphore (deviceCmds (device :: Device)))
   pSignalInfo <- ContT $ withCStruct (signalInfo)
   r <- lift $ vkSignalSemaphore' (deviceHandle (device)) pSignalInfo

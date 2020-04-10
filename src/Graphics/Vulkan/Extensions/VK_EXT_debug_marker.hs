@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_marker  ( debugMarkerSetObjectNam
                                                        , DebugReportObjectTypeEXT(..)
                                                        ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
@@ -23,6 +24,7 @@ import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -113,8 +115,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugMarkerObjectNameInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-debugMarkerSetObjectNameEXT :: Device -> DebugMarkerObjectNameInfoEXT -> IO ()
-debugMarkerSetObjectNameEXT device nameInfo = evalContT $ do
+debugMarkerSetObjectNameEXT :: forall io . MonadIO io => Device -> DebugMarkerObjectNameInfoEXT -> io ()
+debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
   let vkDebugMarkerSetObjectNameEXT' = mkVkDebugMarkerSetObjectNameEXT (pVkDebugMarkerSetObjectNameEXT (deviceCmds (device :: Device)))
   pNameInfo <- ContT $ withCStruct (nameInfo)
   r <- lift $ vkDebugMarkerSetObjectNameEXT' (deviceHandle (device)) pNameInfo
@@ -164,8 +166,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugMarkerObjectTagInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-debugMarkerSetObjectTagEXT :: Device -> DebugMarkerObjectTagInfoEXT -> IO ()
-debugMarkerSetObjectTagEXT device tagInfo = evalContT $ do
+debugMarkerSetObjectTagEXT :: forall io . MonadIO io => Device -> DebugMarkerObjectTagInfoEXT -> io ()
+debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
   let vkDebugMarkerSetObjectTagEXT' = mkVkDebugMarkerSetObjectTagEXT (pVkDebugMarkerSetObjectTagEXT (deviceCmds (device :: Device)))
   pTagInfo <- ContT $ withCStruct (tagInfo)
   r <- lift $ vkDebugMarkerSetObjectTagEXT' (deviceHandle (device)) pTagInfo
@@ -224,8 +226,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'DebugMarkerMarkerInfoEXT'
-cmdDebugMarkerBeginEXT :: CommandBuffer -> DebugMarkerMarkerInfoEXT -> IO ()
-cmdDebugMarkerBeginEXT commandBuffer markerInfo = evalContT $ do
+cmdDebugMarkerBeginEXT :: forall io . MonadIO io => CommandBuffer -> DebugMarkerMarkerInfoEXT -> io ()
+cmdDebugMarkerBeginEXT commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdDebugMarkerBeginEXT' = mkVkCmdDebugMarkerBeginEXT (pVkCmdDebugMarkerBeginEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   lift $ vkCmdDebugMarkerBeginEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo
@@ -297,8 +299,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDebugMarkerEndEXT :: CommandBuffer -> IO ()
-cmdDebugMarkerEndEXT commandBuffer = do
+cmdDebugMarkerEndEXT :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdDebugMarkerEndEXT commandBuffer = liftIO $ do
   let vkCmdDebugMarkerEndEXT' = mkVkCmdDebugMarkerEndEXT (pVkCmdDebugMarkerEndEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDebugMarkerEndEXT' (commandBufferHandle (commandBuffer))
   pure $ ()
@@ -356,8 +358,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'DebugMarkerMarkerInfoEXT'
-cmdDebugMarkerInsertEXT :: CommandBuffer -> DebugMarkerMarkerInfoEXT -> IO ()
-cmdDebugMarkerInsertEXT commandBuffer markerInfo = evalContT $ do
+cmdDebugMarkerInsertEXT :: forall io . MonadIO io => CommandBuffer -> DebugMarkerMarkerInfoEXT -> io ()
+cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdDebugMarkerInsertEXT' = mkVkCmdDebugMarkerInsertEXT (pVkCmdDebugMarkerInsertEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   lift $ vkCmdDebugMarkerInsertEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo

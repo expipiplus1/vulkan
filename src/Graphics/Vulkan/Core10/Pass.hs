@@ -16,6 +16,7 @@ module Graphics.Vulkan.Core10.Pass  ( createFramebuffer
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -32,6 +33,7 @@ import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -164,8 +166,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Framebuffer', 'FramebufferCreateInfo'
-createFramebuffer :: PokeChain a => Device -> FramebufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Framebuffer)
-createFramebuffer device createInfo allocator = evalContT $ do
+createFramebuffer :: forall a io . (PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Framebuffer)
+createFramebuffer device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFramebuffer' = mkVkCreateFramebuffer (pVkCreateFramebuffer (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -181,7 +183,7 @@ createFramebuffer device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withFramebuffer :: PokeChain a => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> ((Framebuffer) -> IO r) -> IO r
+withFramebuffer :: forall a r . PokeChain a => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> ((Framebuffer) -> IO r) -> IO r
 withFramebuffer device pCreateInfo pAllocator =
   bracket
     (createFramebuffer device pCreateInfo pAllocator)
@@ -248,8 +250,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Framebuffer'
-destroyFramebuffer :: Device -> Framebuffer -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyFramebuffer device framebuffer allocator = evalContT $ do
+destroyFramebuffer :: forall io . MonadIO io => Device -> Framebuffer -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyFramebuffer device framebuffer allocator = liftIO . evalContT $ do
   let vkDestroyFramebuffer' = mkVkDestroyFramebuffer (pVkDestroyFramebuffer (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -315,8 +317,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.RenderPass', 'RenderPassCreateInfo'
-createRenderPass :: PokeChain a => Device -> RenderPassCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (RenderPass)
-createRenderPass device createInfo allocator = evalContT $ do
+createRenderPass :: forall a io . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
+createRenderPass device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPass' = mkVkCreateRenderPass (pVkCreateRenderPass (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -332,7 +334,7 @@ createRenderPass device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withRenderPass :: PokeChain a => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> ((RenderPass) -> IO r) -> IO r
+withRenderPass :: forall a r . PokeChain a => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> ((RenderPass) -> IO r) -> IO r
 withRenderPass device pCreateInfo pAllocator =
   bracket
     (createRenderPass device pCreateInfo pAllocator)
@@ -398,8 +400,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.RenderPass'
-destroyRenderPass :: Device -> RenderPass -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyRenderPass device renderPass allocator = evalContT $ do
+destroyRenderPass :: forall io . MonadIO io => Device -> RenderPass -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyRenderPass device renderPass allocator = liftIO . evalContT $ do
   let vkDestroyRenderPass' = mkVkDestroyRenderPass (pVkDestroyRenderPass (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -476,8 +478,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.SharedTypes.Extent2D',
 -- 'Graphics.Vulkan.Core10.Handles.RenderPass'
-getRenderAreaGranularity :: Device -> RenderPass -> IO (("granularity" ::: Extent2D))
-getRenderAreaGranularity device renderPass = evalContT $ do
+getRenderAreaGranularity :: forall io . MonadIO io => Device -> RenderPass -> io (("granularity" ::: Extent2D))
+getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
   let vkGetRenderAreaGranularity' = mkVkGetRenderAreaGranularity (pVkGetRenderAreaGranularity (deviceCmds (device :: Device)))
   pPGranularity <- ContT (withZeroCStruct @Extent2D)
   lift $ vkGetRenderAreaGranularity' (deviceHandle (device)) (renderPass) (pPGranularity)

@@ -6,6 +6,7 @@ module Graphics.Vulkan.Core10.BufferView  ( createBufferView
                                           ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -15,6 +16,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -105,8 +107,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.BufferView', 'BufferViewCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-createBufferView :: Device -> BufferViewCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (BufferView)
-createBufferView device createInfo allocator = evalContT $ do
+createBufferView :: forall io . MonadIO io => Device -> BufferViewCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (BufferView)
+createBufferView device createInfo allocator = liftIO . evalContT $ do
   let vkCreateBufferView' = mkVkCreateBufferView (pVkCreateBufferView (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -122,7 +124,7 @@ createBufferView device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withBufferView :: Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> ((BufferView) -> IO r) -> IO r
+withBufferView :: forall r . Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> ((BufferView) -> IO r) -> IO r
 withBufferView device pCreateInfo pAllocator =
   bracket
     (createBufferView device pCreateInfo pAllocator)
@@ -188,8 +190,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.BufferView',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyBufferView :: Device -> BufferView -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyBufferView device bufferView allocator = evalContT $ do
+destroyBufferView :: forall io . MonadIO io => Device -> BufferView -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyBufferView device bufferView allocator = liftIO . evalContT $ do
   let vkDestroyBufferView' = mkVkDestroyBufferView (pVkDestroyBufferView (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

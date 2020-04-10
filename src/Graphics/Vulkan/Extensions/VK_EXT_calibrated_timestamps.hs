@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( getPhysicalDev
                                                                 ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -36,6 +37,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -141,8 +143,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', 'TimeDomainEXT'
-getPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice -> IO (Result, ("timeDomains" ::: Vector TimeDomainEXT))
-getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = evalContT $ do
+getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("timeDomains" ::: Vector TimeDomainEXT))
+getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPTimeDomainCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -218,8 +220,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'CalibratedTimestampInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-getCalibratedTimestampsEXT :: Device -> ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT) -> IO (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
-getCalibratedTimestampsEXT device timestampInfos = evalContT $ do
+getCalibratedTimestampsEXT :: forall io . MonadIO io => Device -> ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT) -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
+getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
   let vkGetCalibratedTimestampsEXT' = mkVkGetCalibratedTimestampsEXT (pVkGetCalibratedTimestampsEXT (deviceCmds (device :: Device)))
   pPTimestampInfos <- ContT $ allocaBytesAligned @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e) . ($ ())) (timestampInfos)

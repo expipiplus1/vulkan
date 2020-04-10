@@ -43,6 +43,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
 
 import Control.Exception.Base (bracket)
 import Control.Exception.Base (bracket_)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -67,6 +68,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -192,8 +194,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsObjectNameInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-setDebugUtilsObjectNameEXT :: Device -> DebugUtilsObjectNameInfoEXT -> IO ()
-setDebugUtilsObjectNameEXT device nameInfo = evalContT $ do
+setDebugUtilsObjectNameEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectNameInfoEXT -> io ()
+setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
   let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT (pVkSetDebugUtilsObjectNameEXT (deviceCmds (device :: Device)))
   pNameInfo <- ContT $ withCStruct (nameInfo)
   r <- lift $ vkSetDebugUtilsObjectNameEXT' (deviceHandle (device)) pNameInfo
@@ -244,8 +246,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsObjectTagInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-setDebugUtilsObjectTagEXT :: Device -> DebugUtilsObjectTagInfoEXT -> IO ()
-setDebugUtilsObjectTagEXT device tagInfo = evalContT $ do
+setDebugUtilsObjectTagEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectTagInfoEXT -> io ()
+setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
   let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT (pVkSetDebugUtilsObjectTagEXT (deviceCmds (device :: Device)))
   pTagInfo <- ContT $ withCStruct (tagInfo)
   r <- lift $ vkSetDebugUtilsObjectTagEXT' (deviceHandle (device)) pTagInfo
@@ -281,8 +283,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Handles.Queue'
-queueBeginDebugUtilsLabelEXT :: Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-queueBeginDebugUtilsLabelEXT queue labelInfo = evalContT $ do
+queueBeginDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT (pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkQueueBeginDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
@@ -330,8 +332,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-queueEndDebugUtilsLabelEXT :: Queue -> IO ()
-queueEndDebugUtilsLabelEXT queue = do
+queueEndDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> io ()
+queueEndDebugUtilsLabelEXT queue = liftIO $ do
   let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT (pVkQueueEndDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
   vkQueueEndDebugUtilsLabelEXT' (queueHandle (queue))
   pure $ ()
@@ -366,8 +368,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Handles.Queue'
-queueInsertDebugUtilsLabelEXT :: Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-queueInsertDebugUtilsLabelEXT queue labelInfo = evalContT $ do
+queueInsertDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT (pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkQueueInsertDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
@@ -425,8 +427,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
-cmdBeginDebugUtilsLabelEXT :: CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = evalContT $ do
+cmdBeginDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT (pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
@@ -434,7 +436,7 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = evalContT $ do
 
 -- | A safe wrapper for 'cmdBeginDebugUtilsLabelEXT' and
 -- 'cmdEndDebugUtilsLabelEXT' using 'bracket_'
-cmdWithDebugUtilsLabelEXT :: CommandBuffer -> DebugUtilsLabelEXT -> IO r -> IO r
+cmdWithDebugUtilsLabelEXT :: forall r . CommandBuffer -> DebugUtilsLabelEXT -> IO r -> IO r
 cmdWithDebugUtilsLabelEXT commandBuffer pLabelInfo =
   bracket_
     (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo)
@@ -506,8 +508,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdEndDebugUtilsLabelEXT :: CommandBuffer -> IO ()
-cmdEndDebugUtilsLabelEXT commandBuffer = do
+cmdEndDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
   let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT (pVkCmdEndDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdEndDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer))
   pure $ ()
@@ -564,8 +566,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
-cmdInsertDebugUtilsLabelEXT :: CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = evalContT $ do
+cmdInsertDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT (pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkCmdInsertDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
@@ -633,8 +635,8 @@ foreign import ccall
 -- 'DebugUtilsMessengerCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-createDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DebugUtilsMessengerEXT)
-createDebugUtilsMessengerEXT instance' createInfo allocator = evalContT $ do
+createDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugUtilsMessengerEXT)
+createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugUtilsMessengerEXT' = mkVkCreateDebugUtilsMessengerEXT (pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -650,7 +652,7 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = evalContT $ do
 -- 'destroyDebugUtilsMessengerEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugUtilsMessengerEXT) -> IO r) -> IO r
+withDebugUtilsMessengerEXT :: forall r . Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugUtilsMessengerEXT) -> IO r) -> IO r
 withDebugUtilsMessengerEXT instance' pCreateInfo pAllocator =
   bracket
     (createDebugUtilsMessengerEXT instance' pCreateInfo pAllocator)
@@ -721,8 +723,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-destroyDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDebugUtilsMessengerEXT instance' messenger allocator = evalContT $ do
+destroyDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
   let vkDestroyDebugUtilsMessengerEXT' = mkVkDestroyDebugUtilsMessengerEXT (pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -788,8 +790,8 @@ foreign import ccall
 -- 'DebugUtilsMessageSeverityFlagBitsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCallbackDataEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-submitDebugUtilsMessageEXT :: Instance -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> DebugUtilsMessengerCallbackDataEXT -> IO ()
-submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = evalContT $ do
+submitDebugUtilsMessageEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> DebugUtilsMessengerCallbackDataEXT -> io ()
+submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
   let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT (pVkSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance)))
   pCallbackData <- ContT $ withCStruct (callbackData)
   lift $ vkSubmitDebugUtilsMessageEXT' (instanceHandle (instance')) (messageSeverity) (messageTypes) pCallbackData

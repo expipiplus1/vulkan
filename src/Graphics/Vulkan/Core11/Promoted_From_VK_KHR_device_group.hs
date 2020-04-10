@@ -20,6 +20,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group  ( getDeviceGrou
                                                                  ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -30,6 +31,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -112,8 +114,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
-getDeviceGroupPeerMemoryFeatures :: Device -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> IO (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
-getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = evalContT $ do
+getDeviceGroupPeerMemoryFeatures :: forall io . MonadIO io => Device -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
+getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = liftIO . evalContT $ do
   let vkGetDeviceGroupPeerMemoryFeatures' = mkVkGetDeviceGroupPeerMemoryFeatures (pVkGetDeviceGroupPeerMemoryFeatures (deviceCmds (device :: Device)))
   pPPeerMemoryFeatures <- ContT $ bracket (callocBytes @PeerMemoryFeatureFlags 4) free
   lift $ vkGetDeviceGroupPeerMemoryFeatures' (deviceHandle (device)) (heapIndex) (localDeviceIndex) (remoteDeviceIndex) (pPPeerMemoryFeatures)
@@ -197,8 +199,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDeviceMask :: CommandBuffer -> ("deviceMask" ::: Word32) -> IO ()
-cmdSetDeviceMask commandBuffer deviceMask = do
+cmdSetDeviceMask :: forall io . MonadIO io => CommandBuffer -> ("deviceMask" ::: Word32) -> io ()
+cmdSetDeviceMask commandBuffer deviceMask = liftIO $ do
   let vkCmdSetDeviceMask' = mkVkCmdSetDeviceMask (pVkCmdSetDeviceMask (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetDeviceMask' (commandBufferHandle (commandBuffer)) (deviceMask)
   pure $ ()
@@ -451,8 +453,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDispatchBase :: CommandBuffer -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
-cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = do
+cmdDispatchBase :: forall io . MonadIO io => CommandBuffer -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> io ()
+cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = liftIO $ do
   let vkCmdDispatchBase' = mkVkCmdDispatchBase (pVkCmdDispatchBase (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDispatchBase' (commandBufferHandle (commandBuffer)) (baseGroupX) (baseGroupY) (baseGroupZ) (groupCountX) (groupCountY) (groupCountZ)
   pure $ ()

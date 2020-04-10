@@ -174,6 +174,7 @@ import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -222,6 +223,7 @@ import Graphics.Vulkan.Exception (VulkanException(..))
 import Graphics.Vulkan.NamedType ((:::))
 import Graphics.Vulkan.Zero (Zero)
 import Graphics.Vulkan.Zero (Zero(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -254,8 +256,8 @@ foreign import ccall
   :: Ptr AllocatorCreateInfo -> Ptr Allocator -> IO Result
 
 -- | Creates Allocator object.
-createAllocator :: AllocatorCreateInfo -> IO (Allocator)
-createAllocator createInfo = evalContT $ do
+createAllocator :: forall io . MonadIO io => AllocatorCreateInfo -> io (Allocator)
+createAllocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocator <- ContT $ bracket (callocBytes @Allocator 8) free
   r <- lift $ (ffiVmaCreateAllocator) pCreateInfo (pPAllocator)
@@ -267,7 +269,7 @@ createAllocator createInfo = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withAllocator :: AllocatorCreateInfo -> ((Allocator) -> IO r) -> IO r
+withAllocator :: forall r . AllocatorCreateInfo -> ((Allocator) -> IO r) -> IO r
 withAllocator pCreateInfo =
   bracket
     (createAllocator pCreateInfo)
@@ -282,8 +284,8 @@ foreign import ccall
   :: Allocator -> IO ()
 
 -- | Destroys allocator object.
-destroyAllocator :: Allocator -> IO ()
-destroyAllocator allocator = do
+destroyAllocator :: forall io . MonadIO io => Allocator -> io ()
+destroyAllocator allocator = liftIO $ do
   (ffiVmaDestroyAllocator) (allocator)
   pure $ ()
 
@@ -301,8 +303,8 @@ foreign import ccall
 -- It might be useful if you want to keep just the 'Allocator' handle and
 -- fetch other required handles to @VkPhysicalDevice@, @VkDevice@ etc.
 -- every time using this function.
-getAllocatorInfo :: Allocator -> IO (AllocatorInfo)
-getAllocatorInfo allocator = evalContT $ do
+getAllocatorInfo :: forall io . MonadIO io => Allocator -> io (AllocatorInfo)
+getAllocatorInfo allocator = liftIO . evalContT $ do
   pPAllocatorInfo <- ContT (withZeroCStruct @AllocatorInfo)
   lift $ (ffiVmaGetAllocatorInfo) (allocator) (pPAllocatorInfo)
   pAllocatorInfo <- lift $ peekCStruct @AllocatorInfo pPAllocatorInfo
@@ -319,8 +321,8 @@ foreign import ccall
 -- | PhysicalDeviceProperties are fetched from physicalDevice by the
 -- allocator. You can access it here, without fetching it again on your
 -- own.
-getPhysicalDeviceProperties :: Allocator -> IO (Ptr PhysicalDeviceProperties)
-getPhysicalDeviceProperties allocator = evalContT $ do
+getPhysicalDeviceProperties :: forall io . MonadIO io => Allocator -> io (Ptr PhysicalDeviceProperties)
+getPhysicalDeviceProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceProperties) 8) free
   lift $ (ffiVmaGetPhysicalDeviceProperties) (allocator) (pPpPhysicalDeviceProperties)
   ppPhysicalDeviceProperties <- lift $ peek @(Ptr PhysicalDeviceProperties) pPpPhysicalDeviceProperties
@@ -337,8 +339,8 @@ foreign import ccall
 -- | PhysicalDeviceMemoryProperties are fetched from physicalDevice by the
 -- allocator. You can access it here, without fetching it again on your
 -- own.
-getMemoryProperties :: Allocator -> IO (Ptr PhysicalDeviceMemoryProperties)
-getMemoryProperties allocator = evalContT $ do
+getMemoryProperties :: forall io . MonadIO io => Allocator -> io (Ptr PhysicalDeviceMemoryProperties)
+getMemoryProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceMemoryProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceMemoryProperties) 8) free
   lift $ (ffiVmaGetMemoryProperties) (allocator) (pPpPhysicalDeviceMemoryProperties)
   ppPhysicalDeviceMemoryProperties <- lift $ peek @(Ptr PhysicalDeviceMemoryProperties) pPpPhysicalDeviceMemoryProperties
@@ -356,8 +358,8 @@ foreign import ccall
 --
 -- This is just a convenience function. Same information can be obtained
 -- using 'getMemoryProperties'.
-getMemoryTypeProperties :: Allocator -> ("memoryTypeIndex" ::: Word32) -> IO (MemoryPropertyFlags)
-getMemoryTypeProperties allocator memoryTypeIndex = evalContT $ do
+getMemoryTypeProperties :: forall io . MonadIO io => Allocator -> ("memoryTypeIndex" ::: Word32) -> io (MemoryPropertyFlags)
+getMemoryTypeProperties allocator memoryTypeIndex = liftIO . evalContT $ do
   pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
   lift $ (ffiVmaGetMemoryTypeProperties) (allocator) (memoryTypeIndex) (pPFlags)
   pFlags <- lift $ peek @MemoryPropertyFlags pPFlags
@@ -378,8 +380,8 @@ foreign import ccall
 -- 'ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT' flags to inform the
 -- allocator when a new frame begins. Allocations queried using
 -- 'getAllocationInfo' cannot become lost in the current frame.
-setCurrentFrameIndex :: Allocator -> ("frameIndex" ::: Word32) -> IO ()
-setCurrentFrameIndex allocator frameIndex = do
+setCurrentFrameIndex :: forall io . MonadIO io => Allocator -> ("frameIndex" ::: Word32) -> io ()
+setCurrentFrameIndex allocator frameIndex = liftIO $ do
   (ffiVmaSetCurrentFrameIndex) (allocator) (frameIndex)
   pure $ ()
 
@@ -400,8 +402,8 @@ foreign import ccall
 --
 -- Note that when using allocator from multiple threads, returned
 -- information may immediately become outdated.
-calculateStats :: Allocator -> IO (Stats)
-calculateStats allocator = evalContT $ do
+calculateStats :: forall io . MonadIO io => Allocator -> io (Stats)
+calculateStats allocator = liftIO . evalContT $ do
   pPStats <- ContT (withZeroCStruct @Stats)
   lift $ (ffiVmaCalculateStats) (allocator) (pPStats)
   pStats <- lift $ peekCStruct @Stats pPStats
@@ -431,8 +433,8 @@ foreign import ccall
 --
 -- Note that when using allocator from multiple threads, returned
 -- information may immediately become outdated.
-getBudget :: Allocator -> IO (Budget)
-getBudget allocator = evalContT $ do
+getBudget :: forall io . MonadIO io => Allocator -> io (Budget)
+getBudget allocator = liftIO . evalContT $ do
   pPBudget <- ContT (withZeroCStruct @Budget)
   lift $ (ffiVmaGetBudget) (allocator) (pPBudget)
   pBudget <- lift $ peekCStruct @Budget pPBudget
@@ -454,8 +456,8 @@ foreign import ccall
 -- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
 -- |           |               | function.                                     |
 -- +-----------+---------------+-----------------------------------------------+
-buildStatsString :: Allocator -> ("detailedMap" ::: Bool) -> IO (("statsString" ::: Ptr CChar))
-buildStatsString allocator detailedMap = evalContT $ do
+buildStatsString :: forall io . MonadIO io => Allocator -> ("detailedMap" ::: Bool) -> io (("statsString" ::: Ptr CChar))
+buildStatsString allocator detailedMap = liftIO . evalContT $ do
   pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
   lift $ (ffiVmaBuildStatsString) (allocator) (pPpStatsString) (boolToBool32 (detailedMap))
   ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
@@ -470,8 +472,8 @@ foreign import ccall
   :: Allocator -> Ptr CChar -> IO ()
 
 
-freeStatsString :: Allocator -> ("statsString" ::: Ptr CChar) -> IO ()
-freeStatsString allocator statsString = do
+freeStatsString :: forall io . MonadIO io => Allocator -> ("statsString" ::: Ptr CChar) -> io ()
+freeStatsString allocator statsString = liftIO $ do
   (ffiVmaFreeStatsString) (allocator) (statsString)
   pure $ ()
 
@@ -505,8 +507,8 @@ foreign import ccall
 -- the specific type of resource you want to use it for. Please check
 -- parameters of your resource, like image layout (OPTIMAL versus LINEAR)
 -- or mip level count.
-findMemoryTypeIndex :: Allocator -> ("memoryTypeBits" ::: Word32) -> AllocationCreateInfo -> IO (("memoryTypeIndex" ::: Word32))
-findMemoryTypeIndex allocator memoryTypeBits allocationCreateInfo = evalContT $ do
+findMemoryTypeIndex :: forall io . MonadIO io => Allocator -> ("memoryTypeBits" ::: Word32) -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndex allocator memoryTypeBits allocationCreateInfo = liftIO . evalContT $ do
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ (ffiVmaFindMemoryTypeIndex) (allocator) (memoryTypeBits) pAllocationCreateInfo (pPMemoryTypeIndex)
@@ -537,8 +539,8 @@ foreign import ccall
 -- -   'findMemoryTypeIndex'
 --
 -- -   @vkDestroyBuffer@
-findMemoryTypeIndexForBufferInfo :: PokeChain a => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> IO (("memoryTypeIndex" ::: Word32))
-findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo = evalContT $ do
+findMemoryTypeIndexForBufferInfo :: forall a io . (PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
@@ -570,8 +572,8 @@ foreign import ccall
 -- -   'findMemoryTypeIndex'
 --
 -- -   @vkDestroyImage@
-findMemoryTypeIndexForImageInfo :: PokeChain a => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> IO (("memoryTypeIndex" ::: Word32))
-findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo = evalContT $ do
+findMemoryTypeIndexForImageInfo :: forall a io . (PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
@@ -599,8 +601,8 @@ foreign import ccall
 -- +-----------+-------------+-----------------------------------------------+
 -- | out       | pPool       | Handle to created pool.                       |
 -- +-----------+-------------+-----------------------------------------------+
-createPool :: Allocator -> PoolCreateInfo -> IO (Pool)
-createPool allocator createInfo = evalContT $ do
+createPool :: forall io . MonadIO io => Allocator -> PoolCreateInfo -> io (Pool)
+createPool allocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPPool <- ContT $ bracket (callocBytes @Pool 8) free
   r <- lift $ (ffiVmaCreatePool) (allocator) pCreateInfo (pPPool)
@@ -611,7 +613,7 @@ createPool allocator createInfo = evalContT $ do
 -- | A safe wrapper for 'createPool' and 'destroyPool' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withPool :: Allocator -> PoolCreateInfo -> ((Pool) -> IO r) -> IO r
+withPool :: forall r . Allocator -> PoolCreateInfo -> ((Pool) -> IO r) -> IO r
 withPool allocator pCreateInfo =
   bracket
     (createPool allocator pCreateInfo)
@@ -626,8 +628,8 @@ foreign import ccall
   :: Allocator -> Pool -> IO ()
 
 -- | Destroys 'Pool' object and frees Vulkan device memory.
-destroyPool :: Allocator -> Pool -> IO ()
-destroyPool allocator pool = do
+destroyPool :: forall io . MonadIO io => Allocator -> Pool -> io ()
+destroyPool allocator pool = liftIO $ do
   (ffiVmaDestroyPool) (allocator) (pool)
   pure $ ()
 
@@ -650,8 +652,8 @@ foreign import ccall
 -- +-----------+------------+-----------------------------------------------+
 -- | out       | pPoolStats | Statistics of specified pool.                 |
 -- +-----------+------------+-----------------------------------------------+
-getPoolStats :: Allocator -> Pool -> IO (PoolStats)
-getPoolStats allocator pool = evalContT $ do
+getPoolStats :: forall io . MonadIO io => Allocator -> Pool -> io (PoolStats)
+getPoolStats allocator pool = liftIO . evalContT $ do
   pPPoolStats <- ContT (withZeroCStruct @PoolStats)
   lift $ (ffiVmaGetPoolStats) (allocator) (pool) (pPPoolStats)
   pPoolStats <- lift $ peekCStruct @PoolStats pPPoolStats
@@ -679,8 +681,8 @@ foreign import ccall
 -- |           |                      | Optional - pass null if you don\'t need this  |
 -- |           |                      | information.                                  |
 -- +-----------+----------------------+-----------------------------------------------+
-makePoolAllocationsLost :: Allocator -> Pool -> IO (("lostAllocationCount" ::: Word64))
-makePoolAllocationsLost allocator pool = evalContT $ do
+makePoolAllocationsLost :: forall io . MonadIO io => Allocator -> Pool -> io (("lostAllocationCount" ::: Word64))
+makePoolAllocationsLost allocator pool = liftIO . evalContT $ do
   pPLostAllocationCount <- ContT $ bracket (callocBytes @CSize 8) free
   lift $ (ffiVmaMakePoolAllocationsLost) (allocator) (pool) (pPLostAllocationCount)
   pLostAllocationCount <- lift $ peek @CSize pPLostAllocationCount
@@ -715,8 +717,8 @@ foreign import ccall
 --     allocations. @VMA_ASSERT@ is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
-checkPoolCorruption :: Allocator -> Pool -> IO ()
-checkPoolCorruption allocator pool = do
+checkPoolCorruption :: forall io . MonadIO io => Allocator -> Pool -> io ()
+checkPoolCorruption allocator pool = liftIO $ do
   r <- (ffiVmaCheckPoolCorruption) (allocator) (pool)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -734,8 +736,8 @@ foreign import ccall
 -- null-terminated string containing name of the pool that was previously
 -- set. The pointer becomes invalid when the pool is destroyed or its name
 -- is changed using 'setPoolName'.
-getPoolName :: Allocator -> Pool -> IO (("name" ::: Ptr CChar))
-getPoolName allocator pool = evalContT $ do
+getPoolName :: forall io . MonadIO io => Allocator -> Pool -> io (("name" ::: Ptr CChar))
+getPoolName allocator pool = liftIO . evalContT $ do
   pPpName <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
   lift $ (ffiVmaGetPoolName) (allocator) (pool) (pPpName)
   ppName <- lift $ peek @(Ptr CChar) pPpName
@@ -754,8 +756,8 @@ foreign import ccall
 -- @pName@ can be either null or pointer to a null-terminated string with
 -- new name for the pool. Function makes internal copy of the string, so it
 -- can be changed or freed immediately after this call.
-setPoolName :: Allocator -> Pool -> ("name" ::: Maybe ByteString) -> IO ()
-setPoolName allocator pool name = evalContT $ do
+setPoolName :: forall io . MonadIO io => Allocator -> Pool -> ("name" ::: Maybe ByteString) -> io ()
+setPoolName allocator pool name = liftIO . evalContT $ do
   pName <- case (name) of
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
@@ -787,8 +789,8 @@ foreign import ccall
 -- It is recommended to use 'allocateMemoryForBuffer',
 -- 'allocateMemoryForImage', 'createBuffer', 'createImage' instead whenever
 -- possible.
-allocateMemory :: Allocator -> ("vkMemoryRequirements" ::: MemoryRequirements) -> AllocationCreateInfo -> IO (Allocation, AllocationInfo)
-allocateMemory allocator vkMemoryRequirements createInfo = evalContT $ do
+allocateMemory :: forall io . MonadIO io => Allocator -> ("vkMemoryRequirements" ::: MemoryRequirements) -> AllocationCreateInfo -> io (Allocation, AllocationInfo)
+allocateMemory allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
   pVkMemoryRequirements <- ContT $ withCStruct (vkMemoryRequirements)
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
@@ -802,7 +804,7 @@ allocateMemory allocator vkMemoryRequirements createInfo = evalContT $ do
 -- | A safe wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMemory :: Allocator -> MemoryRequirements -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
+withMemory :: forall r . Allocator -> MemoryRequirements -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
 withMemory allocator pVkMemoryRequirements pCreateInfo =
   bracket
     (allocateMemory allocator pVkMemoryRequirements pCreateInfo)
@@ -851,8 +853,8 @@ foreign import ccall
 -- allocations already made within this function call are also freed, so
 -- that when returned result is not @VK_SUCCESS@, @pAllocation@ array is
 -- always entirely filled with @VK_NULL_HANDLE@.
-allocateMemoryPages :: Allocator -> ("vkMemoryRequirements" ::: Vector MemoryRequirements) -> ("createInfo" ::: Vector AllocationCreateInfo) -> IO (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
-allocateMemoryPages allocator vkMemoryRequirements createInfo = evalContT $ do
+allocateMemoryPages :: forall io . MonadIO io => Allocator -> ("vkMemoryRequirements" ::: Vector MemoryRequirements) -> ("createInfo" ::: Vector AllocationCreateInfo) -> io (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
+allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
   pPVkMemoryRequirements <- ContT $ allocaBytesAligned @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVkMemoryRequirements `plusPtr` (24 * (i)) :: Ptr MemoryRequirements) (e) . ($ ())) (vkMemoryRequirements)
   pPCreateInfo <- ContT $ allocaBytesAligned @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 40) 8
@@ -874,7 +876,7 @@ allocateMemoryPages allocator vkMemoryRequirements createInfo = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMemoryPages :: Allocator -> Vector MemoryRequirements -> Vector AllocationCreateInfo -> ((Vector Allocation, Vector AllocationInfo) -> IO r) -> IO r
+withMemoryPages :: forall r . Allocator -> Vector MemoryRequirements -> Vector AllocationCreateInfo -> ((Vector Allocation, Vector AllocationInfo) -> IO r) -> IO r
 withMemoryPages allocator pVkMemoryRequirements pCreateInfo =
   bracket
     (allocateMemoryPages allocator pVkMemoryRequirements pCreateInfo)
@@ -899,8 +901,8 @@ foreign import ccall
 -- +-----------+-----------------+-----------------------------------------------+
 --
 -- You should free the memory using 'freeMemory'.
-allocateMemoryForBuffer :: Allocator -> Buffer -> AllocationCreateInfo -> IO (Allocation, AllocationInfo)
-allocateMemoryForBuffer allocator buffer createInfo = evalContT $ do
+allocateMemoryForBuffer :: forall io . MonadIO io => Allocator -> Buffer -> AllocationCreateInfo -> io (Allocation, AllocationInfo)
+allocateMemoryForBuffer allocator buffer createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
@@ -914,7 +916,7 @@ allocateMemoryForBuffer allocator buffer createInfo = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMemoryForBuffer :: Allocator -> Buffer -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
+withMemoryForBuffer :: forall r . Allocator -> Buffer -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
 withMemoryForBuffer allocator buffer pCreateInfo =
   bracket
     (allocateMemoryForBuffer allocator buffer pCreateInfo)
@@ -929,8 +931,8 @@ foreign import ccall
   :: Allocator -> Image -> Ptr AllocationCreateInfo -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
 -- | Function similar to 'allocateMemoryForBuffer'.
-allocateMemoryForImage :: Allocator -> Image -> AllocationCreateInfo -> IO (Allocation, AllocationInfo)
-allocateMemoryForImage allocator image createInfo = evalContT $ do
+allocateMemoryForImage :: forall io . MonadIO io => Allocator -> Image -> AllocationCreateInfo -> io (Allocation, AllocationInfo)
+allocateMemoryForImage allocator image createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
@@ -944,7 +946,7 @@ allocateMemoryForImage allocator image createInfo = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMemoryForImage :: Allocator -> Image -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
+withMemoryForImage :: forall r . Allocator -> Image -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
 withMemoryForImage allocator image pCreateInfo =
   bracket
     (allocateMemoryForImage allocator image pCreateInfo)
@@ -963,8 +965,8 @@ foreign import ccall
 --
 -- Passing @VK_NULL_HANDLE@ as @allocation@ is valid. Such function call is
 -- just skipped.
-freeMemory :: Allocator -> Allocation -> IO ()
-freeMemory allocator allocation = do
+freeMemory :: forall io . MonadIO io => Allocator -> Allocation -> io ()
+freeMemory allocator allocation = liftIO $ do
   (ffiVmaFreeMemory) (allocator) (allocation)
   pure $ ()
 
@@ -988,8 +990,8 @@ foreign import ccall
 -- Allocations in @pAllocations@ array can come from any memory pools and
 -- types. Passing @VK_NULL_HANDLE@ as elements of @pAllocations@ array is
 -- valid. Such entries are just skipped.
-freeMemoryPages :: Allocator -> ("allocations" ::: Vector Allocation) -> IO ()
-freeMemoryPages allocator allocations = evalContT $ do
+freeMemoryPages :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> io ()
+freeMemoryPages allocator allocations = liftIO . evalContT $ do
   pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   lift $ (ffiVmaFreeMemoryPages) (allocator) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocations)
@@ -1012,8 +1014,8 @@ foreign import ccall
 -- only if @newSize@ equals current allocation\'s size. Otherwise returns
 -- @VK_ERROR_OUT_OF_POOL_MEMORY@, indicating that allocation\'s size could
 -- not be changed.
-resizeAllocation :: Allocator -> Allocation -> ("newSize" ::: DeviceSize) -> IO ()
-resizeAllocation allocator allocation newSize = do
+resizeAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("newSize" ::: DeviceSize) -> io ()
+resizeAllocation allocator allocation newSize = liftIO $ do
   r <- (ffiVmaResizeAllocation) (allocator) (allocation) (newSize)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1044,8 +1046,8 @@ foreign import ccall
 --
 -- -   If you just want to check if allocation is not lost,
 --     'touchAllocation' will work faster.
-getAllocationInfo :: Allocator -> Allocation -> IO (AllocationInfo)
-getAllocationInfo allocator allocation = evalContT $ do
+getAllocationInfo :: forall io . MonadIO io => Allocator -> Allocation -> io (AllocationInfo)
+getAllocationInfo allocator allocation = liftIO . evalContT $ do
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
   lift $ (ffiVmaGetAllocationInfo) (allocator) (allocation) (pPAllocationInfo)
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
@@ -1077,8 +1079,8 @@ foreign import ccall
 -- If the allocation has been created without
 -- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function always
 -- returns @VK_TRUE@.
-touchAllocation :: Allocator -> Allocation -> IO (Bool)
-touchAllocation allocator allocation = do
+touchAllocation :: forall io . MonadIO io => Allocator -> Allocation -> io (Bool)
+touchAllocation allocator allocation = liftIO $ do
   r <- (ffiVmaTouchAllocation) (allocator) (allocation)
   pure $ ((bool32ToBool r))
 
@@ -1104,8 +1106,8 @@ foreign import ccall
 -- copied to allocation\'s @pUserData@. It is opaque, so you can use it
 -- however you want - e.g. as a pointer, ordinal number or some handle to
 -- you own data.
-setAllocationUserData :: Allocator -> Allocation -> ("userData" ::: Ptr ()) -> IO ()
-setAllocationUserData allocator allocation userData = do
+setAllocationUserData :: forall io . MonadIO io => Allocator -> Allocation -> ("userData" ::: Ptr ()) -> io ()
+setAllocationUserData allocator allocation userData = liftIO $ do
   (ffiVmaSetAllocationUserData) (allocator) (allocation) (userData)
   pure $ ()
 
@@ -1126,8 +1128,8 @@ foreign import ccall
 -- Returned allocation is not tied to any specific memory pool or memory
 -- type and not bound to any image or buffer. It has size = 0. It cannot be
 -- turned into a real, non-empty allocation.
-createLostAllocation :: Allocator -> IO (Allocation)
-createLostAllocation allocator = evalContT $ do
+createLostAllocation :: forall io . MonadIO io => Allocator -> io (Allocation)
+createLostAllocation allocator = liftIO . evalContT $ do
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   lift $ (ffiVmaCreateLostAllocation) (allocator) (pPAllocation)
   pAllocation <- lift $ peek @Allocation pPAllocation
@@ -1137,7 +1139,7 @@ createLostAllocation allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withLostAllocation :: Allocator -> ((Allocation) -> IO r) -> IO r
+withLostAllocation :: forall r . Allocator -> ((Allocation) -> IO r) -> IO r
 withLostAllocation allocator =
   bracket
     (createLostAllocation allocator)
@@ -1191,8 +1193,8 @@ foreign import ccall
 -- allocation is made from a memory types that is not @HOST_COHERENT@, you
 -- also need to use 'invalidateAllocation' \/ 'flushAllocation', as
 -- required by Vulkan specification.
-mapMemory :: Allocator -> Allocation -> IO (("data" ::: Ptr ()))
-mapMemory allocator allocation = evalContT $ do
+mapMemory :: forall io . MonadIO io => Allocator -> Allocation -> io (("data" ::: Ptr ()))
+mapMemory allocator allocation = liftIO . evalContT $ do
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
   r <- lift $ (ffiVmaMapMemory) (allocator) (allocation) (pPpData)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1202,7 +1204,7 @@ mapMemory allocator allocation = evalContT $ do
 -- | A safe wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMappedMemory :: Allocator -> Allocation -> ((Ptr ()) -> IO r) -> IO r
+withMappedMemory :: forall r . Allocator -> Allocation -> ((Ptr ()) -> IO r) -> IO r
 withMappedMemory allocator allocation =
   bracket
     (mapMemory allocator allocation)
@@ -1225,8 +1227,8 @@ foreign import ccall
 -- allocation is made from a memory types that is not @HOST_COHERENT@, you
 -- also need to use 'invalidateAllocation' \/ 'flushAllocation', as
 -- required by Vulkan specification.
-unmapMemory :: Allocator -> Allocation -> IO ()
-unmapMemory allocator allocation = do
+unmapMemory :: forall io . MonadIO io => Allocator -> Allocation -> io ()
+unmapMemory allocator allocation = liftIO $ do
   (ffiVmaUnmapMemory) (allocator) (allocation)
   pure $ ()
 
@@ -1262,8 +1264,8 @@ foreign import ccall
 -- @allocation@. If you mean whole allocation, you can pass 0 and
 -- @VK_WHOLE_SIZE@, respectively. Do not pass allocation\'s offset as
 -- @offset@!!!
-flushAllocation :: Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> IO ()
-flushAllocation allocator allocation offset size = do
+flushAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> io ()
+flushAllocation allocator allocation offset size = liftIO $ do
   (ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size)
   pure $ ()
 
@@ -1299,8 +1301,8 @@ foreign import ccall
 -- @allocation@. If you mean whole allocation, you can pass 0 and
 -- @VK_WHOLE_SIZE@, respectively. Do not pass allocation\'s offset as
 -- @offset@!!!
-invalidateAllocation :: Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> IO ()
-invalidateAllocation allocator allocation offset size = do
+invalidateAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> io ()
+invalidateAllocation allocator allocation offset size = liftIO $ do
   (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
   pure $ ()
 
@@ -1340,8 +1342,8 @@ foreign import ccall
 --     allocations. @VMA_ASSERT@ is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
-checkCorruption :: Allocator -> ("memoryTypeBits" ::: Word32) -> IO ()
-checkCorruption allocator memoryTypeBits = do
+checkCorruption :: forall io . MonadIO io => Allocator -> ("memoryTypeBits" ::: Word32) -> io ()
+checkCorruption allocator memoryTypeBits = liftIO $ do
   r <- (ffiVmaCheckCorruption) (allocator) (memoryTypeBits)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1405,8 +1407,8 @@ foreign import ccall
 --
 -- For more information and important limitations regarding
 -- defragmentation, see documentation chapter: /Defragmentation/.
-defragmentationBegin :: Allocator -> DefragmentationInfo2 -> IO (Result, DefragmentationStats, DefragmentationContext)
-defragmentationBegin allocator info = evalContT $ do
+defragmentationBegin :: forall io . MonadIO io => Allocator -> DefragmentationInfo2 -> io (Result, DefragmentationStats, DefragmentationContext)
+defragmentationBegin allocator info = liftIO . evalContT $ do
   pInfo <- ContT $ withCStruct (info)
   pPStats <- ContT (withZeroCStruct @DefragmentationStats)
   pPContext <- ContT $ bracket (callocBytes @DefragmentationContext 8) free
@@ -1420,7 +1422,7 @@ defragmentationBegin allocator info = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDefragmentation :: Allocator -> DefragmentationInfo2 -> ((Result, DefragmentationStats, DefragmentationContext) -> IO r) -> IO r
+withDefragmentation :: forall r . Allocator -> DefragmentationInfo2 -> ((Result, DefragmentationStats, DefragmentationContext) -> IO r) -> IO r
 withDefragmentation allocator pInfo =
   bracket
     (defragmentationBegin allocator pInfo)
@@ -1439,8 +1441,8 @@ foreign import ccall
 -- Use this function to finish defragmentation started by
 -- 'defragmentationBegin'. It is safe to pass @context == null@. The
 -- function then does nothing.
-defragmentationEnd :: Allocator -> DefragmentationContext -> IO ()
-defragmentationEnd allocator context = do
+defragmentationEnd :: forall io . MonadIO io => Allocator -> DefragmentationContext -> io ()
+defragmentationEnd allocator context = liftIO $ do
   r <- (ffiVmaDefragmentationEnd) (allocator) (context)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1453,8 +1455,8 @@ foreign import ccall
   :: Allocator -> DefragmentationContext -> Ptr DefragmentationPassInfo -> IO Result
 
 
-beginDefragmentationPass :: Allocator -> DefragmentationContext -> IO (DefragmentationPassInfo)
-beginDefragmentationPass allocator context = evalContT $ do
+beginDefragmentationPass :: forall io . MonadIO io => Allocator -> DefragmentationContext -> io (DefragmentationPassInfo)
+beginDefragmentationPass allocator context = liftIO . evalContT $ do
   pPInfo <- ContT (withZeroCStruct @DefragmentationPassInfo)
   r <- lift $ (ffiVmaBeginDefragmentationPass) (allocator) (context) (pPInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1465,7 +1467,7 @@ beginDefragmentationPass allocator context = evalContT $ do
 -- 'endDefragmentationPass' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDefragmentationPass :: Allocator -> DefragmentationContext -> ((DefragmentationPassInfo) -> IO r) -> IO r
+withDefragmentationPass :: forall r . Allocator -> DefragmentationContext -> ((DefragmentationPassInfo) -> IO r) -> IO r
 withDefragmentationPass allocator context =
   bracket
     (beginDefragmentationPass allocator context)
@@ -1480,8 +1482,8 @@ foreign import ccall
   :: Allocator -> DefragmentationContext -> IO Result
 
 
-endDefragmentationPass :: Allocator -> DefragmentationContext -> IO ()
-endDefragmentationPass allocator context = do
+endDefragmentationPass :: forall io . MonadIO io => Allocator -> DefragmentationContext -> io ()
+endDefragmentationPass allocator context = liftIO $ do
   r <- (ffiVmaEndDefragmentationPass) (allocator) (context)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1564,8 +1566,8 @@ foreign import ccall
 -- but you should measure that on your platform.
 --
 -- For more information, see /Defragmentation/ chapter.
-defragment :: Allocator -> ("allocations" ::: Vector Allocation) -> ("defragmentationInfo" ::: Maybe DefragmentationInfo) -> IO (("allocationsChanged" ::: Vector Bool), DefragmentationStats)
-defragment allocator allocations defragmentationInfo = evalContT $ do
+defragment :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("defragmentationInfo" ::: Maybe DefragmentationInfo) -> io (("allocationsChanged" ::: Vector Bool), DefragmentationStats)
+defragment allocator allocations defragmentationInfo = liftIO . evalContT $ do
   pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   pPAllocationsChanged <- ContT $ bracket (callocBytes @Bool32 ((fromIntegral ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize))) * 4)) free
@@ -1602,8 +1604,8 @@ foreign import ccall
 -- Vulkan).
 --
 -- It is recommended to use function 'createBuffer' instead of this one.
-bindBufferMemory :: Allocator -> Allocation -> Buffer -> IO ()
-bindBufferMemory allocator allocation buffer = do
+bindBufferMemory :: forall io . MonadIO io => Allocator -> Allocation -> Buffer -> io ()
+bindBufferMemory allocator allocation buffer = liftIO $ do
   r <- (ffiVmaBindBufferMemory) (allocator) (allocation) (buffer)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1636,8 +1638,8 @@ foreign import ccall
 -- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
 -- /VmaAllocatorCreateInfo::vulkanApiVersion/ @== VK_API_VERSION_1_1@.
 -- Otherwise the call fails.
-bindBufferMemory2 :: Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Buffer -> ("next" ::: Ptr ()) -> IO ()
-bindBufferMemory2 allocator allocation allocationLocalOffset buffer next = do
+bindBufferMemory2 :: forall io . MonadIO io => Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Buffer -> ("next" ::: Ptr ()) -> io ()
+bindBufferMemory2 allocator allocation allocationLocalOffset buffer next = liftIO $ do
   r <- (ffiVmaBindBufferMemory2) (allocator) (allocation) (allocationLocalOffset) (buffer) (next)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1662,8 +1664,8 @@ foreign import ccall
 -- Vulkan).
 --
 -- It is recommended to use function 'createImage' instead of this one.
-bindImageMemory :: Allocator -> Allocation -> Image -> IO ()
-bindImageMemory allocator allocation image = do
+bindImageMemory :: forall io . MonadIO io => Allocator -> Allocation -> Image -> io ()
+bindImageMemory allocator allocation image = liftIO $ do
   r <- (ffiVmaBindImageMemory) (allocator) (allocation) (image)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1696,8 +1698,8 @@ foreign import ccall
 -- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
 -- /VmaAllocatorCreateInfo::vulkanApiVersion/ @== VK_API_VERSION_1_1@.
 -- Otherwise the call fails.
-bindImageMemory2 :: Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Image -> ("next" ::: Ptr ()) -> IO ()
-bindImageMemory2 allocator allocation allocationLocalOffset image next = do
+bindImageMemory2 :: forall io . MonadIO io => Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Image -> ("next" ::: Ptr ()) -> io ()
+bindImageMemory2 allocator allocation allocationLocalOffset image next = liftIO $ do
   r <- (ffiVmaBindImageMemory2) (allocator) (allocation) (allocationLocalOffset) (image) (next)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1746,8 +1748,8 @@ foreign import ccall
 -- VMA_ALLOCATION_CREATE_NEVER_ALLOCATE_BIT is not used), it creates
 -- dedicated allocation for this buffer, just like when using
 -- VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT.
-createBuffer :: PokeChain a => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> IO (Buffer, Allocation, AllocationInfo)
-createBuffer allocator bufferCreateInfo allocationCreateInfo = evalContT $ do
+createBuffer :: forall a io . (PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (Buffer, Allocation, AllocationInfo)
+createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
@@ -1763,7 +1765,7 @@ createBuffer allocator bufferCreateInfo allocationCreateInfo = evalContT $ do
 -- | A safe wrapper for 'createBuffer' and 'destroyBuffer' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withBuffer :: PokeChain a => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> ((Buffer, Allocation, AllocationInfo) -> IO r) -> IO r
+withBuffer :: forall a r . PokeChain a => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> ((Buffer, Allocation, AllocationInfo) -> IO r) -> IO r
 withBuffer allocator pBufferCreateInfo pAllocationCreateInfo =
   bracket
     (createBuffer allocator pBufferCreateInfo pAllocationCreateInfo)
@@ -1786,8 +1788,8 @@ foreign import ccall
 -- @
 --
 -- It it safe to pass null as buffer and\/or allocation.
-destroyBuffer :: Allocator -> Buffer -> Allocation -> IO ()
-destroyBuffer allocator buffer allocation = do
+destroyBuffer :: forall io . MonadIO io => Allocator -> Buffer -> Allocation -> io ()
+destroyBuffer allocator buffer allocation = liftIO $ do
   (ffiVmaDestroyBuffer) (allocator) (buffer) (allocation)
   pure $ ()
 
@@ -1800,8 +1802,8 @@ foreign import ccall
   :: Allocator -> Ptr (ImageCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Image -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
 -- | Function similar to 'createBuffer'.
-createImage :: PokeChain a => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> IO (Image, Allocation, AllocationInfo)
-createImage allocator imageCreateInfo allocationCreateInfo = evalContT $ do
+createImage :: forall a io . (PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (Image, Allocation, AllocationInfo)
+createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
@@ -1817,7 +1819,7 @@ createImage allocator imageCreateInfo allocationCreateInfo = evalContT $ do
 -- | A safe wrapper for 'createImage' and 'destroyImage' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withImage :: PokeChain a => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> ((Image, Allocation, AllocationInfo) -> IO r) -> IO r
+withImage :: forall a r . PokeChain a => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> ((Image, Allocation, AllocationInfo) -> IO r) -> IO r
 withImage allocator pImageCreateInfo pAllocationCreateInfo =
   bracket
     (createImage allocator pImageCreateInfo pAllocationCreateInfo)
@@ -1840,8 +1842,8 @@ foreign import ccall
 -- @
 --
 -- It it safe to pass null as image and\/or allocation.
-destroyImage :: Allocator -> Image -> Allocation -> IO ()
-destroyImage allocator image allocation = do
+destroyImage :: forall io . MonadIO io => Allocator -> Image -> Allocation -> io ()
+destroyImage allocator image allocation = liftIO $ do
   (ffiVmaDestroyImage) (allocator) (image) (allocation)
   pure $ ()
 

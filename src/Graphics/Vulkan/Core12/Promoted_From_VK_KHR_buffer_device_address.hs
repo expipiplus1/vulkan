@@ -17,11 +17,13 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address  ( getB
                                                                           , MemoryAllocateFlags
                                                                           ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -110,8 +112,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'BufferDeviceAddressInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-getBufferOpaqueCaptureAddress :: Device -> BufferDeviceAddressInfo -> IO (Word64)
-getBufferOpaqueCaptureAddress device info = evalContT $ do
+getBufferOpaqueCaptureAddress :: forall io . MonadIO io => Device -> BufferDeviceAddressInfo -> io (Word64)
+getBufferOpaqueCaptureAddress device info = liftIO . evalContT $ do
   let vkGetBufferOpaqueCaptureAddress' = mkVkGetBufferOpaqueCaptureAddress (pVkGetBufferOpaqueCaptureAddress (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetBufferOpaqueCaptureAddress' (deviceHandle (device)) pInfo
@@ -180,8 +182,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'BufferDeviceAddressInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-getBufferDeviceAddress :: Device -> BufferDeviceAddressInfo -> IO (DeviceAddress)
-getBufferDeviceAddress device info = evalContT $ do
+getBufferDeviceAddress :: forall io . MonadIO io => Device -> BufferDeviceAddressInfo -> io (DeviceAddress)
+getBufferDeviceAddress device info = liftIO . evalContT $ do
   let vkGetBufferDeviceAddress' = mkVkGetBufferDeviceAddress (pVkGetBufferDeviceAddress (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetBufferDeviceAddress' (deviceHandle (device)) pInfo
@@ -243,8 +245,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'DeviceMemoryOpaqueCaptureAddressInfo'
-getDeviceMemoryOpaqueCaptureAddress :: Device -> DeviceMemoryOpaqueCaptureAddressInfo -> IO (Word64)
-getDeviceMemoryOpaqueCaptureAddress device info = evalContT $ do
+getDeviceMemoryOpaqueCaptureAddress :: forall io . MonadIO io => Device -> DeviceMemoryOpaqueCaptureAddressInfo -> io (Word64)
+getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
   let vkGetDeviceMemoryOpaqueCaptureAddress' = mkVkGetDeviceMemoryOpaqueCaptureAddress (pVkGetDeviceMemoryOpaqueCaptureAddress (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetDeviceMemoryOpaqueCaptureAddress' (deviceHandle (device)) pInfo

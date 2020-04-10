@@ -3,6 +3,8 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count  ( cmdDra
                                                                         , cmdDrawIndexedIndirectCount
                                                                         ) where
 
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -339,8 +341,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndirectCount :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = do
+cmdDrawIndirectCount :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawIndirectCount' = mkVkCmdDrawIndirectCount (pVkCmdDrawIndirectCount (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
   pure $ ()
@@ -666,8 +668,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndexedIndirectCount :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawIndexedIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = do
+cmdDrawIndexedIndirectCount :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndexedIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawIndexedIndirectCount' = mkVkCmdDrawIndexedIndirectCount (pVkCmdDrawIndexedIndirectCount (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawIndexedIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
   pure $ ()

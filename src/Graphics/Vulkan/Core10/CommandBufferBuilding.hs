@@ -59,6 +59,7 @@ module Graphics.Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
 
 import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
@@ -69,6 +70,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CFloat(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -349,8 +351,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
-cmdBindPipeline :: CommandBuffer -> PipelineBindPoint -> Pipeline -> IO ()
-cmdBindPipeline commandBuffer pipelineBindPoint pipeline = do
+cmdBindPipeline :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> Pipeline -> io ()
+cmdBindPipeline commandBuffer pipelineBindPoint pipeline = liftIO $ do
   let vkCmdBindPipeline' = mkVkCmdBindPipeline (pVkCmdBindPipeline (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBindPipeline' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (pipeline)
   pure $ ()
@@ -441,8 +443,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'Viewport'
-cmdSetViewport :: CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewports" ::: Vector Viewport) -> IO ()
-cmdSetViewport commandBuffer firstViewport viewports = evalContT $ do
+cmdSetViewport :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewports" ::: Vector Viewport) -> io ()
+cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
   let vkCmdSetViewport' = mkVkCmdSetViewport (pVkCmdSetViewport (deviceCmds (commandBuffer :: CommandBuffer)))
   pPViewports <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (viewports)) * 24) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) (viewports)
@@ -555,8 +557,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'Rect2D'
-cmdSetScissor :: CommandBuffer -> ("firstScissor" ::: Word32) -> ("scissors" ::: Vector Rect2D) -> IO ()
-cmdSetScissor commandBuffer firstScissor scissors = evalContT $ do
+cmdSetScissor :: forall io . MonadIO io => CommandBuffer -> ("firstScissor" ::: Word32) -> ("scissors" ::: Vector Rect2D) -> io ()
+cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
   let vkCmdSetScissor' = mkVkCmdSetScissor (pVkCmdSetScissor (deviceCmds (commandBuffer :: CommandBuffer)))
   pPScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (scissors)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (scissors)
@@ -619,8 +621,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetLineWidth :: CommandBuffer -> ("lineWidth" ::: Float) -> IO ()
-cmdSetLineWidth commandBuffer lineWidth = do
+cmdSetLineWidth :: forall io . MonadIO io => CommandBuffer -> ("lineWidth" ::: Float) -> io ()
+cmdSetLineWidth commandBuffer lineWidth = liftIO $ do
   let vkCmdSetLineWidth' = mkVkCmdSetLineWidth (pVkCmdSetLineWidth (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetLineWidth' (commandBufferHandle (commandBuffer)) (CFloat (lineWidth))
   pure $ ()
@@ -762,8 +764,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDepthBias :: CommandBuffer -> ("depthBiasConstantFactor" ::: Float) -> ("depthBiasClamp" ::: Float) -> ("depthBiasSlopeFactor" ::: Float) -> IO ()
-cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = do
+cmdSetDepthBias :: forall io . MonadIO io => CommandBuffer -> ("depthBiasConstantFactor" ::: Float) -> ("depthBiasClamp" ::: Float) -> ("depthBiasSlopeFactor" ::: Float) -> io ()
+cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = liftIO $ do
   let vkCmdSetDepthBias' = mkVkCmdSetDepthBias (pVkCmdSetDepthBias (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetDepthBias' (commandBufferHandle (commandBuffer)) (CFloat (depthBiasConstantFactor)) (CFloat (depthBiasClamp)) (CFloat (depthBiasSlopeFactor))
   pure $ ()
@@ -821,8 +823,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetBlendConstants :: CommandBuffer -> ("blendConstants" ::: (Float, Float, Float, Float)) -> IO ()
-cmdSetBlendConstants commandBuffer blendConstants = evalContT $ do
+cmdSetBlendConstants :: forall io . MonadIO io => CommandBuffer -> ("blendConstants" ::: (Float, Float, Float, Float)) -> io ()
+cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
   let vkCmdSetBlendConstants' = mkVkCmdSetBlendConstants (pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer)))
   pBlendConstants <- ContT $ allocaBytesAligned @(Data.Vector.Storable.Sized.Vector 4 CFloat) 16 4
   let pBlendConstants' = lowerArrayPtr pBlendConstants
@@ -901,8 +903,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDepthBounds :: CommandBuffer -> ("minDepthBounds" ::: Float) -> ("maxDepthBounds" ::: Float) -> IO ()
-cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = do
+cmdSetDepthBounds :: forall io . MonadIO io => CommandBuffer -> ("minDepthBounds" ::: Float) -> ("maxDepthBounds" ::: Float) -> io ()
+cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = liftIO $ do
   let vkCmdSetDepthBounds' = mkVkCmdSetDepthBounds (pVkCmdSetDepthBounds (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetDepthBounds' (commandBufferHandle (commandBuffer)) (CFloat (minDepthBounds)) (CFloat (maxDepthBounds))
   pure $ ()
@@ -969,8 +971,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
-cmdSetStencilCompareMask :: CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ()
-cmdSetStencilCompareMask commandBuffer faceMask compareMask = do
+cmdSetStencilCompareMask :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("compareMask" ::: Word32) -> io ()
+cmdSetStencilCompareMask commandBuffer faceMask compareMask = liftIO $ do
   let vkCmdSetStencilCompareMask' = mkVkCmdSetStencilCompareMask (pVkCmdSetStencilCompareMask (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetStencilCompareMask' (commandBufferHandle (commandBuffer)) (faceMask) (compareMask)
   pure $ ()
@@ -1037,8 +1039,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
-cmdSetStencilWriteMask :: CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ()
-cmdSetStencilWriteMask commandBuffer faceMask writeMask = do
+cmdSetStencilWriteMask :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("writeMask" ::: Word32) -> io ()
+cmdSetStencilWriteMask commandBuffer faceMask writeMask = liftIO $ do
   let vkCmdSetStencilWriteMask' = mkVkCmdSetStencilWriteMask (pVkCmdSetStencilWriteMask (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetStencilWriteMask' (commandBufferHandle (commandBuffer)) (faceMask) (writeMask)
   pure $ ()
@@ -1105,8 +1107,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
-cmdSetStencilReference :: CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("reference" ::: Word32) -> IO ()
-cmdSetStencilReference commandBuffer faceMask reference = do
+cmdSetStencilReference :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("reference" ::: Word32) -> io ()
+cmdSetStencilReference commandBuffer faceMask reference = liftIO $ do
   let vkCmdSetStencilReference' = mkVkCmdSetStencilReference (pVkCmdSetStencilReference (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetStencilReference' (commandBufferHandle (commandBuffer)) (faceMask) (reference)
   pure $ ()
@@ -1310,8 +1312,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
-cmdBindDescriptorSets :: CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("firstSet" ::: Word32) -> ("descriptorSets" ::: Vector DescriptorSet) -> ("dynamicOffsets" ::: Vector Word32) -> IO ()
-cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = evalContT $ do
+cmdBindDescriptorSets :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("firstSet" ::: Word32) -> ("descriptorSets" ::: Vector DescriptorSet) -> ("dynamicOffsets" ::: Vector Word32) -> io ()
+cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = liftIO . evalContT $ do
   let vkCmdBindDescriptorSets' = mkVkCmdBindDescriptorSets (pVkCmdBindDescriptorSets (deviceCmds (commandBuffer :: CommandBuffer)))
   pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
@@ -1413,8 +1415,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
 -- 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType'
-cmdBindIndexBuffer :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> IndexType -> IO ()
-cmdBindIndexBuffer commandBuffer buffer offset indexType = do
+cmdBindIndexBuffer :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> IndexType -> io ()
+cmdBindIndexBuffer commandBuffer buffer offset indexType = liftIO $ do
   let vkCmdBindIndexBuffer' = mkVkCmdBindIndexBuffer (pVkCmdBindIndexBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBindIndexBuffer' (commandBufferHandle (commandBuffer)) (buffer) (offset) (indexType)
   pure $ ()
@@ -1521,8 +1523,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBindVertexBuffers :: CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> IO ()
-cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = evalContT $ do
+cmdBindVertexBuffers :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> io ()
+cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalContT $ do
   let vkCmdBindVertexBuffers' = mkVkCmdBindVertexBuffers (pVkCmdBindVertexBuffers (deviceCmds (commandBuffer :: CommandBuffer)))
   let pBuffersLength = Data.Vector.length $ (buffers)
   let pOffsetsLength = Data.Vector.length $ (offsets)
@@ -1801,8 +1803,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDraw :: CommandBuffer -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()
-cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = do
+cmdDraw :: forall io . MonadIO io => CommandBuffer -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> io ()
+cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = liftIO $ do
   let vkCmdDraw' = mkVkCmdDraw (pVkCmdDraw (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDraw' (commandBufferHandle (commandBuffer)) (vertexCount) (instanceCount) (firstVertex) (firstInstance)
   pure $ ()
@@ -2098,8 +2100,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDrawIndexed :: CommandBuffer -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()
-cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = do
+cmdDrawIndexed :: forall io . MonadIO io => CommandBuffer -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> io ()
+cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = liftIO $ do
   let vkCmdDrawIndexed' = mkVkCmdDrawIndexed (pVkCmdDrawIndexed (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawIndexed' (commandBufferHandle (commandBuffer)) (indexCount) (instanceCount) (firstIndex) (vertexOffset) (firstInstance)
   pure $ ()
@@ -2410,8 +2412,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndirect :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawIndirect commandBuffer buffer offset drawCount stride = do
+cmdDrawIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawIndirect' = mkVkCmdDrawIndirect (pVkCmdDrawIndirect (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
   pure $ ()
@@ -2727,8 +2729,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndexedIndirect :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = do
+cmdDrawIndexedIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawIndexedIndirect' = mkVkCmdDrawIndexedIndirect (pVkCmdDrawIndexedIndirect (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawIndexedIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
   pure $ ()
@@ -2962,8 +2964,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDispatch :: CommandBuffer -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
-cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = do
+cmdDispatch :: forall io . MonadIO io => CommandBuffer -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> io ()
+cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
   let vkCmdDispatch' = mkVkCmdDispatch (pVkCmdDispatch (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDispatch' (commandBufferHandle (commandBuffer)) (groupCountX) (groupCountY) (groupCountZ)
   pure $ ()
@@ -3201,8 +3203,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDispatchIndirect :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> IO ()
-cmdDispatchIndirect commandBuffer buffer offset = do
+cmdDispatchIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> io ()
+cmdDispatchIndirect commandBuffer buffer offset = liftIO $ do
   let vkCmdDispatchIndirect' = mkVkCmdDispatchIndirect (pVkCmdDispatchIndirect (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDispatchIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset)
   pure $ ()
@@ -3333,8 +3335,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Buffer', 'BufferCopy',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdCopyBuffer :: CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferCopy) -> IO ()
-cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = evalContT $ do
+cmdCopyBuffer :: forall io . MonadIO io => CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferCopy) -> io ()
+cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ do
   let vkCmdCopyBuffer' = mkVkCmdCopyBuffer (pVkCmdCopyBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   pPRegions <- ContT $ allocaBytesAligned @BufferCopy ((Data.Vector.length (regions)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (24 * (i)) :: Ptr BufferCopy) (e) . ($ ())) (regions)
@@ -3690,8 +3692,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.Image', 'ImageCopy',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdCopyImage :: CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageCopy) -> IO ()
-cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = evalContT $ do
+cmdCopyImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageCopy) -> io ()
+cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdCopyImage' = mkVkCmdCopyImage (pVkCmdCopyImage (deviceCmds (commandBuffer :: CommandBuffer)))
   pPRegions <- ContT $ allocaBytesAligned @ImageCopy ((Data.Vector.length (regions)) * 68) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageCopy) (e) . ($ ())) (regions)
@@ -4054,8 +4056,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Enums.Filter.Filter',
 -- 'Graphics.Vulkan.Core10.Handles.Image', 'ImageBlit',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdBlitImage :: CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageBlit) -> Filter -> IO ()
-cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions filter' = evalContT $ do
+cmdBlitImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageBlit) -> Filter -> io ()
+cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions filter' = liftIO . evalContT $ do
   let vkCmdBlitImage' = mkVkCmdBlitImage (pVkCmdBlitImage (deviceCmds (commandBuffer :: CommandBuffer)))
   pPRegions <- ContT $ allocaBytesAligned @ImageBlit ((Data.Vector.length (regions)) * 80) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (80 * (i)) :: Ptr ImageBlit) (e) . ($ ())) (regions)
@@ -4252,8 +4254,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdCopyBufferToImage :: CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector BufferImageCopy) -> IO ()
-cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = evalContT $ do
+cmdCopyBufferToImage :: forall io . MonadIO io => CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector BufferImageCopy) -> io ()
+cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdCopyBufferToImage' = mkVkCmdCopyBufferToImage (pVkCmdCopyBufferToImage (deviceCmds (commandBuffer :: CommandBuffer)))
   pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e) . ($ ())) (regions)
@@ -4450,8 +4452,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdCopyImageToBuffer :: CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferImageCopy) -> IO ()
-cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = evalContT $ do
+cmdCopyImageToBuffer :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferImageCopy) -> io ()
+cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = liftIO . evalContT $ do
   let vkCmdCopyImageToBuffer' = mkVkCmdCopyImageToBuffer (pVkCmdCopyImageToBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e) . ($ ())) (regions)
@@ -4594,8 +4596,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdUpdateBuffer :: CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("dataSize" ::: DeviceSize) -> ("data" ::: Ptr ()) -> IO ()
-cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = do
+cmdUpdateBuffer :: forall io . MonadIO io => CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("dataSize" ::: DeviceSize) -> ("data" ::: Ptr ()) -> io ()
+cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = liftIO $ do
   let vkCmdUpdateBuffer' = mkVkCmdUpdateBuffer (pVkCmdUpdateBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdUpdateBuffer' (commandBufferHandle (commandBuffer)) (dstBuffer) (dstOffset) (dataSize) (data')
   pure $ ()
@@ -4717,8 +4719,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdFillBuffer :: CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> DeviceSize -> ("data" ::: Word32) -> IO ()
-cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = do
+cmdFillBuffer :: forall io . MonadIO io => CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> DeviceSize -> ("data" ::: Word32) -> io ()
+cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = liftIO $ do
   let vkCmdFillBuffer' = mkVkCmdFillBuffer (pVkCmdFillBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdFillBuffer' (commandBufferHandle (commandBuffer)) (dstBuffer) (dstOffset) (size) (data')
   pure $ ()
@@ -4895,8 +4897,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Graphics.Vulkan.Core10.SharedTypes.ImageSubresourceRange'
-cmdClearColorImage :: CommandBuffer -> Image -> ImageLayout -> ClearColorValue -> ("ranges" ::: Vector ImageSubresourceRange) -> IO ()
-cmdClearColorImage commandBuffer image imageLayout color ranges = evalContT $ do
+cmdClearColorImage :: forall io . MonadIO io => CommandBuffer -> Image -> ImageLayout -> ClearColorValue -> ("ranges" ::: Vector ImageSubresourceRange) -> io ()
+cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalContT $ do
   let vkCmdClearColorImage' = mkVkCmdClearColorImage (pVkCmdClearColorImage (deviceCmds (commandBuffer :: CommandBuffer)))
   pColor <- ContT $ withCStruct (color)
   pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
@@ -5103,8 +5105,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Graphics.Vulkan.Core10.SharedTypes.ImageSubresourceRange'
-cmdClearDepthStencilImage :: CommandBuffer -> Image -> ImageLayout -> ClearDepthStencilValue -> ("ranges" ::: Vector ImageSubresourceRange) -> IO ()
-cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = evalContT $ do
+cmdClearDepthStencilImage :: forall io . MonadIO io => CommandBuffer -> Image -> ImageLayout -> ClearDepthStencilValue -> ("ranges" ::: Vector ImageSubresourceRange) -> io ()
+cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = liftIO . evalContT $ do
   let vkCmdClearDepthStencilImage' = mkVkCmdClearDepthStencilImage (pVkCmdClearDepthStencilImage (deviceCmds (commandBuffer :: CommandBuffer)))
   pDepthStencil <- ContT $ withCStruct (depthStencil)
   pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
@@ -5269,8 +5271,8 @@ foreign import ccall
 --
 -- 'ClearAttachment', 'ClearRect',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdClearAttachments :: CommandBuffer -> ("attachments" ::: Vector ClearAttachment) -> ("rects" ::: Vector ClearRect) -> IO ()
-cmdClearAttachments commandBuffer attachments rects = evalContT $ do
+cmdClearAttachments :: forall io . MonadIO io => CommandBuffer -> ("attachments" ::: Vector ClearAttachment) -> ("rects" ::: Vector ClearRect) -> io ()
+cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
   let vkCmdClearAttachments' = mkVkCmdClearAttachments (pVkCmdClearAttachments (deviceCmds (commandBuffer :: CommandBuffer)))
   pPAttachments <- ContT $ allocaBytesAligned @ClearAttachment ((Data.Vector.length (attachments)) * 24) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments `plusPtr` (24 * (i)) :: Ptr ClearAttachment) (e) . ($ ())) (attachments)
@@ -5473,8 +5475,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve'
-cmdResolveImage :: CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageResolve) -> IO ()
-cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = evalContT $ do
+cmdResolveImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageResolve) -> io ()
+cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdResolveImage' = mkVkCmdResolveImage (pVkCmdResolveImage (deviceCmds (commandBuffer :: CommandBuffer)))
   pPRegions <- ContT $ allocaBytesAligned @ImageResolve ((Data.Vector.length (regions)) * 68) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageResolve) (e) . ($ ())) (regions)
@@ -5605,8 +5607,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.Event',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdSetEvent :: CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> IO ()
-cmdSetEvent commandBuffer event stageMask = do
+cmdSetEvent :: forall io . MonadIO io => CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> io ()
+cmdSetEvent commandBuffer event stageMask = liftIO $ do
   let vkCmdSetEvent' = mkVkCmdSetEvent (pVkCmdSetEvent (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetEvent' (commandBufferHandle (commandBuffer)) (event) (stageMask)
   pure $ ()
@@ -5740,8 +5742,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.Event',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdResetEvent :: CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> IO ()
-cmdResetEvent commandBuffer event stageMask = do
+cmdResetEvent :: forall io . MonadIO io => CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> io ()
+cmdResetEvent commandBuffer event stageMask = liftIO $ do
   let vkCmdResetEvent' = mkVkCmdResetEvent (pVkCmdResetEvent (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdResetEvent' (commandBufferHandle (commandBuffer)) (event) (stageMask)
   pure $ ()
@@ -6060,8 +6062,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Graphics.Vulkan.Core10.OtherTypes.MemoryBarrier',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdWaitEvents :: PokeChain a => CommandBuffer -> ("events" ::: Vector Event) -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> IO ()
-cmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = evalContT $ do
+cmdWaitEvents :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> ("events" ::: Vector Event) -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
+cmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdWaitEvents' = mkVkCmdWaitEvents (pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer)))
   pPEvents <- ContT $ allocaBytesAligned @Event ((Data.Vector.length (events)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
@@ -6411,8 +6413,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Graphics.Vulkan.Core10.OtherTypes.MemoryBarrier',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdPipelineBarrier :: PokeChain a => CommandBuffer -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> DependencyFlags -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> IO ()
-cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = evalContT $ do
+cmdPipelineBarrier :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> DependencyFlags -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
+cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdPipelineBarrier' = mkVkCmdPipelineBarrier (pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer)))
   pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e) . ($ ())) (memoryBarriers)
@@ -6610,14 +6612,14 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdBeginQuery :: CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> IO ()
-cmdBeginQuery commandBuffer queryPool query flags = do
+cmdBeginQuery :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> io ()
+cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
   let vkCmdBeginQuery' = mkVkCmdBeginQuery (pVkCmdBeginQuery (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBeginQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags)
   pure $ ()
 
 -- | A safe wrapper for 'cmdBeginQuery' and 'cmdEndQuery' using 'bracket_'
-cmdWithQuery :: CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> IO r -> IO r
+cmdWithQuery :: forall r . CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> IO r -> IO r
 cmdWithQuery commandBuffer queryPool query flags =
   bracket_
     (cmdBeginQuery commandBuffer queryPool query flags)
@@ -6730,8 +6732,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdEndQuery :: CommandBuffer -> QueryPool -> ("query" ::: Word32) -> IO ()
-cmdEndQuery commandBuffer queryPool query = do
+cmdEndQuery :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> io ()
+cmdEndQuery commandBuffer queryPool query = liftIO $ do
   let vkCmdEndQuery' = mkVkCmdEndQuery (pVkCmdEndQuery (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdEndQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query)
   pure $ ()
@@ -6842,8 +6844,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdResetQueryPool :: CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
-cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = do
+cmdResetQueryPool :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> io ()
+cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = liftIO $ do
   let vkCmdResetQueryPool' = mkVkCmdResetQueryPool (pVkCmdResetQueryPool (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdResetQueryPool' (commandBufferHandle (commandBuffer)) (queryPool) (firstQuery) (queryCount)
   pure $ ()
@@ -6994,8 +6996,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdWriteTimestamp :: CommandBuffer -> PipelineStageFlagBits -> QueryPool -> ("query" ::: Word32) -> IO ()
-cmdWriteTimestamp commandBuffer pipelineStage queryPool query = do
+cmdWriteTimestamp :: forall io . MonadIO io => CommandBuffer -> PipelineStageFlagBits -> QueryPool -> ("query" ::: Word32) -> io ()
+cmdWriteTimestamp commandBuffer pipelineStage queryPool query = liftIO $ do
   let vkCmdWriteTimestamp' = mkVkCmdWriteTimestamp (pVkCmdWriteTimestamp (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdWriteTimestamp' (commandBufferHandle (commandBuffer)) (pipelineStage) (queryPool) (query)
   pure $ ()
@@ -7222,8 +7224,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool',
 -- 'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
-cmdCopyQueryPoolResults :: CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> IO ()
-cmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags = do
+cmdCopyQueryPoolResults :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> io ()
+cmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags = liftIO $ do
   let vkCmdCopyQueryPoolResults' = mkVkCmdCopyQueryPoolResults (pVkCmdCopyQueryPoolResults (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdCopyQueryPoolResults' (commandBufferHandle (commandBuffer)) (queryPool) (firstQuery) (queryCount) (dstBuffer) (dstOffset) (stride) (flags)
   pure $ ()
@@ -7343,8 +7345,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout',
 -- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
-cmdPushConstants :: CommandBuffer -> PipelineLayout -> ShaderStageFlags -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("values" ::: Ptr ()) -> IO ()
-cmdPushConstants commandBuffer layout stageFlags offset size values = do
+cmdPushConstants :: forall io . MonadIO io => CommandBuffer -> PipelineLayout -> ShaderStageFlags -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("values" ::: Ptr ()) -> io ()
+cmdPushConstants commandBuffer layout stageFlags offset size values = liftIO $ do
   let vkCmdPushConstants' = mkVkCmdPushConstants (pVkCmdPushConstants (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdPushConstants' (commandBufferHandle (commandBuffer)) (layout) (stageFlags) (offset) (size) (values)
   pure $ ()
@@ -7546,8 +7548,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'RenderPassBeginInfo',
 -- 'Graphics.Vulkan.Core10.Enums.SubpassContents.SubpassContents'
-cmdBeginRenderPass :: PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> IO ()
-cmdBeginRenderPass commandBuffer renderPassBegin contents = evalContT $ do
+cmdBeginRenderPass :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io ()
+cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $ do
   let vkCmdBeginRenderPass' = mkVkCmdBeginRenderPass (pVkCmdBeginRenderPass (deviceCmds (commandBuffer :: CommandBuffer)))
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
   lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) pRenderPassBegin (contents)
@@ -7555,7 +7557,7 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = evalContT $ do
 
 -- | A safe wrapper for 'cmdBeginRenderPass' and 'cmdEndRenderPass' using
 -- 'bracket_'
-cmdWithRenderPass :: PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> IO r -> IO r
+cmdWithRenderPass :: forall a r . PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> IO r -> IO r
 cmdWithRenderPass commandBuffer pRenderPassBegin contents =
   bracket_
     (cmdBeginRenderPass commandBuffer pRenderPassBegin contents)
@@ -7653,8 +7655,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.SubpassContents.SubpassContents'
-cmdNextSubpass :: CommandBuffer -> SubpassContents -> IO ()
-cmdNextSubpass commandBuffer contents = do
+cmdNextSubpass :: forall io . MonadIO io => CommandBuffer -> SubpassContents -> io ()
+cmdNextSubpass commandBuffer contents = liftIO $ do
   let vkCmdNextSubpass' = mkVkCmdNextSubpass (pVkCmdNextSubpass (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdNextSubpass' (commandBufferHandle (commandBuffer)) (contents)
   pure $ ()
@@ -7724,8 +7726,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdEndRenderPass :: CommandBuffer -> IO ()
-cmdEndRenderPass commandBuffer = do
+cmdEndRenderPass :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdEndRenderPass commandBuffer = liftIO $ do
   let vkCmdEndRenderPass' = mkVkCmdEndRenderPass (pVkCmdEndRenderPass (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdEndRenderPass' (commandBufferHandle (commandBuffer))
   pure $ ()
@@ -7946,8 +7948,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdExecuteCommands :: CommandBuffer -> ("commandBuffers" ::: Vector CommandBuffer) -> IO ()
-cmdExecuteCommands commandBuffer commandBuffers = evalContT $ do
+cmdExecuteCommands :: forall io . MonadIO io => CommandBuffer -> ("commandBuffers" ::: Vector CommandBuffer) -> io ()
+cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
   let vkCmdExecuteCommands' = mkVkCmdExecuteCommands (pVkCmdExecuteCommands (deviceCmds (commandBuffer :: CommandBuffer)))
   pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)

@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core10.Memory  ( allocateMemory
                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -26,6 +27,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -226,8 +228,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory', 'MemoryAllocateInfo'
-allocateMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DeviceMemory)
-allocateMemory device allocateInfo allocator = evalContT $ do
+allocateMemory :: forall a io . (PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DeviceMemory)
+allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   let vkAllocateMemory' = mkVkAllocateMemory (pVkAllocateMemory (deviceCmds (device :: Device)))
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pAllocator <- case (allocator) of
@@ -242,7 +244,7 @@ allocateMemory device allocateInfo allocator = evalContT $ do
 -- | A safe wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> ((DeviceMemory) -> IO r) -> IO r
+withMemory :: forall a r . PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> ((DeviceMemory) -> IO r) -> IO r
 withMemory device pAllocateInfo pAllocator =
   bracket
     (allocateMemory device pAllocateInfo pAllocator)
@@ -327,8 +329,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
-freeMemory :: Device -> DeviceMemory -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-freeMemory device memory allocator = evalContT $ do
+freeMemory :: forall io . MonadIO io => Device -> DeviceMemory -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+freeMemory device memory allocator = liftIO . evalContT $ do
   let vkFreeMemory' = mkVkFreeMemory (pVkFreeMemory (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -474,8 +476,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
 -- 'Graphics.Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
-mapMemory :: Device -> DeviceMemory -> ("offset" ::: DeviceSize) -> DeviceSize -> MemoryMapFlags -> IO (("data" ::: Ptr ()))
-mapMemory device memory offset size flags = evalContT $ do
+mapMemory :: forall io . MonadIO io => Device -> DeviceMemory -> ("offset" ::: DeviceSize) -> DeviceSize -> MemoryMapFlags -> io (("data" ::: Ptr ()))
+mapMemory device memory offset size flags = liftIO . evalContT $ do
   let vkMapMemory' = mkVkMapMemory (pVkMapMemory (deviceCmds (device :: Device)))
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
   r <- lift $ vkMapMemory' (deviceHandle (device)) (memory) (offset) (size) (flags) (pPpData)
@@ -486,7 +488,7 @@ mapMemory device memory offset size flags = evalContT $ do
 -- | A safe wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMappedMemory :: Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> ((Ptr ()) -> IO r) -> IO r
+withMappedMemory :: forall r . Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> ((Ptr ()) -> IO r) -> IO r
 withMappedMemory device memory offset size flags =
   bracket
     (mapMemory device memory offset size flags)
@@ -531,8 +533,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
-unmapMemory :: Device -> DeviceMemory -> IO ()
-unmapMemory device memory = do
+unmapMemory :: forall io . MonadIO io => Device -> DeviceMemory -> io ()
+unmapMemory device memory = liftIO $ do
   let vkUnmapMemory' = mkVkUnmapMemory (pVkUnmapMemory (deviceCmds (device :: Device)))
   vkUnmapMemory' (deviceHandle (device)) (memory)
   pure $ ()
@@ -602,8 +604,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
-flushMappedMemoryRanges :: Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> IO ()
-flushMappedMemoryRanges device memoryRanges = evalContT $ do
+flushMappedMemoryRanges :: forall io . MonadIO io => Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> io ()
+flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges (pVkFlushMappedMemoryRanges (deviceCmds (device :: Device)))
   pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
@@ -666,8 +668,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
-invalidateMappedMemoryRanges :: Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> IO ()
-invalidateMappedMemoryRanges device memoryRanges = evalContT $ do
+invalidateMappedMemoryRanges :: forall io . MonadIO io => Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> io ()
+invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges (pVkInvalidateMappedMemoryRanges (deviceCmds (device :: Device)))
   pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
@@ -711,8 +713,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-getDeviceMemoryCommitment :: Device -> DeviceMemory -> IO (("committedMemoryInBytes" ::: DeviceSize))
-getDeviceMemoryCommitment device memory = evalContT $ do
+getDeviceMemoryCommitment :: forall io . MonadIO io => Device -> DeviceMemory -> io (("committedMemoryInBytes" ::: DeviceSize))
+getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
   let vkGetDeviceMemoryCommitment' = mkVkGetDeviceMemoryCommitment (pVkGetDeviceMemoryCommitment (deviceCmds (device :: Device)))
   pPCommittedMemoryInBytes <- ContT $ bracket (callocBytes @DeviceSize 8) free
   lift $ vkGetDeviceMemoryCommitment' (deviceHandle (device)) (memory) (pPCommittedMemoryInBytes)

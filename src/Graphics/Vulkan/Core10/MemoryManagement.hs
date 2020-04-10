@@ -6,12 +6,14 @@ module Graphics.Vulkan.Core10.MemoryManagement  ( getBufferMemoryRequirements
                                                 , MemoryRequirements(..)
                                                 ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -72,8 +74,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MemoryRequirements'
-getBufferMemoryRequirements :: Device -> Buffer -> IO (MemoryRequirements)
-getBufferMemoryRequirements device buffer = evalContT $ do
+getBufferMemoryRequirements :: forall io . MonadIO io => Device -> Buffer -> io (MemoryRequirements)
+getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirements' = mkVkGetBufferMemoryRequirements (pVkGetBufferMemoryRequirements (deviceCmds (device :: Device)))
   pPMemoryRequirements <- ContT (withZeroCStruct @MemoryRequirements)
   lift $ vkGetBufferMemoryRequirements' (deviceHandle (device)) (buffer) (pPMemoryRequirements)
@@ -232,8 +234,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-bindBufferMemory :: Device -> Buffer -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> IO ()
-bindBufferMemory device buffer memory memoryOffset = do
+bindBufferMemory :: forall io . MonadIO io => Device -> Buffer -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> io ()
+bindBufferMemory device buffer memory memoryOffset = liftIO $ do
   let vkBindBufferMemory' = mkVkBindBufferMemory (pVkBindBufferMemory (deviceCmds (device :: Device)))
   r <- vkBindBufferMemory' (deviceHandle (device)) (buffer) (memory) (memoryOffset)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -265,8 +267,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Image', 'MemoryRequirements'
-getImageMemoryRequirements :: Device -> Image -> IO (MemoryRequirements)
-getImageMemoryRequirements device image = evalContT $ do
+getImageMemoryRequirements :: forall io . MonadIO io => Device -> Image -> io (MemoryRequirements)
+getImageMemoryRequirements device image = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements' = mkVkGetImageMemoryRequirements (pVkGetImageMemoryRequirements (deviceCmds (device :: Device)))
   pPMemoryRequirements <- ContT (withZeroCStruct @MemoryRequirements)
   lift $ vkGetImageMemoryRequirements' (deviceHandle (device)) (image) (pPMemoryRequirements)
@@ -444,8 +446,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
 -- 'Graphics.Vulkan.Core10.Handles.Image'
-bindImageMemory :: Device -> Image -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> IO ()
-bindImageMemory device image memory memoryOffset = do
+bindImageMemory :: forall io . MonadIO io => Device -> Image -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> io ()
+bindImageMemory device image memory memoryOffset = liftIO $ do
   let vkBindImageMemory' = mkVkBindImageMemory (pVkBindImageMemory (deviceCmds (device :: Device)))
   r <- vkBindImageMemory' (deviceHandle (device)) (image) (memory) (memoryOffset)
   when (r < SUCCESS) (throwIO (VulkanException r))

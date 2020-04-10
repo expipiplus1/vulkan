@@ -11,12 +11,14 @@ module Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display  ( acquireXlibDisp
                                                                ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Foreign.Storable (Storable(peek))
 import Foreign.Ptr (FunPtr)
@@ -89,8 +91,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-acquireXlibDisplayEXT :: PhysicalDevice -> ("dpy" ::: Ptr Display) -> DisplayKHR -> IO ()
-acquireXlibDisplayEXT physicalDevice dpy display = do
+acquireXlibDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> DisplayKHR -> io ()
+acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
   let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT (pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   r <- vkAcquireXlibDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (display)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -136,8 +138,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getRandROutputDisplayEXT :: PhysicalDevice -> ("dpy" ::: Ptr Display) -> RROutput -> IO (DisplayKHR)
-getRandROutputDisplayEXT physicalDevice dpy rrOutput = evalContT $ do
+getRandROutputDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> RROutput -> io (DisplayKHR)
+getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
   let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT (pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
   _ <- lift $ vkGetRandROutputDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (rrOutput) (pPDisplay)

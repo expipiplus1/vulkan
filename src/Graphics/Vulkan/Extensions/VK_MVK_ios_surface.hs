@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_MVK_ios_surface  ( createIOSSurfaceMVK
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -28,6 +29,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -123,8 +125,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'IOSSurfaceCreateInfoMVK', 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createIOSSurfaceMVK :: Instance -> IOSSurfaceCreateInfoMVK -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createIOSSurfaceMVK instance' createInfo allocator = evalContT $ do
+createIOSSurfaceMVK :: forall io . MonadIO io => Instance -> IOSSurfaceCreateInfoMVK -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateIOSSurfaceMVK' = mkVkCreateIOSSurfaceMVK (pVkCreateIOSSurfaceMVK (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
