@@ -13,8 +13,14 @@ import           Language.Haskell.TH.Syntax     ( nameBase
                                                 , nameModule
                                                 , mkNameG_tc
                                                 , mkName
+                                                , Pred
                                                 )
-import           Data.List.Extra                ( nubOrd )
+import           Language.Haskell.TH.Datatype   ( freeVariablesWellScoped
+                                                , quantifyType
+                                                )
+import           Data.List.Extra                ( nubOrd
+                                                , (\\)
+                                                )
 import           Polysemy
 import           Polysemy.Input
 import qualified Data.Text                     as T
@@ -85,22 +91,7 @@ makeReturnType
 makeReturnType includeInOutCountTypes mc@MarshaledCommand {..}
   = do
     ts <- marshaledCommandReturnTypes includeInOutCountTypes mc
-    pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
-
-constrainStructVariables
-  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
-  => Type
-  -> Sem r Type
-constrainStructVariables t = do
-  (ns, ps) <- structVariables t
-  unless (null ns) $ tellImport (TyConName "PokeChain")
-  unless (null ps) $ tellImport (TyConName "PeekChain")
-  pure $ ForallT
-    []
-    (  ((ConT (typeName (TyConName "PokeChain")) :@) . VarT <$> (ns <> ps))
-    <> ((ConT (typeName (TyConName "PeekChain")) :@) . VarT <$> ps)
-    )
-    t
+    pure $ VarT ioVar :@ foldl' (:@) (TupleT (length ts)) ts
 
 structVariables
   :: (HasErr r, HasRenderedNames r) => Type -> Sem r ([Name], [Name])
@@ -118,9 +109,9 @@ structVariables = \case
   ConT n :@ _ | n == ''Ptr -> pure ([], [])
   f :@ x                  -> liftA2 (<>) (structVariables f) (structVariables x)
   ConT   _                -> pure ([], [])
+  VarT   _                -> pure ([], [])
   TupleT _                -> pure ([], [])
-  t ->
-    throw $ "Unhandled Type constructor in negativeStructVariables: " <> show t
+  t -> throw $ "Unhandled Type constructor in structVariables: " <> show t
 
 ----------------------------------------------------------------
 -- Calling this command
@@ -196,10 +187,13 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
 
   rhs <- case stmtsDoc of
-    IOStmts    d -> pure d
+    IOStmts d -> do
+      tellImport 'liftIO
+      pure $ "liftIO $" <+> d
     ContTStmts d -> do
       tellImport 'evalContT
-      pure $ "evalContT $" <+> d
+      tellImport 'liftIO
+      pure $ "liftIO . evalContT $" <+> d
 
   ----------------------------------------------------------------
   -- The type of this command
@@ -215,7 +209,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
         Returned _        -> Nothing
         _                 -> Just p
       paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
-  tDoc <- renderType =<< constrainStructVariables t
+  tDoc <- renderType . addMonadIO =<< constrainStructVariables t
 
 
   tellDocWithHaddock $ \getDoc -> vsep
@@ -395,13 +389,15 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
 
   rhs <- case stmtsDoc of
-    IOStmts    d -> pure d
+    IOStmts d -> do
+      tellImport 'liftIO
+      pure $ "liftIO $" <+> d
     ContTStmts d -> do
       tellImport 'evalContT
-      pure $ "evalContT $" <+> d
+      tellImport 'liftIO
+      pure $ "liftIO . evalContT $" <+> d
 
-
-  tDoc <- renderType =<< constrainStructVariables commandType
+  tDoc <- renderType . addMonadIO =<< constrainStructVariables commandType
   tellDocWithHaddock $ \getDoc -> vsep
     [ getDoc (TopLevel (cName mcCommand))
     , pretty commandName <+> "::" <+> indent 0 tDoc
@@ -760,6 +756,36 @@ lowerParamType :: Parameter -> Parameter
 lowerParamType p@Parameter {..} = case pType of
   Array q _ elem -> p { pType = Ptr q elem }
   _              -> p
+
+----------------------------------------------------------------
+--
+----------------------------------------------------------------
+
+addMonadIO :: Type -> Type
+addMonadIO = addConstraints
+      [ConT ''MonadIO :@ VarT ioVar]
+
+ioVar :: Name
+ioVar = mkName "io"
+
+constrainStructVariables
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
+  => Type
+  -> Sem r Type
+constrainStructVariables t = do
+  (ns, ps) <- structVariables t
+  unless (null ns) $ tellImport (TyConName "PokeChain")
+  unless (null ps) $ tellImport (TyConName "PeekChain")
+  pure $ addConstraints
+    (  ((ConT (typeName (TyConName "PokeChain")) :@) . VarT <$> (ns <> ps))
+    <> ((ConT (typeName (TyConName "PeekChain")) :@) . VarT <$> ps)
+    )
+    t
+
+addConstraints :: [Pred] -> Type -> Type
+addConstraints new = quantifyType . \case
+  ForallT vs ctx ty -> ForallT vs (ctx <> new) ty
+  ty                -> ForallT [] new ty
 
 ----------------------------------------------------------------
 -- ImportConstructors
