@@ -1,13 +1,13 @@
-cabal-version: 2.0
+cabal-version: 1.12
 
 -- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8dab8f11da46dc2c2658ae5c314bfa3a352aeedc462b94392f9d3011c328f47d
+-- hash: 0d595958b1e29a041962649e6443fee1867d188d738bf97424d639b89de19c43
 
 name:           vulkan
-version:        3.0.0.0
+version:        3.1.0.0
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -501,8 +501,8 @@ executable sdl-triangle
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   c-sources:
       examples/sdl-triangle/DebugCallback.c
-  build-tools:
-      glslang
+  build-tool-depends:
+      glslang:glslang
   if flag(build-examples)
     build-depends:
         base <4.14

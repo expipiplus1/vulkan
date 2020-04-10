@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 33c5cf9bc66e2dac63d48ca670eb9a0ac08af79fa97c07a076d161b7aaea438e
+-- hash: bf65e56616559dd06dc12eaca84a968b2da67af7d27e25da79567a4677ba106b
 
 name:           VulkanMemoryAllocator
 version:        0.0.0.0
@@ -17,6 +17,7 @@ build-type:     Simple
 extra-source-files:
     readme.md
     changelog.md
+    VulkanMemoryAllocator/src/vk_mem_alloc.h
 
 source-repository head
   type: git
@@ -29,6 +30,11 @@ flag safe-foreign-calls
 
 flag vma-ndebug
   description: Compile VulkanMemoryAllocator with NDEBUG to disable assertions.
+  manual: True
+  default: False
+
+flag vma-recording
+  description: Compile VulkanMemoryAllocator with VMA_RECORDING_ENABLED to enable recording functionality.
   manual: True
   default: False
 
@@ -53,9 +59,11 @@ library
     , transformers
     , vector
     , vector-sized
-    , vulkan
+    , vulkan ==3.1.*
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
   if flag(vma-ndebug)
     cxx-options: -DNDEBUG
+  if flag(vma-recording)
+    cxx-options: -DVMA_RECORDING_ENABLED
   default-language: Haskell2010

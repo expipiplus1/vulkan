@@ -1,5 +1,5 @@
 name: vulkan
-version: 3.0.0.0
+version: 3.1.0.0
 synopsis: Bindings to the Vulkan graphics API.
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -52,7 +52,7 @@ executables:
   sdl-triangle:
     main: Main.hs
     source-dirs: examples/sdl-triangle
-    system-build-tools:
+    build-tools:
       - glslang
     when:
     - condition: flag(build-examples)
