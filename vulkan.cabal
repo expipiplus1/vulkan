@@ -1,10 +1,10 @@
-cabal-version: 2.0
+cabal-version: 1.12
 
 -- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 086f10e46bbcccf48a302edb10a880a1f1ae69338c49843294412d8c30d833e1
+-- hash: 7a4b71d18fa3aad08655db1fe0509bcdf84c82ee475ee3f205cfda3ddc5dc2ba
 
 name:           vulkan
 version:        3.1.0.0
@@ -451,6 +451,8 @@ library
       Graphics.Vulkan.NamedType
       Graphics.Vulkan.Version
       Graphics.Vulkan.Zero
+  other-modules:
+      Paths_vulkan
   hs-source-dirs:
       src
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
@@ -499,8 +501,6 @@ executable sdl-triangle
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   c-sources:
       examples/sdl-triangle/DebugCallback.c
-  build-tools:
-      glslang
   if flag(build-examples)
     build-depends:
         base <4.14
