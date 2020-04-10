@@ -63,7 +63,7 @@ main = runManaged $ do
                                 imageAvailableSemaphore
                                 renderFinishedSemaphore
                                 commandBuffers
-  liftIO $ deviceWaitIdle vwDevice
+  deviceWaitIdle vwDevice
 
 mainLoop :: IO () -> IO ()
 mainLoop draw = whileM $ do
@@ -134,7 +134,7 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
           , commandBufferCount = fromIntegral $ V.length framebuffers
           }
     buffers <- managed $ withCommandBuffers dev commandBufferAllocateInfo
-    _ <- liftIO $ for (V.zip framebuffers buffers) $ \(framebuffer, buffer) ->
+    _ <- liftIO . for (V.zip framebuffers buffers) $ \(framebuffer, buffer) ->
       useCommandBuffer
           buffer
           zero { flags = COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT }
@@ -348,11 +348,11 @@ data VulkanWindow = VulkanWindow
 withVulkanWindow :: Text -> Int -> Int -> Managed VulkanWindow
 withVulkanWindow appName width height = do
   window             <- managed $ withWindow appName width height
-  instanceCreateInfo <- liftIO $ windowInstanceCreateInfo window
+  instanceCreateInfo <- windowInstanceCreateInfo window
   inst               <- managed $ withInstance instanceCreateInfo Nothing
   _                  <- managed
     $ withDebugUtilsMessengerEXT inst debugUtilsMessengerCreateInfo Nothing
-  liftIO $ submitDebugUtilsMessageEXT
+  submitDebugUtilsMessageEXT
     inst
     DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
     DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
@@ -360,7 +360,7 @@ withVulkanWindow appName width height = do
   surface <- managed $ withSDLWindowSurface inst window
   (dev, graphicsQueue, graphicsQueueFamilyIndex, presentQueue, swapchainFormat, swapchainExtent, swapchain) <-
     createGraphicalDevice inst surface
-  (_, images) <- liftIO $ getSwapchainImagesKHR dev swapchain
+  (_, images) <- getSwapchainImagesKHR dev swapchain
   let imageViewCreateInfo i = zero
         { image            = i
         , viewType         = IMAGE_VIEW_TYPE_2D
@@ -399,10 +399,12 @@ windowHeight = 1080
 
 -- | InstanceCreateInfo for an SDL window
 windowInstanceCreateInfo
-  :: SDL.Window -> IO (InstanceCreateInfo '[DebugUtilsMessengerCreateInfoEXT])
+  :: MonadIO m
+  => SDL.Window
+  -> m (InstanceCreateInfo '[DebugUtilsMessengerCreateInfoEXT])
 windowInstanceCreateInfo window = do
-  windowExtensions <- traverse BS.packCString
-    =<< SDL.vkGetInstanceExtensions window
+  windowExtensions <-
+    liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
   let requiredLayers = ["VK_LAYER_LUNARG_standard_validation"]
       requiredExtensions =
         V.fromList $ EXT_DEBUG_UTILS_EXTENSION_NAME : windowExtensions
@@ -423,12 +425,12 @@ createGraphicalDevice
 createGraphicalDevice inst surface = do
   let requiredDeviceExtensions = [KHR_SWAPCHAIN_EXTENSION_NAME]
   (physicalDevice, graphicsQueueFamilyIndex, presentQueueFamilyIndex, surfaceFormat, presentMode, surfaceCaps) <-
-    liftIO $ pickGraphicalPhysicalDevice
+    pickGraphicalPhysicalDevice
       inst
       surface
       requiredDeviceExtensions
       (SurfaceFormatKHR FORMAT_B8G8R8_UNORM COLOR_SPACE_SRGB_NONLINEAR_KHR)
-  props <- liftIO $ getPhysicalDeviceProperties physicalDevice
+  props <- getPhysicalDeviceProperties physicalDevice
   sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
   let
     deviceCreateInfo :: DeviceCreateInfo '[]
@@ -443,12 +445,12 @@ createGraphicalDevice inst surface = do
       , enabledExtensionNames = requiredDeviceExtensions
       }
   dev           <- managed $ withDevice physicalDevice deviceCreateInfo Nothing
-  graphicsQueue <- liftIO $ getDeviceQueue2
+  graphicsQueue <- getDeviceQueue2
     dev
     zero { queueFamilyIndex = graphicsQueueFamilyIndex
          , flags            = DEVICE_QUEUE_CREATE_PROTECTED_BIT
          }
-  presentQueue <- liftIO $ getDeviceQueue2
+  presentQueue <- getDeviceQueue2
     dev
     zero { queueFamilyIndex = presentQueueFamilyIndex
          , flags            = DEVICE_QUEUE_CREATE_PROTECTED_BIT
@@ -501,11 +503,12 @@ createGraphicalDevice inst surface = do
 
 -- | Find the device which has the most memory and a graphics queue family index
 pickGraphicalPhysicalDevice
-  :: Instance
+  :: MonadIO m
+  => Instance
   -> SurfaceKHR
   -> V.Vector BS.ByteString
   -> SurfaceFormatKHR
-  -> IO
+  -> m
        ( PhysicalDevice
        , Word32
        , Word32
@@ -519,11 +522,11 @@ pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
   graphicsDevs <- fmap (V.mapMaybe id) . for devs $ \dev -> runMaybeT $ do
     graphicsQueue <- MaybeT $ headMay <$> getGraphicsQueueIndices dev
     presentQueue  <- MaybeT $ headMay <$> getPresentQueueIndices dev
-    guard =<< liftIO (deviceHasSwapChain dev)
+    guard =<< deviceHasSwapChain dev
     bestFormat  <- getFormat dev
     presentMode <- getPresentMode dev
-    surfaceCaps <- liftIO $ getPhysicalDeviceSurfaceCapabilitiesKHR dev surface
-    score       <- liftIO $ deviceScore dev
+    surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR dev surface
+    score       <- deviceScore dev
     pure
       ( score
       , (dev, graphicsQueue, presentQueue, bestFormat, presentMode, surfaceCaps)
@@ -531,7 +534,7 @@ pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
   if V.null graphicsDevs
     then do
       sayErr "No suitable devices found"
-      exitFailure
+      liftIO exitFailure
     else pure . snd . V.maximumBy (comparing fst) $ graphicsDevs
 
  where
@@ -539,18 +542,18 @@ pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
     [] -> Nothing
     xs -> Just (V.unsafeHead xs)
 
-  deviceScore :: PhysicalDevice -> IO Word64
+  deviceScore :: MonadIO m => PhysicalDevice -> m Word64
   deviceScore dev = do
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties dev
     let totalSize = sum $ (size :: MemoryHeap -> DeviceSize) <$> heaps
     pure totalSize
 
-  deviceHasSwapChain :: PhysicalDevice -> IO Bool
+  deviceHasSwapChain :: MonadIO m => PhysicalDevice -> m Bool
   deviceHasSwapChain dev = do
     (_, extensions) <- enumerateDeviceExtensionProperties dev Nothing
     pure $ V.any ((KHR_SWAPCHAIN_EXTENSION_NAME ==) . extensionName) extensions
 
-  getGraphicsQueueIndices :: PhysicalDevice -> IO (V.Vector Word32)
+  getGraphicsQueueIndices :: MonadIO m => PhysicalDevice -> m (V.Vector Word32)
   getGraphicsQueueIndices dev = do
     queueFamilyProperties <- getPhysicalDeviceQueueFamilyProperties dev
     let isGraphicsQueue q =
@@ -560,7 +563,7 @@ pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
           (V.indexed queueFamilyProperties)
     pure graphicsQueueIndices
 
-  getPresentQueueIndices :: PhysicalDevice -> IO (V.Vector Word32)
+  getPresentQueueIndices :: MonadIO m => PhysicalDevice -> m (V.Vector Word32)
   getPresentQueueIndices dev = do
     -- TODO: implement getNum...
     numQueues <- V.length <$> getPhysicalDeviceQueueFamilyProperties2 @'[] dev
@@ -569,9 +572,9 @@ pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
       (\i -> (True ==) <$> getPhysicalDeviceSurfaceSupportKHR dev i surface)
       queueIndices
 
-  getFormat :: PhysicalDevice -> MaybeT IO SurfaceFormatKHR
+  getFormat :: MonadIO m => PhysicalDevice -> m SurfaceFormatKHR
   getFormat dev = do
-    (_, formats) <- liftIO $ getPhysicalDeviceSurfaceFormatsKHR dev surface
+    (_, formats) <- getPhysicalDeviceSurfaceFormatsKHR dev surface
     pure $ case formats of
       [] -> desiredFormat
       [SurfaceFormatKHR FORMAT_UNDEFINED _] -> desiredFormat
@@ -587,10 +590,9 @@ pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
         -> desiredFormat
       _ -> V.head formats
 
-  getPresentMode :: PhysicalDevice -> MaybeT IO PresentModeKHR
+  getPresentMode :: MonadIO m => PhysicalDevice -> MaybeT m PresentModeKHR
   getPresentMode dev = do
-    (_, presentModes) <- liftIO
-      $ getPhysicalDeviceSurfacePresentModesKHR dev surface
+    (_, presentModes) <- getPhysicalDeviceSurfacePresentModesKHR dev surface
     let desiredPresentModes =
           [ PRESENT_MODE_MAILBOX_KHR
           , PRESENT_MODE_FIFO_KHR
