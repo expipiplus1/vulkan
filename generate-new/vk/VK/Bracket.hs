@@ -10,7 +10,6 @@ import           Data.List                      ( (\\) )
 import           Polysemy
 import           Data.Vector                    ( Vector )
 import qualified Data.Map                      as Map
-import           Data.Generics.Uniplate.Data
 
 import           Render.Element
 import           Render.Utils

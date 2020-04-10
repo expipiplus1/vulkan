@@ -15,12 +15,10 @@ import           Data.Text.Prettyprint.Doc
                                                 )
 import           Polysemy
 import           Polysemy.Input
-import           Data.Vector                    ( Vector )
 
 import qualified Control.Exception
 
 import           Render.Element
-import           Render.Type
 import           Render.Utils
 import           Render.SpecInfo
 import           Render.Command
@@ -28,7 +26,6 @@ import           Render.Names
 import           Spec.Parse
 import           Haskell                       as H
 import           Error
-import           CType
 import           Marshal.Scheme
 import           Marshal.Command
 import           Render.Scheme
@@ -258,8 +255,7 @@ renderDestroy
   -> Sem r (Doc ())
 renderDestroy paramName Bracket {..} = do
   RenderParams {..} <- input
-  let arguments            = nubOrd (bCreateArguments ++ bDestroyArguments)
-      destroy              = mkFunName bDestroy
+  let destroy              = mkFunName bDestroy
       noDestructorResource = not . any isResource $ bDestroyArguments
       noResource           = null bInnerTypes && noDestructorResource
       usedResourceIndices  = [ n | Resource _ n <- bDestroyArguments ]
@@ -269,7 +265,7 @@ renderDestroy paramName Bracket {..} = do
           | i <- [0 .. n - 1]
           ]
   destroyArgVars <- forV bDestroyArguments $ \case
-    Provided v                _ -> pure $ (pretty (paramName v), Nothing)
+    Provided v                _ -> pure (pretty (paramName v), Nothing)
     Resource IdentityResource n -> pure ("o" <> show n, Nothing)
     Resource ElemResource n ->
       let v = "o" <> show n in pure (v <> "Elem", Just v)
