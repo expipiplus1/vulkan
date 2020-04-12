@@ -8,6 +8,9 @@ extra-source-files:
   - readme.md
   - changelog.md
   - default.nix
+license: BSD-3-Clause
+verbatim:
+  cabal-version: 3.0
 
 library:
   source-dirs: src
@@ -32,6 +35,21 @@ library:
     - -Wno-unused-imports
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
+
+internal-libraries:
+  utils:
+    source-dirs: utils
+    verbatim:
+      visibility: public
+    dependencies:
+      - base < 4.14
+      - bytestring
+      - extra
+      - file-embed
+      - template-haskell
+      - temporary
+      - typed-process
+      - vulkan
 
 executables:
   info:
@@ -60,16 +78,13 @@ executables:
           - base < 4.14
           - bytestring
           - extra
-          - file-embed
           - managed
           - pretty-show
           - say
           - sdl2
-          - template-haskell
-          - temporary
           - text
           - transformers
-          - typed-process
+          - utils
           - vector
           - vulkan
       else:

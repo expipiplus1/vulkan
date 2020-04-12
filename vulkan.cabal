@@ -1,10 +1,10 @@
-cabal-version: 1.12
+cabal-version: 3.0
 
 -- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7a4b71d18fa3aad08655db1fe0509bcdf84c82ee475ee3f205cfda3ddc5dc2ba
+-- hash: 1c4913d4f74e8daf372ea095c7cf6e0cfdb535b73f3bc1d0fae5e1288908bc29
 
 name:           vulkan
 version:        3.1.0.0
@@ -13,7 +13,7 @@ category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
 bug-reports:    https://github.com/expipiplus1/vulkan/issues
 maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
-license:        BSD3
+license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
@@ -473,6 +473,26 @@ library
     cpp-options: -DSAFE_FOREIGN_CALLS
   default-language: Haskell2010
 
+library utils
+  exposed-modules:
+      Graphics.Vulkan.Utils.ShaderQQ
+  other-modules:
+      Paths_vulkan
+  hs-source-dirs:
+      utils
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  build-depends:
+      base <4.14
+    , bytestring
+    , extra
+    , file-embed
+    , template-haskell
+    , temporary
+    , typed-process
+    , vulkan
+  default-language: Haskell2010
+  visibility: public
+
 executable info
   main-is: Main.hs
   other-modules:
@@ -494,7 +514,6 @@ executable info
 executable sdl-triangle
   main-is: Main.hs
   other-modules:
-      ShaderQQ
       Paths_vulkan
   hs-source-dirs:
       examples/sdl-triangle
@@ -506,16 +525,13 @@ executable sdl-triangle
         base <4.14
       , bytestring
       , extra
-      , file-embed
       , managed
       , pretty-show
       , say
       , sdl2
-      , template-haskell
-      , temporary
       , text
       , transformers
-      , typed-process
+      , utils
       , vector
       , vulkan
     buildable: True

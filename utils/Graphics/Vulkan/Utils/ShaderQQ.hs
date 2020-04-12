@@ -1,4 +1,4 @@
-module ShaderQQ
+module Graphics.Vulkan.Utils.ShaderQQ
   ( comp
   , frag
   , geom

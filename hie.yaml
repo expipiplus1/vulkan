@@ -3,6 +3,9 @@ cradle:
     - path: "./src"
       component: "lib:vulkan"
 
+    - path: "./utils"
+      component: "lib:utils"
+
     - path: "./examples/info"
       component: "exe:info"
 

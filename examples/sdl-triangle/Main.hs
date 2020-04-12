@@ -31,10 +31,10 @@ import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
 import           Graphics.Vulkan.Zero
 import           Graphics.Vulkan.CStruct.Extends
 import           Graphics.Vulkan.Version
+import           Graphics.Vulkan.Utils.ShaderQQ
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           Control.Arrow                  ( (&&&) )
-import           ShaderQQ
 
 main :: IO ()
 main = runManaged $ do
