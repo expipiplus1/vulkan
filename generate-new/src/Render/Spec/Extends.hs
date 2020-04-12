@@ -272,10 +272,10 @@ classes Spec {..} = do
     -- @
     -- myFun (Head\{..} :&& Foo\{..} :& ())
     -- @
-    pattern (::&) :: Extensible a => a es -> Chain es -> a es
+    pattern (::&) :: Extensible a => a es' -> Chain es -> a es
     pattern a ::& es <- (\\a -> (a, getNext a) -> (a, es))
       where a ::& es = setNext a es
-    infixr 6 ::&
+    infix 6 ::&
 
     -- | View the head and tail of a 'Chain', see '::&'
     --

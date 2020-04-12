@@ -408,14 +408,16 @@ windowInstanceCreateInfo window = do
   let requiredLayers = ["VK_LAYER_LUNARG_standard_validation"]
       requiredExtensions =
         V.fromList $ EXT_DEBUG_UTILS_EXTENSION_NAME : windowExtensions
-  pure zero
-    { next                  = (debugUtilsMessengerCreateInfo, ())
-    , applicationInfo       = Just zero { applicationName = Just appName
-                                        , apiVersion      = MAKE_VERSION 1 1 0
-                                        }
-    , enabledLayerNames     = requiredLayers
-    , enabledExtensionNames = requiredExtensions
-    }
+  pure
+    $   zero
+          { applicationInfo       = Just zero { applicationName = Just appName
+                                              , apiVersion = MAKE_VERSION 1 1 0
+                                              }
+          , enabledLayerNames     = requiredLayers
+          , enabledExtensionNames = requiredExtensions
+          }
+    ::& debugUtilsMessengerCreateInfo
+    :&  ()
 
 createGraphicalDevice
   :: Instance
