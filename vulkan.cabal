@@ -1,10 +1,10 @@
-cabal-version: 3.0
+cabal-version: 2.2
 
 -- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1c4913d4f74e8daf372ea095c7cf6e0cfdb535b73f3bc1d0fae5e1288908bc29
+-- hash: 5e6b23ad857df6bfa73f4639fbac33a4f0a78d48bce5d31c3f7c9ff1016bd877
 
 name:           vulkan
 version:        3.1.0.0
@@ -491,7 +491,6 @@ library utils
     , typed-process
     , vulkan
   default-language: Haskell2010
-  visibility: public
 
 executable info
   main-is: Main.hs

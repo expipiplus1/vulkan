@@ -7,4 +7,4 @@ extra-deps:
   commit: 45679ab73fe4113eeae3b17ecaa2bec3b00bfd81
 nix:
   enable: false
-  packages: [vulkan-loader]
+  packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2]

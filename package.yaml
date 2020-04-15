@@ -9,8 +9,6 @@ extra-source-files:
   - changelog.md
   - default.nix
 license: BSD-3-Clause
-verbatim:
-  cabal-version: 3.0
 
 library:
   source-dirs: src
@@ -39,8 +37,6 @@ library:
 internal-libraries:
   utils:
     source-dirs: utils
-    verbatim:
-      visibility: public
     dependencies:
       - base < 4.14
       - bytestring
