@@ -196,15 +196,21 @@ ns -p stack ghc vulkan-loader vulkan-headers pkg-config SDL2 --run 'stack --syst
 
 There are a couple of examples in the `examples` directory.
 
+### `info`
+
+For the vulkan instance and all physical devices it dumps layer and extension
+properties to stdout. It also prints features and properties for all physical
+devices.
+
 ### `sdl-triangle`
 
 This opens a window using SDL and renders a triangle.
 
-You'll need to build the shaders first with `(cd examples/sdl-triangle &&
-glslangValidator -V shader.*)`
+You'll need to have `glslangValidator` in `$PATH` when compiling as shaders are
+built in a QuasiQuoter.
 
-Make sure that SDL can find `libvulkan.so` either by setting `LD_LIBRARY_PATH`
-or `SDL_VULKAN_LIBRARY`, this must be the same `libvulkan.so` that the
+If SDL is unable to find `libvulkan.so`, you can set either `LD_LIBRARY_PATH`
+or `SDL_VULKAN_LIBRARY`, it must find the same `libvulkan.so` that the
 `sdl-triangle` binary was compiled against.
 
 Exit with `q`, `escape` or the window exit button.
