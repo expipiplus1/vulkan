@@ -181,16 +181,23 @@ Struct chains inside records are represented as nested tuples: `next ::
 This package requires GHC 8.6 or higher due to the use of the
 `QuantifiedConstraints` language extension.
 
+If you provision `libvulkan.so` (the Vulkan loader) with nix and you're not on
+NixOS, you'll have to use [NixGL](https://github.com/guibou/nixGL) to run your
+programs. For this reason it's recommended to use the system-provided
+`libvulkan.so`.
+
 For instructions on how to regenerate the bindings see [the readme in
 ./generate-new](./generate-new/readme.md).
 
-### Stack
+Set the `build-examples` flag on the `vulkan` package to build the example
+programs. You'll need to supply the following system packages:
 
-To build with examples:
+- `vulkan-loader` (for `libvulkan.so`)
+- `vulkan-headers` (for `vulkan.h`)
+- `pkg-config` and `SDL2` to build the haskell `sdl2` package.
 
-```bash
-ns -p stack ghc vulkan-loader vulkan-headers pkg-config SDL2 --run 'stack --system-ghc build --flag vulkan:build-examples'
-```
+- For the sdl example you'll need to use the patched `sdl2` package until this
+  PR makes its way to Hackage: https://github.com/haskell-game/sdl2/pull/209
 
 ## Examples
 
@@ -212,6 +219,11 @@ built in a QuasiQuoter.
 If SDL is unable to find `libvulkan.so`, you can set either `LD_LIBRARY_PATH`
 or `SDL_VULKAN_LIBRARY`, it must find the same `libvulkan.so` that the
 `sdl-triangle` binary was compiled against.
+
+If you run into the exception `DLCallFailed {sdlExceptionCaller = "SDL.Video.Vulkan.vkLoadLibrary", sdlFunction = "SDL_Vulkan_LoadLibrary", sdlExceptionError = "Installed Vulkan doesn't implement the VK_KHR_surface extension"}`
+it might be because the vulkan loader is unable to find the driver. To check if
+this is the case you can set `VK_ICD_FILENAMES` to the icd json file of your
+desired driver.
 
 Exit with `q`, `escape` or the window exit button.
 
