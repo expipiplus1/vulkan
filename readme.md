@@ -181,6 +181,9 @@ Struct chains inside records are represented as nested tuples: `next ::
 This package requires GHC 8.6 or higher due to the use of the
 `QuantifiedConstraints` language extension.
 
+Make sure you have initialized the `VulkanMemoryAllocator` submodule if you
+intend to build the `VulkanMemoryAllocator` package.
+
 If you provision `libvulkan.so` (the Vulkan loader) with nix and you're not on
 NixOS, you'll have to use [NixGL](https://github.com/guibou/nixGL) to run your
 programs. For this reason it's recommended to use the system-provided
@@ -195,6 +198,7 @@ programs. You'll need to supply the following system packages:
 - `vulkan-loader` (for `libvulkan.so`)
 - `vulkan-headers` (for `vulkan.h`)
 - `pkg-config` and `SDL2` to build the haskell `sdl2` package.
+- `glslang` (for the `glslangValidator` binary, to build the shaders)
 
 - For the sdl example you'll need to use the patched `sdl2` package until this
   PR makes its way to Hackage: https://github.com/haskell-game/sdl2/pull/209
