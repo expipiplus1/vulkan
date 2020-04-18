@@ -4,7 +4,7 @@ packages:
 - VulkanMemoryAllocator
 extra-deps:
 - github: haskell-game/sdl2
-  commit: 45679ab73fe4113eeae3b17ecaa2bec3b00bfd81
+  commit: d10b2ae86ce3db58c5c011cbec6eccf69c2fd2f1
 nix:
   enable: false
   packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2]

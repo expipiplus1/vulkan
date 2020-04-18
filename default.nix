@@ -27,8 +27,8 @@ let
             src = pkgs.fetchFromGitHub {
               owner = "haskell-game";
               repo = "sdl2";
-              rev = "45679ab73fe4113eeae3b17ecaa2bec3b00bfd81";
-              sha256 = "0qnzjs23b9b1j6ixlvhjdmp0anlgv0jxg2mxccb3piwkp9hdj6l2";
+              rev = "d10b2ae86ce3db58c5c011cbec6eccf69c2fd2f1";
+              sha256 = "1qfjfrzc9yjg8ibgr0a7fly6fnd1f2yv731n7h1wjgz9vaa3q6wg";
             };
           };
           bytes = self.bytes_0_17;
