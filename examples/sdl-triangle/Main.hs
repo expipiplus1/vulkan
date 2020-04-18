@@ -8,9 +8,11 @@ import           Control.Exception
 import           Control.Monad.Trans.Maybe
 import           Control.Monad
 import           Control.Monad.Extra
-import           Data.Ord
 import           Control.Monad.IO.Class
 import           Data.Bits
+import           Data.Functor
+import           Data.Maybe                     ( catMaybes )
+import           Data.Ord
 import           Data.Traversable
 import           Foreign.Ptr                    ( castPtr )
 import           Data.List                      ( nub )
@@ -405,15 +407,25 @@ windowInstanceCreateInfo
 windowInstanceCreateInfo window = do
   windowExtensions <-
     liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
-  let requiredLayers = ["VK_LAYER_LUNARG_standard_validation"]
+  availableExtensionNames <-
+    fmap layerName . snd <$> enumerateInstanceLayerProperties
+  let requiredLayers = []
       requiredExtensions =
         V.fromList $ EXT_DEBUG_UTILS_EXTENSION_NAME : windowExtensions
+  optionalLayers <-
+    fmap (V.fromList . catMaybes)
+    . sequence
+    $ [ if n `elem` availableExtensionNames
+          then pure $ Just n
+          else sayErrString ("Unable to find layer " <> show n) $> Nothing
+      | n <- ["VK_LAYER_KHRONOS_validation"]
+      ]
   pure
     $   zero
           { applicationInfo       = Just zero { applicationName = Just appName
-                                              , apiVersion = MAKE_VERSION 1 1 0
+                                              , apiVersion = API_VERSION_1_1
                                               }
-          , enabledLayerNames     = requiredLayers
+          , enabledLayerNames     = requiredLayers <> optionalLayers
           , enabledExtensionNames = requiredExtensions
           }
     ::& debugUtilsMessengerCreateInfo
