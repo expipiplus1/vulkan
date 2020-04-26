@@ -52,7 +52,7 @@ compileShader
   -> IO ByteString
   -- ^ Spir-V bytecode
 compileShader loc stage code = withSystemTempDirectory "th-shader" $ \dir -> do
-  let codeWithLineDirective = maybe code (`insertLineDirective` code) loc
+  let codeWithLineDirective = maybe code (insertLineDirective code) loc
   let shader = dir <> "/shader." <> stage
       spirv  = dir <> "/shader.spv"
   writeFile shader codeWithLineDirective
@@ -69,8 +69,8 @@ compileShader loc stage code = withSystemTempDirectory "th-shader" $ \dir -> do
 
 -- If possible, insert a #line directive after the #version directive (as well
 -- as the extension which allows filenames in line directives.
-insertLineDirective :: Loc -> String -> String
-insertLineDirective Loc {..} code =
+insertLineDirective :: String -> Loc -> String
+insertLineDirective code Loc {..} =
   let isVersionDirective = ("#version" `isPrefixOf`) . dropWhile isSpace
       codeLines = lines code
       (beforeVersion, afterVersion) = break isVersionDirective codeLines
