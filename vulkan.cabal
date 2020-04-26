@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5e6b23ad857df6bfa73f4639fbac33a4f0a78d48bce5d31c3f7c9ff1016bd877
+-- hash: 59eeb441818279116059411d7298256fcacd3c61027b86fd5f007eafc805a9ae
 
 name:           vulkan
 version:        3.1.0.0
@@ -527,7 +527,7 @@ executable sdl-triangle
       , managed
       , pretty-show
       , say
-      , sdl2
+      , sdl2 >=2.5.2.0
       , text
       , transformers
       , utils
