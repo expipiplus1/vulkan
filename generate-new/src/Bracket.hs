@@ -29,6 +29,7 @@ import           Error
 import           Marshal.Scheme
 import           Marshal.Command
 import           Render.Scheme
+import           Render.CommandInfo
 
 data Bracket = Bracket
   { bInnerTypes          :: [MarshalScheme Parameter]
@@ -137,7 +138,8 @@ autoBracket create destroy with = do
   pure Bracket { .. }
 
 renderBracket
-  :: (HasErr r, HasRenderParams r, HasRenderedNames r, HasSpecInfo r)
+  :: forall r
+   . (HasErr r, HasRenderParams r, HasRenderedNames r, HasSpecInfo r)
   => (Text -> Text)
   -- ^ Render param name
   -> Bracket
@@ -163,7 +165,7 @@ renderBracket paramName b@Bracket {..} =
           <=< schemeTypeNegative
           )
           [ t | Provided _ t <- arguments ]
-        let argHsVars = [ pretty (paramName v) | Provided v _ <- arguments ]
+        let argHsVars = [ paramName v | Provided v _ <- arguments ]
         innerHsType <- do
           ts <- traverse
             (   note "Inner type has no representation in a negative position"
@@ -192,8 +194,14 @@ renderBracket paramName b@Bracket {..} =
         --
         -- The actual function
         --
-        createCall  <- renderCreate paramName b
-        destroyCall <- renderDestroy paramName b
+        createCall <- do
+          let createDoc = mkFunName bCreate
+          tellImport createDoc
+          renderCreate paramName b (pretty createDoc)
+        destroyCall <- do
+          let destroyDoc = mkFunName bDestroy
+          tellImport destroyDoc
+          renderDestroy paramName b (pretty destroyDoc)
         tellDoc $ vsep
           [ comment
             (T.unlines
@@ -214,49 +222,63 @@ renderBracket paramName b@Bracket {..} =
               )
             )
           , pretty wrapperName <+> "::" <+> wrapperTDoc
-          , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
-            2
-            (pretty bracketDoc <> line <> indent
-              2
-              (vsep [parens createCall, parens destroyCall])
-            )
+          , pretty wrapperName
+          <+> sep (pretty <$> argHsVars)
+          <+> "="
+          <>  line
+          <>  indent
+                2
+                (pretty bracketDoc <> line <> indent
+                  2
+                  (vsep [parens createCall, parens destroyCall])
+                )
+          ]
+        let
+          renderCreate'
+            :: forall r
+             . (HasErr r, HasSpecInfo r, HasRenderParams r, HasRenderElem r)
+            => Doc ()
+            -> Sem r (Doc ())
+          renderCreate' = renderCreate paramName b
+          renderDestroy'
+            :: forall r
+             . (HasErr r, HasSpecInfo r, HasRenderParams r, HasRenderElem r)
+            => Doc ()
+            -> Sem r (Doc ())
+          renderDestroy' = renderDestroy paramName b
+        tellMeta
+          [ ABracket
+              (RenderedBracket wrapperName
+                               (BracketCall create renderCreate')
+                               (BracketCall destroy renderDestroy')
+                               (zip argHsVars argHsTypes)
+              )
           ]
 
 renderCreate
-  :: ( HasErr r
-     , HasRenderParams r
-     , HasSpecInfo r
-     , HasRenderedNames r
-     , HasRenderElem r
-     )
+  :: (HasErr r, HasRenderParams r, HasRenderElem r)
   => (Text -> Text)
   -> Bracket
+  -> Doc ()
   -> Sem r (Doc ())
-renderCreate paramName Bracket {..} = do
+renderCreate paramName Bracket {..} createDoc = do
   RenderParams {..} <- input
-  let create = mkFunName bCreate
   createArgVars <- forV bCreateArguments $ \case
     Provided v _ -> pure (pretty (paramName v))
     Resource _ _ -> throw "Resource used in its own construction"
     -- Would be a bit weird to hit this, but nothing unhandleable
     Member   _ _ -> throw "TODO: Member used during construction"
-  tellImport create
-  pure $ pretty create <+> sep createArgVars
+  pure $ createDoc <+> sep createArgVars
 
 renderDestroy
-  :: ( HasErr r
-     , HasRenderParams r
-     , HasSpecInfo r
-     , HasRenderedNames r
-     , HasRenderElem r
-     )
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
   => (Text -> Text)
   -> Bracket
+  -> Doc ()
   -> Sem r (Doc ())
-renderDestroy paramName Bracket {..} = do
+renderDestroy paramName Bracket {..} destroyDoc = do
   RenderParams {..} <- input
-  let destroy              = mkFunName bDestroy
-      noDestructorResource = not . any isResource $ bDestroyArguments
+  let noDestructorResource = not . any isResource $ bDestroyArguments
       noResource           = null bInnerTypes && noDestructorResource
       usedResourceIndices  = [ n | Resource _ n <- bDestroyArguments ]
       resourcePattern      = case length bInnerTypes of
@@ -291,7 +313,6 @@ renderDestroy paramName Bracket {..} = do
               )
         _ -> throw $ "Found multiple siblings with the same name " <> sibling
   let (appVars, catMaybes -> toTraverse) = unzip destroyArgVars
-  tellImport destroy
   unless (null toTraverse) (tellImport 'traverse_)
   when (length toTraverse >= 2)
     $ throw
@@ -303,6 +324,6 @@ renderDestroy paramName Bracket {..} = do
           xs
       callDestructor =
         (if noResource then emptyDoc else "\\" <> resourcePattern <+> "-> ")
-          <> withTraversals (pretty destroy <+> sep appVars) toTraverse
+          <> withTraversals (destroyDoc <+> sep appVars) toTraverse
       traverseDestroy = "traverse" <+> parens callDestructor
   pure $ bool callDestructor traverseDestroy bDestroyIndividually

@@ -160,5 +160,14 @@ appearsInPositivePosition s = ($ s) <$> inputs siAppearsInPositivePosition
 appearsInNegativePosition :: HasSpecInfo r => CName -> Sem r Bool
 appearsInNegativePosition s = ($ s) <$> inputs siAppearsInNegativePosition
 
+saveSpecInfo :: HasSpecInfo r' => Sem (Input SpecInfo : r) a -> Sem r' (Sem r a)
+saveSpecInfo m = do
+  si <- input
+  pure $ runInputConst si m
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
 inputs :: Member (Input a) r => (a -> b) -> Sem r b
 inputs f = f <$> input

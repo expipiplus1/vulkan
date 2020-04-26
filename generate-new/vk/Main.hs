@@ -25,6 +25,9 @@ import           AssignModules
 import           Documentation.All
 import           Bespoke.RenderParams
 import           Bespoke.MarshalParams
+import           BYOB
+import           Render.CommandInfo
+import           Render.ImportLocation
 
 import           VK.Render
 
@@ -49,7 +52,7 @@ main =
                | Feature {..}      <- toList specFeatures
                , major : minor : _ <- pure $ versionBranch fVersion
                ]
-        doLoadDocs = True
+        doLoadDocs = False
     getDocumentation <- if doLoadDocs
       then liftIO $ loadAllDocumentation allExtensionNames
                                          "./Vulkan-Docs"
@@ -63,7 +66,7 @@ main =
       . withTypeInfo spec
       $ do
 
-          mps <- marshalParams spec
+          mps          <- marshalParams spec
 
           (ss, us, cs) <- runInputConst mps $ do
             ss <- timeItNamed "Marshaling structs"
@@ -86,6 +89,30 @@ main =
             $   assignModules spec
             =<< assignBespokeModules renderElements
 
+          let
+            commandManifest = mconcat
+              [ CommandManifest cs bs
+              | (m, rs) <- groups
+              , let
+                cs =
+                  fromList
+                    [ Located m c
+                    | ACommand c <- toList (Compose (Compose rs))
+                    ]
+              , let
+                bs =
+                  fromList
+                    [ Located m b
+                    | ABracket b <- toList (Compose (Compose rs))
+                    ]
+              ]
+
+          let merged         = mergeElements groups
+              importLocation = makeImportLocation merged
+
+          timeItNamed "writing other bindings"
+            $ byob "out-mtl" importLocation commandManifest
+
           timeItNamed "writing"
-            $ renderSegments getDocumentation "out" (mergeElements groups)
+            $ renderSegments getDocumentation "out" importLocation merged
 

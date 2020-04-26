@@ -98,6 +98,7 @@ dependencies:
   - prettyprinter
   - regex-applicative
   - relude
+  - resourcet
   - say
   - tagsoup
   - template-haskell
@@ -109,7 +110,7 @@ dependencies:
   - uniplate
   - unordered-containers
   - vector
-  - vector-sized
   - vector-algorithms
+  - vector-sized
   - word-wrap
   - xeno

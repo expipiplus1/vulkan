@@ -1,10 +1,12 @@
+{-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
 module Render.Element
   ( genRe
   , emptyRenderElement
   , makeRenderElementInternal
   , HasRenderElem
   , HasRenderParams
-  , RenderElement(..)
+  , RenderElement
+  , RenderElement'(..)
   , RenderParams(..)
   , Export(..)
   , ExportReexportable(..)
@@ -30,6 +32,7 @@ module Render.Element
   , tellExplicitModule
   , tellSourceImport
   , tellReexportMod
+  , tellReexportModHiding
   , tellInternal
   , tellImportWithAll
   , tellQualImport
@@ -37,6 +40,7 @@ module Render.Element
   , tellImport
   , tellImportWith
   , tellNotReexportable
+  , tellMeta
   , wrapSymbol
   , exportDoc
   , renderExport
@@ -62,6 +66,7 @@ import           Data.Text.Prettyprint.Doc
 import           Data.Char                      ( isAlpha
                                                 , isLower
                                                 )
+import qualified Data.Map                      as Map
 import           Polysemy
 import           Polysemy.State
 import           Polysemy.Input
@@ -78,13 +83,21 @@ import           Haskell.Name
 import           CType
 import           Render.Type.Preserve
 import           Spec.Name
-import {-# SOURCE #-} Render.Stmts
 import           Documentation
+import {-# SOURCE #-} Render.Stmts
+import {-# SOURCE #-} Render.CommandInfo
+
+-- TODO: Remove 'RendereElement' from this module and deal just with
+-- 'RenderElement''
+type RenderElement = RenderElement' [RenderedCommandInfo]
 
 -- It would be nice to distinguish the type of render element and boot to
 -- prevent nesting, however without the polysemy plugin (doesn't work for me in
 -- HIE) the type inference for this is a chore.
-data RenderElement = RenderElement
+-- | Something to render into the bindings, including dependendcy information
+--
+-- Parameterized over some metadata
+data RenderElement' a = RenderElement
   { reName              :: Text
   , reBoot              :: Maybe RenderElement
   , reDoc               :: (Documentee -> Doc ()) -> Maybe (Doc ())
@@ -94,11 +107,16 @@ data RenderElement = RenderElement
     -- declared names which arent exported
   , reImports           :: Set (Import Name)
   , reLocalImports      :: Set (Import HName)
-  , reReexportedModules :: Set ModName
+  , reReexportedModules :: Map ModName (Set HName)
+    -- ^ A set of modules with reexport, with hidden values. In the 'Semigroup'
+    -- instance for RenderElement the hidden sets are combined
   , reReexportedNames   :: Set Export
   , reExplicitModule    :: Maybe ModName
   , reReexportable      :: All
+  , reMeta              :: a
+    -- ^ Some metadata about what this contains
   }
+  deriving (Functor, Foldable, Traversable)
 
 data Export = Export
   { exportName         :: HName
@@ -130,7 +148,7 @@ data Import n = Import
 newtype ModName = ModName { unModName :: Text }
   deriving (Eq, Ord, Show, Pretty)
 
-instance Semigroup RenderElement where
+instance Semigroup a => Semigroup (RenderElement' a) where
   r1 <> r2 = RenderElement
     { reName              = reName r1 <> " and " <> reName r2
     , reBoot              = reBoot r1 <> reBoot r2
@@ -139,10 +157,13 @@ instance Semigroup RenderElement where
     , reInternal          = reInternal r1 <> reInternal r2
     , reImports           = reImports r1 <> reImports r2
     , reLocalImports      = reLocalImports r1 <> reLocalImports r2
-    , reReexportedModules = reReexportedModules r1 <> reReexportedModules r2
+    , reReexportedModules = Map.unionWith (<>)
+                                          (reReexportedModules r1)
+                                          (reReexportedModules r2)
     , reReexportedNames   = reReexportedNames r1 <> reReexportedNames r2
     , reExplicitModule    = reExplicitModule r1 <|> reExplicitModule r2
     , reReexportable      = reReexportable r1 <> reReexportable r2
+    , reMeta              = reMeta r1 <> reMeta r2
     }
 
 lineMaybe :: Maybe (Doc ()) -> Maybe (Doc ()) -> Maybe (Doc ())
@@ -307,33 +328,36 @@ data IdiomaticTypeTo
 
 type HasRenderElem r = MemberWithError (State RenderElement) r
 
-genRe :: Text -> Sem (State RenderElement : r) () -> Sem r RenderElement
-genRe n m = do
-  (o, _) <- runState (emptyRenderElement n) m
-  pure o
+genRe
+  :: Monoid a
+  => Text
+  -> Sem (State (RenderElement' a) : r) ()
+  -> Sem r (RenderElement' a)
+genRe n m = fst <$> runState (emptyRenderElement n) m
 
 tellBoot :: HasRenderElem r => Sem (State RenderElement : r) () -> Sem r ()
 tellBoot m = do
-  n      <- gets reName
+  n      <- gets @RenderElement reName
   (b, _) <- runState (emptyRenderElement (n <> " boot")) m
-  modify' (\r -> r { reBoot = reBoot r <> Just b })
+  modify' @RenderElement (\r -> r { reBoot = reBoot r <> Just b })
 
 identicalBoot :: RenderElement -> RenderElement
 identicalBoot re = re { reBoot = Just re }
 
-emptyRenderElement :: Text -> RenderElement
+emptyRenderElement :: Monoid a => Text -> RenderElement' a
 emptyRenderElement n = RenderElement { reName              = n
-                            , reBoot              = Nothing
-                            , reDoc               = mempty
-                            , reExports           = mempty
-                            , reInternal          = mempty
-                            , reImports           = mempty
-                            , reLocalImports      = mempty
-                            , reReexportedModules = mempty
-                            , reReexportedNames   = mempty
-                            , reExplicitModule    = Nothing
-                            , reReexportable      = mempty
-                            }
+                                     , reBoot              = Nothing
+                                     , reDoc               = mempty
+                                     , reExports           = mempty
+                                     , reInternal          = mempty
+                                     , reImports           = mempty
+                                     , reLocalImports      = mempty
+                                     , reReexportedModules = mempty
+                                     , reReexportedNames   = mempty
+                                     , reExplicitModule    = Nothing
+                                     , reReexportable      = mempty
+                                     , reMeta              = mempty
+                                     }
 
 -- | Prevent any exports from being in the module export list
 makeRenderElementInternal :: RenderElement -> RenderElement
@@ -341,38 +365,38 @@ makeRenderElementInternal re =
   re { reExports = mempty, reInternal = reExports re <> reInternal re }
 
 tellExplicitModule :: (HasRenderElem r, HasErr r) => ModName -> Sem r ()
-tellExplicitModule mod = gets reExplicitModule >>= \case
-  Nothing -> modify' (\r -> r { reExplicitModule = Just mod })
+tellExplicitModule mod = gets @RenderElement reExplicitModule >>= \case
+  Nothing -> modify' @RenderElement (\r -> r { reExplicitModule = Just mod })
   Just m | m == mod -> pure ()
   _ -> throw "Render element has been given two explicit modules"
 
 tellExport :: MemberWithError (State RenderElement) r => Export -> Sem r ()
-tellExport e = modify' (\r -> r { reExports = reExports r <> V.singleton e })
+tellExport e = modify' @RenderElement (\r -> r { reExports = reExports r <> V.singleton e })
 
 -- | A convenience for declaraing a data declaration and also putting it in the
 -- hs boot file
 tellDataExport :: MemberWithError (State RenderElement) r => HName -> Sem r ()
 tellDataExport e = do
   let dat = EData e
-  modify' (\r -> r { reExports = reExports r <> V.singleton dat })
+  modify' @RenderElement (\r -> r { reExports = reExports r <> V.singleton dat })
   tellBoot $ do
     tellExport dat { exportWithAll = False }
     tellDoc $ "data" <+> pretty e
 
 tellInternal :: MemberWithError (State RenderElement) r => Export -> Sem r ()
 tellInternal e =
-  modify' (\r -> r { reInternal = reInternal r <> V.singleton e })
+  modify' @RenderElement (\r -> r { reInternal = reInternal r <> V.singleton e })
 
 tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
 tellDoc d =
-  modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
+  modify' @RenderElement (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
 
 tellDocWithHaddock
   :: MemberWithError (State RenderElement) r
   => ((Documentee -> Doc ()) -> Doc ())
   -> Sem r ()
 tellDocWithHaddock d =
-  modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just (d h) })
+  modify' @RenderElement (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just (d h) })
 
 class Importable a where
   addImport
@@ -401,7 +425,7 @@ instance Importable Name where
         -- This is an name in an external library, don't import with source
         RenderParams {..} <- input
         let q = qual || V.elem withModule alwaysQualifiedNames
-        modify' $ \r -> r
+        modify' @RenderElement $ \r -> r
           { reImports = insert (Import withModule q children withAll False)
                                (reImports r)
           }
@@ -419,7 +443,7 @@ instance Importable HName where
       , importChildren = mkName . T.unpack . unName <$> importChildren i
       }
     Nothing ->
-      modify' $ \r -> r { reLocalImports = insert i (reLocalImports r) }
+      modify' @RenderElement $ \r -> r { reLocalImports = insert i (reLocalImports r) }
 
 addModName :: HasRenderParams r => HName -> Sem r (Maybe Name)
 addModName n = do
@@ -432,11 +456,11 @@ addModName n = do
 
 tellSourceImport, tellImportWithAll, tellQualImport, tellQualImportWithAll, tellImport
   :: (HasRenderElem r, HasRenderParams r, Importable a) => a -> Sem r ()
-tellImport a = addImport (Import a False Empty False False)
-tellSourceImport a = addImport (Import a False Empty False True)
-tellImportWithAll a = addImport (Import a False Empty True False)
-tellQualImport a = addImport (Import a True Empty False False)
-tellQualImportWithAll a = addImport (Import a True Empty True False)
+tellImport            a = addImport (Import a False Empty False False)
+tellSourceImport      a = addImport (Import a False Empty False True)
+tellImportWithAll     a = addImport (Import a False Empty True  False)
+tellQualImport        a = addImport (Import a True  Empty False False)
+tellQualImportWithAll a = addImport (Import a True  Empty True  False)
 
 tellImportWith
   :: (HasRenderElem r, HasRenderParams r, Importable a) => a -> a -> Sem r ()
@@ -445,11 +469,27 @@ tellImportWith parent dat =
 
 tellReexportMod
   :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
-tellReexportMod e =
-  modify' (\r -> r { reReexportedModules = insert e (reReexportedModules r) })
+tellReexportMod e = tellReexportModHiding e mempty
+
+tellReexportModHiding
+  :: MemberWithError (State RenderElement) r => ModName -> [HName] -> Sem r ()
+tellReexportModHiding e hs = modify' @RenderElement
+  (\r -> r
+    { reReexportedModules = Map.insertWith (<>)
+                                           e
+                                           (fromList hs)
+                                           (reReexportedModules r)
+    }
+  )
 
 tellNotReexportable :: MemberWithError (State RenderElement) r => Sem r ()
-tellNotReexportable = modify' (\r -> r { reReexportable = All False })
+tellNotReexportable = modify' @RenderElement (\r -> r { reReexportable = All False })
+
+tellMeta
+  :: forall a r
+   . Semigroup a
+  => Member (State (RenderElement' a)) r => a -> Sem r ()
+tellMeta m = modify' @(RenderElement' a) (\r -> r { reMeta = reMeta r <> m })
 
 ----------------------------------------------------------------
 -- Utils

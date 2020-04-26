@@ -49,6 +49,7 @@ import           Render.Scheme
 import           Render.SpecInfo
 import           Render.Type
 import           Spec.Parse
+import           Render.CommandInfo
 
 renderCommand
   :: ( HasErr r
@@ -213,6 +214,8 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
     , pretty commandName <+> "::" <+> indent 0 tDoc
     , pretty commandName <+> sep paramNames <+> "=" <+> rhs
     ]
+
+  tellMeta [ACommand (RenderedCommand commandName r nts)]
 
 ----------------------------------------------------------------
 -- Checking the result and throwing an exception if something went wrong
@@ -399,6 +402,8 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     , pretty commandName <+> "::" <+> indent 0 tDoc
     , pretty commandName <+> sep paramNames <+> "=" <+> rhs
     ]
+
+  tellMeta [ACommand (RenderedCommand commandName returnType nts)]
 
 pokesForGettingCount
   :: ( HasErr r

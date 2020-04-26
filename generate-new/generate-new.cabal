@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6c12383d1a50ee3ff29c4b9943470d00a22d711604a1eca895cb37ea90175a5c
+-- hash: 6811e77e21fbb1c53f0b2ca9cc96dc0efa39d928503811d7af9e4668e87348b2
 
 name:           generate-new
 version:        0.0.0
@@ -24,6 +24,7 @@ library
       Bespoke.Seeds
       Bespoke.Utils
       Bracket
+      BYOB
       CType
       CType.Size
       Data.Text.Extra
@@ -44,6 +45,7 @@ library
       Render.Aggregate
       Render.Alias
       Render.Command
+      Render.CommandInfo
       Render.Constant
       Render.CStruct
       Render.Dynamic
@@ -52,6 +54,7 @@ library
       Render.Enum
       Render.FuncPointer
       Render.Handle
+      Render.ImportLocation
       Render.Names
       Render.Peek
       Render.Scheme
@@ -107,6 +110,7 @@ library
     , prettyprinter
     , regex-applicative
     , relude
+    , resourcet
     , say
     , tagsoup
     , template-haskell
@@ -160,6 +164,7 @@ executable vk
     , prettyprinter
     , regex-applicative
     , relude
+    , resourcet
     , say
     , tagsoup
     , template-haskell
@@ -216,6 +221,7 @@ executable vma
     , prettyprinter
     , regex-applicative
     , relude
+    , resourcet
     , say
     , tagsoup
     , template-haskell

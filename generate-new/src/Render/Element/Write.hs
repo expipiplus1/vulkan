@@ -27,7 +27,6 @@ import           Polysemy.Input
 import           Data.List                      ( lookup )
 import           Foreign.Ptr
 import           Language.Haskell.TH            ( nameBase
-                                                , nameModule
                                                 , mkName
                                                 )
 
@@ -44,6 +43,7 @@ import           Spec.Types
 import           Haskell.Name
 import           Documentation
 import           Documentation.Haddock
+import           Render.ImportLocation
 
 ----------------------------------------------------------------
 -- Rendering
@@ -53,29 +53,17 @@ renderSegments
   :: forall r
    . ( HasErr r
      , MemberWithError (Embed IO) r
-     , HasSpecInfo r
      , HasTypeInfo r
      , HasRenderedNames r
      , HasRenderParams r
      )
   => (Documentee -> Maybe Documentation)
   -> FilePath
+  -> ImportLocation
   -> [Segment ModName RenderElement]
   -> Sem r ()
-renderSegments getDoc out segments = do
-  let exportMap :: Map.Map HName (Export, ModName)
-      exportMap = Map.fromList
-        [ (n, (e, m))
-        | Segment m rs <- segments
-        , r            <- toList rs
-        , e            <- toList (reExports r)
-        , n <- exportName e : (exportName <$> V.toList (exportWith e))
-        ]
-      findLocalModule :: HName -> Maybe ModName
-      findLocalModule n = snd <$> Map.lookup n exportMap
-      findModule :: Name -> Maybe ModName
-      findModule n = ModName . T.pack <$> nameModule n
-
+renderSegments getDoc out ImportLocation{..} segments = do
+  let
       --
       -- Boot module handling
       -- TODO, move this checking elsewhere
@@ -128,7 +116,6 @@ renderSegments getDoc out segments = do
 renderModule
   :: ( MemberWithError (Embed IO) r
      , HasErr r
-     , HasSpecInfo r
      , HasTypeInfo r
      , HasRenderedNames r
      , HasRenderParams r
@@ -154,16 +141,24 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
           (out <> "/" <> T.unpack (T.replace "." "/" (unModName modName) <> ext)
           )
       openImports = vsep
-        ( fmap (\(ModName n) -> "import" <+> pretty n)
-        . Set.toList
-        . Set.unions
+        ( fmap
+            (\(ModName n, hidden) -> if Set.null hidden
+              then "import" <+> pretty n
+              else
+                let renderHidden h =
+                      nameSpacePrefix (nameNameSpace h) <> pretty h
+                in  "import" <+> pretty n <+> "hiding" <+> tupled
+                      (fmap renderHidden . Set.toList $ hidden)
+            )
+        . Map.toList
+        . Map.unionsWith (<>)
         $ (reReexportedModules <$> V.toList es)
         )
       declaredNames = V.concatMap
         (\RenderElement {..} -> allExports (reExports <> reInternal))
         es
-      importFilter =
-        Relude.filter (\(Import n _ _ _ _) -> n `V.notElem` declaredNames)
+      importFilter = Relude.filter
+        (\(Import n qual _ _ _) -> qual || n `V.notElem` declaredNames)
       findModule' n =
         note ("Unable to find module for " <> show n) (findModule n)
       findLocalModule' n =
@@ -221,10 +216,11 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
               <>  ":"
               <+> viaShow e
           Right (Haddock t) -> commentNoWrap t
+      allReexportedModules :: Vector ModName
       allReexportedModules =
         V.fromList
-          . Set.toList
-          . Set.unions
+          . Map.keys
+          . Map.unions
           . fmap reReexportedModules
           . toList
           $ es
@@ -277,7 +273,7 @@ allExports =
 -- | If we are importing constructors of a type alias, resolve the alias and
 -- import the constructors with the resolved name.
 renderImport
-  :: (HasErr r, HasSpecInfo r, Eq a)
+  :: (HasErr r, Eq a)
   => (a -> Sem r ModName)
   -> (a -> Text)
   -> (a -> NameSpace)
@@ -301,9 +297,8 @@ renderImport findModule getName getNameSpace resolveAlias i =
                              i { importName = resolved }
           pure $ vsep [a, c]
 
-
 renderImport'
-  :: (HasErr r, HasSpecInfo r, Eq a)
+  :: (HasErr r, Eq a)
   => (a -> Sem r ModName)
   -> (a -> Text)
   -> (a -> NameSpace)
