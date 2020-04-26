@@ -164,14 +164,17 @@ createPipelineCache device createInfo allocator = liftIO . evalContT $ do
   pPipelineCache <- lift $ peek @PipelineCache pPPipelineCache
   pure $ (pPipelineCache)
 
--- | A safe wrapper for 'createPipelineCache' and 'destroyPipelineCache'
--- using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createPipelineCache'
+-- and 'destroyPipelineCache'
 --
--- The allocated value must not be returned from the provided computation
-withPipelineCache :: forall r . Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> ((PipelineCache) -> IO r) -> IO r
-withPipelineCache device pCreateInfo pAllocator =
-  bracket
-    (createPipelineCache device pCreateInfo pAllocator)
+-- To ensure that 'destroyPipelineCache' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withPipelineCache :: forall io r . MonadIO io => (io (PipelineCache) -> ((PipelineCache) -> io ()) -> r) -> Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> r
+withPipelineCache b device pCreateInfo pAllocator =
+  b (createPipelineCache device pCreateInfo pAllocator)
     (\(o0) -> destroyPipelineCache device o0 pAllocator)
 
 

@@ -127,14 +127,17 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
   pSemaphore <- lift $ peek @Semaphore pPSemaphore
   pure $ (pSemaphore)
 
--- | A safe wrapper for 'createSemaphore' and 'destroySemaphore' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createSemaphore' and
+-- 'destroySemaphore'
 --
--- The allocated value must not be returned from the provided computation
-withSemaphore :: forall a r . PokeChain a => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> ((Semaphore) -> IO r) -> IO r
-withSemaphore device pCreateInfo pAllocator =
-  bracket
-    (createSemaphore device pCreateInfo pAllocator)
+-- To ensure that 'destroySemaphore' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withSemaphore :: forall a io r . (PokeChain a, MonadIO io) => (io (Semaphore) -> ((Semaphore) -> io ()) -> r) -> Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> r
+withSemaphore b device pCreateInfo pAllocator =
+  b (createSemaphore device pCreateInfo pAllocator)
     (\(o0) -> destroySemaphore device o0 pAllocator)
 
 

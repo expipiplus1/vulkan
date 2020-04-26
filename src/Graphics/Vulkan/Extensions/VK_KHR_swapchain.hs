@@ -297,14 +297,17 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
   pSwapchain <- lift $ peek @SwapchainKHR pPSwapchain
   pure $ (pSwapchain)
 
--- | A safe wrapper for 'createSwapchainKHR' and 'destroySwapchainKHR' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createSwapchainKHR'
+-- and 'destroySwapchainKHR'
 --
--- The allocated value must not be returned from the provided computation
-withSwapchainKHR :: forall a r . PokeChain a => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> ((SwapchainKHR) -> IO r) -> IO r
-withSwapchainKHR device pCreateInfo pAllocator =
-  bracket
-    (createSwapchainKHR device pCreateInfo pAllocator)
+-- To ensure that 'destroySwapchainKHR' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withSwapchainKHR :: forall a io r . (PokeChain a, MonadIO io) => (io (SwapchainKHR) -> ((SwapchainKHR) -> io ()) -> r) -> Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> r
+withSwapchainKHR b device pCreateInfo pAllocator =
+  b (createSwapchainKHR device pCreateInfo pAllocator)
     (\(o0) -> destroySwapchainKHR device o0 pAllocator)
 
 

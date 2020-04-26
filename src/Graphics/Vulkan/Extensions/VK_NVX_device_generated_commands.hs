@@ -63,7 +63,6 @@ module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands  ( cmdProcess
                                                                     ) where
 
 import Control.Exception.Base (bracket)
-import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -382,14 +381,17 @@ createIndirectCommandsLayoutNVX device createInfo allocator = liftIO . evalContT
   pIndirectCommandsLayout <- lift $ peek @IndirectCommandsLayoutNVX pPIndirectCommandsLayout
   pure $ (pIndirectCommandsLayout)
 
--- | A safe wrapper for 'createIndirectCommandsLayoutNVX' and
--- 'destroyIndirectCommandsLayoutNVX' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createIndirectCommandsLayoutNVX' and 'destroyIndirectCommandsLayoutNVX'
 --
--- The allocated value must not be returned from the provided computation
-withIndirectCommandsLayoutNVX :: forall r . Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> ((IndirectCommandsLayoutNVX) -> IO r) -> IO r
-withIndirectCommandsLayoutNVX device pCreateInfo pAllocator =
-  bracket
-    (createIndirectCommandsLayoutNVX device pCreateInfo pAllocator)
+-- To ensure that 'destroyIndirectCommandsLayoutNVX' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withIndirectCommandsLayoutNVX :: forall io r . MonadIO io => (io (IndirectCommandsLayoutNVX) -> ((IndirectCommandsLayoutNVX) -> io ()) -> r) -> Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> r
+withIndirectCommandsLayoutNVX b device pCreateInfo pAllocator =
+  b (createIndirectCommandsLayoutNVX device pCreateInfo pAllocator)
     (\(o0) -> destroyIndirectCommandsLayoutNVX device o0 pAllocator)
 
 
@@ -528,14 +530,17 @@ createObjectTableNVX device createInfo allocator = liftIO . evalContT $ do
   pObjectTable <- lift $ peek @ObjectTableNVX pPObjectTable
   pure $ (pObjectTable)
 
--- | A safe wrapper for 'createObjectTableNVX' and 'destroyObjectTableNVX'
--- using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createObjectTableNVX' and 'destroyObjectTableNVX'
 --
--- The allocated value must not be returned from the provided computation
-withObjectTableNVX :: forall r . Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> ((ObjectTableNVX) -> IO r) -> IO r
-withObjectTableNVX device pCreateInfo pAllocator =
-  bracket
-    (createObjectTableNVX device pCreateInfo pAllocator)
+-- To ensure that 'destroyObjectTableNVX' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withObjectTableNVX :: forall io r . MonadIO io => (io (ObjectTableNVX) -> ((ObjectTableNVX) -> io ()) -> r) -> Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> r
+withObjectTableNVX b device pCreateInfo pAllocator =
+  b (createObjectTableNVX device pCreateInfo pAllocator)
     (\(o0) -> destroyObjectTableNVX device o0 pAllocator)
 
 
@@ -700,12 +705,18 @@ registerObjectsNVX device objectTable objectTableEntries objectIndices = liftIO 
   r <- lift $ vkRegisterObjectsNVX' (deviceHandle (device)) (objectTable) ((fromIntegral ppObjectTableEntriesLength :: Word32)) (pPpObjectTableEntries) (pPObjectIndices)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
--- | A safe wrapper for 'registerObjectsNVX' and 'unregisterObjectsNVX' using
--- 'bracket_'
-withRegisteredObjectsNVX :: forall r . Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
-withRegisteredObjectsNVX device objectTable ppObjectTableEntries pObjectIndices pObjectEntryTypes =
-  bracket_
-    (registerObjectsNVX device objectTable ppObjectTableEntries pObjectIndices)
+-- | A convenience wrapper to make a compatible pair of 'registerObjectsNVX'
+-- and 'unregisterObjectsNVX'
+--
+-- To ensure that 'unregisterObjectsNVX' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+withRegisteredObjectsNVX :: forall io r . MonadIO io => (io () -> io () -> r) -> Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> r
+withRegisteredObjectsNVX b device objectTable ppObjectTableEntries pObjectIndices pObjectEntryTypes =
+  b (registerObjectsNVX device objectTable ppObjectTableEntries pObjectIndices)
     (unregisterObjectsNVX device objectTable pObjectEntryTypes pObjectIndices)
 
 

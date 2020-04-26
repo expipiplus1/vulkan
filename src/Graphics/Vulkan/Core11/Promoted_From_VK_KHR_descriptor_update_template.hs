@@ -152,14 +152,17 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
   pDescriptorUpdateTemplate <- lift $ peek @DescriptorUpdateTemplate pPDescriptorUpdateTemplate
   pure $ (pDescriptorUpdateTemplate)
 
--- | A safe wrapper for 'createDescriptorUpdateTemplate' and
--- 'destroyDescriptorUpdateTemplate' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createDescriptorUpdateTemplate' and 'destroyDescriptorUpdateTemplate'
 --
--- The allocated value must not be returned from the provided computation
-withDescriptorUpdateTemplate :: forall r . Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> ((DescriptorUpdateTemplate) -> IO r) -> IO r
-withDescriptorUpdateTemplate device pCreateInfo pAllocator =
-  bracket
-    (createDescriptorUpdateTemplate device pCreateInfo pAllocator)
+-- To ensure that 'destroyDescriptorUpdateTemplate' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDescriptorUpdateTemplate :: forall io r . MonadIO io => (io (DescriptorUpdateTemplate) -> ((DescriptorUpdateTemplate) -> io ()) -> r) -> Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> r
+withDescriptorUpdateTemplate b device pCreateInfo pAllocator =
+  b (createDescriptorUpdateTemplate device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorUpdateTemplate device o0 pAllocator)
 
 

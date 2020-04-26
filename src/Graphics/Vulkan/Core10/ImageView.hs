@@ -135,14 +135,17 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
   pView <- lift $ peek @ImageView pPView
   pure $ (pView)
 
--- | A safe wrapper for 'createImageView' and 'destroyImageView' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createImageView' and
+-- 'destroyImageView'
 --
--- The allocated value must not be returned from the provided computation
-withImageView :: forall a r . PokeChain a => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> ((ImageView) -> IO r) -> IO r
-withImageView device pCreateInfo pAllocator =
-  bracket
-    (createImageView device pCreateInfo pAllocator)
+-- To ensure that 'destroyImageView' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withImageView :: forall a io r . (PokeChain a, MonadIO io) => (io (ImageView) -> ((ImageView) -> io ()) -> r) -> Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> r
+withImageView b device pCreateInfo pAllocator =
+  b (createImageView device pCreateInfo pAllocator)
     (\(o0) -> destroyImageView device o0 pAllocator)
 
 

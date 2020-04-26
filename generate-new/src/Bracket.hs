@@ -1,34 +1,32 @@
 module Bracket
   where
 
-import           Relude                  hiding ( Handle
-                                                , Type
-                                                )
-import           Data.List.Extra                ( nubOrd
-                                                , elemIndex
+import           Data.List.Extra                ( elemIndex
+                                                , nubOrd
                                                 )
 import qualified Data.Text.Extra               as T
-import           Language.Haskell.TH            ( mkName )
 import           Data.Text.Prettyprint.Doc
                                          hiding ( brackets
                                                 , plural
                                                 )
+import           Language.Haskell.TH            ( mkName )
 import           Polysemy
 import           Polysemy.Input
+import           Relude                  hiding ( Handle
+                                                , Type
+                                                )
 
-import qualified Control.Exception
-
-import           Render.Element
-import           Render.Utils
-import           Render.SpecInfo
-import           Render.Command
-import           Render.Names
-import           Spec.Parse
-import           Haskell                       as H
 import           Error
-import           Marshal.Scheme
+import           Haskell                       as H
 import           Marshal.Command
+import           Marshal.Scheme
+import           Render.Command
+import           Render.Element
+import           Render.Names
 import           Render.Scheme
+import           Render.SpecInfo
+import           Render.Utils
+import           Spec.Parse
 
 data Bracket = Bracket
   { bInnerTypes          :: [MarshalScheme Parameter]
@@ -163,7 +161,8 @@ renderBracket paramName b@Bracket {..} =
           <=< schemeTypeNegative
           )
           [ t | Provided _ t <- arguments ]
-        let argHsVars = [ pretty (paramName v) | Provided v _ <- arguments ]
+        let argHsVars =
+              "b" : [ pretty (paramName v) | Provided v _ <- arguments ]
         innerHsType <- do
           ts <- traverse
             (   note "Inner type has no representation in a negative position"
@@ -171,23 +170,24 @@ renderBracket paramName b@Bracket {..} =
             )
             bInnerTypes
           pure $ foldl' (:@) (TupleT (length ts)) ts
-        let noDestructorResource = not (any isResource bDestroyArguments)
-            noResource           = null bInnerTypes && noDestructorResource
-            cont                 = if noResource
-              then ConT ''IO :@ VarT (mkName "r")
-              else innerHsType ~> ConT ''IO :@ VarT (mkName "r")
-            wrapperType = foldr (~>)
-                                (ConT ''IO :@ VarT (mkName "r"))
-                                (argHsTypes ++ [cont])
-        constrainedType <- constrainStructVariables wrapperType
-        wrapperTDoc     <- renderType constrainedType
-        bracketDoc      <- if noResource
-          then do
-            tellImport 'Control.Exception.bracket_
-            pure "bracket_"
-          else do
-            tellImport 'Control.Exception.bracket
-            pure "bracket"
+        let
+          noDestructorResource = not (any isResource bDestroyArguments)
+          noResource           = null bInnerTypes && noDestructorResource
+          ioVar                = VarT (mkName "io")
+          rVar                 = VarT (mkName "r")
+          bracketTy            = if noResource
+            then (ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar)
+            else
+              (  ioVar
+              :@ innerHsType
+              ~> (innerHsType ~> ioVar :@ ConT ''())
+              ~> rVar
+              )
+          wrapperType   = foldr (~>) rVar (bracketTy : argHsTypes)
+          bracketSuffix = bool "" "_" noResource
+        constrainedType <- addConstraints [ConT ''MonadIO :@ ioVar]
+          <$> constrainStructVariables wrapperType
+        wrapperTDoc <- renderType constrainedType
 
         --
         -- The actual function
@@ -197,29 +197,27 @@ renderBracket paramName b@Bracket {..} =
         tellDoc $ vsep
           [ comment
             (T.unlines
-              (  [ "A safe wrapper for '"
-                   <> unName create
-                   <> "' and '"
-                   <> unName destroy
-                   <> "' using '"
-                   <> bracketDoc
-                   <> "'"
-                 ]
-              <> bool
-                   [ ""
-                   , "The allocated value must not be returned from the provided computation"
-                   ]
-                   []
-                   noResource
+              ([ "A convenience wrapper to make a compatible pair of calls to '"
+               <> unName create
+               <> "' and '"
+               <> unName destroy
+               <> "'"
+               , ""
+               , "To ensure that '"
+               <> unName destroy
+               <> "' is always called: pass 'Control.Exception.bracket"
+               <> bracketSuffix
+               <> "' (or the allocate function from your favourite resource management library) as the first argument."
+               , "To just extract the pair pass '(,)' as the first argument."
+               , ""
+               ]
+              <> [ "Note that there is no inner resource" | noResource ]
               )
             )
           , pretty wrapperName <+> "::" <+> wrapperTDoc
           , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
             2
-            (pretty bracketDoc <> line <> indent
-              2
-              (vsep [parens createCall, parens destroyCall])
-            )
+            ("b" <+> indent 0 (vsep [parens createCall, parens destroyCall]))
           ]
 
 renderCreate

@@ -241,13 +241,17 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   pMemory <- lift $ peek @DeviceMemory pPMemory
   pure $ (pMemory)
 
--- | A safe wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'allocateMemory' and
+-- 'freeMemory'
 --
--- The allocated value must not be returned from the provided computation
-withMemory :: forall a r . PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> ((DeviceMemory) -> IO r) -> IO r
-withMemory device pAllocateInfo pAllocator =
-  bracket
-    (allocateMemory device pAllocateInfo pAllocator)
+-- To ensure that 'freeMemory' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withMemory :: forall a io r . (PokeChain a, MonadIO io) => (io (DeviceMemory) -> ((DeviceMemory) -> io ()) -> r) -> Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> r
+withMemory b device pAllocateInfo pAllocator =
+  b (allocateMemory device pAllocateInfo pAllocator)
     (\(o0) -> freeMemory device o0 pAllocator)
 
 
@@ -485,13 +489,17 @@ mapMemory device memory offset size flags = liftIO . evalContT $ do
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
 
--- | A safe wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'mapMemory' and
+-- 'unmapMemory'
 --
--- The allocated value must not be returned from the provided computation
-withMappedMemory :: forall r . Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> ((Ptr ()) -> IO r) -> IO r
-withMappedMemory device memory offset size flags =
-  bracket
-    (mapMemory device memory offset size flags)
+-- To ensure that 'unmapMemory' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withMappedMemory :: forall io r . MonadIO io => (io (Ptr ()) -> ((Ptr ()) -> io ()) -> r) -> Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> r
+withMappedMemory b device memory offset size flags =
+  b (mapMemory device memory offset size flags)
     (\(_) -> unmapMemory device memory)
 
 

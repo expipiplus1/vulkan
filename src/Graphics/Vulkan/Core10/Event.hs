@@ -126,13 +126,17 @@ createEvent device createInfo allocator = liftIO . evalContT $ do
   pEvent <- lift $ peek @Event pPEvent
   pure $ (pEvent)
 
--- | A safe wrapper for 'createEvent' and 'destroyEvent' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createEvent' and
+-- 'destroyEvent'
 --
--- The allocated value must not be returned from the provided computation
-withEvent :: forall r . Device -> EventCreateInfo -> Maybe AllocationCallbacks -> ((Event) -> IO r) -> IO r
-withEvent device pCreateInfo pAllocator =
-  bracket
-    (createEvent device pCreateInfo pAllocator)
+-- To ensure that 'destroyEvent' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withEvent :: forall io r . MonadIO io => (io (Event) -> ((Event) -> io ()) -> r) -> Device -> EventCreateInfo -> Maybe AllocationCallbacks -> r
+withEvent b device pCreateInfo pAllocator =
+  b (createEvent device pCreateInfo pAllocator)
     (\(o0) -> destroyEvent device o0 pAllocator)
 
 

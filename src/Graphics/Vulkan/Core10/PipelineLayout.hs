@@ -127,14 +127,17 @@ createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
   pPipelineLayout <- lift $ peek @PipelineLayout pPPipelineLayout
   pure $ (pPipelineLayout)
 
--- | A safe wrapper for 'createPipelineLayout' and 'destroyPipelineLayout'
--- using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createPipelineLayout' and 'destroyPipelineLayout'
 --
--- The allocated value must not be returned from the provided computation
-withPipelineLayout :: forall r . Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> ((PipelineLayout) -> IO r) -> IO r
-withPipelineLayout device pCreateInfo pAllocator =
-  bracket
-    (createPipelineLayout device pCreateInfo pAllocator)
+-- To ensure that 'destroyPipelineLayout' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withPipelineLayout :: forall io r . MonadIO io => (io (PipelineLayout) -> ((PipelineLayout) -> io ()) -> r) -> Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> r
+withPipelineLayout b device pCreateInfo pAllocator =
+  b (createPipelineLayout device pCreateInfo pAllocator)
     (\(o0) -> destroyPipelineLayout device o0 pAllocator)
 
 

@@ -42,7 +42,6 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
                                                       ) where
 
 import Control.Exception.Base (bracket)
-import Control.Exception.Base (bracket_)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -434,12 +433,18 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
 
--- | A safe wrapper for 'cmdBeginDebugUtilsLabelEXT' and
--- 'cmdEndDebugUtilsLabelEXT' using 'bracket_'
-cmdWithDebugUtilsLabelEXT :: forall r . CommandBuffer -> DebugUtilsLabelEXT -> IO r -> IO r
-cmdWithDebugUtilsLabelEXT commandBuffer pLabelInfo =
-  bracket_
-    (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo)
+-- | A convenience wrapper to make a compatible pair of
+-- 'cmdBeginDebugUtilsLabelEXT' and 'cmdEndDebugUtilsLabelEXT'
+--
+-- To ensure that 'cmdEndDebugUtilsLabelEXT' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+cmdWithDebugUtilsLabelEXT :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> DebugUtilsLabelEXT -> r
+cmdWithDebugUtilsLabelEXT b commandBuffer pLabelInfo =
+  b (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo)
     (cmdEndDebugUtilsLabelEXT commandBuffer)
 
 
@@ -648,14 +653,17 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
   pMessenger <- lift $ peek @DebugUtilsMessengerEXT pPMessenger
   pure $ (pMessenger)
 
--- | A safe wrapper for 'createDebugUtilsMessengerEXT' and
--- 'destroyDebugUtilsMessengerEXT' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createDebugUtilsMessengerEXT' and 'destroyDebugUtilsMessengerEXT'
 --
--- The allocated value must not be returned from the provided computation
-withDebugUtilsMessengerEXT :: forall r . Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugUtilsMessengerEXT) -> IO r) -> IO r
-withDebugUtilsMessengerEXT instance' pCreateInfo pAllocator =
-  bracket
-    (createDebugUtilsMessengerEXT instance' pCreateInfo pAllocator)
+-- To ensure that 'destroyDebugUtilsMessengerEXT' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDebugUtilsMessengerEXT :: forall io r . MonadIO io => (io (DebugUtilsMessengerEXT) -> ((DebugUtilsMessengerEXT) -> io ()) -> r) -> Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> r
+withDebugUtilsMessengerEXT b instance' pCreateInfo pAllocator =
+  b (createDebugUtilsMessengerEXT instance' pCreateInfo pAllocator)
     (\(o0) -> destroyDebugUtilsMessengerEXT instance' o0 pAllocator)
 
 

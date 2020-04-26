@@ -139,13 +139,17 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
   pSampler <- lift $ peek @Sampler pPSampler
   pure $ (pSampler)
 
--- | A safe wrapper for 'createSampler' and 'destroySampler' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createSampler' and
+-- 'destroySampler'
 --
--- The allocated value must not be returned from the provided computation
-withSampler :: forall a r . PokeChain a => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> ((Sampler) -> IO r) -> IO r
-withSampler device pCreateInfo pAllocator =
-  bracket
-    (createSampler device pCreateInfo pAllocator)
+-- To ensure that 'destroySampler' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withSampler :: forall a io r . (PokeChain a, MonadIO io) => (io (Sampler) -> ((Sampler) -> io ()) -> r) -> Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> r
+withSampler b device pCreateInfo pAllocator =
+  b (createSampler device pCreateInfo pAllocator)
     (\(o0) -> destroySampler device o0 pAllocator)
 
 

@@ -156,14 +156,17 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
   pShaderModule <- lift $ peek @ShaderModule pPShaderModule
   pure $ (pShaderModule)
 
--- | A safe wrapper for 'createShaderModule' and 'destroyShaderModule' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createShaderModule'
+-- and 'destroyShaderModule'
 --
--- The allocated value must not be returned from the provided computation
-withShaderModule :: forall a r . PokeChain a => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> ((ShaderModule) -> IO r) -> IO r
-withShaderModule device pCreateInfo pAllocator =
-  bracket
-    (createShaderModule device pCreateInfo pAllocator)
+-- To ensure that 'destroyShaderModule' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withShaderModule :: forall a io r . (PokeChain a, MonadIO io) => (io (ShaderModule) -> ((ShaderModule) -> io ()) -> r) -> Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> r
+withShaderModule b device pCreateInfo pAllocator =
+  b (createShaderModule device pCreateInfo pAllocator)
     (\(o0) -> destroyShaderModule device o0 pAllocator)
 
 

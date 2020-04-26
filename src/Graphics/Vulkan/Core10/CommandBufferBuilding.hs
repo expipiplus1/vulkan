@@ -57,7 +57,6 @@ module Graphics.Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                                      , ClearAttachment(..)
                                                      ) where
 
-import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
@@ -6618,11 +6617,18 @@ cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
   vkCmdBeginQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags)
   pure $ ()
 
--- | A safe wrapper for 'cmdBeginQuery' and 'cmdEndQuery' using 'bracket_'
-cmdWithQuery :: forall r . CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> IO r -> IO r
-cmdWithQuery commandBuffer queryPool query flags =
-  bracket_
-    (cmdBeginQuery commandBuffer queryPool query flags)
+-- | A convenience wrapper to make a compatible pair of 'cmdBeginQuery' and
+-- 'cmdEndQuery'
+--
+-- To ensure that 'cmdEndQuery' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+cmdWithQuery :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> r
+cmdWithQuery b commandBuffer queryPool query flags =
+  b (cmdBeginQuery commandBuffer queryPool query flags)
     (cmdEndQuery commandBuffer queryPool query)
 
 
@@ -7555,12 +7561,18 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $
   lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) pRenderPassBegin (contents)
   pure $ ()
 
--- | A safe wrapper for 'cmdBeginRenderPass' and 'cmdEndRenderPass' using
--- 'bracket_'
-cmdWithRenderPass :: forall a r . PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> IO r -> IO r
-cmdWithRenderPass commandBuffer pRenderPassBegin contents =
-  bracket_
-    (cmdBeginRenderPass commandBuffer pRenderPassBegin contents)
+-- | A convenience wrapper to make a compatible pair of 'cmdBeginRenderPass'
+-- and 'cmdEndRenderPass'
+--
+-- To ensure that 'cmdEndRenderPass' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+cmdWithRenderPass :: forall a io r . (PokeChain a, MonadIO io) => (io () -> io () -> r) -> CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> r
+cmdWithRenderPass b commandBuffer pRenderPassBegin contents =
+  b (cmdBeginRenderPass commandBuffer pRenderPassBegin contents)
     (cmdEndRenderPass commandBuffer)
 
 

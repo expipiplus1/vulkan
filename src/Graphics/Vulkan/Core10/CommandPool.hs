@@ -127,14 +127,17 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
   pCommandPool <- lift $ peek @CommandPool pPCommandPool
   pure $ (pCommandPool)
 
--- | A safe wrapper for 'createCommandPool' and 'destroyCommandPool' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createCommandPool'
+-- and 'destroyCommandPool'
 --
--- The allocated value must not be returned from the provided computation
-withCommandPool :: forall r . Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> ((CommandPool) -> IO r) -> IO r
-withCommandPool device pCreateInfo pAllocator =
-  bracket
-    (createCommandPool device pCreateInfo pAllocator)
+-- To ensure that 'destroyCommandPool' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withCommandPool :: forall io r . MonadIO io => (io (CommandPool) -> ((CommandPool) -> io ()) -> r) -> Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> r
+withCommandPool b device pCreateInfo pAllocator =
+  b (createCommandPool device pCreateInfo pAllocator)
     (\(o0) -> destroyCommandPool device o0 pAllocator)
 
 

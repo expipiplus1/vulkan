@@ -259,13 +259,17 @@ createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
   pDevice' <- lift $ (\h -> Device h <$> initDeviceCmds cmds h) pDevice
   pure $ (pDevice')
 
--- | A safe wrapper for 'createDevice' and 'destroyDevice' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createDevice' and
+-- 'destroyDevice'
 --
--- The allocated value must not be returned from the provided computation
-withDevice :: forall a r . PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> ((Device) -> IO r) -> IO r
-withDevice physicalDevice pCreateInfo pAllocator =
-  bracket
-    (createDevice physicalDevice pCreateInfo pAllocator)
+-- To ensure that 'destroyDevice' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDevice :: forall a io r . (PokeChain a, MonadIO io) => (io (Device) -> ((Device) -> io ()) -> r) -> PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> r
+withDevice b physicalDevice pCreateInfo pAllocator =
+  b (createDevice physicalDevice pCreateInfo pAllocator)
     (\(o0) -> destroyDevice o0 pAllocator)
 
 

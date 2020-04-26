@@ -179,14 +179,17 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
   pFramebuffer <- lift $ peek @Framebuffer pPFramebuffer
   pure $ (pFramebuffer)
 
--- | A safe wrapper for 'createFramebuffer' and 'destroyFramebuffer' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createFramebuffer'
+-- and 'destroyFramebuffer'
 --
--- The allocated value must not be returned from the provided computation
-withFramebuffer :: forall a r . PokeChain a => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> ((Framebuffer) -> IO r) -> IO r
-withFramebuffer device pCreateInfo pAllocator =
-  bracket
-    (createFramebuffer device pCreateInfo pAllocator)
+-- To ensure that 'destroyFramebuffer' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withFramebuffer :: forall a io r . (PokeChain a, MonadIO io) => (io (Framebuffer) -> ((Framebuffer) -> io ()) -> r) -> Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> r
+withFramebuffer b device pCreateInfo pAllocator =
+  b (createFramebuffer device pCreateInfo pAllocator)
     (\(o0) -> destroyFramebuffer device o0 pAllocator)
 
 
@@ -330,14 +333,17 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
   pRenderPass <- lift $ peek @RenderPass pPRenderPass
   pure $ (pRenderPass)
 
--- | A safe wrapper for 'createRenderPass' and 'destroyRenderPass' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createRenderPass'
+-- and 'destroyRenderPass'
 --
--- The allocated value must not be returned from the provided computation
-withRenderPass :: forall a r . PokeChain a => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> ((RenderPass) -> IO r) -> IO r
-withRenderPass device pCreateInfo pAllocator =
-  bracket
-    (createRenderPass device pCreateInfo pAllocator)
+-- To ensure that 'destroyRenderPass' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withRenderPass :: forall a io r . (PokeChain a, MonadIO io) => (io (RenderPass) -> ((RenderPass) -> io ()) -> r) -> Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> r
+withRenderPass b device pCreateInfo pAllocator =
+  b (createRenderPass device pCreateInfo pAllocator)
     (\(o0) -> destroyRenderPass device o0 pAllocator)
 
 

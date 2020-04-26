@@ -17,7 +17,6 @@ module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformF
                                                              , pattern EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
                                                              ) where
 
-import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -396,12 +395,18 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
   lift $ vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
   pure $ ()
 
--- | A safe wrapper for 'cmdBeginTransformFeedbackEXT' and
--- 'cmdEndTransformFeedbackEXT' using 'bracket_'
-cmdWithTransformFeedbackEXT :: forall r . CommandBuffer -> Word32 -> Vector Buffer -> Either Word32 (Vector DeviceSize) -> IO r -> IO r
-cmdWithTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets =
-  bracket_
-    (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
+-- | A convenience wrapper to make a compatible pair of
+-- 'cmdBeginTransformFeedbackEXT' and 'cmdEndTransformFeedbackEXT'
+--
+-- To ensure that 'cmdEndTransformFeedbackEXT' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+cmdWithTransformFeedbackEXT :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> Word32 -> Vector Buffer -> Either Word32 (Vector DeviceSize) -> r
+cmdWithTransformFeedbackEXT b commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets =
+  b (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
     (cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
 
 
@@ -737,12 +742,18 @@ cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
   pure $ ()
 
--- | A safe wrapper for 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT'
--- using 'bracket_'
-cmdWithQueryIndexedEXT :: forall r . CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO r -> IO r
-cmdWithQueryIndexedEXT commandBuffer queryPool query flags index =
-  bracket_
-    (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index)
+-- | A convenience wrapper to make a compatible pair of
+-- 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT'
+--
+-- To ensure that 'cmdEndQueryIndexedEXT' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+cmdWithQueryIndexedEXT :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> r
+cmdWithQueryIndexedEXT b commandBuffer queryPool query flags index =
+  b (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index)
     (cmdEndQueryIndexedEXT commandBuffer queryPool query index)
 
 

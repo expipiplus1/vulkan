@@ -185,14 +185,17 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   pSetLayout <- lift $ peek @DescriptorSetLayout pPSetLayout
   pure $ (pSetLayout)
 
--- | A safe wrapper for 'createDescriptorSetLayout' and
--- 'destroyDescriptorSetLayout' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createDescriptorSetLayout' and 'destroyDescriptorSetLayout'
 --
--- The allocated value must not be returned from the provided computation
-withDescriptorSetLayout :: forall a r . PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorSetLayout) -> IO r) -> IO r
-withDescriptorSetLayout device pCreateInfo pAllocator =
-  bracket
-    (createDescriptorSetLayout device pCreateInfo pAllocator)
+-- To ensure that 'destroyDescriptorSetLayout' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDescriptorSetLayout :: forall a io r . (PokeChain a, MonadIO io) => (io (DescriptorSetLayout) -> ((DescriptorSetLayout) -> io ()) -> r) -> Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> r
+withDescriptorSetLayout b device pCreateInfo pAllocator =
+  b (createDescriptorSetLayout device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorSetLayout device o0 pAllocator)
 
 
@@ -345,14 +348,17 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   pDescriptorPool <- lift $ peek @DescriptorPool pPDescriptorPool
   pure $ (pDescriptorPool)
 
--- | A safe wrapper for 'createDescriptorPool' and 'destroyDescriptorPool'
--- using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createDescriptorPool' and 'destroyDescriptorPool'
 --
--- The allocated value must not be returned from the provided computation
-withDescriptorPool :: forall a r . PokeChain a => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorPool) -> IO r) -> IO r
-withDescriptorPool device pCreateInfo pAllocator =
-  bracket
-    (createDescriptorPool device pCreateInfo pAllocator)
+-- To ensure that 'destroyDescriptorPool' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDescriptorPool :: forall a io r . (PokeChain a, MonadIO io) => (io (DescriptorPool) -> ((DescriptorPool) -> io ()) -> r) -> Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> r
+withDescriptorPool b device pCreateInfo pAllocator =
+  b (createDescriptorPool device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorPool device o0 pAllocator)
 
 
@@ -630,14 +636,17 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   pDescriptorSets <- lift $ generateM (fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) (\i -> peek @DescriptorSet ((pPDescriptorSets `advancePtrBytes` (8 * (i)) :: Ptr DescriptorSet)))
   pure $ (pDescriptorSets)
 
--- | A safe wrapper for 'allocateDescriptorSets' and 'freeDescriptorSets'
--- using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'allocateDescriptorSets' and 'freeDescriptorSets'
 --
--- The allocated value must not be returned from the provided computation
-withDescriptorSets :: forall a r . PokeChain a => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> ((Vector DescriptorSet) -> IO r) -> IO r
-withDescriptorSets device pAllocateInfo descriptorPool =
-  bracket
-    (allocateDescriptorSets device pAllocateInfo)
+-- To ensure that 'freeDescriptorSets' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDescriptorSets :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> r
+withDescriptorSets b device pAllocateInfo descriptorPool =
+  b (allocateDescriptorSets device pAllocateInfo)
     (\(o0) -> freeDescriptorSets device descriptorPool o0)
 
 

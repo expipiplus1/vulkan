@@ -12,7 +12,6 @@ module Graphics.Vulkan.Core10.CommandBuffer  ( allocateCommandBuffers
                                              ) where
 
 import Control.Exception.Base (bracket)
-import Control.Exception.Base (bracket_)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -180,14 +179,17 @@ allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
     pure $ (\h -> CommandBuffer h cmds ) pCommandBuffersElem)
   pure $ (pCommandBuffers)
 
--- | A safe wrapper for 'allocateCommandBuffers' and 'freeCommandBuffers'
--- using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'allocateCommandBuffers' and 'freeCommandBuffers'
 --
--- The allocated value must not be returned from the provided computation
-withCommandBuffers :: forall r . Device -> CommandBufferAllocateInfo -> ((Vector CommandBuffer) -> IO r) -> IO r
-withCommandBuffers device pAllocateInfo =
-  bracket
-    (allocateCommandBuffers device pAllocateInfo)
+-- To ensure that 'freeCommandBuffers' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withCommandBuffers :: forall io r . MonadIO io => (io (Vector CommandBuffer) -> ((Vector CommandBuffer) -> io ()) -> r) -> Device -> CommandBufferAllocateInfo -> r
+withCommandBuffers b device pAllocateInfo =
+  b (allocateCommandBuffers device pAllocateInfo)
     (\(o0) -> freeCommandBuffers device (commandPool (pAllocateInfo :: CommandBufferAllocateInfo)) o0)
 
 
@@ -351,12 +353,18 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
   r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) pBeginInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
--- | A safe wrapper for 'beginCommandBuffer' and 'endCommandBuffer' using
--- 'bracket_'
-useCommandBuffer :: forall a r . PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO r -> IO r
-useCommandBuffer commandBuffer pBeginInfo =
-  bracket_
-    (beginCommandBuffer commandBuffer pBeginInfo)
+-- | A convenience wrapper to make a compatible pair of 'beginCommandBuffer'
+-- and 'endCommandBuffer'
+--
+-- To ensure that 'endCommandBuffer' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+useCommandBuffer :: forall a io r . (PokeChain a, MonadIO io) => (io () -> io () -> r) -> CommandBuffer -> CommandBufferBeginInfo a -> r
+useCommandBuffer b commandBuffer pBeginInfo =
+  b (beginCommandBuffer commandBuffer pBeginInfo)
     (endCommandBuffer commandBuffer)
 
 

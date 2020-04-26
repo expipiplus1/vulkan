@@ -250,14 +250,17 @@ createInstance createInfo allocator = liftIO . evalContT $ do
   pInstance' <- lift $ (\h -> Instance h <$> initInstanceCmds h) pInstance
   pure $ (pInstance')
 
--- | A safe wrapper for 'createInstance' and 'destroyInstance' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createInstance' and
+-- 'destroyInstance'
 --
--- The allocated value must not be returned from the provided computation
-withInstance :: forall a r . PokeChain a => InstanceCreateInfo a -> Maybe AllocationCallbacks -> ((Instance) -> IO r) -> IO r
-withInstance pCreateInfo pAllocator =
-  bracket
-    (createInstance pCreateInfo pAllocator)
+-- To ensure that 'destroyInstance' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withInstance :: forall a io r . (PokeChain a, MonadIO io) => (io (Instance) -> ((Instance) -> io ()) -> r) -> InstanceCreateInfo a -> Maybe AllocationCallbacks -> r
+withInstance b pCreateInfo pAllocator =
+  b (createInstance pCreateInfo pAllocator)
     (\(o0) -> destroyInstance o0 pAllocator)
 
 

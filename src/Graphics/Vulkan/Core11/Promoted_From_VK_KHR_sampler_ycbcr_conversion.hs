@@ -191,14 +191,17 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
   pYcbcrConversion <- lift $ peek @SamplerYcbcrConversion pPYcbcrConversion
   pure $ (pYcbcrConversion)
 
--- | A safe wrapper for 'createSamplerYcbcrConversion' and
--- 'destroySamplerYcbcrConversion' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createSamplerYcbcrConversion' and 'destroySamplerYcbcrConversion'
 --
--- The allocated value must not be returned from the provided computation
-withSamplerYcbcrConversion :: forall a r . PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> ((SamplerYcbcrConversion) -> IO r) -> IO r
-withSamplerYcbcrConversion device pCreateInfo pAllocator =
-  bracket
-    (createSamplerYcbcrConversion device pCreateInfo pAllocator)
+-- To ensure that 'destroySamplerYcbcrConversion' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withSamplerYcbcrConversion :: forall a io r . (PokeChain a, MonadIO io) => (io (SamplerYcbcrConversion) -> ((SamplerYcbcrConversion) -> io ()) -> r) -> Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> r
+withSamplerYcbcrConversion b device pCreateInfo pAllocator =
+  b (createSamplerYcbcrConversion device pCreateInfo pAllocator)
     (\(o0) -> destroySamplerYcbcrConversion device o0 pAllocator)
 
 

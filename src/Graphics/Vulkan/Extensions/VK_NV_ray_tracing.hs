@@ -331,14 +331,17 @@ createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $
   pAccelerationStructure <- lift $ peek @AccelerationStructureNV pPAccelerationStructure
   pure $ (pAccelerationStructure)
 
--- | A safe wrapper for 'createAccelerationStructureNV' and
--- 'destroyAccelerationStructureNV' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createAccelerationStructureNV' and 'destroyAccelerationStructureNV'
 --
--- The allocated value must not be returned from the provided computation
-withAccelerationStructureNV :: forall r . Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> ((AccelerationStructureNV) -> IO r) -> IO r
-withAccelerationStructureNV device pCreateInfo pAllocator =
-  bracket
-    (createAccelerationStructureNV device pCreateInfo pAllocator)
+-- To ensure that 'destroyAccelerationStructureNV' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withAccelerationStructureNV :: forall io r . MonadIO io => (io (AccelerationStructureNV) -> ((AccelerationStructureNV) -> io ()) -> r) -> Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> r
+withAccelerationStructureNV b device pCreateInfo pAllocator =
+  b (createAccelerationStructureNV device pCreateInfo pAllocator)
     (\(o0) -> destroyAccelerationStructureNV device o0 pAllocator)
 
 

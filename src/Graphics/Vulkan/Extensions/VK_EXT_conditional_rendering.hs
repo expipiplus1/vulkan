@@ -15,7 +15,6 @@ module Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginCondit
                                                                 , pattern EXT_CONDITIONAL_RENDERING_EXTENSION_NAME
                                                                 ) where
 
-import Control.Exception.Base (bracket_)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
@@ -134,12 +133,18 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO
   lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
   pure $ ()
 
--- | A safe wrapper for 'cmdBeginConditionalRenderingEXT' and
--- 'cmdEndConditionalRenderingEXT' using 'bracket_'
-cmdWithConditionalRenderingEXT :: forall r . CommandBuffer -> ConditionalRenderingBeginInfoEXT -> IO r -> IO r
-cmdWithConditionalRenderingEXT commandBuffer pConditionalRenderingBegin =
-  bracket_
-    (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin)
+-- | A convenience wrapper to make a compatible pair of
+-- 'cmdBeginConditionalRenderingEXT' and 'cmdEndConditionalRenderingEXT'
+--
+-- To ensure that 'cmdEndConditionalRenderingEXT' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+cmdWithConditionalRenderingEXT :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> ConditionalRenderingBeginInfoEXT -> r
+cmdWithConditionalRenderingEXT b commandBuffer pConditionalRenderingBegin =
+  b (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin)
     (cmdEndConditionalRenderingEXT commandBuffer)
 
 

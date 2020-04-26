@@ -140,13 +140,17 @@ createFence device createInfo allocator = liftIO . evalContT $ do
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
 
--- | A safe wrapper for 'createFence' and 'destroyFence' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createFence' and
+-- 'destroyFence'
 --
--- The allocated value must not be returned from the provided computation
-withFence :: forall a r . PokeChain a => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> ((Fence) -> IO r) -> IO r
-withFence device pCreateInfo pAllocator =
-  bracket
-    (createFence device pCreateInfo pAllocator)
+-- To ensure that 'destroyFence' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withFence :: forall a io r . (PokeChain a, MonadIO io) => (io (Fence) -> ((Fence) -> io ()) -> r) -> Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> r
+withFence b device pCreateInfo pAllocator =
+  b (createFence device pCreateInfo pAllocator)
     (\(o0) -> destroyFence device o0 pAllocator)
 
 

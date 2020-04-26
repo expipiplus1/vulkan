@@ -2,6 +2,7 @@
 module Render.Command
   ( renderCommand
   , constrainStructVariables
+  , addConstraints
   ) where
 
 import           Relude                  hiding ( Type
@@ -764,6 +765,8 @@ addMonadIO = addConstraints
 ioVar :: Name
 ioVar = mkName "io"
 
+-- | Any extensible structs have 'PokeChain' or 'PeekChain' constraints added
+-- depending on their position polarity.
 constrainStructVariables
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
   => Type
@@ -778,6 +781,8 @@ constrainStructVariables t = do
     )
     t
 
+-- | Add constraints to a type, folding them into an existing forall if
+-- possible
 addConstraints :: [Pred] -> Type -> Type
 addConstraints new = quantifyType . \case
   ForallT vs ctx ty -> ForallT vs (ctx <> new) ty

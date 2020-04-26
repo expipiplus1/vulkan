@@ -148,13 +148,17 @@ createBuffer device createInfo allocator = liftIO . evalContT $ do
   pBuffer <- lift $ peek @Buffer pPBuffer
   pure $ (pBuffer)
 
--- | A safe wrapper for 'createBuffer' and 'destroyBuffer' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createBuffer' and
+-- 'destroyBuffer'
 --
--- The allocated value must not be returned from the provided computation
-withBuffer :: forall a r . PokeChain a => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> ((Buffer) -> IO r) -> IO r
-withBuffer device pCreateInfo pAllocator =
-  bracket
-    (createBuffer device pCreateInfo pAllocator)
+-- To ensure that 'destroyBuffer' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withBuffer :: forall a io r . (PokeChain a, MonadIO io) => (io (Buffer) -> ((Buffer) -> io ()) -> r) -> Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> r
+withBuffer b device pCreateInfo pAllocator =
+  b (createBuffer device pCreateInfo pAllocator)
     (\(o0) -> destroyBuffer device o0 pAllocator)
 
 

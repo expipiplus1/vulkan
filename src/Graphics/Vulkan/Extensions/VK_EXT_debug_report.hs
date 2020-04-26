@@ -200,14 +200,17 @@ createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT
   pCallback <- lift $ peek @DebugReportCallbackEXT pPCallback
   pure $ (pCallback)
 
--- | A safe wrapper for 'createDebugReportCallbackEXT' and
--- 'destroyDebugReportCallbackEXT' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createDebugReportCallbackEXT' and 'destroyDebugReportCallbackEXT'
 --
--- The allocated value must not be returned from the provided computation
-withDebugReportCallbackEXT :: forall r . Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugReportCallbackEXT) -> IO r) -> IO r
-withDebugReportCallbackEXT instance' pCreateInfo pAllocator =
-  bracket
-    (createDebugReportCallbackEXT instance' pCreateInfo pAllocator)
+-- To ensure that 'destroyDebugReportCallbackEXT' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDebugReportCallbackEXT :: forall io r . MonadIO io => (io (DebugReportCallbackEXT) -> ((DebugReportCallbackEXT) -> io ()) -> r) -> Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> r
+withDebugReportCallbackEXT b instance' pCreateInfo pAllocator =
+  b (createDebugReportCallbackEXT instance' pCreateInfo pAllocator)
     (\(o0) -> destroyDebugReportCallbackEXT instance' o0 pAllocator)
 
 

@@ -293,14 +293,17 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (pPipelines)
 
--- | A safe wrapper for 'createGraphicsPipelines' and 'destroyPipeline' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createGraphicsPipelines' and 'destroyPipeline'
 --
--- The allocated value must not be returned from the provided computation
-withGraphicsPipelines :: forall a r . PokeChain a => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
-withGraphicsPipelines device pipelineCache pCreateInfos pAllocator =
-  bracket
-    (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
+-- To ensure that 'destroyPipeline' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector Pipeline) -> ((Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
+withGraphicsPipelines b device pipelineCache pCreateInfos pAllocator =
+  b (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
     (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
 
 
@@ -412,14 +415,17 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (pPipelines)
 
--- | A safe wrapper for 'createComputePipelines' and 'destroyPipeline' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createComputePipelines' and 'destroyPipeline'
 --
--- The allocated value must not be returned from the provided computation
-withComputePipelines :: forall a r . PokeChain a => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
-withComputePipelines device pipelineCache pCreateInfos pAllocator =
-  bracket
-    (createComputePipelines device pipelineCache pCreateInfos pAllocator)
+-- To ensure that 'destroyPipeline' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector Pipeline) -> ((Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
+withComputePipelines b device pipelineCache pCreateInfos pAllocator =
+  b (createComputePipelines device pipelineCache pCreateInfos pAllocator)
     (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
 
 

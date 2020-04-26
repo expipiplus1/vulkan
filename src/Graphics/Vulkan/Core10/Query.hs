@@ -139,14 +139,17 @@ createQueryPool device createInfo allocator = liftIO . evalContT $ do
   pQueryPool <- lift $ peek @QueryPool pPQueryPool
   pure $ (pQueryPool)
 
--- | A safe wrapper for 'createQueryPool' and 'destroyQueryPool' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createQueryPool' and
+-- 'destroyQueryPool'
 --
--- The allocated value must not be returned from the provided computation
-withQueryPool :: forall a r . PokeChain a => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> ((QueryPool) -> IO r) -> IO r
-withQueryPool device pCreateInfo pAllocator =
-  bracket
-    (createQueryPool device pCreateInfo pAllocator)
+-- To ensure that 'destroyQueryPool' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withQueryPool :: forall a io r . (PokeChain a, MonadIO io) => (io (QueryPool) -> ((QueryPool) -> io ()) -> r) -> Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> r
+withQueryPool b device pCreateInfo pAllocator =
+  b (createQueryPool device pCreateInfo pAllocator)
     (\(o0) -> destroyQueryPool device o0 pAllocator)
 
 

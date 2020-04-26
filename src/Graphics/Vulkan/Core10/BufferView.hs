@@ -120,14 +120,17 @@ createBufferView device createInfo allocator = liftIO . evalContT $ do
   pView <- lift $ peek @BufferView pPView
   pure $ (pView)
 
--- | A safe wrapper for 'createBufferView' and 'destroyBufferView' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of 'createBufferView'
+-- and 'destroyBufferView'
 --
--- The allocated value must not be returned from the provided computation
-withBufferView :: forall r . Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> ((BufferView) -> IO r) -> IO r
-withBufferView device pCreateInfo pAllocator =
-  bracket
-    (createBufferView device pCreateInfo pAllocator)
+-- To ensure that 'destroyBufferView' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withBufferView :: forall io r . MonadIO io => (io (BufferView) -> ((BufferView) -> io ()) -> r) -> Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> r
+withBufferView b device pCreateInfo pAllocator =
+  b (createBufferView device pCreateInfo pAllocator)
     (\(o0) -> destroyBufferView device o0 pAllocator)
 
 

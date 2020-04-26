@@ -15,7 +15,6 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( createR
                                                                        ) where
 
 import Control.Exception.Base (bracket)
-import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
@@ -405,12 +404,18 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
   lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) pRenderPassBegin pSubpassBeginInfo
   pure $ ()
 
--- | A safe wrapper for 'cmdBeginRenderPass2' and 'cmdEndRenderPass2' using
--- 'bracket_'
-cmdWithRenderPass2 :: forall a r . PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> IO r -> IO r
-cmdWithRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo =
-  bracket_
-    (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo)
+-- | A convenience wrapper to make a compatible pair of 'cmdBeginRenderPass2'
+-- and 'cmdEndRenderPass2'
+--
+-- To ensure that 'cmdEndRenderPass2' is always called: pass
+-- 'Control.Exception.bracket_' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+-- Note that there is no inner resource
+cmdWithRenderPass2 :: forall a io r . (PokeChain a, MonadIO io) => (io () -> io () -> r) -> CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> r
+cmdWithRenderPass2 b commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo =
+  b (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo)
     (cmdEndRenderPass2 commandBuffer pSubpassEndInfo)
 
 

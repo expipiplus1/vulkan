@@ -193,14 +193,17 @@ createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
   pValidationCache <- lift $ peek @ValidationCacheEXT pPValidationCache
   pure $ (pValidationCache)
 
--- | A safe wrapper for 'createValidationCacheEXT' and
--- 'destroyValidationCacheEXT' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of
+-- 'createValidationCacheEXT' and 'destroyValidationCacheEXT'
 --
--- The allocated value must not be returned from the provided computation
-withValidationCacheEXT :: forall r . Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> ((ValidationCacheEXT) -> IO r) -> IO r
-withValidationCacheEXT device pCreateInfo pAllocator =
-  bracket
-    (createValidationCacheEXT device pCreateInfo pAllocator)
+-- To ensure that 'destroyValidationCacheEXT' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withValidationCacheEXT :: forall io r . MonadIO io => (io (ValidationCacheEXT) -> ((ValidationCacheEXT) -> io ()) -> r) -> Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> r
+withValidationCacheEXT b device pCreateInfo pAllocator =
+  b (createValidationCacheEXT device pCreateInfo pAllocator)
     (\(o0) -> destroyValidationCacheEXT device o0 pAllocator)
 
 
