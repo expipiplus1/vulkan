@@ -4,6 +4,6 @@ module Marshal
   )
   where
 
-import Marshal.Struct
-import Marshal.Command
+import           Marshal.Command
+import           Marshal.Struct
 

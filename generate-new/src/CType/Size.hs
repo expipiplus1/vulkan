@@ -4,9 +4,12 @@ module CType.Size
   )
 where
 
-import           Relude                  hiding ( runState, get, put )
 import           Polysemy
 import           Polysemy.State
+import           Relude                  hiding ( get
+                                                , put
+                                                , runState
+                                                )
 
 scanOffsets
   :: (Traversable f, Monad m)

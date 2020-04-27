@@ -1,14 +1,14 @@
 module Render.Stmts.Poke.SiblingInfo
   where
 
-import           Relude
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Input
+import           Relude
 
 import           Error
-import           Spec.Name
 import {-# SOURCE #-} Marshal.Scheme
+import           Spec.Name
 
 data SiblingInfo a = SiblingInfo
   { siReferrer :: Doc ()

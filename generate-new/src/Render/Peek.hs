@@ -8,29 +8,29 @@ module Render.Peek
   , unwrapIdiomaticType
   ) where
 
-import           Relude                  hiding ( Type
-                                                , last
-                                                , init
-                                                , Const
-                                                , State
-                                                )
 import qualified Data.Text                     as T
 import           Data.Text.Prettyprint.Doc
-import           Polysemy
-import           Polysemy.NonDet         hiding ( Empty )
-import           Polysemy.Fail
+import           Data.Vector                    ( Vector )
 import           Data.Vector.Extra              ( pattern (:<|)
                                                 , pattern Empty
                                                 )
-import           Data.Vector                    ( Vector )
-import           Polysemy.Input
 import qualified Data.Vector.Extra             as V
+import           Polysemy
+import           Polysemy.Fail
+import           Polysemy.Input
+import           Polysemy.NonDet         hiding ( Empty )
+import           Relude                  hiding ( Const
+                                                , State
+                                                , Type
+                                                , init
+                                                , last
+                                                )
 
-import           Foreign.Ptr
-import           Foreign.C.Types                ( CChar )
-import           Foreign.Storable
-import           Foreign.Marshal.Utils
 import qualified Data.ByteString               as BS
+import           Foreign.C.Types                ( CChar )
+import           Foreign.Marshal.Utils
+import           Foreign.Ptr
+import           Foreign.Storable
 
 import           CType                         as C
 import           Error

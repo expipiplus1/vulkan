@@ -15,28 +15,28 @@ module Haskell
   )
 where
 
-import           Relude                  hiding ( Type
-                                                , group
-                                                , State
-                                                , words
-                                                , unwords
-                                                )
-import           Language.Haskell.TH
-import           Data.Text.Prettyprint.Doc
-import           Data.Generics.Uniplate.Data
-import           Polysemy
-import           Polysemy.Input
 import           Data.Char                      ( isLower )
+import           Data.Generics.Uniplate.Data
 import qualified Data.List.Extra               as List
 import qualified Data.Text                     as T
+import           Data.Text.Prettyprint.Doc
 import qualified Data.Vector                   as V
+import           Language.Haskell.TH
+import           Polysemy
+import           Polysemy.Input
 import           Prelude                        ( head
-                                                , words
                                                 , unwords
+                                                , words
+                                                )
+import           Relude                  hiding ( State
+                                                , Type
+                                                , group
+                                                , unwords
+                                                , words
                                                 )
 
-import           Render.Element
 import           Haskell.Name
+import           Render.Element
 
 typeName :: HName -> Name
 typeName = mkName . T.unpack . unName

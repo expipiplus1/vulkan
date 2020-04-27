@@ -1,35 +1,35 @@
 module Render.Union
   where
 
+import           Data.Text.Prettyprint.Doc
+import           Polysemy
+import           Polysemy.Input
+import           Polysemy.NonDet
 import           Relude                  hiding ( State
                                                 , Type
                                                 )
-import           Data.Text.Prettyprint.Doc
-import           Polysemy
-import           Polysemy.NonDet
-import           Polysemy.Input
 
-import           Foreign.Ptr
+import           Control.Exception              ( bracket )
 import           Control.Monad.Trans.Cont       ( runContT )
 import           Foreign.Marshal.Alloc
-import           Control.Exception              ( bracket )
+import           Foreign.Ptr
 import           Language.Haskell.TH            ( mkName )
 
-import           Spec.Parse
-import           Haskell                       as H
-import           Error
 import           CType
-import           Render.Element
-import           Render.Type
-import           Render.Stmts.Poke
-import           Render.Peek
-import           Render.Stmts
-import           Marshal.Struct
+import           Error
+import           Haskell                       as H
 import           Marshal.Scheme
 import           Marshal.Scheme.Zero
+import           Marshal.Struct
+import           Render.Element
+import           Render.Names
+import           Render.Peek
 import           Render.Scheme
 import           Render.SpecInfo
-import           Render.Names
+import           Render.Stmts
+import           Render.Stmts.Poke
+import           Render.Type
+import           Spec.Parse
 
 renderUnion
   :: ( HasErr r

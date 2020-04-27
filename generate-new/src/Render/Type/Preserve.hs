@@ -1,7 +1,7 @@
 module Render.Type.Preserve where
 
-import           Polysemy
 import           Language.Haskell.TH            ( Type )
+import           Polysemy
 
 data Preserve
   = DoNotPreserve

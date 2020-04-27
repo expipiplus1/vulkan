@@ -4,39 +4,39 @@
 
 module Main where
 
+import           Control.Arrow                  ( (&&&) )
 import           Control.Exception
-import           Control.Monad.Trans.Maybe
 import           Control.Monad
 import           Control.Monad.Extra
 import           Control.Monad.IO.Class
+import           Control.Monad.Managed
+import           Control.Monad.Trans.Maybe
 import           Data.Bits
+import qualified Data.ByteString               as BS
 import           Data.Functor
+import           Data.List                      ( nub )
 import           Data.Maybe                     ( catMaybes )
 import           Data.Ord
-import           Data.Traversable
-import           Foreign.Ptr                    ( castPtr )
-import           Data.List                      ( nub )
-import qualified Data.ByteString               as BS
-import           Data.Word
-import           Say
-import           System.Exit
 import           Data.String                    ( IsString )
 import           Data.Text               hiding ( maximum )
 import           Data.Text.Encoding
-import           Control.Monad.Managed
+import           Data.Traversable
 import qualified Data.Vector                   as V
+import           Data.Word
+import           Foreign.Ptr                    ( castPtr )
+import           Graphics.Vulkan.CStruct.Extends
 import           Graphics.Vulkan.Core10
 import           Graphics.Vulkan.Core11
+import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
 import           Graphics.Vulkan.Extensions.VK_KHR_surface
 import           Graphics.Vulkan.Extensions.VK_KHR_swapchain
-import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
-import           Graphics.Vulkan.Zero
-import           Graphics.Vulkan.CStruct.Extends
-import           Graphics.Vulkan.Version
 import           Graphics.Vulkan.Utils.ShaderQQ
+import           Graphics.Vulkan.Version
+import           Graphics.Vulkan.Zero
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
-import           Control.Arrow                  ( (&&&) )
+import           Say
+import           System.Exit
 
 main :: IO ()
 main = runManaged $ do

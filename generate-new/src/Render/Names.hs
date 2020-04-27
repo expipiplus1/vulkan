@@ -8,12 +8,12 @@ module Render.Names
   , getResolveAlias
   ) where
 
-import           Relude                  hiding ( ask )
+import qualified Data.HashMap.Strict           as Map
+import qualified Data.HashSet                  as Set
 import           Data.List                      ( partition )
 import           Polysemy
 import           Polysemy.Input
-import qualified Data.HashSet                  as Set
-import qualified Data.HashMap.Strict           as Map
+import           Relude                  hiding ( ask )
 
 import           Haskell.Name
 import           Render.Element

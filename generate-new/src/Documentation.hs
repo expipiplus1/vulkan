@@ -19,13 +19,13 @@ import           Data.Foldable
 import           Data.Maybe
 import           Documentation.RunAsciiDoctor
                                          hiding ( main )
-import           Relude                  hiding ( rem
-                                                , elem
+import           Relude                  hiding ( elem
+                                                , rem
                                                 )
 import           Say
+import           Spec.Name
 import           System.Environment
 import           Text.Pandoc
-import           Spec.Name
 
 data Documentation = Documentation
   { dDocumentee    :: Documentee

@@ -1,30 +1,30 @@
 module Main
   where
 
-import           Relude                  hiding ( uncons
-                                                , Type
-                                                , Handle
-                                                )
-import           Say
-import           System.TimeIt
+import           Data.Text.Extra                ( (<+>) )
+import           Data.Version
 import           Polysemy
 import           Polysemy.Fixpoint
 import           Polysemy.Input
-import           Data.Text.Extra                ( (<+>) )
-import           Data.Version
+import           Relude                  hiding ( Handle
+                                                , Type
+                                                , uncons
+                                                )
+import           Say
+import           System.TimeIt
 
+import           AssignModules
+import           Bespoke                        ( assignBespokeModules )
+import           Bespoke.MarshalParams
+import           Bespoke.RenderParams
+import           Documentation.All
 import           Error
 import           Marshal
-import           Render.SpecInfo
-import           Render.Names
-import           Render.Element.Write
 import           Render.Aggregate
-import           Bespoke                        ( assignBespokeModules )
+import           Render.Element.Write
+import           Render.Names
+import           Render.SpecInfo
 import           Spec.Parse
-import           AssignModules
-import           Documentation.All
-import           Bespoke.RenderParams
-import           Bespoke.MarshalParams
 
 import           VK.Render
 

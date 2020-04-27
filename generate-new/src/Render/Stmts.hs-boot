@@ -6,10 +6,10 @@ module Render.Stmts
   , StmtE
   ) where
 
-import           Polysemy
-import           Polysemy.State
-import           Polysemy.Fixpoint
 import           Error
+import           Polysemy
+import           Polysemy.Fixpoint
+import           Polysemy.State
 
 type HasStmts r = (Member Fixpoint r, HasErr r)
 type Stmt s (r :: [Effect]) = Sem (StmtE s r ': r)

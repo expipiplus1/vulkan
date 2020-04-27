@@ -2,34 +2,34 @@ module Bespoke.RenderParams
   ( renderParams
   ) where
 
-import           Relude                  hiding ( uncons
-                                                , Type
-                                                , Handle
-                                                )
+import           Data.Char                      ( isLower )
 import qualified Data.HashSet                  as Set
-import qualified Data.Vector.Storable.Sized    as VSS
-import qualified Data.Vector                   as V
-import qualified Data.Text                     as T
-import           Data.Tuple.Extra               ( curry3 )
 import qualified Data.List                     as List
-import           Data.Text.Extra                ( lowerCaseFirst
+import qualified Data.Text                     as T
+import           Data.Text.Extra                ( (<+>)
+                                                , lowerCaseFirst
                                                 , upperCaseFirst
-                                                , (<+>)
                                                 )
 import           Data.Text.Prettyprint.Doc      ( pretty )
+import           Data.Tuple.Extra               ( curry3 )
+import qualified Data.Vector                   as V
+import qualified Data.Vector.Storable.Sized    as VSS
 import           Language.Haskell.TH            ( nameBase )
-import           Data.Char                      ( isLower )
+import           Relude                  hiding ( Handle
+                                                , Type
+                                                , uncons
+                                                )
 
 import           Foreign.C.Types
 import           Foreign.Ptr
 
 import           CType
+import           Haskell
 import           Render.Element
 import           Render.Stmts                   ( useViaName )
 import           Render.Stmts.Poke              ( CmdsDoc(..) )
-import           Spec.Parse
 import           Render.Type.Preserve
-import           Haskell
+import           Spec.Parse
 
 renderParams :: V.Vector Handle -> RenderParams
 renderParams handles = r

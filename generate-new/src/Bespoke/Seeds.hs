@@ -2,8 +2,8 @@ module Bespoke.Seeds
   ( ModulePlacement(..)
   ) where
 
-import           Relude
 import           Data.Version
+import           Relude
 
 data ModulePlacement
   = CoreMod Version Text

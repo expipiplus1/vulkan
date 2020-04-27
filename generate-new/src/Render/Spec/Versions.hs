@@ -2,20 +2,20 @@
 module Render.Spec.Versions
   where
 
-import           Relude
-import           Polysemy
-import           Polysemy.Input
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
-import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Version
+import           Polysemy
+import           Polysemy.Input
+import           Relude
+import           Text.InterpolatedString.Perl6.Unindented
 
 import           Data.Bits
 
 import           Error
+import           Haskell.Name
 import           Render.Element
 import           Spec.Parse
-import           Haskell.Name
 
 specVersions
   :: forall r

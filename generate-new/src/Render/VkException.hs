@@ -4,24 +4,24 @@ module Render.VkException
   ( vkExceptionRenderElement)
   where
 
-import           Relude                  hiding ( ask )
-import           Polysemy.Input
+import           Data.Text                     as T
 import           Data.Text.Prettyprint.Doc
+import           Data.Vector                   as V
+import           Polysemy.Input
+import           Relude                  hiding ( ask )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Text.Pandoc
-import           Data.Text                     as T
-import           Data.Vector                   as V
 
 import           Control.Exception
 
-import           Spec.Types
+import           Documentation
 import           Error
 import           Haskell                       as H
+import           Haskell.Name                   ( )
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
-import           Haskell.Name                   ( )
-import           Documentation
+import           Spec.Types
 
 vkExceptionRenderElement
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)

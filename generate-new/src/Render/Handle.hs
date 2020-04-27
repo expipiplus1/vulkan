@@ -1,23 +1,23 @@
 module Render.Handle
   where
 
-import           Relude                  hiding ( lift
-                                                , Handle
-                                                )
 import           Data.Text.Prettyprint.Doc
+import           Language.Haskell.TH            ( mkName )
 import           Polysemy
 import           Polysemy.Input
-import           Language.Haskell.TH            ( mkName )
+import           Relude                  hiding ( Handle
+                                                , lift
+                                                )
 
 import           Foreign.Ptr
 import           Foreign.Storable
 import           Numeric
 import           Text.Show
 
-import           Spec.Parse
-import           Haskell                       as H
 import           Error
+import           Haskell                       as H
 import           Render.Element
+import           Spec.Parse
 
 renderHandle
   :: (HasErr r, HasRenderParams r) => Handle -> Sem r RenderElement

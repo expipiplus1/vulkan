@@ -2,20 +2,20 @@
 module Render.Scheme
   where
 
-import           Relude                  hiding ( lift )
+import qualified Data.Vector                   as V
+import           Foreign.Ptr
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Instances  ( )
 import           Polysemy
 import           Polysemy.Input
-import qualified Data.Vector                   as V
-import           Foreign.Ptr
+import           Relude                  hiding ( lift )
 
+import           Error
 import           Haskell                       as H
 import           Marshal.Scheme
-import           Error
-import           Render.Type
 import           Render.Element
 import           Render.SpecInfo
+import           Render.Type
 
 schemeTypeNegative
   :: (HasErr r, HasRenderParams r, Show a, HasSpecInfo r)

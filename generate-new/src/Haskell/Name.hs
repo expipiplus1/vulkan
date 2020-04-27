@@ -6,10 +6,10 @@ module Haskell.Name
   )
 where
 
-import           Relude
-import           Data.Text.Prettyprint.Doc
-import           Text.InterpolatedString.Perl6
 import           Data.Text
+import           Data.Text.Prettyprint.Doc
+import           Relude
+import           Text.InterpolatedString.Perl6
 
 import           Render.Utils                   ( unReservedWord )
 

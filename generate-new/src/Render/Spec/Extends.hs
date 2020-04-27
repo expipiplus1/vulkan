@@ -3,31 +3,31 @@ module Render.Spec.Extends
   ( structExtends
   ) where
 
+import           Data.Text.Prettyprint.Doc
+import qualified Data.Vector.Extra             as V
+import           Polysemy
+import           Polysemy.Input
 import           Relude                  hiding ( Enum
                                                 , Text
                                                 )
-import           Polysemy
-import           Polysemy.Input
-import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6.Unindented
-import qualified Data.Vector.Extra             as V
 
+import           Control.Exception              ( throwIO )
 import           Control.Monad.Trans.Cont       ( ContT
                                                 , evalContT
                                                 )
 import           Foreign.Ptr
 import           Foreign.Storable
-import           GHC.TypeLits
 import           GHC.IO.Exception
-import           Control.Exception              ( throwIO )
+import           GHC.TypeLits
 import           Type.Reflection
 
-import           Error
 import           CType
-import           Render.Element
-import           Spec.Types
-import           Render.SpecInfo
+import           Error
 import           Haskell
+import           Render.Element
+import           Render.SpecInfo
+import           Spec.Types
 
 structExtends
   :: forall r

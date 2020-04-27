@@ -45,41 +45,41 @@ module Render.Element
   , nameSpacePrefix
   ) where
 
-import           Relude                  hiding ( runState
-                                                , State
-                                                , modify'
-                                                , gets
-                                                , Handle
-                                                , Type
-                                                )
-import qualified Data.Vector.Extra             as V
-import           Data.Vector.Extra              ( Vector
-                                                , pattern Empty
-                                                )
-import           Data.Text                     as T
-import           Data.Set                       ( insert )
-import           Data.Text.Prettyprint.Doc
 import           Data.Char                      ( isAlpha
                                                 , isLower
                                                 )
-import           Polysemy
-import           Polysemy.State
-import           Polysemy.Input
+import           Data.Set                       ( insert )
+import           Data.Text                     as T
+import           Data.Text.Prettyprint.Doc
+import qualified Data.Vector.Extra             as V
+import           Data.Vector.Extra              ( pattern Empty
+                                                , Vector
+                                                )
 import           Language.Haskell.TH.Syntax
-                                         hiding ( NameSpace
-                                                , ModName
+                                         hiding ( ModName
                                                 , Module
+                                                , NameSpace
                                                 , Stmt
                                                 )
+import           Polysemy
+import           Polysemy.Input
+import           Polysemy.State
+import           Relude                  hiding ( Handle
+                                                , State
+                                                , Type
+                                                , gets
+                                                , modify'
+                                                , runState
+                                                )
 
-import           Error
-import           Render.Utils
-import           Haskell.Name
 import           CType
-import           Render.Type.Preserve
-import           Spec.Name
-import {-# SOURCE #-} Render.Stmts
 import           Documentation
+import           Error
+import           Haskell.Name
+import {-# SOURCE #-} Render.Stmts
+import           Render.Type.Preserve
+import           Render.Utils
+import           Spec.Name
 
 -- It would be nice to distinguish the type of render element and boot to
 -- prevent nesting, however without the polysemy plugin (doesn't work for me in

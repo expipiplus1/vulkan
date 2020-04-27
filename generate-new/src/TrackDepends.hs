@@ -1,9 +1,9 @@
 module TrackDepends
   where
 
-import Relude
-import Polysemy
-import Polysemy.Writer
+import           Polysemy
+import           Polysemy.Writer
+import           Relude
 
 newtype ModuleName = ModuleName { unModuleName :: Text }
 

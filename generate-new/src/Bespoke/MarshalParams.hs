@@ -2,19 +2,19 @@ module Bespoke.MarshalParams
   ( marshalParams
   ) where
 
-import           Relude                  hiding ( uncons
-                                                , Type
-                                                , Handle
-                                                )
-import           Relude.Extra.Map
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.Text                     as T
 import           Polysemy
+import           Relude                  hiding ( Handle
+                                                , Type
+                                                , uncons
+                                                )
+import           Relude.Extra.Map
 
-import           CType
-import           Spec.Parse
-import           Marshal.Scheme
 import           Bespoke
+import           CType
+import           Marshal.Scheme
+import           Spec.Parse
 
 marshalParams :: Spec -> Sem r MarshalParams
 marshalParams spec@Spec {..} = do

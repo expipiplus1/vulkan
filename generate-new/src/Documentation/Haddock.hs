@@ -4,16 +4,16 @@ module Documentation.Haddock
   , documentationToHaddock
   ) where
 
-import           Relude
 import           Data.Default
 import           Data.List                     as List
 import qualified Data.Text.Extra               as T
+import           Relude
 import           Text.Pandoc
 
 import           Documentation
-import           Spec.Name
-import           Render.Element                 ( ModName(..) )
 import           Haskell.Name
+import           Render.Element                 ( ModName(..) )
+import           Spec.Name
 
 newtype Haddock = Haddock { unHaddock :: Text }
   deriving (Show)

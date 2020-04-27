@@ -17,29 +17,29 @@ module Render.Stmts.Poke
   , getVectorPoke
   ) where
 
-import           Relude                  hiding ( Type
-                                                , last
-                                                , init
-                                                , head
-                                                , Const
-                                                )
-import           Data.Text.Prettyprint.Doc
-import           Polysemy
-import           Polysemy.NonDet         hiding ( Empty )
-import           Polysemy.Input
-import           Polysemy.Fail
 import           Data.Char                      ( isUpper )
-import           Data.Vector.Extra              ( Vector
-                                                , pattern Empty
-                                                )
 import qualified Data.Text.Extra               as T
+import           Data.Text.Prettyprint.Doc
+import           Data.Vector.Extra              ( pattern Empty
+                                                , Vector
+                                                )
+import           Polysemy
+import           Polysemy.Fail
+import           Polysemy.Input
+import           Polysemy.NonDet         hiding ( Empty )
+import           Relude                  hiding ( Const
+                                                , Type
+                                                , head
+                                                , init
+                                                , last
+                                                )
 
-import qualified Data.Vector                   as V
-import           Foreign.Ptr
-import           Foreign.Marshal.Alloc
+import           Control.Exception              ( bracket )
 import           Control.Monad.Trans.Cont       ( ContT )
 import qualified Data.ByteString               as BS
-import           Control.Exception              ( bracket )
+import qualified Data.Vector                   as V
+import           Foreign.Marshal.Alloc
+import           Foreign.Ptr
 
 import           CType                         as C
 import           Error
@@ -47,13 +47,13 @@ import           Haskell
 import           Marshal.Marshalable
 import           Marshal.Scheme
 import           Render.Element
-import           Render.SpecInfo
-import           Render.Type
-import           Render.Stmts
-import           Render.Stmts.Utils
-import           Render.Scheme
 import           Render.Names
+import           Render.Scheme
+import           Render.SpecInfo
+import           Render.Stmts
 import           Render.Stmts.Poke.SiblingInfo
+import           Render.Stmts.Utils
+import           Render.Type
 
 type HasPoke a r
   = ( Marshalable a

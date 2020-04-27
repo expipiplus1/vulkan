@@ -4,20 +4,20 @@ module Render.Stmts.Alloc
   , allocateAndPeek
   ) where
 
-import           Relude                  hiding ( Type
-                                                , last
-                                                , init
-                                                , head
-                                                , Const
-                                                )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Input
-import qualified Data.Text.Extra               as T
+import           Relude                  hiding ( Const
+                                                , Type
+                                                , head
+                                                , init
+                                                , last
+                                                )
 
-import           Foreign.Marshal.Alloc
-import           Control.Monad.Trans.Cont       ( ContT )
 import           Control.Exception              ( bracket )
+import           Control.Monad.Trans.Cont       ( ContT )
+import           Foreign.Marshal.Alloc
 
 import           CType                         as C
 import           Error
@@ -25,11 +25,11 @@ import           Haskell
 import           Marshal.Marshalable
 import           Marshal.Scheme
 import           Render.Element
+import           Render.Peek
 import           Render.SpecInfo
-import           Render.Type
 import           Render.Stmts
 import           Render.Stmts.Poke
-import           Render.Peek
+import           Render.Type
 
 -- | Allocates memory in the first ref, and peeks from it in the second
 allocateAndPeek

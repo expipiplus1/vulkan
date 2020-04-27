@@ -11,41 +11,41 @@ module Bespoke
   , zeroNextPointer
   ) where
 
-import           Relude                  hiding ( Const )
-import           Data.Text.Prettyprint.Doc
-import           Polysemy
-import           Polysemy.Input
-import qualified Data.Text                     as T
 import qualified Data.List.Extra               as List
+import qualified Data.Map                      as Map
+import qualified Data.Text                     as T
+import           Data.Text.Prettyprint.Doc
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector.Extra             as V
-import qualified Data.Map                      as Map
-import           Foreign.Ptr
 import           Foreign.C.Types
-import           Text.InterpolatedString.Perl6.Unindented
+import           Foreign.Ptr
 import           Language.Haskell.TH            ( mkName )
+import           Polysemy
+import           Polysemy.Input
+import           Relude                  hiding ( Const )
+import           Text.InterpolatedString.Perl6.Unindented
 
-import           Foreign.Marshal.Alloc
-import           Data.Bits
-import           Foreign.Marshal.Utils
 import           Control.Monad.Trans.Cont       ( ContT )
+import           Data.Bits
 import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Unsafe        as BS
+import           Foreign.Marshal.Alloc
+import           Foreign.Marshal.Utils
 
+import           CType
+import           Error
 import           Haskell                       as H
-import           Spec.Types
+import           Marshal.Marshalable
+import           Marshal.Scheme
 import           Render.Element
-import           Render.Utils
-import           Render.Stmts
-import           Render.Stmts.Utils
-import           Render.Stmts.Poke              ( getVectorPoke )
 import           Render.Peek                    ( storablePeek
                                                 , vectorPeekWithLenRef
                                                 )
-import           Error
-import           Marshal.Scheme
-import           Marshal.Marshalable
-import           CType
+import           Render.Stmts
+import           Render.Stmts.Poke              ( getVectorPoke )
+import           Render.Stmts.Utils
+import           Render.Utils
+import           Spec.Types
 
 ----------------------------------------------------------------
 -- Changes to the spec

@@ -28,10 +28,10 @@ import           Algebra.Graph.AdjacencyIntMap
                                          hiding ( empty )
 
 import           Error
-import           Spec.Types
+import           Haskell
 import           Render.Element
 import           Render.SpecInfo
-import           Haskell
+import           Spec.Types
 
 import           VK.Render
 

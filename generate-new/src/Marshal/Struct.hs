@@ -4,17 +4,17 @@ module Marshal.Struct
   , MarshaledStructMember(..)
   ) where
 
-import           Relude
-import           Polysemy
-import           Polysemy.NonDet
-import           Polysemy.Input
-import           Polysemy.Fail
 import qualified Data.Vector                   as V
+import           Polysemy
+import           Polysemy.Fail
+import           Polysemy.Input
+import           Polysemy.NonDet
+import           Relude
 
-import           Spec.Parse
 import           Error
 import           Marshal.Scheme
 import           Render.SpecInfo
+import           Spec.Parse
 
 data MarshaledStruct t = MarshaledStruct
   { msName    :: CName

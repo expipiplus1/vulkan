@@ -6,9 +6,9 @@ module Data.Vector.Extra
   , pattern Singleton
   ) where
 
-import           Prelude
 import           Data.Vector
 import qualified Data.Vector                   as V
+import           Prelude
 
 {-# complete Empty, (:<|) #-}
 

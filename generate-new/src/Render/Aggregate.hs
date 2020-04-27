@@ -1,18 +1,18 @@
 module Render.Aggregate
   where
 
-import           Prelude
-import           Polysemy
+import           Data.List.Extra                ( (\\)
+                                                , inits
+                                                , nubOrd
+                                                )
+import qualified Data.Map                      as Map
+import           Data.Text                      ( intercalate
+                                                , splitOn
+                                                )
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
-import qualified Data.Map                      as Map
-import           Data.Text                      ( splitOn
-                                                , intercalate
-                                                )
-import           Data.List.Extra                ( nubOrd
-                                                , inits
-                                                , (\\)
-                                                )
+import           Polysemy
+import           Prelude
 
 import           Render.Element
 import           Write.Segment

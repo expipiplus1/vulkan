@@ -1,19 +1,19 @@
 module CType
   where
 
-import           Relude                  hiding ( Const )
-import           Language.C.Types.Parse  hiding ( Proto
-                                                , Array
+import           Data.ByteString.Char8         as BS
+import qualified Language.C.Types              as C
+import           Language.C.Types.Parse  hiding ( Array
+                                                , Proto
                                                 , TypeName
                                                 )
-import qualified Language.C.Types              as C
-import           Data.ByteString.Char8         as BS
 import           Polysemy
 import           Polysemy.Input
+import           Relude                  hiding ( Const )
+import           Spec.Name
+import qualified Text.Parsec.Char              as Parsec
 import qualified Text.ParserCombinators.Parsec.Combinator
                                                as Parsec
-import qualified Text.Parsec.Char              as Parsec
-import           Spec.Name
 
 
 import           Error

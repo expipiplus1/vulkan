@@ -5,29 +5,29 @@ module Bespoke.Utils
   )
 where
 
-import           Relude
-import           Polysemy
-import           Foreign.Ptr
 import           Foreign.C.Types
+import           Foreign.Ptr
+import           Polysemy
+import           Relude
 import           Text.InterpolatedString.Perl6.Unindented
 
 import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Unsafe        as BS
 import qualified Data.Vector                   as V
-import qualified Data.Vector.Sized             as VS
-import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector.Generic           as VG
 import qualified Data.Vector.Generic.Sized     as VGS
 import qualified Data.Vector.Generic.Sized.Internal
                                                as VGSI
+import qualified Data.Vector.Sized             as VS
+import qualified Data.Vector.Storable.Sized    as VSS
 import           Foreign.Marshal.Array
 import           Foreign.Marshal.Utils
 import           Foreign.Storable
 import           GHC.TypeNats
 
-import           Render.Element
 import           Error
 import           Haskell.Name
+import           Render.Element
 
 zeroClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 zeroClass = genRe "zero class" $ do

@@ -5,14 +5,14 @@ module Spec.Types
   , module Spec.Types
   ) where
 
-import           Relude                  hiding ( Handle )
 import           Data.Vector                    ( Vector )
 import           Data.Version
+import           Relude                  hiding ( Handle )
 
-import           Spec.Name
-import           Spec.APIConstant
 import           CType
 import qualified Marshal.Marshalable           as M
+import           Spec.APIConstant
+import           Spec.Name
 
 data Spec = Spec
   { specHeaderVersion      :: Word

@@ -1,56 +1,56 @@
 module Main
   where
 
-import           Relude                  hiding ( Type
-                                                , Handle
-                                                )
-import qualified Data.Text                     as T
+import           Control.Exception              ( mapException )
 import qualified Data.List                     as List
+import qualified Data.Map                      as Map
+import qualified Data.Set                      as Set
+import qualified Data.Text                     as T
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import qualified Data.Vector.Algorithms.Intro  as V
-import           Language.C.Parser
+import           Language.C.Analysis.AstAnalysis
+import           Language.C.Analysis.ConstEval
+import           Language.C.Analysis.SemRep
+import           Language.C.Analysis.TravMonad
 import           Language.C.Data
 import           Language.C.Data.Ident
+import           Language.C.Parser
 import           Language.C.Syntax
-import           Language.C.Analysis.AstAnalysis
-import           Language.C.Analysis.TravMonad
-import           Language.C.Analysis.SemRep
-import           Language.C.Analysis.ConstEval
-import           System.Process.Typed
 import           Polysemy
-import           Polysemy.NonDet
 import           Polysemy.Fail
-import           Polysemy.Input
 import           Polysemy.Fixpoint
+import           Polysemy.Input
+import           Polysemy.NonDet
+import           Relude                  hiding ( Handle
+                                                , Type
+                                                )
 import           Say
-import qualified Data.Map                      as Map
-import qualified Data.Set                      as Set
+import           System.Process.Typed
 import           System.TimeIt
-import           Control.Exception              ( mapException )
 
-import           Error
+import qualified Bespoke.MarshalParams         as Vk
+import qualified Bespoke.RenderParams          as Vk
 import           CType
 import           CType.Size
-import           Spec.Parse
-import           Render.SpecInfo
+import           Error
+import           Marshal.Command
+import           Marshal.Marshalable
+import           Marshal.Scheme
+import           Marshal.Struct
 import           Render.Element                 ( ModName(..)
                                                 , makeRenderElementInternal
                                                 )
 import           Render.Element.Write
-import           Render.Names
 import           Render.FuncPointer
-import           Marshal.Scheme
-import           Marshal.Struct
-import           Marshal.Command
-import           Marshal.Marshalable
+import           Render.Names
+import           Render.SpecInfo
+import           Spec.Parse
 import           Write.Segment
-import qualified Bespoke.MarshalParams         as Vk
-import qualified Bespoke.RenderParams          as Vk
 
-import           VMA.RenderParams
-import           VMA.Render
 import           VMA.Documentation
+import           VMA.Render
+import           VMA.RenderParams
 
 vmaDir, vmaDocbookDir, vmaHeader :: FilePath
 vmaDir = "../VulkanMemoryAllocator/VulkanMemoryAllocator"

@@ -1,10 +1,10 @@
 module Render.Utils
   where
 
-import           Relude
-import           Data.Text.Prettyprint.Doc
-import           Text.Wrap
 import qualified Data.Text                     as T
+import           Data.Text.Prettyprint.Doc
+import           Relude
+import           Text.Wrap
 
 parenList :: Foldable f => f (Doc ()) -> Doc ()
 parenList = genericList (<>) "(" ")"

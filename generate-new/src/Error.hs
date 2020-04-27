@@ -20,11 +20,11 @@ module Error
   )
 where
 
-import           Relude
-import           Polysemy
 import           Data.Vector                   as V
                                          hiding ( toList )
+import           Polysemy
 import qualified Polysemy.Error                as E
+import           Relude
 import           Relude.Extra.Validation
 
 type Err = E.Error (Vector Text)

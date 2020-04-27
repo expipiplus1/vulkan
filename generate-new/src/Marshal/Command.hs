@@ -10,22 +10,22 @@ module Marshal.Command
   , marshaledParamTypePositive
   ) where
 
-import           Relude
-import           Polysemy
-import           Polysemy.NonDet
-import           Polysemy.Input
-import           Polysemy.Fail
 import qualified Data.Vector                   as V
+import           Polysemy
+import           Polysemy.Fail
+import           Polysemy.Input
+import           Polysemy.NonDet
+import           Relude
 
 import           CType
-import           Spec.Parse
 import           Error
+import           Haskell                       as H
 import           Marshal.Scheme
-import           Render.SpecInfo
 import           Render.Element
 import           Render.Scheme
+import           Render.SpecInfo
 import           Render.Type
-import           Haskell                       as H
+import           Spec.Parse
 
 data MarshaledCommand = MarshaledCommand
   { mcName    :: CName

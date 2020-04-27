@@ -2,29 +2,29 @@
 module Render.Enum
   where
 
-import           Text.Printf
-import           Relude                  hiding ( lift )
-import           Text.Show
-import qualified Text.Read                     as R
 import           Data.Text.Prettyprint.Doc
+import qualified Data.Vector                   as V
 import           Polysemy
 import           Polysemy.Input
-import qualified Data.Vector                   as V
+import           Relude                  hiding ( lift )
+import           Text.Printf
+import qualified Text.Read                     as R
+import           Text.Show
 
-import           Foreign.Storable
 import           Data.Bits
-import           Numeric
+import           Foreign.Storable
 import           GHC.Read                hiding ( parens )
+import           Numeric
 import           Text.Read               hiding ( parens )
 
-import           Spec.Parse
-import           Haskell                       as H
-import           Error
-import           Render.Element
-import           Render.Utils
 import           CType                          ( CType(TypeName) )
-import           Render.Type
+import           Error
+import           Haskell                       as H
+import           Render.Element
 import           Render.SpecInfo
+import           Render.Type
+import           Render.Utils
+import           Spec.Parse
 
 renderEnum
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)

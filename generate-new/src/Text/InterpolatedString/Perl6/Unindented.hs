@@ -19,13 +19,13 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Text.InterpolatedString.Perl6.Unindented (qqi, qci, qi, showQ)where
 
-import           Prelude
 import           Data.Char
 import           Data.List
-import           Language.Haskell.TH.Quote
-import           Text.InterpolatedString.Perl6
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.String
+import           Language.Haskell.TH.Quote
+import           Prelude
+import           Text.InterpolatedString.Perl6
 
 wrapQuasi :: (String -> String) -> QuasiQuoter -> QuasiQuoter
 wrapQuasi f QuasiQuoter {..} =

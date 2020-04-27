@@ -5,13 +5,13 @@ module Spec.APIConstant
   , decodeName
   ) where
 
-import           Relude
-import           Polysemy
-import           Data.Char
 import           Data.Bits
-import           Text.Regex.Applicative
 import qualified Data.ByteString.Char8         as BS
+import           Data.Char
 import qualified Data.Text                     as T
+import           Polysemy
+import           Relude
+import           Text.Regex.Applicative
 
 import           Error
 import           Spec.Name

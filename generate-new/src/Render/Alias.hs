@@ -1,15 +1,15 @@
 module Render.Alias
   where
 
-import           Relude
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Input
+import           Relude
 
-import           Spec.Parse
 import           Error
 import           Render.Element
 import           Render.SpecInfo
+import           Spec.Parse
 
 renderAlias
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)

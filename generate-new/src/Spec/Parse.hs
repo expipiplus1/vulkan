@@ -4,44 +4,44 @@ module Spec.Parse
   )
 where
 
-import           Relude                  hiding ( Handle
-                                                , State
-                                                , get
-                                                , put
-                                                , runState
-                                                , evalState
-                                                , modify'
-                                                )
-import           Xeno.DOM
-import           Data.Vector                    ( Vector )
-import           Data.List.Extra                ( nubOrd )
 import           Control.Monad.Extra            ( mapMaybeM )
-import           Text.ParserCombinators.ReadP
-                                         hiding ( get )
-import           Data.Version
-import           Language.C.Types               ( cIdentifierFromString
-                                                , TypeNames
-                                                )
+import           Data.Bits
 import qualified Data.ByteString.Char8         as BS
-import qualified Data.Map                      as Map
-import           Polysemy.State
+import           Data.Char
 import           Data.List                      ( dropWhileEnd
                                                 , lookup
                                                 )
+import           Data.List.Extra                ( nubOrd )
+import qualified Data.Map                      as Map
 import qualified Data.Text                     as T
+import           Data.Text.Extra                ( (<+>) )
+import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
-import           Data.Char
+import           Data.Version
+import           Language.C.Types               ( TypeNames
+                                                , cIdentifierFromString
+                                                )
 import           Polysemy
 import           Polysemy.Input
-import           Data.Text.Extra                ( (<+>) )
-import           Data.Bits
+import           Polysemy.State
+import           Relude                  hiding ( Handle
+                                                , State
+                                                , evalState
+                                                , get
+                                                , modify'
+                                                , put
+                                                , runState
+                                                )
+import           Text.ParserCombinators.ReadP
+                                         hiding ( get )
+import           Xeno.DOM
 
-import           Spec.APIConstant
+import           Bespoke
 import           CType
 import           CType.Size
 import           Error
-import           Bespoke
 import           Marshal.Marshalable            ( ParameterLength(..) )
+import           Spec.APIConstant
 import           Spec.Types
 
 ----------------------------------------------------------------

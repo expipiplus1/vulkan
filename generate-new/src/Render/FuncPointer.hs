@@ -2,20 +2,20 @@
 module Render.FuncPointer
   where
 
-import           Relude
 import           Data.Text.Prettyprint.Doc
+import           Foreign.Ptr
 import           Language.Haskell.TH.Syntax
 import           Polysemy
 import           Polysemy.Input
-import           Foreign.Ptr
+import           Relude
 
-import           Spec.Parse
-import           Haskell                       as H
-import           Error
-import           Render.Element
-import           Render.Type
-import           Render.SpecInfo
 import           CType
+import           Error
+import           Haskell                       as H
+import           Render.Element
+import           Render.SpecInfo
+import           Render.Type
+import           Spec.Parse
 
 renderFuncPointer
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)

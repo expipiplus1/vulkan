@@ -1,49 +1,49 @@
 module Render.Element.Write
   where
 
-import           Relude                  hiding ( runState
-                                                , State
-                                                , modify'
-                                                , Handle
+import           Data.Char                      ( isLower )
+import           Data.List                      ( lookup )
+import           Data.List.Extra                ( groupOn
+                                                , nubOrd
+                                                , nubOrdOn
                                                 )
 import qualified Data.Map                      as Map
 import qualified Data.Set                      as Set
-import qualified Data.Vector.Extra             as V
-import           Data.Vector.Extra              ( Vector )
-import           Data.Text                     as T
-import           Data.Char                      ( isLower )
-import           Data.Text.IO                  as T
 import           Data.Set                       ( unions )
-import           Data.List.Extra                ( nubOrd
-                                                , groupOn
-                                                , nubOrdOn
-                                                )
+import           Data.Text                     as T
+import           Data.Text.IO                  as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.Text
-import           System.Directory
-import           System.FilePath
+import qualified Data.Vector.Extra             as V
+import           Data.Vector.Extra              ( Vector )
+import           Foreign.Ptr
+import           Language.Haskell.TH            ( mkName
+                                                , nameBase
+                                                , nameModule
+                                                )
 import           Polysemy
 import           Polysemy.Input
-import           Data.List                      ( lookup )
-import           Foreign.Ptr
-import           Language.Haskell.TH            ( nameBase
-                                                , nameModule
-                                                , mkName
+import           Relude                  hiding ( Handle
+                                                , State
+                                                , modify'
+                                                , runState
                                                 )
+import           System.Directory
+import           System.FilePath
 
 import qualified Data.Vector.Generic           as VG
 import           Type.Reflection
 
-import           Render.Utils
-import           Render.Names
-import           Render.SpecInfo
-import           Render.Element
-import           Error
-import           Write.Segment
-import           Spec.Types
-import           Haskell.Name
 import           Documentation
 import           Documentation.Haddock
+import           Error
+import           Haskell.Name
+import           Render.Element
+import           Render.Names
+import           Render.SpecInfo
+import           Render.Utils
+import           Spec.Types
+import           Write.Segment
 
 ----------------------------------------------------------------
 -- Rendering

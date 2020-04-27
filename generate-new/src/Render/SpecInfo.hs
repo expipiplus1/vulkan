@@ -1,18 +1,18 @@
 module Render.SpecInfo
   where
 
-import           Relude                  hiding ( Handle )
-import qualified Data.HashMap.Strict           as Map
-import qualified Data.HashSet                  as Set
-import           Polysemy.Input
-import           Polysemy
 import           Algebra.Graph.Relation
 import           Algebra.Graph.ToGraph
 import           CType
+import qualified Data.HashMap.Strict           as Map
+import qualified Data.HashSet                  as Set
 import           Error
+import           Polysemy
+import           Polysemy.Input
+import           Relude                  hiding ( Handle )
 
-import           Spec.Types
 import           Render.Element
+import           Spec.Types
 
 type HasSpecInfo r = MemberWithError (Input SpecInfo) r
 

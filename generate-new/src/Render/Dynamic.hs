@@ -3,34 +3,34 @@
 module Render.Dynamic
   where
 
-import           Relude                  hiding ( Type
-                                                , State
-                                                )
-import           Data.Text.Prettyprint.Doc
-import           Text.InterpolatedString.Perl6.Unindented
 import qualified Data.List.Extra               as List
+import           Data.Text.Prettyprint.Doc
+import qualified Data.Vector                   as V
+import           Data.Vector.Extra              ( pattern (:<|)
+                                                , Vector
+                                                )
 import           Polysemy
 import           Polysemy.Input
 import           Polysemy.State
-import           Data.Vector.Extra              ( Vector
-                                                , pattern (:<|)
+import           Relude                  hiding ( State
+                                                , Type
                                                 )
-import qualified Data.Vector                   as V
+import           Text.InterpolatedString.Perl6.Unindented
 
 import           Foreign.Ptr
 import           GHC.Ptr
 
-import           Spec.Parse
+import qualified CType                         as C
+import           Error
 import           Haskell                       as H
 import           Haskell.Name                   ( )
 import           Marshal
-import           Error
-import           Render.Element.Write
 import           Render.Element
-import           Render.Type
+import           Render.Element.Write
 import           Render.SpecInfo
+import           Render.Type
 import           Render.Utils
-import qualified CType                         as C
+import           Spec.Parse
 
 renderDynamicLoader
   :: (HasErr r, HasRenderParams r, HasTypeInfo r, HasSpecInfo r)

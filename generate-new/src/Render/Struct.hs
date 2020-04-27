@@ -3,39 +3,39 @@
 module Render.Struct
   where
 
-import           Relude                  hiding ( Handle )
-import           Text.InterpolatedString.Perl6.Unindented
-import           Data.Text.Prettyprint.Doc
+import qualified Data.Map                      as Map
 import           Data.Text.Extra                ( upperCaseFirst )
+import           Data.Text.Prettyprint.Doc
+import qualified Data.Vector.Extra             as V
 import           Polysemy
 import           Polysemy.Input
-import qualified Data.Vector.Extra             as V
-import qualified Data.Map                      as Map
+import           Relude                  hiding ( Handle )
+import           Text.InterpolatedString.Perl6.Unindented
 
+import           Control.Monad.Trans.Cont       ( evalContT )
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import           Foreign.Storable
-import           Control.Monad.Trans.Cont       ( evalContT )
 
-import           Error
+import           Bespoke
+import           CType
 import           Data.Typeable
+import           Error
 import           Haskell                       as H
                                          hiding ( Type )
-import           CType
 import           Marshal
 import           Marshal.Scheme
 import           Marshal.Scheme.Zero
 import           Render.Element
+import           Render.Names
 import           Render.Peek
-import           Render.Stmts.Poke
 import           Render.Scheme
-import           Render.Stmts
 import           Render.SpecInfo
+import           Render.Stmts
+import           Render.Stmts.Poke
 import           Render.Type
 import           Render.Utils
-import           Render.Names
 import           Spec.Parse
-import           Bespoke
 
 renderStruct
   :: ( HasErr r

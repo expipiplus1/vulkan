@@ -9,32 +9,32 @@ module Render.Type
   , namedTy
   ) where
 
-import           Relude                  hiding ( lift
-                                                , State
-                                                , modify'
-                                                , get
-                                                , put
-                                                , runState
-                                                , Type
-                                                )
-import           Language.Haskell.TH
-import           Language.Haskell.TH.Instances  ( )
-import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
-import           Polysemy
-import           Polysemy.State
-import           Polysemy.Input
+import qualified Data.Vector                   as V
+import qualified Data.Vector.Storable.Sized    as VSS
 import           Foreign.C.Types
 import           Foreign.Ptr
-import qualified Data.Vector.Storable.Sized    as VSS
+import           Language.Haskell.TH
+import           Language.Haskell.TH.Instances  ( )
+import           Polysemy
+import           Polysemy.Input
+import           Polysemy.State
+import           Relude                  hiding ( State
+                                                , Type
+                                                , get
+                                                , lift
+                                                , modify'
+                                                , put
+                                                , runState
+                                                )
 
-import           Render.SpecInfo
-import           Spec.Types
 import           CType
-import           Haskell                       as H
 import           Error
+import           Haskell                       as H
 import           Render.Element
+import           Render.SpecInfo
 import           Render.Type.Preserve
+import           Spec.Types
 
 -- | The same as 'cToHsType' except type variables are written as @_@
 cToHsTypeWithHoles

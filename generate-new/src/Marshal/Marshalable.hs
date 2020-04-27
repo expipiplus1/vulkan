@@ -3,9 +3,9 @@ module Marshal.Marshalable
   , CName(..)
   ) where
 
-import           Relude
 import           Data.Vector                   as V
                                          hiding ( empty )
+import           Relude
 
 import           CType
 import           Spec.Name

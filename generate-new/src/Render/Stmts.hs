@@ -29,42 +29,42 @@ module Render.Stmts
   , CmdsDoc(..)
   ) where
 
-import           Relude                  hiding ( Type
-                                                , State
-                                                , modify'
-                                                , evalState
-                                                , get
-                                                , gets
-                                                , execState
-                                                , runState
+import qualified Data.Dependent.Map            as DMap
+import           Data.Dependent.Map             ( DMap
+                                                , Some(..)
                                                 )
-import           Prelude                        ( until
-                                                , showsPrec
-                                                , lookup
-                                                )
-import           Polysemy
-import           Polysemy.State
-import           Polysemy.Fixpoint
+import qualified Data.GADT.Compare             as DMap
+import qualified Data.GADT.Show                as DMap
 import qualified Data.List.Extra               as List
-import qualified Data.Set                      as Set
 import qualified Data.Map                      as Map
+import qualified Data.Set                      as Set
 import           Data.Text.Extra                ( lowerCaseFirst
                                                 , snoc
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Data.Type.Equality
 import           Data.Typeable
-import qualified Data.GADT.Show                as DMap
-import qualified Data.GADT.Compare             as DMap
-import qualified Data.Dependent.Map            as DMap
-import           Data.Dependent.Map             ( DMap
-                                                , Some(..)
+import           Polysemy
+import           Polysemy.Fixpoint
+import           Polysemy.State
+import           Prelude                        ( lookup
+                                                , showsPrec
+                                                , until
+                                                )
+import           Relude                  hiding ( State
+                                                , Type
+                                                , evalState
+                                                , execState
+                                                , get
+                                                , gets
+                                                , modify'
+                                                , runState
                                                 )
 
+import           Error
+import           Haskell
 import           Render.Element
 import           Render.Utils
-import           Haskell
-import           Error
 
 ----------------------------------------------------------------
 -- Some handy newtypes for tagging results

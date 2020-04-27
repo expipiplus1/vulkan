@@ -5,34 +5,34 @@ module Render.Command
   , addConstraints
   ) where
 
-import           Relude                  hiding ( Type
-                                                , Handle
-                                                )
-import           Data.Text.Prettyprint.Doc
-import           Data.Text.Extra                ( upperCaseFirst )
-import           Language.Haskell.TH.Syntax     ( nameBase
-                                                , nameModule
-                                                , mkNameG_tc
-                                                , mkName
-                                                , Pred
-                                                )
-import           Language.Haskell.TH.Datatype   ( quantifyType )
 import           Data.List.Extra                ( nubOrd )
-import           Polysemy
-import           Polysemy.Input
+import qualified Data.Map                      as Map
 import qualified Data.Text                     as T
+import           Data.Text.Extra                ( upperCaseFirst )
+import           Data.Text.Prettyprint.Doc
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
-import           Data.Vector.Extra              ( pattern Empty
-                                                , pattern (:<|)
+import           Data.Vector.Extra              ( pattern (:<|)
+                                                , pattern Empty
                                                 )
-import qualified Data.Map                      as Map
+import           Language.Haskell.TH.Datatype   ( quantifyType )
+import           Language.Haskell.TH.Syntax     ( Pred
+                                                , mkName
+                                                , mkNameG_tc
+                                                , nameBase
+                                                , nameModule
+                                                )
+import           Polysemy
+import           Polysemy.Input
+import           Relude                  hiding ( Handle
+                                                , Type
+                                                )
 
+import           Control.Exception              ( throwIO )
 import           Control.Monad.Trans.Cont
 import           Foreign.C.Types
 import           Foreign.Ptr
 import qualified GHC.Ptr
-import           Control.Exception              ( throwIO )
 
 import           CType                         as C
 import           Error
@@ -41,13 +41,13 @@ import           Marshal
 import           Marshal.Marshalable
 import           Marshal.Scheme
 import           Render.Element
-import           Render.Peek
 import           Render.Names
-import           Render.Stmts
-import           Render.Stmts.Poke
-import           Render.Stmts.Alloc
+import           Render.Peek
 import           Render.Scheme
 import           Render.SpecInfo
+import           Render.Stmts
+import           Render.Stmts.Alloc
+import           Render.Stmts.Poke
 import           Render.Type
 import           Spec.Parse
 

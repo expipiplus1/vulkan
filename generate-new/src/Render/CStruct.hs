@@ -5,22 +5,22 @@ module Render.CStruct
   )
 where
 
-import           Relude                  hiding ( lift
-                                                , State
-                                                )
-import           Text.InterpolatedString.Perl6.Unindented
-import           Polysemy
-import           Polysemy.Input
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
+import           Polysemy
+import           Polysemy.Input
+import           Relude                  hiding ( State
+                                                , lift
+                                                )
+import           Text.InterpolatedString.Perl6.Unindented
 
-import           Foreign.Ptr
-import           Foreign.Marshal.Alloc
 import           Control.Exception              ( bracket )
+import           Foreign.Marshal.Alloc
+import           Foreign.Ptr
 
 import           Error
-import           Render.Element
 import           Haskell.Name
+import           Render.Element
 
 cStructDocs :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
 cStructDocs = V.fromList [toCStruct, fromCStruct]

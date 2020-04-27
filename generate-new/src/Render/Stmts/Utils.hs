@@ -1,29 +1,29 @@
 module Render.Stmts.Utils
   where
 
-import           Relude                  hiding ( Type
-                                                , last
-                                                , init
-                                                , head
-                                                , Const
-                                                )
-import           Data.Text.Prettyprint.Doc
-import           Polysemy
-import           Language.Haskell.TH            ( nameBase )
 import qualified Data.Text.Extra               as T
+import           Data.Text.Prettyprint.Doc
+import           Language.Haskell.TH            ( nameBase )
+import           Polysemy
+import           Relude                  hiding ( Const
+                                                , Type
+                                                , head
+                                                , init
+                                                , last
+                                                )
 
-import           Foreign.Storable
-import           Control.Monad.Trans.Cont       ( ContT )
-import           GHC.IO.Exception
 import           Control.Exception              ( throwIO )
+import           Control.Monad.Trans.Cont       ( ContT )
+import           Foreign.Storable
+import           GHC.IO.Exception
 
 import           Error
 import           Haskell
 import           Marshal.Marshalable
 import           Render.Element
+import           Render.Names
 import           Render.SpecInfo
 import           Render.Stmts
-import           Render.Names
 
 -- Store using 'poke' or 'pokeCStruct'
 storablePoke

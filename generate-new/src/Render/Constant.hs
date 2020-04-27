@@ -2,18 +2,18 @@
 module Render.Constant
   where
 
-import           Relude
 import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH.Syntax
-import           Text.Printf
 import           Polysemy
 import           Polysemy.Input
+import           Relude
+import           Text.Printf
 
-import           Spec.Parse
-import           Spec.APIConstant
-import           Haskell                       as H
 import           Error
+import           Haskell                       as H
 import           Render.Element
+import           Spec.APIConstant
+import           Spec.Parse
 
 renderConstant
   :: (HasErr r, HasRenderParams r)

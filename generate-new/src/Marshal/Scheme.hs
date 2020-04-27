@@ -1,32 +1,32 @@
 module Marshal.Scheme
   where
 
+import           Data.Text.Prettyprint.Doc
+import           Data.Vector.Extra              ( pattern (:<|)
+                                                , pattern Empty
+                                                , pattern Singleton
+                                                , Vector
+                                                )
+import qualified Data.Vector.Extra             as V
+import           Polysemy
+import           Polysemy.Fail
+import           Polysemy.Input
+import           Polysemy.NonDet         hiding ( Empty )
+import qualified Prelude                       as P
 import           Relude                  hiding ( Const
                                                 , uncons
                                                 )
-import qualified Prelude                       as P
-import           Polysemy
-import           Polysemy.Input
-import           Polysemy.NonDet         hiding ( Empty )
-import           Polysemy.Fail
-import           Data.Vector.Extra              ( Vector
-                                                , pattern Empty
-                                                , pattern Singleton
-                                                , pattern (:<|)
-                                                )
-import qualified Data.Vector.Extra             as V
-import           Data.Text.Prettyprint.Doc
 
+import           CType
+import           Error
+import           Haskell                       as H
 import           Marshal.Marshalable
-import           Render.Stmts
 import           Render.Element
-import           Render.SpecInfo
 import           Render.Names
+import           Render.SpecInfo
+import           Render.Stmts
 import           Render.Stmts.Poke.SiblingInfo
 import           Spec.Types
-import           Error
-import           CType
-import           Haskell                       as H
 
 -- | @MarshalScheme a@ represents how we will marshal some @a@ (a struct
 -- member or a command parameter (both referred to as parameter here))
