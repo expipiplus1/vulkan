@@ -76,6 +76,7 @@ executables:
 dependencies:
   - algebraic-graphs
   - ascii-progress
+  - safe
   - async-pool
   - base
   - bytestring
@@ -102,6 +103,7 @@ dependencies:
   - tagsoup
   - template-haskell
   - text
+  - th-abstraction
   - th-orphans
   - timeit
   - transformers
@@ -109,7 +111,7 @@ dependencies:
   - uniplate
   - unordered-containers
   - vector
-  - vector-sized
   - vector-algorithms
+  - vector-sized
   - word-wrap
   - xeno

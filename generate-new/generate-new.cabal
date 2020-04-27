@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6c12383d1a50ee3ff29c4b9943470d00a22d711604a1eca895cb37ea90175a5c
+-- hash: 85b0084b15f82941f72120895924ca77515e5b85491ba928f3a92e9f8b98ba9e
 
 name:           generate-new
 version:        0.0.0
@@ -17,7 +17,6 @@ build-type:     Simple
 
 library
   exposed-modules:
-      AssignModules
       Bespoke
       Bespoke.MarshalParams
       Bespoke.RenderParams
@@ -107,10 +106,12 @@ library
     , prettyprinter
     , regex-applicative
     , relude
+    , safe
     , say
     , tagsoup
     , template-haskell
     , text
+    , th-abstraction
     , th-orphans
     , timeit
     , transformers
@@ -127,6 +128,7 @@ library
 executable vk
   main-is: Main.hs
   other-modules:
+      VK.AssignModules
       VK.Bracket
       VK.Render
       Paths_generate_new
@@ -160,10 +162,12 @@ executable vk
     , prettyprinter
     , regex-applicative
     , relude
+    , safe
     , say
     , tagsoup
     , template-haskell
     , text
+    , th-abstraction
     , th-orphans
     , timeit
     , transformers
@@ -216,10 +220,12 @@ executable vma
     , prettyprinter
     , regex-applicative
     , relude
+    , safe
     , say
     , tagsoup
     , template-haskell
     , text
+    , th-abstraction
     , th-orphans
     , timeit
     , transformers

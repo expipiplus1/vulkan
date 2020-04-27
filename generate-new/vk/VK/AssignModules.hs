@@ -1,4 +1,4 @@
-module AssignModules
+module VK.AssignModules
   ( assignModules
   ) where
 
