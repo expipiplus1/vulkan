@@ -40,7 +40,7 @@ import           Control.Arrow                  ( (&&&) )
 
 main :: IO ()
 main = runManaged $ do
-  managed_ withSDL
+  withSDL
 
   VulkanWindow {..} <- withVulkanWindow appName windowWidth windowHeight
   renderPass        <- Main.createRenderPass vwDevice vwFormat
@@ -111,8 +111,8 @@ drawFrame dev swapchain graphicsQueue presentQueue imageAvailableSemaphore rende
 
 createSemaphores :: Device -> Managed (Semaphore, Semaphore)
 createSemaphores dev = do
-  imageAvailableSemaphore <- managed $ withSemaphore dev zero Nothing
-  renderFinishedSemaphore <- managed $ withSemaphore dev zero Nothing
+  imageAvailableSemaphore <- withSemaphore allocate dev zero Nothing
+  renderFinishedSemaphore <- withSemaphore allocate dev zero Nothing
   pure (imageAvailableSemaphore, renderFinishedSemaphore)
 
 createCommandBuffers
@@ -128,16 +128,17 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
     let commandPoolCreateInfo :: CommandPoolCreateInfo
         commandPoolCreateInfo =
           zero { queueFamilyIndex = graphicsQueueFamilyIndex }
-    commandPool <- managed $ withCommandPool dev commandPoolCreateInfo Nothing
+    commandPool <- withCommandPool allocate dev commandPoolCreateInfo Nothing
     let commandBufferAllocateInfo :: CommandBufferAllocateInfo
         commandBufferAllocateInfo = zero
           { commandPool        = commandPool
           , level              = COMMAND_BUFFER_LEVEL_PRIMARY
           , commandBufferCount = fromIntegral $ V.length framebuffers
           }
-    buffers <- managed $ withCommandBuffers dev commandBufferAllocateInfo
+    buffers <- withCommandBuffers allocate dev commandBufferAllocateInfo
     _ <- liftIO . for (V.zip framebuffers buffers) $ \(framebuffer, buffer) ->
       useCommandBuffer
+          bracket_
           buffer
           zero { flags = COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT }
         $ do
@@ -195,8 +196,8 @@ createShaders dev = do
           fragColor = colors[gl_VertexIndex];
         }
       |]
-  fragModule <- managed $ withShaderModule dev zero { code = fragCode } Nothing
-  vertModule <- managed $ withShaderModule dev zero { code = vertCode } Nothing
+  fragModule <- withShaderModule allocate dev zero { code = fragCode } Nothing
+  vertModule <- withShaderModule allocate dev zero { code = vertCode } Nothing
   let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
                                        , module' = vertModule
                                        , name    = "main"
@@ -241,7 +242,8 @@ createRenderPass dev swapchainImageFormat = do
       , dstAccessMask = ACCESS_COLOR_ATTACHMENT_READ_BIT
                           .|. ACCESS_COLOR_ATTACHMENT_WRITE_BIT
       }
-  managed $ withRenderPass
+  withRenderPass
+    allocate
     dev
     zero { attachments  = [attachmentDescription]
          , subpasses    = [subpass]
@@ -253,7 +255,7 @@ createGraphicsPipeline
   :: Device -> RenderPass -> Extent2D -> Format -> Managed Pipeline
 createGraphicsPipeline dev renderPass swapchainExtent swapchainImageFormat = do
   shaderStages   <- createShaders dev
-  pipelineLayout <- managed $ withPipelineLayout dev zero Nothing
+  pipelineLayout <- withPipelineLayout allocate dev zero Nothing
   let
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo = zero
@@ -311,10 +313,8 @@ createGraphicsPipeline dev renderPass swapchainExtent swapchainImageFormat = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  fmap V.head $ managed $ withGraphicsPipelines dev
-                                                zero
-                                                [pipelineCreateInfo]
-                                                Nothing
+  fmap V.head
+    $ withGraphicsPipelines allocate dev zero [pipelineCreateInfo] Nothing
 
 createFramebuffers
   :: Device
@@ -332,7 +332,7 @@ createFramebuffers dev imageViews renderPass swapchainExtent =
           , height      = height (swapchainExtent :: Extent2D)
           , layers      = 1
           }
-    managed $ withFramebuffer dev framebufferCreateInfo Nothing
+    withFramebuffer allocate dev framebufferCreateInfo Nothing
 
 data VulkanWindow = VulkanWindow
   { vwSdlWindow                :: SDL.Window
@@ -349,17 +349,18 @@ data VulkanWindow = VulkanWindow
 
 withVulkanWindow :: Text -> Int -> Int -> Managed VulkanWindow
 withVulkanWindow appName width height = do
-  window             <- managed $ withWindow appName width height
+  window             <- withWindow appName width height
   instanceCreateInfo <- windowInstanceCreateInfo window
-  inst               <- managed $ withInstance instanceCreateInfo Nothing
-  _                  <- managed
-    $ withDebugUtilsMessengerEXT inst debugUtilsMessengerCreateInfo Nothing
-  submitDebugUtilsMessageEXT
-    inst
-    DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-    DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-    zero { message = "Debug Message Test" }
-  surface <- managed $ withSDLWindowSurface inst window
+  inst               <- withInstance allocate instanceCreateInfo Nothing
+  _                  <- withDebugUtilsMessengerEXT allocate
+                                                   inst
+                                                   debugUtilsMessengerCreateInfo
+                                                   Nothing
+  submitDebugUtilsMessageEXT inst
+                             DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+                             DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+                             zero { message = "Debug Message Test" }
+  surface <- withSDLWindowSurface inst window
   (dev, graphicsQueue, graphicsQueueFamilyIndex, presentQueue, swapchainFormat, swapchainExtent, swapchain) <-
     createGraphicalDevice inst surface
   (_, images) <- getSwapchainImagesKHR dev swapchain
@@ -380,7 +381,7 @@ withVulkanWindow appName width height = do
                                   }
         }
   imageViews <- for images
-    $ \i -> managed $ withImageView dev (imageViewCreateInfo i) Nothing
+    $ \i -> withImageView allocate dev (imageViewCreateInfo i) Nothing
   pure $ VulkanWindow window
                       dev
                       surface
@@ -455,7 +456,7 @@ createGraphicalDevice inst surface = do
         ]
       , enabledExtensionNames = requiredDeviceExtensions
       }
-  dev           <- managed $ withDevice physicalDevice deviceCreateInfo Nothing
+  dev           <- withDevice allocate physicalDevice deviceCreateInfo Nothing
   graphicsQueue <- getDeviceQueue2
     dev
     zero { queueFamilyIndex = graphicsQueueFamilyIndex }
@@ -497,7 +498,7 @@ createGraphicalDevice inst surface = do
           , presentMode        = presentMode
           , clipped            = True
           }
-  swapchain <- managed $ withSwapchainKHR dev swapchainCreateInfo Nothing
+  swapchain <- withSwapchainKHR allocate dev swapchainCreateInfo Nothing
   pure
     ( dev
     , graphicsQueue
@@ -636,16 +637,17 @@ foreign import ccall unsafe "DebugCallback.c &debugCallback"
 ----------------------------------------------------------------
 
 -- | Run something having initialized SDL
-withSDL :: IO a -> IO a
+withSDL :: Managed ()
 withSDL =
-  bracket_
-      (SDL.initialize ([SDL.InitEvents, SDL.InitVideo] :: [SDL.InitFlag]))
-      SDL.quit
+  managed_
+    $ bracket_
+        (SDL.initialize ([SDL.InitEvents, SDL.InitVideo] :: [SDL.InitFlag]))
+        SDL.quit
     . bracket_ (SDL.vkLoadLibrary Nothing) SDL.vkUnloadLibrary
 
 -- | Create an SDL window and use it
-withWindow :: Text -> Int -> Int -> (SDL.Window -> IO a) -> IO a
-withWindow title width height = bracket
+withWindow :: Text -> Int -> Int -> Managed SDL.Window
+withWindow title width height = managed $ bracket
   (SDL.createWindow
     title
     (SDL.defaultWindow
@@ -670,10 +672,17 @@ getSDLWindowSurface :: Instance -> SDL.Window -> IO SurfaceKHR
 getSDLWindowSurface inst window =
   SurfaceKHR <$> SDL.vkCreateSurface window (castPtr (instanceHandle inst))
 
-withSDLWindowSurface :: Instance -> SDL.Window -> (SurfaceKHR -> IO a) -> IO a
-withSDLWindowSurface inst window = bracket
+withSDLWindowSurface :: Instance -> SDL.Window -> Managed SurfaceKHR
+withSDLWindowSurface inst window = managed $ bracket
   (getSDLWindowSurface inst window)
   (\o -> destroySurfaceKHR inst o Nothing)
+
+----------------------------------------------------------------
+-- Resource handling with 'managed'
+----------------------------------------------------------------
+
+allocate :: IO a -> (a -> IO ()) -> Managed a
+allocate c d = managed (bracket c d)
 
 ----------------------------------------------------------------
 -- Bit utils

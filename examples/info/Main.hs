@@ -1,14 +1,15 @@
 module Main
   where
 
+import           Control.Exception
+import           Data.Foldable
+import           Graphics.Vulkan.Core10
 import           Graphics.Vulkan.Version
 import           Graphics.Vulkan.Zero
-import           Graphics.Vulkan.Core10
 import           Text.Pretty.Simple
-import           Data.Foldable
 
 main :: IO ()
-main = withInstance zero Nothing $ \i -> do
+main = withInstance bracket zero Nothing $ \i -> do
   pPrint i
   (_, layers    ) <- enumerateInstanceLayerProperties
   (_, extensions) <- enumerateInstanceExtensionProperties Nothing
