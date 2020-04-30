@@ -87,24 +87,15 @@ data CustomScheme a = CustomScheme
     -- ^ A name for Eq and Ord, also useful for debugging
   , csZero :: Maybe (Doc ())
     -- ^ The 'zero' value for this scheme if possible
+  , csZeroIsZero :: Bool
+    -- ^ Does the 'zero' value write zero bytes (and can be omitted if we know
+    -- the bytes are zero already).
+    -- TODO, better name for this
   , csType
       :: forall r
        . (HasErr r, HasRenderParams r, HasSpecInfo r)
       => Sem r H.Type
-  , csDirectPoke
-      :: forall k (s :: k) r
-       . ( Marshalable a
-         , HasRenderElem r
-         , HasRenderParams r
-         , HasErr r
-         , HasSpecInfo r
-         , HasSiblingInfo a r
-         , HasStmts r
-         , HasRenderedNames r
-         , Show a
-         )
-      => Ref s ValueDoc
-      -> Stmt s r (Ref s ValueDoc)
+  , csDirectPoke :: CSPoke a
   , csPeek
       :: forall k r (s :: k)
        . ( HasErr r
@@ -118,6 +109,22 @@ data CustomScheme a = CustomScheme
       => Ref s AddrDoc
       -> Stmt s r (Ref s ValueDoc)
   }
+
+data CSPoke a
+  = NoPoke
+  | APoke
+       (forall k (s :: k) r
+       . ( Marshalable a
+         , HasRenderElem r
+         , HasRenderParams r
+         , HasErr r
+         , HasSpecInfo r
+         , HasSiblingInfo a r
+         , HasStmts r
+         , HasRenderedNames r
+         , Show a
+         )
+      => Ref s ValueDoc -> Stmt s r (Ref s ValueDoc))
 
 instance Eq (CustomScheme a) where
   (==) = (==) `on` csName
@@ -137,6 +144,7 @@ data CustomSchemeElided a = CustomSchemeElided
          , HasSpecInfo r
          , HasStmts r
          , HasRenderedNames r
+         , HasSiblingInfo a r
          , Show a
          )
       => Stmt s r (Ref s ValueDoc)
@@ -158,7 +166,7 @@ instance Ord (CustomSchemeElided a) where
   compare = compare `on` cseName
 
 instance P.Show (CustomScheme a) where
-  showsPrec d (CustomScheme name _ _ _ _) =
+  showsPrec d (CustomScheme name _ _ _ _ _) =
     P.showParen (d > 10)
       $ P.showString "CustomScheme "
       . P.showsPrec 11 name
@@ -449,6 +457,11 @@ innerType wes wdh t = do
     .  asum @[]
     $  [ unwrapDispatchableHandles t | wdh == DoNotWrapDispatchableHandles ]
     <> [ wrapExtensibleStruct t | wes == WrapExtensibleStructs ]
+    <> [ do
+           i <- raise $ innerType wes wdh tElem
+           pure (Tupled n i)
+       | Array _ (NumericArraySize n) tElem <- pure t
+       ]
 
   pure $ fromMaybe (Normal t) r
 

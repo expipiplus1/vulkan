@@ -4,7 +4,7 @@ module Render.Struct
   where
 
 import qualified Data.Map                      as Map
-import           Data.Text.Extra                ( upperCaseFirst )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import qualified Data.Vector.Extra             as V
 import           Polysemy
@@ -350,12 +350,14 @@ pokeZeroCStructDecl
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
-pokeZeroCStructDecl ms@MarshaledStruct {..} = do
+pokeZeroCStructDecl ms@MarshaledStruct {..} = context "ZeroCStruct" $ do
   RenderParams {..} <- input
 
   let replaceWithZeroChainPoke m = case msmScheme m of
-        Custom s@(CustomScheme "Chain" _ _ _ _) ->
-          m { msmScheme = Custom s { csDirectPoke = const zeroNextPointer } }
+        Custom s@(CustomScheme "Chain" _ _ _ _ _) -> m
+          { msmScheme = Custom s { csDirectPoke = APoke $ const zeroNextPointer
+                                 }
+          }
         _ -> m
       ms' = ms { msMembers = replaceWithZeroChainPoke <$> msMembers }
   pokeDoc <- renderPokes zeroMemberVal (IOAction $ pretty contVar) ms' >>= \case
@@ -435,7 +437,8 @@ renderPokes memberDoc end MarshaledStruct {..} = do
             addr <-
               stmt
                 Nothing
-                (Just ("p" <> upperCaseFirst (unCName $ smName msmStructMember))
+                (Just
+                  ("p" <> T.upperCaseFirst (unCName $ smName msmStructMember))
                 )
               . fmap (Pure InlineOnce . AddrDoc)
               $ do
@@ -490,6 +493,7 @@ zeroMemberVal MarshaledStructMember {..} = case msmScheme of
   ElidedUnivalued _ ->
     pure $ Just "error \"This should never appear in the generated source\""
   _ | True V.:<| _ <- smIsOptional msmStructMember -> pure Nothing
+  Custom CustomScheme { csZeroIsZero = True } -> pure Nothing
   s -> zeroScheme s
 
 ----------------------------------------------------------------

@@ -162,9 +162,10 @@ nextPointers Spec {..} =
   chainScheme = CustomScheme
     { csName       = "Chain"
     , csZero       = Just "()"
+    , csZeroIsZero = False -- Pointer to chain
     -- , csType = pure $ ForallT [] [ConT (mkName "PokeChain") :@ chainVarT] chainT
     , csType       = pure $ ForallT [] [] chainT
-    , csDirectPoke = \chainRef ->
+    , csDirectPoke = APoke $ \chainRef ->
       stmt (Just (ConT ''Ptr :@ chainT)) (Just "pNext") $ do
         tellImportWithAll (TyConName "PokeChain")
         tellImport (TyConName "Chain")
@@ -233,11 +234,12 @@ difficultLengths =
       (p :: a) | "pSampleMask" <- name p   -> Just . Custom $ CustomScheme
         { csName       = "Sample mask array"
         , csZero       = Just "mempty"
+        , csZeroIsZero = True
         , csType       = do
                            RenderParams {..} <- input
                            let TyConName sm = mkTyName "VkSampleMask"
                            pure $ ConT ''Vector :@ ConT (mkName (T.unpack sm))
-        , csDirectPoke = \vecRef -> do
+        , csDirectPoke = APoke $ \vecRef -> do
           RenderParams {..} <- input
           stmt (Just (ConT ''Ptr :@ ConT ''Word32)) (Just "pSampleMask") $ do
             tellQualImport 'V.length
@@ -353,8 +355,9 @@ difficultLengths =
       p | "pCode" <- name p -> Just . Custom $ CustomScheme
         { csName       = "Shader code"
         , csZero       = Just "mempty"
+        , csZeroIsZero = True
         , csType       = pure $ ConT ''ByteString
-        , csDirectPoke = \bsRef -> do
+        , csDirectPoke = APoke $ \bsRef -> do
           assertMul4 <- unitStmt $ do
             ValueDoc bs <- use bsRef
             tellQualImport 'BS.length
@@ -440,8 +443,9 @@ difficultLengths =
         -> Just . Custom $ CustomScheme
           { csName       = "Acceleration structure version"
           , csZero       = Just "mempty"
+          , csZeroIsZero = False -- It's a pointer to some version string
           , csType       = pure $ ConT ''ByteString
-          , csDirectPoke = \bsRef -> do
+          , csDirectPoke = APoke $ \bsRef -> do
             assertCorrectLength <- unitStmt $ do
               RenderParams {..} <- input
               ValueDoc bs       <- use bsRef
@@ -456,8 +460,9 @@ difficultLengths =
                   parens
                     $   "Data.ByteString.length"
                     <+> bs
-                    <+> "== 2 * "
+                    <+> "== 2 *"
                     <+> pretty uuidSizeDoc
+              tellImport uuidSizeDoc
               throwErrDoc err cond
             stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData") $ do
               after assertCorrectLength
@@ -470,13 +475,14 @@ difficultLengths =
               pure
                 .   ContTAction
                 .   ValueDoc
-                $   "ContT . castPtr @CChar @Word8 $ unsafeUseAsCString"
+                $   "fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString"
                 <+> bs
           , csPeek       = \addrRef ->
             stmt (Just (ConT ''ByteString)) (Just "versionData") $ do
               RenderParams {..} <- input
               let uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
                   bytes       = "2 *" <+> pretty uuidSizeDoc
+              tellImport uuidSizeDoc
               ptr <- use =<< storablePeek
                 "versionData"
                 addrRef
@@ -530,8 +536,9 @@ bitfields = BespokeScheme $ \case
       n  -> stmt Nothing Nothing $ do
         ValueDoc shifted <- use shifted
         tellImport '(.&.)
-        let mask =
-              "0x" <> pretty (showHex ((1 `shiftL` bitSize :: Int) - 1) "")
+        tellImport 'coerce
+        let mask = "coerce @Word32 0x"
+              <> pretty (showHex ((1 `shiftL` bitSize :: Int) - 1) "")
         pure . Pure InlineOnce . ValueDoc $ parens (shifted <+> ".&." <+> mask)
     stmt (Just tyH) (Just (unCName name)) $ do
       masked <- use masked
@@ -542,14 +549,10 @@ bitfields = BespokeScheme $ \case
     p
       | Bitfield ty bitSize <- type' p -> Custom CustomScheme
         { csName       = "bitfield slave " <> unCName (name p)
-        , csZero       = Nothing
+        , csZero       = Just "zero"
+        , csZeroIsZero = True
         , csType       = cToHsType DoNotPreserve ty
-        , csDirectPoke = const
-                         . unitStmt
-                         . pure
-                         . Pure AlwaysInline
-                         . ValueDoc
-                         $ "()"
+        , csDirectPoke = NoPoke
         , csPeek       = peekBitfield (name p) ty bitSize bitShift
         }
       | otherwise -> error "bitfield slave type isn't a bitfield "
@@ -558,21 +561,27 @@ bitfields = BespokeScheme $ \case
   bitfieldMaster master (slaveName, slaveBitSize) = case type' master of
     Bitfield ty masterBitSize -> Custom CustomScheme
       { csName       = "bitfield master " <> unCName (name master)
-      , csZero       = Nothing
+      , csZero       = Just "zero"
+      , csZeroIsZero = True
       , csType       = cToHsType DoNotPreserve ty
-      , csDirectPoke = \masterRef -> do
-        tyH <- cToHsType DoPreserve ty
-        stmt (Just tyH) Nothing $ do
-          ValueDoc slaveDoc  <- useViaName (unCName slaveName)
-          ValueDoc masterDoc <- use masterRef
-          tellImport 'shiftL
-          tellImport '(.|.)
-          pure
-            .   Pure InlineOnce
-            .   ValueDoc
-            $   parens (slaveDoc <+> "`shiftL`" <+> viaShow masterBitSize)
-            <+> ".|."
-            <+> masterDoc
+      , csDirectPoke = APoke $ \masterRef -> do
+                         tyH <- cToHsType DoPreserve ty
+                         stmt (Just tyH) Nothing $ do
+                           ValueDoc slaveDoc  <- useViaName (unCName slaveName)
+                           ValueDoc masterDoc <- use masterRef
+                           tellImport 'shiftL
+                           tellImport '(.|.)
+                           tellImport 'coerce
+                           pure
+                             .   Pure InlineOnce
+                             .   ValueDoc
+                             $   parens
+                                   (   parens ("coerce @_ @Word32" <+> slaveDoc)
+                                   <+> "`shiftL`"
+                                   <+> viaShow masterBitSize
+                                   )
+                             <+> ".|."
+                             <+> masterDoc
       , csPeek       = peekBitfield (name master) ty masterBitSize 0
       }
     _ -> error "bitfield master isn't a bitfield"
@@ -580,43 +589,51 @@ bitfields = BespokeScheme $ \case
 accelerationStructureGeometry :: BespokeScheme
 accelerationStructureGeometry = BespokeScheme $ \case
   "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
-    p
+    (p :: a)
       | "geometryArrayOfPointers" <- name p
       -> Just . ElidedCustom $ CustomSchemeElided
         { cseName       = "geometry array type"
         , cseDirectPoke = do
           RenderParams {..} <- input
           let t = mkPatternName "VK_FALSE"
+          tellImport t
           tyH <- cToHsType DoNotPreserve (type' p)
           stmt (Just tyH) Nothing $ pure . Pure AlwaysInline . ValueDoc $ pretty
             t
         , csePeek       = Nothing -- TODO assert it's VK_FALSE here
         }
-      |
-      -- | "geometryCount" <- name p
+      | "geometryCount" <- name p
       -- -> Just $ ElidedLength (TypeName "uint32_t")
       --                        mempty
-      --                        (fromList ["ppGeometries"])
-        "ppGeometries" <- name p, Ptr Const unPtrTy <- type' p
+      --                        (fromList [_])
+      -> Just . ElidedCustom $ CustomSchemeElided
+        { cseName       = "geometryCount"
+        , cseDirectPoke = elidedLengthPoke @_ @a (name p)
+                                                 (type' p)
+                                                 mempty
+                                                 (V.fromList ["ppGeometries"])
+        , csePeek       = Just $ \addr -> storablePeek (name p) addr (type' p)
+        }
+      | "ppGeometries" <- name p, Ptr Const unPtrTy@(Ptr Const elemTy) <- type'
+        p
       -> Just . Custom $ CustomScheme
         { csName       = "ppGeometries"
         , csZero       = Just "mempty"
-        , csType       = cToHsType DoNotPreserve unPtrTy
-        , csDirectPoke = \vecRef -> do
-                           ptrRef <- getPokeDirect p
-                                                   (Vector (Normal unPtrTy))
-                                                   vecRef
-                           tyH <- cToHsType DoPreserve (Ptr Const unPtrTy)
-                           stmt (Just tyH) Nothing $ do
-                             ValueDoc ptr <- use ptrRef
-                             pure
-                               .   Pure NeverInline
-                               .   ValueDoc
-                               $   "alloc and poke"
-                               <+> ptr
-        -- , csPeek       = \addr -> do
-        --                    ptrRef <- storablePeek (name p)
-        --                    peekStmt p (castStmt ptrRef) (Vector (Normal (unPtrTy)))
+        , csZeroIsZero = True -- Pointer to empty array
+        , csType       = (ConT ''Vector :@) <$> cToHsType DoNotPreserve elemTy
+        , csDirectPoke = APoke $ \vecRef -> do
+          -- ptrRef <- getPokeDirect p (Vector (Normal elemTy)) vecRef
+          ptrRef <- getPokeDirect' @a (name p)
+                                      unPtrTy
+                                      (Vector (Normal elemTy))
+                                      vecRef
+          tyH <- cToHsType DoPreserve (Ptr Const unPtrTy)
+          stmt (Just tyH) (Just "ppGeometries") $ do
+            ValueDoc ptr <- use ptrRef
+            tellImportWithAll ''ContT
+            tellImport 'with
+            pure . ContTAction . ValueDoc $ "ContT $ with" <+> ptr
+        , csPeek       = error "unused csPeek for ppGeometries"
         }
     _ -> Nothing
   _ -> const Nothing
