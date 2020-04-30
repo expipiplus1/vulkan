@@ -443,7 +443,7 @@ difficultLengths =
         -> Just . Custom $ CustomScheme
           { csName       = "Acceleration structure version"
           , csZero       = Just "mempty"
-          , csZeroIsZero = False -- It's a pointer to some version string
+          , csZeroIsZero = True
           , csType       = pure $ ConT ''ByteString
           , csDirectPoke = APoke $ \bsRef -> do
             assertCorrectLength <- unitStmt $ do
