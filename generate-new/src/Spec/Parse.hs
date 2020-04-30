@@ -942,8 +942,8 @@ boolListAttr = listAttr $ \case
 
 lenListAttr :: ByteString -> Node -> P (Vector ParameterLength)
 lenListAttr = listAttr $ \case
-  "null-terminated"                      -> pure NullTerminated
-  l | [param, member] <- tokenise "::" l -> do
+  "null-terminated" -> pure NullTerminated
+  l | [param, member] <- tokenise "-&gt;" =<< tokenise "::" l -> do
     s <- decode param
     m <- decode member
     pure $ NamedMemberLength (CName s) (CName m)
