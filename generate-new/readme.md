@@ -66,6 +66,7 @@ The docbook documentation will be in `docs/docbook`.
   for vectors and matricies. For example it would be nice to use `linear`s
   `Mat34` to set `VkAccelerationStructureInstanceKHR::transform`.
 
+- Don't peek the same value for every bitfield component
 
 ## To check
 
