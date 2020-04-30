@@ -41,7 +41,8 @@ renderParams handles = r
     , mkConName                   = \parent ->
                                       ConName
                                         . (case parent of
-                                            "VkPerformanceCounterResultKHR" -> ("Counter" <>)
+                                            "VkPerformanceCounterResultKHR" -> (<> "Counter")
+                                            "VkDeviceOrHostAddressConstKHR" -> (<> "Const")
                                             _ -> id
                                           )
                                         . upperCaseFirst

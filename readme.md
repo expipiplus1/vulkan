@@ -84,7 +84,11 @@ import `Graphics.Vulkan.Zero` too.
 
 - To prevent a name clash between the constructors of
   `VkClearColorValue` and `VkPerformanceCounterResultKHR` the latter have had
-  `Counter` prefixed.
+  `Counter` suffixed.
+
+- To prevent a name clash between the constructors of
+  `DeviceOrHostAddressKHR` and `DeviceOrHostAddressConstKHR` the latter have
+  had `Const` suffixed.
 
 ## How the C types relate to Haskell types
 
