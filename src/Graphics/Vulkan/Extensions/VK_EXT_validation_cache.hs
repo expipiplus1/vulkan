@@ -193,7 +193,7 @@ createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
   pValidationCache <- lift $ peek @ValidationCacheEXT pPValidationCache
   pure $ (pValidationCache)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createValidationCacheEXT' and 'destroyValidationCacheEXT'
 --
 -- To ensure that 'destroyValidationCacheEXT' is always called: pass

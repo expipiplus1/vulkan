@@ -10,7 +10,7 @@ module Graphics.Vulkan.Core10.Enums.DescriptorType  (DescriptorType( DESCRIPTOR_
                                                                    , DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
                                                                    , DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
                                                                    , DESCRIPTOR_TYPE_INPUT_ATTACHMENT
-                                                                   , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
+                                                                   , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
                                                                    , DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
                                                                    , ..
                                                                    )) where
@@ -115,10 +115,10 @@ import Graphics.Vulkan.Zero (Zero)
 -- structure in the @pNext@ chain of
 -- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'. When updating
 -- descriptors with a @descriptorType@ of
--- 'DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV', none of the @pImageInfo@,
+-- 'DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR', none of the @pImageInfo@,
 -- @pBufferInfo@, or @pTexelBufferView@ members are accessed, instead the
 -- source data of the descriptor update operation is taken from the
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 -- structure in the @pNext@ chain of
 -- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'.
 --
@@ -154,8 +154,8 @@ pattern DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = DescriptorType 8
 pattern DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = DescriptorType 9
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
 pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = DescriptorType 10
--- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
-pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV = DescriptorType 1000165000
+-- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR"
+pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR = DescriptorType 1000165000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT"
 pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT = DescriptorType 1000138000
 {-# complete DESCRIPTOR_TYPE_SAMPLER,
@@ -169,7 +169,7 @@ pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT = DescriptorType 1000138000
              DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
-             DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV,
+             DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR,
              DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT :: DescriptorType #-}
 
 instance Show DescriptorType where
@@ -185,7 +185,7 @@ instance Show DescriptorType where
     DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC -> showString "DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC"
     DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC -> showString "DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC"
     DESCRIPTOR_TYPE_INPUT_ATTACHMENT -> showString "DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
-    DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV -> showString "DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
+    DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR -> showString "DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR"
     DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT -> showString "DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT"
     DescriptorType x -> showParen (p >= 11) (showString "DescriptorType " . showsPrec 11 x)
 
@@ -201,7 +201,7 @@ instance Read DescriptorType where
                             , ("DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC", pure DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
                             , ("DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC", pure DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
                             , ("DESCRIPTOR_TYPE_INPUT_ATTACHMENT", pure DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
-                            , ("DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV", pure DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV)
+                            , ("DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR", pure DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR)
                             , ("DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT", pure DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT)]
                      +++
                      prec 10 (do

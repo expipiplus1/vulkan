@@ -179,7 +179,7 @@ allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
     pure $ (\h -> CommandBuffer h cmds ) pCommandBuffersElem)
   pure $ (pCommandBuffers)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'allocateCommandBuffers' and 'freeCommandBuffers'
 --
 -- To ensure that 'freeCommandBuffers' is always called: pass
@@ -353,8 +353,8 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
   r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) pBeginInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
--- | A convenience wrapper to make a compatible pair of 'beginCommandBuffer'
--- and 'endCommandBuffer'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'beginCommandBuffer' and 'endCommandBuffer'
 --
 -- To ensure that 'endCommandBuffer' is always called: pass
 -- 'Control.Exception.bracket_' (or the allocate function from your

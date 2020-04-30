@@ -148,8 +148,8 @@ createBuffer device createInfo allocator = liftIO . evalContT $ do
   pBuffer <- lift $ peek @Buffer pPBuffer
   pure $ (pBuffer)
 
--- | A convenience wrapper to make a compatible pair of 'createBuffer' and
--- 'destroyBuffer'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createBuffer' and 'destroyBuffer'
 --
 -- To ensure that 'destroyBuffer' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

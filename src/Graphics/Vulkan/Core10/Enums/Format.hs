@@ -261,6 +261,8 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateGeometryTypeInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryTrianglesDataKHR',
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.Core10.Pass.AttachmentDescription',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',

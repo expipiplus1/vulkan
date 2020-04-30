@@ -433,7 +433,7 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'cmdBeginDebugUtilsLabelEXT' and 'cmdEndDebugUtilsLabelEXT'
 --
 -- To ensure that 'cmdEndDebugUtilsLabelEXT' is always called: pass
@@ -653,7 +653,7 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
   pMessenger <- lift $ peek @DebugUtilsMessengerEXT pPMessenger
   pure $ (pMessenger)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDebugUtilsMessengerEXT' and 'destroyDebugUtilsMessengerEXT'
 --
 -- To ensure that 'destroyDebugUtilsMessengerEXT' is always called: pass

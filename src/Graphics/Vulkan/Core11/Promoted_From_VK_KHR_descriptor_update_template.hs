@@ -152,7 +152,7 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
   pDescriptorUpdateTemplate <- lift $ peek @DescriptorUpdateTemplate pPDescriptorUpdateTemplate
   pure $ (pDescriptorUpdateTemplate)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDescriptorUpdateTemplate' and 'destroyDescriptorUpdateTemplate'
 --
 -- To ensure that 'destroyDescriptorUpdateTemplate' is always called: pass

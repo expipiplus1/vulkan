@@ -360,11 +360,21 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- = Description
 --
--- If this structure is not present, or if @pAttributes@ is set to @NULL@,
--- default security descriptor values will be used, and child processes
--- created by the application will not inherit the handle, as described in
--- the MSDN documentation for “Synchronization Object Security and Access
--- Rights”1.
+-- If
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
+-- is not present in the same @pNext@ chain, this structure is ignored.
+--
+-- If
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
+-- is present in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo' with a
+-- Windows @handleType@, but either 'ExportSemaphoreWin32HandleInfoKHR' is
+-- not present in the @pNext@ chain, or if it is but @pAttributes@ is set
+-- to @NULL@, default security descriptor values will be used, and child
+-- processes created by the application will not inherit the handle, as
+-- described in the MSDN documentation for “Synchronization Object Security
+-- and Access Rights”1. Further, if the structure is not present, the
+-- access rights used depend on the handle type.
 --
 -- For handles of the following types:
 --

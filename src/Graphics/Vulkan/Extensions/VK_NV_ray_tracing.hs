@@ -1,17 +1,59 @@
 {-# language CPP #-}
 module Graphics.Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                                      , createAccelerationStructureNV
-                                                     , withAccelerationStructureNV
-                                                     , destroyAccelerationStructureNV
                                                      , getAccelerationStructureMemoryRequirementsNV
-                                                     , bindAccelerationStructureMemoryNV
                                                      , cmdCopyAccelerationStructureNV
-                                                     , cmdWriteAccelerationStructuresPropertiesNV
                                                      , cmdBuildAccelerationStructureNV
                                                      , cmdTraceRaysNV
-                                                     , getRayTracingShaderGroupHandlesNV
                                                      , getAccelerationStructureHandleNV
                                                      , createRayTracingPipelinesNV
+                                                     , pattern STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV
+                                                     , pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV
+                                                     , pattern SHADER_STAGE_RAYGEN_BIT_NV
+                                                     , pattern SHADER_STAGE_ANY_HIT_BIT_NV
+                                                     , pattern SHADER_STAGE_CLOSEST_HIT_BIT_NV
+                                                     , pattern SHADER_STAGE_MISS_BIT_NV
+                                                     , pattern SHADER_STAGE_INTERSECTION_BIT_NV
+                                                     , pattern SHADER_STAGE_CALLABLE_BIT_NV
+                                                     , pattern PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV
+                                                     , pattern PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV
+                                                     , pattern BUFFER_USAGE_RAY_TRACING_BIT_NV
+                                                     , pattern PIPELINE_BIND_POINT_RAY_TRACING_NV
+                                                     , pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
+                                                     , pattern ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV
+                                                     , pattern ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV
+                                                     , pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
+                                                     , pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
+                                                     , pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
+                                                     , pattern INDEX_TYPE_NONE_NV
+                                                     , pattern RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV
+                                                     , pattern RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV
+                                                     , pattern RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV
+                                                     , pattern GEOMETRY_TYPE_TRIANGLES_NV
+                                                     , pattern GEOMETRY_TYPE_AABBS_NV
+                                                     , pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV
+                                                     , pattern ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV
+                                                     , pattern GEOMETRY_OPAQUE_BIT_NV
+                                                     , pattern GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV
+                                                     , pattern GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV
+                                                     , pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV
+                                                     , pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV
+                                                     , pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV
+                                                     , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV
+                                                     , pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV
+                                                     , pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV
+                                                     , pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV
+                                                     , pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV
+                                                     , pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV
+                                                     , pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV
+                                                     , pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV
+                                                     , pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV
+                                                     , pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV
+                                                     , destroyAccelerationStructureNV
+                                                     , bindAccelerationStructureMemoryNV
+                                                     , cmdWriteAccelerationStructuresPropertiesNV
+                                                     , getRayTracingShaderGroupHandlesNV
+                                                     , pattern SHADER_UNUSED_NV
                                                      , RayTracingShaderGroupCreateInfoNV(..)
                                                      , RayTracingPipelineCreateInfoNV(..)
                                                      , GeometryTrianglesNV(..)
@@ -20,60 +62,53 @@ module Graphics.Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                                      , GeometryNV(..)
                                                      , AccelerationStructureInfoNV(..)
                                                      , AccelerationStructureCreateInfoNV(..)
-                                                     , BindAccelerationStructureMemoryInfoNV(..)
-                                                     , WriteDescriptorSetAccelerationStructureNV(..)
                                                      , AccelerationStructureMemoryRequirementsInfoNV(..)
                                                      , PhysicalDeviceRayTracingPropertiesNV(..)
-                                                     , GeometryInstanceFlagBitsNV( GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV
-                                                                                 , GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV
-                                                                                 , GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV
-                                                                                 , GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV
-                                                                                 , ..
-                                                                                 )
-                                                     , GeometryInstanceFlagsNV
-                                                     , GeometryFlagBitsNV( GEOMETRY_OPAQUE_BIT_NV
-                                                                         , GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV
-                                                                         , ..
-                                                                         )
                                                      , GeometryFlagsNV
-                                                     , BuildAccelerationStructureFlagBitsNV( BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV
-                                                                                           , BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV
-                                                                                           , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV
-                                                                                           , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV
-                                                                                           , BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV
-                                                                                           , ..
-                                                                                           )
+                                                     , GeometryInstanceFlagsNV
                                                      , BuildAccelerationStructureFlagsNV
-                                                     , CopyAccelerationStructureModeNV( COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV
-                                                                                      , COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV
-                                                                                      , ..
-                                                                                      )
-                                                     , AccelerationStructureTypeNV( ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV
-                                                                                  , ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV
-                                                                                  , ..
-                                                                                  )
-                                                     , GeometryTypeNV( GEOMETRY_TYPE_TRIANGLES_NV
-                                                                     , GEOMETRY_TYPE_AABBS_NV
-                                                                     , ..
-                                                                     )
-                                                     , AccelerationStructureMemoryRequirementsTypeNV( ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV
-                                                                                                    , ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV
-                                                                                                    , ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV
-                                                                                                    , ..
-                                                                                                    )
-                                                     , RayTracingShaderGroupTypeNV( RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV
-                                                                                  , RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV
-                                                                                  , RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV
-                                                                                  , ..
-                                                                                  )
+                                                     , AccelerationStructureNV
+                                                     , GeometryFlagBitsNV
+                                                     , GeometryInstanceFlagBitsNV
+                                                     , BuildAccelerationStructureFlagBitsNV
+                                                     , CopyAccelerationStructureModeNV
+                                                     , AccelerationStructureTypeNV
+                                                     , GeometryTypeNV
+                                                     , RayTracingShaderGroupTypeNV
+                                                     , AccelerationStructureMemoryRequirementsTypeNV
+                                                     , BindAccelerationStructureMemoryInfoNV
+                                                     , WriteDescriptorSetAccelerationStructureNV
+                                                     , AabbPositionsNV
+                                                     , TransformMatrixNV
+                                                     , AccelerationStructureInstanceNV
                                                      , NV_RAY_TRACING_SPEC_VERSION
                                                      , pattern NV_RAY_TRACING_SPEC_VERSION
                                                      , NV_RAY_TRACING_EXTENSION_NAME
                                                      , pattern NV_RAY_TRACING_EXTENSION_NAME
-                                                     , AccelerationStructureNV(..)
+                                                     , AccelerationStructureKHR(..)
+                                                     , BindAccelerationStructureMemoryInfoKHR(..)
+                                                     , WriteDescriptorSetAccelerationStructureKHR(..)
+                                                     , AabbPositionsKHR(..)
+                                                     , TransformMatrixKHR(..)
+                                                     , AccelerationStructureInstanceKHR(..)
+                                                     , destroyAccelerationStructureKHR
+                                                     , bindAccelerationStructureMemoryKHR
+                                                     , cmdWriteAccelerationStructuresPropertiesKHR
+                                                     , getRayTracingShaderGroupHandlesKHR
                                                      , DebugReportObjectTypeEXT(..)
-                                                     , SHADER_UNUSED_NV
-                                                     , pattern SHADER_UNUSED_NV
+                                                     , GeometryInstanceFlagBitsKHR(..)
+                                                     , GeometryInstanceFlagsKHR
+                                                     , GeometryFlagBitsKHR(..)
+                                                     , GeometryFlagsKHR
+                                                     , BuildAccelerationStructureFlagBitsKHR(..)
+                                                     , BuildAccelerationStructureFlagsKHR
+                                                     , CopyAccelerationStructureModeKHR(..)
+                                                     , AccelerationStructureTypeKHR(..)
+                                                     , GeometryTypeKHR(..)
+                                                     , AccelerationStructureMemoryRequirementsTypeKHR(..)
+                                                     , RayTracingShaderGroupTypeKHR(..)
+                                                     , SHADER_UNUSED_KHR
+                                                     , pattern SHADER_UNUSED_KHR
                                                      ) where
 
 import Control.Exception.Base (bracket)
@@ -87,16 +122,6 @@ import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
-import GHC.Read (choose)
-import GHC.Read (expectP)
-import GHC.Read (parens)
-import GHC.Show (showParen)
-import GHC.Show (showString)
-import GHC.Show (showsPrec)
-import Numeric (showHex)
-import Text.ParserCombinators.ReadPrec ((+++))
-import Text.ParserCombinators.ReadPrec (prec)
-import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
@@ -104,7 +129,6 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CSize(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -117,53 +141,63 @@ import qualified Foreign.Storable (Storable(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
-import GHC.Read (Read(readPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
-import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (bindAccelerationStructureMemoryKHR)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (cmdWriteAccelerationStructuresPropertiesKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (destroyAccelerationStructureKHR)
 import Graphics.Vulkan.CStruct.Extends (forgetExtensions)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (getRayTracingShaderGroupHandlesKHR)
 import Graphics.Vulkan.CStruct.Extends (peekSomeCStruct)
 import Graphics.Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Graphics.Vulkan.NamedType ((:::))
-import Graphics.Vulkan.Extensions.Handles (AccelerationStructureNV)
-import Graphics.Vulkan.Extensions.Handles (AccelerationStructureNV(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AabbPositionsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureInstanceKHR)
+import Graphics.Vulkan.Extensions.Handles (AccelerationStructureKHR)
+import Graphics.Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureMemoryRequirementsTypeKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureTypeKHR)
 import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BindAccelerationStructureMemoryInfoKHR)
 import Graphics.Vulkan.Core10.BaseType (Bool32)
 import Graphics.Vulkan.Core10.BaseType (Bool32(..))
 import Graphics.Vulkan.Core10.Handles (Buffer)
 import Graphics.Vulkan.Core10.Handles (Buffer(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagsKHR)
 import Graphics.Vulkan.CStruct.Extends (Chain)
 import Graphics.Vulkan.Core10.Handles (CommandBuffer)
 import Graphics.Vulkan.Core10.Handles (CommandBuffer(..))
 import Graphics.Vulkan.Core10.Handles (CommandBuffer_T)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureModeKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureModeKHR(..))
 import Graphics.Vulkan.Core10.Handles (Device)
 import Graphics.Vulkan.Core10.Handles (Device(..))
-import Graphics.Vulkan.Dynamic (DeviceCmds(pVkBindAccelerationStructureMemoryNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdBuildAccelerationStructureNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdCopyAccelerationStructureNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdTraceRaysNV))
-import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdWriteAccelerationStructuresPropertiesNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCompileDeferredNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateAccelerationStructureNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateRayTracingPipelinesNV))
-import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyAccelerationStructureNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetAccelerationStructureHandleNV))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetAccelerationStructureMemoryRequirementsNV))
-import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetRayTracingShaderGroupHandlesNV))
-import Graphics.Vulkan.Core10.Handles (DeviceMemory)
 import Graphics.Vulkan.Core10.BaseType (DeviceSize)
 import Graphics.Vulkan.Core10.Handles (Device_T)
 import Graphics.Vulkan.CStruct.Extends (Extends)
 import Graphics.Vulkan.CStruct.Extends (Extensible(..))
-import Graphics.Vulkan.Core10.BaseType (Flags)
 import Graphics.Vulkan.Core10.Enums.Format (Format)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagBitsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryTypeKHR)
 import Graphics.Vulkan.Core10.Enums.IndexType (IndexType)
 import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR)
 import Graphics.Vulkan.CStruct.Extends (PeekChain)
@@ -178,35 +212,116 @@ import Graphics.Vulkan.Core10.Handles (PipelineLayout)
 import Graphics.Vulkan.Core10.Pipeline (PipelineShaderStageCreateInfo)
 import Graphics.Vulkan.CStruct.Extends (PokeChain)
 import Graphics.Vulkan.CStruct.Extends (PokeChain(..))
-import Graphics.Vulkan.Core10.Handles (QueryPool)
-import Graphics.Vulkan.Core10.Handles (QueryPool(..))
-import Graphics.Vulkan.Core10.Enums.QueryType (QueryType)
-import Graphics.Vulkan.Core10.Enums.QueryType (QueryType(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingShaderGroupTypeKHR)
 import Graphics.Vulkan.Core10.Enums.Result (Result)
 import Graphics.Vulkan.Core10.Enums.Result (Result(..))
 import Graphics.Vulkan.CStruct.Extends (SomeStruct)
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
 import Graphics.Vulkan.CStruct (ToCStruct)
 import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (TransformMatrixKHR)
 import Graphics.Vulkan.Exception (VulkanException(..))
-import Graphics.Vulkan.Zero (Zero)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (WriteDescriptorSetAccelerationStructureKHR)
 import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureMemoryRequirementsTypeKHR(ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureMemoryRequirementsTypeKHR(ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureMemoryRequirementsTypeKHR(ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureTypeKHR(ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureTypeKHR(ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR))
+import Graphics.Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
+import Graphics.Vulkan.Core10.Enums.AccessFlagBits (AccessFlagBits(ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
+import Graphics.Vulkan.Core10.Enums.AccessFlagBits (AccessFlagBits(ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
+import Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlagBits(BUFFER_USAGE_RAY_TRACING_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR(BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureModeKHR(COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureModeKHR(COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR))
+import Graphics.Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT))
+import Graphics.Vulkan.Core10.Enums.DescriptorType (DescriptorType(DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagBitsKHR(GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagBitsKHR(GEOMETRY_OPAQUE_BIT_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryTypeKHR(GEOMETRY_TYPE_AABBS_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryTypeKHR(GEOMETRY_TYPE_TRIANGLES_KHR))
+import Graphics.Vulkan.Core10.Enums.IndexType (IndexType(INDEX_TYPE_NONE_KHR))
+import Graphics.Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
+import Graphics.Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint(PIPELINE_BIND_POINT_RAY_TRACING_KHR))
+import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
+import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
+import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.QueryType (QueryType(QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingShaderGroupTypeKHR(RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingShaderGroupTypeKHR(RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingShaderGroupTypeKHR(RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR))
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(SHADER_STAGE_ANY_HIT_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(SHADER_STAGE_CALLABLE_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(SHADER_STAGE_CLOSEST_HIT_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(SHADER_STAGE_INTERSECTION_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(SHADER_STAGE_MISS_BIT_KHR))
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(SHADER_STAGE_RAYGEN_BIT_KHR))
+import Graphics.Vulkan.Core10.APIConstants (pattern SHADER_UNUSED_KHR)
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV))
-import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_GEOMETRY_AABB_NV))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_GEOMETRY_NV))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV))
-import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR))
 import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Graphics.Vulkan.Extensions.Handles (AccelerationStructureNV(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (bindAccelerationStructureMemoryKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (cmdWriteAccelerationStructuresPropertiesKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (destroyAccelerationStructureKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (getRayTracingShaderGroupHandlesKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AabbPositionsKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureInstanceKHR(..))
+import Graphics.Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureMemoryRequirementsTypeKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureTypeKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BindAccelerationStructureMemoryInfoKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureModeKHR(..))
 import Graphics.Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(..))
-import Graphics.Vulkan.Core10.APIConstants (SHADER_UNUSED_NV)
-import Graphics.Vulkan.Core10.APIConstants (pattern SHADER_UNUSED_NV)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagBitsKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (GeometryTypeKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingShaderGroupTypeKHR(..))
+import Graphics.Vulkan.Core10.APIConstants (SHADER_UNUSED_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (TransformMatrixKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (WriteDescriptorSetAccelerationStructureKHR(..))
+import Graphics.Vulkan.Core10.APIConstants (pattern SHADER_UNUSED_KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -270,9 +385,9 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- -   @pAccelerationStructure@ is a pointer to a
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
---     in which the resulting acceleration structure object is returned.
+-- -   @pAccelerationStructure@ is a pointer to a 'AccelerationStructureNV'
+--     handle in which the resulting acceleration structure object is
+--     returned.
 --
 -- = Description
 --
@@ -300,7 +415,7 @@ foreign import ccall
 --     structure
 --
 -- -   @pAccelerationStructure@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
+--     'AccelerationStructureNV' handle
 --
 -- == Return Codes
 --
@@ -314,8 +429,7 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'AccelerationStructureCreateInfoNV',
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
+-- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
 createAccelerationStructureNV :: forall io . MonadIO io => Device -> AccelerationStructureCreateInfoNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io (AccelerationStructureNV)
@@ -330,84 +444,6 @@ createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAccelerationStructure <- lift $ peek @AccelerationStructureNV pPAccelerationStructure
   pure $ (pAccelerationStructure)
-
--- | A convenience wrapper to make a compatible pair of
--- 'createAccelerationStructureNV' and 'destroyAccelerationStructureNV'
---
--- To ensure that 'destroyAccelerationStructureNV' is always called: pass
--- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
-withAccelerationStructureNV :: forall io r . MonadIO io => (io (AccelerationStructureNV) -> ((AccelerationStructureNV) -> io ()) -> r) -> Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> r
-withAccelerationStructureNV b device pCreateInfo pAllocator =
-  b (createAccelerationStructureNV device pCreateInfo pAllocator)
-    (\(o0) -> destroyAccelerationStructureNV device o0 pAllocator)
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "dynamic" mkVkDestroyAccelerationStructureNV
-  :: FunPtr (Ptr Device_T -> AccelerationStructureNV -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> AccelerationStructureNV -> Ptr AllocationCallbacks -> IO ()
-
--- | vkDestroyAccelerationStructureNV - Destroy an acceleration structure
--- object
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the buffer.
---
--- -   @accelerationStructure@ is the acceleration structure to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- == Valid Usage
---
--- -   All submitted commands that refer to @accelerationStructure@ /must/
---     have completed execution
---
--- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when @accelerationStructure@ was created, a compatible
---     set of callbacks /must/ be provided here
---
--- -   If no
---     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when @accelerationStructure@ was created, @pAllocator@
---     /must/ be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
---     handle
---
--- -   @accelerationStructure@ /must/ be a valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     structure
---
--- -   @accelerationStructure@ /must/ have been created, allocated, or
---     retrieved from @device@
---
--- = See Also
---
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
--- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
--- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyAccelerationStructureNV :: forall io . MonadIO io => Device -> AccelerationStructureNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
-destroyAccelerationStructureNV device accelerationStructure allocator = liftIO . evalContT $ do
-  let vkDestroyAccelerationStructureNV' = mkVkDestroyAccelerationStructureNV (pVkDestroyAccelerationStructureNV (deviceCmds (device :: Device)))
-  pAllocator <- case (allocator) of
-    Nothing -> pure nullPtr
-    Just j -> ContT $ withCStruct (j)
-  lift $ vkDestroyAccelerationStructureNV' (deviceHandle (device)) (accelerationStructure) pAllocator
-  pure $ ()
 
 
 foreign import ccall
@@ -452,53 +488,8 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkBindAccelerationStructureMemoryNV
-  :: FunPtr (Ptr Device_T -> Word32 -> Ptr BindAccelerationStructureMemoryInfoNV -> IO Result) -> Ptr Device_T -> Word32 -> Ptr BindAccelerationStructureMemoryInfoNV -> IO Result
-
--- | vkBindAccelerationStructureMemoryNV - Bind acceleration structure memory
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the acceleration structures
---     and memory.
---
--- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
---
--- -   @pBindInfos@ is a pointer to an array of
---     'BindAccelerationStructureMemoryInfoNV' structures describing images
---     and memory to bind.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'BindAccelerationStructureMemoryInfoNV',
--- 'Graphics.Vulkan.Core10.Handles.Device'
-bindAccelerationStructureMemoryNV :: forall io . MonadIO io => Device -> ("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoNV) -> io ()
-bindAccelerationStructureMemoryNV device bindInfos = liftIO . evalContT $ do
-  let vkBindAccelerationStructureMemoryNV' = mkVkBindAccelerationStructureMemoryNV (pVkBindAccelerationStructureMemoryNV (deviceCmds (device :: Device)))
-  pPBindInfos <- ContT $ allocaBytesAligned @BindAccelerationStructureMemoryInfoNV ((Data.Vector.length (bindInfos)) * 56) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (56 * (i)) :: Ptr BindAccelerationStructureMemoryInfoNV) (e) . ($ ())) (bindInfos)
-  r <- lift $ vkBindAccelerationStructureMemoryNV' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos)
-  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
   "dynamic" mkVkCmdCopyAccelerationStructureNV
-  :: FunPtr (Ptr CommandBuffer_T -> AccelerationStructureNV -> AccelerationStructureNV -> CopyAccelerationStructureModeNV -> IO ()) -> Ptr CommandBuffer_T -> AccelerationStructureNV -> AccelerationStructureNV -> CopyAccelerationStructureModeNV -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> AccelerationStructureKHR -> AccelerationStructureKHR -> CopyAccelerationStructureModeKHR -> IO ()) -> Ptr CommandBuffer_T -> AccelerationStructureKHR -> AccelerationStructureKHR -> CopyAccelerationStructureModeKHR -> IO ()
 
 -- | vkCmdCopyAccelerationStructureNV - Copy an acceleration structure
 --
@@ -513,17 +504,21 @@ foreign import ccall
 -- -   @src@ is a pointer to the source acceleration structure for the
 --     copy.
 --
--- -   @mode@ is a 'CopyAccelerationStructureModeNV' value specifying
---     additional operations to perform during the copy.
+-- -   @mode@ is a
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
+--     value specifying additional operations to perform during the copy.
 --
 -- == Valid Usage
 --
--- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV' or
---     'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV'
+-- -   [[VUID-{refpage}-mode-03410]] @mode@ /must/ be
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR'
+--     or
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
--- -   @src@ /must/ have been built with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV' if @mode@ is
---     'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV'
+-- -   [[VUID-{refpage}-src-03411]] @src@ /must/ have been built with
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
+--     if @mode@ is
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -531,12 +526,14 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @dst@ /must/ be a valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
+--     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
 -- -   @src@ /must/ be a valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
+--     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
--- -   @mode@ /must/ be a valid 'CopyAccelerationStructureModeNV' value
+-- -   @mode@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
+--     value
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -568,10 +565,10 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
--- 'CopyAccelerationStructureModeNV'
-cmdCopyAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> ("dst" ::: AccelerationStructureNV) -> ("src" ::: AccelerationStructureNV) -> CopyAccelerationStructureModeNV -> io ()
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
+cmdCopyAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> ("dst" ::: AccelerationStructureKHR) -> ("src" ::: AccelerationStructureKHR) -> CopyAccelerationStructureModeKHR -> io ()
 cmdCopyAccelerationStructureNV commandBuffer dst src mode = liftIO $ do
   let vkCmdCopyAccelerationStructureNV' = mkVkCmdCopyAccelerationStructureNV (pVkCmdCopyAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdCopyAccelerationStructureNV' (commandBufferHandle (commandBuffer)) (dst) (src) (mode)
@@ -582,115 +579,8 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkCmdWriteAccelerationStructuresPropertiesNV
-  :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr AccelerationStructureNV -> QueryType -> QueryPool -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr AccelerationStructureNV -> QueryType -> QueryPool -> Word32 -> IO ()
-
--- | vkCmdWriteAccelerationStructuresPropertiesNV - Write acceleration
--- structure result parameters to query results.
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @accelerationStructureCount@ is the count of acceleration structures
---     for which to query the property.
---
--- -   @pAccelerationStructures@ is a pointer to an array of existing
---     previously built acceleration structures.
---
--- -   @queryType@ is a 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
---     value specifying the type of queries managed by the pool.
---
--- -   @queryPool@ is the query pool that will manage the results of the
---     query.
---
--- -   @firstQuery@ is the first query index within the query pool that
---     will contain the @accelerationStructureCount@ number of results.
---
--- == Valid Usage
---
--- -   @queryType@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
---
--- -   @queryPool@ /must/ have been created with a @queryType@ matching
---     @queryType@
---
--- -   The queries identified by @queryPool@ and @firstQuery@ /must/ be
---     /unavailable/
---
--- -   All acceleration structures in @accelerationStructures@ /must/ have
---     been built with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV' if
---     @queryType@ is
---     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   @pAccelerationStructures@ /must/ be a valid pointer to an array of
---     @accelerationStructureCount@ valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handles
---
--- -   @queryType@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' value
---
--- -   @queryPool@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ support compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @accelerationStructureCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @queryPool@, and the elements of
---     @pAccelerationStructures@ /must/ have been created, allocated, or
---     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
---
--- == Host Synchronization
---
--- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
--- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
--- 'Graphics.Vulkan.Core10.Handles.QueryPool',
--- 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
-cmdWriteAccelerationStructuresPropertiesNV :: forall io . MonadIO io => CommandBuffer -> ("accelerationStructures" ::: Vector AccelerationStructureNV) -> QueryType -> QueryPool -> ("firstQuery" ::: Word32) -> io ()
-cmdWriteAccelerationStructuresPropertiesNV commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
-  let vkCmdWriteAccelerationStructuresPropertiesNV' = mkVkCmdWriteAccelerationStructuresPropertiesNV (pVkCmdWriteAccelerationStructuresPropertiesNV (deviceCmds (commandBuffer :: CommandBuffer)))
-  pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
-  lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
-  lift $ vkCmdWriteAccelerationStructuresPropertiesNV' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery)
-  pure $ ()
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
   "dynamic" mkVkCmdBuildAccelerationStructureNV
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr AccelerationStructureInfoNV -> Buffer -> DeviceSize -> Bool32 -> AccelerationStructureNV -> AccelerationStructureNV -> Buffer -> DeviceSize -> IO ()) -> Ptr CommandBuffer_T -> Ptr AccelerationStructureInfoNV -> Buffer -> DeviceSize -> Bool32 -> AccelerationStructureNV -> AccelerationStructureNV -> Buffer -> DeviceSize -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr AccelerationStructureInfoNV -> Buffer -> DeviceSize -> Bool32 -> AccelerationStructureKHR -> AccelerationStructureKHR -> Buffer -> DeviceSize -> IO ()) -> Ptr CommandBuffer_T -> Ptr AccelerationStructureInfoNV -> Buffer -> DeviceSize -> Bool32 -> AccelerationStructureKHR -> AccelerationStructureKHR -> Buffer -> DeviceSize -> IO ()
 
 -- | vkCmdBuildAccelerationStructureNV - Build an acceleration structure
 --
@@ -702,11 +592,10 @@ foreign import ccall
 -- -   @pInfo@ contains the shared information for the acceleration
 --     structure’s structure.
 --
--- -   @instanceData@ is the buffer containing instance data that will be
---     used to build the acceleration structure as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-instance Accelerator structure instances.>
---     This parameter /must/ be @NULL@ for bottom level acceleration
---     structures.
+-- -   @instanceData@ is the buffer containing an array of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureInstanceKHR'
+--     structures defining acceleration structures. This parameter /must/
+--     be @NULL@ for bottom level acceleration structures.
 --
 -- -   @instanceOffset@ is the offset in bytes (relative to the start of
 --     @instanceData@) at which the instance data is located.
@@ -749,7 +638,7 @@ foreign import ccall
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' set in
 --     'AccelerationStructureInfoNV'::@flags@
 --
--- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.FALSE', The @size@
+-- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.FALSE', the @size@
 --     member of the
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
@@ -761,7 +650,7 @@ foreign import ccall
 --     /must/ be less than or equal to the size of @scratch@ minus
 --     @scratchOffset@
 --
--- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', The @size@
+-- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', the @size@
 --     member of the
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
@@ -772,6 +661,26 @@ foreign import ccall
 --     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV'
 --     /must/ be less than or equal to the size of @scratch@ minus
 --     @scratchOffset@
+--
+-- -   @scratch@ /must/ have been created with
+--     'BUFFER_USAGE_RAY_TRACING_BIT_NV' usage flag
+--
+-- -   If @instanceData@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @instanceData@
+--     /must/ have been created with 'BUFFER_USAGE_RAY_TRACING_BIT_NV'
+--     usage flag
+--
+-- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', then objects
+--     that were previously active /must/ not be made inactive as per
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims>
+--
+-- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', then objects
+--     that were previously inactive /must/ not be made active as per
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims>
+--
+-- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', the @src@ and
+--     @dst@ objects /must/ either be the same object or not have any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --
 -- == Valid Usage (Implicit)
 --
@@ -786,11 +695,11 @@ foreign import ccall
 --     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- -   @dst@ /must/ be a valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
+--     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
 -- -   If @src@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @src@ /must/ be a valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
+--     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
 -- -   @scratch@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
 --     handle
@@ -827,12 +736,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'AccelerationStructureInfoNV',
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Graphics.Vulkan.Core10.BaseType.Bool32',
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBuildAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> AccelerationStructureInfoNV -> ("instanceData" ::: Buffer) -> ("instanceOffset" ::: DeviceSize) -> ("update" ::: Bool) -> ("dst" ::: AccelerationStructureNV) -> ("src" ::: AccelerationStructureNV) -> ("scratch" ::: Buffer) -> ("scratchOffset" ::: DeviceSize) -> io ()
+cmdBuildAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> AccelerationStructureInfoNV -> ("instanceData" ::: Buffer) -> ("instanceOffset" ::: DeviceSize) -> ("update" ::: Bool) -> ("dst" ::: AccelerationStructureKHR) -> ("src" ::: AccelerationStructureKHR) -> ("scratch" ::: Buffer) -> ("scratchOffset" ::: DeviceSize) -> io ()
 cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureNV' = mkVkCmdBuildAccelerationStructureNV (pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pInfo <- ContT $ withCStruct (info)
@@ -1049,6 +958,57 @@ foreign import ccall
 --     bound to the pipeline bind point used by this command /must/ not be
 --     a protected resource
 --
+-- -   @raygenShaderBindingOffset@ /must/ be less than the size of
+--     @raygenShaderBindingTableBuffer@
+--
+-- -   @raygenShaderBindingOffset@ /must/ be a multiple of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @missShaderBindingOffset@ /must/ be less than the size of
+--     @missShaderBindingTableBuffer@
+--
+-- -   @missShaderBindingOffset@ /must/ be a multiple of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @hitShaderBindingOffset@ /must/ be less than the size of
+--     @hitShaderBindingTableBuffer@
+--
+-- -   @hitShaderBindingOffset@ /must/ be a multiple of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @callableShaderBindingOffset@ /must/ be less than the size of
+--     @callableShaderBindingTableBuffer@
+--
+-- -   @callableShaderBindingOffset@ /must/ be a multiple of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @missShaderBindingStride@ /must/ be a multiple of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   @hitShaderBindingStride@ /must/ be a multiple of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   @callableShaderBindingStride@ /must/ be a multiple of
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   @missShaderBindingStride@ /must/ be less than or equal to
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   @hitShaderBindingStride@ /must/ be less than or equal to
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   @callableShaderBindingStride@ /must/ be less than or equal to
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   Any shader group handle referenced by this call /must/ have been
+--     queried from the currently bound ray tracing shader pipeline
+--
+-- -   This command /must/ not cause a shader call instruction to be
+--     executed from a shader invocation with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
+--     greater than the value of @maxRecursionDepth@ used to create the
+--     bound ray tracing pipeline.
+--
 -- -   If @commandBuffer@ is a protected command buffer, any resource
 --     written to by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
 --     bound to the pipeline bind point used by this command /must/ not be
@@ -1058,48 +1018,6 @@ foreign import ccall
 --     other than the framebuffer-space and compute stages in the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point /must/ not write to any resource
---
--- -   @raygenShaderBindingOffset@ /must/ be less than the size of
---     @raygenShaderBindingTableBuffer@
---
--- -   @raygenShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingOffset@ /must/ be less than the size of
---     @missShaderBindingTableBuffer@
---
--- -   @missShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
---
--- -   @hitShaderBindingOffset@ /must/ be less than the size of
---     @hitShaderBindingTableBuffer@
---
--- -   @hitShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
---
--- -   @callableShaderBindingOffset@ /must/ be less than the size of
---     @callableShaderBindingTableBuffer@
---
--- -   @callableShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
---
--- -   @hitShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
---
--- -   @callableShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
---
--- -   @missShaderBindingStride@ /must/ be a less than or equal to
---     'PhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
---
--- -   @hitShaderBindingStride@ /must/ be a less than or equal to
---     'PhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
---
--- -   @callableShaderBindingStride@ /must/ be a less than or equal to
---     'PhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
 --
 -- -   @width@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
@@ -1179,82 +1097,8 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkGetRayTracingShaderGroupHandlesNV
-  :: FunPtr (Ptr Device_T -> Pipeline -> Word32 -> Word32 -> CSize -> Ptr () -> IO Result) -> Ptr Device_T -> Pipeline -> Word32 -> Word32 -> CSize -> Ptr () -> IO Result
-
--- | vkGetRayTracingShaderGroupHandlesNV - Query ray tracing pipeline shader
--- group handles
---
--- = Parameters
---
--- -   @device@ is the logical device containing the ray tracing pipeline.
---
--- -   @pipeline@ is the ray tracing pipeline object containing the
---     shaders.
---
--- -   @firstGroup@ is the index of the first group to retrieve a handle
---     for from the 'RayTracingShaderGroupCreateInfoNV'::@pGroups@ array.
---
--- -   @groupCount@ is the number of shader handles to retrieve.
---
--- -   @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
---
--- -   @pData@ is a pointer to a user-allocated buffer where the results
---     will be written.
---
--- == Valid Usage
---
--- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than the
---     number of shader groups in @pipeline@.
---
--- -   @dataSize@ /must/ be at least
---     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@ ×
---     @groupCount@
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
---     handle
---
--- -   @pipeline@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Pipeline' handle
---
--- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
---
--- -   @dataSize@ /must/ be greater than @0@
---
--- -   @pipeline@ /must/ have been created, allocated, or retrieved from
---     @device@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---
---     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---
---     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.Handles.Device',
--- 'Graphics.Vulkan.Core10.Handles.Pipeline'
-getRayTracingShaderGroupHandlesNV :: forall io . MonadIO io => Device -> Pipeline -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> io ()
-getRayTracingShaderGroupHandlesNV device pipeline firstGroup groupCount dataSize data' = liftIO $ do
-  let vkGetRayTracingShaderGroupHandlesNV' = mkVkGetRayTracingShaderGroupHandlesNV (pVkGetRayTracingShaderGroupHandlesNV (deviceCmds (device :: Device)))
-  r <- vkGetRayTracingShaderGroupHandlesNV' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data')
-  when (r < SUCCESS) (throwIO (VulkanException r))
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
   "dynamic" mkVkGetAccelerationStructureHandleNV
-  :: FunPtr (Ptr Device_T -> AccelerationStructureNV -> CSize -> Ptr () -> IO Result) -> Ptr Device_T -> AccelerationStructureNV -> CSize -> Ptr () -> IO Result
+  :: FunPtr (Ptr Device_T -> AccelerationStructureKHR -> CSize -> Ptr () -> IO Result) -> Ptr Device_T -> AccelerationStructureKHR -> CSize -> Ptr () -> IO Result
 
 -- | vkGetAccelerationStructureHandleNV - Get opaque acceleration structure
 -- handle
@@ -1285,9 +1129,9 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-getAccelerationStructureHandleNV :: forall io . MonadIO io => Device -> AccelerationStructureNV -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> io ()
+getAccelerationStructureHandleNV :: forall io . MonadIO io => Device -> AccelerationStructureKHR -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> io ()
 getAccelerationStructureHandleNV device accelerationStructure dataSize data' = liftIO $ do
   let vkGetAccelerationStructureHandleNV' = mkVkGetAccelerationStructureHandleNV (pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device)))
   r <- vkGetAccelerationStructureHandleNV' (deviceHandle (device)) (accelerationStructure) (CSize (dataSize)) (data')
@@ -1331,17 +1175,25 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the @flags@ member of any element of @pCreateInfos@ contains the
+-- -   [[VUID-{refpage}-flags-03415]] If the @flags@ member of any element
+--     of @pCreateInfos@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and the @basePipelineIndex@ member of that same element is not
 --     @-1@, @basePipelineIndex@ /must/ be less than the index into
 --     @pCreateInfos@ that corresponds to that element
 --
--- -   If the @flags@ member of any element of @pCreateInfos@ contains the
+-- -   [[VUID-{refpage}-flags-03416]] If the @flags@ member of any element
+--     of @pCreateInfos@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, the base pipeline /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
+--
+-- -   [[VUID-{refpage}-pipelineCache-02903]] If @pipelineCache@ was
+--     created with
+--     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
+--     host access to @pipelineCache@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1405,27 +1257,213 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
   pure $ (pPipelines)
 
 
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV"
+pattern STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV = STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR
+
+
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV"
+pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR
+
+
+-- No documentation found for TopLevel "VK_SHADER_STAGE_RAYGEN_BIT_NV"
+pattern SHADER_STAGE_RAYGEN_BIT_NV = SHADER_STAGE_RAYGEN_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_SHADER_STAGE_ANY_HIT_BIT_NV"
+pattern SHADER_STAGE_ANY_HIT_BIT_NV = SHADER_STAGE_ANY_HIT_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV"
+pattern SHADER_STAGE_CLOSEST_HIT_BIT_NV = SHADER_STAGE_CLOSEST_HIT_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_SHADER_STAGE_MISS_BIT_NV"
+pattern SHADER_STAGE_MISS_BIT_NV = SHADER_STAGE_MISS_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_SHADER_STAGE_INTERSECTION_BIT_NV"
+pattern SHADER_STAGE_INTERSECTION_BIT_NV = SHADER_STAGE_INTERSECTION_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_SHADER_STAGE_CALLABLE_BIT_NV"
+pattern SHADER_STAGE_CALLABLE_BIT_NV = SHADER_STAGE_CALLABLE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV"
+pattern PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV = PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV"
+pattern PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV = PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_BUFFER_USAGE_RAY_TRACING_BIT_NV"
+pattern BUFFER_USAGE_RAY_TRACING_BIT_NV = BUFFER_USAGE_RAY_TRACING_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_BIND_POINT_RAY_TRACING_NV"
+pattern PIPELINE_BIND_POINT_RAY_TRACING_NV = PIPELINE_BIND_POINT_RAY_TRACING_KHR
+
+
+-- No documentation found for TopLevel "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
+pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV = DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV"
+pattern ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV = ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV"
+pattern ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV = ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV"
+pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR
+
+
+-- No documentation found for TopLevel "VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV"
+pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_NV = OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
+
+
+-- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT = DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
+
+
+-- No documentation found for TopLevel "VK_INDEX_TYPE_NONE_NV"
+pattern INDEX_TYPE_NONE_NV = INDEX_TYPE_NONE_KHR
+
+
+-- No documentation found for TopLevel "VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV"
+pattern RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV = RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR
+
+
+-- No documentation found for TopLevel "VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV"
+pattern RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV = RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR
+
+
+-- No documentation found for TopLevel "VK_RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV"
+pattern RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV = RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_TYPE_TRIANGLES_NV"
+pattern GEOMETRY_TYPE_TRIANGLES_NV = GEOMETRY_TYPE_TRIANGLES_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_TYPE_AABBS_NV"
+pattern GEOMETRY_TYPE_AABBS_NV = GEOMETRY_TYPE_AABBS_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV"
+pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV = ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV"
+pattern ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV = ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_OPAQUE_BIT_NV"
+pattern GEOMETRY_OPAQUE_BIT_NV = GEOMETRY_OPAQUE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV"
+pattern GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV = GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV"
+pattern GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV = GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV"
+pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV = GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV"
+pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV = GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV"
+pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV = GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV = BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV"
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV = BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV"
+pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV = BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV"
+pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV = BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV"
+pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV = BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV"
+pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV = COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR
+
+
+-- No documentation found for TopLevel "VK_COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV"
+pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV = COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV"
+pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV = ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV"
+pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV = ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV"
+pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV = ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_KHR
+
+
+-- No documentation found for TopLevel "vkDestroyAccelerationStructureNV"
+destroyAccelerationStructureNV = destroyAccelerationStructureKHR
+
+
+-- No documentation found for TopLevel "vkBindAccelerationStructureMemoryNV"
+bindAccelerationStructureMemoryNV = bindAccelerationStructureMemoryKHR
+
+
+-- No documentation found for TopLevel "vkCmdWriteAccelerationStructuresPropertiesNV"
+cmdWriteAccelerationStructuresPropertiesNV = cmdWriteAccelerationStructuresPropertiesKHR
+
+
+-- No documentation found for TopLevel "vkGetRayTracingShaderGroupHandlesNV"
+getRayTracingShaderGroupHandlesNV = getRayTracingShaderGroupHandlesKHR
+
+
+-- No documentation found for TopLevel "VK_SHADER_UNUSED_NV"
+pattern SHADER_UNUSED_NV = SHADER_UNUSED_KHR
+
+
 -- | VkRayTracingShaderGroupCreateInfoNV - Structure specifying shaders in a
 -- shader group
 --
 -- == Valid Usage
 --
 -- -   If @type@ is 'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV' then
---     @generalShader@ /must/ be a valid index into @pStages@ referring to
---     a shader of
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_NV',
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MISS_BIT_NV',
---     or
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CALLABLE_BIT_NV'
+--     @generalShader@ /must/ be a valid index into
+--     'RayTracingPipelineCreateInfoNV'::@pStages@ referring to a shader of
+--     'SHADER_STAGE_RAYGEN_BIT_NV', 'SHADER_STAGE_MISS_BIT_NV', or
+--     'SHADER_STAGE_CALLABLE_BIT_NV'
 --
 -- -   If @type@ is 'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV' then
 --     @closestHitShader@, @anyHitShader@, and @intersectionShader@ /must/
 --     be 'Graphics.Vulkan.Core10.APIConstants.SHADER_UNUSED_NV'
 --
 -- -   If @type@ is 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV'
---     then @intersectionShader@ /must/ be a valid index into @pStages@
---     referring to a shader of
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_INTERSECTION_BIT_NV'
+--     then @intersectionShader@ /must/ be a valid index into
+--     'RayTracingPipelineCreateInfoNV'::@pStages@ referring to a shader of
+--     'SHADER_STAGE_INTERSECTION_BIT_NV'
 --
 -- -   If @type@ is 'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV'
 --     then @intersectionShader@ /must/ be
@@ -1433,13 +1471,13 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
 --
 -- -   @closestHitShader@ /must/ be either
 --     'Graphics.Vulkan.Core10.APIConstants.SHADER_UNUSED_NV' or a valid
---     index into @pStages@ referring to a shader of
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CLOSEST_HIT_BIT_NV'
+--     index into 'RayTracingPipelineCreateInfoNV'::@pStages@ referring to
+--     a shader of 'SHADER_STAGE_CLOSEST_HIT_BIT_NV'
 --
 -- -   @anyHitShader@ /must/ be either
 --     'Graphics.Vulkan.Core10.APIConstants.SHADER_UNUSED_NV' or a valid
---     index into @pStages@ referring to a shader of
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ANY_HIT_BIT_NV'
+--     index into 'RayTracingPipelineCreateInfoNV'::@pStages@ referring to
+--     a shader of 'SHADER_STAGE_ANY_HIT_BIT_NV'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1448,39 +1486,42 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @type@ /must/ be a valid 'RayTracingShaderGroupTypeNV' value
+-- -   @type@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingShaderGroupTypeKHR'
+--     value
 --
 -- = See Also
 --
--- 'RayTracingPipelineCreateInfoNV', 'RayTracingShaderGroupTypeNV',
+-- 'RayTracingPipelineCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingShaderGroupTypeKHR',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data RayTracingShaderGroupCreateInfoNV = RayTracingShaderGroupCreateInfoNV
   { -- | @type@ is the type of hit group specified in this structure.
-    type' :: RayTracingShaderGroupTypeNV
+    type' :: RayTracingShaderGroupTypeKHR
   , -- | @generalShader@ is the index of the ray generation, miss, or callable
     -- shader from 'RayTracingPipelineCreateInfoNV'::@pStages@ in the group if
     -- the shader group has @type@ of
-    -- 'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV' and
+    -- 'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV', and
     -- 'Graphics.Vulkan.Core10.APIConstants.SHADER_UNUSED_NV' otherwise.
     generalShader :: Word32
   , -- | @closestHitShader@ is the optional index of the closest hit shader from
     -- 'RayTracingPipelineCreateInfoNV'::@pStages@ in the group if the shader
     -- group has @type@ of
     -- 'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV' or
-    -- 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV' and
+    -- 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV', and
     -- 'Graphics.Vulkan.Core10.APIConstants.SHADER_UNUSED_NV' otherwise.
     closestHitShader :: Word32
   , -- | @anyHitShader@ is the optional index of the any-hit shader from
     -- 'RayTracingPipelineCreateInfoNV'::@pStages@ in the group if the shader
     -- group has @type@ of
     -- 'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV' or
-    -- 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV' and
+    -- 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV', and
     -- 'Graphics.Vulkan.Core10.APIConstants.SHADER_UNUSED_NV' otherwise.
     anyHitShader :: Word32
   , -- | @intersectionShader@ is the index of the intersection shader from
     -- 'RayTracingPipelineCreateInfoNV'::@pStages@ in the group if the shader
     -- group has @type@ of
-    -- 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV' and
+    -- 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV', and
     -- 'Graphics.Vulkan.Core10.APIConstants.SHADER_UNUSED_NV' otherwise.
     intersectionShader :: Word32
   }
@@ -1492,7 +1533,7 @@ instance ToCStruct RayTracingShaderGroupCreateInfoNV where
   pokeCStruct p RayTracingShaderGroupCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr RayTracingShaderGroupTypeNV)) (type')
+    poke ((p `plusPtr` 16 :: Ptr RayTracingShaderGroupTypeKHR)) (type')
     poke ((p `plusPtr` 20 :: Ptr Word32)) (generalShader)
     poke ((p `plusPtr` 24 :: Ptr Word32)) (closestHitShader)
     poke ((p `plusPtr` 28 :: Ptr Word32)) (anyHitShader)
@@ -1503,7 +1544,7 @@ instance ToCStruct RayTracingShaderGroupCreateInfoNV where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr RayTracingShaderGroupTypeNV)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr RayTracingShaderGroupTypeKHR)) (zero)
     poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
@@ -1512,7 +1553,7 @@ instance ToCStruct RayTracingShaderGroupCreateInfoNV where
 
 instance FromCStruct RayTracingShaderGroupCreateInfoNV where
   peekCStruct p = do
-    type' <- peek @RayTracingShaderGroupTypeNV ((p `plusPtr` 16 :: Ptr RayTracingShaderGroupTypeNV))
+    type' <- peek @RayTracingShaderGroupTypeKHR ((p `plusPtr` 16 :: Ptr RayTracingShaderGroupTypeKHR))
     generalShader <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     closestHitShader <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     anyHitShader <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
@@ -1546,49 +1587,89 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --
 -- == Valid Usage
 --
--- -   If @flags@ contains the
+-- -   [[VUID-{refpage}-flags-03421]] If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is @-1@, @basePipelineHandle@ /must/
 --     be a valid handle to a ray tracing
 --     'Graphics.Vulkan.Core10.Handles.Pipeline'
 --
--- -   If @flags@ contains the
+-- -   [[VUID-{refpage}-flags-03422]] If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @basePipelineIndex@ /must/ be a valid index into the calling
 --     command’s @pCreateInfos@ parameter
 --
--- -   If @flags@ contains the
+-- -   [[VUID-{refpage}-flags-03423]] If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is not @-1@, @basePipelineHandle@
 --     /must/ be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @flags@ contains the
+-- -   [[VUID-{refpage}-flags-03424]] If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @basePipelineIndex@ /must/ be @-1@
 --
--- -   The @stage@ member of one element of @pStages@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_NV'
+-- -   [[VUID-{refpage}-stage-03425]] The @stage@ member of at least one
+--     element of @pStages@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_KHR'
 --
--- -   The shader code for the entry points identified by @pStages@, and
---     the rest of the state identified by this structure /must/ adhere to
---     the pipeline linking rules described in the
+-- -   [[VUID-{refpage}-pStages-03426]] The shader code for the entry
+--     points identified by @pStages@, and the rest of the state identified
+--     by this structure /must/ adhere to the pipeline linking rules
+--     described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces Shader Interfaces>
 --     chapter
 --
--- -   @layout@ /must/ be
+-- -   [[VUID-{refpage}-layout-03427]] @layout@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency consistent>
 --     with all shaders specified in @pStages@
 --
--- -   The number of resources in @layout@ accessible to each shader stage
---     that is used by the pipeline /must/ be less than or equal to
+-- -   [[VUID-{refpage}-layout-03428]] The number of resources in @layout@
+--     accessible to each shader stage that is used by the pipeline /must/
+--     be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageResources@
+--
+-- -   [[VUID-{refpage}-flags-02904]] @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
+--
+-- -   [[VUID-{refpage}-pipelineCreationCacheControl-02905]] If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
 --
 -- -   @maxRecursionDepth@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesNV'::@maxRecursionDepth@
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
+--
+-- -   @flags@ /must/ not include both
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEFER_COMPILE_BIT_NV'
+--     and
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     at the same time.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1640,18 +1721,18 @@ data RayTracingPipelineCreateInfoNV (es :: [Type]) = RayTracingPipelineCreateInf
     -- 'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
     -- specifying how the pipeline will be generated.
     flags :: PipelineCreateFlags
-  , -- | @pStages@ is a pointer to an array of @stageCount@
+  , -- | @pStages@ is an array of size @stageCount@ structures of type
     -- 'Graphics.Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'
-    -- structures describing the set of the shader stages to be included in the
-    -- ray tracing pipeline.
+    -- describing the set of the shader stages to be included in the ray
+    -- tracing pipeline.
     stages :: Vector (SomeStruct PipelineShaderStageCreateInfo)
-  , -- | @pGroups@ is a pointer to an array of @groupCount@
-    -- 'RayTracingShaderGroupCreateInfoNV' structures describing the set of the
-    -- shader stages to be included in each shader group in the ray tracing
-    -- pipeline.
+  , -- | @pGroups@ is an array of size @groupCount@ structures of type
+    -- 'RayTracingShaderGroupCreateInfoNV' describing the set of the shader
+    -- stages to be included in each shader group in the ray tracing pipeline.
     groups :: Vector RayTracingShaderGroupCreateInfoNV
-  , -- | @maxRecursionDepth@ is the maximum recursion that will be called from
-    -- this pipeline.
+  , -- | @maxRecursionDepth@ is the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth maximum recursion depth>
+    -- of shaders executed by this pipeline.
     maxRecursionDepth :: Word32
   , -- | @layout@ is the description of binding locations used by both the
     -- pipeline and descriptor sets used with the pipeline.
@@ -1746,11 +1827,9 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoNV es) where
 --
 -- = Description
 --
--- If @indexType@ is
--- 'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV', then this
--- structure describes a set of triangles determined by @vertexCount@.
--- Otherwise, this structure describes a set of indexed triangles
--- determined by @indexCount@.
+-- If @indexType@ is 'INDEX_TYPE_NONE_NV', then this structure describes a
+-- set of triangles determined by @vertexCount@. Otherwise, this structure
+-- describes a set of indexed triangles determined by @indexCount@.
 --
 -- == Valid Usage
 --
@@ -1775,18 +1854,17 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoNV es) where
 -- -   @indexType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
---     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
+--     'INDEX_TYPE_NONE_NV'
 --
 -- -   @indexData@ /must/ be
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if @indexType@ is
---     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
+--     'INDEX_TYPE_NONE_NV'
 --
 -- -   @indexData@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Buffer' handle if @indexType@ is not
---     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
+--     'INDEX_TYPE_NONE_NV'
 --
--- -   @indexCount@ /must/ be @0@ if @indexType@ is
---     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
+-- -   @indexCount@ /must/ be @0@ if @indexType@ is 'INDEX_TYPE_NONE_NV'
 --
 -- -   @transformOffset@ /must/ be less than the size of @transformData@
 --
@@ -1839,7 +1917,8 @@ data GeometryTrianglesNV = GeometryTrianglesNV
     vertexCount :: Word32
   , -- | @vertexStride@ is the stride in bytes between each vertex.
     vertexStride :: DeviceSize
-  , -- | @vertexFormat@ is the format of each vertex element.
+  , -- | @vertexFormat@ is a 'Graphics.Vulkan.Core10.Enums.Format.Format'
+    -- describing the format of each vertex element.
     vertexFormat :: Format
   , -- | @indexData@ is the buffer containing index data for this geometry.
     indexData :: Buffer
@@ -1848,11 +1927,11 @@ data GeometryTrianglesNV = GeometryTrianglesNV
     indexOffset :: DeviceSize
   , -- | @indexCount@ is the number of indices to include in this geometry.
     indexCount :: Word32
-  , -- | @indexType@ is the format of each index.
+  , -- | @indexType@ is a 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType'
+    -- describing the format of each index.
     indexType :: IndexType
-  , -- | @transformData@ is a buffer containing optional reference to an array of
-    -- 32-bit floats representing a 3x4 row major affine transformation matrix
-    -- for this geometry.
+  , -- | @transformData@ is an optional buffer containing an 'TransformMatrixNV'
+    -- structure defining a transformation to be applied to this geometry.
     transformData :: Buffer
   , -- | @transformOffset@ is the offset in bytes in @transformData@ of the
     -- transform information described above.
@@ -2068,16 +2147,20 @@ instance Zero GeometryDataNV where
 --
 -- = See Also
 --
--- 'AccelerationStructureInfoNV', 'GeometryDataNV', 'GeometryFlagsNV',
--- 'GeometryTypeNV',
+-- 'AccelerationStructureInfoNV', 'GeometryDataNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.GeometryFlagsKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.GeometryTypeKHR',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data GeometryNV = GeometryNV
-  { -- | @geometryType@ /must/ be a valid 'GeometryTypeNV' value
-    geometryType :: GeometryTypeNV
+  { -- | @geometryType@ /must/ be a valid
+    -- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.GeometryTypeKHR' value
+    geometryType :: GeometryTypeKHR
   , -- | @geometry@ /must/ be a valid 'GeometryDataNV' structure
     geometry :: GeometryDataNV
-  , -- | @flags@ /must/ be a valid combination of 'GeometryFlagBitsNV' values
-    flags :: GeometryFlagsNV
+  , -- | @flags@ /must/ be a valid combination of
+    -- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.GeometryFlagBitsKHR'
+    -- values
+    flags :: GeometryFlagsKHR
   }
   deriving (Typeable)
 deriving instance Show GeometryNV
@@ -2087,24 +2170,24 @@ instance ToCStruct GeometryNV where
   pokeCStruct p GeometryNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr GeometryTypeNV)) (geometryType)
+    lift $ poke ((p `plusPtr` 16 :: Ptr GeometryTypeKHR)) (geometryType)
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr GeometryDataNV)) (geometry) . ($ ())
-    lift $ poke ((p `plusPtr` 160 :: Ptr GeometryFlagsNV)) (flags)
+    lift $ poke ((p `plusPtr` 160 :: Ptr GeometryFlagsKHR)) (flags)
     lift $ f
   cStructSize = 168
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr GeometryTypeNV)) (zero)
+    lift $ poke ((p `plusPtr` 16 :: Ptr GeometryTypeKHR)) (zero)
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr GeometryDataNV)) (zero) . ($ ())
     lift $ f
 
 instance FromCStruct GeometryNV where
   peekCStruct p = do
-    geometryType <- peek @GeometryTypeNV ((p `plusPtr` 16 :: Ptr GeometryTypeNV))
+    geometryType <- peek @GeometryTypeKHR ((p `plusPtr` 16 :: Ptr GeometryTypeKHR))
     geometry <- peekCStruct @GeometryDataNV ((p `plusPtr` 24 :: Ptr GeometryDataNV))
-    flags <- peek @GeometryFlagsNV ((p `plusPtr` 160 :: Ptr GeometryFlagsNV))
+    flags <- peek @GeometryFlagsKHR ((p `plusPtr` 160 :: Ptr GeometryFlagsKHR))
     pure $ GeometryNV
              geometryType geometry flags
 
@@ -2147,19 +2230,20 @@ instance Zero GeometryNV where
 --     @geometryType@ member of each geometry in @pGeometries@ /must/ be
 --     the same
 --
+-- -   @flags@ /must/ be a valid combination of
+--     'BuildAccelerationStructureFlagBitsNV' values
+--
 -- -   If @flags@ has the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV' bit set,
 --     then it /must/ not have the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV' bit set
 --
 -- -   @scratch@ /must/ have been created with
---     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---     usage flag
+--     'BUFFER_USAGE_RAY_TRACING_BIT_NV' usage flag
 --
 -- -   If @instanceData@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @instanceData@
---     /must/ have been created with
---     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RAY_TRACING_BIT_NV'
+--     /must/ have been created with 'BUFFER_USAGE_RAY_TRACING_BIT_NV'
 --     usage flag
 --
 -- == Valid Usage (Implicit)
@@ -2171,8 +2255,7 @@ instance Zero GeometryNV where
 --
 -- -   @type@ /must/ be a valid 'AccelerationStructureTypeNV' value
 --
--- -   @flags@ /must/ be a valid combination of
---     'BuildAccelerationStructureFlagBitsNV' values
+-- -   @flags@ /must/ be @0@
 --
 -- -   If @geometryCount@ is not @0@, @pGeometries@ /must/ be a valid
 --     pointer to an array of @geometryCount@ valid 'GeometryNV' structures
@@ -2309,196 +2392,6 @@ instance Zero AccelerationStructureCreateInfoNV where
            zero
 
 
--- | VkBindAccelerationStructureMemoryInfoNV - Structure specifying
--- acceleration structure memory binding
---
--- == Valid Usage
---
--- -   @accelerationStructure@ /must/ not already be backed by a memory
---     object
---
--- -   @memoryOffset@ /must/ be less than the size of @memory@
---
--- -   @memory@ /must/ have been allocated using one of the memory types
---     allowed in the @memoryTypeBits@ member of the
---     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
---     structure returned from a call to
---     'getAccelerationStructureMemoryRequirementsNV' with
---     @accelerationStructure@ and @type@ of
---     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV'
---
--- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
---     member of the
---     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
---     structure returned from a call to
---     'getAccelerationStructureMemoryRequirementsNV' with
---     @accelerationStructure@ and @type@ of
---     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV'
---
--- -   The @size@ member of the
---     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
---     structure returned from a call to
---     'getAccelerationStructureMemoryRequirementsNV' with
---     @accelerationStructure@ and @type@ of
---     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV' /must/
---     be less than or equal to the size of @memory@ minus @memoryOffset@
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV'
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @accelerationStructure@ /must/ be a valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
---
--- -   @memory@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
---
--- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
---     pointer to an array of @deviceIndexCount@ @uint32_t@ values
---
--- -   Both of @accelerationStructure@, and @memory@ /must/ have been
---     created, allocated, or retrieved from the same
---     'Graphics.Vulkan.Core10.Handles.Device'
---
--- = See Also
---
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
--- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
--- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
--- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
--- 'bindAccelerationStructureMemoryNV'
-data BindAccelerationStructureMemoryInfoNV = BindAccelerationStructureMemoryInfoNV
-  { -- | @accelerationStructure@ is the acceleration structure to be attached to
-    -- memory.
-    accelerationStructure :: AccelerationStructureNV
-  , -- | @memory@ is a 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
-    -- describing the device memory to attach.
-    memory :: DeviceMemory
-  , -- | @memoryOffset@ is the start offset of the region of memory that is to be
-    -- bound to the acceleration structure. The number of bytes returned in the
-    -- 'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@
-    -- member in @memory@, starting from @memoryOffset@ bytes, will be bound to
-    -- the specified acceleration structure.
-    memoryOffset :: DeviceSize
-  , -- | @pDeviceIndices@ is a pointer to an array of device indices.
-    deviceIndices :: Vector Word32
-  }
-  deriving (Typeable)
-deriving instance Show BindAccelerationStructureMemoryInfoNV
-
-instance ToCStruct BindAccelerationStructureMemoryInfoNV where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p BindAccelerationStructureMemoryInfoNV{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr AccelerationStructureNV)) (accelerationStructure)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceMemory)) (memory)
-    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (memoryOffset)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceIndices)) :: Word32))
-    pPDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (deviceIndices)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (deviceIndices)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPDeviceIndices')
-    lift $ f
-  cStructSize = 56
-  cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr AccelerationStructureNV)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceMemory)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
-    pPDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPDeviceIndices')
-    lift $ f
-
-instance FromCStruct BindAccelerationStructureMemoryInfoNV where
-  peekCStruct p = do
-    accelerationStructure <- peek @AccelerationStructureNV ((p `plusPtr` 16 :: Ptr AccelerationStructureNV))
-    memory <- peek @DeviceMemory ((p `plusPtr` 24 :: Ptr DeviceMemory))
-    memoryOffset <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
-    deviceIndexCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    pDeviceIndices <- peek @(Ptr Word32) ((p `plusPtr` 48 :: Ptr (Ptr Word32)))
-    pDeviceIndices' <- generateM (fromIntegral deviceIndexCount) (\i -> peek @Word32 ((pDeviceIndices `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
-    pure $ BindAccelerationStructureMemoryInfoNV
-             accelerationStructure memory memoryOffset pDeviceIndices'
-
-instance Zero BindAccelerationStructureMemoryInfoNV where
-  zero = BindAccelerationStructureMemoryInfoNV
-           zero
-           zero
-           zero
-           mempty
-
-
--- | VkWriteDescriptorSetAccelerationStructureNV - Structure specifying
--- acceleration structure descriptor info
---
--- == Valid Usage
---
--- -   @accelerationStructureCount@ /must/ be equal to @descriptorCount@ in
---     the extended structure
---
--- -   Each acceleration structure in @pAccelerationStructures@ must have
---     been created with 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV'
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV'
---
--- -   @pAccelerationStructures@ /must/ be a valid pointer to an array of
---     @accelerationStructureCount@ valid
---     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handles
---
--- -   @accelerationStructureCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
--- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
-data WriteDescriptorSetAccelerationStructureNV = WriteDescriptorSetAccelerationStructureNV
-  { -- | @pAccelerationStructures@ are the acceleration structures to update.
-    accelerationStructures :: Vector AccelerationStructureNV }
-  deriving (Typeable)
-deriving instance Show WriteDescriptorSetAccelerationStructureNV
-
-instance ToCStruct WriteDescriptorSetAccelerationStructureNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p WriteDescriptorSetAccelerationStructureNV{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32))
-    pPAccelerationStructures' <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures' `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureNV))) (pPAccelerationStructures')
-    lift $ f
-  cStructSize = 32
-  cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pPAccelerationStructures' <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures' `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureNV))) (pPAccelerationStructures')
-    lift $ f
-
-instance FromCStruct WriteDescriptorSetAccelerationStructureNV where
-  peekCStruct p = do
-    accelerationStructureCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    pAccelerationStructures <- peek @(Ptr AccelerationStructureNV) ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureNV)))
-    pAccelerationStructures' <- generateM (fromIntegral accelerationStructureCount) (\i -> peek @AccelerationStructureNV ((pAccelerationStructures `advancePtrBytes` (8 * (i)) :: Ptr AccelerationStructureNV)))
-    pure $ WriteDescriptorSetAccelerationStructureNV
-             pAccelerationStructures'
-
-instance Zero WriteDescriptorSetAccelerationStructureNV where
-  zero = WriteDescriptorSetAccelerationStructureNV
-           mempty
-
-
 -- | VkAccelerationStructureMemoryRequirementsInfoNV - Structure specifying
 -- acceleration to query for memory requirements
 --
@@ -2507,15 +2400,15 @@ instance Zero WriteDescriptorSetAccelerationStructureNV where
 -- = See Also
 --
 -- 'AccelerationStructureMemoryRequirementsTypeNV',
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV',
+-- 'AccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAccelerationStructureMemoryRequirementsNV'
 data AccelerationStructureMemoryRequirementsInfoNV = AccelerationStructureMemoryRequirementsInfoNV
   { -- | @type@ /must/ be a valid 'AccelerationStructureMemoryRequirementsTypeNV'
     -- value
     type' :: AccelerationStructureMemoryRequirementsTypeNV
-  , -- | @accelerationStructure@ /must/ be a valid
-    -- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
+  , -- | @accelerationStructure@ /must/ be a valid 'AccelerationStructureNV'
+    -- handle
     accelerationStructure :: AccelerationStructureNV
   }
   deriving (Typeable)
@@ -2566,6 +2459,10 @@ instance Zero AccelerationStructureMemoryRequirementsInfoNV where
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
+--
+-- Limits specified by this structure /must/ match those specified with the
+-- same name in
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -2660,368 +2557,72 @@ instance Zero PhysicalDeviceRayTracingPropertiesNV where
            zero
 
 
--- | VkGeometryInstanceFlagBitsNV - Instance flag bits
---
--- = Description
---
--- 'GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV' and
--- 'GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV' /must/ not be used in the same
--- flag.
---
--- = See Also
---
--- 'GeometryInstanceFlagsNV'
-newtype GeometryInstanceFlagBitsNV = GeometryInstanceFlagBitsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
-
--- | 'GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV' disables face culling
--- for this instance.
-pattern GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV = GeometryInstanceFlagBitsNV 0x00000001
--- | 'GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV' indicates
--- that the front face of the triangle for culling purposes is the face
--- that is counter clockwise in object space relative to the ray origin.
--- Because the facing is determined in object space, an instance transform
--- matrix does not change the winding, but a geometry transform does.
-pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV = GeometryInstanceFlagBitsNV 0x00000002
--- | 'GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV' causes this instance to act as
--- though 'GEOMETRY_OPAQUE_BIT_NV' were specified on all geometries
--- referenced by this instance. This behavior /can/ be overridden by the
--- ray flag @gl_RayFlagsNoOpaqueNV@.
-pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV = GeometryInstanceFlagBitsNV 0x00000004
--- | 'GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV' causes this instance to act
--- as though 'GEOMETRY_OPAQUE_BIT_NV' were not specified on all geometries
--- referenced by this instance. This behavior /can/ be overridden by the
--- ray flag @gl_RayFlagsOpaqueNV@.
-pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV = GeometryInstanceFlagBitsNV 0x00000008
-
-type GeometryInstanceFlagsNV = GeometryInstanceFlagBitsNV
-
-instance Show GeometryInstanceFlagBitsNV where
-  showsPrec p = \case
-    GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV -> showString "GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV"
-    GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV -> showString "GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV"
-    GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV -> showString "GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV"
-    GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV -> showString "GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV"
-    GeometryInstanceFlagBitsNV x -> showParen (p >= 11) (showString "GeometryInstanceFlagBitsNV 0x" . showHex x)
-
-instance Read GeometryInstanceFlagBitsNV where
-  readPrec = parens (choose [("GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV", pure GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV)
-                            , ("GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV", pure GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_NV)
-                            , ("GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV", pure GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_NV)
-                            , ("GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV", pure GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "GeometryInstanceFlagBitsNV")
-                       v <- step readPrec
-                       pure (GeometryInstanceFlagBitsNV v)))
+-- No documentation found for TopLevel "VkGeometryFlagsNV"
+type GeometryFlagsNV = GeometryFlagsKHR
 
 
--- | VkGeometryFlagBitsNV - Bitmask specifying additional parameters for a
--- geometry
---
--- = See Also
---
--- 'GeometryFlagsNV'
-newtype GeometryFlagBitsNV = GeometryFlagBitsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
-
--- | 'GEOMETRY_OPAQUE_BIT_NV' indicates that this geometry does not invoke
--- the any-hit shaders even if present in a hit group.
-pattern GEOMETRY_OPAQUE_BIT_NV = GeometryFlagBitsNV 0x00000001
--- | 'GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV' indicates that the
--- implementation /must/ only call the any-hit shader a single time for
--- each primitive in this geometry. If this bit is absent an implementation
--- /may/ invoke the any-hit shader more than once for this geometry.
-pattern GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV = GeometryFlagBitsNV 0x00000002
-
-type GeometryFlagsNV = GeometryFlagBitsNV
-
-instance Show GeometryFlagBitsNV where
-  showsPrec p = \case
-    GEOMETRY_OPAQUE_BIT_NV -> showString "GEOMETRY_OPAQUE_BIT_NV"
-    GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV -> showString "GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV"
-    GeometryFlagBitsNV x -> showParen (p >= 11) (showString "GeometryFlagBitsNV 0x" . showHex x)
-
-instance Read GeometryFlagBitsNV where
-  readPrec = parens (choose [("GEOMETRY_OPAQUE_BIT_NV", pure GEOMETRY_OPAQUE_BIT_NV)
-                            , ("GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV", pure GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "GeometryFlagBitsNV")
-                       v <- step readPrec
-                       pure (GeometryFlagBitsNV v)))
+-- No documentation found for TopLevel "VkGeometryInstanceFlagsNV"
+type GeometryInstanceFlagsNV = GeometryInstanceFlagsKHR
 
 
--- | VkBuildAccelerationStructureFlagBitsNV - Bitmask specifying additional
--- parameters for acceleration structure builds
---
--- = Description
---
--- Note
---
--- 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' and
--- 'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV' /may/ take more
--- time and memory than a normal build, and so /should/ only be used when
--- those features are used.
---
--- = See Also
---
--- 'BuildAccelerationStructureFlagsNV'
-newtype BuildAccelerationStructureFlagBitsNV = BuildAccelerationStructureFlagBitsNV Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
-
--- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' indicates that the
--- specified acceleration structure /can/ be updated with @update@ of
--- 'Graphics.Vulkan.Core10.BaseType.TRUE' in
--- 'cmdBuildAccelerationStructureNV'.
-pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV = BuildAccelerationStructureFlagBitsNV 0x00000001
--- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV' indicates that
--- the specified acceleration structure /can/ act as the source for
--- 'cmdCopyAccelerationStructureNV' with @mode@ of
--- 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV' to produce a compacted
--- acceleration structure.
-pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV = BuildAccelerationStructureFlagBitsNV 0x00000002
--- | 'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV' indicates that
--- the given acceleration structure build /should/ prioritize trace
--- performance over build time.
-pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV = BuildAccelerationStructureFlagBitsNV 0x00000004
--- | 'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV' indicates that
--- the given acceleration structure build /should/ prioritize build time
--- over trace performance.
-pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV = BuildAccelerationStructureFlagBitsNV 0x00000008
--- | 'BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV' indicates that this
--- acceleration structure /should/ minimize the size of the scratch memory
--- and the final result build, potentially at the expense of build time or
--- trace performance.
-pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV = BuildAccelerationStructureFlagBitsNV 0x00000010
-
-type BuildAccelerationStructureFlagsNV = BuildAccelerationStructureFlagBitsNV
-
-instance Show BuildAccelerationStructureFlagBitsNV where
-  showsPrec p = \case
-    BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV -> showString "BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV"
-    BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV -> showString "BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV"
-    BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV -> showString "BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV"
-    BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV -> showString "BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV"
-    BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV -> showString "BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV"
-    BuildAccelerationStructureFlagBitsNV x -> showParen (p >= 11) (showString "BuildAccelerationStructureFlagBitsNV 0x" . showHex x)
-
-instance Read BuildAccelerationStructureFlagBitsNV where
-  readPrec = parens (choose [("BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV", pure BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV)
-                            , ("BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV", pure BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV)
-                            , ("BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV", pure BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV)
-                            , ("BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV", pure BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV)
-                            , ("BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV", pure BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "BuildAccelerationStructureFlagBitsNV")
-                       v <- step readPrec
-                       pure (BuildAccelerationStructureFlagBitsNV v)))
+-- No documentation found for TopLevel "VkBuildAccelerationStructureFlagsNV"
+type BuildAccelerationStructureFlagsNV = BuildAccelerationStructureFlagsKHR
 
 
--- | VkCopyAccelerationStructureModeNV - Acceleration structure copy mode
---
--- = See Also
---
--- 'cmdCopyAccelerationStructureNV'
-newtype CopyAccelerationStructureModeNV = CopyAccelerationStructureModeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | 'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV' creates a direct copy of the
--- acceleration structure specified in @src@ into the one specified by
--- @dst@. The @dst@ acceleration structure /must/ have been created with
--- the same parameters as @src@.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV = CopyAccelerationStructureModeNV 0
--- | 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV' creates a more compact
--- version of an acceleration structure @src@ into @dst@. The acceleration
--- structure @dst@ /must/ have been created with a @compactedSize@
--- corresponding to the one returned by
--- 'cmdWriteAccelerationStructuresPropertiesNV' after the build of the
--- acceleration structure specified by @src@.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV = CopyAccelerationStructureModeNV 1
-{-# complete COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV,
-             COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV :: CopyAccelerationStructureModeNV #-}
-
-instance Show CopyAccelerationStructureModeNV where
-  showsPrec p = \case
-    COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV -> showString "COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV"
-    COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV -> showString "COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV"
-    CopyAccelerationStructureModeNV x -> showParen (p >= 11) (showString "CopyAccelerationStructureModeNV " . showsPrec 11 x)
-
-instance Read CopyAccelerationStructureModeNV where
-  readPrec = parens (choose [("COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV", pure COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV)
-                            , ("COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV", pure COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CopyAccelerationStructureModeNV")
-                       v <- step readPrec
-                       pure (CopyAccelerationStructureModeNV v)))
+-- No documentation found for TopLevel "VkAccelerationStructureNV"
+type AccelerationStructureNV = AccelerationStructureKHR
 
 
--- | VkAccelerationStructureTypeNV - Type of acceleration structure
---
--- = See Also
---
--- 'AccelerationStructureInfoNV'
-newtype AccelerationStructureTypeNV = AccelerationStructureTypeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV' is a top-level acceleration
--- structure containing instance data referring to bottom-level level
--- acceleration structures.
-pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV = AccelerationStructureTypeNV 0
--- | 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV' is a bottom-level
--- acceleration structure containing the AABBs or geometry to be
--- intersected.
-pattern ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV = AccelerationStructureTypeNV 1
-{-# complete ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV,
-             ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV :: AccelerationStructureTypeNV #-}
-
-instance Show AccelerationStructureTypeNV where
-  showsPrec p = \case
-    ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV -> showString "ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV"
-    ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV -> showString "ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV"
-    AccelerationStructureTypeNV x -> showParen (p >= 11) (showString "AccelerationStructureTypeNV " . showsPrec 11 x)
-
-instance Read AccelerationStructureTypeNV where
-  readPrec = parens (choose [("ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV", pure ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV)
-                            , ("ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV", pure ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AccelerationStructureTypeNV")
-                       v <- step readPrec
-                       pure (AccelerationStructureTypeNV v)))
+-- No documentation found for TopLevel "VkGeometryFlagBitsNV"
+type GeometryFlagBitsNV = GeometryFlagBitsKHR
 
 
--- | VkGeometryTypeNV - Enum specifying which type of geometry is provided
---
--- = See Also
---
--- 'GeometryNV'
-newtype GeometryTypeNV = GeometryTypeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | 'GEOMETRY_TYPE_TRIANGLES_NV' indicates that the @triangles@ of
--- 'GeometryDataNV' contains valid data.
-pattern GEOMETRY_TYPE_TRIANGLES_NV = GeometryTypeNV 0
--- | 'GEOMETRY_TYPE_AABBS_NV' indicates that the @aabbs@ of 'GeometryDataNV'
--- contains valid data.
-pattern GEOMETRY_TYPE_AABBS_NV = GeometryTypeNV 1
-{-# complete GEOMETRY_TYPE_TRIANGLES_NV,
-             GEOMETRY_TYPE_AABBS_NV :: GeometryTypeNV #-}
-
-instance Show GeometryTypeNV where
-  showsPrec p = \case
-    GEOMETRY_TYPE_TRIANGLES_NV -> showString "GEOMETRY_TYPE_TRIANGLES_NV"
-    GEOMETRY_TYPE_AABBS_NV -> showString "GEOMETRY_TYPE_AABBS_NV"
-    GeometryTypeNV x -> showParen (p >= 11) (showString "GeometryTypeNV " . showsPrec 11 x)
-
-instance Read GeometryTypeNV where
-  readPrec = parens (choose [("GEOMETRY_TYPE_TRIANGLES_NV", pure GEOMETRY_TYPE_TRIANGLES_NV)
-                            , ("GEOMETRY_TYPE_AABBS_NV", pure GEOMETRY_TYPE_AABBS_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "GeometryTypeNV")
-                       v <- step readPrec
-                       pure (GeometryTypeNV v)))
+-- No documentation found for TopLevel "VkGeometryInstanceFlagBitsNV"
+type GeometryInstanceFlagBitsNV = GeometryInstanceFlagBitsKHR
 
 
--- | VkAccelerationStructureMemoryRequirementsTypeNV - Acceleration structure
--- memory requirement type
---
--- = See Also
---
--- 'AccelerationStructureMemoryRequirementsInfoNV'
-newtype AccelerationStructureMemoryRequirementsTypeNV = AccelerationStructureMemoryRequirementsTypeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV' requests the
--- memory requirement for the
--- 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' backing
--- store.
-pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV = AccelerationStructureMemoryRequirementsTypeNV 0
--- | 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV'
--- requests the memory requirement for scratch space during the initial
--- build.
-pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV = AccelerationStructureMemoryRequirementsTypeNV 1
--- | 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV'
--- requests the memory requirement for scratch space during an update.
-pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV = AccelerationStructureMemoryRequirementsTypeNV 2
-{-# complete ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV,
-             ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV,
-             ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV :: AccelerationStructureMemoryRequirementsTypeNV #-}
-
-instance Show AccelerationStructureMemoryRequirementsTypeNV where
-  showsPrec p = \case
-    ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV -> showString "ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV"
-    ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV -> showString "ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV"
-    ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV -> showString "ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV"
-    AccelerationStructureMemoryRequirementsTypeNV x -> showParen (p >= 11) (showString "AccelerationStructureMemoryRequirementsTypeNV " . showsPrec 11 x)
-
-instance Read AccelerationStructureMemoryRequirementsTypeNV where
-  readPrec = parens (choose [("ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV", pure ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV)
-                            , ("ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV", pure ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV)
-                            , ("ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV", pure ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "AccelerationStructureMemoryRequirementsTypeNV")
-                       v <- step readPrec
-                       pure (AccelerationStructureMemoryRequirementsTypeNV v)))
+-- No documentation found for TopLevel "VkBuildAccelerationStructureFlagBitsNV"
+type BuildAccelerationStructureFlagBitsNV = BuildAccelerationStructureFlagBitsKHR
 
 
--- | VkRayTracingShaderGroupTypeNV - Shader group types
---
--- = Description
---
--- Note
---
--- For current group types, the hit group type could be inferred from the
--- presence or absence of the intersection shader, but we provide the type
--- explicitly for future hit groups that do not have that property.
---
--- = See Also
---
--- 'RayTracingShaderGroupCreateInfoNV'
-newtype RayTracingShaderGroupTypeNV = RayTracingShaderGroupTypeNV Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
+-- No documentation found for TopLevel "VkCopyAccelerationStructureModeNV"
+type CopyAccelerationStructureModeNV = CopyAccelerationStructureModeKHR
 
--- | 'RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV' indicates a shader group with
--- a single
--- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_NV',
--- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MISS_BIT_NV',
--- or
--- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CALLABLE_BIT_NV'
--- shader in it.
-pattern RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV = RayTracingShaderGroupTypeNV 0
--- | 'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV' specifies a
--- shader group that only hits triangles and /must/ not contain an
--- intersection shader, only closest hit and any-hit.
-pattern RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV = RayTracingShaderGroupTypeNV 1
--- | 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV' specifies a
--- shader group that only intersects with custom geometry and /must/
--- contain an intersection shader and /may/ contain closest hit and any-hit
--- shaders.
-pattern RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV = RayTracingShaderGroupTypeNV 2
-{-# complete RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV,
-             RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV,
-             RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV :: RayTracingShaderGroupTypeNV #-}
 
-instance Show RayTracingShaderGroupTypeNV where
-  showsPrec p = \case
-    RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV -> showString "RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV"
-    RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV -> showString "RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV"
-    RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV -> showString "RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV"
-    RayTracingShaderGroupTypeNV x -> showParen (p >= 11) (showString "RayTracingShaderGroupTypeNV " . showsPrec 11 x)
+-- No documentation found for TopLevel "VkAccelerationStructureTypeNV"
+type AccelerationStructureTypeNV = AccelerationStructureTypeKHR
 
-instance Read RayTracingShaderGroupTypeNV where
-  readPrec = parens (choose [("RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV", pure RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV)
-                            , ("RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV", pure RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_NV)
-                            , ("RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV", pure RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "RayTracingShaderGroupTypeNV")
-                       v <- step readPrec
-                       pure (RayTracingShaderGroupTypeNV v)))
+
+-- No documentation found for TopLevel "VkGeometryTypeNV"
+type GeometryTypeNV = GeometryTypeKHR
+
+
+-- No documentation found for TopLevel "VkRayTracingShaderGroupTypeNV"
+type RayTracingShaderGroupTypeNV = RayTracingShaderGroupTypeKHR
+
+
+-- No documentation found for TopLevel "VkAccelerationStructureMemoryRequirementsTypeNV"
+type AccelerationStructureMemoryRequirementsTypeNV = AccelerationStructureMemoryRequirementsTypeKHR
+
+
+-- No documentation found for TopLevel "VkBindAccelerationStructureMemoryInfoNV"
+type BindAccelerationStructureMemoryInfoNV = BindAccelerationStructureMemoryInfoKHR
+
+
+-- No documentation found for TopLevel "VkWriteDescriptorSetAccelerationStructureNV"
+type WriteDescriptorSetAccelerationStructureNV = WriteDescriptorSetAccelerationStructureKHR
+
+
+-- No documentation found for TopLevel "VkAabbPositionsNV"
+type AabbPositionsNV = AabbPositionsKHR
+
+
+-- No documentation found for TopLevel "VkTransformMatrixNV"
+type TransformMatrixNV = TransformMatrixKHR
+
+
+-- No documentation found for TopLevel "VkAccelerationStructureInstanceNV"
+type AccelerationStructureInstanceNV = AccelerationStructureInstanceKHR
 
 
 type NV_RAY_TRACING_SPEC_VERSION = 3

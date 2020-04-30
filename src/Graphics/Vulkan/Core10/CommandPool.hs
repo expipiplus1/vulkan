@@ -127,8 +127,8 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
   pCommandPool <- lift $ peek @CommandPool pPCommandPool
   pure $ (pCommandPool)
 
--- | A convenience wrapper to make a compatible pair of 'createCommandPool'
--- and 'destroyCommandPool'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createCommandPool' and 'destroyCommandPool'
 --
 -- To ensure that 'destroyCommandPool' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

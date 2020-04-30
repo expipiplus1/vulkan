@@ -127,8 +127,8 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
   pSemaphore <- lift $ peek @Semaphore pPSemaphore
   pure $ (pSemaphore)
 
--- | A convenience wrapper to make a compatible pair of 'createSemaphore' and
--- 'destroySemaphore'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createSemaphore' and 'destroySemaphore'
 --
 -- To ensure that 'destroySemaphore' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

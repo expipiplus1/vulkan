@@ -139,8 +139,8 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
   pSampler <- lift $ peek @Sampler pPSampler
   pure $ (pSampler)
 
--- | A convenience wrapper to make a compatible pair of 'createSampler' and
--- 'destroySampler'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createSampler' and 'destroySampler'
 --
 -- To ensure that 'destroySampler' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

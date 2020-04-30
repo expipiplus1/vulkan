@@ -191,7 +191,7 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
   pYcbcrConversion <- lift $ peek @SamplerYcbcrConversion pPYcbcrConversion
   pure $ (pYcbcrConversion)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createSamplerYcbcrConversion' and 'destroySamplerYcbcrConversion'
 --
 -- To ensure that 'destroySamplerYcbcrConversion' is always called: pass
@@ -358,9 +358,6 @@ instance Zero SamplerYcbcrConversionInfo where
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Graphics.Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'
---
--- -   @format@ /must/ represent unsigned normalized values (i.e. the
---     format must be a @UNORM@ format)
 --
 -- -   If the format has a @_422@ or @_420@ suffix, then @components.g@
 --     /must/ be

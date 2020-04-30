@@ -395,7 +395,7 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
   lift $ vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'cmdBeginTransformFeedbackEXT' and 'cmdEndTransformFeedbackEXT'
 --
 -- To ensure that 'cmdEndTransformFeedbackEXT' is always called: pass
@@ -742,7 +742,7 @@ cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT'
 --
 -- To ensure that 'cmdEndQueryIndexedEXT' is always called: pass

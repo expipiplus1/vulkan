@@ -156,8 +156,8 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
   pShaderModule <- lift $ peek @ShaderModule pPShaderModule
   pure $ (pShaderModule)
 
--- | A convenience wrapper to make a compatible pair of 'createShaderModule'
--- and 'destroyShaderModule'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createShaderModule' and 'destroyShaderModule'
 --
 -- To ensure that 'destroyShaderModule' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -353,19 +353,6 @@ instance PokeChain es => ToCStruct (ShaderModuleCreateInfo es) where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ unless (Data.ByteString.length (mempty) .&. 3 == 0) $
-      throwIO $ IOError Nothing InvalidArgument "" "code size must be a multiple of 4" Nothing Nothing
-    unalignedCode <- ContT $ unsafeUseAsCString (mempty)
-    pCode'' <- if ptrToWordPtr unalignedCode .&. 3 == 0
-      -- If this pointer is already aligned properly then use it
-      then pure $ castPtr @CChar @Word32 unalignedCode
-      -- Otherwise allocate and copy the bytes
-      else do
-        let len = Data.ByteString.length (mempty)
-        mem <- ContT $ allocaBytesAligned @Word32 len 4
-        lift $ copyBytes mem (castPtr @CChar @Word32 unalignedCode) len
-        pure mem
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) pCode''
     lift $ f
 
 instance PeekChain es => FromCStruct (ShaderModuleCreateInfo es) where

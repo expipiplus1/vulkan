@@ -164,8 +164,8 @@ createImage device createInfo allocator = liftIO . evalContT $ do
   pImage <- lift $ peek @Image pPImage
   pure $ (pImage)
 
--- | A convenience wrapper to make a compatible pair of 'createImage' and
--- 'destroyImage'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createImage' and 'destroyImage'
 --
 -- To ensure that 'destroyImage' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

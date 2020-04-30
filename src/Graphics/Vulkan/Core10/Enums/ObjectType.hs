@@ -25,12 +25,12 @@ module Graphics.Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                            , OBJECT_TYPE_DESCRIPTOR_SET
                                                            , OBJECT_TYPE_FRAMEBUFFER
                                                            , OBJECT_TYPE_COMMAND_POOL
+                                                           , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
+                                                           , OBJECT_TYPE_DEFERRED_OPERATION_KHR
                                                            , OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
-                                                           , OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
                                                            , OBJECT_TYPE_VALIDATION_CACHE_EXT
+                                                           , OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
                                                            , OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
-                                                           , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX
-                                                           , OBJECT_TYPE_OBJECT_TABLE_NVX
                                                            , OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
                                                            , OBJECT_TYPE_DISPLAY_MODE_KHR
                                                            , OBJECT_TYPE_DISPLAY_KHR
@@ -130,15 +130,13 @@ import Graphics.Vulkan.Zero (Zero)
 -- +-----------------------------------------------+--------------------------------------------------------------------+
 -- | 'OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT'       | 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT'        |
 -- +-----------------------------------------------+--------------------------------------------------------------------+
--- | 'OBJECT_TYPE_OBJECT_TABLE_NVX'                | 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'                |
--- +-----------------------------------------------+--------------------------------------------------------------------+
--- | 'OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX'    | 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'     |
+-- | 'OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV'     | 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'      |
 -- +-----------------------------------------------+--------------------------------------------------------------------+
 -- | 'OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT'       | 'Graphics.Vulkan.Extensions.Handles.DebugUtilsMessengerEXT'        |
 -- +-----------------------------------------------+--------------------------------------------------------------------+
 -- | 'OBJECT_TYPE_VALIDATION_CACHE_EXT'            | 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'            |
 -- +-----------------------------------------------+--------------------------------------------------------------------+
--- | 'OBJECT_TYPE_ACCELERATION_STRUCTURE_NV'       | 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV'       |
+-- | 'OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR'      | 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'      |
 -- +-----------------------------------------------+--------------------------------------------------------------------+
 -- | 'OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL' | 'Graphics.Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' |
 -- +-----------------------------------------------+--------------------------------------------------------------------+
@@ -204,18 +202,18 @@ pattern OBJECT_TYPE_DESCRIPTOR_SET = ObjectType 23
 pattern OBJECT_TYPE_FRAMEBUFFER = ObjectType 24
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern OBJECT_TYPE_COMMAND_POOL = ObjectType 25
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
+pattern OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV = ObjectType 1000277000
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR"
+pattern OBJECT_TYPE_DEFERRED_OPERATION_KHR = ObjectType 1000268000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL"
 pattern OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL = ObjectType 1000210000
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV"
-pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_NV = ObjectType 1000165000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_VALIDATION_CACHE_EXT"
 pattern OBJECT_TYPE_VALIDATION_CACHE_EXT = ObjectType 1000160000
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR"
+pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR = ObjectType 1000165000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
 pattern OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = ObjectType 1000128000
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX"
-pattern OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX = ObjectType 1000086001
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_OBJECT_TABLE_NVX"
-pattern OBJECT_TYPE_OBJECT_TABLE_NVX = ObjectType 1000086000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT"
 pattern OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT = ObjectType 1000011000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DISPLAY_MODE_KHR"
@@ -256,12 +254,12 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = ObjectType 1000156000
              OBJECT_TYPE_DESCRIPTOR_SET,
              OBJECT_TYPE_FRAMEBUFFER,
              OBJECT_TYPE_COMMAND_POOL,
+             OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV,
+             OBJECT_TYPE_DEFERRED_OPERATION_KHR,
              OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL,
-             OBJECT_TYPE_ACCELERATION_STRUCTURE_NV,
              OBJECT_TYPE_VALIDATION_CACHE_EXT,
+             OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR,
              OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT,
-             OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX,
-             OBJECT_TYPE_OBJECT_TABLE_NVX,
              OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT,
              OBJECT_TYPE_DISPLAY_MODE_KHR,
              OBJECT_TYPE_DISPLAY_KHR,
@@ -298,12 +296,12 @@ instance Show ObjectType where
     OBJECT_TYPE_DESCRIPTOR_SET -> showString "OBJECT_TYPE_DESCRIPTOR_SET"
     OBJECT_TYPE_FRAMEBUFFER -> showString "OBJECT_TYPE_FRAMEBUFFER"
     OBJECT_TYPE_COMMAND_POOL -> showString "OBJECT_TYPE_COMMAND_POOL"
+    OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV -> showString "OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
+    OBJECT_TYPE_DEFERRED_OPERATION_KHR -> showString "OBJECT_TYPE_DEFERRED_OPERATION_KHR"
     OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL -> showString "OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL"
-    OBJECT_TYPE_ACCELERATION_STRUCTURE_NV -> showString "OBJECT_TYPE_ACCELERATION_STRUCTURE_NV"
     OBJECT_TYPE_VALIDATION_CACHE_EXT -> showString "OBJECT_TYPE_VALIDATION_CACHE_EXT"
+    OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR -> showString "OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR"
     OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT -> showString "OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
-    OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX -> showString "OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX"
-    OBJECT_TYPE_OBJECT_TABLE_NVX -> showString "OBJECT_TYPE_OBJECT_TABLE_NVX"
     OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT -> showString "OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT"
     OBJECT_TYPE_DISPLAY_MODE_KHR -> showString "OBJECT_TYPE_DISPLAY_MODE_KHR"
     OBJECT_TYPE_DISPLAY_KHR -> showString "OBJECT_TYPE_DISPLAY_KHR"
@@ -340,12 +338,12 @@ instance Read ObjectType where
                             , ("OBJECT_TYPE_DESCRIPTOR_SET", pure OBJECT_TYPE_DESCRIPTOR_SET)
                             , ("OBJECT_TYPE_FRAMEBUFFER", pure OBJECT_TYPE_FRAMEBUFFER)
                             , ("OBJECT_TYPE_COMMAND_POOL", pure OBJECT_TYPE_COMMAND_POOL)
+                            , ("OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV", pure OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV)
+                            , ("OBJECT_TYPE_DEFERRED_OPERATION_KHR", pure OBJECT_TYPE_DEFERRED_OPERATION_KHR)
                             , ("OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL", pure OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL)
-                            , ("OBJECT_TYPE_ACCELERATION_STRUCTURE_NV", pure OBJECT_TYPE_ACCELERATION_STRUCTURE_NV)
                             , ("OBJECT_TYPE_VALIDATION_CACHE_EXT", pure OBJECT_TYPE_VALIDATION_CACHE_EXT)
+                            , ("OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR", pure OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR)
                             , ("OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT", pure OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT)
-                            , ("OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX", pure OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX)
-                            , ("OBJECT_TYPE_OBJECT_TABLE_NVX", pure OBJECT_TYPE_OBJECT_TABLE_NVX)
                             , ("OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT", pure OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT)
                             , ("OBJECT_TYPE_DISPLAY_MODE_KHR", pure OBJECT_TYPE_DISPLAY_MODE_KHR)
                             , ("OBJECT_TYPE_DISPLAY_KHR", pure OBJECT_TYPE_DISPLAY_KHR)

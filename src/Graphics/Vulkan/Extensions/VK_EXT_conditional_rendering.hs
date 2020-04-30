@@ -133,7 +133,7 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO
   lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'cmdBeginConditionalRenderingEXT' and 'cmdEndConditionalRenderingEXT'
 --
 -- To ensure that 'cmdEndConditionalRenderingEXT' is always called: pass

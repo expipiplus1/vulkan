@@ -16,13 +16,13 @@ module Graphics.Vulkan.Core10.Enums.AccessFlagBits  ( AccessFlagBits( ACCESS_IND
                                                                     , ACCESS_HOST_WRITE_BIT
                                                                     , ACCESS_MEMORY_READ_BIT
                                                                     , ACCESS_MEMORY_WRITE_BIT
+                                                                    , ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV
+                                                                    , ACCESS_COMMAND_PREPROCESS_READ_BIT_NV
                                                                     , ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
-                                                                    , ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV
-                                                                    , ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV
                                                                     , ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV
+                                                                    , ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR
+                                                                    , ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR
                                                                     , ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
-                                                                    , ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX
-                                                                    , ACCESS_COMMAND_PROCESS_READ_BIT_NVX
                                                                     , ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT
                                                                     , ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT
                                                                     , ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT
@@ -63,92 +63,92 @@ import Graphics.Vulkan.Zero (Zero)
 -- accesses of that type. The following table lists, for each access flag,
 -- which pipeline stages /can/ perform that type of access.
 --
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | Access flag                                        | Supported pipeline stages                                                                               |
--- +====================================================+=========================================================================================================+
--- | 'ACCESS_INDIRECT_COMMAND_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'                   |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_INDEX_READ_BIT'                            | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_INPUT_BIT'                    |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_VERTEX_ATTRIBUTE_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_INPUT_BIT'                    |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_UNIFORM_READ_BIT'                          | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                 |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                 |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV',          |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                  |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',    |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT', |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT',                |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or             |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                  |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_SHADER_READ_BIT'                           | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                 |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                 |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV',          |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                  |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',    |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT', |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT',                |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or             |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                  |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_SHADER_WRITE_BIT'                          | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                 |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                 |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV',          |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                  |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',    |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT', |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT',                |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or             |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                  |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_INPUT_ATTACHMENT_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT'                 |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_COLOR_ATTACHMENT_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'         |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_COLOR_ATTACHMENT_WRITE_BIT'                | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'         |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT'         | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT', or        |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'             |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'        | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT', or        |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'             |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_TRANSFER_READ_BIT'                         | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'                        |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_TRANSFER_WRITE_BIT'                        | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'                        |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_HOST_READ_BIT'                             | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'                            |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_HOST_WRITE_BIT'                            | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'                            |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_MEMORY_READ_BIT'                           | Any                                                                                                     |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_MEMORY_WRITE_BIT'                          | Any                                                                                                     |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'         |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_COMMAND_PROCESS_READ_BIT_NVX'              | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX'             |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX'             | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX'             |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT'        | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'       |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'            | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'           |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT'          | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'          |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT'  | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'          |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT'   | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'                   |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV'        | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV', or       |
--- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV' |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV'       | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV' |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
--- | 'ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT'         | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'    |
--- +----------------------------------------------------+---------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | Access flag                                        | Supported pipeline stages                                                                                |
+-- +====================================================+==========================================================================================================+
+-- | 'ACCESS_INDIRECT_COMMAND_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'                    |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_INDEX_READ_BIT'                            | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_INPUT_BIT'                     |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_VERTEX_ATTRIBUTE_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_INPUT_BIT'                     |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_UNIFORM_READ_BIT'                          | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR',          |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                   |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',     |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT',  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT',                 |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or              |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                   |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_SHADER_READ_BIT'                           | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR',          |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                   |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',     |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT',  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT',                 |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or              |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                   |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_SHADER_WRITE_BIT'                          | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV',                  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV',                  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR',          |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT',                   |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',     |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT',  |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT',                 |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT', or              |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMPUTE_SHADER_BIT'                   |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_INPUT_ATTACHMENT_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_SHADER_BIT'                  |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_COLOR_ATTACHMENT_READ_BIT'                 | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'          |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_COLOR_ATTACHMENT_WRITE_BIT'                | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'          |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT'         | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT', or         |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'              |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'        | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT', or         |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'              |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_TRANSFER_READ_BIT'                         | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'                         |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_TRANSFER_WRITE_BIT'                        | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'                         |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_HOST_READ_BIT'                             | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'                             |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_HOST_WRITE_BIT'                            | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'                             |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_MEMORY_READ_BIT'                           | Any                                                                                                      |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_MEMORY_WRITE_BIT'                          | Any                                                                                                      |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'          |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_COMMAND_PREPROCESS_READ_BIT_NV'            | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'            |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV'           | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV'            |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT'        | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'        |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'            | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'            |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT'          | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'           |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT'  | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'           |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT'   | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_DRAW_INDIRECT_BIT'                    |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'       | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR', or       |
+-- |                                                    | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'      | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+-- | 'ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT'         | 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'     |
+-- +----------------------------------------------------+----------------------------------------------------------------------------------------------------------+
 --
 -- Supported access types
 --
@@ -277,33 +277,33 @@ pattern ACCESS_MEMORY_READ_BIT = AccessFlagBits 0x00008000
 -- valid in any access mask, and is treated as equivalent to setting all
 -- @WRITE@ access flags that are valid where it is used.
 pattern ACCESS_MEMORY_WRITE_BIT = AccessFlagBits 0x00010000
+-- | 'ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV' specifies writes to the
+-- 'Graphics.Vulkan.Core10.Handles.Buffer' preprocess outputs in
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'.
+pattern ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV = AccessFlagBits 0x00040000
+-- | 'ACCESS_COMMAND_PREPROCESS_READ_BIT_NV' specifies reads from
+-- 'Graphics.Vulkan.Core10.Handles.Buffer' inputs to
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'.
+pattern ACCESS_COMMAND_PREPROCESS_READ_BIT_NV = AccessFlagBits 0x00020000
 -- | 'ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT' specifies read access to a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
 -- during dynamic
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymapops fragment density map operations>
 pattern ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT = AccessFlagBits 0x01000000
--- | 'ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV' specifies write access to
--- an acceleration structure as part of a build command.
-pattern ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV = AccessFlagBits 0x00400000
--- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV' specifies read access to an
--- acceleration structure as part of a trace or build command.
-pattern ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV = AccessFlagBits 0x00200000
 -- | 'ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV' specifies read access to a
 -- shading rate image as part of a drawing command, as bound by
 -- 'Graphics.Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV'.
 pattern ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV = AccessFlagBits 0x00800000
+-- | 'ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR' specifies write access to
+-- an acceleration structure as part of a build command.
+pattern ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR = AccessFlagBits 0x00400000
+-- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR' specifies read access to an
+-- acceleration structure as part of a trace or build command.
+pattern ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR = AccessFlagBits 0x00200000
 -- | 'ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' is similar to
 -- 'ACCESS_COLOR_ATTACHMENT_READ_BIT', but also includes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>.
 pattern ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = AccessFlagBits 0x00080000
--- | 'ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX' specifies writes to the target
--- command buffer in
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.cmdProcessCommandsNVX'.
-pattern ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX = AccessFlagBits 0x00040000
--- | 'ACCESS_COMMAND_PROCESS_READ_BIT_NVX' specifies reads from
--- 'Graphics.Vulkan.Core10.Handles.Buffer' inputs to
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.cmdProcessCommandsNVX'.
-pattern ACCESS_COMMAND_PROCESS_READ_BIT_NVX = AccessFlagBits 0x00020000
 -- | 'ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT' specifies read access to a
 -- predicate as part of conditional rendering.
 pattern ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT = AccessFlagBits 0x00100000
@@ -342,13 +342,13 @@ instance Show AccessFlagBits where
     ACCESS_HOST_WRITE_BIT -> showString "ACCESS_HOST_WRITE_BIT"
     ACCESS_MEMORY_READ_BIT -> showString "ACCESS_MEMORY_READ_BIT"
     ACCESS_MEMORY_WRITE_BIT -> showString "ACCESS_MEMORY_WRITE_BIT"
+    ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV -> showString "ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV"
+    ACCESS_COMMAND_PREPROCESS_READ_BIT_NV -> showString "ACCESS_COMMAND_PREPROCESS_READ_BIT_NV"
     ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT -> showString "ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"
-    ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV -> showString "ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV"
-    ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV -> showString "ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV"
     ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV -> showString "ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV"
+    ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR -> showString "ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"
+    ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR -> showString "ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR"
     ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT -> showString "ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"
-    ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX -> showString "ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX"
-    ACCESS_COMMAND_PROCESS_READ_BIT_NVX -> showString "ACCESS_COMMAND_PROCESS_READ_BIT_NVX"
     ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT -> showString "ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT"
     ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT -> showString "ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT"
     ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT -> showString "ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT"
@@ -373,13 +373,13 @@ instance Read AccessFlagBits where
                             , ("ACCESS_HOST_WRITE_BIT", pure ACCESS_HOST_WRITE_BIT)
                             , ("ACCESS_MEMORY_READ_BIT", pure ACCESS_MEMORY_READ_BIT)
                             , ("ACCESS_MEMORY_WRITE_BIT", pure ACCESS_MEMORY_WRITE_BIT)
+                            , ("ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV", pure ACCESS_COMMAND_PREPROCESS_WRITE_BIT_NV)
+                            , ("ACCESS_COMMAND_PREPROCESS_READ_BIT_NV", pure ACCESS_COMMAND_PREPROCESS_READ_BIT_NV)
                             , ("ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT", pure ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT)
-                            , ("ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV", pure ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV)
-                            , ("ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV", pure ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV)
                             , ("ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV", pure ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV)
+                            , ("ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR", pure ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR)
+                            , ("ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR", pure ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR)
                             , ("ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT", pure ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT)
-                            , ("ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX", pure ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX)
-                            , ("ACCESS_COMMAND_PROCESS_READ_BIT_NVX", pure ACCESS_COMMAND_PROCESS_READ_BIT_NVX)
                             , ("ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT", pure ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT)
                             , ("ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT", pure ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT)
                             , ("ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT", pure ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT)

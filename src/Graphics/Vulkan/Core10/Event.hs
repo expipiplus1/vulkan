@@ -126,8 +126,8 @@ createEvent device createInfo allocator = liftIO . evalContT $ do
   pEvent <- lift $ peek @Event pPEvent
   pure $ (pEvent)
 
--- | A convenience wrapper to make a compatible pair of 'createEvent' and
--- 'destroyEvent'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createEvent' and 'destroyEvent'
 --
 -- To ensure that 'destroyEvent' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

@@ -427,8 +427,10 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.getAccelerationStructureMemoryRequirementsKHR',
 -- 'getBufferMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'getImageMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
 data MemoryRequirements2 (es :: [Type]) = MemoryRequirements2

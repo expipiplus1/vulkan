@@ -175,7 +175,8 @@ foreign import ccall
 -- -   @queueFamilyIndex@ is the queue family index.
 --
 -- -   @connection@ is a pointer to an @xcb_connection_t@ to the X server.
---     @visual_id@ is an X11 visual (@xcb_visualid_t@).
+--
+-- -   @visual_id@ is an X11 visual (@xcb_visualid_t@).
 --
 -- = Description
 --

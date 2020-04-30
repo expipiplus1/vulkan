@@ -241,8 +241,8 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   pMemory <- lift $ peek @DeviceMemory pPMemory
   pure $ (pMemory)
 
--- | A convenience wrapper to make a compatible pair of 'allocateMemory' and
--- 'freeMemory'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'allocateMemory' and 'freeMemory'
 --
 -- To ensure that 'freeMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -489,8 +489,8 @@ mapMemory device memory offset size flags = liftIO . evalContT $ do
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
 
--- | A convenience wrapper to make a compatible pair of 'mapMemory' and
--- 'unmapMemory'
+-- | A convenience wrapper to make a compatible pair of calls to 'mapMemory'
+-- and 'unmapMemory'
 --
 -- To ensure that 'unmapMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

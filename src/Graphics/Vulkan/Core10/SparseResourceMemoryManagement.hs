@@ -1020,6 +1020,10 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
 --     created
 --
+-- -   @image@ /must/ have been created with
+--     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--     set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'

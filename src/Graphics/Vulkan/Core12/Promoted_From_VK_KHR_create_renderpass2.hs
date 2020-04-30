@@ -404,8 +404,8 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
   lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) pRenderPassBegin pSubpassBeginInfo
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of 'cmdBeginRenderPass2'
--- and 'cmdEndRenderPass2'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'cmdBeginRenderPass2' and 'cmdEndRenderPass2'
 --
 -- To ensure that 'cmdEndRenderPass2' is always called: pass
 -- 'Control.Exception.bracket_' (or the allocate function from your
@@ -1123,6 +1123,28 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   All attachments in @pColorAttachments@ that are not
 --     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
 --     the same sample count
+--
+-- -   All attachments in @pInputAttachments@ that are not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
+--     formats whose features contain at least one of
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'.
+--
+-- -   All attachments in @pColorAttachments@ that are not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
+--     formats whose features contain
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   All attachments in @pResolveAttachments@ that are not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
+--     formats whose features contain
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   If @pDepthStencilAttachment@ is not @NULL@ and the attachment is not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it
+--     /must/ have a format whose features contain
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If the @VK_AMD_mixed_attachment_samples@ extension is enabled, all
 --     attachments in @pColorAttachments@ that are not

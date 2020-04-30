@@ -297,8 +297,8 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
   pSwapchain <- lift $ peek @SwapchainKHR pPSwapchain
   pure $ (pSwapchain)
 
--- | A convenience wrapper to make a compatible pair of 'createSwapchainKHR'
--- and 'destroySwapchainKHR'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createSwapchainKHR' and 'destroySwapchainKHR'
 --
 -- To ensure that 'destroySwapchainKHR' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

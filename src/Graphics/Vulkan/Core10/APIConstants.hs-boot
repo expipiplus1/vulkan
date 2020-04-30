@@ -4,6 +4,7 @@ module Graphics.Vulkan.Core10.APIConstants  ( LUID_SIZE
                                             , MAX_DEVICE_GROUP_SIZE
                                             , MAX_DRIVER_NAME_SIZE
                                             , MAX_DRIVER_INFO_SIZE
+                                            , SHADER_UNUSED_KHR
                                             ) where
 
 
@@ -21,4 +22,7 @@ type MAX_DRIVER_NAME_SIZE = 256
 
 
 type MAX_DRIVER_INFO_SIZE = 256
+
+
+type SHADER_UNUSED_KHR = 0xffffffff
 

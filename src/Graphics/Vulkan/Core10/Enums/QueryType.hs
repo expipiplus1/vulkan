@@ -3,7 +3,8 @@ module Graphics.Vulkan.Core10.Enums.QueryType  (QueryType( QUERY_TYPE_OCCLUSION
                                                          , QUERY_TYPE_PIPELINE_STATISTICS
                                                          , QUERY_TYPE_TIMESTAMP
                                                          , QUERY_TYPE_PERFORMANCE_QUERY_INTEL
-                                                         , QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
+                                                         , QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR
+                                                         , QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR
                                                          , QUERY_TYPE_PERFORMANCE_QUERY_KHR
                                                          , QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT
                                                          , ..
@@ -28,7 +29,9 @@ import Graphics.Vulkan.Zero (Zero)
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdWriteAccelerationStructuresPropertiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.writeAccelerationStructuresPropertiesKHR'
 newtype QueryType = QueryType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -44,9 +47,12 @@ pattern QUERY_TYPE_TIMESTAMP = QueryType 2
 -- | 'QUERY_TYPE_PERFORMANCE_QUERY_INTEL' specifies a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-performance-intel Intel performance query>.
 pattern QUERY_TYPE_PERFORMANCE_QUERY_INTEL = QueryType 1000210000
--- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV' specifies a
+-- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR' specifies a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-copying ray tracing serialization acceleration structure size query>
+pattern QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR = QueryType 1000150000
+-- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR' specifies a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-copying ray tracing acceleration structure size query>.
-pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = QueryType 1000165000
+pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR = QueryType 1000165000
 -- | 'QUERY_TYPE_PERFORMANCE_QUERY_KHR' specifies a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-performance performance query>.
 pattern QUERY_TYPE_PERFORMANCE_QUERY_KHR = QueryType 1000116000
@@ -57,7 +63,8 @@ pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = QueryType 1000028004
              QUERY_TYPE_PIPELINE_STATISTICS,
              QUERY_TYPE_TIMESTAMP,
              QUERY_TYPE_PERFORMANCE_QUERY_INTEL,
-             QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV,
+             QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR,
+             QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR,
              QUERY_TYPE_PERFORMANCE_QUERY_KHR,
              QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT :: QueryType #-}
 
@@ -67,7 +74,8 @@ instance Show QueryType where
     QUERY_TYPE_PIPELINE_STATISTICS -> showString "QUERY_TYPE_PIPELINE_STATISTICS"
     QUERY_TYPE_TIMESTAMP -> showString "QUERY_TYPE_TIMESTAMP"
     QUERY_TYPE_PERFORMANCE_QUERY_INTEL -> showString "QUERY_TYPE_PERFORMANCE_QUERY_INTEL"
-    QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV -> showString "QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV"
+    QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR -> showString "QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR"
+    QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR -> showString "QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR"
     QUERY_TYPE_PERFORMANCE_QUERY_KHR -> showString "QUERY_TYPE_PERFORMANCE_QUERY_KHR"
     QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT -> showString "QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT"
     QueryType x -> showParen (p >= 11) (showString "QueryType " . showsPrec 11 x)
@@ -77,7 +85,8 @@ instance Read QueryType where
                             , ("QUERY_TYPE_PIPELINE_STATISTICS", pure QUERY_TYPE_PIPELINE_STATISTICS)
                             , ("QUERY_TYPE_TIMESTAMP", pure QUERY_TYPE_TIMESTAMP)
                             , ("QUERY_TYPE_PERFORMANCE_QUERY_INTEL", pure QUERY_TYPE_PERFORMANCE_QUERY_INTEL)
-                            , ("QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV", pure QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV)
+                            , ("QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR", pure QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR)
+                            , ("QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR", pure QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR)
                             , ("QUERY_TYPE_PERFORMANCE_QUERY_KHR", pure QUERY_TYPE_PERFORMANCE_QUERY_KHR)
                             , ("QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT", pure QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT)]
                      +++

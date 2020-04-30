@@ -250,8 +250,8 @@ createInstance createInfo allocator = liftIO . evalContT $ do
   pInstance' <- lift $ (\h -> Instance h <$> initInstanceCmds h) pInstance
   pure $ (pInstance')
 
--- | A convenience wrapper to make a compatible pair of 'createInstance' and
--- 'destroyInstance'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createInstance' and 'destroyInstance'
 --
 -- To ensure that 'destroyInstance' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -1251,7 +1251,10 @@ data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
     applicationInfo :: Maybe ApplicationInfo
   , -- | @ppEnabledLayerNames@ is a pointer to an array of @enabledLayerCount@
     -- null-terminated UTF-8 strings containing the names of layers to enable
-    -- for the created instance. See the
+    -- for the created instance. The layers are loaded in the order they are
+    -- listed in this array, with the first array element being the closest to
+    -- the application, and the last array element being the closest to the
+    -- driver. See the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-layers>
     -- section for further details.
     enabledLayerNames :: Vector ByteString

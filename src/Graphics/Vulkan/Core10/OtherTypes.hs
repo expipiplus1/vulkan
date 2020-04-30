@@ -514,8 +514,9 @@ instance Zero BufferMemoryBarrier where
 --     and
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If @image@ has a single-plane color format or is not /disjoint/,
---     then the @aspectMask@ member of @subresourceRange@ /must/ be
+-- -   If @image@ has a color format and either the format is single-plane
+--     or the image is not disjoint then the @aspectMask@ member of
+--     @subresourceRange@ /must/ only include
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   If @image@ has a multi-planar format and the image is /disjoint/,

@@ -105,7 +105,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
 import Graphics.Vulkan.CStruct (ToCStruct)
 import Graphics.Vulkan.CStruct (ToCStruct(..))
 import Graphics.Vulkan.Exception (VulkanException(..))
-import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_ray_tracing (WriteDescriptorSetAccelerationStructureNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (WriteDescriptorSetAccelerationStructureKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block (WriteDescriptorSetInlineUniformBlockEXT)
 import Graphics.Vulkan.Zero (Zero(..))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_DESCRIPTOR_SET))
@@ -185,7 +185,7 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   pSetLayout <- lift $ peek @DescriptorSetLayout pPSetLayout
   pure $ (pSetLayout)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDescriptorSetLayout' and 'destroyDescriptorSetLayout'
 --
 -- To ensure that 'destroyDescriptorSetLayout' is always called: pass
@@ -348,7 +348,7 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   pDescriptorPool <- lift $ peek @DescriptorPool pPDescriptorPool
   pure $ (pDescriptorPool)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDescriptorPool' and 'destroyDescriptorPool'
 --
 -- To ensure that 'destroyDescriptorPool' is always called: pass
@@ -636,7 +636,7 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   pDescriptorSets <- lift $ generateM (fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) (\i -> peek @DescriptorSet ((pPDescriptorSets `advancePtrBytes` (8 * (i)) :: Ptr DescriptorSet)))
   pure $ (pDescriptorSets)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'allocateDescriptorSets' and 'freeDescriptorSets'
 --
 -- To ensure that 'freeDescriptorSets' is always called: pass
@@ -1059,10 +1059,10 @@ instance Zero DescriptorImageInfo where
 -- 'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 -- structure included in the @pNext@ chain of 'WriteDescriptorSet', or if
 -- @descriptorType@ is
--- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+-- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 -- in which case the source data for the descriptor writes is taken from
 -- the
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 -- structure in the @pNext@ chain of 'WriteDescriptorSet', as specified
 -- below.
 --
@@ -1176,9 +1176,9 @@ instance Zero DescriptorImageInfo where
 --     structure whose @dataSize@ member equals @descriptorCount@
 --
 -- -   If @descriptorType@ is
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 --     the @pNext@ chain /must/ include a
---     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 --     structure whose @accelerationStructureCount@ member equals
 --     @descriptorCount@
 --
@@ -1359,7 +1359,7 @@ instance Zero DescriptorImageInfo where
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 --     or
 --     'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 --
@@ -1427,7 +1427,7 @@ instance Extensible WriteDescriptorSet where
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureNV = Just f
+    | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureKHR = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetInlineUniformBlockEXT = Just f
     | otherwise = Nothing
 

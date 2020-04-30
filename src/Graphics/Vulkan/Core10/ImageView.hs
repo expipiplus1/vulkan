@@ -135,8 +135,8 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
   pView <- lift $ peek @ImageView pPView
   pure $ (pView)
 
--- | A convenience wrapper to make a compatible pair of 'createImageView' and
--- 'destroyImageView'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createImageView' and 'destroyImageView'
 --
 -- To ensure that 'destroyImageView' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -653,12 +653,6 @@ instance Zero ComponentMapping where
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
 --     created, according to the formula defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
---
--- -   If @image@ was created with the
---     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
---     flag, @format@ /must/ be compatible with the @format@ used to create
---     @image@, as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
 --
 -- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'

@@ -13,7 +13,12 @@ data Bool32
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.BindIndexBufferIndirectCommandNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.BindVertexBufferIndirectCommandNV',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressConstKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressKHR'
 type DeviceAddress = Word64
 
 
@@ -21,9 +26,12 @@ type DeviceAddress = Word64
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryAabbsDataKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryTrianglesDataKHR',
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferPropertiesANDROID',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.BindAccelerationStructureMemoryInfoKHR',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.BufferCopy',
@@ -31,13 +39,13 @@ type DeviceAddress = Word64
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.BufferImageCopy',
 -- 'Graphics.Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
 -- 'Graphics.Vulkan.Core10.BufferView.BufferViewCreateInfo',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdProcessCommandsInfoNVX',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.DescriptorBufferInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryAABBNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.IndirectCommandsTokenNVX',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsStreamNV',
 -- 'Graphics.Vulkan.Core10.Memory.MappedMemoryRange',
 -- 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.MemoryHeap',
@@ -52,6 +60,7 @@ type DeviceAddress = Word64
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements',
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseMemoryBind',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.StridedBufferRegionKHR',
 -- 'Graphics.Vulkan.Core10.Image.SubresourceLayout',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.bindBufferMemory',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.bindImageMemory',
@@ -59,6 +68,7 @@ type DeviceAddress = Word64
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_transform_feedback.cmdBindTransformFeedbackBuffersEXT',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdBuildAccelerationStructureIndirectKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect',
@@ -75,6 +85,7 @@ type DeviceAddress = Word64
 -- 'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysIndirectKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdUpdateBuffer',
 -- 'Graphics.Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',

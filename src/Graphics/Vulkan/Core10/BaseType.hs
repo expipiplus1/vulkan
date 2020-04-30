@@ -52,16 +52,19 @@ bool32ToBool = \case
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureBuildGeometryInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateGeometryTypeInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryInstancesDataKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
 -- 'Graphics.Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.DescriptorSetLayoutSupport',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.DeviceGeneratedCommandsFeaturesNVX',
 -- 'Graphics.Vulkan.Extensions.VK_AMD_display_native_hdr.DisplayNativeHdrSurfaceCapabilitiesAMD',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_filter_cubic.FilterCubicImageViewImageFormatPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements',
 -- 'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.PerformanceOverrideInfoINTEL',
 -- 'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.PerformanceValueDataINTEL',
@@ -84,6 +87,8 @@ bool32ToBool = \case
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config.PhysicalDeviceDiagnosticsConfigFeaturesNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive.PhysicalDeviceExclusiveScissorFeaturesNV',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsProperties',
@@ -105,9 +110,11 @@ bool32ToBool = \case
 -- 'Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeaturesEXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
 -- 'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
 -- 'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingFeaturesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
@@ -168,6 +175,7 @@ bool32ToBool = \case
 -- 'Graphics.Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD',
 -- 'Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.TextureLODGatherFormatPropertiesAMD',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.cmdExecuteGeneratedCommandsNV',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR',
 -- 'Graphics.Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD',
 -- 'Graphics.Vulkan.Core10.Fence.waitForFences'
@@ -254,9 +262,12 @@ type Flags = Word32
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryAabbsDataKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryTrianglesDataKHR',
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferPropertiesANDROID',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.BindAccelerationStructureMemoryInfoKHR',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.BufferCopy',
@@ -264,13 +275,13 @@ type Flags = Word32
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.BufferImageCopy',
 -- 'Graphics.Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
 -- 'Graphics.Vulkan.Core10.BufferView.BufferViewCreateInfo',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdProcessCommandsInfoNVX',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.DescriptorBufferInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryAABBNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.IndirectCommandsTokenNVX',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsStreamNV',
 -- 'Graphics.Vulkan.Core10.Memory.MappedMemoryRange',
 -- 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.MemoryHeap',
@@ -285,6 +296,7 @@ type Flags = Word32
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements',
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseMemoryBind',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.StridedBufferRegionKHR',
 -- 'Graphics.Vulkan.Core10.Image.SubresourceLayout',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.bindBufferMemory',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.bindImageMemory',
@@ -292,6 +304,7 @@ type Flags = Word32
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_transform_feedback.cmdBindTransformFeedbackBuffersEXT',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdBuildAccelerationStructureIndirectKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect',
@@ -308,6 +321,7 @@ type Flags = Word32
 -- 'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysIndirectKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdUpdateBuffer',
 -- 'Graphics.Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',
@@ -321,6 +335,11 @@ type DeviceSize = Word64
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.BindIndexBufferIndirectCommandNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.BindVertexBufferIndirectCommandNV',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressConstKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressKHR'
 type DeviceAddress = Word64
 

@@ -838,31 +838,31 @@ instance Zero PerformanceQuerySubmitInfoKHR where
 
 
 data PerformanceCounterResultKHR
-  = CounterInt32 Int32
-  | CounterInt64 Int64
-  | CounterUint32 Word32
-  | CounterUint64 Word64
-  | CounterFloat32 Float
-  | CounterFloat64 Double
+  = Int32Counter Int32
+  | Int64Counter Int64
+  | Uint32Counter Word32
+  | Uint64Counter Word64
+  | Float32Counter Float
+  | Float64Counter Double
   deriving (Show)
 
 instance ToCStruct PerformanceCounterResultKHR where
   withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr PerformanceCounterResultKHR -> PerformanceCounterResultKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
-    CounterInt32 v -> lift $ poke (castPtr @_ @Int32 p) (v)
-    CounterInt64 v -> lift $ poke (castPtr @_ @Int64 p) (v)
-    CounterUint32 v -> lift $ poke (castPtr @_ @Word32 p) (v)
-    CounterUint64 v -> lift $ poke (castPtr @_ @Word64 p) (v)
-    CounterFloat32 v -> lift $ poke (castPtr @_ @CFloat p) (CFloat (v))
-    CounterFloat64 v -> lift $ poke (castPtr @_ @CDouble p) (CDouble (v))
+    Int32Counter v -> lift $ poke (castPtr @_ @Int32 p) (v)
+    Int64Counter v -> lift $ poke (castPtr @_ @Int64 p) (v)
+    Uint32Counter v -> lift $ poke (castPtr @_ @Word32 p) (v)
+    Uint64Counter v -> lift $ poke (castPtr @_ @Word64 p) (v)
+    Float32Counter v -> lift $ poke (castPtr @_ @CFloat p) (CFloat (v))
+    Float64Counter v -> lift $ poke (castPtr @_ @CDouble p) (CDouble (v))
   pokeZeroCStruct :: Ptr PerformanceCounterResultKHR -> IO b -> IO b
   pokeZeroCStruct _ f = f
   cStructSize = 8
   cStructAlignment = 8
 
 instance Zero PerformanceCounterResultKHR where
-  zero = CounterInt64 zero
+  zero = Int64Counter zero
 
 
 -- | VkPerformanceCounterScopeKHR - Supported counter scope types

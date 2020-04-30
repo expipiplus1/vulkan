@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits  ( FormatFeatureFlagBi
                                                                                   , FORMAT_FEATURE_BLIT_DST_BIT
                                                                                   , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT
                                                                                   , FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
+                                                                                  , FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
                                                                                   , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
                                                                                   , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT
                                                                                   , FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
@@ -318,6 +319,8 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = FormatFeatureFlagBits 0
 -- view /can/ be used as a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT = FormatFeatureFlagBits 0x01000000
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"
+pattern FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = FormatFeatureFlagBits 0x20000000
 -- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG = FormatFeatureFlagBits 0x00002000
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT' specifies
@@ -415,6 +418,7 @@ instance Show FormatFeatureFlagBits where
     FORMAT_FEATURE_BLIT_DST_BIT -> showString "FORMAT_FEATURE_BLIT_DST_BIT"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
     FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT -> showString "FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT"
+    FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR -> showString "FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT"
     FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT -> showString "FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT"
@@ -443,6 +447,7 @@ instance Read FormatFeatureFlagBits where
                             , ("FORMAT_FEATURE_BLIT_DST_BIT", pure FORMAT_FEATURE_BLIT_DST_BIT)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)
                             , ("FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT", pure FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT)
+                            , ("FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR", pure FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT)
                             , ("FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT", pure FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT)

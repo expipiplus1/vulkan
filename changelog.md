@@ -1,8 +1,10 @@
 # Change Log
 
 ## WIP
+  - Update API version 1.2.135
   - Bracket functions now take as an argument a function to consume a pair of
     begin/end actions
+  - Move `Counter` prefix on `PerformanceCounterResult` to be a suffix
 
 ## [3.1.0.0] - 2020-03-10
   - Commands are now in MonadIO

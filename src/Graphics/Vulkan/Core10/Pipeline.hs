@@ -101,6 +101,7 @@ import Graphics.Vulkan.Core10.Enums.Format (Format)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
 import Graphics.Vulkan.Core10.Enums.FrontFace (FrontFace)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_generated_commands (GraphicsPipelineShaderGroupsCreateInfoNV)
 import Graphics.Vulkan.Core10.Enums.LogicOp (LogicOp)
 import Graphics.Vulkan.CStruct.Extends (PeekChain)
 import Graphics.Vulkan.CStruct.Extends (PeekChain(..))
@@ -233,6 +234,19 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
 --
+-- -   If @pipelineCache@ was created with
+--     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
+--     host access to @pipelineCache@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--
+-- Note
+--
+-- An implicit cache may be provided by the implementation or a layer. For
+-- this reason, it is still valid to set
+-- 'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+-- on @flags@ for any element of @pCreateInfos@ while passing
+-- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' for @pipelineCache@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
@@ -293,7 +307,7 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (pPipelines)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createGraphicsPipelines' and 'destroyPipeline'
 --
 -- To ensure that 'destroyPipeline' is always called: pass
@@ -355,6 +369,11 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
 --
+-- -   If @pipelineCache@ was created with
+--     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
+--     host access to @pipelineCache@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
@@ -415,7 +434,7 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (pPipelines)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createComputePipelines' and 'destroyPipeline'
 --
 -- To ensure that 'destroyPipeline' is always called: pass
@@ -858,7 +877,9 @@ instance Zero SpecializationInfo where
 -- = See Also
 --
 -- 'ComputePipelineCreateInfo', 'GraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PipelineShaderStageCreateFlags',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Handles.ShaderModule',
 -- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits',
@@ -1001,6 +1022,37 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- -   The number of resources in @layout@ accessible to the compute shader
 --     stage /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageResources@
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1288,6 +1340,7 @@ instance Zero VertexInputAttributeDescription where
 -- = See Also
 --
 -- 'GraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags.PipelineVertexInputStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'VertexInputAttributeDescription', 'VertexInputBindingDescription'
@@ -1515,6 +1568,7 @@ instance Zero PipelineInputAssemblyStateCreateInfo where
 -- = See Also
 --
 -- 'GraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags.PipelineTessellationStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineTessellationStateCreateInfo (es :: [Type]) = PipelineTessellationStateCreateInfo
@@ -3174,6 +3228,40 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
 --     /must/ be in the range [1,256]
 --
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands →deviceGeneratedCommands>
+--     feature /must/ be enabled
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -3182,6 +3270,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
+--     'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV',
 --     'Graphics.Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
 --     'Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT',
 --     'Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
@@ -3317,6 +3406,7 @@ instance Extensible GraphicsPipelineCreateInfo where
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
     | Just Refl <- eqT @e @PipelineRepresentativeFragmentTestStateCreateInfoNV = Just f
     | Just Refl <- eqT @e @PipelineDiscardRectangleStateCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @GraphicsPipelineShaderGroupsCreateInfoNV = Just f
     | otherwise = Nothing
 
 instance PokeChain es => ToCStruct (GraphicsPipelineCreateInfo es) where

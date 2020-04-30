@@ -240,10 +240,10 @@ foreign import ccall
 -- controls the behavior of all
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing drawing commands>.
 -- The pipeline bound to
--- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_NV'
+-- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR'
 -- controls the behavior of
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV'. No other
--- commands are affected by the pipeline state.
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysKHR'. No
+-- other commands are affected by the pipeline state.
 --
 -- == Valid Usage
 --
@@ -296,13 +296,17 @@ foreign import ccall
 --     active
 --
 -- -   If @pipelineBindPoint@ is
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_NV',
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR',
 --     the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ support compute operations
 --
 -- -   If @pipelineBindPoint@ is
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_NV',
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR',
 --     the @pipeline@ /must/ be a ray tracing pipeline
+--
+-- -   The @pipeline@ /must/ not have been created with
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+--     set.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1361,7 +1365,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   @indexType@ /must/ not be
---     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'.
+--     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'.
 --
 -- -   If @indexType@ is
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT', the
@@ -3491,24 +3495,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The source region specified by each element of @pRegions@ /must/ be
---     a region that is contained within @srcImage@ if the @srcImage@’s
---     'Graphics.Vulkan.Core10.Enums.Format.Format' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied if the @srcImage@’s
---     'Graphics.Vulkan.Core10.Enums.Format.Format' is a multi-planar
---     format
---
--- -   The destination region specified by each element of @pRegions@
---     /must/ be a region that is contained within @dstImage@ if the
---     @dstImage@’s 'Graphics.Vulkan.Core10.Enums.Format.Format' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied to if the @dstImage@’s
---     'Graphics.Vulkan.Core10.Enums.Format.Format' is a multi-planar
---     format
---
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
 --     in memory
@@ -3571,19 +3557,6 @@ foreign import ccall
 --     plane /must/ be compatible according to
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes the description of compatible planes>
 --     for the plane being copied
---
--- -   When a copy is performed to or from an image with a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     the @aspectMask@ of the @srcSubresource@ and\/or @dstSubresource@
---     that refers to the multi-planar image /must/ be
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     (with
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     valid only for a 'Graphics.Vulkan.Core10.Enums.Format.Format' with
---     three planes)
 --
 -- -   The sample count of @srcImage@ and @dstImage@ /must/ match
 --
@@ -6617,8 +6590,8 @@ cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
   vkCmdBeginQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags)
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of 'cmdBeginQuery' and
--- 'cmdEndQuery'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'cmdBeginQuery' and 'cmdEndQuery'
 --
 -- To ensure that 'cmdEndQuery' is always called: pass
 -- 'Control.Exception.bracket_' (or the allocate function from your
@@ -7561,8 +7534,8 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $
   lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) pRenderPassBegin (contents)
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of 'cmdBeginRenderPass'
--- and 'cmdEndRenderPass'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'cmdBeginRenderPass' and 'cmdEndRenderPass'
 --
 -- To ensure that 'cmdEndRenderPass' is always called: pass
 -- 'Control.Exception.bracket_' (or the allocate function from your

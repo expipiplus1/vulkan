@@ -179,8 +179,8 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
   pFramebuffer <- lift $ peek @Framebuffer pPFramebuffer
   pure $ (pFramebuffer)
 
--- | A convenience wrapper to make a compatible pair of 'createFramebuffer'
--- and 'destroyFramebuffer'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createFramebuffer' and 'destroyFramebuffer'
 --
 -- To ensure that 'destroyFramebuffer' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -333,8 +333,8 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
   pRenderPass <- lift $ peek @RenderPass pPRenderPass
   pure $ (pRenderPass)
 
--- | A convenience wrapper to make a compatible pair of 'createRenderPass'
--- and 'destroyRenderPass'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createRenderPass' and 'destroyRenderPass'
 --
 -- To ensure that 'destroyRenderPass' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
