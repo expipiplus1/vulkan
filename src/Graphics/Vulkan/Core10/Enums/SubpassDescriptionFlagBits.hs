@@ -1,5 +1,7 @@
 {-# language CPP #-}
-module Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
+module Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
+                                                                                            , SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
+                                                                                            , SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
                                                                                             , SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX
                                                                                             , ..
                                                                                             )
@@ -29,6 +31,10 @@ import Graphics.Vulkan.Zero (Zero)
 newtype SubpassDescriptionFlagBits = SubpassDescriptionFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
+-- No documentation found for Nested "VkSubpassDescriptionFlagBits" "VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM"
+pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM = SubpassDescriptionFlagBits 0x00000008
+-- No documentation found for Nested "VkSubpassDescriptionFlagBits" "VK_SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM"
+pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM = SubpassDescriptionFlagBits 0x00000004
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX' specifies that
 -- shaders compiled for this subpass use per-view positions which only
 -- differ in value in the x component. Per-view viewport mask /can/ also be
@@ -46,12 +52,16 @@ type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 
 instance Show SubpassDescriptionFlagBits where
   showsPrec p = \case
+    SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM -> showString "SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM"
+    SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM -> showString "SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM"
     SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX -> showString "SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX"
     SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX -> showString "SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX"
     SubpassDescriptionFlagBits x -> showParen (p >= 11) (showString "SubpassDescriptionFlagBits 0x" . showHex x)
 
 instance Read SubpassDescriptionFlagBits where
-  readPrec = parens (choose [("SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX", pure SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX)
+  readPrec = parens (choose [("SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM", pure SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM)
+                            , ("SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM", pure SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM)
+                            , ("SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX", pure SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX)
                             , ("SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX", pure SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX)]
                      +++
                      prec 10 (do

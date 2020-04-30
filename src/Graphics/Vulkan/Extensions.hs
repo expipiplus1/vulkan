@@ -61,6 +61,7 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                                    , module Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
                                    , module Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
+                                   , module Graphics.Vulkan.Extensions.VK_EXT_robustness2
                                    , module Graphics.Vulkan.Extensions.VK_EXT_sample_locations
                                    , module Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
                                    , module Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
@@ -199,6 +200,7 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_NV_viewport_array2
                                    , module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
                                    , module Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+                                   , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
                                    , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                                    , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
                                    , module Graphics.Vulkan.Extensions.WSITypes
@@ -265,6 +267,7 @@ import Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
+import Graphics.Vulkan.Extensions.VK_EXT_robustness2
 import Graphics.Vulkan.Extensions.VK_EXT_sample_locations
 import Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
 import Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
@@ -403,6 +406,7 @@ import Graphics.Vulkan.Extensions.VK_NV_shading_rate_image
 import Graphics.Vulkan.Extensions.VK_NV_viewport_array2
 import Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
 import Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
 import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
 import Graphics.Vulkan.Extensions.WSITypes

@@ -375,9 +375,17 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   [[VUID-{refpage}-None-02720]] All vertex input bindings accessed via
+-- -   [[VUID-{refpage}-None-04007]] All vertex input bindings accessed via
 --     vertex input variables declared in the vertex shader entry point’s
---     interface /must/ have valid buffers bound
+--     interface /must/ have either valid or
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' buffers bound
+--
+-- -   [[VUID-{refpage}-None-04008]] If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, all vertex input bindings accessed via
+--     vertex input variables declared in the vertex shader entry point’s
+--     interface /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   [[VUID-{refpage}-None-02721]] For a given vertex buffer binding, any
 --     attribute data fetched /must/ be entirely contained within the

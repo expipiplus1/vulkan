@@ -906,7 +906,6 @@ instance ToCStruct DescriptorBufferInfo where
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr Buffer)) (zero)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
     poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
     f

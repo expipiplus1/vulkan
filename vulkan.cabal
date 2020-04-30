@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 918a7d79b7844fdf6a73f2297b486fb2893965c1a8ed2fdbd386d4e1721effe7
+-- hash: 8aa3a3b640d90e5d61cb119effe260e6b2770be0cd25795a39e62fe3eb17dfc0
 
 name:           vulkan
 version:        3.1.0.0
@@ -313,6 +313,7 @@ library
       Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
       Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
       Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
+      Graphics.Vulkan.Extensions.VK_EXT_robustness2
       Graphics.Vulkan.Extensions.VK_EXT_sample_locations
       Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
       Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
@@ -451,6 +452,7 @@ library
       Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
       Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
       Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
+      Graphics.Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
       Graphics.Vulkan.Extensions.WSITypes

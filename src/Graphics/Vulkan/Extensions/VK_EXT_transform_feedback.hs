@@ -1093,7 +1093,15 @@ foreign import ccall
 --
 -- -   All vertex input bindings accessed via vertex input variables
 --     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
+--     either valid or 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     buffers bound
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, all vertex input bindings accessed via
+--     vertex input variables declared in the vertex shader entry point’s
+--     interface /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   For a given vertex buffer binding, any attribute data fetched /must/
 --     be entirely contained within the corresponding vertex buffer
