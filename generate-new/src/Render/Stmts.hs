@@ -22,6 +22,8 @@ module Render.Stmts
   , use
   , after
   , refType
+  , freshName
+  , freeNames
   , ValueDoc(..)
   , AddrDoc(..)
   , UnitDoc(..)
@@ -401,22 +403,27 @@ varName ref hint = do
   -- Check if this reference already has a name
   usedRefs <- gets @(ActionsState s r) asUsedRefs
   case Prelude.lookup (This ref) usedRefs of
-    Just v                     -> pure v
+    Just v -> pure v
 
     Nothing | Just "_" <- hint -> pure "_"
 
-    Nothing                    -> do
-      -- If it doesn't make one up which isn't in 'usedNames'
-      usedNames <- gets @(ActionsState s r) asUsedNames
-      let proposed =
-            unReservedWord
-              . lowerCaseFirst
-              . fromMaybe ("x" <> show (unRef ref))
-              $ hint
-          actual = until (`Set.notMember` usedNames) (`snoc` '\'') proposed
-      modify' @(ActionsState s r)
-        (\st -> st { asUsedNames = Set.insert actual (asUsedNames st) })
-      pure actual
+    -- If it doesn't make one up which isn't in 'usedNames'
+    Nothing -> freshName (hint <|> Just ("x" <> show (unRef ref)))
+
+freshName :: forall s r . Maybe Text -> Stmt s r Text
+freshName hint = do
+  usedNames <- gets @(ActionsState s r) asUsedNames
+  let proposed = unReservedWord . lowerCaseFirst . fromMaybe "x" $ hint
+      actual   = until (`Set.notMember` usedNames) (`snoc` '\'') proposed
+  modify' @(ActionsState s r)
+    (\st -> st { asUsedNames = Set.insert actual (asUsedNames st) })
+  pure actual
+
+freeNames :: forall s r . [Text] -> Stmt s r ()
+freeNames names = modify' @(ActionsState s r)
+  (\st ->
+    st { asUsedNames = asUsedNames st Set.\\ Set.fromList names }
+  )
 
 renderRef
   :: forall r a s

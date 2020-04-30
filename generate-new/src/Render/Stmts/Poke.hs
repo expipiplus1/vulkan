@@ -20,6 +20,7 @@ module Render.Stmts.Poke
   ) where
 
 import           Data.Char                      ( isUpper )
+import           Data.List                      ( (!!) )
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Vector.Extra              ( pattern Empty
@@ -631,8 +632,8 @@ tupleIndirect
 tupleIndirect name size toElem fromElem valueRef firstAddrRef =
   stmtC Nothing name $ do
     let indices = [0 .. size - 1]
-        elemName n = "e" <> show n :: Text
-        elemNames = [ elemName n | n <- indices ]
+    elemNames <- traverse (freshName . Just . ("e" <>) . show) indices
+    let elemName = (elemNames !!)
 
     castFirstAddrRef <-
       stmt Nothing (Just ("p" <> T.upperCaseFirst (unCName name))) $ do
@@ -651,6 +652,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
           . ValueDoc
           . pretty
           . elemName
+          . fromIntegral
           $ i
         addrRef <- elemAddrRef toElem castFirstAddrRef (Left (fromIntegral i))
         getPokeIndirect' (CName (unCName name <> show i))
@@ -663,6 +665,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
         traverse_ after es
         pure $ Pure AlwaysInline ("()" :: Doc ())
 
+    freeNames elemNames
 
     let (con, d) = case subPokes of
           IOStmts    d -> (IOAction, d)
