@@ -1439,7 +1439,7 @@ foreign import ccall
 --     executed from a shader invocation with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
---     bound ray tracing pipeline.
+--     bound ray tracing pipeline
 --
 -- -   If @commandBuffer@ is a protected command buffer, any resource
 --     written to by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
@@ -2086,7 +2086,7 @@ foreign import ccall
 --     executed from a shader invocation with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
---     bound ray tracing pipeline.
+--     bound ray tracing pipeline
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single
@@ -2402,8 +2402,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-pOffsetInfos-03402]] @pOffsetInfos@[i] /must/ be a
---     valid pointer to an array of @pInfos@[i].@geometryCount@
+-- -   [[VUID-{refpage}-pOffsetInfos-03402]] Each element of
+--     @ppOffsetInfos@[i] /must/ be a valid pointer to an array of
+--     @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
 -- -   [[VUID-{refpage}-pInfos-03403]] Each
@@ -2715,8 +2716,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-pOffsetInfos-03402]] @pOffsetInfos@[i] /must/ be a
---     valid pointer to an array of @pInfos@[i].@geometryCount@
+-- -   [[VUID-{refpage}-pOffsetInfos-03402]] Each element of
+--     @ppOffsetInfos@[i] /must/ be a valid pointer to an array of
+--     @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
 -- -   [[VUID-{refpage}-pInfos-03403]] Each

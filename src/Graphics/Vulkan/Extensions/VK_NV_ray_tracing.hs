@@ -1007,7 +1007,7 @@ foreign import ccall
 --     executed from a shader invocation with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
---     bound ray tracing pipeline.
+--     bound ray tracing pipeline
 --
 -- -   If @commandBuffer@ is a protected command buffer, any resource
 --     written to by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object

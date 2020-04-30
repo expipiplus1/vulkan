@@ -359,7 +359,7 @@ foreign import ccall
 --
 -- -   [[VUID-{refpage}-None-02687]] Image subresources used as attachments
 --     in the current render pass /must/ not be accessed in any way other
---     than as an attachment by this command.
+--     than as an attachment by this command
 --
 -- -   [[VUID-{refpage}-maxMultiviewInstanceIndex-02688]] If the draw is
 --     recorded in a render pass instance with multiview enabled, the
