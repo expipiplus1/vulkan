@@ -317,20 +317,21 @@ peekCStructBody MarshaledStruct {..} = do
       forbiddenNames = fromList []
   renderStmtsIO forbiddenNames $ do
     memberRefs <-
-      fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} ->
-        context (unCName $ smName msmStructMember) $ do
+      fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} -> do
 
-          hTy <- cToHsType DoPreserve (smType msmStructMember)
+        -- Safe to unBitfield here as we're making it into a pointer type
+        hPtrTy <- (ConT ''Ptr :@)
+          <$> cToHsType DoPreserve (unBitfield (smType msmStructMember))
 
-          fmap (isElided msmScheme, ) <$> do
+        fmap (isElided msmScheme, ) <$> do
 
-            addr <- stmt (Just (ConT ''Ptr :@ hTy)) Nothing $ do
-              tDoc <- renderType (ConT ''Ptr :@ hTy)
-              pure $ Pure InlineOnce (offset (smOffset msmStructMember) tDoc)
+          addr <- stmt (Just hPtrTy) Nothing $ do
+            tDoc <- renderType hPtrTy
+            pure $ Pure InlineOnce (offset (smOffset msmStructMember) tDoc)
 
-            p <- peekStmt msmStructMember addr msmScheme
-            for_ p (nameRef (unCName $ smName msmStructMember))
-            pure p
+          p <- peekStmt msmStructMember addr msmScheme
+          for_ p (nameRef (unCName $ smName msmStructMember))
+          pure p
 
 
     stmt Nothing Nothing $ do
@@ -438,9 +439,10 @@ renderPokes memberDoc end MarshaledStruct {..} = do
                 )
               . fmap (Pure InlineOnce . AddrDoc)
               $ do
+                  -- Safe to unBitfield here as we're making it into a pointer
                   pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles
                     DoPreserve
-                    (smType msmStructMember)
+                    (unBitfield (smType msmStructMember))
                   tellImport 'plusPtr
                   pure $ parens
                     (   pretty addrVar

@@ -49,7 +49,7 @@ main =
                | Feature {..}      <- toList specFeatures
                , major : minor : _ <- pure $ versionBranch fVersion
                ]
-        doLoadDocs = True
+        doLoadDocs = False
     getDocumentation <- if doLoadDocs
       then liftIO $ loadAllDocumentation allExtensionNames
                                          "./Vulkan-Docs"
@@ -63,7 +63,7 @@ main =
       . withTypeInfo spec
       $ do
 
-          mps <- marshalParams spec
+          mps          <- marshalParams spec
 
           (ss, us, cs) <- runInputConst mps $ do
             ss <- timeItNamed "Marshaling structs"

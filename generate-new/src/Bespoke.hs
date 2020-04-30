@@ -31,6 +31,7 @@ import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Unsafe        as BS
 import           Foreign.Marshal.Alloc
 import           Foreign.Marshal.Utils
+import           Numeric
 
 import           CType
 import           Error
@@ -41,9 +42,11 @@ import           Render.Element
 import           Render.Peek                    ( storablePeek
                                                 , vectorPeekWithLenRef
                                                 )
+import           Render.SpecInfo
 import           Render.Stmts
-import           Render.Stmts.Poke              ( getVectorPoke )
+import           Render.Stmts.Poke
 import           Render.Stmts.Utils
+import           Render.Type
 import           Render.Utils
 import           Spec.Types
 
@@ -126,6 +129,8 @@ bespokeSchemes spec =
   pure
     $  [baseInOut, wsiScheme, dualPurposeBytestrings, nextPointers spec]
     <> difficultLengths
+    <> [bitfields]
+    <> [accelerationStructureGeometry]
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -424,7 +429,197 @@ difficultLengths =
         }
       _ -> Nothing
     _ -> const Nothing
+  , BespokeScheme $ \case
+    "VkAccelerationStructureVersionKHR" -> \case
+      p
+        | "versionData" <- name p
+        , Ptr Const (TypeName "uint8_t") <- type' p
+        , -- TODO, This should be a "MultipleLength" or something
+          V.Singleton (NamedLength (CName len)) <- lengths p
+        , len == "2*VK_UUID_SIZE"
+        -> Just . Custom $ CustomScheme
+          { csName       = "Acceleration structure version"
+          , csZero       = Just "mempty"
+          , csType       = pure $ ConT ''ByteString
+          , csDirectPoke = \bsRef -> do
+            assertCorrectLength <- unitStmt $ do
+              RenderParams {..} <- input
+              ValueDoc bs       <- use bsRef
+              tellQualImport 'BS.length
+              let
+                err =
+                  "AccelerationStructureVersionKHR::versionData must be "
+                    <> len
+                    <> " bytes"
+                uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
+                cond =
+                  parens
+                    $   "Data.ByteString.length"
+                    <+> bs
+                    <+> "== 2 * "
+                    <+> pretty uuidSizeDoc
+              throwErrDoc err cond
+            stmt (Just (ConT ''Ptr :@ ConT ''Word8)) (Just "versionData") $ do
+              after assertCorrectLength
+              ValueDoc bs <- use bsRef
+              tellImportWithAll ''ContT
+              tellImport 'BS.unsafeUseAsCString
+              tellImport 'castPtr
+              tellImport ''Word8
+              tellImport ''CChar
+              pure
+                .   ContTAction
+                .   ValueDoc
+                $   "ContT . castPtr @CChar @Word8 $ unsafeUseAsCString"
+                <+> bs
+          , csPeek       = \addrRef ->
+            stmt (Just (ConT ''ByteString)) (Just "versionData") $ do
+              RenderParams {..} <- input
+              let uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
+                  bytes       = "2 *" <+> pretty uuidSizeDoc
+              ptr <- use =<< storablePeek
+                "versionData"
+                addrRef
+                (Ptr Const (Ptr Const (TypeName "uint8_t")))
+              tellImport 'castPtr
+              tellImport ''Word8
+              tellImport ''CChar
+              let castPtr = "castPtr @Word8 @CChar" <+> ptr
+              tellImport 'BS.packCStringLen
+              pure . IOAction . ValueDoc $ "packCStringLen" <+> tupled
+                [castPtr, bytes]
+          }
+      _ -> Nothing
+    _ -> const Nothing
   ]
+
+-- | Bitfields at the moment are handled by writing both fields when the first
+-- (lower bits) one is written and not doing anything for the second one.
+bitfields :: BespokeScheme
+bitfields = BespokeScheme $ \case
+  "VkAccelerationStructureInstanceKHR" -> \case
+    p
+      | "instanceCustomIndex" <- name p -> Just $ bitfieldMaster p ("mask", 8)
+      | "mask" <- name p -> Just $ bitfieldSlave 24 p
+      | "instanceShaderBindingTableRecordOffset" <- name p -> Just
+      $ bitfieldMaster p ("flags", 8)
+      | "flags" <- name p -> Just $ bitfieldSlave 24 p
+    _ -> Nothing
+  _ -> const Nothing
+ where
+  peekBitfield
+    :: (HasRenderElem r, HasErr r, HasSpecInfo r, HasRenderParams r)
+    => CName
+    -> CType
+    -> Int
+    -> Int
+    -> Ref s AddrDoc
+    -> Stmt s r (Ref s ValueDoc)
+  peekBitfield name ty bitSize bitShift addr = do
+    tyH     <- cToHsType DoNotPreserve ty
+    base    <- storablePeek name addr (Ptr Const ty)
+    shifted <- case bitShift of
+      0 -> pure base
+      n -> stmt Nothing Nothing $ do
+        ValueDoc base <- use base
+        tellImport 'shiftR
+        pure . Pure InlineOnce . ValueDoc $ parens
+          (base <+> "`shiftR`" <+> viaShow bitShift)
+    masked <- case bitSize of
+      32 -> pure shifted
+      n  -> stmt Nothing Nothing $ do
+        ValueDoc shifted <- use shifted
+        tellImport '(.&.)
+        let mask =
+              "0x" <> pretty (showHex ((1 `shiftL` bitSize :: Int) - 1) "")
+        pure . Pure InlineOnce . ValueDoc $ parens (shifted <+> ".&." <+> mask)
+    stmt (Just tyH) (Just (unCName name)) $ do
+      masked <- use masked
+      pure . Pure NeverInline $ masked
+
+  bitfieldSlave :: Marshalable a => Int -> a -> MarshalScheme a
+  bitfieldSlave bitShift = \case
+    p
+      | Bitfield ty bitSize <- type' p -> Custom CustomScheme
+        { csName       = "bitfield slave " <> unCName (name p)
+        , csZero       = Nothing
+        , csType       = cToHsType DoNotPreserve ty
+        , csDirectPoke = const
+                         . unitStmt
+                         . pure
+                         . Pure AlwaysInline
+                         . ValueDoc
+                         $ "()"
+        , csPeek       = peekBitfield (name p) ty bitSize bitShift
+        }
+      | otherwise -> error "bitfield slave type isn't a bitfield "
+
+  bitfieldMaster :: Marshalable a => a -> (CName, Int) -> MarshalScheme a
+  bitfieldMaster master (slaveName, slaveBitSize) = case type' master of
+    Bitfield ty masterBitSize -> Custom CustomScheme
+      { csName       = "bitfield master " <> unCName (name master)
+      , csZero       = Nothing
+      , csType       = cToHsType DoNotPreserve ty
+      , csDirectPoke = \masterRef -> do
+        tyH <- cToHsType DoPreserve ty
+        stmt (Just tyH) Nothing $ do
+          ValueDoc slaveDoc  <- useViaName (unCName slaveName)
+          ValueDoc masterDoc <- use masterRef
+          tellImport 'shiftL
+          tellImport '(.|.)
+          pure
+            .   Pure InlineOnce
+            .   ValueDoc
+            $   parens (slaveDoc <+> "`shiftL`" <+> viaShow masterBitSize)
+            <+> ".|."
+            <+> masterDoc
+      , csPeek       = peekBitfield (name master) ty masterBitSize 0
+      }
+    _ -> error "bitfield master isn't a bitfield"
+
+accelerationStructureGeometry :: BespokeScheme
+accelerationStructureGeometry = BespokeScheme $ \case
+  "VkAccelerationStructureBuildGeometryInfoKHR" -> \case
+    p
+      | "geometryArrayOfPointers" <- name p
+      -> Just . ElidedCustom $ CustomSchemeElided
+        { cseName       = "geometry array type"
+        , cseDirectPoke = do
+          RenderParams {..} <- input
+          let t = mkPatternName "VK_FALSE"
+          tyH <- cToHsType DoNotPreserve (type' p)
+          stmt (Just tyH) Nothing $ pure . Pure AlwaysInline . ValueDoc $ pretty
+            t
+        , csePeek       = Nothing -- TODO assert it's VK_FALSE here
+        }
+      |
+      -- | "geometryCount" <- name p
+      -- -> Just $ ElidedLength (TypeName "uint32_t")
+      --                        mempty
+      --                        (fromList ["ppGeometries"])
+        "ppGeometries" <- name p, Ptr Const unPtrTy <- type' p
+      -> Just . Custom $ CustomScheme
+        { csName       = "ppGeometries"
+        , csZero       = Just "mempty"
+        , csType       = cToHsType DoNotPreserve unPtrTy
+        , csDirectPoke = \vecRef -> do
+                           ptrRef <- getPokeDirect p
+                                                   (Vector (Normal unPtrTy))
+                                                   vecRef
+                           tyH <- cToHsType DoPreserve (Ptr Const unPtrTy)
+                           stmt (Just tyH) Nothing $ do
+                             ValueDoc ptr <- use ptrRef
+                             pure
+                               .   Pure NeverInline
+                               .   ValueDoc
+                               $   "alloc and poke"
+                               <+> ptr
+        -- , csPeek       = \addr -> do
+        --                    ptrRef <- storablePeek (name p)
+        --                    peekStmt p (castStmt ptrRef) (Vector (Normal (unPtrTy)))
+        }
+    _ -> Nothing
+  _ -> const Nothing
 
 structChainVar :: String
 structChainVar = "es"

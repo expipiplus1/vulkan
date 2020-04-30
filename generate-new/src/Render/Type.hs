@@ -1,4 +1,5 @@
 {-# language TemplateHaskellQuotes #-}
+{-# language NoStarIsType #-}
 module Render.Type
   ( Preserve(..)
   , ExtensibleStructStyle(..)
@@ -27,6 +28,8 @@ import           Relude                  hiding ( State
                                                 , put
                                                 , runState
                                                 )
+
+import           GHC.TypeNats
 
 import           CType
 import           Error
@@ -123,16 +126,10 @@ cToHsType' structStyle preserve t = do
     Ptr _ p    -> do
       t' <- cToHsType' structStyle preserve p
       pure $ ConT ''Ptr :@ t'
-    Array _ (NumericArraySize n) e -> do
+    Array _ s e -> do
       e' <- cToHsType' structStyle preserve e
-      let arrayTy = ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
-      pure $ case preserve of
-        DoLower -> ConT ''Ptr :@ arrayTy
-        _       -> arrayTy
-    Array _ (SymbolicArraySize n) e -> do
-      RenderParams {..} <- input
-      e'                <- cToHsType' structStyle preserve e
-      let arrayTy = ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
+      s' <- arraySizeType s
+      let arrayTy = ConT ''VSS.Vector :@ s' :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy
@@ -164,6 +161,17 @@ cToHsType' structStyle preserve t = do
           Just name -> namedTy name t'
       pure $ foldr (~>) (ConT ''IO :@ retTy) pTys
     Bitfield _ _ -> throw "TODO Bitfields"
+
+arraySizeType :: HasRenderParams r => ArraySize -> Sem r H.Type
+arraySizeType = \case
+  NumericArraySize  n -> pure $ LitT (NumTyLit (fromIntegral n))
+  SymbolicArraySize n -> do
+    RenderParams {..} <- input
+    pure $ ConT (typeName (mkTyName n))
+  MultipleArraySize a b -> do
+    a <- arraySizeType (NumericArraySize a)
+    b <- arraySizeType b
+    pure $ InfixT a ''(*) b
 
 -- TODO: Remove vulkan specific stuff here
 namedTy :: Text -> H.Type -> H.Type

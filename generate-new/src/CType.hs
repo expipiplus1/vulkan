@@ -1,7 +1,8 @@
 module CType
   where
 
-import           Data.ByteString.Char8         as BS
+import qualified Data.ByteString.Char8         as BS
+import           Data.List.Extra               as List
 import qualified Language.C.Types              as C
 import           Language.C.Types.Parse  hiding ( Array
                                                 , Proto
@@ -39,6 +40,7 @@ data CType
 data ArraySize
   = NumericArraySize Word
   | SymbolicArraySize CName
+  | MultipleArraySize Word ArraySize
   deriving (Show, Eq, Ord)
 
 data Qualifier
@@ -78,6 +80,11 @@ parseCType bs = do
           Nothing -> r
           Just b  -> Bitfield r (fromIntegral b)
 
+unBitfield :: CType -> CType
+unBitfield = \case
+  Bitfield ty _ -> ty
+  ty            -> ty
+
 cTypeToType :: HasErr r => C -> Sem r CType
 cTypeToType = \case
   C.TypeSpecifier (C.Specifiers [] [] []) t -> nameToType t
@@ -111,8 +118,16 @@ arraySize :: HasErr r => C.ArrayType C.CIdentifier -> Sem r ArraySize
 arraySize = \case
   C.SizedByInteger i | i >= 0    -> pure $ NumericArraySize (fromInteger i)
                      | otherwise -> throw "Negative C array size"
-  C.SizedByIdentifier t ->
-    pure $ SymbolicArraySize (CName . fromString . unCIdentifier $ t)
+  C.SizedByIdentifier t
+    | xs <- List.splitOn "*" . unCIdentifier $ t
+    , length xs >= 2
+    , Just ms <- traverse readMaybe (List.init xs)
+    -> let end' = case List.last xs of
+             l | Just i <- readMaybe l -> NumericArraySize i
+               | otherwise -> SymbolicArraySize . CName . fromString $ l
+       in  pure $ Relude.foldr MultipleArraySize end' ms
+    | otherwise
+    -> pure $ SymbolicArraySize (CName . fromString . unCIdentifier $ t)
   _ -> throw "Unhandled C Array size"
 
 nameToType :: HasErr r => C.TypeSpecifier -> Sem r CType

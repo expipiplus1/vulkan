@@ -52,6 +52,9 @@ brackets marshaledCommands handles = context "brackets" $ do
       cmdBeBracket h = autoBracket' (CName ("vkCmdBegin" <> h))
                                     (CName ("vkCmdEnd" <> h))
                                     (CName ("vkCmdWith" <> h))
+
+  -- TODO: Missing functions here should be warnings, because we might be
+  -- generating a different version of the spec.
   bs <- sequenceV
     [ cdBracket "Instance"
     , cdBracket "Device"

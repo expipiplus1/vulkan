@@ -188,10 +188,7 @@ sizeAll typeSizes constantMap unions structs = do
           Left u -> for (sizeUnion g u) $ \u' -> do
             modify' (Map.insert (sName u') (sSize u', sAlignment u'))
             pure (Left u')
-          -- Contains bitfields, TODO implement these properly
-          Right s | Just s' <- structSizeOverrides s -> pure . Just . Right $ s'
-
-          Right s -> for (sizeStruct g s) $ \s' -> do
+          Right s -> for (structSizeOverrides s <|> sizeStruct g s) $ \s' -> do
             modify' (Map.insert (sName s') (sSize s', sAlignment s'))
             pure (Right s')
   (m, r) <- runState initial $ tryTwice both try
@@ -203,6 +200,7 @@ sizeAll typeSizes constantMap unions structs = do
   pure (us, ss, getSize m)
 
 -- Structs which are too tricky to size in code
+-- Contains bitfields, TODO implement these properly
 structSizeOverrides
   :: StructOrUnion AStruct WithoutSize sc
   -> Maybe (StructOrUnion AStruct 'WithSize sc)

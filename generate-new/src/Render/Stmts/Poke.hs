@@ -671,12 +671,18 @@ fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
   RenderParams {..} <- input
   checkLength       <- stmtC Nothing name $ do
     len     <- use =<< lenRefFromSibling @a name
-    maxSize <- case size of
-      NumericArraySize  n -> pure $ viaShow n
-      SymbolicArraySize n -> do
-        let n' = mkPatternName n
-        tellImport n'
-        pure (pretty n')
+    maxSize <-
+      let arraySizeDoc = \case
+            NumericArraySize  n -> pure $ viaShow n
+            SymbolicArraySize n -> do
+              let n' = mkPatternName n
+              tellImport n'
+              pure (pretty n')
+            MultipleArraySize a b -> do
+              a' <- arraySizeDoc (NumericArraySize a)
+              b' <- arraySizeDoc b
+              pure (a' <+> "*" <+> b')
+      in  arraySizeDoc size
     let err :: Text
         err =
           unCName name
