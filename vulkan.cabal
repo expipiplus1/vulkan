@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 59eeb441818279116059411d7298256fcacd3c61027b86fd5f007eafc805a9ae
+-- hash: ef36e6d6b8a90afba60ad2d4951a4dedeb6fd2e6ee86407208dfa3a65a1213ee
 
 name:           vulkan
 version:        3.1.0.0
@@ -103,7 +103,7 @@ library
       Graphics.Vulkan.Core10.Enums.ObjectType
       Graphics.Vulkan.Core10.Enums.PhysicalDeviceType
       Graphics.Vulkan.Core10.Enums.PipelineBindPoint
-      Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags
+      Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
       Graphics.Vulkan.Core10.Enums.PipelineCacheHeaderVersion
       Graphics.Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
       Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits
@@ -309,6 +309,7 @@ library
       Graphics.Vulkan.Extensions.VK_EXT_memory_priority
       Graphics.Vulkan.Extensions.VK_EXT_metal_surface
       Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
+      Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
       Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
       Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
@@ -350,6 +351,7 @@ library
       Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address
       Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
       Graphics.Vulkan.Extensions.VK_KHR_dedicated_allocation
+      Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations
       Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
       Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
       Graphics.Vulkan.Extensions.VK_KHR_device_group
@@ -383,7 +385,9 @@ library
       Graphics.Vulkan.Extensions.VK_KHR_multiview
       Graphics.Vulkan.Extensions.VK_KHR_performance_query
       Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties
+      Graphics.Vulkan.Extensions.VK_KHR_pipeline_library
       Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
+      Graphics.Vulkan.Extensions.VK_KHR_ray_tracing
       Graphics.Vulkan.Extensions.VK_KHR_relaxed_block_layout
       Graphics.Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
       Graphics.Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
@@ -422,6 +426,8 @@ library
       Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
       Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
       Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
+      Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config
+      Graphics.Vulkan.Extensions.VK_NV_device_generated_commands
       Graphics.Vulkan.Extensions.VK_NV_external_memory
       Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
       Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
@@ -443,7 +449,6 @@ library
       Graphics.Vulkan.Extensions.VK_NV_viewport_array2
       Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
       Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
-      Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
       Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
       Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
       Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform

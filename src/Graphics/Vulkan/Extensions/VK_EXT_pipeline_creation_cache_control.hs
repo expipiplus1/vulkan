@@ -1,5 +1,6 @@
 {-# language CPP #-}
-module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control  ( PhysicalDevicePipelineCreationCacheControlFeaturesEXT(..)
+module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control  ( pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT
+                                                                          , PhysicalDevicePipelineCreationCacheControlFeaturesEXT(..)
                                                                           , EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION
                                                                           , pattern EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION
                                                                           , EXT_PIPELINE_CREATION_CACHE_CONTROL_EXTENSION_NAME
@@ -26,7 +27,12 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
 import Graphics.Vulkan.CStruct (ToCStruct)
 import Graphics.Vulkan.CStruct (ToCStruct(..))
 import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result(PIPELINE_COMPILE_REQUIRED_EXT))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT))
+-- No documentation found for TopLevel "VK_ERROR_PIPELINE_COMPILE_REQUIRED_EXT"
+pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED_EXT
+
+
 -- | VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT - Structure
 -- describing whether pipeline cache control can be supported by an
 -- implementation
@@ -103,11 +109,11 @@ instance Zero PhysicalDevicePipelineCreationCacheControlFeaturesEXT where
            zero
 
 
-type EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION = 2
+type EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION"
 pattern EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION = 2
+pattern EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION = 3
 
 
 type EXT_PIPELINE_CREATION_CACHE_CONTROL_EXTENSION_NAME = "VK_EXT_pipeline_creation_cache_control"

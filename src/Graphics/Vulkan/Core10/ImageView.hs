@@ -806,6 +806,30 @@ instance Zero ComponentMapping where
 --     @usage@ member of the 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'
 --     structure used to create @image@
 --
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE'
+--     and @subresourceRange.layerCount@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
+--     @subresourceRange.layerCount@ /must/ be @6@
+--
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
+--     and @subresourceRange.layerCount@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
+--     @subresourceRange.layerCount@ /must/ be a multiple of @6@
+--
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE'
+--     and @subresourceRange.layerCount@ is
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     remaining number of layers /must/ be @6@
+--
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
+--     and @subresourceRange.layerCount@ is
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     remaining number of layers /must/ be a multiple of @6@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

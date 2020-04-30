@@ -18,7 +18,7 @@ module Graphics.Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                                    , ERROR_FORMAT_NOT_SUPPORTED
                                                    , ERROR_FRAGMENTED_POOL
                                                    , ERROR_UNKNOWN
-                                                   , ERROR_PIPELINE_COMPILE_REQUIRED_EXT
+                                                   , PIPELINE_COMPILE_REQUIRED_EXT
                                                    , OPERATION_NOT_DEFERRED_KHR
                                                    , OPERATION_DEFERRED_KHR
                                                    , THREAD_DONE_KHR
@@ -148,10 +148,10 @@ pattern ERROR_FRAGMENTED_POOL = Result (-12)
 -- | 'ERROR_UNKNOWN' An unknown error has occurred; either the application
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN = Result (-13)
--- | 'ERROR_PIPELINE_COMPILE_REQUIRED_EXT' A pipeline creation failed because
--- some or all of the data necessary to create the pipeline was not
--- pre-compiled.
-pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = Result 1000297000
+-- | 'PIPELINE_COMPILE_REQUIRED_EXT' A requested pipeline creation would have
+-- required compilation, but the application requested compilation to not
+-- be performed.
+pattern PIPELINE_COMPILE_REQUIRED_EXT = Result 1000297000
 -- | 'OPERATION_NOT_DEFERRED_KHR' A deferred operation was requested and no
 -- operations were deferred.
 pattern OPERATION_NOT_DEFERRED_KHR = Result 1000268003
@@ -179,8 +179,7 @@ pattern ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT = Result (-1000158000
 pattern ERROR_INCOMPATIBLE_VERSION_KHR = Result (-1000150000)
 -- | 'ERROR_INVALID_SHADER_NV' One or more shaders failed to compile or link.
 -- More details are reported back to the application via
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_debug_report@
--- if enabled.
+-- @VK_EXT_debug_report@ if enabled.
 pattern ERROR_INVALID_SHADER_NV = Result (-1000012000)
 -- No documentation found for Nested "VkResult" "VK_ERROR_VALIDATION_FAILED_EXT"
 pattern ERROR_VALIDATION_FAILED_EXT = Result (-1000011001)
@@ -239,7 +238,7 @@ pattern ERROR_OUT_OF_POOL_MEMORY = Result (-1000069000)
              ERROR_FORMAT_NOT_SUPPORTED,
              ERROR_FRAGMENTED_POOL,
              ERROR_UNKNOWN,
-             ERROR_PIPELINE_COMPILE_REQUIRED_EXT,
+             PIPELINE_COMPILE_REQUIRED_EXT,
              OPERATION_NOT_DEFERRED_KHR,
              OPERATION_DEFERRED_KHR,
              THREAD_DONE_KHR,
@@ -281,7 +280,7 @@ instance Show Result where
     ERROR_FORMAT_NOT_SUPPORTED -> showString "ERROR_FORMAT_NOT_SUPPORTED"
     ERROR_FRAGMENTED_POOL -> showString "ERROR_FRAGMENTED_POOL"
     ERROR_UNKNOWN -> showString "ERROR_UNKNOWN"
-    ERROR_PIPELINE_COMPILE_REQUIRED_EXT -> showString "ERROR_PIPELINE_COMPILE_REQUIRED_EXT"
+    PIPELINE_COMPILE_REQUIRED_EXT -> showString "PIPELINE_COMPILE_REQUIRED_EXT"
     OPERATION_NOT_DEFERRED_KHR -> showString "OPERATION_NOT_DEFERRED_KHR"
     OPERATION_DEFERRED_KHR -> showString "OPERATION_DEFERRED_KHR"
     THREAD_DONE_KHR -> showString "THREAD_DONE_KHR"
@@ -323,7 +322,7 @@ instance Read Result where
                             , ("ERROR_FORMAT_NOT_SUPPORTED", pure ERROR_FORMAT_NOT_SUPPORTED)
                             , ("ERROR_FRAGMENTED_POOL", pure ERROR_FRAGMENTED_POOL)
                             , ("ERROR_UNKNOWN", pure ERROR_UNKNOWN)
-                            , ("ERROR_PIPELINE_COMPILE_REQUIRED_EXT", pure ERROR_PIPELINE_COMPILE_REQUIRED_EXT)
+                            , ("PIPELINE_COMPILE_REQUIRED_EXT", pure PIPELINE_COMPILE_REQUIRED_EXT)
                             , ("OPERATION_NOT_DEFERRED_KHR", pure OPERATION_NOT_DEFERRED_KHR)
                             , ("OPERATION_DEFERRED_KHR", pure OPERATION_DEFERRED_KHR)
                             , ("THREAD_DONE_KHR", pure THREAD_DONE_KHR)

@@ -545,10 +545,8 @@ instance Zero ImageSubresourceRange where
 --
 -- == Valid Usage
 --
--- -   Unless the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
---     extension is enabled @depth@ /must/ be between @0.0@ and @1.0@,
---     inclusive
+-- -   Unless the @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @depth@ /must/ be between @0.0@ and @1.0@, inclusive
 --
 -- = See Also
 --

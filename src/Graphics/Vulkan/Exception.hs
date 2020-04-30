@@ -34,7 +34,7 @@ resultString = \case
   ERROR_FORMAT_NOT_SUPPORTED -> "A requested format is not supported on this device"
   ERROR_FRAGMENTED_POOL -> "A pool allocation has failed due to fragmentation of the pool's memory"
   ERROR_UNKNOWN -> "An unknown error has occurred; either the application has provided invalid input, or an implementation failure has occurred"
-  ERROR_PIPELINE_COMPILE_REQUIRED_EXT -> "A pipeline creation failed because some or all of the data necessary to create the pipeline was not pre-compiled"
+  PIPELINE_COMPILE_REQUIRED_EXT -> "A requested pipeline creation would have required compilation, but the application requested compilation to not be performed"
   OPERATION_NOT_DEFERRED_KHR -> "A deferred operation was requested and no operations were deferred"
   OPERATION_DEFERRED_KHR -> "A deferred operation was requested and at least some of the work was deferred"
   THREAD_DONE_KHR -> "A deferred operation is not complete but there is no work remaining to assign to additional threads"

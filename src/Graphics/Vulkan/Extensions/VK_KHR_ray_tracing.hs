@@ -143,7 +143,7 @@ import Text.ParserCombinators.ReadPrec (step)
 import qualified Data.ByteString (length)
 import Data.ByteString (packCStringLen)
 import Data.ByteString.Unsafe (unsafeUseAsCString)
-import GHC.Prim (coerce)
+import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.Trans.Cont (runContT)
@@ -1764,22 +1764,19 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-flags-03415]] If the @flags@ member of any element
---     of @pCreateInfos@ contains the
+-- -   If the @flags@ member of any element of @pCreateInfos@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and the @basePipelineIndex@ member of that same element is not
 --     @-1@, @basePipelineIndex@ /must/ be less than the index into
 --     @pCreateInfos@ that corresponds to that element
 --
--- -   [[VUID-{refpage}-flags-03416]] If the @flags@ member of any element
---     of @pCreateInfos@ contains the
+-- -   If the @flags@ member of any element of @pCreateInfos@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, the base pipeline /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
 --
--- -   [[VUID-{refpage}-pipelineCache-02903]] If @pipelineCache@ was
---     created with
+-- -   If @pipelineCache@ was created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
 --     host access to @pipelineCache@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
@@ -1823,6 +1820,8 @@ foreign import ccall
 --     -   'Graphics.Vulkan.Core10.Enums.Result.OPERATION_DEFERRED_KHR'
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
@@ -3086,54 +3085,51 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-flags-03421]] If @flags@ contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is @-1@, @basePipelineHandle@ /must/
 --     be a valid handle to a ray tracing
 --     'Graphics.Vulkan.Core10.Handles.Pipeline'
 --
--- -   [[VUID-{refpage}-flags-03422]] If @flags@ contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @basePipelineIndex@ /must/ be a valid index into the calling
 --     command’s @pCreateInfos@ parameter
 --
--- -   [[VUID-{refpage}-flags-03423]] If @flags@ contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is not @-1@, @basePipelineHandle@
 --     /must/ be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   [[VUID-{refpage}-flags-03424]] If @flags@ contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @basePipelineIndex@ /must/ be @-1@
 --
--- -   [[VUID-{refpage}-stage-03425]] The @stage@ member of at least one
---     element of @pStages@ /must/ be
+-- -   The @stage@ member of at least one element of @pStages@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_KHR'
 --
--- -   [[VUID-{refpage}-pStages-03426]] The shader code for the entry
---     points identified by @pStages@, and the rest of the state identified
---     by this structure /must/ adhere to the pipeline linking rules
---     described in the
+-- -   The shader code for the entry points identified by @pStages@, and
+--     the rest of the state identified by this structure /must/ adhere to
+--     the pipeline linking rules described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces Shader Interfaces>
 --     chapter
 --
--- -   [[VUID-{refpage}-layout-03427]] @layout@ /must/ be
+-- -   @layout@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency consistent>
 --     with all shaders specified in @pStages@
 --
--- -   [[VUID-{refpage}-layout-03428]] The number of resources in @layout@
---     accessible to each shader stage that is used by the pipeline /must/
---     be less than or equal to
+-- -   The number of resources in @layout@ accessible to each shader stage
+--     that is used by the pipeline /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageResources@
 --
--- -   [[VUID-{refpage}-flags-02904]] @flags@ /must/ not include
+-- -   @flags@ /must/ not include
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
 --
--- -   [[VUID-{refpage}-pipelineCreationCacheControl-02905]] If the
+-- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'

@@ -104,9 +104,7 @@ foreign import ccall
 -- If the shader stage fails to compile
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INVALID_SHADER_NV' will be
 -- generated and the compile log will be reported back to the application
--- by
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_debug_report@
--- if enabled.
+-- by @VK_EXT_debug_report@ if enabled.
 --
 -- == Valid Usage (Implicit)
 --

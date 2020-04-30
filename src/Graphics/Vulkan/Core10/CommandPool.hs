@@ -163,8 +163,7 @@ foreign import ccall
 -- = Description
 --
 -- When a pool is destroyed, all command buffers allocated from the pool
--- are
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkFreeCommandBuffers freed>.
+-- are <vkFreeCommandBuffers.html freed>.
 --
 -- Any primary command buffer allocated from another
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the

@@ -124,7 +124,11 @@ import Graphics.Vulkan.Zero (Zero)
 -- -   'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
 --     specifies that pipeline creation will fail if a compile is required
 --     for creation of a valid 'Graphics.Vulkan.Core10.Handles.Pipeline'
---     object.
+--     object;
+--     'Graphics.Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
+--     will be returned by pipeline creation, and the
+--     'Graphics.Vulkan.Core10.Handles.Pipeline' will be set to
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- -   When creating multiple pipelines,
 --     'PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT' specifies that

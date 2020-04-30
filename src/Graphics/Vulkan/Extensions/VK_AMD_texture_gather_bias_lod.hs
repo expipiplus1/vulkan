@@ -40,9 +40,8 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 data TextureLODGatherFormatPropertiesAMD = TextureLODGatherFormatPropertiesAMD
   { -- | @supportsTextureGatherLODBiasAMD@ tells if the image format can be used
     -- with texture gather bias\/LOD functions, as introduced by the
-    -- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_AMD_texture_gather_bias_lod@
-    -- extension. This field is set by the implementation. User-specified value
-    -- is ignored.
+    -- @VK_AMD_texture_gather_bias_lod@ extension. This field is set by the
+    -- implementation. User-specified value is ignored.
     supportsTextureGatherLODBiasAMD :: Bool }
   deriving (Typeable)
 deriving instance Show TextureLODGatherFormatPropertiesAMD

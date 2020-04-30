@@ -161,9 +161,7 @@ foreign import ccall
 -- size of the specified heap. In such cases, allocated memory is tracked
 -- on a per-device and per-heap basis. Some platforms allow overallocation
 -- into other heaps. The overallocation behavior /can/ be specified through
--- the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_AMD_memory_overallocation_behavior@
--- extension.
+-- the @VK_AMD_memory_overallocation_behavior@ extension.
 --
 -- == Valid Usage
 --

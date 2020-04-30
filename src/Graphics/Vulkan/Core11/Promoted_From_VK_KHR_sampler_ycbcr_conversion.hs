@@ -344,17 +344,23 @@ instance Zero SamplerYcbcrConversionInfo where
 --     it /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
 --
--- -   @format@ /must/ support
+-- -   The
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
+--     /must/ support
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
 --
--- -   If the format does not support
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
+--     do not support
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Graphics.Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'
 --
--- -   If the format does not support
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
+--     do not support
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Graphics.Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'
@@ -406,12 +412,16 @@ instance Zero SamplerYcbcrConversionInfo where
 --     swizzle to @format@ /must/ each have a bit-depth greater than or
 --     equal to 8.
 --
--- -   If the format does not support
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
+--     do not support
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
 --     @forceExplicitReconstruction@ /must/ be
 --     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
--- -   If the format does not support
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
+--     do not support
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT',
 --     @chromaFilter@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.Filter.FILTER_LINEAR'
@@ -602,11 +612,9 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the
 --     image. (That is, @aspectMask@ /must/ specify a plane index that is
 --     less than the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
---     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
+--     <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierPlaneCount>
+--     associated with the image’s <VkImageCreateInfo.html format> and
+--     <VkImageDrmFormatModifierPropertiesEXT.html drmFormatModifier>.)
 --
 -- == Valid Usage (Implicit)
 --
@@ -683,11 +691,9 @@ instance Zero BindImagePlaneMemoryInfo where
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the
 --     image. (That is, @aspectMask@ /must/ specify a plane index that is
 --     less than the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
---     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
+--     <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierPlaneCount>
+--     associated with the image’s <VkImageCreateInfo.html format> and
+--     <VkImageDrmFormatModifierPropertiesEXT.html drmFormatModifier>.)
 --
 -- == Valid Usage (Implicit)
 --

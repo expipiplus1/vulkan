@@ -279,6 +279,8 @@ foreign import ccall
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
+--     -   'Graphics.Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
@@ -293,7 +295,7 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'GraphicsPipelineCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-createGraphicsPipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("pipelines" ::: Vector Pipeline))
+createGraphicsPipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateGraphicsPipelines' = mkVkCreateGraphicsPipelines (pVkCreateGraphicsPipelines (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(GraphicsPipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 144) 8
@@ -305,7 +307,7 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
   r <- lift $ vkCreateGraphicsPipelines' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (pPCreateInfos) pAllocator (pPPipelines)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
-  pure $ (pPipelines)
+  pure $ (r, pPipelines)
 
 -- | A convenience wrapper to make a compatible pair of calls to
 -- 'createGraphicsPipelines' and 'destroyPipeline'
@@ -315,10 +317,10 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector Pipeline) -> ((Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
+withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
 withGraphicsPipelines b device pipelineCache pCreateInfos pAllocator =
   b (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
-    (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 
 
 foreign import ccall
@@ -406,6 +408,8 @@ foreign import ccall
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
+--     -   'Graphics.Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
@@ -420,7 +424,7 @@ foreign import ccall
 -- 'ComputePipelineCreateInfo', 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-createComputePipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("pipelines" ::: Vector Pipeline))
+createComputePipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateComputePipelines' = mkVkCreateComputePipelines (pVkCreateComputePipelines (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(ComputePipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 96) 8
@@ -432,7 +436,7 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
   r <- lift $ vkCreateComputePipelines' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (pPCreateInfos) pAllocator (pPPipelines)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
-  pure $ (pPipelines)
+  pure $ (r, pPipelines)
 
 -- | A convenience wrapper to make a compatible pair of calls to
 -- 'createComputePipelines' and 'destroyPipeline'
@@ -442,10 +446,10 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector Pipeline) -> ((Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
+withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
 withComputePipelines b device pipelineCache pCreateInfos pAllocator =
   b (createComputePipelines device pipelineCache pCreateInfos pAllocator)
-    (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 
 
 foreign import ccall
@@ -1810,9 +1814,8 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 --     'Graphics.Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL' or
 --     'Graphics.Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL_RECTANGLE_NV'
 --
--- -   If the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_NV_fill_rectangle@
---     extension is not enabled, @polygonMode@ /must/ not be
+-- -   If the @VK_NV_fill_rectangle@ extension is not enabled,
+--     @polygonMode@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL_RECTANGLE_NV'
 --
 -- == Valid Usage (Implicit)
@@ -3028,10 +3031,8 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', the @depthBiasClamp@ member
 --     of @pRasterizationState@ /must/ be @0.0@
 --
--- -   If the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
---     extension is not enabled and no element of the @pDynamicStates@
---     member of @pDynamicState@ is
+-- -   If the @VK_EXT_depth_range_unrestricted@ extension is not enabled
+--     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Graphics.Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS',
 --     and the @depthBoundsTestEnable@ member of @pDepthStencilState@ is
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', the @minDepthBounds@ and

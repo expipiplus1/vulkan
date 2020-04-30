@@ -52,11 +52,10 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- The following bits /may/ be set in @linearTilingFeatures@,
 -- @optimalTilingFeatures@, and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierTilingFeatures>,
--- specifying that the features are supported by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImage images>
--- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageView image views>
+-- <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierTilingFeatures>,
+-- specifying that the features are supported by <VkImage.html images> or
+-- <VkImageView.html image views> or
+-- <VkSamplerYcbcrConversion.html sampler Y′CBCR conversion objects>
 -- created with the queried
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'::@format@:
 --
@@ -210,11 +209,8 @@ import Graphics.Vulkan.Zero (Zero)
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
--- features are supported by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBuffer buffers>
--- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferView buffer views>
--- created with the queried
+-- features are supported by <VkBuffer.html buffers> or
+-- <VkBufferView.html buffer views> created with the queried
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceProperties'::@format@:
 --
 -- -   'FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT' specifies that the format

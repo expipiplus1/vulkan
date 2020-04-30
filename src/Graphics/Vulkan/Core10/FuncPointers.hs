@@ -129,7 +129,7 @@ type FN_vkReallocationFunction = ("pUserData" ::: Ptr ()) -> ("pOriginal" ::: Pt
 -- /must/ not free the old allocation.
 --
 -- @pfnReallocation@ /must/ follow the same
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkAllocationFunction_return_rules rules for return values as >.
+-- <vkAllocationFunction_return_rules.html rules for return values as >.
 --
 -- = See Also
 --

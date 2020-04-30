@@ -55,12 +55,11 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- Note
 --
 -- The 'PhysicalDeviceSubgroupSizeControlFeaturesEXT' structure was added
--- in version 2 of the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_subgroup_size_control@
--- extension. Version 1 implementations of this extension will not fill out
--- the features structure but applications may assume that both
--- @subgroupSizeControl@ and @computeFullSubgroups@ are supported if the
--- extension is supported. (See also the
+-- in version 2 of the @VK_EXT_subgroup_size_control@ extension. Version 1
+-- implementations of this extension will not fill out the features
+-- structure but applications may assume that both @subgroupSizeControl@
+-- and @computeFullSubgroups@ are supported if the extension is supported.
+-- (See also the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-requirements Feature Requirements>
 -- section.) Applications are advised to add a
 -- 'PhysicalDeviceSubgroupSizeControlFeaturesEXT' structure to the @pNext@

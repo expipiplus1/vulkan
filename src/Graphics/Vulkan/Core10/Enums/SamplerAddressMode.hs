@@ -45,9 +45,8 @@ pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = SamplerAddressMode 3
 -- | 'SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE' specifies that the mirror
 -- clamp to edge wrap mode will be used. This is only valid if
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
--- is enabled, or if the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_KHR_sampler_mirror_clamp_to_edge@
--- extension is enabled.
+-- is enabled, or if the @VK_KHR_sampler_mirror_clamp_to_edge@ extension is
+-- enabled.
 pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = SamplerAddressMode 4
 {-# complete SAMPLER_ADDRESS_MODE_REPEAT,
              SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,

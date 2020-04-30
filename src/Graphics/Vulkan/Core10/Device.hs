@@ -495,12 +495,10 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     structure, then @pEnabledFeatures@ /must/ be @NULL@
 --
 -- -   @ppEnabledExtensionNames@ /must/ not contain
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_AMD_negative_viewport_height@
+--     @VK_AMD_negative_viewport_height@
 --
 -- -   @ppEnabledExtensionNames@ /must/ not contain both
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_KHR_buffer_device_address@
---     and
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_buffer_device_address@
+--     @VK_KHR_buffer_device_address@ and @VK_EXT_buffer_device_address@
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core12.PhysicalDeviceVulkan11Features' structure,

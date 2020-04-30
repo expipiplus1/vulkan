@@ -43,7 +43,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoherentMemoryFeaturesAMD = PhysicalDeviceCoherentMemoryFeaturesAMD
   { -- | @deviceCoherentMemory@ indicates that the implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkMemoryPropertyFlagBits device coherent memory>.
+    -- <VkMemoryPropertyFlagBits.html device coherent memory>.
     deviceCoherentMemory :: Bool }
   deriving (Typeable)
 deriving instance Show PhysicalDeviceCoherentMemoryFeaturesAMD

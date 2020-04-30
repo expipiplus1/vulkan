@@ -8,6 +8,7 @@ module Graphics.Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerfor
                                                               , releasePerformanceConfigurationINTEL
                                                               , queueSetPerformanceConfigurationINTEL
                                                               , getPerformanceParameterINTEL
+                                                              , pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL
                                                               , PerformanceValueINTEL(..)
                                                               , InitializePerformanceApiInfoINTEL(..)
                                                               , QueryPoolPerformanceQueryCreateInfoINTEL(..)
@@ -129,7 +130,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL))
-import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL))
 import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Graphics.Vulkan.Extensions.Handles (PerformanceConfigurationINTEL(..))
 foreign import ccall
@@ -611,6 +612,10 @@ getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
   pure $ (pValue)
 
 
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL"
+pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL
+
+
 -- | VkPerformanceValueINTEL - Container for value and types of parameters
 -- that can be queried
 --
@@ -730,14 +735,14 @@ deriving instance Show QueryPoolPerformanceQueryCreateInfoINTEL
 instance ToCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolPerformanceQueryCreateInfoINTEL{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL)
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr QueryPoolSamplingModeINTEL)) (performanceCountersSampling)
     f
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL)
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr QueryPoolSamplingModeINTEL)) (zero)
     f

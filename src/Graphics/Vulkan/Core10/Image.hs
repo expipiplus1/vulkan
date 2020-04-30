@@ -346,11 +346,9 @@ foreign import ccall
 --     then the @aspectMask@ member of @pSubresource@ /must/ be
 --     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ and the index @i@ /must/ be
 --     less than the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
---     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.
+--     <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierPlaneCount>
+--     associated with the image’s <VkImageCreateInfo.html format> and
+--     <VkImageDrmFormatModifierPropertiesEXT.html drmFormatModifier>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1585,10 +1583,8 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- then the @aspectMask@ member of 'ImageSubresource' /must/ be one of
 -- @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@, where the maximum allowed
 -- plane index @i@ is defined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
--- associated with the image’s
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
--- and
+-- <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierPlaneCount>
+-- associated with the image’s <VkImageCreateInfo.html format> and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier modifier>.
 -- The memory range used by the subresource is described by @offset@ and
 -- @size@. If the image is /disjoint/, then the @offset@ is relative to the

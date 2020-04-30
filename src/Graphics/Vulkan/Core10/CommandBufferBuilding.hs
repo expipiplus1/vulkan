@@ -723,10 +723,9 @@ foreign import ccall
 --
 -- For fixed-point depth buffers, fragment depth values are always limited
 -- to the range [0,1] by clamping after depth bias addition is performed.
--- Unless the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
--- extension is enabled, fragment depth values are clamped even when the
--- depth buffer uses a floating-point representation.
+-- Unless the @VK_EXT_depth_range_unrestricted@ extension is enabled,
+-- fragment depth values are clamped even when the depth buffer uses a
+-- floating-point representation.
 --
 -- == Valid Usage
 --
@@ -863,15 +862,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Unless the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
---     extension is enabled @minDepthBounds@ /must/ be between @0.0@ and
---     @1.0@, inclusive
+-- -   Unless the @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @minDepthBounds@ /must/ be between @0.0@ and @1.0@, inclusive
 --
--- -   Unless the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
---     extension is enabled @maxDepthBounds@ /must/ be between @0.0@ and
---     @1.0@, inclusive
+-- -   Unless the @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @maxDepthBounds@ /must/ be between @0.0@ and @1.0@, inclusive
 --
 -- == Valid Usage (Implicit)
 --
@@ -3886,10 +3881,6 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
 --     or 'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
--- -   The sample count of @srcImage@ and @dstImage@ /must/ both be equal
---     to
---     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
---
 -- -   If either of @srcImage@ or @dstImage@ was created with a signed
 --     integer 'Graphics.Vulkan.Core10.Enums.Format.Format', the other
 --     /must/ also have been created with a signed integer
@@ -4927,7 +4918,7 @@ foreign import ccall
 -- -   If any element of @pRanges.aspect@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     and @image@ was created with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     <VkImageStencilUsageCreateInfo.html separate stencil usage>,
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     /must/ have been included in the
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
@@ -4936,7 +4927,7 @@ foreign import ccall
 -- -   If any element of @pRanges.aspect@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     and @image@ was not created with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     <VkImageStencilUsageCreateInfo.html separate stencil usage>,
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     /must/ have been included in the
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@usage@ used to
@@ -8016,15 +8007,11 @@ cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
 -- -   (@y@ + @height@) /must/ be less than or equal to
 --     @viewportBoundsRange@[1]
 --
--- -   Unless
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
---     extension is enabled @minDepth@ /must/ be between @0.0@ and @1.0@,
---     inclusive
+-- -   Unless @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @minDepth@ /must/ be between @0.0@ and @1.0@, inclusive
 --
--- -   Unless
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
---     extension is enabled @maxDepth@ /must/ be between @0.0@ and @1.0@,
---     inclusive
+-- -   Unless @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @maxDepth@ /must/ be between @0.0@ and @1.0@, inclusive
 --
 -- = See Also
 --
@@ -8734,9 +8721,9 @@ instance Zero ImageBlit where
 -- queues that do not support graphics.
 --
 -- When copying to a depth aspect, and the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
--- extension is not enabled, the data in buffer memory /must/ be in the
--- range [0,1], or the resulting values are undefined.
+-- @VK_EXT_depth_range_unrestricted@ extension is not enabled, the data in
+-- buffer memory /must/ be in the range [0,1], or the resulting values are
+-- undefined.
 --
 -- Copies are done layer by layer starting with image layer
 -- @baseArrayLayer@ member of @imageSubresource@. @layerCount@ layers are

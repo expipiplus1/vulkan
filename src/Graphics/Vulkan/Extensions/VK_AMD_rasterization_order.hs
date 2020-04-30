@@ -46,13 +46,11 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 --
 -- == Valid Usage (Implicit)
 --
--- If the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_AMD_rasterization_order@
--- device extension is not enabled or the application does not request a
--- particular rasterization order through specifying a
--- 'PipelineRasterizationStateRasterizationOrderAMD' structure then the
--- rasterization order used by the graphics pipeline defaults to
--- 'RASTERIZATION_ORDER_STRICT_AMD'.
+-- If the @VK_AMD_rasterization_order@ device extension is not enabled or
+-- the application does not request a particular rasterization order
+-- through specifying a 'PipelineRasterizationStateRasterizationOrderAMD'
+-- structure then the rasterization order used by the graphics pipeline
+-- defaults to 'RASTERIZATION_ORDER_STRICT_AMD'.
 --
 -- = See Also
 --
