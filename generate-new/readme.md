@@ -61,7 +61,21 @@ The docbook documentation will be in `docs/docbook`.
 - Groups of `lift`ed actions which don't return anything can be grouped under
   one `lift`:
 
+- If we move to peeking and poking ByteArrays using `RecordDotSyntax` it would
+  be nice to have alternative virtual members for using nicer types than tuples
+  for vectors and matricies. For example it would be nice to use `linear`s
+  `Mat34` to set `VkAccelerationStructureInstanceKHR::transform`.
+
+
 ## To check
+
+- DeviceAddressConst
+
+- Nested Tuples in transform matrix
+
+- SHADER_UNUSED should be a pattern not a type
+
+- Investigate Graphics.Vulkan.Extensions.VK_NV_ray_tracing.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV
 
 - `VkAccelerationStructureGeometryTrianglesDataKHR: Unhandled Maybe conversion to TypeName "VkDeviceOrHostAddressConstKHR"`
 
@@ -97,3 +111,5 @@ The docbook documentation will be in `docs/docbook`.
 - chaoticbob/SPIRV-Reflect
 
 - ValveSoftware/openvr
+
+- cgltf
