@@ -139,7 +139,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   @instance@ the instance the callback will be logged on.
+-- -   @instance@ is the instance the callback will be logged on.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DebugReportCallbackCreateInfoEXT'
 --     structure defining the conditions under which this callback will be
@@ -223,9 +223,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   @instance@ the instance where the callback was created.
+-- -   @instance@ is the instance where the callback was created.
 --
--- -   @callback@ the
+-- -   @callback@ is the
 --     'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT' object
 --     to destroy. @callback@ is an externally synchronized object and
 --     /must/ not be used on more than one thread at a time. This means
@@ -302,9 +302,9 @@ foreign import ccall
 -- -   @objectType@ is a 'DebugReportObjectTypeEXT' specifying the type of
 --     object being used or created at the time the event was triggered.
 --
--- -   @object@ this is the object where the issue was detected. @object@
---     /can/ be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if there
---     is no object associated with the event.
+-- -   @object@ is the object where the issue was detected. @object@ /can/
+--     be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if there is no
+--     object associated with the event.
 --
 -- -   @location@ is an application defined value.
 --
@@ -332,7 +332,7 @@ foreign import ccall
 --     @object@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @object@ /must/ be a Vulkan object of the corresponding type
 --     associated with @objectType@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
 --
 -- == Valid Usage (Implicit)
 --
@@ -581,7 +581,7 @@ instance Read DebugReportFlagBitsEXT where
 -- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT' | 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'   |
 -- +-----------------------------------------------------------+-------------------------------------------------------------+
 --
--- VkDebugReportObjectTypeEXT and Vulkan Handle Relationship
+-- 'DebugReportObjectTypeEXT' and Vulkan Handle Relationship
 --
 -- Note
 --

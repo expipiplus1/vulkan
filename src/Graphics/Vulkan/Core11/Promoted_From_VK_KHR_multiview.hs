@@ -81,10 +81,10 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- == Valid Usage
 --
 -- -   If @multiviewGeometryShader@ is enabled then @multiview@ /must/ also
---     be enabled.
+--     be enabled
 --
 -- -   If @multiviewTessellationShader@ is enabled then @multiview@ /must/
---     also be enabled.
+--     also be enabled
 --
 -- == Valid Usage (Implicit)
 --

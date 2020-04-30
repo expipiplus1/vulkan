@@ -578,7 +578,7 @@ deviceWaitIdle device = liftIO $ do
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- -   For each element of @pSignalSemaphores@ created with a
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -588,7 +588,7 @@ deviceWaitIdle device = liftIO $ do
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>

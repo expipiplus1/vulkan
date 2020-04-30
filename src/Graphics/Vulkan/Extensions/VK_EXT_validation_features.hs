@@ -63,6 +63,17 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- | VkValidationFeaturesEXT - Specify validation features to enable or
 -- disable for a Vulkan instance
 --
+-- == Valid Usage
+--
+-- -   If the @pEnabledValidationFeatures@ array contains
+--     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT',
+--     then it /must/ also contain
+--     'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
+--
+-- -   If the @pEnabledValidationFeatures@ array contains
+--     'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT', then it /must/ not
+--     contain 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -159,8 +170,7 @@ pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = ValidationFeatureEnableEXT 
 -- that is one less than the value reported by the device. If the device
 -- supports the binding of only one descriptor set, the validation layer
 -- does not perform GPU-assisted validation. This feature is disabled by
--- default. The GPU-assisted validation feature must be enabled in order to
--- use this feature.
+-- default.
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = ValidationFeatureEnableEXT 1
 -- | 'VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT' specifies that Vulkan
 -- best-practices validation is enabled. Activating this feature enables
@@ -171,8 +181,7 @@ pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT = ValidationFeatureEnableEX
 -- | 'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT' specifies that the layers
 -- will process @debugPrintfEXT@ operations in shaders and send the
 -- resulting output to the debug callback. This feature is disabled by
--- default. 'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT' /must/ never be
--- enabled when 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT' is enabled.
+-- default.
 pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT = ValidationFeatureEnableEXT 3
 {-# complete VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
              VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,

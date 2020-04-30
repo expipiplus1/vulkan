@@ -62,7 +62,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 -- == Valid Usage
 --
 -- -   If @variablePointers@ is enabled then
---     @variablePointersStorageBuffer@ /must/ also be enabled.
+--     @variablePointersStorageBuffer@ /must/ also be enabled
 --
 -- == Valid Usage (Implicit)
 --

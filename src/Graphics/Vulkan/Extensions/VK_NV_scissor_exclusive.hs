@@ -91,7 +91,7 @@ foreign import ccall
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- -   @firstExclusiveScissor@ /must/ be less than
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@

@@ -229,7 +229,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
 --     @buffer@ /must/ equal
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
---     and @memoryOffset@ /must/ be zero.
+--     and @memoryOffset@ /must/ be zero
 --
 -- -   If @buffer@ was created with
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
@@ -401,7 +401,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
 --     structure, @image@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     bit set.
+--     bit set
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
@@ -467,7 +467,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
 --     @image@ /must/ equal
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     and @memoryOffset@ /must/ be zero.
+--     and @memoryOffset@ /must/ be zero
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
@@ -488,7 +488,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     original image for which the allocation was created; and the
 --     @arrayLayers@ parameter of the image being bound /must/ be equal to
 --     or smaller than the original image for which the allocation was
---     created.
+--     created
 --
 -- -   If @image@ was created with
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
@@ -529,7 +529,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'::@swapchain@,
 --     then the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR'
---     structure containing the same swapchain handle.
+--     structure containing the same swapchain handle
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR'

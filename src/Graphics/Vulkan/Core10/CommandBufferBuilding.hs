@@ -269,10 +269,12 @@ foreign import ccall
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-variableMultisampleRate variable multisample rate>
 --     feature is not supported, @pipeline@ is a graphics pipeline, the
---     current subpass has no attachments, and this is not the first call
---     to this function with a graphics pipeline after transitioning to the
---     current subpass, then the sample count specified by this pipeline
---     /must/ match that set in the previous pipeline
+--     current subpass
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments uses no attachments>,
+--     and this is not the first call to this function with a graphics
+--     pipeline after transitioning to the current subpass, then the sample
+--     count specified by this pipeline /must/ match that set in the
+--     previous pipeline
 --
 -- -   If
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
@@ -306,7 +308,7 @@ foreign import ccall
 --
 -- -   The @pipeline@ /must/ not have been created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
---     set.
+--     set
 --
 -- == Valid Usage (Implicit)
 --
@@ -1360,7 +1362,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   @indexType@ /must/ not be
---     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'.
+--     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
 --
 -- -   If @indexType@ is
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT', the
@@ -1618,7 +1620,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -1719,14 +1721,14 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
@@ -1737,7 +1739,7 @@ foreign import ccall
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -1909,7 +1911,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -2010,14 +2012,14 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
@@ -2028,7 +2030,7 @@ foreign import ccall
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -2190,7 +2192,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -2291,14 +2293,14 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
@@ -2309,7 +2311,7 @@ foreign import ccall
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -2503,7 +2505,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -2604,14 +2606,14 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
@@ -2622,7 +2624,7 @@ foreign import ccall
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -2814,7 +2816,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -3047,7 +3049,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -3497,7 +3499,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
 -- -   @srcImage@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
@@ -3519,7 +3521,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
 -- -   @dstImage@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
@@ -3914,7 +3916,7 @@ foreign import ccall
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
---     'Graphics.Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'.
+--     'Graphics.Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
 -- -   If @filter@ is
 --     'Graphics.Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT',
@@ -4105,7 +4107,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
 -- -   If @srcBuffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single
@@ -4299,7 +4301,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
 -- -   @srcImage@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
@@ -4737,7 +4739,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @image@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
 -- -   @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
@@ -4913,7 +4915,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @image@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
 -- -   If any element of @pRanges.aspect@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
@@ -5149,7 +5151,7 @@ foreign import ccall
 --     then the @colorAttachment@ member of that element /must/ either
 --     refer to a color attachment which is
 --     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', or /must/
---     be a valid color attachment.
+--     be a valid color attachment
 --
 -- -   If the @aspectMask@ member of any element of @pAttachments@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
@@ -5180,13 +5182,13 @@ foreign import ccall
 --     @0@
 --
 -- -   If @commandBuffer@ is an unprotected command buffer, then each
---     attachment to be cleared /must/ not be a protected image.
+--     attachment to be cleared /must/ not be a protected image
 --
 -- -   If @commandBuffer@ is a protected command buffer, then each
---     attachment to be cleared /must/ not be an unprotected image.
+--     attachment to be cleared /must/ not be an unprotected image
 --
 -- -   If the render pass instance this is recorded in uses multiview, then
---     @baseArrayLayer@ /must/ be zero and @layerCount@ /must/ be one.
+--     @baseArrayLayer@ /must/ be zero and @layerCount@ /must/ be one
 --
 -- == Valid Usage (Implicit)
 --
@@ -5340,7 +5342,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   @srcImage@ and @dstImage@ /must/ have been created with the same
 --     image format
@@ -5508,7 +5510,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
---     physical device.
+--     physical device
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -5643,7 +5645,7 @@ foreign import ccall
 --     'cmdWaitEvents' command that is currently executing
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
---     physical device.
+--     physical device
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -5879,26 +5881,26 @@ foreign import ccall
 --     that was used to create the
 --     'Graphics.Vulkan.Core10.Handles.CommandPool' that @commandBuffer@
 --     was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ or
 --     @pImageMemoryBarriers@ /must/ not have any access flag included in
 --     its @srcAccessMask@ member if that bit is not supported by any of
 --     the pipeline stages in @srcStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
 -- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ or
 --     @pImageMemoryBarriers@ /must/ not have any access flag included in
 --     its @dstAccessMask@ member if that bit is not supported by any of
 --     the pipeline stages in @dstStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
 -- -   The @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any
 --     element of @pBufferMemoryBarriers@ or @pImageMemoryBarriers@ /must/
 --     be equal.
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
---     physical device.
+--     physical device
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -6527,7 +6529,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     this command /must/ not be recorded in a command buffer that, either
 --     directly or through secondary command buffers, also contains a
---     'cmdResetQueryPool' command affecting the same query.
+--     'cmdResetQueryPool' command affecting the same query
 --
 -- == Valid Usage (Implicit)
 --
@@ -7808,7 +7810,8 @@ foreign import ccall
 --     in the @pNext@ chain of 'RenderPassBeginInfo', then each element of
 --     @pCommandBuffers@ /must/ have been recorded with
 --     'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM'
---     in the @pNext@ chain of VkCommandBufferBeginInfo
+--     in the @pNext@ chain of
+--     'Graphics.Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'
 --
 -- -   If 'cmdExecuteCommands' is being called within a render pass
 --     instance that included
@@ -8353,7 +8356,7 @@ instance Zero BufferCopy where
 --
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @srcOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
+--     @srcOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@
 --
 -- -   @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the source
@@ -8361,15 +8364,15 @@ instance Zero BufferCopy where
 --
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
+--     @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@
 --
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
+--     @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@
 --
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
---     @srcOffset.z@ /must/ be @0@.
+--     @srcOffset.z@ /must/ be @0@
 --
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
@@ -8377,21 +8380,21 @@ instance Zero BufferCopy where
 --
 -- -   If both @srcImage@ and @dstImage@ are of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' then
---     @extent.depth@ /must/ be @1@.
+--     @extent.depth@ /must/ be @1@
 --
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and the
 --     @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then
 --     @extent.depth@ /must/ equal to the @layerCount@ member of
---     @srcSubresource@.
+--     @srcSubresource@
 --
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and the
 --     @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then
 --     @extent.depth@ /must/ equal to the @layerCount@ member of
---     @dstSubresource@.
+--     @dstSubresource@
 --
 -- -   @dstOffset.x@ and (@extent.width@ + @dstOffset.x@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the
@@ -8403,7 +8406,7 @@ instance Zero BufferCopy where
 --
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @dstOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
+--     @dstOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@
 --
 -- -   @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the
@@ -8559,7 +8562,7 @@ instance Zero ImageCopy where
 --
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y /must/ be @1@.
+--     @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y /must/ be @1@
 --
 -- -   @srcOffset@[0].z and @srcOffset@[1].z /must/ both be greater than or
 --     equal to @0@ and less than or equal to the source image subresource
@@ -8568,7 +8571,7 @@ instance Zero ImageCopy where
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
---     @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z /must/ be @1@.
+--     @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z /must/ be @1@
 --
 -- -   @dstOffset@[0].x and @dstOffset@[1].x /must/ both be greater than or
 --     equal to @0@ and less than or equal to the destination image
@@ -8580,7 +8583,7 @@ instance Zero ImageCopy where
 --
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y /must/ be @1@.
+--     @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y /must/ be @1@
 --
 -- -   @dstOffset@[0].z and @dstOffset@[1].z /must/ both be greater than or
 --     equal to @0@ and less than or equal to the destination image
@@ -8589,7 +8592,7 @@ instance Zero ImageCopy where
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
---     @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z /must/ be @1@.
+--     @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --
@@ -8735,7 +8738,7 @@ instance Zero ImageBlit where
 --     parameter’s format is not a depth\/stencil format or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then @bufferOffset@ /must/ be a multiple of the format’s texel block
---     size.
+--     size
 --
 -- -   If the calling command’s 'Graphics.Vulkan.Core10.Handles.Image'
 --     parameter’s format is a
@@ -8768,8 +8771,7 @@ instance Zero ImageBlit where
 -- -   If the calling command’s @srcImage@ ('cmdCopyImageToBuffer') or
 --     @dstImage@ ('cmdCopyBufferToImage') is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @imageOffset.y@ /must/ be @0@ and @imageExtent.height@ /must/ be
---     @1@.
+--     @imageOffset.y@ /must/ be @0@ and @imageExtent.height@ /must/ be @1@
 --
 -- -   @imageOffset.z@ and (imageExtent.depth + @imageOffset.z@) /must/
 --     both be greater than or equal to @0@ and less than or equal to the
@@ -8953,7 +8955,7 @@ instance Zero BufferImageCopy where
 --
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @srcOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
+--     @srcOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@
 --
 -- -   @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the source
@@ -8962,7 +8964,7 @@ instance Zero BufferImageCopy where
 -- -   If the calling command’s @srcImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
---     @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
+--     @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@
 --
 -- -   @dstOffset.x@ and (@extent.width@ + @dstOffset.x@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the
@@ -8974,7 +8976,7 @@ instance Zero BufferImageCopy where
 --
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then
---     @dstOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
+--     @dstOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@
 --
 -- -   @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the
@@ -8983,7 +8985,7 @@ instance Zero BufferImageCopy where
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
---     @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
+--     @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --
@@ -9304,13 +9306,13 @@ instance Zero ImageResolve where
 --
 -- -   If the @pNext@ chain includes
 --     'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
---     @renderArea@::@offset@ /must/ equal (0,0).
+--     @renderArea@::@offset@ /must/ equal (0,0)
 --
 -- -   If the @pNext@ chain includes
 --     'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
 --     @renderArea@::@extent@ transformed by
 --     'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM'::@transform@
---     /must/ equal the @framebuffer@ dimensions.
+--     /must/ equal the @framebuffer@ dimensions
 --
 -- == Valid Usage (Implicit)
 --
@@ -9458,7 +9460,7 @@ instance es ~ '[] => Zero (RenderPassBeginInfo es) where
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
 --
 -- -   @aspectMask@ /must/ not include
---     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@.
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
 --
 -- -   @clearValue@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.SharedTypes.ClearValue' union

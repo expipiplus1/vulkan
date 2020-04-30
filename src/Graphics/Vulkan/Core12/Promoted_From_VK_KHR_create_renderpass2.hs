@@ -890,10 +890,8 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 -- 'Graphics.Vulkan.Core10.Pass.AttachmentReference' have the identical
 -- effect to those parameters.
 --
--- @aspectMask@ has the same effect for the described attachment as
--- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.InputAttachmentAspectReference'::@aspectMask@
--- has on each corresponding attachment. It is ignored when this structure
--- is used to describe anything other than an input attachment reference.
+-- @aspectMask@ is ignored when this structure is used to describe anything
+-- other than an input attachment reference.
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
@@ -1129,7 +1127,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     formats whose features contain at least one of
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   All attachments in @pColorAttachments@ that are not
 --     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
@@ -1175,7 +1173,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
 --     it /must/ also include
---     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'.
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
 --
 -- -   If the @attachment@ member of any element of @pInputAttachments@ is
 --     not 'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then
@@ -1676,7 +1674,7 @@ instance Zero SubpassDependency2 where
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
 --     or
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'.
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   For any element of @pDependencies@, if the @srcSubpass@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage

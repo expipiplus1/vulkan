@@ -183,24 +183,24 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --     reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
 -- -   The memory from which @fd@ was exported /must/ have been created on
---     the same underlying physical device as @device@.
+--     the same underlying physical device as @device@
 --
 -- -   If @handleType@ is not @0@, it /must/ be defined as a POSIX file
---     descriptor handle.
+--     descriptor handle
 --
 -- -   If @handleType@ is not @0@, @fd@ /must/ be a valid handle of the
---     type specified by @handleType@.
+--     type specified by @handleType@
 --
 -- -   The memory represented by @fd@ /must/ have been created from a
 --     physical device and driver that is compatible with @device@ and
 --     @handleType@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility>
 --
 -- -   @fd@ /must/ obey any requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --

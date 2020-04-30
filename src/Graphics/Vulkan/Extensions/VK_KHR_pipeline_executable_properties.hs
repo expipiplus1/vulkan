@@ -141,10 +141,10 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled.
+--     /must/ be enabled
 --
 -- -   @pipeline@ member of @pPipelineInfo@ /must/ have been created with
---     @device@.
+--     @device@
 --
 -- == Valid Usage (Implicit)
 --
@@ -235,16 +235,16 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled.
+--     /must/ be enabled
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     @device@.
+--     @device@
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
 --     set in the @flags@ field of
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'.
+--     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -343,16 +343,16 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled.
+--     /must/ be enabled
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     @device@.
+--     @device@
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
 --     set in the @flags@ field of
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'.
+--     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -628,7 +628,7 @@ data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
     pipeline :: Pipeline
   , -- | @executableIndex@ /must/ be less than the number of executables
     -- associated with @pipeline@ as returned in the @pExecutableCount@
-    -- parameter of 'getPipelineExecutablePropertiesKHR'.
+    -- parameter of 'getPipelineExecutablePropertiesKHR'
     executableIndex :: Word32
   }
   deriving (Typeable)

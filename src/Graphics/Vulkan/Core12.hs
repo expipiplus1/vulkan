@@ -355,9 +355,10 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- are available in all stages, or are restricted to fragment and compute
     -- stages.
     subgroupQuadOperationsInAllStages :: Bool
-  , -- | @pointClippingBehavior@ /must/ be a valid
+  , -- | @pointClippingBehavior@ is a
     -- 'Graphics.Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
-    -- value
+    -- value specifying the point clipping behavior supported by the
+    -- implementation.
     pointClippingBehavior :: PointClippingBehavior
   , -- | @maxMultiviewViewCount@ is one greater than the maximum view index that
     -- /can/ be used in a subpass.
@@ -1202,26 +1203,31 @@ instance Zero PhysicalDeviceVulkan12Features where
 -- 'Graphics.Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
-  { -- | @driverID@ /must/ be a valid
-    -- 'Graphics.Vulkan.Core12.Enums.DriverId.DriverId' value
+  { -- | @driverID@ is a unique identifier for the driver of the physical device.
     driverID :: DriverId
-  , -- | @driverName@ /must/ be a null-terminated UTF-8 string whose length is
-    -- less than or equal to VK_MAX_DRIVER_NAME_SIZE
+  , -- | @driverName@ is an array of
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@
+    -- containing a null-terminated UTF-8 string which is the name of the
+    -- driver.
     driverName :: ByteString
-  , -- | @driverInfo@ /must/ be a null-terminated UTF-8 string whose length is
-    -- less than or equal to VK_MAX_DRIVER_INFO_SIZE
+  , -- | @driverInfo@ is an array of
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@
+    -- containing a null-terminated UTF-8 string with additional information
+    -- about the driver.
     driverInfo :: ByteString
   , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
     -- driver is conformant against (see
     -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion').
     conformanceVersion :: ConformanceVersion
-  , -- | @denormBehaviorIndependence@ /must/ be a valid
+  , -- | @denormBehaviorIndependence@ is a
     -- 'Graphics.Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
-    -- value
+    -- value indicating whether, and how, denorm behavior can be set
+    -- independently for different bit widths.
     denormBehaviorIndependence :: ShaderFloatControlsIndependence
-  , -- | @roundingModeIndependence@ /must/ be a valid
+  , -- | @roundingModeIndependence@ is a
     -- 'Graphics.Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
-    -- value
+    -- value indicating whether, and how, rounding modes can be set
+    -- independently for different bit widths.
     roundingModeIndependence :: ShaderFloatControlsIndependence
   , -- | @shaderSignedZeroInfNanPreserveFloat16@ is a boolean value indicating
     -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
@@ -1458,9 +1464,21 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set.
     maxDescriptorSetUpdateAfterBindInputAttachments :: Word32
-  , -- | @supportedDepthResolveModes@ /must/ not be @0@
+  , -- | @supportedDepthResolveModes@ is a bitmask of
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits'
+    -- indicating the set of supported depth resolve modes.
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
+    -- /must/ be included in the set but implementations /may/ support
+    -- additional modes.
     supportedDepthResolveModes :: ResolveModeFlags
-  , -- | @supportedStencilResolveModes@ /must/ not be @0@
+  , -- | @supportedStencilResolveModes@ is a bitmask of
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits'
+    -- indicating the set of supported stencil resolve modes.
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
+    -- /must/ be included in the set but implementations /may/ support
+    -- additional modes.
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_AVERAGE_BIT'
+    -- /must/ not be included in the set.
     supportedStencilResolveModes :: ResolveModeFlags
   , -- | @independentResolveNone@ is 'Graphics.Vulkan.Core10.BaseType.TRUE' if
     -- the implementation supports setting the depth and stencil resolve modes
@@ -1488,9 +1506,10 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- allowed by the implementation between the current value of a timeline
     -- semaphore and any pending signal or wait operations.
     maxTimelineSemaphoreValueDifference :: Word64
-  , -- | @framebufferIntegerColorSampleCounts@ /must/ be a valid combination of
+  , -- | @framebufferIntegerColorSampleCounts@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-    -- values
+    -- indicating the color sample counts that are supported for all
+    -- framebuffer color attachments with integer formats.
     framebufferIntegerColorSampleCounts :: SampleCountFlags
   }
   deriving (Typeable)

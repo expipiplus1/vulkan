@@ -5,6 +5,8 @@ import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
 import Foreign.Ptr (castFunPtr)
 import Foreign.Ptr (nullPtr)
 import Control.Monad.Trans.Class (lift)
@@ -20,6 +22,8 @@ import Graphics.Vulkan.Dynamic (getInstanceProcAddr')
 import Graphics.Vulkan.NamedType ((:::))
 import Graphics.Vulkan.Core10.Enums.Result (Result)
 import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -43,6 +47,10 @@ foreign import ccall
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 -- = See Also
 --
 -- No cross-references are available
@@ -50,7 +58,8 @@ enumerateInstanceVersion :: forall io . MonadIO io => io (("apiVersion" ::: Word
 enumerateInstanceVersion  = liftIO . evalContT $ do
   vkEnumerateInstanceVersion' <- lift $ mkVkEnumerateInstanceVersion . castFunPtr @_ @(("pApiVersion" ::: Ptr Word32) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceVersion"#)
   pPApiVersion <- ContT $ bracket (callocBytes @Word32 4) free
-  _ <- lift $ vkEnumerateInstanceVersion' (pPApiVersion)
+  r <- lift $ vkEnumerateInstanceVersion' (pPApiVersion)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pApiVersion <- lift $ peek @Word32 pPApiVersion
   pure $ (pApiVersion)
 

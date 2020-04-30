@@ -178,6 +178,7 @@ import {-# SOURCE #-} Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import {-# SOURCE #-} Graphics.Vulkan.Core10.Enums.ImageType (ImageType)
 import {-# SOURCE #-} Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import {-# SOURCE #-} Graphics.Vulkan.Core10.Handles (ImageView)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NVX_image_view_handle (ImageViewAddressPropertiesNVX)
 import {-# SOURCE #-} Graphics.Vulkan.Core10.ImageView (ImageViewCreateInfo)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NVX_image_view_handle (ImageViewHandleInfoNVX)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd (ImportFenceFdInfoKHR)
@@ -844,6 +845,7 @@ data DeviceCmds = DeviceCmds
   , pVkCmdTraceRaysIndirectKHR :: FunPtr (Ptr CommandBuffer_T -> ("pRaygenShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> ("pMissShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> ("pHitShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> ("pCallableShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> Buffer -> ("offset" ::: DeviceSize) -> IO ())
   , pVkGetDeviceAccelerationStructureCompatibilityKHR :: FunPtr (Ptr Device_T -> Ptr AccelerationStructureVersionKHR -> IO Result)
   , pVkGetImageViewHandleNVX :: FunPtr (Ptr Device_T -> ("pInfo" ::: Ptr ImageViewHandleInfoNVX) -> IO Word32)
+  , pVkGetImageViewAddressNVX :: FunPtr (Ptr Device_T -> ImageView -> ("pProperties" ::: Ptr ImageViewAddressPropertiesNVX) -> IO Result)
   , pVkGetDeviceGroupSurfacePresentModes2EXT :: forall a . FunPtr (Ptr Device_T -> ("pSurfaceInfo" ::: Ptr (PhysicalDeviceSurfaceInfo2KHR a)) -> ("pModes" ::: Ptr DeviceGroupPresentModeFlagsKHR) -> IO Result)
   , pVkAcquireFullScreenExclusiveModeEXT :: FunPtr (Ptr Device_T -> SwapchainKHR -> IO Result)
   , pVkReleaseFullScreenExclusiveModeEXT :: FunPtr (Ptr Device_T -> SwapchainKHR -> IO Result)
@@ -918,6 +920,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1186,6 +1189,7 @@ initDeviceCmds instanceCmds handle = do
   vkCmdTraceRaysIndirectKHR <- getDeviceProcAddr' handle (Ptr "vkCmdTraceRaysIndirectKHR"#)
   vkGetDeviceAccelerationStructureCompatibilityKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceAccelerationStructureCompatibilityKHR"#)
   vkGetImageViewHandleNVX <- getDeviceProcAddr' handle (Ptr "vkGetImageViewHandleNVX"#)
+  vkGetImageViewAddressNVX <- getDeviceProcAddr' handle (Ptr "vkGetImageViewAddressNVX"#)
   vkGetDeviceGroupSurfacePresentModes2EXT <- getDeviceProcAddr' handle (Ptr "vkGetDeviceGroupSurfacePresentModes2EXT"#)
   vkAcquireFullScreenExclusiveModeEXT <- getDeviceProcAddr' handle (Ptr "vkAcquireFullScreenExclusiveModeEXT"#)
   vkReleaseFullScreenExclusiveModeEXT <- getDeviceProcAddr' handle (Ptr "vkReleaseFullScreenExclusiveModeEXT"#)
@@ -1474,6 +1478,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pRaygenShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> ("pMissShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> ("pHitShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> ("pCallableShaderBindingTable" ::: Ptr StridedBufferRegionKHR) -> Buffer -> ("offset" ::: DeviceSize) -> IO ()) vkCmdTraceRaysIndirectKHR)
     (castFunPtr @_ @(Ptr Device_T -> Ptr AccelerationStructureVersionKHR -> IO Result) vkGetDeviceAccelerationStructureCompatibilityKHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pInfo" ::: Ptr ImageViewHandleInfoNVX) -> IO Word32) vkGetImageViewHandleNVX)
+    (castFunPtr @_ @(Ptr Device_T -> ImageView -> ("pProperties" ::: Ptr ImageViewAddressPropertiesNVX) -> IO Result) vkGetImageViewAddressNVX)
     (castFunPtr @_ @(Ptr Device_T -> ("pSurfaceInfo" ::: Ptr (PhysicalDeviceSurfaceInfo2KHR _)) -> ("pModes" ::: Ptr DeviceGroupPresentModeFlagsKHR) -> IO Result) vkGetDeviceGroupSurfacePresentModes2EXT)
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> IO Result) vkAcquireFullScreenExclusiveModeEXT)
     (castFunPtr @_ @(Ptr Device_T -> SwapchainKHR -> IO Result) vkReleaseFullScreenExclusiveModeEXT)

@@ -368,38 +368,38 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @minFilter@ and @magFilter@ /must/ be equal.
+--     then @minFilter@ and @magFilter@ /must/ be equal
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @mipmapMode@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @minLod@ and @maxLod@ /must/ be zero.
+--     then @minLod@ and @maxLod@ /must/ be zero
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @addressModeU@ and @addressModeV@ /must/ each be either
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --     or
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @anisotropyEnable@ /must/ be
---     'Graphics.Vulkan.Core10.BaseType.FALSE'.
+--     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @compareEnable@ /must/ be
---     'Graphics.Vulkan.Core10.BaseType.FALSE'.
+--     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @unnormalizedCoordinates@ /must/ be
---     'Graphics.Vulkan.Core10.BaseType.FALSE'.
+--     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
 -- == Valid Usage (Implicit)
 --

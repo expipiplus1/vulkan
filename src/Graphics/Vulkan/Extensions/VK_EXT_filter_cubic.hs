@@ -108,7 +108,7 @@ instance Zero PhysicalDeviceImageViewImageFormatInfoEXT where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
 --     structure /must/ include a
 --     'PhysicalDeviceImageViewImageFormatInfoEXT' structure with an
---     @imageViewType@ that is compatible with @imageType@.
+--     @imageViewType@ that is compatible with @imageType@
 --
 -- = See Also
 --

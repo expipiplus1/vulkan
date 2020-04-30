@@ -202,10 +202,10 @@ data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
   { -- | @flags@ /must/ be @0@
     flags :: Win32SurfaceCreateFlagsKHR
   , -- | @hinstance@ /must/ be a valid Win32
-    -- 'Graphics.Vulkan.Extensions.WSITypes.HINSTANCE'.
+    -- 'Graphics.Vulkan.Extensions.WSITypes.HINSTANCE'
     hinstance :: HINSTANCE
   , -- | @hwnd@ /must/ be a valid Win32
-    -- 'Graphics.Vulkan.Extensions.WSITypes.HWND'.
+    -- 'Graphics.Vulkan.Extensions.WSITypes.HWND'
     hwnd :: HWND
   }
   deriving (Typeable)

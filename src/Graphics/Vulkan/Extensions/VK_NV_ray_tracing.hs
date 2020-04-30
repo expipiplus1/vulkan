@@ -628,7 +628,7 @@ foreign import ccall
 --     'AccelerationStructureInfoNV'::@geometryCount@ for @dst@ are greater
 --     than or equal to the build size and each geometry in
 --     'AccelerationStructureInfoNV'::@pGeometries@ for @dst@ has greater
---     than or equal to the number of vertices, indices, and AABBs.
+--     than or equal to the number of vertices, indices, and AABBs
 --
 -- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', @src@ /must/
 --     not be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -862,7 +862,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -1190,7 +1190,7 @@ foreign import ccall
 -- -   If @pipelineCache@ was created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
 --     host access to @pipelineCache@ /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --
 -- == Valid Usage (Implicit)
 --
@@ -1665,7 +1665,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEFER_COMPILE_BIT_NV'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
---     at the same time.
+--     at the same time
 --
 -- == Valid Usage (Implicit)
 --

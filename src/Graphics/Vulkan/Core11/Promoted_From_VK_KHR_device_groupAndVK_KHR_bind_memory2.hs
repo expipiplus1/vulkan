@@ -200,18 +200,18 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 -- == Valid Usage
 --
 -- -   At least one of @deviceIndexCount@ and
---     @splitInstanceBindRegionCount@ /must/ be zero.
+--     @splitInstanceBindRegionCount@ /must/ be zero
 --
 -- -   @deviceIndexCount@ /must/ either be zero or equal to the number of
 --     physical devices in the logical device
 --
--- -   All elements of @pDeviceIndices@ /must/ be valid device indices.
+-- -   All elements of @pDeviceIndices@ /must/ be valid device indices
 --
 -- -   @splitInstanceBindRegionCount@ /must/ either be zero or equal to the
 --     number of physical devices in the logical device squared
 --
 -- -   Elements of @pSplitInstanceBindRegions@ that correspond to the same
---     instance of an image /must/ not overlap.
+--     instance of an image /must/ not overlap
 --
 -- -   The @offset.x@ member of any element of @pSplitInstanceBindRegions@
 --     /must/ be a multiple of the sparse image block width

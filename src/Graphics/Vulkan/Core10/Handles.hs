@@ -309,6 +309,7 @@ data Device_T
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR',
 -- 'Graphics.Vulkan.Core10.Image.getImageSubresourceLayout',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewAddressNVX',
 -- 'Graphics.Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewHandleNVX',
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getMemoryAndroidHardwareBufferANDROID',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdKHR',
@@ -708,7 +709,8 @@ instance Show Image where
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
 -- 'Graphics.Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV',
 -- 'Graphics.Vulkan.Core10.ImageView.createImageView',
--- 'Graphics.Vulkan.Core10.ImageView.destroyImageView'
+-- 'Graphics.Vulkan.Core10.ImageView.destroyImageView',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewAddressNVX'
 newtype ImageView = ImageView Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

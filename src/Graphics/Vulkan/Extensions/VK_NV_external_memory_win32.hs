@@ -136,7 +136,7 @@ data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
     -- values
     handleType :: ExternalMemoryHandleTypeFlagsNV
   , -- | @handle@ /must/ be a valid handle to memory, obtained as specified by
-    -- @handleType@.
+    -- @handleType@
     handle :: HANDLE
   }
   deriving (Typeable)

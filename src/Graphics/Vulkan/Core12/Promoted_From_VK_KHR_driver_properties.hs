@@ -123,12 +123,12 @@ data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties
   { -- | @driverID@ is a unique identifier for the driver of the physical device.
     driverID :: DriverId
   , -- | @driverName@ is an array of
-    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE_KHR' @char@
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@
     -- containing a null-terminated UTF-8 string which is the name of the
     -- driver.
     driverName :: ByteString
   , -- | @driverInfo@ is an array of
-    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE_KHR' @char@
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@
     -- containing a null-terminated UTF-8 string with additional information
     -- about the driver.
     driverInfo :: ByteString

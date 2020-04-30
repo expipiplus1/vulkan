@@ -245,13 +245,13 @@ instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
 --     @loadOp@ equal to
 --     'Graphics.Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD'
 --     or
---     'Graphics.Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_DONT_CARE'.
+--     'Graphics.Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_DONT_CARE'
 --
 -- -   If @fragmentDensityMapAttachment@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
 --     @fragmentDensityMapAttachment@ /must/ reference an attachment with a
 --     @storeOp@ equal to
---     'Graphics.Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_DONT_CARE'.
+--     'Graphics.Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_DONT_CARE'
 --
 -- == Valid Usage (Implicit)
 --

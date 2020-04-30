@@ -102,7 +102,7 @@ foreign import ccall
 -- -   @pInfoSize@ is a pointer to a value related to the amount of data
 --     the query returns, as described below.
 --
--- -   @pInfo@ is either NULL or a pointer to a buffer.
+-- -   @pInfo@ is either @NULL@ or a pointer to a buffer.
 --
 -- = Description
 --

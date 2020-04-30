@@ -797,7 +797,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
 --     bits set /must/ not be used by any command that was recorded to a
 --     command buffer which is in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
@@ -949,7 +949,7 @@ instance Zero DescriptorBufferInfo where
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---     but not both.
+--     but not both
 --
 -- -   @imageLayout@ /must/ match the actual
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' of each
@@ -1095,12 +1095,12 @@ instance Zero DescriptorImageInfo where
 --
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/
---     have identical @descriptorType@ and @stageFlags@.
+--     have identical @descriptorType@ and @stageFlags@
 --
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/ all
 --     either use immutable samplers or /must/ all not use immutable
---     samplers.
+--     samplers
 --
 -- -   @descriptorType@ /must/ match the type of @dstBinding@ within
 --     @dstSet@
@@ -1344,7 +1344,7 @@ instance Zero DescriptorImageInfo where
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/
 --     have identical
---     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'.
+--     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',

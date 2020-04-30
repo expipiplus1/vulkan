@@ -266,7 +266,7 @@ foreign import ccall
 -- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
 --     outstanding 'cmdDebugMarkerBeginEXT' command recorded to
 --     @commandBuffer@ that has not previously been ended by a call to
---     'cmdDebugMarkerEndEXT'.
+--     'cmdDebugMarkerEndEXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -389,7 +389,7 @@ data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
     -- @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @pObjectName@ /must/ be a null-terminated UTF-8 string
     objectName :: ByteString
@@ -456,7 +456,7 @@ data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
     -- @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
     tagName :: Word64

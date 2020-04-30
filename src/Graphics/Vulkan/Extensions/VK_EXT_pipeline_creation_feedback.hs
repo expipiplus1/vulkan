@@ -123,11 +123,13 @@ instance Zero PipelineCreationFeedbackEXT where
 -- is set in @pPipelineCreationFeedback@.
 --
 -- When chained to
--- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- or 'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', the @i@
 -- element of @pPipelineStageCreationFeedbacks@ corresponds to the @i@
 -- element of
--- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@pStages@
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@pStages@,
+-- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@pStages@,
 -- or
 -- 'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@.
 -- When chained to
@@ -153,6 +155,12 @@ instance Zero PipelineCreationFeedbackEXT where
 --     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal
 --     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR'::@stageCount@
+--
+-- -   When chained to
+--     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
+--     'PipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
+--     /must/ equal
+--     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@stageCount@
 --
 -- == Valid Usage (Implicit)
 --
@@ -255,6 +263,7 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PipelineCreationFeedbackFlagB
 -- creation work by using the @pipelineCache@ parameter of
 -- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV',
 -- or 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines'. When an
 -- implementation sets this bit for the entire pipeline, it /may/ leave it
 -- unset for any stage.

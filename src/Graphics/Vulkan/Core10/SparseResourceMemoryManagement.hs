@@ -377,7 +377,7 @@ foreign import ccall
 -- -   When a semaphore wait operation referring to a binary semaphore
 --     defined by any element of the @pWaitSemaphores@ member of any
 --     element of @pBindInfo@ executes on @queue@, there /must/ be no other
---     queues waiting on the same semaphore.
+--     queues waiting on the same semaphore
 --
 -- -   All elements of the @pWaitSemaphores@ member of all elements of
 --     @pBindInfo@ member referring to a binary semaphore /must/ be
@@ -391,7 +391,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --     /must/ reference a semaphore signal operation that has been
 --     submitted for execution and any semaphore signal operations on which
---     it depends (if any) /must/ have also been submitted for execution.
+--     it depends (if any) /must/ have also been submitted for execution
 --
 -- == Valid Usage (Implicit)
 --
@@ -651,14 +651,14 @@ instance Zero SparseImageMemoryRequirements where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     or
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when the resource was created.
+--     when the resource was created
 --
 -- -   If @memory@ was created by a memory import operation, the external
 --     handle type of the imported memory /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     or
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when the resource was created.
+--     when the resource was created
 --
 -- == Valid Usage (Implicit)
 --
@@ -787,12 +787,12 @@ instance Zero SparseMemoryBind where
 --     not equal to @0@, at least one handle type it contained /must/ also
 --     have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when the image was created.
+--     when the image was created
 --
 -- -   If @memory@ was created by a memory import operation, the external
 --     handle type of the imported memory /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when @image@ was created.
+--     when @image@ was created
 --
 -- == Valid Usage (Implicit)
 --
@@ -1126,7 +1126,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- -   For each element of @pSignalSemaphores@ created with a
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -1136,7 +1136,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- == Valid Usage (Implicit)
 --

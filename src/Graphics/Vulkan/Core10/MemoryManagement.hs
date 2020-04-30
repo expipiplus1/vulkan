@@ -151,7 +151,7 @@ foreign import ccall
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
 --     @buffer@ /must/ equal
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
---     and @memoryOffset@ /must/ be zero.
+--     and @memoryOffset@ /must/ be zero
 --
 -- -   If buffer was created with the
 --     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
@@ -310,7 +310,7 @@ foreign import ccall
 --
 -- -   @image@ /must/ not have been created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     set.
+--     set
 --
 -- -   @image@ /must/ not already be backed by a memory object
 --
@@ -352,7 +352,7 @@ foreign import ccall
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
 --     @image@ /must/ equal
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     and @memoryOffset@ /must/ be zero.
+--     and @memoryOffset@ /must/ be zero
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
@@ -373,7 +373,7 @@ foreign import ccall
 --     original image for which the allocation was created; and the
 --     @arrayLayers@ parameter of the image being bound /must/ be equal to
 --     or smaller than the original image for which the allocation was
---     created.
+--     created
 --
 -- -   If image was created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'

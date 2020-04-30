@@ -245,7 +245,7 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
 --     bit set
 --
 -- -   @offset@ /must/ be less than the size of @buffer@ by at least 32
---     bits.
+--     bits
 --
 -- -   @offset@ /must/ be a multiple of 4
 --

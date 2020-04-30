@@ -367,7 +367,7 @@ foreign import ccall
 --     structure, the @pNext@ chain of @pImageFormatInfo@ /must/ include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo'
 --     structure with @handleType@ set to
---     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'.
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1054,7 +1054,7 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 -- -   @tiling@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --     if and only if the @pNext@ chain includes
---     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'.
+--     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
 -- -   If @tiling@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
@@ -1062,7 +1062,7 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
 --     then the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---     structure with non-zero @viewFormatCount@.
+--     structure with non-zero @viewFormatCount@
 --
 -- == Valid Usage (Implicit)
 --

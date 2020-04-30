@@ -163,7 +163,7 @@ foreign import ccall
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     were provided when @operation@ was created, @pAllocator@ /must/ be
---     NULL
+--     @NULL@
 --
 -- -   @operation@ /must/ be completed
 --

@@ -278,7 +278,7 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 -- -   If @pCode@ declares any of the capabilities listed as /optional/ in
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
---     appendix, the corresponding feature(s) /must/ be enabled.
+--     appendix, the corresponding feature(s) /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --

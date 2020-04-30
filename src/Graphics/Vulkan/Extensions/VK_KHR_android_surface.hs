@@ -189,7 +189,7 @@ data AndroidSurfaceCreateInfoKHR = AndroidSurfaceCreateInfoKHR
   { -- | @flags@ /must/ be @0@
     flags :: AndroidSurfaceCreateFlagsKHR
   , -- | @window@ /must/ point to a valid Android
-    -- 'Graphics.Vulkan.Extensions.WSITypes.ANativeWindow'.
+    -- 'Graphics.Vulkan.Extensions.WSITypes.ANativeWindow'
     window :: Ptr ANativeWindow
   }
   deriving (Typeable)

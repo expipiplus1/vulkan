@@ -193,29 +193,29 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 -- == Valid Usage
 --
 -- -   @handleType@ /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fence-handletypes-win32 Handle Types Supported by VkImportFenceWin32HandleInfoKHR>
---     table.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fence-handletypes-win32 Handle Types Supported by >
+--     table
 --
 -- -   If @handleType@ is not
 --     'Graphics.Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT',
---     @name@ /must/ be @NULL@.
+--     @name@ /must/ be @NULL@
 --
 -- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
 --     name a valid synchronization primitive of the type specified by
---     @handleType@.
+--     @handleType@
 --
 -- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
---     a valid handle of the type specified by @handleType@.
+--     a valid handle of the type specified by @handleType@
 --
--- -   If @handle@ is not @NULL@, @name@ must be @NULL@.
+-- -   If @handle@ is not @NULL@, @name@ must be @NULL@
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
 --     @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --
@@ -346,7 +346,7 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 --     'Graphics.Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT',
 --     a 'ExportFenceWin32HandleInfoKHR' structure /must/ not be included
 --     in the @pNext@ chain of
---     'Graphics.Vulkan.Core10.Fence.FenceCreateInfo'.
+--     'Graphics.Vulkan.Core10.Fence.FenceCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -430,27 +430,27 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 --
 -- -   @handleType@ /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'::@handleTypes@
---     when the @fence@’s current payload was created.
+--     when the @fence@’s current payload was created
 --
 -- -   If @handleType@ is defined as an NT handle, 'getFenceWin32HandleKHR'
 --     /must/ be called no more than once for each valid unique combination
---     of @fence@ and @handleType@.
+--     of @fence@ and @handleType@
 --
 -- -   @fence@ /must/ not currently have its payload replaced by an
 --     imported payload as described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'::@exportFromImportedHandleTypes@
---     for @handleType@.
+--     for @handleType@
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @fence@ /must/ be signaled, or have an
 --     associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
---     pending execution.
+--     pending execution
 --
 -- -   @handleType@ /must/ be defined as an NT handle or a global share
---     handle.
+--     handle
 --
 -- == Valid Usage (Implicit)
 --

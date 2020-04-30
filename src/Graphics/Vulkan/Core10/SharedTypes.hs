@@ -277,7 +277,7 @@ instance Zero Extent3D where
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
 --
 -- -   @aspectMask@ /must/ not include
---     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@.
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
 --
 -- -   @layerCount@ /must/ be greater than 0
 --

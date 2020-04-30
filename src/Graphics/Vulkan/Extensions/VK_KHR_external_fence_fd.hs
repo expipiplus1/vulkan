@@ -198,11 +198,11 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 -- == Valid Usage
 --
 -- -   @handleType@ /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by VkImportFenceFdInfoKHR>
---     table.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by >
+--     table
 --
 -- -   @fd@ /must/ obey any requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- If @handleType@ is
 -- 'Graphics.Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT',
@@ -325,22 +325,22 @@ instance Zero ImportFenceFdInfoKHR where
 --
 -- -   @handleType@ /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'::@handleTypes@
---     when @fence@’s current payload was created.
+--     when @fence@’s current payload was created
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @fence@ /must/ be signaled, or have an
 --     associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
---     pending execution.
+--     pending execution
 --
 -- -   @fence@ /must/ not currently have its payload replaced by an
 --     imported payload as described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'::@exportFromImportedHandleTypes@
---     for @handleType@.
+--     for @handleType@
 --
--- -   @handleType@ /must/ be defined as a POSIX file descriptor handle.
+-- -   @handleType@ /must/ be defined as a POSIX file descriptor handle
 --
 -- == Valid Usage (Implicit)
 --

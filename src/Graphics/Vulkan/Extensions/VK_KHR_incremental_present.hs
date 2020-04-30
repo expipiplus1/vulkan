@@ -169,13 +169,13 @@ instance Zero PresentRegionKHR where
 -- -   The sum of @offset@ and @extent@ /must/ be no greater than the
 --     @imageExtent@ member of the
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
---     structure given to
---     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+--     structure passed to
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
 --
--- -   @layer@ /must/ be less than @imageArrayLayers@ member of the
+-- -   @layer@ /must/ be less than the @imageArrayLayers@ member of the
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
---     structure given to
---     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+--     structure passed to
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
 --
 -- Some platforms allow the size of a surface to change, and then scale the
 -- pixels of the image to fit the surface. 'RectLayerKHR' specifies pixels

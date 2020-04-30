@@ -204,7 +204,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
 --     for each extension in the
 --     'DeviceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also be
---     present in that list.
+--     present in that list
 --
 -- == Valid Usage (Implicit)
 --
@@ -376,7 +376,7 @@ destroyDevice device allocator = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-protectedMemory protected memory>
 --     feature is not enabled, the
 --     'Graphics.Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
---     bit of @flags@ /must/ not be set.
+--     bit of @flags@ /must/ not be set
 --
 -- == Valid Usage (Implicit)
 --

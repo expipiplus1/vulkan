@@ -316,7 +316,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   One or more present commands on @swapchain@ /must/ have been
---     processed by the presentation engine.
+--     processed by the presentation engine
 --
 -- == Valid Usage (Implicit)
 --
@@ -511,7 +511,7 @@ instance Zero DisplayEventInfoEXT where
 -- -   The bits in @surfaceCounters@ /must/ be supported by
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@surface@,
 --     as reported by
---     'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.getPhysicalDeviceSurfaceCapabilities2EXT'.
+--     'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.getPhysicalDeviceSurfaceCapabilities2EXT'
 --
 -- == Valid Usage (Implicit)
 --

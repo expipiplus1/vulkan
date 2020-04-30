@@ -246,6 +246,7 @@ import {-# SOURCE #-} Graphics.Vulkan.Core10.SharedTypes (ImageSubresourceLayers
 import {-# SOURCE #-} Graphics.Vulkan.Core10.SharedTypes (ImageSubresourceRange)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_swapchain (ImageSwapchainCreateInfoKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_astc_decode_mode (ImageViewASTCDecodeModeEXT)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NVX_image_view_handle (ImageViewAddressPropertiesNVX)
 import {-# SOURCE #-} Graphics.Vulkan.Core10.ImageView (ImageViewCreateInfo)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NVX_image_view_handle (ImageViewHandleInfoNVX)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (ImageViewUsageCreateInfo)

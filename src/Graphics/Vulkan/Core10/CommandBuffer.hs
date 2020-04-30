@@ -394,7 +394,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   If @commandBuffer@ is a primary command buffer, there /must/ not be
 --     an active render pass instance
@@ -412,14 +412,14 @@ foreign import ccall
 --     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.cmdBeginDebugUtilsLabelEXT'
 --     command recorded to @commandBuffer@ that has not previously been
 --     ended by a call to
---     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.cmdEndDebugUtilsLabelEXT'.
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.cmdEndDebugUtilsLabelEXT'
 --
 -- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
 --     be an outstanding
 --     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.cmdDebugMarkerBeginEXT'
 --     command recorded to @commandBuffer@ that has not previously been
 --     ended by a call to
---     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.cmdDebugMarkerEndEXT'.
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.cmdDebugMarkerEndEXT'
 --
 -- == Valid Usage (Implicit)
 --

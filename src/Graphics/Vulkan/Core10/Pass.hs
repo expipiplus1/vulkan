@@ -1074,7 +1074,7 @@ instance Zero AttachmentReference where
 --     formats whose features contain at least one of
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   All attachments in @pColorAttachments@ that are not
 --     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
@@ -1119,12 +1119,12 @@ instance Zero AttachmentReference where
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
 --     it /must/ also include
---     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'.
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
 --
 -- -   If the render pass is created with
 --     'Graphics.Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM'
 --     each of the elements of @pInputAttachments@ /must/ be
---     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'.
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1599,7 +1599,7 @@ instance Zero SubpassDependency where
 --     to
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
 --     or
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'.
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   For any member of @pAttachments@ with a @stencilLoadOp@ equal to
 --     'Graphics.Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR',
@@ -1613,13 +1613,13 @@ instance Zero SubpassDependency where
 --     'Graphics.Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR',
 --     the first use of that attachment /must/ not specify a @layout@ equal
 --     to
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'.
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
 --
 -- -   For any member of @pAttachments@ with a @stencilLoadOp@ equal to
 --     'Graphics.Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR',
 --     the first use of that attachment /must/ not specify a @layout@ equal
 --     to
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'.
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.RenderPassInputAttachmentAspectCreateInfo'
@@ -1880,17 +1880,18 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 -- when to overlap execution of subpasses, etc.
 --
 -- It is legal for a subpass to use no color or depth\/stencil attachments,
--- and rather use shader side effects such as image stores and atomics to
--- produce an output. In this case, the subpass continues to use the
--- @width@, @height@, and @layers@ of the framebuffer to define the
+-- either because it has no attachment references or because all of them
+-- are 'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'. This kind
+-- of subpass /can/ use shader side effects such as image stores and
+-- atomics to produce an output. In this case, the subpass continues to use
+-- the @width@, @height@, and @layers@ of the framebuffer to define the
 -- dimensions of the rendering area, and the @rasterizationSamples@ from
 -- each pipeline’s
 -- 'Graphics.Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' to
 -- define the number of samples used in rasterization; however, if
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures'::@variableMultisampleRate@
 -- is 'Graphics.Vulkan.Core10.BaseType.FALSE', then all pipelines to be
--- bound with a given zero-attachment subpass /must/ have the same value
--- for
+-- bound with the subpass /must/ have the same value for
 -- 'Graphics.Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
 --
 -- == Valid Usage
@@ -1935,14 +1936,14 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 -- -   Each element of @pAttachments@ that is used as a fragment density
 --     map attachment by @renderPass@ /must/ not have been created with a
 --     @flags@ value including
---     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
+--     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
 -- -   If @renderPass@ has a fragment density map attachment and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nonsubsampledimages non-subsample image feature>
 --     is not enabled, each element of @pAttachments@ /must/ have been
 --     created with a @flags@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---     unless that element is the fragment density map attachment.
+--     unless that element is the fragment density map attachment
 --
 -- -   If @flags@ does not include
 --     'Graphics.Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
@@ -2004,17 +2005,17 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     each element of @pAttachments@ /must/ have been created with the
 --     identity swizzle
 --
--- -   @width@ /must/ be greater than @0@.
+-- -   @width@ /must/ be greater than @0@
 --
 -- -   @width@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferWidth@
 --
--- -   @height@ /must/ be greater than @0@.
+-- -   @height@ /must/ be greater than @0@
 --
 -- -   @height@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
--- -   @layers@ /must/ be greater than @0@.
+-- -   @layers@ /must/ be greater than @0@
 --
 -- -   @layers@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferLayers@

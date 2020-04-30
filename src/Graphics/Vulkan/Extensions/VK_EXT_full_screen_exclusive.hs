@@ -450,7 +450,7 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 --
 -- Note
 --
--- It’s the responsibility of the application to change the display
+-- It is the responsibility of the application to change the display
 -- settings of the targeted Win32 display using the appropriate platform
 -- APIs. Such changes /may/ alter the surface capabilities reported for the
 -- created surface.

@@ -62,12 +62,12 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 --
 -- -   @divisor@ /must/ be a value between @0@ and
 --     'PhysicalDeviceVertexAttributeDivisorPropertiesEXT'::@maxVertexAttribDivisor@,
---     inclusive.
+--     inclusive
 --
 -- -   'Graphics.Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@inputRate@
 --     /must/ be of type
 --     'Graphics.Vulkan.Core10.Enums.VertexInputRate.VERTEX_INPUT_RATE_INSTANCE'
---     for this @binding@.
+--     for this @binding@
 --
 -- = See Also
 --

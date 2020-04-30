@@ -197,7 +197,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
 --     for each extension in the
 --     'InstanceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also be
---     present in that list.
+--     present in that list
 --
 -- == Valid Usage (Implicit)
 --
@@ -453,7 +453,7 @@ foreign import ccall
 -- | covered above        |                      |                       |
 -- +----------------------+----------------------+-----------------------+
 --
--- vkGetDeviceProcAddr behavior
+-- 'getDeviceProcAddr' behavior
 --
 -- [1]
 --     \"*\" means any representable value for the parameter (including
@@ -538,7 +538,7 @@ foreign import ccall
 -- | covered above        |                                                                                  |                       |
 -- +----------------------+----------------------------------------------------------------------------------+-----------------------+
 --
--- vkGetInstanceProcAddr behavior
+-- 'getInstanceProcAddr' behavior
 --
 -- [1]
 --     \"*\" means any representable value for the parameter (including
@@ -2916,14 +2916,15 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structures, respectively.
     sparseResidencyAliased :: Bool
   , -- | @variableMultisampleRate@ specifies whether all pipelines that will be
-    -- bound to a command buffer during a subpass with no attachments /must/
-    -- have the same value for
+    -- bound to a command buffer during a
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>
+    -- /must/ have the same value for
     -- 'Graphics.Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
     -- If set to 'Graphics.Vulkan.Core10.BaseType.TRUE', the implementation
-    -- supports variable multisample rates in a subpass with no attachments. If
-    -- set to 'Graphics.Vulkan.Core10.BaseType.FALSE', then all pipelines bound
-    -- in such a subpass /must/ have the same multisample rate. This has no
-    -- effect in situations where a subpass uses any attachments.
+    -- supports variable multisample rates in a subpass which uses no
+    -- attachments. If set to 'Graphics.Vulkan.Core10.BaseType.FALSE', then all
+    -- pipelines bound in such a subpass /must/ have the same multisample rate.
+    -- This has no effect in situations where a subpass uses any attachments.
     variableMultisampleRate :: Bool
   , -- | @inheritedQueries@ specifies whether a secondary command buffer /may/ be
     -- executed while a query is active.
@@ -3954,8 +3955,8 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     framebufferStencilSampleCounts :: SampleCountFlags
   , -- | @framebufferNoAttachmentsSampleCounts@ is a bitmask1 of
     -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-    -- indicating the supported sample counts for a framebuffer with no
-    -- attachments.
+    -- indicating the supported sample counts for a
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>.
     framebufferNoAttachmentsSampleCounts :: SampleCountFlags
   , -- | @maxColorAttachments@ is the maximum number of color attachments that
     -- /can/ be used by a subpass in a render pass. The @colorAttachmentCount@

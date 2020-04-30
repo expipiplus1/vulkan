@@ -291,7 +291,7 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --
 -- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @image@ /must/ be bound to memory.
+--     external memory handle type, then @image@ /must/ be bound to memory
 --
 -- == Valid Usage (Implicit)
 --

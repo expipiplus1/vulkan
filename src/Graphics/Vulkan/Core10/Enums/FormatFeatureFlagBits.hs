@@ -52,7 +52,7 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- The following bits /may/ be set in @linearTilingFeatures@,
 -- @optimalTilingFeatures@, and
--- <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierTilingFeatures>,
+-- 'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierTilingFeatures@,
 -- specifying that the features are supported by <VkImage.html images> or
 -- <VkImageView.html image views> or
 -- <VkSamplerYcbcrConversion.html sampler Y′CBCR conversion objects>

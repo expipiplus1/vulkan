@@ -199,6 +199,7 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_NV_viewport_array2
                                    , module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
                                    , module Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+                                   , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                                    , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
                                    , module Graphics.Vulkan.Extensions.WSITypes
                                    ) where
@@ -402,6 +403,7 @@ import Graphics.Vulkan.Extensions.VK_NV_shading_rate_image
 import Graphics.Vulkan.Extensions.VK_NV_viewport_array2
 import Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
 import Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
 import Graphics.Vulkan.Extensions.WSITypes
 

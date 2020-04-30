@@ -463,7 +463,7 @@ foreign import ccall
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of the
---     'CopyAccelerationStructureInfoKHR' structure.
+--     'CopyAccelerationStructureInfoKHR' structure
 --
 -- == Valid Usage (Implicit)
 --
@@ -543,10 +543,10 @@ foreign import ccall
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
 --     objects referenced by this command /must/ be bound to host-visible
---     memory.
+--     memory
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds →rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -645,7 +645,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   All 'DeviceOrHostAddressConstKHR' referenced by this command /must/
---     contain valid device addresses.
+--     contain valid device addresses
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
 --     objects referenced by this command /must/ be bound to device memory.
@@ -653,7 +653,7 @@ foreign import ccall
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of the
---     'CopyAccelerationStructureToMemoryInfoKHR' structure.
+--     'CopyAccelerationStructureToMemoryInfoKHR' structure
 --
 -- -   [[VUID-{refpage}-mode-03412]] @mode@ /must/ be
 --     'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
@@ -727,7 +727,7 @@ foreign import ccall
 -- 'cmdCopyMemoryToAccelerationStructureKHR' or
 -- 'copyMemoryToAccelerationStructureKHR'.
 --
--- -   @device@ is the device which owns @pInfo->pname@:src.
+-- -   @device@ is the device which owns @pInfo->src@.
 --
 -- -   @pInfo@ is a pointer to a 'CopyAccelerationStructureToMemoryInfoKHR'
 --     structure defining the copy operation.
@@ -744,13 +744,13 @@ foreign import ccall
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
 --     objects referenced by this command /must/ be bound to host-visible
---     memory.
+--     memory
 --
 -- -   All 'DeviceOrHostAddressKHR' referenced by this command /must/
---     contain valid host pointers.
+--     contain valid host pointers
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds →rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -823,7 +823,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   All 'DeviceOrHostAddressKHR' referenced by this command /must/
---     contain valid device addresses.
+--     contain valid device addresses
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
 --     objects referenced by this command /must/ be bound to device memory.
@@ -831,14 +831,14 @@ foreign import ccall
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of the
---     'CopyMemoryToAccelerationStructureInfoKHR' structure.
+--     'CopyMemoryToAccelerationStructureInfoKHR' structure
 --
 -- -   [[VUID-{refpage}-mode-03413]] @mode@ /must/ be
 --     'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
 --
--- -   [[VUID-{refpage}-pInfo-03414]] The data in @pInfo->pname@:src /must/
---     have a format compatible with the destination physical device as
---     returned by 'getDeviceAccelerationStructureCompatibilityKHR'
+-- -   [[VUID-{refpage}-pInfo-03414]] The data in @pInfo->src@ /must/ have
+--     a format compatible with the destination physical device as returned
+--     by 'getDeviceAccelerationStructureCompatibilityKHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -905,7 +905,7 @@ foreign import ccall
 -- 'cmdCopyAccelerationStructureToMemoryKHR' or
 -- 'copyAccelerationStructureToMemoryKHR'.
 --
--- -   @device@ is the device which owns @pInfo->pname@:dst.
+-- -   @device@ is the device which owns @pInfo->dst@.
 --
 -- -   @pInfo@ is a pointer to a 'CopyMemoryToAccelerationStructureInfoKHR'
 --     structure defining the copy operation.
@@ -922,13 +922,13 @@ foreign import ccall
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
 --     objects referenced by this command /must/ be bound to host-visible
---     memory.
+--     memory
 --
 -- -   All 'DeviceOrHostAddressConstKHR' referenced by this command /must/
---     contain valid host pointers.
+--     contain valid host pointers
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds →rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1155,7 +1155,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds →rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1294,7 +1294,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -1592,7 +1592,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than the
---     number of shader groups in @pipeline@.
+--     number of shader groups in @pipeline@
 --
 -- -   @dataSize@ /must/ be at least
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@ ×
@@ -1669,14 +1669,14 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than the
---     number of shader groups in @pipeline@.
+--     number of shader groups in @pipeline@
 --
 -- -   @dataSize@ /must/ be at least
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleCaptureReplaySize@
 --     × @groupCount@
 --
 -- -   'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplay@
---     /must/ be enabled to call this function.
+--     /must/ be enabled to call this function
 --
 -- == Valid Usage (Implicit)
 --
@@ -1757,9 +1757,9 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS'
 -- error is returned if the implementation is unable to re-use the shader
 -- group handles provided in
--- 'RayTracingShaderGroupCreateInfoKHR'→@pShaderGroupCaptureReplayHandle@
+-- 'RayTracingShaderGroupCreateInfoKHR'::@pShaderGroupCaptureReplayHandle@
 -- when
--- 'PhysicalDeviceRayTracingFeaturesKHR'→@rayTracingShaderGroupHandleCaptureReplay@
+-- 'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplay@
 -- is enabled.
 --
 -- == Valid Usage
@@ -1779,7 +1779,7 @@ foreign import ccall
 -- -   If @pipelineCache@ was created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
 --     host access to @pipelineCache@ /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing rayTracing>
@@ -1941,7 +1941,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -2104,7 +2104,7 @@ foreign import ccall
 --     than or equal to the size of @buffer@
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-indirecttraceray →rayTracingIndirectTraceRays>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-indirecttraceray ::rayTracingIndirectTraceRays>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2379,7 +2379,7 @@ foreign import ccall
 --
 -- -   @ppOffsetInfos@ is an array of @infoCount@ pointers to arrays of
 --     'AccelerationStructureBuildOffsetInfoKHR' structures. Each
---     @ppOffsetInfos@[i] is an array of @pInfos@[i]→@geometryCount@
+--     @ppOffsetInfos@[i] is an array of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures defining
 --     dynamic offsets to the addresses where geometry data is stored, as
 --     defined by @pInfos@[i].
@@ -2403,7 +2403,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   [[VUID-{refpage}-pOffsetInfos-03402]] @pOffsetInfos@[i] /must/ be a
---     valid pointer to an array of @pInfos@[i]→@geometryCount@
+--     valid pointer to an array of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
 -- -   [[VUID-{refpage}-pInfos-03403]] Each
@@ -2426,7 +2426,7 @@ foreign import ccall
 --     @dstAccelerationStructure@ has greater than or equal to the number
 --     of vertices, indices, and AABBs,
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
---     both 0 or both non-zero, and all other parameters are the same.
+--     both 0 or both non-zero, and all other parameters are the same
 --
 -- -   [[VUID-{refpage}-pInfos-03405]] For each @pInfos@[i], if @update@ is
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', then objects that were
@@ -2494,7 +2494,7 @@ foreign import ccall
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of any of the
---     provided 'AccelerationStructureBuildGeometryInfoKHR' structures.
+--     provided 'AccelerationStructureBuildGeometryInfoKHR' structures
 --
 -- == Valid Usage (Implicit)
 --
@@ -2575,7 +2575,7 @@ foreign import ccall
 --     geometry used to build the acceleration structure.
 --
 -- -   @indirectBuffer@ is the 'Graphics.Vulkan.Core10.Handles.Buffer'
---     containing @pInfo->pname@:geometryCount
+--     containing @pInfo->geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures defining
 --     dynamic offsets to the addresses where geometry data is stored, as
 --     defined by @pInfo@.
@@ -2595,13 +2595,13 @@ foreign import ccall
 --     objects referenced by this command /must/ be bound to device memory
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-indirectasbuild →rayTracingIndirectAccelerationStructureBuild>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-indirectasbuild ::rayTracingIndirectAccelerationStructureBuild>
 --     feature /must/ be enabled
 --
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
 --     structure /must/ not be included in the @pNext@ chain of any of the
---     provided 'AccelerationStructureBuildGeometryInfoKHR' structures.
+--     provided 'AccelerationStructureBuildGeometryInfoKHR' structures
 --
 -- == Valid Usage (Implicit)
 --
@@ -2686,7 +2686,7 @@ foreign import ccall
 --
 -- -   @ppOffsetInfos@ is an array of @infoCount@ pointers to arrays of
 --     'AccelerationStructureBuildOffsetInfoKHR' structures. Each
---     @ppOffsetInfos@[i] is an array of @pInfos@[i]→@geometryCount@
+--     @ppOffsetInfos@[i] is an array of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures defining
 --     dynamic offsets to the addresses where geometry data is stored, as
 --     defined by @pInfos@[i].
@@ -2716,7 +2716,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   [[VUID-{refpage}-pOffsetInfos-03402]] @pOffsetInfos@[i] /must/ be a
---     valid pointer to an array of @pInfos@[i]→@geometryCount@
+--     valid pointer to an array of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
 -- -   [[VUID-{refpage}-pInfos-03403]] Each
@@ -2739,7 +2739,7 @@ foreign import ccall
 --     @dstAccelerationStructure@ has greater than or equal to the number
 --     of vertices, indices, and AABBs,
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
---     both 0 or both non-zero, and all other parameters are the same.
+--     both 0 or both non-zero, and all other parameters are the same
 --
 -- -   [[VUID-{refpage}-pInfos-03405]] For each @pInfos@[i], if @update@ is
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', then objects that were
@@ -2776,7 +2776,7 @@ foreign import ccall
 --     memory
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds →rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -3185,11 +3185,11 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     feature is not enabled, @flags@ /must/ not include
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
 --
--- -   If @libraries.pname@:libraryCount is zero, then @stageCount@ /must/
---     not be zero
+-- -   If @libraries.libraryCount@ is zero, then @stageCount@ /must/ not be
+--     zero
 --
--- -   If @libraries.pname@:libraryCount is zero, then @groupCount@ /must/
---     not be zero
+-- -   If @libraries.libraryCount@ is zero, then @groupCount@ /must/ not be
+--     zero
 --
 -- == Valid Usage (Implicit)
 --
@@ -4345,9 +4345,9 @@ instance Zero AccelerationStructureGeometryKHR where
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RAY_TRACING_BIT_KHR'
 --     usage flag
 --
--- -   If @update@ is enam:VK_TRUE, the @srcAccelerationStructure@ and
---     @dstAccelerationStructure@ objects /must/ either be the same object
---     or not have any
+-- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', the
+--     @srcAccelerationStructure@ and @dstAccelerationStructure@ objects
+--     /must/ either be the same object or not have any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --
 -- == Valid Usage (Implicit)
@@ -4415,8 +4415,8 @@ data AccelerationStructureBuildGeometryInfoKHR (es :: [Type]) = AccelerationStru
     -- 'AccelerationStructureGeometryKHR' structures if
     -- @geometryArrayOfPointers@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', or
     -- a pointer to a pointer to an array of 'AccelerationStructureGeometryKHR'
-    -- structures if it’s 'Graphics.Vulkan.Core10.BaseType.FALSE'. Each element
-    -- of the array describes the data used to build each acceleration
+    -- structures if it is 'Graphics.Vulkan.Core10.BaseType.FALSE'. Each
+    -- element of the array describes the data used to build each acceleration
     -- structure geometry.
     geometries :: Vector AccelerationStructureGeometryKHR
   , -- | @scratchData@ is the device or host address to memory that will be used
@@ -4767,8 +4767,8 @@ instance Zero AccelerationStructureCreateGeometryTypeInfoKHR where
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxGeometryCount@
 --
 -- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' then
---     @pGeometryInfos->pname@:maxPrimitiveCount /must/ be less than or
---     equal to 'PhysicalDeviceRayTracingPropertiesKHR'::@maxInstanceCount@
+--     @pGeometryInfos->maxPrimitiveCount@ /must/ be less than or equal to
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@maxInstanceCount@
 --
 -- -   The total number of triangles in all geometries /must/ be less than
 --     or equal to
@@ -5229,27 +5229,15 @@ instance Zero AccelerationStructureDeviceAddressInfoKHR where
 -- | VkAccelerationStructureVersionKHR - Acceleration structure version
 -- information
 --
--- == Valid Usage
---
--- -   TBD
---
 -- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR'
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @versionData@ /must/ be a valid pointer to an array of
---     @2@*VK_UUID_SIZE @uint8_t@ values
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceAccelerationStructureCompatibilityKHR'
 data AccelerationStructureVersionKHR = AccelerationStructureVersionKHR
-  { -- | @versionData@ is a pointer to the version header as defined in
-    -- 'CopyAccelerationStructureModeKHR'
+  { -- | @versionData@ /must/ be a valid pointer to an array of @2@*VK_UUID_SIZE
+    -- @uint8_t@ values
     versionData :: ByteString }
   deriving (Typeable)
 deriving instance Show AccelerationStructureVersionKHR
@@ -5484,9 +5472,9 @@ instance es ~ '[] => Zero (CopyAccelerationStructureToMemoryInfoKHR es) where
 -- -   [[VUID-{refpage}-mode-03413]] @mode@ /must/ be
 --     'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
 --
--- -   [[VUID-{refpage}-pInfo-03414]] The data in @pInfo->pname@:src /must/
---     have a format compatible with the destination physical device as
---     returned by 'getDeviceAccelerationStructureCompatibilityKHR'
+-- -   [[VUID-{refpage}-pInfo-03414]] The data in @pInfo->src@ /must/ have
+--     a format compatible with the destination physical device as returned
+--     by 'getDeviceAccelerationStructureCompatibilityKHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -5932,7 +5920,7 @@ newtype AccelerationStructureTypeKHR = AccelerationStructureTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' is a top-level acceleration
--- structure containing instance data referring to bottom-level level
+-- structure containing instance data referring to bottom-level
 -- acceleration structures.
 pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR = AccelerationStructureTypeKHR 0
 -- | 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' is a bottom-level

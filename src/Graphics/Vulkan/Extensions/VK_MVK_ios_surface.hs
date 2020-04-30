@@ -153,7 +153,7 @@ data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
   { -- | @flags@ /must/ be @0@
     flags :: IOSSurfaceCreateFlagsMVK
   , -- | @pView@ /must/ be a valid @UIView@ and /must/ be backed by a @CALayer@
-    -- instance of type 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer'.
+    -- instance of type 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer'
     view :: Ptr ()
   }
   deriving (Typeable)

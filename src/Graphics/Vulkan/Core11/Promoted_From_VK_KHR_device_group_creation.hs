@@ -268,7 +268,7 @@ instance Zero PhysicalDeviceGroupProperties where
 --
 -- -   If @physicalDeviceCount@ is not @0@, the @physicalDevice@ parameter
 --     of 'Graphics.Vulkan.Core10.Device.createDevice' /must/ be an element
---     of @pPhysicalDevices@.
+--     of @pPhysicalDevices@
 --
 -- == Valid Usage (Implicit)
 --

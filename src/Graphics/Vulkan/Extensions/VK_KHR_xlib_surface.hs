@@ -212,10 +212,10 @@ data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
   { -- | @flags@ /must/ be @0@
     flags :: XlibSurfaceCreateFlagsKHR
   , -- | @dpy@ /must/ point to a valid Xlib
-    -- 'Graphics.Vulkan.Extensions.WSITypes.Display'.
+    -- 'Graphics.Vulkan.Extensions.WSITypes.Display'
     dpy :: Ptr Display
   , -- | @window@ /must/ be a valid Xlib
-    -- 'Graphics.Vulkan.Extensions.WSITypes.Window'.
+    -- 'Graphics.Vulkan.Extensions.WSITypes.Window'
     window :: Window
   }
   deriving (Typeable)

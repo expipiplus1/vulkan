@@ -342,7 +342,7 @@ instance Zero SamplerYcbcrConversionInfo where
 -- -   If an external format conversion is being created, @format@ /must/
 --     be 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', otherwise
 --     it /must/ not be
---     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
+--     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
@@ -410,7 +410,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     'Graphics.Vulkan.Core11.Enums.SamplerYcbcrRange.SAMPLER_YCBCR_RANGE_ITU_NARROW'
 --     then the R, G and B channels obtained by applying the @component@
 --     swizzle to @format@ /must/ each have a bit-depth greater than or
---     equal to 8.
+--     equal to 8
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
@@ -592,29 +592,28 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --
 -- == Valid Usage
 --
--- -   If the image’s tiling is
+-- -   If the image’s @tiling@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL',
 --     then @planeAspect@ /must/ be a single valid /format plane/ for the
---     image. (That is, @planeAspect@ /must/ be
+--     image (that is, for a two-plane image @planeAspect@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---     for “@_2PLANE@” formats and @planeAspect@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     and for a three-plane image @planeAspect@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     for “@_3PLANE@” formats.)
+--     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT')
 --
--- -   If the image’s tiling is
+-- -   If the image’s @tiling@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the
---     image. (That is, @aspectMask@ /must/ specify a plane index that is
+--     image (that is, @aspectMask@ /must/ specify a plane index that is
 --     less than the
---     <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierPlaneCount>
---     associated with the image’s <VkImageCreateInfo.html format> and
---     <VkImageDrmFormatModifierPropertiesEXT.html drmFormatModifier>.)
+--     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
+--     associated with the image’s @format@ and
+--     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierPropertiesEXT'::@drmFormatModifier@)
 --
 -- == Valid Usage (Implicit)
 --
@@ -672,11 +671,11 @@ instance Zero BindImagePlaneMemoryInfo where
 --
 -- == Valid Usage
 --
--- -   If the image’s tiling is
+-- -   If the image’s @tiling@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL',
 --     then @planeAspect@ /must/ be a single valid /format plane/ for the
---     image. (That is, for a two-plane image @planeAspect@ /must/ be
+--     image (that is, for a two-plane image @planeAspect@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
@@ -684,16 +683,16 @@ instance Zero BindImagePlaneMemoryInfo where
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT').
+--     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT')
 --
--- -   If the image’s tiling is
+-- -   If the image’s @tiling@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the
---     image. (That is, @aspectMask@ /must/ specify a plane index that is
+--     image (that is, @aspectMask@ /must/ specify a plane index that is
 --     less than the
---     <VkDrmFormatModifierPropertiesEXT.html drmFormatModifierPlaneCount>
---     associated with the image’s <VkImageCreateInfo.html format> and
---     <VkImageDrmFormatModifierPropertiesEXT.html drmFormatModifier>.)
+--     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
+--     associated with the image’s @format@ and
+--     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierPropertiesEXT'::@drmFormatModifier@)
 --
 -- == Valid Usage (Implicit)
 --

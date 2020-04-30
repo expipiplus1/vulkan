@@ -324,18 +324,18 @@ instance Zero DrmFormatModifierPropertiesEXT where
 -- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     then @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
---     @queueFamilyIndexCount@ @uint32_t@ values.
+--     @queueFamilyIndexCount@ @uint32_t@ values
 --
 -- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---     then @queueFamilyIndexCount@ /must/ be greater than @1@.
+--     then @queueFamilyIndexCount@ /must/ be greater than @1@
 --
 -- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     each element of @pQueueFamilyIndices@ /must/ be unique and /must/ be
 --     less than the @pQueueFamilyPropertyCount@ returned by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
---     for the @physicalDevice@ that was used to create @device@.
+--     for the @physicalDevice@ that was used to create @device@
 --
 -- == Valid Usage (Implicit)
 --
@@ -416,7 +416,7 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 --     parameters in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' and its
 --     @pNext@ chain, as determined by querying
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
---     extended with 'PhysicalDeviceImageDrmFormatModifierInfoEXT'.
+--     extended with 'PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -502,22 +502,22 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' and its @pNext@
 --     chain, as determined by querying
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
---     extended with 'PhysicalDeviceImageDrmFormatModifierInfoEXT'.
+--     extended with 'PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
 -- -   @drmFormatModifierPlaneCount@ /must/ be equal to the
 --     'DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
 --     associated with
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@format@ and
 --     @drmFormatModifier@, as found by querying
---     'DrmFormatModifierPropertiesListEXT'.
+--     'DrmFormatModifierPropertiesListEXT'
 --
 -- -   For each element of @pPlaneLayouts@, @size@ /must/ be 0
 --
 -- -   For each element of @pPlaneLayouts@, @arrayPitch@ /must/ be 0 if
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@arrayLayers@ is 1.
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@arrayLayers@ is 1
 --
 -- -   For each element of @pPlaneLayouts@, @depthPitch@ /must/ be 0 if
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@extent.depth@ is 1.
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@extent.depth@ is 1
 --
 -- == Valid Usage (Implicit)
 --

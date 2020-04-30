@@ -18,7 +18,8 @@ data Bool32
 -- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.BindVertexBufferIndirectCommandNV',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressConstKHR',
--- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressKHR'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.DeviceOrHostAddressKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX'
 type DeviceAddress = Word64
 
 
@@ -45,6 +46,7 @@ type DeviceAddress = Word64
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryAABBNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX',
 -- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsStreamNV',
 -- 'Graphics.Vulkan.Core10.Memory.MappedMemoryRange',
 -- 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo',

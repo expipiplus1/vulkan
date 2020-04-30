@@ -357,7 +357,7 @@ foreign import ccall
 --
 -- -   @pOverrideInfo@ /must/ not be used with a
 --     'PerformanceOverrideTypeINTEL' that is not reported available by
---     'getPerformanceParameterINTEL'.
+--     'getPerformanceParameterINTEL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -818,7 +818,7 @@ instance Zero PerformanceMarkerInfoINTEL where
 --
 -- -   The value written by the application into @marker@ /must/ only used
 --     the valid bits as reported by 'getPerformanceParameterINTEL' with
---     the 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL'.
+--     the 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL'
 --
 -- == Valid Usage (Implicit)
 --

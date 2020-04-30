@@ -45,16 +45,16 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     @pViewFormats@ array /must/ be compatible with the format specified
 --     in the @format@ field of
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo', as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
 --
 -- -   If 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ does not
 --     contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     @viewFormatCount@ /must/ be @0@ or @1@.
+--     @viewFormatCount@ /must/ be @0@ or @1@
 --
 -- -   If @viewFormatCount@ is not @0@,
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@format@ /must/ be
---     in @pViewFormats@.
+--     in @pViewFormats@
 --
 -- == Valid Usage (Implicit)
 --

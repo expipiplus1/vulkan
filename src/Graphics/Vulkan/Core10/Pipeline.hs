@@ -237,7 +237,7 @@ foreign import ccall
 -- -   If @pipelineCache@ was created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
 --     host access to @pipelineCache@ /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --
 -- Note
 --
@@ -374,7 +374,7 @@ foreign import ccall
 -- -   If @pipelineCache@ was created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
 --     host access to @pipelineCache@ /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --
 -- == Valid Usage (Implicit)
 --
@@ -778,7 +778,7 @@ instance Zero SpecializationInfo where
 --     the identified entry point /must/ have an @OpExecutionMode@
 --     instruction that specifies a maximum output vertex count,
 --     @OutputVertices@, that is greater than @0@ and less than or equal to
---     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputVertices@.
+--     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputVertices@
 --
 -- -   If @stage@ is
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV',
@@ -786,26 +786,26 @@ instance Zero SpecializationInfo where
 --     instruction that specifies a maximum output primitive count,
 --     @OutputPrimitivesNV@, that is greater than @0@ and less than or
 --     equal to
---     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputPrimitives@.
+--     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputPrimitives@
 --
 -- -   If @flags@ has the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 --     flag set, the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- -   If @flags@ has the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
 --     flag set, the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-computeFullSubgroups computeFullSubgroups>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --     structure is included in the @pNext@ chain, @flags@ /must/ not have
 --     the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
---     flag set.
+--     flag set
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -813,7 +813,7 @@ instance Zero SpecializationInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
 --     feature /must/ be enabled, and @stage@ /must/ be a valid bit
 --     specified in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages requiredSubgroupSizeStages>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages requiredSubgroupSizeStages>
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -823,7 +823,7 @@ instance Zero SpecializationInfo where
 --     to the product of
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'::@requiredSubgroupSize@
 --     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -831,7 +831,7 @@ instance Zero SpecializationInfo where
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
 --     flag set, the local workgroup size in the X dimension of the
 --     pipeline /must/ be a multiple of
---     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'::@requiredSubgroupSize@.
+--     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'::@requiredSubgroupSize@
 --
 -- -   If @flags@ has both the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
@@ -839,7 +839,7 @@ instance Zero SpecializationInfo where
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 --     flags set, the local workgroup size in the X dimension of the
 --     pipeline /must/ be a multiple of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
 --
 -- -   If @flags@ has the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
@@ -849,7 +849,7 @@ instance Zero SpecializationInfo where
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --     structure is included in the @pNext@ chain, the local workgroup size
 --     in the X dimension of the pipeline /must/ be a multiple of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>
 --
 -- == Valid Usage (Implicit)
 --
@@ -2205,13 +2205,13 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
 --     is 'Graphics.Vulkan.Core10.BaseType.FALSE' and @colorBlendOp@ is an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>,
---     then @colorBlendOp@ /must/ be the same for all attachments.
+--     then @colorBlendOp@ /must/ be the same for all attachments
 --
 -- -   If
 --     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
 --     is 'Graphics.Vulkan.Core10.BaseType.FALSE' and @alphaBlendOp@ is an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>,
---     then @alphaBlendOp@ /must/ be the same for all attachments.
+--     then @alphaBlendOp@ /must/ be the same for all attachments
 --
 -- -   If
 --     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendAllOperations@
@@ -2876,12 +2876,12 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
 --     or
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT').
+--     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT')
 --
 -- -   The @stage@ member of one element of @pStages@ /must/ be either
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'.
+--     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
 --
 -- -   The @stage@ member of each element of @pStages@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
@@ -2980,7 +2980,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Core10.BaseType.FALSE' if the attached image’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     does not contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'
 --
 -- -   If rasterization is not disabled and the subpass uses color
 --     attachments, the @attachmentCount@ member of @pColorBlendState@
@@ -3126,11 +3126,11 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   If the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask and @multiviewTessellationShader@
 --     is not enabled, then @pStages@ /must/ not include tessellation
---     shaders.
+--     shaders
 --
 -- -   If the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask and @multiviewGeometryShader@ is
---     not enabled, then @pStages@ /must/ not include a geometry shader.
+--     not enabled, then @pStages@ /must/ not include a geometry shader
 --
 -- -   If the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask, shaders in the pipeline /must/
@@ -3138,20 +3138,16 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   If the @renderPass@ has multiview enabled, then all shaders /must/
 --     not include variables decorated with the @Layer@ built-in decoration
---     in their interfaces.
+--     in their interfaces
 --
 -- -   @flags@ /must/ not contain the
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.PIPELINE_CREATE_DISPATCH_BASE'
---     flag.
+--     flag
 --
 -- -   If @pStages@ includes a fragment shader stage and an input
---     attachment was referenced by the
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.RenderPassInputAttachmentAspectCreateInfo'
---     at @renderPass@ create time, its shader code /must/ not read from
---     any aspect that was not specified in the @aspectMask@ of the
---     corresponding
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.InputAttachmentAspectReference'
---     structure.
+--     attachment was referenced by an @aspectMask@ at @renderPass@
+--     creation time, its shader code /must/ only read from the aspects
+--     that were specified for that input attachment
 --
 -- -   The number of resources in @layout@ accessible to each shader stage
 --     that is used by the pipeline /must/ be less than or equal to
@@ -3207,7 +3203,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     feature /must/ be enabled
 --
 -- -   If there are any mesh shader stages in the pipeline there /must/ not
---     be any shader stage in the pipeline with a @Xfb@ execution mode.
+--     be any shader stage in the pipeline with a @Xfb@ execution mode
 --
 -- -   If the @lineRasterizationMode@ member of a
 --     'Graphics.Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
@@ -3253,8 +3249,12 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
 --     then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands →deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
+--     then all stages /must/ not specify @Xfb@ execution mode
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>

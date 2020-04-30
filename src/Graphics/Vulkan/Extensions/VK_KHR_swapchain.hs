@@ -682,7 +682,7 @@ foreign import ccall
 -- -   When a semaphore wait operation referring to a binary semaphore
 --     defined by the elements of the @pWaitSemaphores@ member of
 --     @pPresentInfo@ executes on @queue@, there /must/ be no other queues
---     waiting on the same semaphore.
+--     waiting on the same semaphore
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ be semaphores that are signaled, or have
@@ -692,12 +692,12 @@ foreign import ccall
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ be created with a
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
---     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
+--     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ reference a semaphore signal operation that has been
 --     submitted for execution and any semaphore signal operations on which
---     it depends (if any) /must/ have also been submitted for execution.
+--     it depends (if any) /must/ have also been submitted for execution
 --
 -- Any writes to memory backing the images referenced by the
 -- @pImageIndices@ and @pSwapchains@ members of @pPresentInfo@, that are
@@ -712,6 +712,17 @@ foreign import ccall
 -- request to the presentation engine. However, the scope of this set of
 -- queue operations does not include the actual processing of the image by
 -- the presentation engine.
+--
+-- Note
+--
+-- The origin of the native orientation of the surface coordinate system is
+-- not specified in the Vulkan specification; it depends on the platform.
+-- For most platforms the origin is by default upper-left, meaning the
+-- pixel of the presented 'Graphics.Vulkan.Core10.Handles.Image' at
+-- coordinates (0,0) would appear at the upper left pixel of the platform
+-- surface (assuming
+-- 'Graphics.Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- and the display standing the right way up).
 --
 -- If 'queuePresentKHR' fails to enqueue the corresponding set of queue
 -- operations, it /may/ return
@@ -2218,7 +2229,7 @@ instance Zero AcquireNextImageInfoKHR where
 -- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR', then each
 --     element of @pDeviceMasks@ /must/ have exactly one bit set, and some
 --     physical device in the logical device /must/ include that bit in its
---     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@.
+--     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@
 --
 -- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR', then each
 --     element of @pDeviceMasks@ /must/ have a value for which all set bits
