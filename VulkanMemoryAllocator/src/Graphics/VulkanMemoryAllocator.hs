@@ -43,6 +43,8 @@ module Graphics.VulkanMemoryAllocator  ( createAllocator
                                        , unmapMemory
                                        , flushAllocation
                                        , invalidateAllocation
+                                       , flushAllocations
+                                       , invalidateAllocations
                                        , checkCorruption
                                        , defragmentationBegin
                                        , withDefragmentation
@@ -200,6 +202,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Graphics.Vulkan.Core10.APIConstants (pattern MAX_MEMORY_HEAPS)
 import Graphics.Vulkan.Core10.APIConstants (pattern MAX_MEMORY_TYPES)
 import Graphics.Vulkan.Core10.Enums.Result (pattern SUCCESS)
@@ -1339,6 +1342,129 @@ invalidateAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("o
 invalidateAllocation allocator allocation offset size = liftIO $ do
   r <- (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
   when (r < SUCCESS) (throwIO (VulkanException r))
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaFlushAllocations" ffiVmaFlushAllocations
+  :: Allocator -> Word32 -> Ptr Allocation -> Ptr DeviceSize -> Ptr DeviceSize -> IO Result
+
+-- | Flushes memory of given set of allocations.
+--
+-- Calls @vkFlushMappedMemoryRanges()@ for memory associated with given
+-- ranges of given allocations. For more information, see documentation of
+-- 'flushAllocation'.
+--
+-- __Parameters.__
+--
+-- +-----------------+--------------------------------------------------------+
+-- | allocator       |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocationCount |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocations     |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | offsets         | If not null, it must point to an array of offsets of   |
+-- |                 | regions to flush, relative to the beginning of         |
+-- |                 | respective allocations. Null means all ofsets are      |
+-- |                 | zero.                                                  |
+-- +-----------------+--------------------------------------------------------+
+-- | sizes           | If not null, it must point to an array of sizes of     |
+-- |                 | regions to flush in respective allocations. Null means |
+-- |                 | @VK_WHOLE_SIZE@ for all allocations.                   |
+-- +-----------------+--------------------------------------------------------+
+--
+-- This function returns the @VkResult@ from @vkFlushMappedMemoryRanges@ if
+-- it is called, otherwise @VK_SUCCESS@.
+flushAllocations :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
+flushAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
+  let allocationsLength = Data.Vector.length $ (allocations)
+  let offsetsLength = Data.Vector.length $ (offsets)
+  lift $ unless (fromIntegral offsetsLength == allocationsLength || offsetsLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "offsets and allocations must have the same length" Nothing Nothing
+  let sizesLength = Data.Vector.length $ (sizes)
+  lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
+  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
+  offsets' <- if Data.Vector.null (offsets)
+    then pure nullPtr
+    else do
+      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
+      pure $ pOffsets
+  sizes' <- if Data.Vector.null (sizes)
+    then pure nullPtr
+    else do
+      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
+      pure $ pSizes
+  r <- lift $ (ffiVmaFlushAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes'
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaInvalidateAllocations" ffiVmaInvalidateAllocations
+  :: Allocator -> Word32 -> Ptr Allocation -> Ptr DeviceSize -> Ptr DeviceSize -> IO Result
+
+-- | Invalidates memory of given set of allocations.
+--
+-- Calls @vkInvalidateMappedMemoryRanges()@ for memory associated with
+-- given ranges of given allocations. For more information, see
+-- documentation of 'invalidateAllocation'.
+--
+-- __Parameters.__
+--
+-- +-----------------+--------------------------------------------------------+
+-- | allocator       |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocationCount |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocations     |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | offsets         | If not null, it must point to an array of offsets of   |
+-- |                 | regions to flush, relative to the beginning of         |
+-- |                 | respective allocations. Null means all ofsets are      |
+-- |                 | zero.                                                  |
+-- +-----------------+--------------------------------------------------------+
+-- | sizes           | If not null, it must point to an array of sizes of     |
+-- |                 | regions to flush in respective allocations. Null means |
+-- |                 | @VK_WHOLE_SIZE@ for all allocations.                   |
+-- +-----------------+--------------------------------------------------------+
+--
+-- This function returns the @VkResult@ from
+-- @vkInvalidateMappedMemoryRanges@ if it is called, otherwise
+-- @VK_SUCCESS@.
+invalidateAllocations :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
+invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
+  let allocationsLength = Data.Vector.length $ (allocations)
+  let offsetsLength = Data.Vector.length $ (offsets)
+  lift $ unless (fromIntegral offsetsLength == allocationsLength || offsetsLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "offsets and allocations must have the same length" Nothing Nothing
+  let sizesLength = Data.Vector.length $ (sizes)
+  lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
+  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
+  offsets' <- if Data.Vector.null (offsets)
+    then pure nullPtr
+    else do
+      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
+      pure $ pOffsets
+  sizes' <- if Data.Vector.null (sizes)
+    then pure nullPtr
+    else do
+      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
+      pure $ pSizes
+  r <- lift $ (ffiVmaInvalidateAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes'
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
