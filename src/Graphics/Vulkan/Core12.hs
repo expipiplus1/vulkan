@@ -50,6 +50,7 @@ import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_type
 import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout
 import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -69,7 +70,6 @@ import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -393,9 +393,9 @@ instance ToCStruct PhysicalDeviceVulkan11Properties where
   pokeCStruct p PhysicalDeviceVulkan11Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (deviceUUID)
-    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (driverUUID)
-    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8))) (deviceLUID)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (deviceUUID)
+    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8))) (driverUUID)
+    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8))) (deviceLUID)
     poke ((p `plusPtr` 56 :: Ptr Word32)) (deviceNodeMask)
     poke ((p `plusPtr` 60 :: Ptr Bool32)) (boolToBool32 (deviceLUIDValid))
     poke ((p `plusPtr` 64 :: Ptr Word32)) (subgroupSize)
@@ -414,9 +414,9 @@ instance ToCStruct PhysicalDeviceVulkan11Properties where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
-    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
-    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8))) (mempty)
     poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 60 :: Ptr Bool32)) (boolToBool32 (zero))
     poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
@@ -433,9 +433,9 @@ instance ToCStruct PhysicalDeviceVulkan11Properties where
 
 instance FromCStruct PhysicalDeviceVulkan11Properties where
   peekCStruct p = do
-    deviceUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
-    driverUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
-    deviceLUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8)))
+    deviceUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8)))
+    driverUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8)))
+    deviceLUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8)))
     deviceNodeMask <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
     deviceLUIDValid <- peek @Bool32 ((p `plusPtr` 60 :: Ptr Bool32))
     subgroupSize <- peek @Word32 ((p `plusPtr` 64 :: Ptr Word32))
@@ -1521,8 +1521,8 @@ instance ToCStruct PhysicalDeviceVulkan12Properties where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (driverID)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))) (driverName)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (driverName)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
     ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (conformanceVersion) . ($ ())
     lift $ poke ((p `plusPtr` 536 :: Ptr ShaderFloatControlsIndependence)) (denormBehaviorIndependence)
     lift $ poke ((p `plusPtr` 540 :: Ptr ShaderFloatControlsIndependence)) (roundingModeIndependence)
@@ -1579,8 +1579,8 @@ instance ToCStruct PhysicalDeviceVulkan12Properties where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (zero)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (mempty)
     ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (zero) . ($ ())
     lift $ poke ((p `plusPtr` 536 :: Ptr ShaderFloatControlsIndependence)) (zero)
     lift $ poke ((p `plusPtr` 540 :: Ptr ShaderFloatControlsIndependence)) (zero)
@@ -1634,8 +1634,8 @@ instance ToCStruct PhysicalDeviceVulkan12Properties where
 instance FromCStruct PhysicalDeviceVulkan12Properties where
   peekCStruct p = do
     driverID <- peek @DriverId ((p `plusPtr` 16 :: Ptr DriverId))
-    driverName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))))
-    driverInfo <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))))
+    driverName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))))
+    driverInfo <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))))
     conformanceVersion <- peekCStruct @ConformanceVersion ((p `plusPtr` 532 :: Ptr ConformanceVersion))
     denormBehaviorIndependence <- peek @ShaderFloatControlsIndependence ((p `plusPtr` 536 :: Ptr ShaderFloatControlsIndependence))
     roundingModeIndependence <- peek @ShaderFloatControlsIndependence ((p `plusPtr` 540 :: Ptr ShaderFloatControlsIndependence))

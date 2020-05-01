@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_NV_mesh_shader  ( cmdDrawMeshTasksNV
                                                      , pattern NV_MESH_SHADER_EXTENSION_NAME
                                                      ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
@@ -26,7 +27,6 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -1067,7 +1067,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (maxDrawMeshTasksCount)
     poke ((p `plusPtr` 20 :: Ptr Word32)) (maxTaskWorkGroupInvocations)
-    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 3 Word32)))
     case (maxTaskWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pMaxTaskWorkGroupSize' :: Ptr Word32) (e0)
@@ -1076,7 +1076,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 36 :: Ptr Word32)) (maxTaskTotalMemorySize)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (maxTaskOutputCount)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (maxMeshWorkGroupInvocations)
-    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (FixedArray 3 Word32)))
     case (maxMeshWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pMaxMeshWorkGroupSize' :: Ptr Word32) (e0)
@@ -1096,7 +1096,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxTaskWorkGroupSize' :: Ptr Word32) (e0)
@@ -1105,7 +1105,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
-    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxMeshWorkGroupSize' :: Ptr Word32) (e0)
@@ -1123,14 +1123,14 @@ instance FromCStruct PhysicalDeviceMeshShaderPropertiesNV where
   peekCStruct p = do
     maxDrawMeshTasksCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     maxTaskWorkGroupInvocations <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    let pmaxTaskWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxTaskWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 24 :: Ptr (FixedArray 3 Word32)))
     maxTaskWorkGroupSize0 <- peek @Word32 ((pmaxTaskWorkGroupSize `advancePtrBytes` 0 :: Ptr Word32))
     maxTaskWorkGroupSize1 <- peek @Word32 ((pmaxTaskWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     maxTaskWorkGroupSize2 <- peek @Word32 ((pmaxTaskWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))
     maxTaskTotalMemorySize <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
     maxTaskOutputCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     maxMeshWorkGroupInvocations <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    let pmaxMeshWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxMeshWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 48 :: Ptr (FixedArray 3 Word32)))
     maxMeshWorkGroupSize0 <- peek @Word32 ((pmaxMeshWorkGroupSize `advancePtrBytes` 0 :: Ptr Word32))
     maxMeshWorkGroupSize1 <- peek @Word32 ((pmaxMeshWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     maxMeshWorkGroupSize2 <- peek @Word32 ((pmaxMeshWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))

@@ -15,6 +15,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities 
                                                                                  , pattern LUID_SIZE
                                                                                  ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
@@ -34,7 +35,6 @@ import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
 import Graphics.Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
@@ -523,9 +523,9 @@ instance ToCStruct PhysicalDeviceIDProperties where
   pokeCStruct p PhysicalDeviceIDProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (deviceUUID)
-    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (driverUUID)
-    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8))) (deviceLUID)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (deviceUUID)
+    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8))) (driverUUID)
+    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8))) (deviceLUID)
     poke ((p `plusPtr` 56 :: Ptr Word32)) (deviceNodeMask)
     poke ((p `plusPtr` 60 :: Ptr Bool32)) (boolToBool32 (deviceLUIDValid))
     f
@@ -534,18 +534,18 @@ instance ToCStruct PhysicalDeviceIDProperties where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
-    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
-    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8))) (mempty)
     poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 60 :: Ptr Bool32)) (boolToBool32 (zero))
     f
 
 instance FromCStruct PhysicalDeviceIDProperties where
   peekCStruct p = do
-    deviceUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
-    driverUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
-    deviceLUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8)))
+    deviceUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8)))
+    driverUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8)))
+    deviceLUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8)))
     deviceNodeMask <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
     deviceLUIDValid <- peek @Bool32 ((p `plusPtr` 60 :: Ptr Bool32))
     pure $ PhysicalDeviceIDProperties

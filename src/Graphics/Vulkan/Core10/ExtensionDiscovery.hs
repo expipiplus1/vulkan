@@ -4,6 +4,7 @@ module Graphics.Vulkan.Core10.ExtensionDiscovery  ( enumerateInstanceExtensionPr
                                                   , ExtensionProperties(..)
                                                   ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -35,7 +36,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Dynamic (getInstanceProcAddr')
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -266,19 +266,19 @@ deriving instance Show ExtensionProperties
 instance ToCStruct ExtensionProperties where
   withCStruct x f = allocaBytesAligned 260 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExtensionProperties{..} f = do
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (extensionName)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (extensionName)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (specVersion)
     f
   cStructSize = 260
   cStructAlignment = 4
   pokeZeroCStruct p f = do
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct ExtensionProperties where
   peekCStruct p = do
-    extensionName <- packCString (lowerArrayPtr ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))))
+    extensionName <- packCString (lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))))
     specVersion <- peek @Word32 ((p `plusPtr` 256 :: Ptr Word32))
     pure $ ExtensionProperties
              extensionName specVersion

@@ -41,6 +41,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
                                                       , DebugUtilsMessengerEXT(..)
                                                       ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -91,7 +92,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.NamedType ((:::))
@@ -1012,7 +1012,7 @@ instance ToCStruct DebugUtilsLabelEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pLabelName'' <- ContT $ useAsCString (labelName)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CChar))) pLabelName''
-    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (color) of
       (e0, e1, e2, e3) -> do
         poke (pColor' :: Ptr CFloat) (CFloat (e0))
@@ -1032,7 +1032,7 @@ instance ToCStruct DebugUtilsLabelEXT where
 instance FromCStruct DebugUtilsLabelEXT where
   peekCStruct p = do
     pLabelName <- packCString =<< peek ((p `plusPtr` 16 :: Ptr (Ptr CChar)))
-    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     color0 <- peek @CFloat ((pcolor `advancePtrBytes` 0 :: Ptr CFloat))
     color1 <- peek @CFloat ((pcolor `advancePtrBytes` 4 :: Ptr CFloat))
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))

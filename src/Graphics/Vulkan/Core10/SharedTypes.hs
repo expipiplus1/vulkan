@@ -10,6 +10,7 @@ module Graphics.Vulkan.Core10.SharedTypes  ( Offset2D(..)
                                            , ClearValue(..)
                                            ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -30,7 +31,6 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
@@ -609,7 +609,7 @@ instance ToCStruct ClearColorValue where
   pokeCStruct :: Ptr ClearColorValue -> ClearColorValue -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Float32 v -> lift $ do
-      let pFloat32 = lowerArrayPtr (castPtr @_ @(Data.Vector.Storable.Sized.Vector 4 CFloat) p)
+      let pFloat32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 CFloat) p)
       case (v) of
         (e0, e1, e2, e3) -> do
           poke (pFloat32 :: Ptr CFloat) (CFloat (e0))
@@ -617,7 +617,7 @@ instance ToCStruct ClearColorValue where
           poke (pFloat32 `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
           poke (pFloat32 `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
     Int32 v -> lift $ do
-      let pInt32 = lowerArrayPtr (castPtr @_ @(Data.Vector.Storable.Sized.Vector 4 Int32) p)
+      let pInt32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 Int32) p)
       case (v) of
         (e0, e1, e2, e3) -> do
           poke (pInt32 :: Ptr Int32) (e0)
@@ -625,7 +625,7 @@ instance ToCStruct ClearColorValue where
           poke (pInt32 `plusPtr` 8 :: Ptr Int32) (e2)
           poke (pInt32 `plusPtr` 12 :: Ptr Int32) (e3)
     Uint32 v -> lift $ do
-      let pUint32 = lowerArrayPtr (castPtr @_ @(Data.Vector.Storable.Sized.Vector 4 Word32) p)
+      let pUint32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 Word32) p)
       case (v) of
         (e0, e1, e2, e3) -> do
           poke (pUint32 :: Ptr Word32) (e0)

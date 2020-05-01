@@ -112,6 +112,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_ray_tracing  ( destroyAccelerationStruc
                                                       , pattern SHADER_UNUSED_KHR
                                                       ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -179,7 +180,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -4991,24 +4991,24 @@ deriving instance Show TransformMatrixKHR
 instance ToCStruct TransformMatrixKHR where
   withCStruct x f = allocaBytesAligned 48 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p TransformMatrixKHR{..} f = do
-    let pMatrix' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector 3 (Data.Vector.Storable.Sized.Vector 4 CFloat))))
+    let pMatrix' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray 3 (FixedArray 4 CFloat))))
     case (matrix) of
       (e0, e1, e2) -> do
-        let pMatrix0 = lowerArrayPtr (pMatrix' :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat))
+        let pMatrix0 = lowerArrayPtr (pMatrix' :: Ptr (FixedArray 4 CFloat))
         case (e0) of
           (e0', e1', e2', e3) -> do
             poke (pMatrix0 :: Ptr CFloat) (CFloat (e0'))
             poke (pMatrix0 `plusPtr` 4 :: Ptr CFloat) (CFloat (e1'))
             poke (pMatrix0 `plusPtr` 8 :: Ptr CFloat) (CFloat (e2'))
             poke (pMatrix0 `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-        let pMatrix1 = lowerArrayPtr (pMatrix' `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat))
+        let pMatrix1 = lowerArrayPtr (pMatrix' `plusPtr` 16 :: Ptr (FixedArray 4 CFloat))
         case (e1) of
           (e0', e1', e2', e3) -> do
             poke (pMatrix1 :: Ptr CFloat) (CFloat (e0'))
             poke (pMatrix1 `plusPtr` 4 :: Ptr CFloat) (CFloat (e1'))
             poke (pMatrix1 `plusPtr` 8 :: Ptr CFloat) (CFloat (e2'))
             poke (pMatrix1 `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-        let pMatrix2 = lowerArrayPtr (pMatrix' `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat))
+        let pMatrix2 = lowerArrayPtr (pMatrix' `plusPtr` 32 :: Ptr (FixedArray 4 CFloat))
         case (e2) of
           (e0', e1', e2', e3) -> do
             poke (pMatrix2 :: Ptr CFloat) (CFloat (e0'))
@@ -5020,24 +5020,24 @@ instance ToCStruct TransformMatrixKHR where
   cStructSize = 48
   cStructAlignment = 4
   pokeZeroCStruct p f = do
-    let pMatrix' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector 3 (Data.Vector.Storable.Sized.Vector 4 CFloat))))
+    let pMatrix' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray 3 (FixedArray 4 CFloat))))
     case (((zero, zero, zero, zero), (zero, zero, zero, zero), (zero, zero, zero, zero))) of
       (e0, e1, e2) -> do
-        let pMatrix0 = lowerArrayPtr (pMatrix' :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat))
+        let pMatrix0 = lowerArrayPtr (pMatrix' :: Ptr (FixedArray 4 CFloat))
         case (e0) of
           (e0', e1', e2', e3) -> do
             poke (pMatrix0 :: Ptr CFloat) (CFloat (e0'))
             poke (pMatrix0 `plusPtr` 4 :: Ptr CFloat) (CFloat (e1'))
             poke (pMatrix0 `plusPtr` 8 :: Ptr CFloat) (CFloat (e2'))
             poke (pMatrix0 `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-        let pMatrix1 = lowerArrayPtr (pMatrix' `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat))
+        let pMatrix1 = lowerArrayPtr (pMatrix' `plusPtr` 16 :: Ptr (FixedArray 4 CFloat))
         case (e1) of
           (e0', e1', e2', e3) -> do
             poke (pMatrix1 :: Ptr CFloat) (CFloat (e0'))
             poke (pMatrix1 `plusPtr` 4 :: Ptr CFloat) (CFloat (e1'))
             poke (pMatrix1 `plusPtr` 8 :: Ptr CFloat) (CFloat (e2'))
             poke (pMatrix1 `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-        let pMatrix2 = lowerArrayPtr (pMatrix' `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat))
+        let pMatrix2 = lowerArrayPtr (pMatrix' `plusPtr` 32 :: Ptr (FixedArray 4 CFloat))
         case (e2) of
           (e0', e1', e2', e3) -> do
             poke (pMatrix2 :: Ptr CFloat) (CFloat (e0'))
@@ -5049,18 +5049,18 @@ instance ToCStruct TransformMatrixKHR where
 
 instance FromCStruct TransformMatrixKHR where
   peekCStruct p = do
-    let pmatrix = lowerArrayPtr @(Data.Vector.Storable.Sized.Vector 4 CFloat) ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector 3 (Data.Vector.Storable.Sized.Vector 4 CFloat))))
-    let pmatrix0 = lowerArrayPtr @CFloat ((pmatrix `advancePtrBytes` 0 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pmatrix = lowerArrayPtr @(FixedArray 4 CFloat) ((p `plusPtr` 0 :: Ptr (FixedArray 3 (FixedArray 4 CFloat))))
+    let pmatrix0 = lowerArrayPtr @CFloat ((pmatrix `advancePtrBytes` 0 :: Ptr (FixedArray 4 CFloat)))
     matrix00 <- peek @CFloat ((pmatrix0 `advancePtrBytes` 0 :: Ptr CFloat))
     matrix01 <- peek @CFloat ((pmatrix0 `advancePtrBytes` 4 :: Ptr CFloat))
     matrix02 <- peek @CFloat ((pmatrix0 `advancePtrBytes` 8 :: Ptr CFloat))
     matrix03 <- peek @CFloat ((pmatrix0 `advancePtrBytes` 12 :: Ptr CFloat))
-    let pmatrix1 = lowerArrayPtr @CFloat ((pmatrix `advancePtrBytes` 16 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pmatrix1 = lowerArrayPtr @CFloat ((pmatrix `advancePtrBytes` 16 :: Ptr (FixedArray 4 CFloat)))
     matrix10 <- peek @CFloat ((pmatrix1 `advancePtrBytes` 0 :: Ptr CFloat))
     matrix11 <- peek @CFloat ((pmatrix1 `advancePtrBytes` 4 :: Ptr CFloat))
     matrix12 <- peek @CFloat ((pmatrix1 `advancePtrBytes` 8 :: Ptr CFloat))
     matrix13 <- peek @CFloat ((pmatrix1 `advancePtrBytes` 12 :: Ptr CFloat))
-    let pmatrix2 = lowerArrayPtr @CFloat ((pmatrix `advancePtrBytes` 32 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pmatrix2 = lowerArrayPtr @CFloat ((pmatrix `advancePtrBytes` 32 :: Ptr (FixedArray 4 CFloat)))
     matrix20 <- peek @CFloat ((pmatrix2 `advancePtrBytes` 0 :: Ptr CFloat))
     matrix21 <- peek @CFloat ((pmatrix2 `advancePtrBytes` 4 :: Ptr CFloat))
     matrix22 <- peek @CFloat ((pmatrix2 `advancePtrBytes` 8 :: Ptr CFloat))

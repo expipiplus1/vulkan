@@ -50,6 +50,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalD
                                                             , pattern KHR_PERFORMANCE_QUERY_EXTENSION_NAME
                                                             ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -103,7 +104,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -535,7 +535,7 @@ instance ToCStruct PerformanceCounterKHR where
     poke ((p `plusPtr` 16 :: Ptr PerformanceCounterUnitKHR)) (unit)
     poke ((p `plusPtr` 20 :: Ptr PerformanceCounterScopeKHR)) (scope)
     poke ((p `plusPtr` 24 :: Ptr PerformanceCounterStorageKHR)) (storage)
-    pokeFixedLengthByteString ((p `plusPtr` 28 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (uuid)
+    pokeFixedLengthByteString ((p `plusPtr` 28 :: Ptr (FixedArray UUID_SIZE Word8))) (uuid)
     f
   cStructSize = 48
   cStructAlignment = 8
@@ -545,7 +545,7 @@ instance ToCStruct PerformanceCounterKHR where
     poke ((p `plusPtr` 16 :: Ptr PerformanceCounterUnitKHR)) (zero)
     poke ((p `plusPtr` 20 :: Ptr PerformanceCounterScopeKHR)) (zero)
     poke ((p `plusPtr` 24 :: Ptr PerformanceCounterStorageKHR)) (zero)
-    pokeFixedLengthByteString ((p `plusPtr` 28 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 28 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
     f
 
 instance FromCStruct PerformanceCounterKHR where
@@ -553,7 +553,7 @@ instance FromCStruct PerformanceCounterKHR where
     unit <- peek @PerformanceCounterUnitKHR ((p `plusPtr` 16 :: Ptr PerformanceCounterUnitKHR))
     scope <- peek @PerformanceCounterScopeKHR ((p `plusPtr` 20 :: Ptr PerformanceCounterScopeKHR))
     storage <- peek @PerformanceCounterStorageKHR ((p `plusPtr` 24 :: Ptr PerformanceCounterStorageKHR))
-    uuid <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 28 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
+    uuid <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 28 :: Ptr (FixedArray UUID_SIZE Word8)))
     pure $ PerformanceCounterKHR
              unit scope storage uuid
 
@@ -607,26 +607,26 @@ instance ToCStruct PerformanceCounterDescriptionKHR where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr PerformanceCounterDescriptionFlagsKHR)) (flags)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (name)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (category)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (description)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (name)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (category)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
     f
   cStructSize = 792
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
     f
 
 instance FromCStruct PerformanceCounterDescriptionKHR where
   peekCStruct p = do
     flags <- peek @PerformanceCounterDescriptionFlagsKHR ((p `plusPtr` 16 :: Ptr PerformanceCounterDescriptionFlagsKHR))
-    name <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
-    category <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 532 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
+    name <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
+    category <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
+    description <- packCString (lowerArrayPtr ((p `plusPtr` 532 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
     pure $ PerformanceCounterDescriptionKHR
              flags name category description
 

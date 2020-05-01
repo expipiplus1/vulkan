@@ -57,6 +57,7 @@ module Graphics.Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                                      , ClearAttachment(..)
                                                      ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
@@ -87,7 +88,6 @@ import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.NamedType ((:::))
@@ -780,7 +780,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdSetBlendConstants
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat) -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()
 
 -- | vkCmdSetBlendConstants - Set the values of blend constants
 --
@@ -830,7 +830,7 @@ foreign import ccall
 cmdSetBlendConstants :: forall io . MonadIO io => CommandBuffer -> ("blendConstants" ::: (Float, Float, Float, Float)) -> io ()
 cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
   let vkCmdSetBlendConstants' = mkVkCmdSetBlendConstants (pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer)))
-  pBlendConstants <- ContT $ allocaBytesAligned @(Data.Vector.Storable.Sized.Vector 4 CFloat) 16 4
+  pBlendConstants <- ContT $ allocaBytesAligned @(FixedArray 4 CFloat) 16 4
   let pBlendConstants' = lowerArrayPtr pBlendConstants
   lift $ case (blendConstants) of
     (e0, e1, e2, e3) -> do
@@ -8680,13 +8680,13 @@ instance ToCStruct ImageBlit where
   withCStruct x f = allocaBytesAligned 80 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageBlit{..} f = evalContT $ do
     ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (srcSubresource) . ($ ())
-    let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Offset3D)))
+    let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray 2 Offset3D)))
     case (srcOffsets) of
       (e0, e1) -> do
         ContT $ pokeCStruct (pSrcOffsets' :: Ptr Offset3D) (e0) . ($ ())
         ContT $ pokeCStruct (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1) . ($ ())
     ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr ImageSubresourceLayers)) (dstSubresource) . ($ ())
-    let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Offset3D)))
+    let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (FixedArray 2 Offset3D)))
     case (dstOffsets) of
       (e0, e1) -> do
         ContT $ pokeCStruct (pDstOffsets' :: Ptr Offset3D) (e0) . ($ ())
@@ -8696,13 +8696,13 @@ instance ToCStruct ImageBlit where
   cStructAlignment = 4
   pokeZeroCStruct p f = evalContT $ do
     ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
-    let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Offset3D)))
+    let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray 2 Offset3D)))
     case ((zero, zero)) of
       (e0, e1) -> do
         ContT $ pokeCStruct (pSrcOffsets' :: Ptr Offset3D) (e0) . ($ ())
         ContT $ pokeCStruct (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1) . ($ ())
     ContT $ pokeCStruct ((p `plusPtr` 40 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
-    let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Offset3D)))
+    let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (FixedArray 2 Offset3D)))
     case ((zero, zero)) of
       (e0, e1) -> do
         ContT $ pokeCStruct (pDstOffsets' :: Ptr Offset3D) (e0) . ($ ())
@@ -8712,11 +8712,11 @@ instance ToCStruct ImageBlit where
 instance FromCStruct ImageBlit where
   peekCStruct p = do
     srcSubresource <- peekCStruct @ImageSubresourceLayers ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers))
-    let psrcOffsets = lowerArrayPtr @Offset3D ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Offset3D)))
+    let psrcOffsets = lowerArrayPtr @Offset3D ((p `plusPtr` 16 :: Ptr (FixedArray 2 Offset3D)))
     srcOffsets0 <- peekCStruct @Offset3D ((psrcOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
     srcOffsets1 <- peekCStruct @Offset3D ((psrcOffsets `advancePtrBytes` 12 :: Ptr Offset3D))
     dstSubresource <- peekCStruct @ImageSubresourceLayers ((p `plusPtr` 40 :: Ptr ImageSubresourceLayers))
-    let pdstOffsets = lowerArrayPtr @Offset3D ((p `plusPtr` 56 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Offset3D)))
+    let pdstOffsets = lowerArrayPtr @Offset3D ((p `plusPtr` 56 :: Ptr (FixedArray 2 Offset3D)))
     dstOffsets0 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
     dstOffsets1 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 12 :: Ptr Offset3D))
     pure $ ImageBlit

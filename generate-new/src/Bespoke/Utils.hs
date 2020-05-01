@@ -15,11 +15,6 @@ import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Unsafe        as BS
 import qualified Data.Vector                   as V
 import qualified Data.Vector.Generic           as VG
-import qualified Data.Vector.Generic.Sized     as VGS
-import qualified Data.Vector.Generic.Sized.Internal
-                                               as VGSI
-import qualified Data.Vector.Sized             as VS
-import qualified Data.Vector.Storable.Sized    as VSS
 import           Foreign.Marshal.Array
 import           Foreign.Marshal.Utils
 import           Foreign.Storable
@@ -53,8 +48,6 @@ zeroClass = genRe "zero class" $ do
     , ''Ptr
     ]
 
-  traverseV_ tellQualImport [''VSS.Vector, 'VSS.replicate]
-
   tellExport (EClass (TyConName "Zero"))
   tellExplicitModule (ModName "Graphics.Vulkan.Zero")
   tellNotReexportable
@@ -71,9 +64,6 @@ zeroClass = genRe "zero class" $ do
     --
     class Zero a where
       zero :: a
-
-    instance (KnownNat n, Storable a, Zero a) => Zero (Data.Vector.Storable.Sized.Vector n a) where
-      zero = Data.Vector.Storable.Sized.replicate zero
 
     instance Zero Bool where
       zero = False
@@ -152,6 +142,8 @@ marshalUtils = genRe "marshal utils" $ do
     , ''(<=)
     , 'natVal
     , 'plusPtr
+    , ''Nat
+    , ''Type
     ]
 
   traverseV_
@@ -165,14 +157,8 @@ marshalUtils = genRe "marshal utils" $ do
     , '(VG.++)
     , 'VG.snoc
     , 'VG.empty
-    , ''VGS.Vector
-    , 'VGS.fromSized
-    , ''VS.Vector
     , 'BS.length
-    , ''VSS.Vector
     ]
-
-  tellQualImportWithAll ''VGSI.Vector
 
   traverseV_
     (tellExport . ETerm . TermName)
@@ -182,8 +168,13 @@ marshalUtils = genRe "marshal utils" $ do
     , "lowerArrayPtr"
     , "advancePtrBytes"
     ]
+  tellExport (EType (TyConName "FixedArray"))
 
   tellDoc [qi|
+    -- | An unpopulated type intended to be used as in @'Ptr' (FixedArray n a)@ to
+    -- indicate that the pointer points to an array of @n@ @a@s
+    data FixedArray (n :: Nat) (a :: Type)
+
     -- | Store a 'ByteString' in a fixed amount of space inserting a null
     -- character at the end and truncating if necessary.
     --
@@ -195,7 +186,7 @@ marshalUtils = genRe "marshal utils" $ do
     pokeFixedLengthNullTerminatedByteString
       :: forall n
        . KnownNat n
-      => Ptr (Data.Vector.Storable.Sized.Vector n CChar)
+      => Ptr (FixedArray n CChar)
       -> ByteString
       -> IO ()
     pokeFixedLengthNullTerminatedByteString to bs =
@@ -216,7 +207,7 @@ marshalUtils = genRe "marshal utils" $ do
     pokeFixedLengthByteString
       :: forall n
        . KnownNat n
-      => Ptr (Data.Vector.Storable.Sized.Vector n Word8)
+      => Ptr (FixedArray n Word8)
       -> ByteString
       -> IO ()
     pokeFixedLengthByteString to bs = unsafeUseAsCString bs $ \from -> do
@@ -228,14 +219,14 @@ marshalUtils = genRe "marshal utils" $ do
     peekByteStringFromSizedVectorPtr
       :: forall n
        . KnownNat n
-      => Ptr (Data.Vector.Storable.Sized.Vector n Word8)
+      => Ptr (FixedArray n Word8)
       -> IO ByteString
     peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
 
     -- | Get the pointer to the first element in the array
     lowerArrayPtr
       :: forall a n
-       . Ptr (Data.Vector.Storable.Sized.Vector n a)
+       . Ptr (FixedArray n a)
       -> Ptr a
     lowerArrayPtr = castPtr
 

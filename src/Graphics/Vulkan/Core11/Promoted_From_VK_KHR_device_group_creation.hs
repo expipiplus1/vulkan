@@ -9,6 +9,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation  ( enum
                                                                           , pattern MAX_DEVICE_GROUP_SIZE
                                                                           ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -38,7 +39,6 @@ import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -202,7 +202,7 @@ instance ToCStruct PhysicalDeviceGroupProperties where
     poke ((p `plusPtr` 16 :: Ptr Word32)) (physicalDeviceCount)
     unless ((Data.Vector.length $ (physicalDevices)) <= MAX_DEVICE_GROUP_SIZE) $
       throwIO $ IOError Nothing InvalidArgument "" "physicalDevices is too long, a maximum of MAX_DEVICE_GROUP_SIZE elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE (Ptr PhysicalDevice_T))))) `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (physicalDevices)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE (Ptr PhysicalDevice_T))))) `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (physicalDevices)
     poke ((p `plusPtr` 280 :: Ptr Bool32)) (boolToBool32 (subsetAllocation))
     f
   cStructSize = 288
@@ -213,14 +213,14 @@ instance ToCStruct PhysicalDeviceGroupProperties where
     poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     unless ((Data.Vector.length $ (mempty)) <= MAX_DEVICE_GROUP_SIZE) $
       throwIO $ IOError Nothing InvalidArgument "" "physicalDevices is too long, a maximum of MAX_DEVICE_GROUP_SIZE elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE (Ptr PhysicalDevice_T))))) `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (mempty)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE (Ptr PhysicalDevice_T))))) `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (mempty)
     poke ((p `plusPtr` 280 :: Ptr Bool32)) (boolToBool32 (zero))
     f
 
 instance FromCStruct PhysicalDeviceGroupProperties where
   peekCStruct p = do
     physicalDeviceCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    physicalDevices <- generateM (MAX_DEVICE_GROUP_SIZE) (\i -> peek @(Ptr PhysicalDevice_T) (((lowerArrayPtr @(Ptr PhysicalDevice_T) ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE (Ptr PhysicalDevice_T))))) `advancePtrBytes` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T))))
+    physicalDevices <- generateM (MAX_DEVICE_GROUP_SIZE) (\i -> peek @(Ptr PhysicalDevice_T) (((lowerArrayPtr @(Ptr PhysicalDevice_T) ((p `plusPtr` 24 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE (Ptr PhysicalDevice_T))))) `advancePtrBytes` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T))))
     subsetAllocation <- peek @Bool32 ((p `plusPtr` 280 :: Ptr Bool32))
     pure $ PhysicalDeviceGroupProperties
              physicalDeviceCount physicalDevices (bool32ToBool subsetAllocation)

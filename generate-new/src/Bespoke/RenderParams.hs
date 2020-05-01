@@ -13,7 +13,6 @@ import           Data.Text.Extra                ( (<+>)
 import           Data.Text.Prettyprint.Doc      ( pretty )
 import           Data.Tuple.Extra               ( curry3 )
 import qualified Data.Vector                   as V
-import qualified Data.Vector.Storable.Sized    as VSS
 import           Language.Haskell.TH            ( nameBase )
 import           Relude                  hiding ( Handle
                                                 , Type
@@ -58,7 +57,7 @@ renderParams handles = r
                                     . (<> "Handle")
                                     . lowerCaseFirst
                                     . dropVk
-    , alwaysQualifiedNames        = V.fromList [''VSS.Vector]
+    , alwaysQualifiedNames        = mempty
     , mkIdiomaticType             =
       (`List.lookup` (  [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat
                         , wrappedIdiomaticType ''Int32  ''CInt    'CInt

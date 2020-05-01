@@ -17,6 +17,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_tooling_info  ( getPhysicalDeviceToolPr
                                                        , pattern EXT_TOOLING_INFO_EXTENSION_NAME
                                                        ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -55,7 +56,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
@@ -186,31 +186,31 @@ instance ToCStruct PhysicalDeviceToolPropertiesEXT where
   pokeCStruct p PhysicalDeviceToolPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (name)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (version)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (name)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (version)
     poke ((p `plusPtr` 528 :: Ptr ToolPurposeFlagsEXT)) (purposes)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (description)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 788 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (layer)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 788 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (layer)
     f
   cStructSize = 1048
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
     poke ((p `plusPtr` 528 :: Ptr ToolPurposeFlagsEXT)) (zero)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 788 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 532 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 788 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
     f
 
 instance FromCStruct PhysicalDeviceToolPropertiesEXT where
   peekCStruct p = do
-    name <- packCString (lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))))
-    version <- packCString (lowerArrayPtr ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))))
+    name <- packCString (lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))))
+    version <- packCString (lowerArrayPtr ((p `plusPtr` 272 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))))
     purposes <- peek @ToolPurposeFlagsEXT ((p `plusPtr` 528 :: Ptr ToolPurposeFlagsEXT))
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 532 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
-    layer <- packCString (lowerArrayPtr ((p `plusPtr` 788 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))))
+    description <- packCString (lowerArrayPtr ((p `plusPtr` 532 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
+    layer <- packCString (lowerArrayPtr ((p `plusPtr` 788 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))))
     pure $ PhysicalDeviceToolPropertiesEXT
              name version purposes description layer
 

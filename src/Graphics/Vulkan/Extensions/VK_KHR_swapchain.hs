@@ -44,6 +44,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                                     , SurfaceTransformFlagsKHR
                                                     ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -90,7 +91,6 @@ import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -1856,7 +1856,7 @@ instance ToCStruct DeviceGroupPresentCapabilitiesKHR where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     unless ((Data.Vector.length $ (presentMask)) <= MAX_DEVICE_GROUP_SIZE) $
       throwIO $ IOError Nothing InvalidArgument "" "presentMask is too long, a maximum of MAX_DEVICE_GROUP_SIZE elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (presentMask)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (presentMask)
     poke ((p `plusPtr` 144 :: Ptr DeviceGroupPresentModeFlagsKHR)) (modes)
     f
   cStructSize = 152
@@ -1866,13 +1866,13 @@ instance ToCStruct DeviceGroupPresentCapabilitiesKHR where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     unless ((Data.Vector.length $ (mempty)) <= MAX_DEVICE_GROUP_SIZE) $
       throwIO $ IOError Nothing InvalidArgument "" "presentMask is too long, a maximum of MAX_DEVICE_GROUP_SIZE elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
     poke ((p `plusPtr` 144 :: Ptr DeviceGroupPresentModeFlagsKHR)) (zero)
     f
 
 instance FromCStruct DeviceGroupPresentCapabilitiesKHR where
   peekCStruct p = do
-    presentMask <- generateM (MAX_DEVICE_GROUP_SIZE) (\i -> peek @Word32 (((lowerArrayPtr @Word32 ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE Word32)))) `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
+    presentMask <- generateM (MAX_DEVICE_GROUP_SIZE) (\i -> peek @Word32 (((lowerArrayPtr @Word32 ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE Word32)))) `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     modes <- peek @DeviceGroupPresentModeFlagsKHR ((p `plusPtr` 144 :: Ptr DeviceGroupPresentModeFlagsKHR))
     pure $ DeviceGroupPresentCapabilitiesKHR
              presentMask modes

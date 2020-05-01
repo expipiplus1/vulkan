@@ -4,6 +4,7 @@ module Graphics.Vulkan.CStruct.Utils  ( pokeFixedLengthByteString
                                       , peekByteStringFromSizedVectorPtr
                                       , lowerArrayPtr
                                       , advancePtrBytes
+                                      , FixedArray
                                       ) where
 
 import Foreign.Marshal.Array (allocaArray)
@@ -28,7 +29,6 @@ import qualified Data.Vector.Generic (length)
 import qualified Data.Vector.Generic (replicate)
 import qualified Data.Vector.Generic (snoc)
 import qualified Data.Vector.Generic (take)
-import qualified Data.Vector.Generic.Sized (fromSized)
 import Data.Proxy (Proxy(..))
 import Foreign.C.Types (CChar(..))
 import Foreign.Storable (Storable)
@@ -37,16 +37,14 @@ import GHC.TypeNats (type(<=))
 import GHC.TypeNats (KnownNat)
 import Data.Word (Word8)
 import Data.ByteString (ByteString)
+import GHC.TypeNats (Nat)
+import Data.Kind (Type)
 import Data.Vector (Vector)
 import qualified Data.Vector.Generic (Vector)
-import qualified Data.Vector.Generic.Sized.Internal (Vector)
-import qualified Data.Vector.Generic.Sized.Internal (Vector(..))
-import qualified Data.Vector.Sized (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 
 -- | An unpopulated type intended to be used as in @'Ptr' (FixedArray n a)@ to
 -- indicate that the pointer points to an array of @n@ @a@s
--- data FixedArray (n :: Nat) (a :: Type)
+data FixedArray (n :: Nat) (a :: Type)
 
 -- | Store a 'ByteString' in a fixed amount of space inserting a null
 -- character at the end and truncating if necessary.
@@ -59,7 +57,7 @@ import qualified Data.Vector.Storable.Sized (Vector)
 pokeFixedLengthNullTerminatedByteString
   :: forall n
    . KnownNat n
-  => Ptr (Data.Vector.Storable.Sized.Vector n CChar)
+  => Ptr (FixedArray n CChar)
   -> ByteString
   -> IO ()
 pokeFixedLengthNullTerminatedByteString to bs =
@@ -80,7 +78,7 @@ pokeFixedLengthNullTerminatedByteString to bs =
 pokeFixedLengthByteString
   :: forall n
    . KnownNat n
-  => Ptr (Data.Vector.Storable.Sized.Vector n Word8)
+  => Ptr (FixedArray n Word8)
   -> ByteString
   -> IO ()
 pokeFixedLengthByteString to bs = unsafeUseAsCString bs $ \from -> do
@@ -88,17 +86,18 @@ pokeFixedLengthByteString to bs = unsafeUseAsCString bs $ \from -> do
       len       = min maxLength (Data.ByteString.length bs)
   copyBytes (lowerArrayPtr to) (castPtr @CChar @Word8 from) len
 
+-- | Peek a 'ByteString' from a fixed sized array of bytes
 peekByteStringFromSizedVectorPtr
   :: forall n
    . KnownNat n
-  => Ptr (Data.Vector.Storable.Sized.Vector n Word8)
+  => Ptr (FixedArray n Word8)
   -> IO ByteString
 peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
 
 -- | Get the pointer to the first element in the array
 lowerArrayPtr
   :: forall a n
-   . Ptr (Data.Vector.Storable.Sized.Vector n a)
+   . Ptr (FixedArray n a)
   -> Ptr a
 lowerArrayPtr = castPtr
 

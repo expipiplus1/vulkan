@@ -3,7 +3,6 @@ module Graphics.Vulkan.Zero  (Zero(..)) where
 
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
-import qualified Data.Vector.Storable.Sized (replicate)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
 import Foreign.C.Types (CInt)
@@ -20,7 +19,6 @@ import Data.Word (Word16)
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Word (Word8)
-import qualified Data.Vector.Storable.Sized (Vector)
 
 -- | A class for initializing things with all zero data
 --
@@ -33,9 +31,6 @@ import qualified Data.Vector.Storable.Sized (Vector)
 --
 class Zero a where
   zero :: a
-
-instance (KnownNat n, Storable a, Zero a) => Zero (Data.Vector.Storable.Sized.Vector n a) where
-  zero = Data.Vector.Storable.Sized.replicate zero
 
 instance Zero Bool where
   zero = False

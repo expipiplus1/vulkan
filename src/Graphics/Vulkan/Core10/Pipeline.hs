@@ -24,6 +24,7 @@ module Graphics.Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                         , GraphicsPipelineCreateInfo(..)
                                         ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -70,7 +71,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -2473,7 +2473,7 @@ instance PokeChain es => ToCStruct (PipelineColorBlendStateCreateInfo es) where
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (attachments)) * 32) 4
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (attachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
-    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (blendConstants) of
       (e0, e1, e2, e3) -> do
         poke (pBlendConstants' :: Ptr CFloat) (CFloat (e0))
@@ -2492,7 +2492,7 @@ instance PokeChain es => ToCStruct (PipelineColorBlendStateCreateInfo es) where
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (mempty)) * 32) 4
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
-    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case ((zero, zero, zero, zero)) of
       (e0, e1, e2, e3) -> do
         poke (pBlendConstants' :: Ptr CFloat) (CFloat (e0))
@@ -2511,7 +2511,7 @@ instance PeekChain es => FromCStruct (PipelineColorBlendStateCreateInfo es) wher
     attachmentCount <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     pAttachments <- peek @(Ptr PipelineColorBlendAttachmentState) ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState)))
     pAttachments' <- generateM (fromIntegral attachmentCount) (\i -> peekCStruct @PipelineColorBlendAttachmentState ((pAttachments `advancePtrBytes` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState)))
-    let pblendConstants = lowerArrayPtr @CFloat ((p `plusPtr` 40 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pblendConstants = lowerArrayPtr @CFloat ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     blendConstants0 <- peek @CFloat ((pblendConstants `advancePtrBytes` 0 :: Ptr CFloat))
     blendConstants1 <- peek @CFloat ((pblendConstants `advancePtrBytes` 4 :: Ptr CFloat))
     blendConstants2 <- peek @CFloat ((pblendConstants `advancePtrBytes` 8 :: Ptr CFloat))

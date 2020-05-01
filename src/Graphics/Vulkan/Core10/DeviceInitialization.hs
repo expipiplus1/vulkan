@@ -25,6 +25,7 @@ module Graphics.Vulkan.Core10.DeviceInitialization  ( createInstance
                                                     , PhysicalDeviceLimits(..)
                                                     ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -72,7 +73,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -1001,8 +1001,8 @@ instance ToCStruct PhysicalDeviceProperties where
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (vendorID)
     lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (deviceID)
     lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (deviceType)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (deviceName)
-    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (pipelineCacheUUID)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (deviceName)
+    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (pipelineCacheUUID)
     ContT $ pokeCStruct ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (limits) . ($ ())
     ContT $ pokeCStruct ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (sparseProperties) . ($ ())
     lift $ f
@@ -1014,8 +1014,8 @@ instance ToCStruct PhysicalDeviceProperties where
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (zero)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
     ContT $ pokeCStruct ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (zero) . ($ ())
     ContT $ pokeCStruct ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (zero) . ($ ())
     lift $ f
@@ -1027,8 +1027,8 @@ instance FromCStruct PhysicalDeviceProperties where
     vendorID <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
     deviceID <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
     deviceType <- peek @PhysicalDeviceType ((p `plusPtr` 16 :: Ptr PhysicalDeviceType))
-    deviceName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))))
-    pipelineCacheUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
+    deviceName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))))
+    pipelineCacheUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8)))
     limits <- peekCStruct @PhysicalDeviceLimits ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits))
     sparseProperties <- peekCStruct @PhysicalDeviceSparseProperties ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties))
     pure $ PhysicalDeviceProperties
@@ -1768,11 +1768,11 @@ instance ToCStruct PhysicalDeviceMemoryProperties where
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeCount)
     lift $ unless ((Data.Vector.length $ (memoryTypes)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (memoryTypes)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (memoryTypes)
     lift $ poke ((p `plusPtr` 260 :: Ptr Word32)) (memoryHeapCount)
     lift $ unless ((Data.Vector.length $ (memoryHeaps)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (memoryHeaps)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (memoryHeaps)
     lift $ f
   cStructSize = 520
   cStructAlignment = 8
@@ -1780,19 +1780,19 @@ instance ToCStruct PhysicalDeviceMemoryProperties where
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
     lift $ unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (mempty)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
     lift $ unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (mempty)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (mempty)
     lift $ f
 
 instance FromCStruct PhysicalDeviceMemoryProperties where
   peekCStruct p = do
     memoryTypeCount <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
-    memoryTypes <- generateM (MAX_MEMORY_TYPES) (\i -> peekCStruct @MemoryType (((lowerArrayPtr @MemoryType ((p `plusPtr` 4 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES MemoryType)))) `advancePtrBytes` (8 * (i)) :: Ptr MemoryType)))
+    memoryTypes <- generateM (MAX_MEMORY_TYPES) (\i -> peekCStruct @MemoryType (((lowerArrayPtr @MemoryType ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `advancePtrBytes` (8 * (i)) :: Ptr MemoryType)))
     memoryHeapCount <- peek @Word32 ((p `plusPtr` 260 :: Ptr Word32))
-    memoryHeaps <- generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @MemoryHeap (((lowerArrayPtr @MemoryHeap ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS MemoryHeap)))) `advancePtrBytes` (16 * (i)) :: Ptr MemoryHeap)))
+    memoryHeaps <- generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @MemoryHeap (((lowerArrayPtr @MemoryHeap ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `advancePtrBytes` (16 * (i)) :: Ptr MemoryHeap)))
     pure $ PhysicalDeviceMemoryProperties
              memoryTypeCount memoryTypes memoryHeapCount memoryHeaps
 
@@ -4243,14 +4243,14 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 208 :: Ptr Word32)) (maxFragmentDualSrcAttachments)
     poke ((p `plusPtr` 212 :: Ptr Word32)) (maxFragmentCombinedOutputResources)
     poke ((p `plusPtr` 216 :: Ptr Word32)) (maxComputeSharedMemorySize)
-    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (FixedArray 3 Word32)))
     case (maxComputeWorkGroupCount) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupCount' :: Ptr Word32) (e0)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 4 :: Ptr Word32) (e1)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 8 :: Ptr Word32) (e2)
     poke ((p `plusPtr` 232 :: Ptr Word32)) (maxComputeWorkGroupInvocations)
-    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (FixedArray 3 Word32)))
     case (maxComputeWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupSize' :: Ptr Word32) (e0)
@@ -4264,12 +4264,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 268 :: Ptr CFloat)) (CFloat (maxSamplerLodBias))
     poke ((p `plusPtr` 272 :: Ptr CFloat)) (CFloat (maxSamplerAnisotropy))
     poke ((p `plusPtr` 276 :: Ptr Word32)) (maxViewports)
-    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Word32)))
+    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (FixedArray 2 Word32)))
     case (maxViewportDimensions) of
       (e0, e1) -> do
         poke (pMaxViewportDimensions' :: Ptr Word32) (e0)
         poke (pMaxViewportDimensions' `plusPtr` 4 :: Ptr Word32) (e1)
-    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (FixedArray 2 CFloat)))
     case (viewportBoundsRange) of
       (e0, e1) -> do
         poke (pViewportBoundsRange' :: Ptr CFloat) (CFloat (e0))
@@ -4306,12 +4306,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 432 :: Ptr Word32)) (maxCullDistances)
     poke ((p `plusPtr` 436 :: Ptr Word32)) (maxCombinedClipAndCullDistances)
     poke ((p `plusPtr` 440 :: Ptr Word32)) (discreteQueuePriorities)
-    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (FixedArray 2 CFloat)))
     case (pointSizeRange) of
       (e0, e1) -> do
         poke (pPointSizeRange' :: Ptr CFloat) (CFloat (e0))
         poke (pPointSizeRange' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (FixedArray 2 CFloat)))
     case (lineWidthRange) of
       (e0, e1) -> do
         poke (pLineWidthRange' :: Ptr CFloat) (CFloat (e0))
@@ -4379,14 +4379,14 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 208 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 212 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 216 :: Ptr Word32)) (zero)
-    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupCount' :: Ptr Word32) (e0)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 4 :: Ptr Word32) (e1)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 8 :: Ptr Word32) (e2)
     poke ((p `plusPtr` 232 :: Ptr Word32)) (zero)
-    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupSize' :: Ptr Word32) (e0)
@@ -4400,12 +4400,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 268 :: Ptr CFloat)) (CFloat (zero))
     poke ((p `plusPtr` 272 :: Ptr CFloat)) (CFloat (zero))
     poke ((p `plusPtr` 276 :: Ptr Word32)) (zero)
-    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Word32)))
+    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (FixedArray 2 Word32)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pMaxViewportDimensions' :: Ptr Word32) (e0)
         poke (pMaxViewportDimensions' `plusPtr` 4 :: Ptr Word32) (e1)
-    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (FixedArray 2 CFloat)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pViewportBoundsRange' :: Ptr CFloat) (CFloat (e0))
@@ -4433,12 +4433,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 432 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 436 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 440 :: Ptr Word32)) (zero)
-    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (FixedArray 2 CFloat)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pPointSizeRange' :: Ptr CFloat) (CFloat (e0))
         poke (pPointSizeRange' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (FixedArray 2 CFloat)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pLineWidthRange' :: Ptr CFloat) (CFloat (e0))
@@ -4506,12 +4506,12 @@ instance FromCStruct PhysicalDeviceLimits where
     maxFragmentDualSrcAttachments <- peek @Word32 ((p `plusPtr` 208 :: Ptr Word32))
     maxFragmentCombinedOutputResources <- peek @Word32 ((p `plusPtr` 212 :: Ptr Word32))
     maxComputeSharedMemorySize <- peek @Word32 ((p `plusPtr` 216 :: Ptr Word32))
-    let pmaxComputeWorkGroupCount = lowerArrayPtr @Word32 ((p `plusPtr` 220 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxComputeWorkGroupCount = lowerArrayPtr @Word32 ((p `plusPtr` 220 :: Ptr (FixedArray 3 Word32)))
     maxComputeWorkGroupCount0 <- peek @Word32 ((pmaxComputeWorkGroupCount `advancePtrBytes` 0 :: Ptr Word32))
     maxComputeWorkGroupCount1 <- peek @Word32 ((pmaxComputeWorkGroupCount `advancePtrBytes` 4 :: Ptr Word32))
     maxComputeWorkGroupCount2 <- peek @Word32 ((pmaxComputeWorkGroupCount `advancePtrBytes` 8 :: Ptr Word32))
     maxComputeWorkGroupInvocations <- peek @Word32 ((p `plusPtr` 232 :: Ptr Word32))
-    let pmaxComputeWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 236 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxComputeWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 236 :: Ptr (FixedArray 3 Word32)))
     maxComputeWorkGroupSize0 <- peek @Word32 ((pmaxComputeWorkGroupSize `advancePtrBytes` 0 :: Ptr Word32))
     maxComputeWorkGroupSize1 <- peek @Word32 ((pmaxComputeWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     maxComputeWorkGroupSize2 <- peek @Word32 ((pmaxComputeWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))
@@ -4523,10 +4523,10 @@ instance FromCStruct PhysicalDeviceLimits where
     maxSamplerLodBias <- peek @CFloat ((p `plusPtr` 268 :: Ptr CFloat))
     maxSamplerAnisotropy <- peek @CFloat ((p `plusPtr` 272 :: Ptr CFloat))
     maxViewports <- peek @Word32 ((p `plusPtr` 276 :: Ptr Word32))
-    let pmaxViewportDimensions = lowerArrayPtr @Word32 ((p `plusPtr` 280 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Word32)))
+    let pmaxViewportDimensions = lowerArrayPtr @Word32 ((p `plusPtr` 280 :: Ptr (FixedArray 2 Word32)))
     maxViewportDimensions0 <- peek @Word32 ((pmaxViewportDimensions `advancePtrBytes` 0 :: Ptr Word32))
     maxViewportDimensions1 <- peek @Word32 ((pmaxViewportDimensions `advancePtrBytes` 4 :: Ptr Word32))
-    let pviewportBoundsRange = lowerArrayPtr @CFloat ((p `plusPtr` 288 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pviewportBoundsRange = lowerArrayPtr @CFloat ((p `plusPtr` 288 :: Ptr (FixedArray 2 CFloat)))
     viewportBoundsRange0 <- peek @CFloat ((pviewportBoundsRange `advancePtrBytes` 0 :: Ptr CFloat))
     viewportBoundsRange1 <- peek @CFloat ((pviewportBoundsRange `advancePtrBytes` 4 :: Ptr CFloat))
     viewportSubPixelBits <- peek @Word32 ((p `plusPtr` 296 :: Ptr Word32))
@@ -4561,10 +4561,10 @@ instance FromCStruct PhysicalDeviceLimits where
     maxCullDistances <- peek @Word32 ((p `plusPtr` 432 :: Ptr Word32))
     maxCombinedClipAndCullDistances <- peek @Word32 ((p `plusPtr` 436 :: Ptr Word32))
     discreteQueuePriorities <- peek @Word32 ((p `plusPtr` 440 :: Ptr Word32))
-    let ppointSizeRange = lowerArrayPtr @CFloat ((p `plusPtr` 444 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let ppointSizeRange = lowerArrayPtr @CFloat ((p `plusPtr` 444 :: Ptr (FixedArray 2 CFloat)))
     pointSizeRange0 <- peek @CFloat ((ppointSizeRange `advancePtrBytes` 0 :: Ptr CFloat))
     pointSizeRange1 <- peek @CFloat ((ppointSizeRange `advancePtrBytes` 4 :: Ptr CFloat))
-    let plineWidthRange = lowerArrayPtr @CFloat ((p `plusPtr` 452 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let plineWidthRange = lowerArrayPtr @CFloat ((p `plusPtr` 452 :: Ptr (FixedArray 2 CFloat)))
     lineWidthRange0 <- peek @CFloat ((plineWidthRange `advancePtrBytes` 0 :: Ptr CFloat))
     lineWidthRange1 <- peek @CFloat ((plineWidthRange `advancePtrBytes` 4 :: Ptr CFloat))
     pointSizeGranularity <- peek @CFloat ((p `plusPtr` 460 :: Ptr CFloat))

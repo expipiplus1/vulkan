@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8aa3a3b640d90e5d61cb119effe260e6b2770be0cd25795a39e62fe3eb17dfc0
+-- hash: 4a4c32a541de0c8b6cb3ae93a2d797e48f496180002ab6fb85da34637f5b5b15
 
 name:           vulkan
 version:        3.1.0.0
@@ -470,7 +470,6 @@ library
     , bytestring
     , transformers
     , vector
-    , vector-sized
   if os(windows)
     extra-libraries:
         vulkan-1

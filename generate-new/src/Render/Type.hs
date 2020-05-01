@@ -12,7 +12,6 @@ module Render.Type
 
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
-import qualified Data.Vector.Storable.Sized    as VSS
 import           Foreign.C.Types
 import           Foreign.Ptr
 import           Language.Haskell.TH
@@ -129,7 +128,8 @@ cToHsType' structStyle preserve t = do
     Array _ s e -> do
       e' <- cToHsType' structStyle preserve e
       s' <- arraySizeType s
-      let arrayTy = ConT ''VSS.Vector :@ s' :@ e'
+      let arrayTy =
+            ConT (mkName "Graphics.Vulkan.CStruct.Utils.FixedArray") :@ s' :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy

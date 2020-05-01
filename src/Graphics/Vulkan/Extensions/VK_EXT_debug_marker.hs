@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_marker  ( debugMarkerSetObjectNam
                                                        , DebugReportObjectTypeEXT(..)
                                                        ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
@@ -42,7 +43,6 @@ import Data.Word (Word64)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.Core10.Handles (CommandBuffer)
@@ -544,7 +544,7 @@ instance ToCStruct DebugMarkerMarkerInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pMarkerName'' <- ContT $ useAsCString (markerName)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CChar))) pMarkerName''
-    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (color) of
       (e0, e1, e2, e3) -> do
         poke (pColor' :: Ptr CFloat) (CFloat (e0))
@@ -564,7 +564,7 @@ instance ToCStruct DebugMarkerMarkerInfoEXT where
 instance FromCStruct DebugMarkerMarkerInfoEXT where
   peekCStruct p = do
     pMarkerName <- packCString =<< peek ((p `plusPtr` 16 :: Ptr (Ptr CChar)))
-    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     color0 <- peek @CFloat ((pcolor `advancePtrBytes` 0 :: Ptr CFloat))
     color1 <- peek @CFloat ((pcolor `advancePtrBytes` 4 :: Ptr CFloat))
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))

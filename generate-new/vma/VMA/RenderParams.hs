@@ -7,7 +7,6 @@ import           Relude                  hiding ( uncons
                                                 , Handle
                                                 )
 import qualified Data.HashSet                  as Set
-import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import qualified Data.Text                     as T
@@ -52,7 +51,7 @@ renderParams handles = r
                                     . (<> "Handle")
                                     . lowerCaseFirst
                                     . dropVma
-    , alwaysQualifiedNames        = V.fromList [''VSS.Vector]
+    , alwaysQualifiedNames        = mempty
     , mkIdiomaticType             =
       let
         dropVulkanModule = transformBi

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f006fafa8b697ae367ead38a4111762a7c2a5f09edf0b2186f0591cf2d715380
+-- hash: c766a4420d747ecfae41da16d704d805be5150bf84f7c5a10f6c02473c741ca0
 
 name:           generate-new
 version:        0.0.0
@@ -121,7 +121,6 @@ library
     , unordered-containers
     , vector
     , vector-algorithms
-    , vector-sized
     , word-wrap
     , xeno
   default-language: Haskell2010
@@ -178,7 +177,6 @@ executable vk
     , unordered-containers
     , vector
     , vector-algorithms
-    , vector-sized
     , word-wrap
     , xeno
   default-language: Haskell2010
@@ -237,7 +235,6 @@ executable vma
     , unordered-containers
     , vector
     , vector-algorithms
-    , vector-sized
     , word-wrap
     , xeno
   default-language: Haskell2010
