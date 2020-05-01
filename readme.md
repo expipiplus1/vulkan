@@ -209,31 +209,8 @@ programs. You'll need to supply the following system packages:
 
 ## Examples
 
-There are a couple of examples in the `examples` directory.
-
-### `info`
-
-For the vulkan instance and all physical devices it dumps layer and extension
-properties to stdout. It also prints features and properties for all physical
-devices.
-
-### `sdl-triangle`
-
-This opens a window using SDL and renders a triangle.
-
-You'll need to have `glslangValidator` in `$PATH` when compiling as shaders are
-built in a QuasiQuoter.
-
-If SDL is unable to find `libvulkan.so`, you can set either `LD_LIBRARY_PATH`
-or `SDL_VULKAN_LIBRARY`, it must find the same `libvulkan.so` that the
-`sdl-triangle` binary was compiled against.
-
-If you run into the exception `DLCallFailed {sdlExceptionCaller = "SDL.Video.Vulkan.vkLoadLibrary", sdlFunction = "SDL_Vulkan_LoadLibrary", sdlExceptionError = "Installed Vulkan doesn't implement the VK_KHR_surface extension"}`
-it might be because the vulkan loader is unable to find the driver. To check if
-this is the case you can set `VK_ICD_FILENAMES` to the icd json file of your
-desired driver.
-
-Exit with `q`, `escape` or the window exit button.
+There exists a package to build some example programs in the `examples`
+directory.
 
 ## Current Status
 

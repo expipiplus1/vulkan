@@ -1,14 +1,2 @@
 cradle:
   cabal:
-    - path: "./src"
-      component: "lib:vulkan"
-
-    - path: "./utils"
-      component: "lib:utils"
-
-    - path: "./examples/info"
-      component: "exe:info"
-
-    - path: "./examples/sdl-triangle"
-      component: "exe:sdl-triangle"
-

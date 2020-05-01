@@ -1,0 +1,7 @@
+cradle:
+  cabal:
+    - path: "./info/"
+      component: "exe:info"
+
+    - path: "./sdl-triangle/"
+      component: "exe:sdl-triangle"

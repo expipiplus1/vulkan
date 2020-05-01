@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 414b94f5656b1b34f461da3dcc8a81e84f42ac058181e153cc199bef50da97f3
+-- hash: c57104dcc8733137c1bfff46dd514d31663d76d918e5f38a73fbdca65f88c59c
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -17,7 +17,6 @@ license:        BSD-3-Clause
 build-type:     Simple
 extra-source-files:
     readme.md
-    default.nix
 
 source-repository head
   type: git
