@@ -313,8 +313,9 @@ createGraphicsPipeline dev renderPass swapchainExtent swapchainImageFormat = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  fmap V.head
-    $ withGraphicsPipelines allocate dev zero [pipelineCreateInfo] Nothing
+  V.head
+    .   snd
+    <$> withGraphicsPipelines allocate dev zero [pipelineCreateInfo] Nothing
 
 createFramebuffers
   :: Device
