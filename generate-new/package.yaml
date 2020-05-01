@@ -93,6 +93,7 @@ dependencies:
   - mtl
   - pandoc
   - parsec
+  - parsers
   - polysemy
   - polysemy-plugin
   - pretty-show
