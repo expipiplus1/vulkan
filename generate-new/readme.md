@@ -70,34 +70,7 @@ The docbook documentation will be in `docs/docbook`.
 
 ## To check
 
-- DeviceAddressConst
-
-- Nested Tuples in transform matrix
-
-- SHADER_UNUSED should be a pattern not a type
-
-- Investigate Graphics.Vulkan.Extensions.VK_NV_ray_tracing.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV
-
-- `VkAccelerationStructureGeometryTrianglesDataKHR: Unhandled Maybe conversion to TypeName "VkDeviceOrHostAddressConstKHR"`
-
-- `VkAccelerationStructureGeometryTrianglesDataKHR: Unhandled Maybe conversion to TypeName "VkDeviceOrHostAddressConstKHR"`
-
-- `VkAccelerationStructureBuildGeometryInfoKHR: Unhandled TypeName "VkAccelerationStructureGeometryKHR" conversion to: Ptr Const (Ptr Const (TypeName "VkAccelerationStructureGeometryKHR"))`
-
-- `VkAccelerationStructureCreateGeometryTypeInfoKHR: Unhandled Maybe conversion to TypeName "VkFormat"`
-
-- `VkAccelerationStructureCreateGeometryTypeInfoKHR: Unhandled Maybe conversion to TypeName "VkBool32"`
-
-- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
-
-- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
-
-- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
-
-- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
-
-- `VkAccelerationStructureVersionKHR: Unable to find ref named 2*VK_UUID_SIZE`
-
+During development unfinished bits not to forget are listed here.
 
 # VMA TODOs
 
