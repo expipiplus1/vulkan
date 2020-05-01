@@ -39,7 +39,6 @@ import qualified Data.Vector (length)
 import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -219,25 +218,25 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBindTransformFeedbackBuffersEXT :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdBindTransformFeedbackBuffersEXT :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
 cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
   let vkCmdBindTransformFeedbackBuffersEXT' = mkVkCmdBindTransformFeedbackBuffersEXT (pVkCmdBindTransformFeedbackBuffersEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pBuffersLength = Data.Vector.length $ (buffers)
   let pOffsetsLength = Data.Vector.length $ (offsets)
   lift $ unless (pOffsetsLength == pBuffersLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pOffsets and pBuffers must have the same length" Nothing Nothing
-  let pSizesLength = either id (fromIntegral . Data.Vector.length) (sizes)
+  let pSizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral pSizesLength == pBuffersLength || pSizesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pSizes and pBuffers must have the same length" Nothing Nothing
   pPBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (buffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)
   pPOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (offsets)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (offsets)
-  pSizes <- case (sizes) of
-    Left _ -> pure nullPtr
-    Right v -> do
-      pPSizes <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (v)) * 8) 8
-      lift $ Data.Vector.imapM_ (\i e -> poke (pPSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (v)
+  pSizes <- if Data.Vector.null (sizes)
+    then pure nullPtr
+    else do
+      pPSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pPSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pPSizes
   lift $ vkCmdBindTransformFeedbackBuffersEXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes
   pure $ ()
@@ -377,20 +376,20 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBeginTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdBeginTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Vector DeviceSize) -> io ()
 cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdBeginTransformFeedbackEXT' = mkVkCmdBeginTransformFeedbackEXT (pVkCmdBeginTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
-  let pCounterBufferOffsetsLength = either id (fromIntegral . Data.Vector.length) (counterBufferOffsets)
+  let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pCounterBufferOffsets and pCounterBuffers must have the same length" Nothing Nothing
   pPCounterBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (counterBuffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (counterBuffers)
-  pCounterBufferOffsets <- case (counterBufferOffsets) of
-    Left _ -> pure nullPtr
-    Right v -> do
-      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (v)) * 8) 8
-      lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (v)
+  pCounterBufferOffsets <- if Data.Vector.null (counterBufferOffsets)
+    then pure nullPtr
+    else do
+      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
   lift $ vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
   pure $ ()
@@ -404,7 +403,7 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
 -- To just extract the pair pass '(,)' as the first argument.
 --
 -- Note that there is no inner resource
-cmdWithTransformFeedbackEXT :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> Word32 -> Vector Buffer -> Either Word32 (Vector DeviceSize) -> r
+cmdWithTransformFeedbackEXT :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> Word32 -> Vector Buffer -> Vector DeviceSize -> r
 cmdWithTransformFeedbackEXT b commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets =
   b (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
     (cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
@@ -530,20 +529,20 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdEndTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdEndTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Vector DeviceSize) -> io ()
 cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdEndTransformFeedbackEXT' = mkVkCmdEndTransformFeedbackEXT (pVkCmdEndTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
-  let pCounterBufferOffsetsLength = either id (fromIntegral . Data.Vector.length) (counterBufferOffsets)
+  let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pCounterBufferOffsets and pCounterBuffers must have the same length" Nothing Nothing
   pPCounterBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (counterBuffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (counterBuffers)
-  pCounterBufferOffsets <- case (counterBufferOffsets) of
-    Left _ -> pure nullPtr
-    Right v -> do
-      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (v)) * 8) 8
-      lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (v)
+  pCounterBufferOffsets <- if Data.Vector.null (counterBufferOffsets)
+    then pure nullPtr
+    else do
+      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
   lift $ vkCmdEndTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
   pure $ ()

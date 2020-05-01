@@ -34,7 +34,6 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -1255,7 +1254,7 @@ data SubpassDescription2 (es :: [Type]) = SubpassDescription2
   , -- | @pResolveAttachments@ is an optional array of @colorAttachmentCount@
     -- 'AttachmentReference2' structures defining the resolve attachments for
     -- this subpass and their layouts.
-    resolveAttachments :: Either Word32 (Vector (SomeStruct AttachmentReference2))
+    resolveAttachments :: Vector (SomeStruct AttachmentReference2)
   , -- | @pDepthStencilAttachment@ is a pointer to a 'AttachmentReference2'
     -- structure specifying the depth\/stencil attachment for this subpass and
     -- its layout.
@@ -1292,19 +1291,19 @@ instance PokeChain es => ToCStruct (SubpassDescription2 es) where
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPInputAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (inputAttachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr (AttachmentReference2 _)))) (pPInputAttachments')
     let pColorAttachmentsLength = Data.Vector.length $ (colorAttachments)
-    let pResolveAttachmentsLength = either id (fromIntegral . Data.Vector.length) (resolveAttachments)
+    let pResolveAttachmentsLength = Data.Vector.length $ (resolveAttachments)
     lift $ unless (fromIntegral pResolveAttachmentsLength == pColorAttachmentsLength || pResolveAttachmentsLength == 0) $
       throwIO $ IOError Nothing InvalidArgument "" "pResolveAttachments and pColorAttachments must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral pColorAttachmentsLength :: Word32))
     pPColorAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (colorAttachments)) * 32) 8
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPColorAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (colorAttachments)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 _)))) (pPColorAttachments')
-    pResolveAttachments'' <- case (resolveAttachments) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPResolveAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (v)) * 32) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPResolveAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (v)
-        pure $ pPResolveAttachments'
+    pResolveAttachments'' <- if Data.Vector.null (resolveAttachments)
+      then pure nullPtr
+      else do
+        pPResolveAttachments <- ContT $ allocaBytesAligned @(AttachmentReference2 _) (((Data.Vector.length (resolveAttachments))) * 32) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPResolveAttachments `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) ((resolveAttachments))
+        pure $ pPResolveAttachments
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 _)))) pResolveAttachments''
     pDepthStencilAttachment'' <- case (depthStencilAttachment) of
       Nothing -> pure nullPtr
@@ -1348,15 +1347,15 @@ instance PeekChain es => FromCStruct (SubpassDescription2 es) where
     pColorAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 a))))
     pColorAttachments' <- generateM (fromIntegral colorAttachmentCount) (\i -> peekSomeCStruct (forgetExtensions ((pColorAttachments `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))
     pResolveAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 a))))
-    pResolveAttachments' <- maybePeek (\j -> generateM (fromIntegral colorAttachmentCount) (\i -> peekSomeCStruct (forgetExtensions (((j) `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))) pResolveAttachments
-    let pResolveAttachments'' = maybe (Left colorAttachmentCount) Right pResolveAttachments'
+    let pResolveAttachmentsLength = if pResolveAttachments == nullPtr then 0 else (fromIntegral colorAttachmentCount)
+    pResolveAttachments' <- generateM pResolveAttachmentsLength (\i -> peekSomeCStruct (forgetExtensions ((pResolveAttachments `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))
     pDepthStencilAttachment <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 64 :: Ptr (Ptr (AttachmentReference2 a))))
     pDepthStencilAttachment' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pDepthStencilAttachment
     preserveAttachmentCount <- peek @Word32 ((p `plusPtr` 72 :: Ptr Word32))
     pPreserveAttachments <- peek @(Ptr Word32) ((p `plusPtr` 80 :: Ptr (Ptr Word32)))
     pPreserveAttachments' <- generateM (fromIntegral preserveAttachmentCount) (\i -> peek @Word32 ((pPreserveAttachments `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     pure $ SubpassDescription2
-             next flags pipelineBindPoint viewMask pInputAttachments' pColorAttachments' pResolveAttachments'' pDepthStencilAttachment' pPreserveAttachments'
+             next flags pipelineBindPoint viewMask pInputAttachments' pColorAttachments' pResolveAttachments' pDepthStencilAttachment' pPreserveAttachments'
 
 instance es ~ '[] => Zero (SubpassDescription2 es) where
   zero = SubpassDescription2
@@ -1366,7 +1365,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
            zero
            mempty
            mempty
-           (Left 0)
+           mempty
            Nothing
            mempty
 
