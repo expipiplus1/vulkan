@@ -11,6 +11,8 @@ let
 
   targets = {
     vulkan = ./.;
+    vulkan-utils = ./utils;
+    vulkan-examples = ./examples;
     VulkanMemoryAllocator = ./VulkanMemoryAllocator;
     generate-new = ./generate-new;
   };
@@ -91,11 +93,15 @@ let
         haskellPackages.callCabal2nixWithOptions "" src "--flag=build-examples"
         ({ } // pkgs.lib.optionalAttrs (name == "vulkan") {
           vulkan = pkgs.vulkan-loader;
-        } // pkgs.lib.optionalAttrs
-          (name == "VulkanMemoryAllocator" && forShell) {
+        } // pkgs.lib.optionalAttrs ((name == "vulkan-examples" || name
+          == "vulkan-utils" || name == "VulkanMemoryAllocator") && forShell) {
             # For the shell we don't want to have the compile the local dependency
             # for VMA
             vulkan = null;
+          } // pkgs.lib.optionalAttrs (name == "vulkan-examples" && forShell) {
+            # For the shell we don't want to have the compile the local dependency
+            # for VMA
+            vulkan-utils = null;
           });
     in if name == "vulkan" then
       with pkgs.haskell.lib;

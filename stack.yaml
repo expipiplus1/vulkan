@@ -1,6 +1,8 @@
 resolver: lts-15.0
 packages:
 - .
+- utils
+- examples
 - VulkanMemoryAllocator
 extra-deps:
 - sdl2-2.5.2.0

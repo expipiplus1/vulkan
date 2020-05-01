@@ -1,0 +1,72 @@
+name: vulkan-examples
+version: 0.1.0.0
+synopsis: Haskell examples for the Vulkan graphics API.
+category: Graphics
+maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+github: expipiplus1/vulkan
+extra-source-files:
+  - readme.md
+  - default.nix
+license: BSD-3-Clause
+
+executables:
+  info:
+    main: Main.hs
+    source-dirs: info
+    dependencies:
+      - base < 4.14
+      - vulkan
+      - pretty-simple
+      - bytestring
+
+  sdl-triangle:
+    main: Main.hs
+    source-dirs: sdl-triangle
+    dependencies:
+      - base < 4.14
+      - bytestring
+      - extra
+      - managed
+      - pretty-show
+      - say
+      - sdl2 >= 2.5.2.0
+      - text
+      - transformers
+      - vulkan-utils
+      - vector
+      - vulkan
+    c-sources: sdl-triangle/DebugCallback.c
+
+default-extensions:
+  - AllowAmbiguousTypes
+  - CPP
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DerivingStrategies
+  - DuplicateRecordFields
+  - FlexibleContexts
+  - FlexibleInstances
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - LambdaCase
+  - MagicHash
+  - NoMonomorphismRestriction
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternSynonyms
+  - PolyKinds
+  - QuantifiedConstraints
+  - RankNTypes
+  - RecordWildCards
+  - RoleAnnotations
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - Strict
+  - TypeApplications
+  - TypeFamilyDependencies
+  - TypeOperators
+  - TypeSynonymInstances
+  - UndecidableInstances
+  - ViewPatterns

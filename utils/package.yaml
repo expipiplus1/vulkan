@@ -1,46 +1,23 @@
-name: vulkan
-version: 3.1.0.0
-synopsis: Bindings to the Vulkan graphics API.
+name: vulkan-utils
+version: 0.1.0.0
+synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
   - readme.md
-  - changelog.md
-  - default.nix
-license: BSD-3-Clause
 
 library:
   source-dirs: src
   dependencies:
     - base < 4.14
     - bytestring
-    - transformers
-    - vector
-  when:
-    - condition: os(windows)
-      then:
-        extra-libraries: vulkan-1
-      else:
-        extra-libraries: vulkan
-    - condition: flag(safe-foreign-calls)
-      cpp-options: -DSAFE_FOREIGN_CALLS
-  ghc-options:
-    - -Wall
-    - -Wno-unticked-promoted-constructors
-    - -Wno-missing-pattern-synonym-signatures
-    - -Wno-unused-imports
-    - -Wno-missing-signatures
-    - -Wno-partial-type-signatures
-
-flags:
-  safe-foreign-calls:
-    description:
-      Do not mark foreign imports as 'unsafe'. This means that
-      callbacks from Vulkan to Haskell will work. If you are using
-      these then make sure this flag is enabled.
-    default: no
-    manual: yes
+    - extra
+    - file-embed
+    - template-haskell
+    - temporary
+    - typed-process
+    - vulkan
 
 default-extensions:
   - AllowAmbiguousTypes
@@ -75,4 +52,3 @@ default-extensions:
   - TypeSynonymInstances
   - UndecidableInstances
   - ViewPatterns
-

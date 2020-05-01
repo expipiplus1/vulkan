@@ -1,4 +1,6 @@
 packages:
   ./
   ./VulkanMemoryAllocator
+  ./utils
+  ./examples
   ./generate-new/

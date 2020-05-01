@@ -1,0 +1,43 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 5d283991b70c971baa51daacb86159698f6bb3b53adcf31e9b964812b40acf80
+
+name:           vulkan-utils
+version:        0.1.0.0
+synopsis:       Utils for the vulkan package
+category:       Graphics
+homepage:       https://github.com/expipiplus1/vulkan#readme
+bug-reports:    https://github.com/expipiplus1/vulkan/issues
+maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    readme.md
+
+source-repository head
+  type: git
+  location: https://github.com/expipiplus1/vulkan
+
+library
+  exposed-modules:
+      Graphics.Vulkan.Utils.ShaderQQ
+  other-modules:
+      Paths_vulkan_utils
+  hs-source-dirs:
+      src
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  build-depends:
+      base <4.14
+    , bytestring
+    , extra
+    , file-embed
+    , template-haskell
+    , temporary
+    , typed-process
+    , vulkan
+  default-language: Haskell2010
