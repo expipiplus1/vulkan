@@ -76,7 +76,13 @@ let
 
   buildSet = pkgs.lib.foldl (ps: p: ps // { ${p.pname} = p; }) { } packages;
   packages = map (t: haskellPackages.${t}) (builtins.attrNames targets);
-  tools = with pkgs; [ pkgconfig asciidoctor python3 doxygen glslang vulkan-validation-layers ];
+  tools = with pkgs; [
+    pkgconfig
+    asciidoctor
+    python3
+    doxygen
+    vulkan-validation-layers
+  ];
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   makeDrv = name: src:
@@ -92,7 +98,8 @@ let
             vulkan = null;
           });
     in if name == "vulkan" then
-      pkgs.haskell.lib.addExtraLibrary drv pkgs.vulkan-headers
+      with pkgs.haskell.lib;
+      addExtraLibrary (addBuildTool drv pkgs.glslang) pkgs.vulkan-headers
     else
       drv;
 
