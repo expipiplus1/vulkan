@@ -58,7 +58,7 @@ structMemberScheme Struct {..} member = do
         -- Pointers to return values in, unmarshaled at the moment
       , returnPointerInStructScheme
         -- Optional and non optional arrays
-      , arrayScheme WrapExtensibleStructs DoNotWrapDispatchableHandles
+      , arrayScheme WrapExtensibleStructs DoNotWrapDispatchableHandles sMembers
       , fixedArrayScheme WrapExtensibleStructs DoNotWrapDispatchableHandles
         -- Optional things:
       , optionalDefaultScheme WrapExtensibleStructs DoNotWrapDispatchableHandles

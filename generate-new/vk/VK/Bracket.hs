@@ -124,7 +124,7 @@ brackets marshaledCommands handles = context "brackets" $ do
         | Bracket {..} <- bs
         , TypeName n   <-
           [ t | Normal t <- bInnerTypes ]
-            <> [ t | Vector (Normal t) <- bInnerTypes ]
+            <> [ t | Vector _ (Normal t) <- bInnerTypes ]
         ]
       unhandledHandles =
         toList handleNames \\ (createdBracketNames ++ ignoredHandles)
@@ -135,7 +135,7 @@ brackets marshaledCommands handles = context "brackets" $ do
 
 commandBuffersBracket :: Bracket
 commandBuffersBracket = Bracket
-  { bInnerTypes          = [Vector (Normal (TypeName "VkCommandBuffer"))]
+  { bInnerTypes = [Vector NotNullable (Normal (TypeName "VkCommandBuffer"))]
   , bWrapperName         = "vkWithCommandBuffers"
   , bCreate              = "vkAllocateCommandBuffers"
   , bDestroy             = "vkFreeCommandBuffers"

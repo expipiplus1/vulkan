@@ -49,9 +49,6 @@ The docbook documentation will be in `docs/docbook`.
 - non-optional arrays/structs can be allocated at the same time as their parent
   struct, no need for two allocations
 
-- `VkSubpassDescription` shouldn't have `resolveAttachments` be an
-  `Either Word32 Vector` it's constrained to be the same length as colorAttachments
-
 - Unions should probably not use tuple when storing several values,
   `VkClearColorValue` for instance
 

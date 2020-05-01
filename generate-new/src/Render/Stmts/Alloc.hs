@@ -69,7 +69,7 @@ allocate
 allocate a = \case
   Normal   fromTy     -> normal (name a) (type' a) fromTy
   Preserve fromTy     -> normal (name a) (type' a) fromTy
-  Vector   (Normal _) -> allocateVector a
+  Vector _ (Normal _) -> allocateVector a
   ByteString          -> allocateByteString a
   s                   -> throw $ "Unhandled allocation for type " <> show s
 

@@ -32,8 +32,8 @@ schemeTypeNegative s = do
     ElidedVoid        -> pure Nothing
     VoidPtr           -> pure . Just $ ConT ''Ptr :@ ConT ''()
     ByteString        -> pure . Just $ ConT ''ByteString
-    Maybe  e          -> fmap (ConT ''Maybe :@) <$> schemeTypeNegative e
-    Vector e          -> fmap (ConT ''V.Vector :@) <$> schemeTypeNegative e
+    Maybe e           -> fmap (ConT ''Maybe :@) <$> schemeTypeNegative e
+    Vector _ e        -> fmap (ConT ''V.Vector :@) <$> schemeTypeNegative e
     EitherWord32 e ->
       fmap (\t -> ConT ''Either :@ ConT ''Word32 :@ (ConT ''V.Vector :@ t))
         <$> schemeTypeNegative e

@@ -25,8 +25,8 @@ zeroScheme = runNonDetMaybe . go
     ElidedVoid        -> empty
     VoidPtr           -> pure "zero"
     ByteString        -> pure "mempty"
-    Maybe        _    -> pure "Nothing"
-    Vector       _    -> pure "mempty"
+    Maybe _           -> pure "Nothing"
+    Vector _ _        -> pure "mempty"
     EitherWord32 _    -> pure $ parens "Left 0"
     Tupled n s        -> do
       z <- go s

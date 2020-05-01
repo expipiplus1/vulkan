@@ -260,6 +260,7 @@ difficultLengths =
               getVectorPoke @a "pSampleMask"
                                (Ptr Const (TypeName "VkSampleMask"))
                                (Normal (TypeName "VkSampleMask"))
+                               NotNullable
                                vecRef'
             vecPokeDoc <- case vecPoke of
               ContTStmts d -> pure d
@@ -320,12 +321,14 @@ difficultLengths =
                       (   pretty sampleCon
                       <+> "n -> (fromIntegral n + 31) `quot` 32"
                       )
+              -- TODO: pass Nullable here and don't reimplement that logic
               vectorPeekWithLenRef @a "sampleMask"
                                       (Normal (TypeName "VkSampleMask"))
                                       addrRef
                                       (TypeName "VkSampleMask")
                                       mempty
                                       len
+                                      NotNullable
             pure
               .   IOAction
               .   ValueDoc
@@ -622,10 +625,9 @@ accelerationStructureGeometry = BespokeScheme $ \case
         , csZeroIsZero = True -- Pointer to empty array
         , csType       = (ConT ''Vector :@) <$> cToHsType DoNotPreserve elemTy
         , csDirectPoke = APoke $ \vecRef -> do
-          -- ptrRef <- getPokeDirect p (Vector (Normal elemTy)) vecRef
           ptrRef <- getPokeDirect' @a (name p)
                                       unPtrTy
-                                      (Vector (Normal elemTy))
+                                      (Vector NotNullable (Normal elemTy))
                                       vecRef
           tyH <- cToHsType DoPreserve (Ptr Const unPtrTy)
           stmt (Just tyH) (Just "ppGeometries") $ do
