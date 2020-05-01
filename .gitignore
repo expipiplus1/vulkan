@@ -24,6 +24,7 @@ cabal.project.local~
 *.spv
 
 result
+result-*
 .hdevtools.sock
 
 generate-new/out
