@@ -207,7 +207,22 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 
 -- | VkBufferMemoryRequirementsInfo2 - (None)
 --
+-- == Valid Usage
+--
+-- -   If @buffer@ was created with the
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     external memory handle type, then @buffer@ /must/ be bound to
+--     memory.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- = See Also
 --
@@ -216,8 +231,7 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 -- 'getBufferMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR'
 data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
-  { -- | @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
-    -- handle
+  { -- | @buffer@ is the buffer to query.
     buffer :: Buffer }
   deriving (Typeable)
 deriving instance Show BufferMemoryRequirementsInfo2

@@ -542,8 +542,7 @@ instance Zero ImageSubresource where
 --
 --     -   If 'ImageCreateInfo'::@pNext@ contains
 --         'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT',
---         then @imageCreateDrmFormatModifiers@ contains the exactly the
---         modifiers in
+--         then @imageCreateDrmFormatModifiers@ contains the entire array
 --         'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT'::@pDrmFormatModifiers@.
 --
 -- -   Let @VkBool32 imageCreateMaybeLinear@ indicate if the resultant
@@ -565,7 +564,7 @@ instance Zero ImageSubresource where
 --         @DRM_FORMAT_MOD_LINEAR@.
 --
 -- -   Let @VkFormatFeatureFlags imageCreateFormatFeatures@ be the set of
---     format features available during image creation.
+--     valid /format features/ available during image creation.
 --
 --     -   If @tiling@ is
 --         'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR',
@@ -1073,7 +1072,7 @@ instance Zero ImageSubresource where
 --
 -- -   @initialLayout@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'.
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
@@ -1089,7 +1088,7 @@ instance Zero ImageSubresource where
 --
 -- -   If the image @format@ is one of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
---     @samples@ must be
+--     @samples@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   If the image @format@ is one of those listed in

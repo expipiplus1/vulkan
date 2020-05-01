@@ -404,7 +404,7 @@ foreign import ccall
 --     'INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV' bit set
 --
 -- -   'GeneratedCommandsInfoNV'::@pipeline@ /must/ match the current bound
---     pipeline at 'GeneratedCommandsInfoNV'::@pipelineBindPoint@.
+--     pipeline at 'GeneratedCommandsInfoNV'::@pipelineBindPoint@
 --
 -- -   Transform feedback /must/ not be active
 --
@@ -561,11 +561,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @groupIndex@ must be @0@ or less than the effective
+-- -   @groupIndex@ /must/ be @0@ or less than the effective
 --     'GraphicsPipelineShaderGroupsCreateInfoNV'::@groupCount@ including
 --     the referenced pipelines
 --
--- -   The @pipelineBindPoint@ must be
+-- -   The @pipelineBindPoint@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The same restrictions as
@@ -1149,7 +1149,7 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 --     @pPipelines@ /must/ also be as maximum
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxGraphicsShaderGroupCount@
 --
--- -   The state of the first element of @pGroups@ must match its
+-- -   The state of the first element of @pGroups@ /must/ match its
 --     equivalent within the parent’s
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --
@@ -1504,7 +1504,7 @@ instance Zero SetStateFlagsIndirectCommandNV where
 --     bit set
 --
 -- -   The @offset@ /must/ be aligned to
---     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minIndirectCommandsBufferOffsetAlignment@.
+--     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minIndirectCommandsBufferOffsetAlignment@
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single
@@ -1571,7 +1571,7 @@ instance Zero IndirectCommandsStreamNV where
 --     'IndirectCommandsLayoutCreateInfoNV'::@streamCount@
 --
 -- -   @offset@ /must/ be less than or equal to
---     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsTokenOffset@.
+--     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsTokenOffset@
 --
 -- -   If @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV',
 --     @vertexBindingUnit@ /must/ stay within device supported limits for

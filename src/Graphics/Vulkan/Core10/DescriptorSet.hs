@@ -595,15 +595,15 @@ foreign import ccall
 --     'DescriptorSetAllocateInfo' structure
 --
 -- -   @pDescriptorSets@ /must/ be a valid pointer to an array of
---     @pAllocateInfo@::descriptorSetCount
+--     @pAllocateInfo->descriptorSetCount@
 --     'Graphics.Vulkan.Core10.Handles.DescriptorSet' handles
 --
--- -   The value referenced by @pAllocateInfo@::@descriptorSetCount@ /must/
+-- -   The value referenced by @pAllocateInfo->descriptorSetCount@ /must/
 --     be greater than @0@
 --
 -- == Host Synchronization
 --
--- -   Host access to @pAllocateInfo@::descriptorPool /must/ be externally
+-- -   Host access to @pAllocateInfo->descriptorPool@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -872,17 +872,28 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be
 --     less than or equal to the size of @buffer@ minus @offset@
 --
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, @buffer@ /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If @buffer@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @offset@ /must/ be zero and @range@ /must/ be
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE'
+--
 -- == Valid Usage (Implicit)
 --
--- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
---     handle
+-- -   If @buffer@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/
+--     be a valid 'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize', 'WriteDescriptorSet'
 data DescriptorBufferInfo = DescriptorBufferInfo
-  { -- | @buffer@ is the buffer resource.
+  { -- | @buffer@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or the
+    -- buffer resource.
     buffer :: Buffer
   , -- | @offset@ is the offset in bytes from the start of @buffer@. Access to
     -- buffer memory via this descriptor uses addressing that is relative to
@@ -986,8 +997,8 @@ data DescriptorImageInfo = DescriptorImageInfo
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
     -- if the binding being updated does not use immutable samplers.
     sampler :: Sampler
-  , -- | @imageView@ is an image view handle, and is used in descriptor updates
-    -- for types
+  , -- | @imageView@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or an
+    -- image view handle, and is used in descriptor updates for types
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -1065,6 +1076,13 @@ instance Zero DescriptorImageInfo where
 -- structure in the @pNext@ chain of 'WriteDescriptorSet', as specified
 -- below.
 --
+-- If the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- feature is enabled, the buffer, imageView, or bufferView /can/ be
+-- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from a null
+-- descriptor return zero values and stores and atomics to a null
+-- descriptor are discarded.
+--
 -- If the @dstBinding@ has fewer than @descriptorCount@ array elements
 -- remaining starting from @dstArrayElement@, then the remainder will be
 -- used to update the subsequent binding - @dstBinding@+1 starting at array
@@ -1135,9 +1153,18 @@ instance Zero DescriptorImageInfo where
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
---     @pTexelBufferView@ /must/ be a valid pointer to an array of
---     @descriptorCount@ valid 'Graphics.Vulkan.Core10.Handles.BufferView'
---     handles
+--     each element of @pTexelBufferView@ /must/ be either a valid
+--     'Graphics.Vulkan.Core10.Handles.BufferView' handle or
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If @descriptorType@ is
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, each element of @pTexelBufferView@ /must/
+--     not be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
@@ -1163,10 +1190,21 @@ instance Zero DescriptorImageInfo where
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the @imageView@ and @imageLayout@ members of each element of
---     @pImageInfo@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.ImageView' and
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout', respectively
+--     the @imageView@ member of each element of @pImageInfo@ /must/ be
+--     either a valid 'Graphics.Vulkan.Core10.Handles.ImageView' handle or
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If @descriptorType@ is
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, the @imageView@ member of each element of
+--     @pImageInfo@ /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
@@ -1868,7 +1906,7 @@ instance Zero DescriptorSetLayoutBinding where
 -- == Valid Usage
 --
 -- -   The 'DescriptorSetLayoutBinding'::@binding@ members of the elements
---     of the @pBindings@ array /must/ each have different values.
+--     of the @pBindings@ array /must/ each have different values
 --
 -- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',

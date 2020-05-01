@@ -25,15 +25,31 @@ import Graphics.Vulkan.Core10.BaseType (Flags)
 import Graphics.Vulkan.Zero (Zero)
 -- | VkSubpassDescriptionFlagBits - Bitmask specifying usage of a subpass
 --
+-- = Description
+--
+-- Note
+--
+-- Shader resolve operations allow for custom resolve operations, but
+-- overdrawing pixels /may/ have a performance and\/or power cost.
+-- Furthermore, since the contents of any depth stencil attachment or color
+-- attachment is undefined at the begining of a shader resolve subpass, any
+-- depth testing, stencil testing, or blending which sources these
+-- undefined values are also undefined.
+--
 -- = See Also
 --
 -- 'SubpassDescriptionFlags'
 newtype SubpassDescriptionFlagBits = SubpassDescriptionFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- No documentation found for Nested "VkSubpassDescriptionFlagBits" "VK_SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM"
+-- | 'SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM' specifies that the subpass
+-- performs shader resolve operations.
 pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM = SubpassDescriptionFlagBits 0x00000008
--- No documentation found for Nested "VkSubpassDescriptionFlagBits" "VK_SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM"
+-- | 'SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM' specifies that the
+-- framebuffer region is the fragment region, that is, the minimum region
+-- dependencies are by pixel rather than by sample, such that any fragment
+-- shader invocation /can/ access any sample associated with that fragment
+-- shader invocation.
 pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM = SubpassDescriptionFlagBits 0x00000004
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX' specifies that
 -- shaders compiled for this subpass use per-view positions which only

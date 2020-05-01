@@ -31,7 +31,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage
 --
--- -   The bits in @handleTypes@ must be supported and compatible, as
+-- -   The bits in @handleTypes@ /must/ be supported and compatible, as
 --     reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'
 --

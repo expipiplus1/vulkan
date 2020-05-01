@@ -179,7 +179,7 @@ foreign import ccall
 --     as returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that
---     @device@ was created from.
+--     @device@ was created from
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
@@ -789,7 +789,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@
 --     or
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.externalMemoryFeatures@,
---     the @pNext@ chain must include a
+--     the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     or
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'

@@ -207,7 +207,7 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 -- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
 --     a valid handle of the type specified by @handleType@
 --
--- -   If @handle@ is not @NULL@, @name@ must be @NULL@
+-- -   If @handle@ is not @NULL@, @name@ /must/ be @NULL@
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in

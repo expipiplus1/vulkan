@@ -100,7 +100,7 @@ newtype MemoryOverallocationBehaviorAMD = MemoryOverallocationBehaviorAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD' lets the implementation
--- decide if overallocation should be allowed.
+-- decide if overallocation is allowed.
 pattern MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = MemoryOverallocationBehaviorAMD 0
 -- | 'MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD' specifies overallocation is
 -- allowed if platform permits.

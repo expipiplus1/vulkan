@@ -309,6 +309,9 @@ foreign import ccall
 --
 -- -   Host access to @instance@ /must/ be externally synchronized
 --
+-- -   Host access to all 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+--     objects enumerated from @instance@ /must/ be externally synchronized
+--
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
@@ -428,10 +431,10 @@ foreign import ccall
 -- = Description
 --
 -- The returned function pointer is of type
--- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and must be
--- cast to the type of the command being queried. The function pointer
--- /must/ only be called with a dispatchable object (the first parameter)
--- that is @device@ or a child of @device@.
+-- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be
+-- cast to the type of the command being queried before use. The function
+-- pointer /must/ only be called with a dispatchable object (the first
+-- parameter) that is @device@ or a child of @device@.
 --
 -- +----------------------+----------------------+-----------------------+
 -- | @device@             | @pName@              | return value          |
@@ -509,8 +512,8 @@ foreign import ccall
 -- and expected return value (“fp” is “function pointer”) for each case.
 --
 -- The returned function pointer is of type
--- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and must be
--- cast to the type of the command being queried.
+-- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be
+-- cast to the type of the command being queried before use.
 --
 -- +----------------------+----------------------------------------------------------------------------------+-----------------------+
 -- | @instance@           | @pName@                                                                          | return value          |
@@ -1660,19 +1663,19 @@ instance Zero QueueFamilyProperties where
 -- For each pair of elements __X__ and __Y__ returned in @memoryTypes@,
 -- __X__ /must/ be placed at a lower index position than __Y__ if:
 --
--- -   either the set of bit flags returned in the @propertyFlags@ member
---     of __X__ is a strict subset of the set of bit flags returned in the
+-- -   the set of bit flags returned in the @propertyFlags@ member of __X__
+--     is a strict subset of the set of bit flags returned in the
 --     @propertyFlags@ member of __Y__; or
 --
 -- -   the @propertyFlags@ members of __X__ and __Y__ are equal, and __X__
 --     belongs to a memory heap with greater performance (as determined in
 --     an implementation-specific manner) ; or
 --
--- -   or the @propertyFlags@ members of __X__ includes
+-- -   the @propertyFlags@ members of __Y__ includes
 --     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD'
---     and __Y__ does not
+--     and __X__ does not
 --
 -- Note
 --
@@ -2179,13 +2182,72 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --         structure are considered out of bounds even if the members at
     --         the end are not statically used.
     --
-    --     -   If any buffer access is determined to be out of bounds, then any
-    --         other access of the same type (load, store, or atomic) to the
-    --         same buffer that accesses an address less than 16 bytes away
-    --         from the out of bounds address /may/ also be considered out of
-    --         bounds.
+    --     -   If
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is not enabled and any buffer access is determined to be out of
+    --         bounds, then any other access of the same type (load, store, or
+    --         atomic) to the same buffer that accesses an address less than 16
+    --         bytes away from the out of bounds address /may/ also be
+    --         considered out of bounds.
+    --
+    --     -   If the access is a load that reads from the same memory
+    --         locations as a prior store in the same shader invocation, with
+    --         no other intervening accesses to the same memory locations in
+    --         that shader invocation, then the result of the load /may/ be the
+    --         value stored by the store instruction, even if the access is out
+    --         of bounds. If the load is @Volatile@, then an out of bounds load
+    --         /must/ return the appropriate out of bounds value.
+    --
+    -- -   Accesses to descriptors written with a
+    --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' resource or view
+    --     are not considered to be out of bounds. Instead, each type of
+    --     descriptor access defines a specific behavior for accesses to a null
+    --     descriptor.
     --
     -- -   Out-of-bounds buffer loads will return any of the following values:
+    --
+    --     -   If the access is to a uniform buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, loads of offsets between the end of the descriptor
+    --         range and the end of the descriptor range rounded up to a
+    --         multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
+    --         bytes /must/ return either zero values or the contents of the
+    --         memory at the offset being loaded. Loads of offsets past the
+    --         descriptor range rounded up to a multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
+    --         bytes /must/ return zero values.
+    --
+    --     -   If the access is to a storage buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, loads of offsets between the end of the descriptor
+    --         range and the end of the descriptor range rounded up to a
+    --         multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         bytes /must/ return either zero values or the contents of the
+    --         memory at the offset being loaded. Loads of offsets past the
+    --         descriptor range rounded up to a multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         bytes /must/ return zero values. Similarly, stores to addresses
+    --         between the end of the descriptor range and the end of the
+    --         descriptor range rounded up to a multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         bytes /may/ be discarded.
+    --
+    --     -   Non-atomic accesses to storage buffers that are a multiple of 32
+    --         bits /may/ be decomposed into 32-bit accesses that are
+    --         individually bounds-checked.
+    --
+    --     -   If the access is to an index buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, zero values /must/ be returned.
+    --
+    --     -   If the access is to a uniform texel buffer or storage texel
+    --         buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, zero values /must/ be returned, and then
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>
+    --         is applied based on the buffer view’s format.
     --
     --     -   Values from anywhere within the memory range(s) bound to the
     --         buffer (possibly including bytes of memory past the end of the
@@ -2203,13 +2265,24 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- -   Out-of-bounds writes /may/ modify values within the memory range(s)
     --     bound to the buffer, but /must/ not modify any other memory.
     --
+    --     -   If
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, out of bounds writes /must/ not modify any memory.
+    --
     -- -   Out-of-bounds atomics /may/ modify values within the memory range(s)
     --     bound to the buffer, but /must/ not modify any other memory, and
     --     return an undefined value.
     --
-    -- -   Vertex input attributes are considered out of bounds if the offset
-    --     of the attribute in the bound vertex buffer range plus the size of
-    --     the attribute is greater than either:
+    --     -   If
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, out of bounds atomics /must/ not modify any memory,
+    --         and return an undefined value.
+    --
+    -- -   If
+    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --     is disabled, vertex input attributes are considered out of bounds if
+    --     the offset of the attribute in the bound vertex buffer range plus
+    --     the size of the attribute is greater than either:
     --
     --     -   @vertexBufferRangeSize@, if @bindingStride@ == 0; or
     --
@@ -2234,6 +2307,18 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --             attribute.
     --
     --         -   Zero values, or (0,0,0,x) vectors, as described above.
+    --
+    -- -   If
+    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --     is enabled, vertex input attributes are considered out of bounds if
+    --     the offset of the attribute in the bound vertex buffer range plus
+    --     the size of the attribute is greater than the byte size of the
+    --     memory range bound to the vertex buffer binding.
+    --
+    --     -   If a vertex input attribute is out of bounds, the
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction raw data>
+    --         extracted are zero values, and missing G, B, or A components are
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
     --
     -- -   If @robustBufferAccess@ is not enabled, applications /must/ not
     --     perform out of bounds accesses.

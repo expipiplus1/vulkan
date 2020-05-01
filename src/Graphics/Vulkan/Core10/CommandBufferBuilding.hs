@@ -1454,7 +1454,15 @@ foreign import ccall
 -- the offset indicated by @pOffsets@[i] from the start of the buffer
 -- @pBuffers@[i]. All vertex input attributes that use each of these
 -- bindings will use these updated addresses in their address calculations
--- for subsequent draw commands.
+-- for subsequent draw commands. If the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- feature is enabled, elements of @pBuffers@ /can/ be
+-- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', and /can/ be used by
+-- the vertex shader. If a vertex input attribute is bound to a vertex
+-- input binding that is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- the values taken from memory are considered to be zero, and missing G,
+-- B, or A components are
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
 --
 -- == Valid Usage
 --
@@ -1476,13 +1484,23 @@ foreign import ccall
 --     completely and contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, all elements of @pBuffers@ /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If an element of @pBuffers@ is
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then the
+--     corresponding element of @pOffsets@ /must/ be zero
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pBuffers@ /must/ be a valid pointer to an array of @bindingCount@
---     valid 'Graphics.Vulkan.Core10.Handles.Buffer' handles
+--     valid or 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handles
 --
 -- -   @pOffsets@ /must/ be a valid pointer to an array of @bindingCount@
 --     'Graphics.Vulkan.Core10.BaseType.DeviceSize' values
@@ -1496,8 +1514,9 @@ foreign import ccall
 --
 -- -   @bindingCount@ /must/ be greater than @0@
 --
--- -   Both of @commandBuffer@, and the elements of @pBuffers@ /must/ have
---     been created, allocated, or retrieved from the same
+-- -   Both of @commandBuffer@, and the elements of @pBuffers@ that are
+--     valid handles of non-ignored parameters /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
@@ -3868,7 +3887,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
 -- -   @srcImage@ /must/ not use a format listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
@@ -3893,7 +3912,7 @@ foreign import ccall
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
 -- -   @dstImage@ /must/ not use a format listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
@@ -3941,7 +3960,7 @@ foreign import ccall
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
 -- -   If @filter@ is
 --     'Graphics.Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT',
@@ -4949,7 +4968,7 @@ foreign import ccall
 --     of @image@ /must/ contain
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
--- -   If any element of @pRanges.aspect@ includes
+-- -   If the @aspect@ member of any element of @pRanges@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     and @image@ was created with
 --     <VkImageStencilUsageCreateInfo.html separate stencil usage>,
@@ -4958,7 +4977,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
 --     used to create @image@
 --
--- -   If any element of @pRanges.aspect@ includes
+-- -   If the @aspect@ member of any element of @pRanges@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
 --     and @image@ was not created with
 --     <VkImageStencilUsageCreateInfo.html separate stencil usage>,
@@ -4967,7 +4986,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@usage@ used to
 --     create @image@
 --
--- -   If any element of @pRanges.aspect@ includes
+-- -   If the @aspect@ member of any element of @pRanges@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     /must/ have been included in the
@@ -5929,7 +5948,7 @@ foreign import ccall
 --
 -- -   The @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any
 --     element of @pBufferMemoryBarriers@ or @pImageMemoryBarriers@ /must/
---     be equal.
+--     be equal
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
 --     physical device
@@ -8408,7 +8427,7 @@ instance Zero BufferCopy where
 --
 -- -   If the calling command’s @dstImage@ is of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
---     @dstOffset.z@ /must/ be @0@.
+--     @dstOffset.z@ /must/ be @0@
 --
 -- -   If both @srcImage@ and @dstImage@ are of type
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' then
@@ -9109,8 +9128,8 @@ instance Zero ImageResolve where
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>
--- is enabled, then @renderArea@ must equal the framebuffer pre-transformed
--- dimensions. After @renderArea@ has been transformed by
+-- is enabled, then @renderArea@ /must/ equal the framebuffer
+-- pre-transformed dimensions. After @renderArea@ has been transformed by
 -- 'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM'::@transform@,
 -- the resulting render area /must/ be equal to the framebuffer dimensions.
 --

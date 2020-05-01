@@ -30,7 +30,59 @@ import Graphics.Vulkan.CStruct (ToCStruct(..))
 import Graphics.Vulkan.Zero (Zero(..))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT))
--- No documentation found for TopLevel "VkPhysicalDeviceRobustness2FeaturesEXT"
+-- | VkPhysicalDeviceRobustness2FeaturesEXT - Structure describing the
+-- out-of-bounds behavior for an implementation
+--
+-- = Members
+--
+-- The members of the 'PhysicalDeviceRobustness2FeaturesEXT' structure
+-- describe the following features:
+--
+-- = Description
+--
+-- -   @robustBufferAccess2@ indicates whether buffer accesses are tightly
+--     bounds-checked against the range of the descriptor. Uniform buffers
+--     /must/ be bounds-checked to the range of the descriptor, where the
+--     range is rounded up to a multiple of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>.
+--     Storage buffers /must/ be bounds-checked to the range of the
+--     descriptor, where the range is rounded up to a multiple of
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>.
+--     Out of bounds buffer loads will return zero values, and formatted
+--     loads will have (0,0,1) values inserted for missing G, B, or A
+--     components based on the format.
+--
+-- -   @robustImageAccess2@ indicates whether image accesses are tightly
+--     bounds-checked against the dimensions of the image view. Out of
+--     bounds image loads will return zero values, with (0,0,1) values
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba inserted for missing G, B, or A components>
+--     based on the format.
+--
+-- -   @nullDescriptor@ indicates whether descriptors /can/ be written with
+--     a 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' resource or
+--     view, which are considered valid to access and act as if the
+--     descriptor were bound to nothing.
+--
+-- If the 'PhysicalDeviceRobustness2FeaturesEXT' structure is included in
+-- the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+-- it is filled with values indicating whether each feature is supported.
+--
+-- == Valid Usage
+--
+-- -   If @robustBufferAccess2@ is enabled then
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     /must/ also be enabled
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRobustness2FeaturesEXT = PhysicalDeviceRobustness2FeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceRobustness2FeaturesEXT" "robustBufferAccess2"
     robustBufferAccess2 :: Bool
@@ -82,11 +134,39 @@ instance Zero PhysicalDeviceRobustness2FeaturesEXT where
            zero
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceRobustness2PropertiesEXT"
+-- | VkPhysicalDeviceRobustness2PropertiesEXT - Structure describing robust
+-- buffer access properties supported by an implementation
+--
+-- = Members
+--
+-- The members of the 'PhysicalDeviceRobustness2PropertiesEXT' structure
+-- describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceRobustness2PropertiesEXT' structure is included in
+-- the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2PropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceRobustness2PropertiesEXT" "robustStorageBufferAccessSizeAlignment"
+  { -- | @robustStorageBufferAccessSizeAlignment@ is the number of bytes that the
+    -- range of a storage buffer descriptor is rounded up to when used for
+    -- bounds-checking when
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    -- is enabled. This value is either 1 or 4.
     robustStorageBufferAccessSizeAlignment :: DeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceRobustness2PropertiesEXT" "robustUniformBufferAccessSizeAlignment"
+  , -- | @robustUniformBufferAccessSizeAlignment@ is the number of bytes that the
+    -- range of a uniform buffer descriptor is rounded up to when used for
+    -- bounds-checking when
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    -- is enabled. This value is a power of two in the range [1, 256].
     robustUniformBufferAccessSizeAlignment :: DeviceSize
   }
   deriving (Typeable)

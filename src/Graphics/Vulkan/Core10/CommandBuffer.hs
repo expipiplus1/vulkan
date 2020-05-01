@@ -139,15 +139,15 @@ foreign import ccall
 --     'CommandBufferAllocateInfo' structure
 --
 -- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
---     @pAllocateInfo@::commandBufferCount
+--     @pAllocateInfo->commandBufferCount@
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handles
 --
--- -   The value referenced by @pAllocateInfo@::@commandBufferCount@ /must/
+-- -   The value referenced by @pAllocateInfo->commandBufferCount@ /must/
 --     be greater than @0@
 --
 -- == Host Synchronization
 --
--- -   Host access to @pAllocateInfo@::commandPool /must/ be externally
+-- -   Host access to @pAllocateInfo->commandPool@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -404,7 +404,7 @@ foreign import ccall
 --     during the recording of @commandBuffer@ /must/ have been made
 --     inactive
 --
--- -   Conditional rendering must not be
+-- -   Conditional rendering /must/ not be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
 --
 -- -   If @commandBuffer@ is a secondary command buffer, there /must/ not

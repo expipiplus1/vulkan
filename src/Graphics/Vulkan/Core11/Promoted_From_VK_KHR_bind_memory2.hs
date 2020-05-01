@@ -146,6 +146,9 @@ foreign import ccall
 --     then all planes of 'BindImageMemoryInfo'::image /must/ be bound
 --     individually in separate @pBindInfos@
 --
+-- -   @pBindInfos@ /must/ not refer to the same image subresource more
+--     than once.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
@@ -251,8 +254,18 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   If @memory@ was created by a memory import operation, the external
---     handle type of the imported memory /must/ also have been set in
+-- -   If @memory@ was created by a memory import operation, that is not
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     with a non-@NULL@ @buffer@ value, the external handle type of the
+--     imported memory /must/ also have been set in
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
+--     when @buffer@ was created
+--
+-- -   If @memory@ was created with the
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     memory import operation with a non-@NULL@ @buffer@ value,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
@@ -523,7 +536,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     structure, the union of the areas of all elements of
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'::@pSplitInstanceBindRegions@
 --     that correspond to the same instance of @image@ /must/ cover the
---     entire image.
+--     entire image
 --
 -- -   If @image@ was created with a valid swapchain handle in
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'::@swapchain@,
@@ -548,8 +561,18 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
 --
--- -   If @memory@ was created by a memory import operation, the external
---     handle type of the imported memory /must/ also have been set in
+-- -   If @memory@ was created by a memory import operation, that is not
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     with a non-@NULL@ @buffer@ value, the external handle type of the
+--     imported memory /must/ also have been set in
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
+--     when @image@ was created
+--
+-- -   If @memory@ was created with the
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     memory import operation with a non-@NULL@ @buffer@ value,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
 --

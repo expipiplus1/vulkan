@@ -212,7 +212,7 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 -- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
 --     a valid handle of the type specified by @handleType@
 --
--- -   if @handle@ is not @NULL@, @name@ must be @NULL@
+-- -   if @handle@ is not @NULL@, @name@ /must/ be @NULL@
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in

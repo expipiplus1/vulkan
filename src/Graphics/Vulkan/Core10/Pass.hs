@@ -963,16 +963,20 @@ instance Zero AttachmentReference where
 -- 'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', writes to the
 -- corresponding location by a fragment are discarded.
 --
--- If @pResolveAttachments@ is not @NULL@, each of its elements corresponds
--- to a color attachment (the element in @pColorAttachments@ at the same
--- index), and a multisample resolve operation is defined for each
+-- If @flags@ does not include
+-- 'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+-- and if @pResolveAttachments@ is not @NULL@, each of its elements
+-- corresponds to a color attachment (the element in @pColorAttachments@ at
+-- the same index), and a multisample resolve operation is defined for each
 -- attachment. At the end of each subpass, multisample resolve operations
 -- read the subpass’s color attachments, and resolve the samples for each
 -- pixel within the render area to the same pixel location in the
 -- corresponding resolve attachments, unless the resolve attachment index
 -- is 'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'.
 --
--- Similarly, if
+-- Similarly, if @flags@ does not include
+-- 'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+-- and
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'::@pDepthStencilResolveAttachment@
 -- is not @NULL@ and does not have the value
 -- 'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', it corresponds
@@ -1024,6 +1028,15 @@ instance Zero AttachmentReference where
 --     a subpass dependency from __S1__ to __S__.
 --
 -- -   The attachment is not used or preserved in subpass __S__.
+--
+-- In addition, the contents of an attachment within the render area become
+-- undefined at the start of a subpass __S__ if all of the following
+-- conditions are true:
+--
+-- -   'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM'
+--     is set.
+--
+-- -   The attachment is used as a color or depth\/stencil in the subpass.
 --
 -- Once the contents of an attachment become undefined in subpass __S__,
 -- they remain undefined for subpasses in subpass dependency chains
@@ -1120,6 +1133,33 @@ instance Zero AttachmentReference where
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
 --     it /must/ also include
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     and if @pResolveAttachments@ is not @NULL@, then each resolve
+--     attachment /must/ be
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     and if @pDepthStencilResolveAttachmentKHR@ is not @NULL@, then the
+--     depth\/stencil resolve attachment /must/ be
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     then the subpass /must/ be the last subpass in a subpass dependency
+--     chain
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
+--     then the sample count of the input attachments /must/ equal
+--     @rasterizationSamples@
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
+--     and if @sampleShadingEnable@ is enabled (explicitly or implicitly)
+--     then @minSampleShading@ /must/ equal 0.0
 --
 -- -   If the render pass is created with
 --     'Graphics.Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM'
@@ -1607,7 +1647,7 @@ instance Zero SubpassDependency where
 --     to
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
 --     or
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'.
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   For any member of @pAttachments@ with a @loadOp@ equal to
 --     'Graphics.Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR',
@@ -1901,7 +1941,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --
 -- -   If @flags@ does not include
 --     'Graphics.Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
---     and @attachmentCount@ is not @0@, @pAttachments@ must be a valid
+--     and @attachmentCount@ is not @0@, @pAttachments@ /must/ be a valid
 --     pointer to an array of @attachmentCount@ valid
 --     'Graphics.Vulkan.Core10.Handles.ImageView' handles
 --

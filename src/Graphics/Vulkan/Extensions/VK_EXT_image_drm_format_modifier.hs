@@ -412,9 +412,9 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 --
 -- == Valid Usage
 --
--- -   Each /modifier/ in @pDrmFormatModifiers@ must be compatible with the
---     parameters in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' and its
---     @pNext@ chain, as determined by querying
+-- -   Each /modifier/ in @pDrmFormatModifiers@ /must/ be compatible with
+--     the parameters in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' and
+--     its @pNext@ chain, as determined by querying
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
 --     extended with 'PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
@@ -498,7 +498,7 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 --
 -- == Valid Usage
 --
--- -   @drmFormatModifier@ must be compatible with the parameters in
+-- -   @drmFormatModifier@ /must/ be compatible with the parameters in
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' and its @pNext@
 --     chain, as determined by querying
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'

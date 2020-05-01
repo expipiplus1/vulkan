@@ -68,7 +68,26 @@ foreign import ccall
 --     structure in which the memory requirements of the buffer object are
 --     returned.
 --
+-- == Valid Usage
+--
+-- -   If @buffer@ was created with the
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     external memory handle type, then @buffer@ /must/ be bound to
+--     memory.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
+--
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
+--
+-- -   @pMemoryRequirements@ /must/ be a valid pointer to a
+--     'MemoryRequirements' structure
+--
+-- -   @buffer@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
@@ -180,8 +199,18 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   If @memory@ was created by a memory import operation, the external
---     handle type of the imported memory /must/ also have been set in
+-- -   If @memory@ was created by a memory import operation, that is not
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     with a non-@NULL@ @buffer@ value, the external handle type of the
+--     imported memory /must/ also have been set in
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
+--     when @buffer@ was created
+--
+-- -   If @memory@ was created with the
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     memory import operation with a non-@NULL@ @buffer@ value,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
@@ -261,7 +290,29 @@ foreign import ccall
 --     structure in which the memory requirements of the image object are
 --     returned.
 --
+-- == Valid Usage
+--
+-- -   @image@ /must/ not have been created with the
+--     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
+--     flag set
+--
+-- -   If @image@ was created with the
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     external memory handle type, then @image@ /must/ be bound to memory.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
+--
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
+--
+-- -   @pMemoryRequirements@ /must/ be a valid pointer to a
+--     'MemoryRequirements' structure
+--
+-- -   @image@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
@@ -402,8 +453,18 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
 --
--- -   If @memory@ was created by a memory import operation, the external
---     handle type of the imported memory /must/ also have been set in
+-- -   If @memory@ was created by a memory import operation, that is not
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     with a non-@NULL@ @buffer@ value, the external handle type of the
+--     imported memory /must/ also have been set in
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
+--     when @image@ was created
+--
+-- -   If @memory@ was created with the
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     memory import operation with a non-@NULL@ @buffer@ value,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
 --

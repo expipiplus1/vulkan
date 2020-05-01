@@ -240,7 +240,7 @@ instance Zero MemoryDedicatedRequirements where
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     and the external handle was created by the Vulkan API, then the
 --     memory being imported /must/ also be a dedicated buffer allocation
---     and @buffer@ must be identical to the buffer associated with the
+--     and @buffer@ /must/ be identical to the buffer associated with the
 --     imported memory
 --
 -- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -248,7 +248,7 @@ instance Zero MemoryDedicatedRequirements where
 --     memory import operation with handle type
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     the memory being imported /must/ also be a dedicated image
---     allocation and @image@ must be identical to the image associated
+--     allocation and @image@ /must/ be identical to the image associated
 --     with the imported memory
 --
 -- -   If @buffer@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -256,7 +256,7 @@ instance Zero MemoryDedicatedRequirements where
 --     memory import operation with handle type
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     the memory being imported /must/ also be a dedicated buffer
---     allocation and @buffer@ must be identical to the buffer associated
+--     allocation and @buffer@ /must/ be identical to the buffer associated
 --     with the imported memory
 --
 -- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',

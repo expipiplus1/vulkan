@@ -175,7 +175,7 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pNameInfo.objectHandle@ /must/ be externally
+-- -   Host access to @pNameInfo->objectHandle@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -227,7 +227,7 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pTagInfo.objectHandle@ /must/ be externally
+-- -   Host access to @pTagInfo->objectHandle@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes

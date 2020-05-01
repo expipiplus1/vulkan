@@ -72,18 +72,17 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- 'ERROR_UNKNOWN' will be returned by an implementation when an unexpected
 -- error occurs that cannot be attributed to valid behavior of the
--- application and implementation.
+-- application and implementation. Under these conditions, it /may/ be
+-- returned from any command returning a 'Result'.
 --
 -- Note
 --
--- If 'ERROR_UNKNOWN' is received, the application should be checked
--- against the latest validation layers to verify correct behavior as much
--- as possible. If no issues are identified it could be an implementation
+-- 'ERROR_UNKNOWN' is not expected to ever be returned if the application
+-- behavior is valid, and if the implementation is bug-free. If
+-- 'ERROR_UNKNOWN' is received, the application should be checked against
+-- the latest validation layers to verify correct behavior as much as
+-- possible. If no issues are identified it could be an implementation
 -- issue, and the implementor should be contacted for support.
---
--- This error should not be expected from any command if application
--- behavior is valid, and if the implementation is bug-free, but it can be
--- returned by /any/ error returning command when that is not the case.
 --
 -- Performance-critical commands generally do not have return codes. If a
 -- run time error occurs in such commands, the implementation will defer

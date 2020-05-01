@@ -47,9 +47,7 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- -   'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' specifies that the pipeline
 --     to be created is allowed to be the parent of a pipeline that will be
---     created in a subsequent call to
---     'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines' or
---     'Graphics.Vulkan.Core10.Pipeline.createComputePipelines'.
+--     created in a subsequent pipeline creation call.
 --
 -- -   'PIPELINE_CREATE_DERIVATIVE_BIT' specifies that the pipeline to be
 --     created will be a child of a previously created parent pipeline.

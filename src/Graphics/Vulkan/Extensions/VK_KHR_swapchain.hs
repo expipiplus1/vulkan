@@ -253,10 +253,10 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pCreateInfo.surface@ /must/ be externally
+-- -   Host access to @pCreateInfo->surface@ /must/ be externally
 --     synchronized
 --
--- -   Host access to @pCreateInfo.oldSwapchain@ /must/ be externally
+-- -   Host access to @pCreateInfo->oldSwapchain@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -687,7 +687,7 @@ foreign import ccall
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ be semaphores that are signaled, or have
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     previously submitted for execution.
+--     previously submitted for execution
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ be created with a
@@ -738,9 +738,10 @@ foreign import ccall
 --
 -- However, if the presentation request is rejected by the presentation
 -- engine with an error
--- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR' or
--- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set of
--- queue operations are still considered to be enqueued and thus any
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR',
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT',
+-- or 'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set
+-- of queue operations are still considered to be enqueued and thus any
 -- semaphore wait operation specified in 'PresentInfoKHR' will execute when
 -- the corresponding queue operation is complete.
 --
@@ -763,10 +764,10 @@ foreign import ccall
 --
 -- -   Host access to @queue@ /must/ be externally synchronized
 --
--- -   Host access to @pPresentInfo.pWaitSemaphores@[] /must/ be externally
---     synchronized
+-- -   Host access to @pPresentInfo->pWaitSemaphores@[] /must/ be
+--     externally synchronized
 --
--- -   Host access to @pPresentInfo.pSwapchains@[] /must/ be externally
+-- -   Host access to @pPresentInfo->pSwapchains@[] /must/ be externally
 --     synchronized
 --
 -- == Command Properties

@@ -227,7 +227,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 -- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
 --     a valid handle of the type specified by @handleType@
 --
--- -   If @handle@ is not @NULL@, @name@ must be @NULL@
+-- -   If @handle@ is not @NULL@, @name@ /must/ be @NULL@
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in
@@ -244,7 +244,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     the
 --     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@flags@
 --     field /must/ match that of the semaphore from which @handle@ or
---     @name@ was exported.
+--     @name@ was exported
 --
 -- -   If @handleType@ is
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'

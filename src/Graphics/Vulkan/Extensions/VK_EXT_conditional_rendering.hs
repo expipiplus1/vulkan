@@ -174,12 +174,12 @@ foreign import ccall
 --
 -- -   If conditional rendering was made
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---     outside of a render pass instance, it must not be ended inside a
+--     outside of a render pass instance, it /must/ not be ended inside a
 --     render pass instance
 --
 -- -   If conditional rendering was made
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---     within a subpass it must be ended in the same subpass
+--     within a subpass it /must/ be ended in the same subpass
 --
 -- == Valid Usage (Implicit)
 --

@@ -458,7 +458,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
---     objects referenced by this command /must/ be bound to device memory.
+--     objects referenced by this command /must/ be bound to device memory
 --
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
@@ -648,7 +648,7 @@ foreign import ccall
 --     contain valid device addresses
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
---     objects referenced by this command /must/ be bound to device memory.
+--     objects referenced by this command /must/ be bound to device memory
 --
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
@@ -826,7 +826,7 @@ foreign import ccall
 --     contain valid device addresses
 --
 -- -   All 'Graphics.Vulkan.Extensions.Handles.AccelerationStructureKHR'
---     objects referenced by this command /must/ be bound to device memory.
+--     objects referenced by this command /must/ be bound to device memory
 --
 -- -   The
 --     'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR'
@@ -3697,7 +3697,7 @@ instance Zero AccelerationStructureMemoryRequirementsInfoKHR where
 --
 -- -   If @rayTracingShaderGroupHandleCaptureReplayMixed@ is
 --     'Graphics.Vulkan.Core10.BaseType.TRUE',
---     @rayTracingShaderGroupHandleCaptureReplay@ must also be
+--     @rayTracingShaderGroupHandleCaptureReplay@ /must/ also be
 --     'Graphics.Vulkan.Core10.BaseType.TRUE'
 --
 -- == Valid Usage (Implicit)
@@ -4764,12 +4764,15 @@ instance Zero AccelerationStructureCreateGeometryTypeInfoKHR where
 --
 -- -   If @compactedSize@ is not @0@ then @maxGeometryCount@ /must/ be @0@
 --
+-- -   If @compactedSize@ is @0@ then @maxGeometryCount@ /must/ not be @0@
+--
 -- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' then
 --     @maxGeometryCount@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxGeometryCount@
 --
--- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' then
---     @pGeometryInfos->maxPrimitiveCount@ /must/ be less than or equal to
+-- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' then the
+--     @maxPrimitiveCount@ member of each element of the @pGeometryInfos@
+--     array /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@maxInstanceCount@
 --
 -- -   The total number of triangles in all geometries /must/ be less than
@@ -4816,11 +4819,9 @@ instance Zero AccelerationStructureCreateGeometryTypeInfoKHR where
 -- -   @flags@ /must/ be a valid combination of
 --     'BuildAccelerationStructureFlagBitsKHR' values
 --
--- -   @pGeometryInfos@ /must/ be a valid pointer to an array of
---     @maxGeometryCount@ valid
+-- -   If @maxGeometryCount@ is not @0@, @pGeometryInfos@ /must/ be a valid
+--     pointer to an array of @maxGeometryCount@ valid
 --     'AccelerationStructureCreateGeometryTypeInfoKHR' structures
---
--- -   @maxGeometryCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -5383,7 +5384,7 @@ instance es ~ '[] => Zero (CopyAccelerationStructureInfoKHR es) where
 --
 -- -   The memory pointed to by @dst@ /must/ be at least as large as the
 --     serialization size of @src@, as reported by
---     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'.
+--     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
 -- -   [[VUID-{refpage}-mode-03412]] @mode@ /must/ be
 --     'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'

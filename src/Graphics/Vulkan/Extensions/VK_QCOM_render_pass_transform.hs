@@ -47,7 +47,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
 --     or
 --     'Graphics.Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
 --
--- -   The @renderpass@ must have been created with
+-- -   The @renderpass@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo'::@flags@
 --     containing
 --     'Graphics.Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM'

@@ -342,7 +342,7 @@ foreign import ccall
 --
 -- -   The array @pCustomSampleOrders@ /must/ not contain two structures
 --     with matching values for both the @shadingRate@ and @sampleCount@
---     members.
+--     members
 --
 -- == Valid Usage (Implicit)
 --

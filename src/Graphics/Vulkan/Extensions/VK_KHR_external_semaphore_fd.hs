@@ -206,7 +206,7 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 --     the
 --     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@flags@
 --     field /must/ match that of the semaphore from which @fd@ was
---     exported.
+--     exported
 --
 -- -   If @handleType@ is
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT',
@@ -345,7 +345,7 @@ instance Zero ImportSemaphoreFdInfoKHR where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     pending execution
 --
--- -   @handleType@ /must/ be defined as a POSIX file descriptor handle.
+-- -   @handleType@ /must/ be defined as a POSIX file descriptor handle
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @semaphore@ /must/ have been created with a

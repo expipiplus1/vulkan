@@ -56,6 +56,7 @@ type DeviceAddress = Word64
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackPropertiesEXT',
 -- 'Graphics.Vulkan.Core12.PhysicalDeviceVulkan11Properties',

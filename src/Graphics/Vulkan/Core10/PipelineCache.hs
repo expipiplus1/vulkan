@@ -100,9 +100,11 @@ foreign import ccall
 -- total host memory consumed.
 --
 -- Once created, a pipeline cache /can/ be passed to the
--- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines' and
--- 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines' commands. If
--- the pipeline cache passed into these commands is not
+-- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV',
+-- and 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines' commands.
+-- If the pipeline cache passed into these commands is not
 -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the implementation
 -- will query it for possible reuse opportunities and update it with new
 -- content. The use of the pipeline cache object in these commands is
@@ -118,9 +120,8 @@ foreign import ccall
 --
 -- Implementations /should/ make every effort to limit any critical
 -- sections to the actual accesses to the cache, which is expected to be
--- significantly shorter than the duration of the
--- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines' and
--- 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines' commands.
+-- significantly shorter than the duration of the @vkCreate*Pipelines@
+-- commands.
 --
 -- == Valid Usage (Implicit)
 --

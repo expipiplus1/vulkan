@@ -383,7 +383,7 @@ foreign import ccall
 --     @pBindInfo@ member referring to a binary semaphore /must/ be
 --     semaphores that are signaled, or have
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     previously submitted for execution.
+--     previously submitted for execution
 --
 -- -   All elements of the @pWaitSemaphores@ member of all elements of
 --     @pBindInfo@ created with a

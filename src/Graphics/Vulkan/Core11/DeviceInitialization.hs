@@ -41,6 +41,18 @@ foreign import ccall
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
 --
+-- = Description
+--
+-- Note
+--
+-- The intended behaviour of 'enumerateInstanceVersion' is that an
+-- implementation /should/ not need to perform memory allocations and
+-- /should/ unconditionally return
+-- 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'. The loader, and any
+-- enabled layers, /may/ return
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' in the
+-- case of a failed memory allocation.
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]

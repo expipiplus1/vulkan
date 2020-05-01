@@ -1460,7 +1460,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     @viewOffset@ /must/ be @0@
 --
 -- -   If @viewOffset@ is not @0@, @srcSubpass@ /must/ not be equal to
---     @dstSubpass@.
+--     @dstSubpass@
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>

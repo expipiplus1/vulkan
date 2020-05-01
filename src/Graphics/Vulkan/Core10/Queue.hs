@@ -534,7 +534,7 @@ deviceWaitIdle device = liftIO $ do
 --     'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   Each element of @pWaitDstStageMask@ /must/ not include
---     'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
 --
 -- -   If any element of @pWaitSemaphores@ or @pSignalSemaphores@ was
 --     created with a
