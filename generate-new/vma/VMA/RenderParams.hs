@@ -7,7 +7,6 @@ import           Relude                  hiding ( uncons
                                                 , Handle
                                                 )
 import qualified Data.HashSet                  as Set
-import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
 import qualified Data.Text                     as T
 import           Data.Text.Extra                ( lowerCaseFirst

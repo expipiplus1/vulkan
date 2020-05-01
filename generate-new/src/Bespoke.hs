@@ -527,16 +527,16 @@ bitfields = BespokeScheme $ \case
   peekBitfield name ty bitSize bitShift addr = do
     tyH     <- cToHsType DoNotPreserve ty
     base    <- storablePeek name addr (Ptr Const ty)
-    shifted <- case bitShift of
-      0 -> pure base
-      n -> stmt Nothing Nothing $ do
+    shifted <- if bitShift == 0
+      then pure base
+      else stmt Nothing Nothing $ do
         ValueDoc base <- use base
         tellImport 'shiftR
         pure . Pure InlineOnce . ValueDoc $ parens
           (base <+> "`shiftR`" <+> viaShow bitShift)
-    masked <- case bitSize of
-      32 -> pure shifted
-      n  -> stmt Nothing Nothing $ do
+    masked <- if bitSize == 32
+      then pure shifted
+      else stmt Nothing Nothing $ do
         ValueDoc shifted <- use shifted
         tellImport '(.&.)
         tellImport 'coerce
@@ -561,7 +561,7 @@ bitfields = BespokeScheme $ \case
       | otherwise -> error "bitfield slave type isn't a bitfield "
 
   bitfieldMaster :: Marshalable a => a -> (CName, Int) -> MarshalScheme a
-  bitfieldMaster master (slaveName, slaveBitSize) = case type' master of
+  bitfieldMaster master (slaveName, _slaveBitSize) = case type' master of
     Bitfield ty masterBitSize -> Custom CustomScheme
       { csName       = "bitfield master " <> unCName (name master)
       , csZero       = Just "zero"
