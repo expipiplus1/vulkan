@@ -8,11 +8,14 @@
 - For faster iteration documentation generation can be disabled by setting
   `doLoadDocs` to `False` in `vk/Main.hs`
 
-To generate the docs in Vulkan-Docs
+To generate the docs in Vulkan-Docs, note that this requires quite a recent
+nixpkgs with `he` and `escape-string-regexp`:
 
 ```bash
 cd Vulkan-Docs
-nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
+# Generating all the reference pages (which we need) is a side effect of
+# building man/apispec.txt, generated builds their dependencies.
+nix-shell -p python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp --run "./makeAllExts man/apispec.txt generated"
 ```
 
 ## The `vma` generator
