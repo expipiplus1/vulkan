@@ -8,9 +8,28 @@ For the vulkan instance and all physical devices it dumps layer and extension
 properties to stdout. It also prints features and properties for all physical
 devices.
 
+### `offscreen`
+
+This example:
+
+- Renders a triangle to an image
+- Copies the image contents to a CPU-mapped image
+- Writes that image to "triangle.png"
+
+It is a pretty minimal example of rendering something.
+
+The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
+used to ensure resources are deallocated.
+
+The [`autoapply` package](https://hackage.haskell.org/package/autoapply) is
+used to write the boilerplate of passing some global handles to vulkan
+functions.
+
 ### `sdl-triangle`
 
 This opens a window using SDL and renders a triangle.
+
+The `managed` package is used for ensuring resources are deallocated.
 
 You'll need to have `glslangValidator` in `$PATH` when compiling as shaders are
 built in a QuasiQuoter.
