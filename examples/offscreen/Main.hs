@@ -64,6 +64,12 @@ import           Graphics.VulkanMemoryAllocator
                                                 , withImage
                                                 )
 
+----------------------------------------------------------------
+-- Define the monad in which most of the program will run
+----------------------------------------------------------------
+
+-- | @V@ keeps track of a bunch of "global" handles and performs resource
+-- management.
 newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
   deriving newtype ( Functor
                    , Applicative
@@ -76,6 +82,17 @@ newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
                    , MonadResource
                    )
 
+runV
+  :: Instance
+  -> PhysicalDevice
+  -> Word32
+  -> Device
+  -> Allocator
+  -> V a
+  -> ResourceT IO a
+runV ghInstance ghPhysicalDevice ghGraphicsQueueFamilyIndex ghDevice ghAllocator
+  = flip runReaderT GlobalHandles { .. } . unV
+
 data GlobalHandles = GlobalHandles
   { ghInstance                 :: Instance
   , ghPhysicalDevice           :: PhysicalDevice
@@ -83,6 +100,8 @@ data GlobalHandles = GlobalHandles
   , ghAllocator                :: Allocator
   , ghGraphicsQueueFamilyIndex :: Word32
   }
+
+-- Getters for global handles
 
 getInstance :: V Instance
 getInstance = V (asks ghInstance)
@@ -102,17 +121,10 @@ getAllocator = V (asks ghAllocator)
 noAllocationCallbacks :: Maybe AllocationCallbacks
 noAllocationCallbacks = Nothing
 
-runV
-  :: Instance
-  -> PhysicalDevice
-  -> Word32
-  -> Device
-  -> Allocator
-  -> V a
-  -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghGraphicsQueueFamilyIndex ghDevice ghAllocator
-  = flip runReaderT GlobalHandles { .. } . unV
-
+--
+-- Wrap a bunch of Vulkan commands so that they automatically pull global
+-- handles from 'V'
+--
 autoapplyDecs
   id
   [ 'allocate
@@ -122,21 +134,21 @@ autoapplyDecs
   , 'getAllocator
   , 'noAllocationCallbacks
   ]
-  [ 'Vk.withInstance
-  , 'VMA.withImage
-  , 'Vk.withImageView
-  , 'Vk.withRenderPass
-  , 'Vk.withFramebuffer
-  , 'Vk.withCommandPool
-  , 'Vk.withCommandBuffers
-  , 'Vk.withPipelineLayout
-  , 'Vk.withGraphicsPipelines
-  , 'Vk.withShaderModule
-  , 'Vk.getDeviceQueue
+  [ 'VMA.withImage
+  , 'Vk.withInstance
   , 'Vk.deviceWaitIdle
-  , 'Vk.withFence
-  , 'Vk.waitForFences
+  , 'Vk.getDeviceQueue
   , 'Vk.getImageSubresourceLayout
+  , 'Vk.waitForFences
+  , 'Vk.withCommandBuffers
+  , 'Vk.withCommandPool
+  , 'Vk.withFence
+  , 'Vk.withFramebuffer
+  , 'Vk.withGraphicsPipelines
+  , 'Vk.withImageView
+  , 'Vk.withPipelineLayout
+  , 'Vk.withRenderPass
+  , 'Vk.withShaderModule
   ]
 
 ----------------------------------------------------------------
@@ -165,8 +177,10 @@ main = runResourceT $ do
     liftIO $ BSL.writeFile filename (JP.encodePng image)
     deviceWaitIdle
 
+-- | This function sets up everything necessary to render a triangle.
 render :: V (JP.Image JP.PixelRGBA8)
 render = do
+  -- Some things to reuse
   let imageFormat = FORMAT_R8G8B8A8_UNORM
       width       = 256
       height      = 256
@@ -189,6 +203,7 @@ render = do
     allocationCreateInfo = zero { flags = ALLOCATION_CREATE_MAPPED_BIT
                                 , usage = MEMORY_USAGE_GPU_ONLY
                                 }
+  -- Allocate the image with VMA
   (_, (image, _, _)) <- withImage imageCreateInfo allocationCreateInfo
 
   -- Create an image to read on the CPU
@@ -230,7 +245,7 @@ render = do
         }
   (_, imageView) <- withImageView imageViewCreateInfo
 
-  -- Create a renderpass
+  -- Create a renderpass with a single subpass
   let
     attachmentDescription :: AttachmentDescription
     attachmentDescription = zero
@@ -277,7 +292,7 @@ render = do
                                    }
   (_, framebuffer)    <- withFramebuffer framebufferCreateInfo
 
-  -- Create the rendering pipeline
+  -- Create the most vanilla rendering pipeline
   shaderStages        <- createShaders
   (_, pipelineLayout) <- withPipelineLayout zero
   let
@@ -352,6 +367,10 @@ render = do
   (_, [commandBuffer]) <- withCommandBuffers commandBufferAllocateInfo
 
   -- Fill command buffer
+  --
+  -- - Execute the renderpass
+  -- - Transition the images to be able to perform the copy
+  -- - Copy the image to CPU mapped memory
   useCommandBuffer bracket_
                    commandBuffer
                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
@@ -432,7 +451,7 @@ render = do
               }
           ]
 
-  -- Create a fence so we know when render is finished
+  -- Create a fence so we can know when render is finished
   (_, fence) <- withFence zero
 
   -- Submit the command buffer and wait for it to execute
@@ -460,8 +479,7 @@ render = do
       pixelAddr x y = plusPtr
         (mappedData cpuImageAllocationInfo)
         ( fromIntegral (offset (cpuImageLayout :: SubresourceLayout))
-        + fromIntegral (rowPitch cpuImageLayout)
-        * y
+        + (y * fromIntegral (rowPitch cpuImageLayout))
         + (x * sizeOf (0 :: Word32))
         )
   liftIO $ JP.withImage
@@ -495,7 +513,7 @@ createShaders = do
           vec2(0.5, 0.5),
           vec2(-0.5, 0.5)
         );
-vec3 colors[3] = vec3[](
+        vec3 colors[3] = vec3[](
           vec3(1.0, 1.0, 0.0),
           vec3(0.0, 1.0, 1.0),
           vec3(1.0, 0.0, 1.0)
@@ -550,8 +568,9 @@ createInstance = do
                             .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
         , pfnUserCallback = debugCallbackPtr
         }
-      ci :: InstanceCreateInfo '[DebugUtilsMessengerCreateInfoEXT]
-      ci =
+      instanceCreateInfo
+        :: InstanceCreateInfo '[DebugUtilsMessengerCreateInfoEXT]
+      instanceCreateInfo =
         zero
             { applicationInfo       = Just zero { applicationName = Nothing
                                                 , apiVersion      = myApiVersion
@@ -561,7 +580,7 @@ createInstance = do
             }
           ::& debugMessengerCreateInfo
           :&  ()
-  (_, inst) <- withInstance ci
+  (_, inst) <- withInstance instanceCreateInfo
   pure inst
 
 foreign import ccall unsafe "DebugCallback.c &debugCallback"
@@ -575,7 +594,7 @@ createDevice inst = do
   (pdi, phys) <- pickPhysicalDevice inst physicalDeviceInfo
   sayErr . ("Using device: " <>) =<< physicalDeviceName phys
 
-  let ci = zero
+  let deviceCreateInfo = zero
         { queueCreateInfos =
           [ SomeStruct zero { queueFamilyIndex = pdiGraphicsQueueFamilyIndex pdi
                             , queuePriorities  = [1]
@@ -583,7 +602,7 @@ createDevice inst = do
           ]
         }
 
-  (_, dev) <- withDevice allocate phys ci Nothing
+  (_, dev) <- withDevice allocate phys deviceCreateInfo Nothing
   pure (phys, pdi, dev)
 
 ----------------------------------------------------------------
