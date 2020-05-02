@@ -1,5 +1,5 @@
 name: vulkan
-version: 3.1.0.0
+version: 3.2.0.0
 synopsis: Bindings to the Vulkan graphics API.
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -7,11 +7,12 @@ github: expipiplus1/vulkan
 extra-source-files:
   - readme.md
   - changelog.md
-  - default.nix
 license: BSD-3-Clause
 
 library:
   source-dirs: src
+  verbatim:
+    other-modules:
   dependencies:
     - base < 4.14
     - bytestring

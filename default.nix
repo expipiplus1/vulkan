@@ -14,6 +14,7 @@ let
     vulkan-utils = ./utils;
     vulkan-examples = ./examples;
     VulkanMemoryAllocator = ./VulkanMemoryAllocator;
+  } // pkgs.lib.optionalAttrs (compiler == "ghc882") {
     generate-new = ./generate-new;
   };
 
@@ -34,7 +35,7 @@ let
             };
           };
           bytes = self.bytes_0_17;
-          autoapply = self.callCabal2nix "" ../autoapply {};
+          autoapply = self.callCabal2nix "" ../autoapply { };
 
           #
           # Generate
@@ -103,10 +104,13 @@ let
             # For the shell we don't want to have the compile the local dependency
             # for VMA
             vulkan-utils = null;
+            VulkanMemoryAllocator = null;
           });
-    in if name == "vulkan-examples" then
-      with pkgs.haskell.lib;
+    in with pkgs.haskell.lib;
+    if name == "vulkan-examples" then
       addExtraLibrary (addBuildTool drv pkgs.glslang) pkgs.vulkan-headers
+    else if name == "VulkanMemoryAllocator" then
+      addExtraLibrary drv pkgs.vulkan-headers
     else
       drv;
 

@@ -4,10 +4,10 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fc109393337417b26dde42b24f24903e58457fcc9e1132efcd35cf0786197260
+-- hash: 5232652a8c1dabb7eb375d6b33bec1545d620d5f9b9aab94a2a5e98ecec5fc90
 
 name:           VulkanMemoryAllocator
-version:        0.1.0.0
+version:        0.2.0.0
 synopsis:       Bindings to the VulkanMemoryAllocator library
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -58,7 +58,7 @@ library
     , bytestring
     , transformers
     , vector
-    , vulkan ==3.1.*
+    , vulkan ==3.2.*
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
   if flag(vma-ndebug)

@@ -1,7 +1,9 @@
 # Change Log
 
 ## WIP
-  - Update API version 1.2.135
+
+## [3.2.0.0] - 2020-05-02
+  - Update API version 1.2.139
   - Bracket functions now take as an argument a function to consume a pair of
     begin/end actions
   - Change `Either Word32 vec` to `vec` where the non-empty length is

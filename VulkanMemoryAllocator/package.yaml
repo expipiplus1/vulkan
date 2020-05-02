@@ -1,5 +1,5 @@
 name: VulkanMemoryAllocator
-version: 0.1.0.0
+version: 0.2.0.0
 synopsis: Bindings to the VulkanMemoryAllocator library
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -19,7 +19,7 @@ library:
     src/lib.cpp
   dependencies:
     - base < 4.14
-    - vulkan == 3.1.*
+    - vulkan == 3.2.*
     - bytestring
     - transformers
     - vector

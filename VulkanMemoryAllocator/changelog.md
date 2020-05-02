@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.2.0.0] - 2020-05-02
   - Bump VMA version to 2020-04-24
   - Bracket functions now take as an argument a function to consume a pair of
     begin/end actions

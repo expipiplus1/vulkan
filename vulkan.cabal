@@ -4,10 +4,10 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 67c6de37266ab013ec09b7a19a18aecf84ae11247ab1a8f7f7d19f4019cbd256
+-- hash: 09c9cb1a661d3ed562d3fbc971b9dbd0074bc080e9bb0830d0d25d2b13443e67
 
 name:           vulkan
-version:        3.1.0.0
+version:        3.2.0.0
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -19,7 +19,6 @@ build-type:     Simple
 extra-source-files:
     readme.md
     changelog.md
-    default.nix
 
 source-repository head
   type: git
@@ -454,8 +453,6 @@ library
       Graphics.Vulkan.NamedType
       Graphics.Vulkan.Version
       Graphics.Vulkan.Zero
-  other-modules:
-      Paths_vulkan
   hs-source-dirs:
       src
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
