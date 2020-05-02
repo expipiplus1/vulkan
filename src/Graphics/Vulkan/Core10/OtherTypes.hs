@@ -189,7 +189,7 @@ instance Zero MemoryBarrier where
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or a
 --     special queue family reserved for external memory ownership
 --     transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
 --
 -- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
@@ -204,7 +204,7 @@ instance Zero MemoryBarrier where
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
 --     /must/ be a valid queue family or a special queue family reserved
 --     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
 --
 -- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
@@ -212,7 +212,7 @@ instance Zero MemoryBarrier where
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
 --     /must/ be a valid queue family or a special queue family reserved
 --     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
 --
 -- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE',
@@ -441,14 +441,14 @@ instance Zero BufferMemoryBarrier where
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or a
 --     special queue family reserved for external memory transfers, as
 --     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
 --
 -- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     and @srcQueueFamilyIndex@ is
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED',
 --     @dstQueueFamilyIndex@ /must/ also be
---     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'.
+--     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
@@ -456,7 +456,7 @@ instance Zero BufferMemoryBarrier where
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
 --     /must/ be a valid queue family or a special queue family reserved
 --     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
 --
 -- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
@@ -464,7 +464,7 @@ instance Zero BufferMemoryBarrier where
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
 --     /must/ be a valid queue family or a special queue family reserved
 --     for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
 --
 -- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE',
@@ -514,8 +514,9 @@ instance Zero BufferMemoryBarrier where
 --     and
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If @image@ has a single-plane color format or is not /disjoint/,
---     then the @aspectMask@ member of @subresourceRange@ /must/ be
+-- -   If @image@ has a color format and either the format is single-plane
+--     or the image is not disjoint then the @aspectMask@ member of
+--     @subresourceRange@ /must/ only include
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   If @image@ has a multi-planar format and the image is /disjoint/,

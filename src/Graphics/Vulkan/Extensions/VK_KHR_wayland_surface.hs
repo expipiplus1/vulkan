@@ -204,9 +204,9 @@ getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex d
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
   { -- | @flags@ /must/ be @0@
     flags :: WaylandSurfaceCreateFlagsKHR
-  , -- | @display@ /must/ point to a valid Wayland @wl_display@.
+  , -- | @display@ /must/ point to a valid Wayland @wl_display@
     display :: Ptr Wl_display
-  , -- | @surface@ /must/ point to a valid Wayland @wl_surface@.
+  , -- | @surface@ /must/ point to a valid Wayland @wl_surface@
     surface :: Ptr Wl_surface
   }
   deriving (Typeable)

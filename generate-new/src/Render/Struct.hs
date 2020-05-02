@@ -4,7 +4,7 @@ module Render.Struct
   where
 
 import qualified Data.Map                      as Map
-import           Data.Text.Extra                ( upperCaseFirst )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import qualified Data.Vector.Extra             as V
 import           Polysemy
@@ -317,20 +317,21 @@ peekCStructBody MarshaledStruct {..} = do
       forbiddenNames = fromList []
   renderStmtsIO forbiddenNames $ do
     memberRefs <-
-      fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} ->
-        context (unCName $ smName msmStructMember) $ do
+      fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} -> do
 
-          hTy <- cToHsType DoPreserve (smType msmStructMember)
+        -- Safe to unBitfield here as we're making it into a pointer type
+        hPtrTy <- (ConT ''Ptr :@)
+          <$> cToHsType DoPreserve (unBitfield (smType msmStructMember))
 
-          fmap (isElided msmScheme, ) <$> do
+        fmap (isElided msmScheme, ) <$> do
 
-            addr <- stmt (Just (ConT ''Ptr :@ hTy)) Nothing $ do
-              tDoc <- renderType (ConT ''Ptr :@ hTy)
-              pure $ Pure InlineOnce (offset (smOffset msmStructMember) tDoc)
+          addr <- stmt (Just hPtrTy) Nothing $ do
+            tDoc <- renderType hPtrTy
+            pure $ Pure InlineOnce (offset (smOffset msmStructMember) tDoc)
 
-            p <- peekStmt msmStructMember addr msmScheme
-            for_ p (nameRef (unCName $ smName msmStructMember))
-            pure p
+          p <- peekStmt msmStructMember addr msmScheme
+          for_ p (nameRef (unCName $ smName msmStructMember))
+          pure p
 
 
     stmt Nothing Nothing $ do
@@ -349,12 +350,14 @@ pokeZeroCStructDecl
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
-pokeZeroCStructDecl ms@MarshaledStruct {..} = do
+pokeZeroCStructDecl ms@MarshaledStruct {..} = context "ZeroCStruct" $ do
   RenderParams {..} <- input
 
   let replaceWithZeroChainPoke m = case msmScheme m of
-        Custom s@(CustomScheme "Chain" _ _ _ _) ->
-          m { msmScheme = Custom s { csDirectPoke = const zeroNextPointer } }
+        Custom s@(CustomScheme "Chain" _ _ _ _ _) -> m
+          { msmScheme = Custom s { csDirectPoke = APoke $ const zeroNextPointer
+                                 }
+          }
         _ -> m
       ms' = ms { msMembers = replaceWithZeroChainPoke <$> msMembers }
   pokeDoc <- renderPokes zeroMemberVal (IOAction $ pretty contVar) ms' >>= \case
@@ -434,13 +437,15 @@ renderPokes memberDoc end MarshaledStruct {..} = do
             addr <-
               stmt
                 Nothing
-                (Just ("p" <> upperCaseFirst (unCName $ smName msmStructMember))
+                (Just
+                  ("p" <> T.upperCaseFirst (unCName $ smName msmStructMember))
                 )
               . fmap (Pure InlineOnce . AddrDoc)
               $ do
+                  -- Safe to unBitfield here as we're making it into a pointer
                   pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles
                     DoPreserve
-                    (smType msmStructMember)
+                    (unBitfield (smType msmStructMember))
                   tellImport 'plusPtr
                   pure $ parens
                     (   pretty addrVar
@@ -488,6 +493,7 @@ zeroMemberVal MarshaledStructMember {..} = case msmScheme of
   ElidedUnivalued _ ->
     pure $ Just "error \"This should never appear in the generated source\""
   _ | True V.:<| _ <- smIsOptional msmStructMember -> pure Nothing
+  Custom CustomScheme { csZeroIsZero = True } -> pure Nothing
   s -> zeroScheme s
 
 ----------------------------------------------------------------

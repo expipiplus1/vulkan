@@ -24,6 +24,7 @@ module Graphics.Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                         , GraphicsPipelineCreateInfo(..)
                                         ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -70,7 +71,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -101,6 +101,7 @@ import Graphics.Vulkan.Core10.Enums.Format (Format)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
 import Graphics.Vulkan.Core10.Enums.FrontFace (FrontFace)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_generated_commands (GraphicsPipelineShaderGroupsCreateInfoNV)
 import Graphics.Vulkan.Core10.Enums.LogicOp (LogicOp)
 import Graphics.Vulkan.CStruct.Extends (PeekChain)
 import Graphics.Vulkan.CStruct.Extends (PeekChain(..))
@@ -233,6 +234,19 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
 --
+-- -   If @pipelineCache@ was created with
+--     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
+--     host access to @pipelineCache@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
+--
+-- Note
+--
+-- An implicit cache may be provided by the implementation or a layer. For
+-- this reason, it is still valid to set
+-- 'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+-- on @flags@ for any element of @pCreateInfos@ while passing
+-- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' for @pipelineCache@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
@@ -265,6 +279,8 @@ foreign import ccall
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
+--     -   'Graphics.Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
@@ -279,7 +295,7 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'GraphicsPipelineCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-createGraphicsPipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("pipelines" ::: Vector Pipeline))
+createGraphicsPipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateGraphicsPipelines' = mkVkCreateGraphicsPipelines (pVkCreateGraphicsPipelines (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(GraphicsPipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 144) 8
@@ -291,9 +307,9 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
   r <- lift $ vkCreateGraphicsPipelines' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (pPCreateInfos) pAllocator (pPPipelines)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
-  pure $ (pPipelines)
+  pure $ (r, pPipelines)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createGraphicsPipelines' and 'destroyPipeline'
 --
 -- To ensure that 'destroyPipeline' is always called: pass
@@ -301,10 +317,10 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector Pipeline) -> ((Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
+withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
 withGraphicsPipelines b device pipelineCache pCreateInfos pAllocator =
   b (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
-    (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 
 
 foreign import ccall
@@ -355,6 +371,11 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
 --
+-- -   If @pipelineCache@ was created with
+--     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
+--     host access to @pipelineCache@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
@@ -387,6 +408,8 @@ foreign import ccall
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
+--     -   'Graphics.Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
@@ -401,7 +424,7 @@ foreign import ccall
 -- 'ComputePipelineCreateInfo', 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-createComputePipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("pipelines" ::: Vector Pipeline))
+createComputePipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateComputePipelines' = mkVkCreateComputePipelines (pVkCreateComputePipelines (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(ComputePipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 96) 8
@@ -413,9 +436,9 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
   r <- lift $ vkCreateComputePipelines' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (pPCreateInfos) pAllocator (pPPipelines)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
-  pure $ (pPipelines)
+  pure $ (r, pPipelines)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createComputePipelines' and 'destroyPipeline'
 --
 -- To ensure that 'destroyPipeline' is always called: pass
@@ -423,10 +446,10 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector Pipeline) -> ((Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
+withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
 withComputePipelines b device pipelineCache pCreateInfos pAllocator =
   b (createComputePipelines device pipelineCache pCreateInfos pAllocator)
-    (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 
 
 foreign import ccall
@@ -755,7 +778,7 @@ instance Zero SpecializationInfo where
 --     the identified entry point /must/ have an @OpExecutionMode@
 --     instruction that specifies a maximum output vertex count,
 --     @OutputVertices@, that is greater than @0@ and less than or equal to
---     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputVertices@.
+--     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputVertices@
 --
 -- -   If @stage@ is
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV',
@@ -763,26 +786,26 @@ instance Zero SpecializationInfo where
 --     instruction that specifies a maximum output primitive count,
 --     @OutputPrimitivesNV@, that is greater than @0@ and less than or
 --     equal to
---     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputPrimitives@.
+--     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputPrimitives@
 --
 -- -   If @flags@ has the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 --     flag set, the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- -   If @flags@ has the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
 --     flag set, the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-computeFullSubgroups computeFullSubgroups>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --     structure is included in the @pNext@ chain, @flags@ /must/ not have
 --     the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
---     flag set.
+--     flag set
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -790,7 +813,7 @@ instance Zero SpecializationInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroupSizeControl subgroupSizeControl>
 --     feature /must/ be enabled, and @stage@ /must/ be a valid bit
 --     specified in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages requiredSubgroupSizeStages>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages requiredSubgroupSizeStages>
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -800,7 +823,7 @@ instance Zero SpecializationInfo where
 --     to the product of
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'::@requiredSubgroupSize@
 --     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>
 --
 -- -   If a
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
@@ -808,7 +831,7 @@ instance Zero SpecializationInfo where
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
 --     flag set, the local workgroup size in the X dimension of the
 --     pipeline /must/ be a multiple of
---     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'::@requiredSubgroupSize@.
+--     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'::@requiredSubgroupSize@
 --
 -- -   If @flags@ has both the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
@@ -816,7 +839,7 @@ instance Zero SpecializationInfo where
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'
 --     flags set, the local workgroup size in the X dimension of the
 --     pipeline /must/ be a multiple of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
 --
 -- -   If @flags@ has the
 --     'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT'
@@ -826,7 +849,7 @@ instance Zero SpecializationInfo where
 --     'Graphics.Vulkan.Extensions.VK_EXT_subgroup_size_control.PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --     structure is included in the @pNext@ chain, the local workgroup size
 --     in the X dimension of the pipeline /must/ be a multiple of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>
 --
 -- == Valid Usage (Implicit)
 --
@@ -858,7 +881,9 @@ instance Zero SpecializationInfo where
 -- = See Also
 --
 -- 'ComputePipelineCreateInfo', 'GraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PipelineShaderStageCreateFlags',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Handles.ShaderModule',
 -- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits',
@@ -1001,6 +1026,37 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- -   The number of resources in @layout@ accessible to the compute shader
 --     stage /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageResources@
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1288,6 +1344,7 @@ instance Zero VertexInputAttributeDescription where
 -- = See Also
 --
 -- 'GraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags.PipelineVertexInputStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'VertexInputAttributeDescription', 'VertexInputBindingDescription'
@@ -1515,6 +1572,7 @@ instance Zero PipelineInputAssemblyStateCreateInfo where
 -- = See Also
 --
 -- 'GraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags.PipelineTessellationStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineTessellationStateCreateInfo (es :: [Type]) = PipelineTessellationStateCreateInfo
@@ -1756,9 +1814,8 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 --     'Graphics.Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL' or
 --     'Graphics.Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL_RECTANGLE_NV'
 --
--- -   If the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_NV_fill_rectangle@
---     extension is not enabled, @polygonMode@ /must/ not be
+-- -   If the @VK_NV_fill_rectangle@ extension is not enabled,
+--     @polygonMode@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL_RECTANGLE_NV'
 --
 -- == Valid Usage (Implicit)
@@ -2148,13 +2205,13 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
 --     is 'Graphics.Vulkan.Core10.BaseType.FALSE' and @colorBlendOp@ is an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>,
---     then @colorBlendOp@ /must/ be the same for all attachments.
+--     then @colorBlendOp@ /must/ be the same for all attachments
 --
 -- -   If
 --     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
 --     is 'Graphics.Vulkan.Core10.BaseType.FALSE' and @alphaBlendOp@ is an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>,
---     then @alphaBlendOp@ /must/ be the same for all attachments.
+--     then @alphaBlendOp@ /must/ be the same for all attachments
 --
 -- -   If
 --     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendAllOperations@
@@ -2416,7 +2473,7 @@ instance PokeChain es => ToCStruct (PipelineColorBlendStateCreateInfo es) where
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (attachments)) * 32) 4
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (attachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
-    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (blendConstants) of
       (e0, e1, e2, e3) -> do
         poke (pBlendConstants' :: Ptr CFloat) (CFloat (e0))
@@ -2435,7 +2492,7 @@ instance PokeChain es => ToCStruct (PipelineColorBlendStateCreateInfo es) where
     pPAttachments' <- ContT $ allocaBytesAligned @PipelineColorBlendAttachmentState ((Data.Vector.length (mempty)) * 32) 4
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
-    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case ((zero, zero, zero, zero)) of
       (e0, e1, e2, e3) -> do
         poke (pBlendConstants' :: Ptr CFloat) (CFloat (e0))
@@ -2454,7 +2511,7 @@ instance PeekChain es => FromCStruct (PipelineColorBlendStateCreateInfo es) wher
     attachmentCount <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     pAttachments <- peek @(Ptr PipelineColorBlendAttachmentState) ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState)))
     pAttachments' <- generateM (fromIntegral attachmentCount) (\i -> peekCStruct @PipelineColorBlendAttachmentState ((pAttachments `advancePtrBytes` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState)))
-    let pblendConstants = lowerArrayPtr @CFloat ((p `plusPtr` 40 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pblendConstants = lowerArrayPtr @CFloat ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     blendConstants0 <- peek @CFloat ((pblendConstants `advancePtrBytes` 0 :: Ptr CFloat))
     blendConstants1 <- peek @CFloat ((pblendConstants `advancePtrBytes` 4 :: Ptr CFloat))
     blendConstants2 <- peek @CFloat ((pblendConstants `advancePtrBytes` 8 :: Ptr CFloat))
@@ -2819,12 +2876,12 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
 --     or
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT').
+--     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT')
 --
 -- -   The @stage@ member of one element of @pStages@ /must/ be either
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'.
+--     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
 --
 -- -   The @stage@ member of each element of @pStages@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT'
@@ -2923,7 +2980,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Core10.BaseType.FALSE' if the attached image’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     does not contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'
 --
 -- -   If rasterization is not disabled and the subpass uses color
 --     attachments, the @attachmentCount@ member of @pColorBlendState@
@@ -2974,10 +3031,8 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', the @depthBiasClamp@ member
 --     of @pRasterizationState@ /must/ be @0.0@
 --
--- -   If the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
---     extension is not enabled and no element of the @pDynamicStates@
---     member of @pDynamicState@ is
+-- -   If the @VK_EXT_depth_range_unrestricted@ extension is not enabled
+--     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Graphics.Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS',
 --     and the @depthBoundsTestEnable@ member of @pDepthStencilState@ is
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', the @minDepthBounds@ and
@@ -3071,11 +3126,11 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   If the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask and @multiviewTessellationShader@
 --     is not enabled, then @pStages@ /must/ not include tessellation
---     shaders.
+--     shaders
 --
 -- -   If the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask and @multiviewGeometryShader@ is
---     not enabled, then @pStages@ /must/ not include a geometry shader.
+--     not enabled, then @pStages@ /must/ not include a geometry shader
 --
 -- -   If the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask, shaders in the pipeline /must/
@@ -3083,20 +3138,16 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   If the @renderPass@ has multiview enabled, then all shaders /must/
 --     not include variables decorated with the @Layer@ built-in decoration
---     in their interfaces.
+--     in their interfaces
 --
 -- -   @flags@ /must/ not contain the
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.PIPELINE_CREATE_DISPATCH_BASE'
---     flag.
+--     flag
 --
 -- -   If @pStages@ includes a fragment shader stage and an input
---     attachment was referenced by the
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.RenderPassInputAttachmentAspectCreateInfo'
---     at @renderPass@ create time, its shader code /must/ not read from
---     any aspect that was not specified in the @aspectMask@ of the
---     corresponding
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.InputAttachmentAspectReference'
---     structure.
+--     attachment was referenced by an @aspectMask@ at @renderPass@
+--     creation time, its shader code /must/ only read from the aspects
+--     that were specified for that input attachment
 --
 -- -   The number of resources in @layout@ accessible to each shader stage
 --     that is used by the pipeline /must/ be less than or equal to
@@ -3152,7 +3203,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     feature /must/ be enabled
 --
 -- -   If there are any mesh shader stages in the pipeline there /must/ not
---     be any shader stage in the pipeline with a @Xfb@ execution mode.
+--     be any shader stage in the pipeline with a @Xfb@ execution mode
 --
 -- -   If the @lineRasterizationMode@ member of a
 --     'Graphics.Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
@@ -3174,6 +3225,44 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Graphics.Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
 --     /must/ be in the range [1,256]
 --
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
+--
+-- -   @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     feature /must/ be enabled
+--
+-- -   If @flags@ includes
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
+--     then all stages /must/ not specify @Xfb@ execution mode
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -3182,6 +3271,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
+--     'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV',
 --     'Graphics.Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
 --     'Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT',
 --     'Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
@@ -3317,6 +3407,7 @@ instance Extensible GraphicsPipelineCreateInfo where
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
     | Just Refl <- eqT @e @PipelineRepresentativeFragmentTestStateCreateInfoNV = Just f
     | Just Refl <- eqT @e @PipelineDiscardRectangleStateCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @GraphicsPipelineShaderGroupsCreateInfoNV = Just f
     | otherwise = Nothing
 
 instance PokeChain es => ToCStruct (GraphicsPipelineCreateInfo es) where

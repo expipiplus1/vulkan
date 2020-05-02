@@ -49,7 +49,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- uncached memory in particular, repeated accesses to the same or
 -- neighbouring memory locations over a short time period (e.g. within a
 -- frame) may be slower than it would be for the equivalent cached memory
--- type. As such, it’s generally inadvisable to use device coherent or
+-- type. As such, it is generally inadvisable to use device coherent or
 -- device uncached memory except when really needed.
 --
 -- = See Also

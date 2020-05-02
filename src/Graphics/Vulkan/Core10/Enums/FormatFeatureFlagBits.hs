@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits  ( FormatFeatureFlagBi
                                                                                   , FORMAT_FEATURE_BLIT_DST_BIT
                                                                                   , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT
                                                                                   , FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
+                                                                                  , FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
                                                                                   , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
                                                                                   , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT
                                                                                   , FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
@@ -51,11 +52,10 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- The following bits /may/ be set in @linearTilingFeatures@,
 -- @optimalTilingFeatures@, and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierTilingFeatures>,
--- specifying that the features are supported by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImage images>
--- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageView image views>
+-- 'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierTilingFeatures@,
+-- specifying that the features are supported by <VkImage.html images> or
+-- <VkImageView.html image views> or
+-- <VkSamplerYcbcrConversion.html sampler Y′CBCR conversion objects>
 -- created with the queried
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'::@format@:
 --
@@ -209,11 +209,8 @@ import Graphics.Vulkan.Zero (Zero)
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
--- features are supported by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBuffer buffers>
--- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferView buffer views>
--- created with the queried
+-- features are supported by <VkBuffer.html buffers> or
+-- <VkBufferView.html buffer views> created with the queried
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceProperties'::@format@:
 --
 -- -   'FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT' specifies that the format
@@ -318,6 +315,8 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = FormatFeatureFlagBits 0
 -- view /can/ be used as a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT = FormatFeatureFlagBits 0x01000000
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"
+pattern FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = FormatFeatureFlagBits 0x20000000
 -- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG = FormatFeatureFlagBits 0x00002000
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT' specifies
@@ -415,6 +414,7 @@ instance Show FormatFeatureFlagBits where
     FORMAT_FEATURE_BLIT_DST_BIT -> showString "FORMAT_FEATURE_BLIT_DST_BIT"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
     FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT -> showString "FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT"
+    FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR -> showString "FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT"
     FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT -> showString "FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT"
@@ -443,6 +443,7 @@ instance Read FormatFeatureFlagBits where
                             , ("FORMAT_FEATURE_BLIT_DST_BIT", pure FORMAT_FEATURE_BLIT_DST_BIT)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)
                             , ("FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT", pure FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT)
+                            , ("FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR", pure FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT)
                             , ("FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT", pure FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT)

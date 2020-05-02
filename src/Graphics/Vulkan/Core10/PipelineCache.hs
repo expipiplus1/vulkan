@@ -53,7 +53,7 @@ import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
 import Graphics.Vulkan.Core10.Handles (PipelineCache)
 import Graphics.Vulkan.Core10.Handles (PipelineCache(..))
-import Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags (PipelineCacheCreateFlags)
+import Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits (PipelineCacheCreateFlags)
 import Graphics.Vulkan.Core10.Enums.Result (Result)
 import Graphics.Vulkan.Core10.Enums.Result (Result(..))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
@@ -100,22 +100,28 @@ foreign import ccall
 -- total host memory consumed.
 --
 -- Once created, a pipeline cache /can/ be passed to the
--- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines' and
--- 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines' commands. If
--- the pipeline cache passed into these commands is not
+-- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV',
+-- and 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines' commands.
+-- If the pipeline cache passed into these commands is not
 -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the implementation
 -- will query it for possible reuse opportunities and update it with new
 -- content. The use of the pipeline cache object in these commands is
 -- internally synchronized, and the same pipeline cache object /can/ be
 -- used in multiple threads simultaneously.
 --
+-- If @flags@ of @pCreateInfo@ includes
+-- 'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
+-- all commands that modify the returned pipeline cache object /must/ be
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+--
 -- Note
 --
 -- Implementations /should/ make every effort to limit any critical
 -- sections to the actual accesses to the cache, which is expected to be
--- significantly shorter than the duration of the
--- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines' and
--- 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines' commands.
+-- significantly shorter than the duration of the @vkCreate*Pipelines@
+-- commands.
 --
 -- == Valid Usage (Implicit)
 --
@@ -164,8 +170,8 @@ createPipelineCache device createInfo allocator = liftIO . evalContT $ do
   pPipelineCache <- lift $ peek @PipelineCache pPPipelineCache
   pure $ (pPipelineCache)
 
--- | A convenience wrapper to make a compatible pair of 'createPipelineCache'
--- and 'destroyPipelineCache'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createPipelineCache' and 'destroyPipelineCache'
 --
 -- To ensure that 'destroyPipelineCache' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -478,6 +484,11 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
 --     retrieved from a previous call to 'getPipelineCacheData'
 --
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -485,18 +496,22 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
+--     values
 --
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
 --     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.PipelineCacheCreateFlags',
+-- 'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlags',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPipelineCache'
 data PipelineCacheCreateInfo = PipelineCacheCreateInfo
-  { -- | @flags@ is reserved for future use.
+  { -- | @flags@ is a bitmask of
+    -- 'Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
+    -- specifying the behavior of the pipeline cache.
     flags :: PipelineCacheCreateFlags
   , -- | @initialDataSize@ is the number of bytes in @pInitialData@. If
     -- @initialDataSize@ is zero, the pipeline cache will initially be empty.

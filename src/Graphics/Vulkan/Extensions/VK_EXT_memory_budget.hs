@@ -6,6 +6,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_memory_budget  ( PhysicalDeviceMemoryBu
                                                         , pattern EXT_MEMORY_BUDGET_EXTENSION_NAME
                                                         ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad (unless)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
@@ -25,7 +26,6 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.Core10.BaseType (DeviceSize)
@@ -86,10 +86,10 @@ instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     unless ((Data.Vector.length $ (heapBudget)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "heapBudget is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (heapBudget)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (heapBudget)
     unless ((Data.Vector.length $ (heapUsage)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "heapUsage is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 144 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (heapUsage)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 144 :: Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (heapUsage)
     f
   cStructSize = 272
   cStructAlignment = 8
@@ -98,16 +98,16 @@ instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "heapBudget is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (mempty)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (mempty)
     unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "heapUsage is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 144 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (mempty)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 144 :: Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)))) `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (mempty)
     f
 
 instance FromCStruct PhysicalDeviceMemoryBudgetPropertiesEXT where
   peekCStruct p = do
-    heapBudget <- generateM (MAX_MEMORY_HEAPS) (\i -> peek @DeviceSize (((lowerArrayPtr @DeviceSize ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS DeviceSize)))) `advancePtrBytes` (8 * (i)) :: Ptr DeviceSize)))
-    heapUsage <- generateM (MAX_MEMORY_HEAPS) (\i -> peek @DeviceSize (((lowerArrayPtr @DeviceSize ((p `plusPtr` 144 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS DeviceSize)))) `advancePtrBytes` (8 * (i)) :: Ptr DeviceSize)))
+    heapBudget <- generateM (MAX_MEMORY_HEAPS) (\i -> peek @DeviceSize (((lowerArrayPtr @DeviceSize ((p `plusPtr` 16 :: Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)))) `advancePtrBytes` (8 * (i)) :: Ptr DeviceSize)))
+    heapUsage <- generateM (MAX_MEMORY_HEAPS) (\i -> peek @DeviceSize (((lowerArrayPtr @DeviceSize ((p `plusPtr` 144 :: Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)))) `advancePtrBytes` (8 * (i)) :: Ptr DeviceSize)))
     pure $ PhysicalDeviceMemoryBudgetPropertiesEXT
              heapBudget heapUsage
 

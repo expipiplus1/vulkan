@@ -23,7 +23,6 @@ library:
     - bytestring
     - transformers
     - vector
-    - vector-sized
   when:
     - condition: flag(safe-foreign-calls)
       cpp-options: -DSAFE_FOREIGN_CALLS

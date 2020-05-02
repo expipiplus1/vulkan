@@ -8,9 +8,10 @@ module Graphics.Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerfor
                                                               , releasePerformanceConfigurationINTEL
                                                               , queueSetPerformanceConfigurationINTEL
                                                               , getPerformanceParameterINTEL
+                                                              , pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL
                                                               , PerformanceValueINTEL(..)
                                                               , InitializePerformanceApiInfoINTEL(..)
-                                                              , QueryPoolCreateInfoINTEL(..)
+                                                              , QueryPoolPerformanceQueryCreateInfoINTEL(..)
                                                               , PerformanceMarkerInfoINTEL(..)
                                                               , PerformanceStreamMarkerInfoINTEL(..)
                                                               , PerformanceOverrideInfoINTEL(..)
@@ -38,6 +39,7 @@ module Graphics.Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerfor
                                                                                          , PERFORMANCE_VALUE_TYPE_STRING_INTEL
                                                                                          , ..
                                                                                          )
+                                                              , QueryPoolCreateInfoINTEL
                                                               , INTEL_PERFORMANCE_QUERY_SPEC_VERSION
                                                               , pattern INTEL_PERFORMANCE_QUERY_SPEC_VERSION
                                                               , INTEL_PERFORMANCE_QUERY_EXTENSION_NAME
@@ -128,7 +130,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL))
-import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL))
 import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Graphics.Vulkan.Extensions.Handles (PerformanceConfigurationINTEL(..))
 foreign import ccall
@@ -355,7 +357,7 @@ foreign import ccall
 --
 -- -   @pOverrideInfo@ /must/ not be used with a
 --     'PerformanceOverrideTypeINTEL' that is not reported available by
---     'getPerformanceParameterINTEL'.
+--     'getPerformanceParameterINTEL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -610,6 +612,10 @@ getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
   pure $ (pValue)
 
 
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL"
+pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL
+
+
 -- | VkPerformanceValueINTEL - Container for value and types of parameters
 -- that can be queried
 --
@@ -701,16 +707,17 @@ instance Zero InitializePerformanceApiInfoINTEL where
            zero
 
 
--- | VkQueryPoolCreateInfoINTEL - Structure specifying parameters to create a
--- pool of performance queries
+-- | VkQueryPoolPerformanceQueryCreateInfoINTEL - Structure specifying
+-- parameters to create a pool of performance queries
 --
 -- = Members
 --
 -- To create a pool for Intel performance queries, set
 -- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo'::@queryType@ to
 -- 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_INTEL'
--- and add a 'QueryPoolCreateInfoINTEL' structure to the @pNext@ chain of
--- the 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo' structure.
+-- and add a 'QueryPoolPerformanceQueryCreateInfoINTEL' structure to the
+-- @pNext@ chain of the 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo'
+-- structure.
 --
 -- == Valid Usage (Implicit)
 --
@@ -718,42 +725,42 @@ instance Zero InitializePerformanceApiInfoINTEL where
 --
 -- 'QueryPoolSamplingModeINTEL',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
-data QueryPoolCreateInfoINTEL = QueryPoolCreateInfoINTEL
+data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateInfoINTEL
   { -- | @performanceCountersSampling@ /must/ be a valid
     -- 'QueryPoolSamplingModeINTEL' value
     performanceCountersSampling :: QueryPoolSamplingModeINTEL }
   deriving (Typeable)
-deriving instance Show QueryPoolCreateInfoINTEL
+deriving instance Show QueryPoolPerformanceQueryCreateInfoINTEL
 
-instance ToCStruct QueryPoolCreateInfoINTEL where
+instance ToCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p QueryPoolCreateInfoINTEL{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL)
+  pokeCStruct p QueryPoolPerformanceQueryCreateInfoINTEL{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr QueryPoolSamplingModeINTEL)) (performanceCountersSampling)
     f
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL)
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr QueryPoolSamplingModeINTEL)) (zero)
     f
 
-instance FromCStruct QueryPoolCreateInfoINTEL where
+instance FromCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
   peekCStruct p = do
     performanceCountersSampling <- peek @QueryPoolSamplingModeINTEL ((p `plusPtr` 16 :: Ptr QueryPoolSamplingModeINTEL))
-    pure $ QueryPoolCreateInfoINTEL
+    pure $ QueryPoolPerformanceQueryCreateInfoINTEL
              performanceCountersSampling
 
-instance Storable QueryPoolCreateInfoINTEL where
+instance Storable QueryPoolPerformanceQueryCreateInfoINTEL where
   sizeOf ~_ = 24
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero QueryPoolCreateInfoINTEL where
-  zero = QueryPoolCreateInfoINTEL
+instance Zero QueryPoolPerformanceQueryCreateInfoINTEL where
+  zero = QueryPoolPerformanceQueryCreateInfoINTEL
            zero
 
 
@@ -811,7 +818,7 @@ instance Zero PerformanceMarkerInfoINTEL where
 --
 -- -   The value written by the application into @marker@ /must/ only used
 --     the valid bits as reported by 'getPerformanceParameterINTEL' with
---     the 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL'.
+--     the 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1043,7 +1050,7 @@ instance Read PerformanceConfigurationTypeINTEL where
 --
 -- = See Also
 --
--- 'QueryPoolCreateInfoINTEL'
+-- 'QueryPoolPerformanceQueryCreateInfoINTEL'
 newtype QueryPoolSamplingModeINTEL = QueryPoolSamplingModeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -1183,11 +1190,15 @@ instance Read PerformanceValueTypeINTEL where
                        pure (PerformanceValueTypeINTEL v)))
 
 
-type INTEL_PERFORMANCE_QUERY_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VkQueryPoolCreateInfoINTEL"
+type QueryPoolCreateInfoINTEL = QueryPoolPerformanceQueryCreateInfoINTEL
+
+
+type INTEL_PERFORMANCE_QUERY_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_INTEL_PERFORMANCE_QUERY_SPEC_VERSION"
 pattern INTEL_PERFORMANCE_QUERY_SPEC_VERSION :: forall a . Integral a => a
-pattern INTEL_PERFORMANCE_QUERY_SPEC_VERSION = 1
+pattern INTEL_PERFORMANCE_QUERY_SPEC_VERSION = 2
 
 
 type INTEL_PERFORMANCE_QUERY_EXTENSION_NAME = "VK_INTEL_performance_query"

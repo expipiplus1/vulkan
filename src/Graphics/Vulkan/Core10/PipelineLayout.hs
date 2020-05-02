@@ -127,7 +127,7 @@ createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
   pPipelineLayout <- lift $ peek @PipelineLayout pPPipelineLayout
   pure $ (pPipelineLayout)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createPipelineLayout' and 'destroyPipelineLayout'
 --
 -- To ensure that 'destroyPipelineLayout' is always called: pass
@@ -563,10 +563,10 @@ instance Zero PushConstantRange where
 --     set
 --
 -- -   The total number of bindings with a @descriptorType@ of
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV'
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV'::@maxDescriptorSetAccelerationStructures@
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxDescriptorSetAccelerationStructures@
 --
 -- == Valid Usage (Implicit)
 --

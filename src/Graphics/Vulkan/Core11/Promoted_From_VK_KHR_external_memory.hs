@@ -152,7 +152,7 @@ instance Zero ExternalMemoryBufferCreateInfo where
 --     reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
 -- == Valid Usage (Implicit)
 --

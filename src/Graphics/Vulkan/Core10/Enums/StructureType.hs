@@ -48,10 +48,24 @@ module Graphics.Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYP
                                                                  , STRUCTURE_TYPE_MEMORY_BARRIER
                                                                  , STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO
                                                                  , STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
+                                                                 , STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT
+                                                                 , STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT
                                                                  , STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM
                                                                  , STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV
+                                                                 , STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV
+                                                                 , STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV
+                                                                 , STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV
+                                                                 , STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV
+                                                                 , STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV
+                                                                 , STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT
                                                                  , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR
                                                                  , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR
@@ -59,6 +73,7 @@ module Graphics.Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYP
                                                                  , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR
                                                                  , STRUCTURE_TYPE_PIPELINE_INFO_KHR
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR
+                                                                 , STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT
                                                                  , STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT
@@ -102,7 +117,7 @@ module Graphics.Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYP
                                                                  , STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL
                                                                  , STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL
                                                                  , STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL
-                                                                 , STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL
+                                                                 , STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL
                                                                  , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
                                                                  , STRUCTURE_TYPE_CHECKPOINT_DATA_NV
@@ -135,8 +150,6 @@ module Graphics.Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYP
                                                                  , STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV
                                                                  , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV
-                                                                 , STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV
-                                                                 , STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV
                                                                  , STRUCTURE_TYPE_GEOMETRY_AABB_NV
                                                                  , STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV
                                                                  , STRUCTURE_TYPE_GEOMETRY_NV
@@ -157,6 +170,26 @@ module Graphics.Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYP
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV
                                                                  , STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV
+                                                                 , STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR
+                                                                 , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR
+                                                                 , STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR
+                                                                 , STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR
+                                                                 , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR
+                                                                 , STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR
+                                                                 , STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR
                                                                  , STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV
                                                                  , STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT
@@ -220,12 +253,6 @@ module Graphics.Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYP
                                                                  , STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT
                                                                  , STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT
                                                                  , STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV
-                                                                 , STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX
-                                                                 , STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX
-                                                                 , STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX
-                                                                 , STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX
-                                                                 , STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX
-                                                                 , STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX
                                                                  , STRUCTURE_TYPE_PRESENT_REGIONS_KHR
                                                                  , STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT
@@ -264,6 +291,7 @@ module Graphics.Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYP
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
                                                                  , STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
                                                                  , STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD
+                                                                 , STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX
                                                                  , STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
                                                                  , STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT
                                                                  , STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT
@@ -418,7 +446,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Graphics.Vulkan.Zero (Zero)
--- | VkStructureType - Vulkan structure types (@stype@)
+-- | VkStructureType - Vulkan structure types (@sType@)
 --
 -- = Description
 --
@@ -439,9 +467,19 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureBuildGeometryInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateGeometryTypeInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureDeviceAddressInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryAabbsDataKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryInstancesDataKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureGeometryTrianglesDataKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureMemoryRequirementsInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureVersionKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.AcquireProfilingLockInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
@@ -455,7 +493,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout',
 -- 'Graphics.Vulkan.CStruct.Extends.BaseInStructure',
 -- 'Graphics.Vulkan.CStruct.Extends.BaseOutStructure',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.BindAccelerationStructureMemoryInfoKHR',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo',
@@ -472,8 +510,6 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps.CalibratedTimestampInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.CheckpointDataNV',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdProcessCommandsInfoNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdReserveSpaceForCommandsInfoNVX',
 -- 'Graphics.Vulkan.Core10.CommandBuffer.CommandBufferAllocateInfo',
 -- 'Graphics.Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
@@ -483,7 +519,10 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix.CooperativeMatrixPropertiesNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureToMemoryInfoKHR',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.CopyDescriptorSet',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyMemoryToAccelerationStructureInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32.D3D12FenceSubmitInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerMarkerInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectNameInfoEXT',
@@ -497,6 +536,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfoEXT',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
@@ -507,9 +547,8 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountLayoutSupport',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
 -- 'Graphics.Vulkan.Core10.Device.DeviceCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config.DeviceDiagnosticsConfigCreateInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.DeviceEventInfoEXT',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.DeviceGeneratedCommandsFeaturesNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.DeviceGeneratedCommandsLimitsNVX',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupBindSparseInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupCommandBufferBeginInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
@@ -561,10 +600,14 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo',
 -- 'Graphics.Vulkan.Core10.Pass.FramebufferCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_NV_coverage_reduction_mode.FramebufferMixedSamplesCombinationNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryAABBNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata.HdrMetadataEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_headless_surface.HeadlessSurfaceCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_MVK_ios_surface.IOSSurfaceCreateInfoMVK',
@@ -582,6 +625,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX',
 -- 'Graphics.Vulkan.Core10.ImageView.ImageViewCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
@@ -594,7 +638,8 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd.ImportSemaphoreFdInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32.ImportSemaphoreWin32HandleInfoKHR',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.IndirectCommandsLayoutCreateInfoNVX',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutTokenNV',
 -- 'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.InitializePerformanceApiInfoINTEL',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.InstanceCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_MVK_macos_surface.MacOSSurfaceCreateInfoMVK',
@@ -615,7 +660,6 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryWin32HandlePropertiesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_metal_surface.MetalSurfaceCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.ObjectTableCreateInfoNVX',
 -- 'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.PerformanceConfigurationAcquireInfoINTEL',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterDescriptionKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterKHR',
@@ -643,6 +687,9 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsPropertiesNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config.PhysicalDeviceDiagnosticsConfigFeaturesNV',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles.PhysicalDeviceDiscardRectanglePropertiesEXT',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
 -- 'Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive.PhysicalDeviceExclusiveScissorFeaturesNV',
@@ -681,14 +728,19 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info.PhysicalDevicePCIBusInfoPropertiesEXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeaturesEXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
 -- 'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
 -- 'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingFeaturesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
@@ -749,6 +801,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PipelineInfoKHR',
 -- 'Graphics.Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR',
 -- 'Graphics.Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT',
@@ -776,11 +829,14 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE',
 -- 'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo',
 -- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo',
--- 'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolCreateInfoINTEL',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
 -- 'Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.QueueFamilyCheckpointPropertiesNV',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingPipelineInterfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.RayTracingShaderGroupCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.RayTracingShaderGroupCreateInfoNV',
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
@@ -836,7 +892,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- 'Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex.Win32KeyedMutexAcquireReleaseInfoNV',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_win32_surface.Win32SurfaceCreateInfoKHR',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_xcb_surface.XcbSurfaceCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_xlib_surface.XlibSurfaceCreateInfoKHR'
@@ -941,6 +997,18 @@ pattern STRUCTURE_TYPE_MEMORY_BARRIER = StructureType 46
 pattern STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = StructureType 47
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO"
 pattern STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = StructureType 48
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV = StructureType 1000300001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV = StructureType 1000300000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT = StructureType 1000297000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR = StructureType 1000290000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT = StructureType 1000286001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT = StructureType 1000286000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM"
 pattern STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM = StructureType 1000282001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM"
@@ -949,6 +1017,22 @@ pattern STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCO
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT = StructureType 1000281001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT = StructureType 1000281000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV = StructureType 1000277007
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV"
+pattern STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV = StructureType 1000277006
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV"
+pattern STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV = StructureType 1000277005
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV = StructureType 1000277004
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV"
+pattern STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV = StructureType 1000277003
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV = StructureType 1000277002
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV"
+pattern STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV = StructureType 1000277001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV = StructureType 1000277000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT = StructureType 1000276000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR"
@@ -963,6 +1047,8 @@ pattern STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR = StructureType 100026
 pattern STRUCTURE_TYPE_PIPELINE_INFO_KHR = StructureType 1000269001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR = StructureType 1000269000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR"
+pattern STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR = StructureType 1000268000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT = StructureType 1000265000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT"
@@ -1049,8 +1135,8 @@ pattern STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL = StructureType 1000
 pattern STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL = StructureType 1000210002
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL"
 pattern STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL = StructureType 1000210001
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL"
-pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = StructureType 1000210000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL"
+pattern STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL = StructureType 1000210000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL = StructureType 1000209000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV"
@@ -1115,10 +1201,6 @@ pattern STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV = StructureType 1
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV = StructureType 1000165009
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV"
 pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV = StructureType 1000165008
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV"
-pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV = StructureType 1000165007
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV"
-pattern STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV = StructureType 1000165006
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV"
 pattern STRUCTURE_TYPE_GEOMETRY_AABB_NV = StructureType 1000165005
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV"
@@ -1159,6 +1241,46 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV = Struct
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV = StructureType 1000154000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV"
 pattern STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV = StructureType 1000152000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR = StructureType 1000150018
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR = StructureType 1000150017
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR = StructureType 1000150016
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR = StructureType 1000150015
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR = StructureType 1000150014
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR = StructureType 1000150013
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR"
+pattern STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR = StructureType 1000150012
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR"
+pattern STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR = StructureType 1000150011
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR"
+pattern STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR = StructureType 1000150010
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR = StructureType 1000150009
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR = StructureType 1000150008
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR = StructureType 1000150006
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR = StructureType 1000150005
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR = StructureType 1000150004
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR = StructureType 1000150003
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR = StructureType 1000150002
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR = StructureType 1000150001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR = StructureType 1000150000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR"
+pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR = StructureType 1000165007
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR"
+pattern STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR = StructureType 1000165006
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV"
 pattern STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV = StructureType 1000149000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT"
@@ -1285,18 +1407,6 @@ pattern STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT = StructureType 1000091000
 pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT = StructureType 1000090000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV"
 pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV = StructureType 1000087000
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX"
-pattern STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX = StructureType 1000086005
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX"
-pattern STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX = StructureType 1000086004
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX"
-pattern STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX = StructureType 1000086003
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX"
-pattern STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX = StructureType 1000086002
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX"
-pattern STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX = StructureType 1000086001
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX"
-pattern STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX = StructureType 1000086000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR"
 pattern STRUCTURE_TYPE_PRESENT_REGIONS_KHR = StructureType 1000084000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT"
@@ -1373,6 +1483,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV = Struct
 pattern STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP = StructureType 1000049000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD"
 pattern STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD = StructureType 1000041000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX"
+pattern STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX = StructureType 1000030001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX"
 pattern STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX = StructureType 1000030000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT"
@@ -1696,10 +1808,24 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
              STRUCTURE_TYPE_MEMORY_BARRIER,
              STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO,
              STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO,
+             STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT,
+             STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT,
              STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM,
              STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV,
+             STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV,
+             STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV,
+             STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV,
+             STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV,
+             STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV,
+             STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT,
              STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR,
              STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR,
@@ -1707,6 +1833,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
              STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR,
              STRUCTURE_TYPE_PIPELINE_INFO_KHR,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR,
+             STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT,
              STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT,
@@ -1750,7 +1877,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
              STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL,
              STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL,
              STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL,
-             STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL,
+             STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL,
              STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV,
              STRUCTURE_TYPE_CHECKPOINT_DATA_NV,
@@ -1783,8 +1910,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
              STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV,
              STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV,
-             STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV,
-             STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV,
              STRUCTURE_TYPE_GEOMETRY_AABB_NV,
              STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV,
              STRUCTURE_TYPE_GEOMETRY_NV,
@@ -1805,6 +1930,26 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
              STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV,
              STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV,
+             STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR,
+             STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR,
+             STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR,
+             STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR,
+             STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR,
+             STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR,
+             STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR,
+             STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR,
+             STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR,
              STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV,
              STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT,
@@ -1868,12 +2013,6 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
              STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT,
              STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT,
              STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV,
-             STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX,
-             STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX,
-             STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX,
-             STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX,
-             STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX,
-             STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX,
              STRUCTURE_TYPE_PRESENT_REGIONS_KHR,
              STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT,
@@ -1912,6 +2051,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
              STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV,
              STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP,
              STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD,
+             STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX,
              STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX,
              STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT,
@@ -2101,10 +2241,24 @@ instance Show StructureType where
     STRUCTURE_TYPE_MEMORY_BARRIER -> showString "STRUCTURE_TYPE_MEMORY_BARRIER"
     STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO -> showString "STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO"
     STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO -> showString "STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO"
+    STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT"
+    STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR -> showString "STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT"
     STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM -> showString "STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM"
     STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM -> showString "STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV"
+    STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV -> showString "STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV"
+    STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV -> showString "STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV"
+    STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV"
+    STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV -> showString "STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV"
+    STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV"
+    STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT"
     STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR -> showString "STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR"
     STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR -> showString "STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR"
@@ -2112,6 +2266,7 @@ instance Show StructureType where
     STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR -> showString "STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR"
     STRUCTURE_TYPE_PIPELINE_INFO_KHR -> showString "STRUCTURE_TYPE_PIPELINE_INFO_KHR"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR"
+    STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR -> showString "STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT"
     STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT -> showString "STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT"
@@ -2155,7 +2310,7 @@ instance Show StructureType where
     STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL -> showString "STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL"
     STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL -> showString "STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL"
     STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL -> showString "STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL"
-    STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL -> showString "STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL"
+    STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL -> showString "STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL"
     STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV -> showString "STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV"
     STRUCTURE_TYPE_CHECKPOINT_DATA_NV -> showString "STRUCTURE_TYPE_CHECKPOINT_DATA_NV"
@@ -2188,8 +2343,6 @@ instance Show StructureType where
     STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV"
     STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV"
-    STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV -> showString "STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV"
-    STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV -> showString "STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV"
     STRUCTURE_TYPE_GEOMETRY_AABB_NV -> showString "STRUCTURE_TYPE_GEOMETRY_AABB_NV"
     STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV -> showString "STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV"
     STRUCTURE_TYPE_GEOMETRY_NV -> showString "STRUCTURE_TYPE_GEOMETRY_NV"
@@ -2210,6 +2363,26 @@ instance Show StructureType where
     STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV"
     STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV"
+    STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR -> showString "STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR"
+    STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR -> showString "STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR"
+    STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR -> showString "STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR"
+    STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR"
+    STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR -> showString "STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR"
+    STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR -> showString "STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR"
+    STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR -> showString "STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR"
+    STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR -> showString "STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR"
+    STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR -> showString "STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR"
+    STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR -> showString "STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR"
     STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV"
     STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT -> showString "STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT"
@@ -2273,12 +2446,6 @@ instance Show StructureType where
     STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT -> showString "STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT"
     STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT -> showString "STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT"
     STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV -> showString "STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV"
-    STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX -> showString "STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX"
-    STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX -> showString "STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX"
-    STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX -> showString "STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX"
-    STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX -> showString "STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX"
-    STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX -> showString "STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX"
-    STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX -> showString "STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX"
     STRUCTURE_TYPE_PRESENT_REGIONS_KHR -> showString "STRUCTURE_TYPE_PRESENT_REGIONS_KHR"
     STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT -> showString "STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT"
@@ -2317,6 +2484,7 @@ instance Show StructureType where
     STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV"
     STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP -> showString "STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP"
     STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD -> showString "STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD"
+    STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX -> showString "STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX"
     STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX -> showString "STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX"
     STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT -> showString "STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT"
     STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT -> showString "STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT"
@@ -2506,10 +2674,24 @@ instance Read StructureType where
                             , ("STRUCTURE_TYPE_MEMORY_BARRIER", pure STRUCTURE_TYPE_MEMORY_BARRIER)
                             , ("STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO", pure STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO)
                             , ("STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO", pure STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO)
+                            , ("STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV", pure STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT)
+                            , ("STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR", pure STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT)
                             , ("STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM", pure STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM)
                             , ("STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM", pure STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV)
+                            , ("STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV", pure STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV)
+                            , ("STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV", pure STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV)
+                            , ("STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV", pure STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV)
+                            , ("STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV", pure STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV)
+                            , ("STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV", pure STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV)
+                            , ("STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV", pure STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT)
                             , ("STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR", pure STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR)
                             , ("STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR", pure STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR)
@@ -2517,6 +2699,7 @@ instance Read StructureType where
                             , ("STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR", pure STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR)
                             , ("STRUCTURE_TYPE_PIPELINE_INFO_KHR", pure STRUCTURE_TYPE_PIPELINE_INFO_KHR)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR)
+                            , ("STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR", pure STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT)
                             , ("STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT", pure STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT)
@@ -2560,7 +2743,7 @@ instance Read StructureType where
                             , ("STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL", pure STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL)
                             , ("STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL", pure STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL)
                             , ("STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL", pure STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL)
-                            , ("STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL", pure STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL)
+                            , ("STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL", pure STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL)
                             , ("STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV", pure STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV)
                             , ("STRUCTURE_TYPE_CHECKPOINT_DATA_NV", pure STRUCTURE_TYPE_CHECKPOINT_DATA_NV)
@@ -2593,8 +2776,6 @@ instance Read StructureType where
                             , ("STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV", pure STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV)
                             , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV)
-                            , ("STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV", pure STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV)
-                            , ("STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV", pure STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV)
                             , ("STRUCTURE_TYPE_GEOMETRY_AABB_NV", pure STRUCTURE_TYPE_GEOMETRY_AABB_NV)
                             , ("STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV", pure STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV)
                             , ("STRUCTURE_TYPE_GEOMETRY_NV", pure STRUCTURE_TYPE_GEOMETRY_NV)
@@ -2615,6 +2796,26 @@ instance Read StructureType where
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV)
                             , ("STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV", pure STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV)
+                            , ("STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR", pure STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR", pure STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR", pure STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR)
+                            , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR)
+                            , ("STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR", pure STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR", pure STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR)
+                            , ("STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR", pure STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR)
+                            , ("STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR", pure STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR)
+                            , ("STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR", pure STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR)
+                            , ("STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR", pure STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR)
                             , ("STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV", pure STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV)
                             , ("STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT", pure STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT)
@@ -2678,12 +2879,6 @@ instance Read StructureType where
                             , ("STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT", pure STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT)
                             , ("STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT", pure STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT)
                             , ("STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV", pure STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV)
-                            , ("STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX", pure STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX)
-                            , ("STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX", pure STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX)
-                            , ("STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX", pure STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX)
-                            , ("STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX", pure STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX)
-                            , ("STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX", pure STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX)
-                            , ("STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX", pure STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX)
                             , ("STRUCTURE_TYPE_PRESENT_REGIONS_KHR", pure STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
                             , ("STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT", pure STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT)
@@ -2722,6 +2917,7 @@ instance Read StructureType where
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV)
                             , ("STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP", pure STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP)
                             , ("STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD", pure STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD)
+                            , ("STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX", pure STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX)
                             , ("STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX", pure STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX)
                             , ("STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT", pure STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT)
                             , ("STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT", pure STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT)

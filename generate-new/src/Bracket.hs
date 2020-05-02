@@ -4,6 +4,7 @@ module Bracket
 import           Data.List.Extra                ( elemIndex
                                                 , nubOrd
                                                 )
+import           Data.List                      ( findIndex )
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
                                          hiding ( brackets
@@ -104,7 +105,12 @@ autoBracket create destroy with = do
       provided             = Provided (unCName (pName mpParam)) mpScheme
       providedForCreate    = provided `elem` bCreateArguments
       providedByCreate     = mpScheme `elemIndex` bInnerTypes
-      providedByCreateElem = Vector mpScheme `elemIndex` bInnerTypes
+      providedByCreateElem = findIndex
+        (\case
+          Vector _ s | s == mpScheme -> True
+          _                          -> False
+        )
+        bInnerTypes
     in
       case (providedForCreate, providedByCreate, providedByCreateElem) of
         (False, Nothing, Nothing) -> pure provided

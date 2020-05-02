@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 890178555a97d40faa247c4434ae916c10fa23bde5be783f5868801a44c15537
+-- hash: fc109393337417b26dde42b24f24903e58457fcc9e1132efcd35cf0786197260
 
 name:           VulkanMemoryAllocator
 version:        0.1.0.0
@@ -58,7 +58,6 @@ library
     , bytestring
     , transformers
     , vector
-    , vector-sized
     , vulkan ==3.1.*
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS

@@ -202,13 +202,13 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 --     supported for import, as reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
 -- -   If @buffer@ is not @NULL@, it /must/ be a valid Android hardware
 --     buffer object with @AHardwareBuffer_Desc@::@format@ and
 --     @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan as described
 --     in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 --
 -- == Valid Usage (Implicit)
 --
@@ -413,14 +413,14 @@ instance es ~ '[] => Zero (AndroidHardwareBufferPropertiesANDROID es) where
 -- -   'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --     /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
---     when @memory@ was created.
+--     when @memory@ was created
 --
 -- -   If the @pNext@ chain of the
 --     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' used to allocate
 --     @memory@ included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with non-@NULL@ @image@ member, then that @image@ /must/ already be
---     bound to @memory@.
+--     bound to @memory@
 --
 -- == Valid Usage (Implicit)
 --

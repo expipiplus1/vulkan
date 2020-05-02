@@ -104,9 +104,7 @@ foreign import ccall
 -- If the shader stage fails to compile
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INVALID_SHADER_NV' will be
 -- generated and the compile log will be reported back to the application
--- by
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_debug_report@
--- if enabled.
+-- by @VK_EXT_debug_report@ if enabled.
 --
 -- == Valid Usage (Implicit)
 --
@@ -156,8 +154,8 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
   pShaderModule <- lift $ peek @ShaderModule pPShaderModule
   pure $ (pShaderModule)
 
--- | A convenience wrapper to make a compatible pair of 'createShaderModule'
--- and 'destroyShaderModule'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createShaderModule' and 'destroyShaderModule'
 --
 -- To ensure that 'destroyShaderModule' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -280,7 +278,7 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 -- -   If @pCode@ declares any of the capabilities listed as /optional/ in
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
---     appendix, the corresponding feature(s) /must/ be enabled.
+--     appendix, the corresponding feature(s) /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -353,19 +351,6 @@ instance PokeChain es => ToCStruct (ShaderModuleCreateInfo es) where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ unless (Data.ByteString.length (mempty) .&. 3 == 0) $
-      throwIO $ IOError Nothing InvalidArgument "" "code size must be a multiple of 4" Nothing Nothing
-    unalignedCode <- ContT $ unsafeUseAsCString (mempty)
-    pCode'' <- if ptrToWordPtr unalignedCode .&. 3 == 0
-      -- If this pointer is already aligned properly then use it
-      then pure $ castPtr @CChar @Word32 unalignedCode
-      -- Otherwise allocate and copy the bytes
-      else do
-        let len = Data.ByteString.length (mempty)
-        mem <- ContT $ allocaBytesAligned @Word32 len 4
-        lift $ copyBytes mem (castPtr @CChar @Word32 unalignedCode) len
-        pure mem
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) pCode''
     lift $ f
 
 instance PeekChain es => FromCStruct (ShaderModuleCreateInfo es) where

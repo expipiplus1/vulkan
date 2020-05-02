@@ -1,11 +1,11 @@
 {-# language CPP #-}
-module Graphics.Vulkan.Extensions.Handles  ( AccelerationStructureNV
+module Graphics.Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                            , DebugReportCallbackEXT
                                            , DebugUtilsMessengerEXT
+                                           , DeferredOperationKHR
                                            , DisplayKHR
                                            , DisplayModeKHR
-                                           , IndirectCommandsLayoutNVX
-                                           , ObjectTableNVX
+                                           , IndirectCommandsLayoutNV
                                            , PerformanceConfigurationINTEL
                                            , SurfaceKHR
                                            , SwapchainKHR
@@ -14,7 +14,7 @@ module Graphics.Vulkan.Extensions.Handles  ( AccelerationStructureNV
 
 
 
-data AccelerationStructureNV
+data AccelerationStructureKHR
 
 
 data DebugReportCallbackEXT
@@ -23,16 +23,16 @@ data DebugReportCallbackEXT
 data DebugUtilsMessengerEXT
 
 
+data DeferredOperationKHR
+
+
 data DisplayKHR
 
 
 data DisplayModeKHR
 
 
-data IndirectCommandsLayoutNVX
-
-
-data ObjectTableNVX
+data IndirectCommandsLayoutNV
 
 
 data PerformanceConfigurationINTEL

@@ -115,20 +115,20 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 -- == Valid Usage
 --
 -- -   If the protected memory feature is not enabled, @protectedSubmit@
---     /must/ not be 'Graphics.Vulkan.Core10.BaseType.TRUE'.
+--     /must/ not be 'Graphics.Vulkan.Core10.BaseType.TRUE'
 --
 -- -   If @protectedSubmit@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', then
 --     each element of the @pCommandBuffers@ array /must/ be a protected
---     command buffer.
+--     command buffer
 --
 -- -   If @protectedSubmit@ is 'Graphics.Vulkan.Core10.BaseType.FALSE',
 --     then each element of the @pCommandBuffers@ array /must/ be an
---     unprotected command buffer.
+--     unprotected command buffer
 --
 -- -   If the 'Graphics.Vulkan.Core10.Queue.SubmitInfo'::@pNext@ chain does
 --     not include a 'ProtectedSubmitInfo' structure, then each element of
 --     the command buffer of the @pCommandBuffers@ array /must/ be an
---     unprotected command buffer.
+--     unprotected command buffer
 --
 -- == Valid Usage (Implicit)
 --

@@ -9,12 +9,12 @@ module Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlagBits( 
                                                                               , SHADER_STAGE_ALL
                                                                               , SHADER_STAGE_MESH_BIT_NV
                                                                               , SHADER_STAGE_TASK_BIT_NV
-                                                                              , SHADER_STAGE_CALLABLE_BIT_NV
-                                                                              , SHADER_STAGE_INTERSECTION_BIT_NV
-                                                                              , SHADER_STAGE_MISS_BIT_NV
-                                                                              , SHADER_STAGE_CLOSEST_HIT_BIT_NV
-                                                                              , SHADER_STAGE_ANY_HIT_BIT_NV
-                                                                              , SHADER_STAGE_RAYGEN_BIT_NV
+                                                                              , SHADER_STAGE_CALLABLE_BIT_KHR
+                                                                              , SHADER_STAGE_INTERSECTION_BIT_KHR
+                                                                              , SHADER_STAGE_MISS_BIT_KHR
+                                                                              , SHADER_STAGE_CLOSEST_HIT_BIT_KHR
+                                                                              , SHADER_STAGE_ANY_HIT_BIT_KHR
+                                                                              , SHADER_STAGE_RAYGEN_BIT_KHR
                                                                               , ..
                                                                               )
                                                          , ShaderStageFlags
@@ -79,18 +79,18 @@ pattern SHADER_STAGE_ALL = ShaderStageFlagBits 0x7fffffff
 pattern SHADER_STAGE_MESH_BIT_NV = ShaderStageFlagBits 0x00000080
 -- | 'SHADER_STAGE_TASK_BIT_NV' specifies the task stage.
 pattern SHADER_STAGE_TASK_BIT_NV = ShaderStageFlagBits 0x00000040
--- | 'SHADER_STAGE_CALLABLE_BIT_NV' specifies the callable stage.
-pattern SHADER_STAGE_CALLABLE_BIT_NV = ShaderStageFlagBits 0x00002000
--- | 'SHADER_STAGE_INTERSECTION_BIT_NV' specifies the intersection stage.
-pattern SHADER_STAGE_INTERSECTION_BIT_NV = ShaderStageFlagBits 0x00001000
--- | 'SHADER_STAGE_MISS_BIT_NV' specifies the miss stage.
-pattern SHADER_STAGE_MISS_BIT_NV = ShaderStageFlagBits 0x00000800
--- | 'SHADER_STAGE_CLOSEST_HIT_BIT_NV' specifies the closest hit stage.
-pattern SHADER_STAGE_CLOSEST_HIT_BIT_NV = ShaderStageFlagBits 0x00000400
--- | 'SHADER_STAGE_ANY_HIT_BIT_NV' specifies the any-hit stage.
-pattern SHADER_STAGE_ANY_HIT_BIT_NV = ShaderStageFlagBits 0x00000200
--- | 'SHADER_STAGE_RAYGEN_BIT_NV' specifies the ray generation stage.
-pattern SHADER_STAGE_RAYGEN_BIT_NV = ShaderStageFlagBits 0x00000100
+-- | 'SHADER_STAGE_CALLABLE_BIT_KHR' specifies the callable stage.
+pattern SHADER_STAGE_CALLABLE_BIT_KHR = ShaderStageFlagBits 0x00002000
+-- | 'SHADER_STAGE_INTERSECTION_BIT_KHR' specifies the intersection stage.
+pattern SHADER_STAGE_INTERSECTION_BIT_KHR = ShaderStageFlagBits 0x00001000
+-- | 'SHADER_STAGE_MISS_BIT_KHR' specifies the miss stage.
+pattern SHADER_STAGE_MISS_BIT_KHR = ShaderStageFlagBits 0x00000800
+-- | 'SHADER_STAGE_CLOSEST_HIT_BIT_KHR' specifies the closest hit stage.
+pattern SHADER_STAGE_CLOSEST_HIT_BIT_KHR = ShaderStageFlagBits 0x00000400
+-- | 'SHADER_STAGE_ANY_HIT_BIT_KHR' specifies the any-hit stage.
+pattern SHADER_STAGE_ANY_HIT_BIT_KHR = ShaderStageFlagBits 0x00000200
+-- | 'SHADER_STAGE_RAYGEN_BIT_KHR' specifies the ray generation stage.
+pattern SHADER_STAGE_RAYGEN_BIT_KHR = ShaderStageFlagBits 0x00000100
 
 type ShaderStageFlags = ShaderStageFlagBits
 
@@ -106,12 +106,12 @@ instance Show ShaderStageFlagBits where
     SHADER_STAGE_ALL -> showString "SHADER_STAGE_ALL"
     SHADER_STAGE_MESH_BIT_NV -> showString "SHADER_STAGE_MESH_BIT_NV"
     SHADER_STAGE_TASK_BIT_NV -> showString "SHADER_STAGE_TASK_BIT_NV"
-    SHADER_STAGE_CALLABLE_BIT_NV -> showString "SHADER_STAGE_CALLABLE_BIT_NV"
-    SHADER_STAGE_INTERSECTION_BIT_NV -> showString "SHADER_STAGE_INTERSECTION_BIT_NV"
-    SHADER_STAGE_MISS_BIT_NV -> showString "SHADER_STAGE_MISS_BIT_NV"
-    SHADER_STAGE_CLOSEST_HIT_BIT_NV -> showString "SHADER_STAGE_CLOSEST_HIT_BIT_NV"
-    SHADER_STAGE_ANY_HIT_BIT_NV -> showString "SHADER_STAGE_ANY_HIT_BIT_NV"
-    SHADER_STAGE_RAYGEN_BIT_NV -> showString "SHADER_STAGE_RAYGEN_BIT_NV"
+    SHADER_STAGE_CALLABLE_BIT_KHR -> showString "SHADER_STAGE_CALLABLE_BIT_KHR"
+    SHADER_STAGE_INTERSECTION_BIT_KHR -> showString "SHADER_STAGE_INTERSECTION_BIT_KHR"
+    SHADER_STAGE_MISS_BIT_KHR -> showString "SHADER_STAGE_MISS_BIT_KHR"
+    SHADER_STAGE_CLOSEST_HIT_BIT_KHR -> showString "SHADER_STAGE_CLOSEST_HIT_BIT_KHR"
+    SHADER_STAGE_ANY_HIT_BIT_KHR -> showString "SHADER_STAGE_ANY_HIT_BIT_KHR"
+    SHADER_STAGE_RAYGEN_BIT_KHR -> showString "SHADER_STAGE_RAYGEN_BIT_KHR"
     ShaderStageFlagBits x -> showParen (p >= 11) (showString "ShaderStageFlagBits 0x" . showHex x)
 
 instance Read ShaderStageFlagBits where
@@ -125,12 +125,12 @@ instance Read ShaderStageFlagBits where
                             , ("SHADER_STAGE_ALL", pure SHADER_STAGE_ALL)
                             , ("SHADER_STAGE_MESH_BIT_NV", pure SHADER_STAGE_MESH_BIT_NV)
                             , ("SHADER_STAGE_TASK_BIT_NV", pure SHADER_STAGE_TASK_BIT_NV)
-                            , ("SHADER_STAGE_CALLABLE_BIT_NV", pure SHADER_STAGE_CALLABLE_BIT_NV)
-                            , ("SHADER_STAGE_INTERSECTION_BIT_NV", pure SHADER_STAGE_INTERSECTION_BIT_NV)
-                            , ("SHADER_STAGE_MISS_BIT_NV", pure SHADER_STAGE_MISS_BIT_NV)
-                            , ("SHADER_STAGE_CLOSEST_HIT_BIT_NV", pure SHADER_STAGE_CLOSEST_HIT_BIT_NV)
-                            , ("SHADER_STAGE_ANY_HIT_BIT_NV", pure SHADER_STAGE_ANY_HIT_BIT_NV)
-                            , ("SHADER_STAGE_RAYGEN_BIT_NV", pure SHADER_STAGE_RAYGEN_BIT_NV)]
+                            , ("SHADER_STAGE_CALLABLE_BIT_KHR", pure SHADER_STAGE_CALLABLE_BIT_KHR)
+                            , ("SHADER_STAGE_INTERSECTION_BIT_KHR", pure SHADER_STAGE_INTERSECTION_BIT_KHR)
+                            , ("SHADER_STAGE_MISS_BIT_KHR", pure SHADER_STAGE_MISS_BIT_KHR)
+                            , ("SHADER_STAGE_CLOSEST_HIT_BIT_KHR", pure SHADER_STAGE_CLOSEST_HIT_BIT_KHR)
+                            , ("SHADER_STAGE_ANY_HIT_BIT_KHR", pure SHADER_STAGE_ANY_HIT_BIT_KHR)
+                            , ("SHADER_STAGE_RAYGEN_BIT_KHR", pure SHADER_STAGE_RAYGEN_BIT_KHR)]
                      +++
                      prec 10 (do
                        expectP (Ident "ShaderStageFlagBits")

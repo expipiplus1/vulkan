@@ -4,6 +4,7 @@ module Graphics.Vulkan.Core10.LayerDiscovery  ( enumerateInstanceLayerProperties
                                               , LayerProperties(..)
                                               ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -33,7 +34,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Dynamic (getInstanceProcAddr')
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -251,26 +251,26 @@ deriving instance Show LayerProperties
 instance ToCStruct LayerProperties where
   withCStruct x f = allocaBytesAligned 520 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p LayerProperties{..} f = do
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (layerName)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (layerName)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (specVersion)
     poke ((p `plusPtr` 260 :: Ptr Word32)) (implementationVersion)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (description)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 264 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
     f
   cStructSize = 520
   cStructAlignment = 4
   pokeZeroCStruct p f = do
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (mempty)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 264 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
     f
 
 instance FromCStruct LayerProperties where
   peekCStruct p = do
-    layerName <- packCString (lowerArrayPtr ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_EXTENSION_NAME_SIZE CChar))))
+    layerName <- packCString (lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))))
     specVersion <- peek @Word32 ((p `plusPtr` 256 :: Ptr Word32))
     implementationVersion <- peek @Word32 ((p `plusPtr` 260 :: Ptr Word32))
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
+    description <- packCString (lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
     pure $ LayerProperties
              layerName specVersion implementationVersion description
 

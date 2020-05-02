@@ -127,7 +127,7 @@ foreign import ccall
 --     structure is included in the @pNext@ chain of
 --     @pSurfaceCapabilities@, a
 --     'Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
---     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@.
+--     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
 --
 -- == Valid Usage (Implicit)
 --
@@ -218,10 +218,10 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pSurfaceInfo->surface@ must be supported by @physicalDevice@, as
+-- -   @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
 --     reported by
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
---     or an equivalent platform-specific mechanism.
+--     or an equivalent platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --

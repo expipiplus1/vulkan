@@ -133,7 +133,7 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO
   lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'cmdBeginConditionalRenderingEXT' and 'cmdEndConditionalRenderingEXT'
 --
 -- To ensure that 'cmdEndConditionalRenderingEXT' is always called: pass
@@ -174,12 +174,12 @@ foreign import ccall
 --
 -- -   If conditional rendering was made
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---     outside of a render pass instance, it must not be ended inside a
+--     outside of a render pass instance, it /must/ not be ended inside a
 --     render pass instance
 --
 -- -   If conditional rendering was made
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
---     within a subpass it must be ended in the same subpass
+--     within a subpass it /must/ be ended in the same subpass
 --
 -- == Valid Usage (Implicit)
 --
@@ -245,7 +245,7 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
 --     bit set
 --
 -- -   @offset@ /must/ be less than the size of @buffer@ by at least 32
---     bits.
+--     bits
 --
 -- -   @offset@ /must/ be a multiple of 4
 --

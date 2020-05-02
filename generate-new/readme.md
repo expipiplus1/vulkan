@@ -8,11 +8,14 @@
 - For faster iteration documentation generation can be disabled by setting
   `doLoadDocs` to `False` in `vk/Main.hs`
 
-To generate the docs in Vulkan-Docs
+To generate the docs in Vulkan-Docs, note that this requires quite a recent
+nixpkgs with `he` and `escape-string-regexp`:
 
 ```bash
 cd Vulkan-Docs
-nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
+# Generating all the reference pages (which we need) is a side effect of
+# building man/apispec.txt, generated builds their dependencies.
+nix-shell -p python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp --run "./makeAllExts man/apispec.txt generated"
 ```
 
 ## The `vma` generator
@@ -46,9 +49,6 @@ The docbook documentation will be in `docs/docbook`.
 - non-optional arrays/structs can be allocated at the same time as their parent
   struct, no need for two allocations
 
-- `VkSubpassDescription` shouldn't have `resolveAttachments` be an
-  `Either Word32 Vector` it's constrained to be the same length as colorAttachments
-
 - Unions should probably not use tuple when storing several values,
   `VkClearColorValue` for instance
 
@@ -60,6 +60,17 @@ The docbook documentation will be in `docs/docbook`.
 
 - Groups of `lift`ed actions which don't return anything can be grouped under
   one `lift`:
+
+- If we move to peeking and poking ByteArrays using `RecordDotSyntax` it would
+  be nice to have alternative virtual members for using nicer types than tuples
+  for vectors and matricies. For example it would be nice to use `linear`s
+  `Mat34` to set `VkAccelerationStructureInstanceKHR::transform`.
+
+- Don't peek the same value for every bitfield component
+
+## To check
+
+During development unfinished bits not to forget are listed here.
 
 # VMA TODOs
 
@@ -74,3 +85,5 @@ The docbook documentation will be in `docs/docbook`.
 - chaoticbob/SPIRV-Reflect
 
 - ValveSoftware/openvr
+
+- cgltf

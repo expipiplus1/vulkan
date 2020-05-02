@@ -189,14 +189,14 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 --     reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
 -- -   The memory from which @handle@ was exported, or the memory named by
 --     @name@ /must/ have been created on the same underlying physical
---     device as @device@.
+--     device as @device@
 --
 -- -   If @handleType@ is not @0@, it /must/ be defined as an NT handle or
---     a global share handle.
+--     a global share handle
 --
 -- -   If @handleType@ is not
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
@@ -204,23 +204,23 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
 --     or
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
---     @name@ /must/ be @NULL@.
+--     @name@ /must/ be @NULL@
 --
 -- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
---     name a valid memory resource of the type specified by @handleType@.
+--     name a valid memory resource of the type specified by @handleType@
 --
 -- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
---     a valid handle of the type specified by @handleType@.
+--     a valid handle of the type specified by @handleType@
 --
--- -   if @handle@ is not @NULL@, @name@ must be @NULL@.
+-- -   if @handle@ is not @NULL@, @name@ /must/ be @NULL@
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
 --     @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --
@@ -289,7 +289,16 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- = Description
 --
--- If this structure is not present, or if @pAttributes@ is set to @NULL@,
+-- If
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
+-- is not present in the same @pNext@ chain, this structure is ignored.
+--
+-- If
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
+-- is present in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' with a Windows
+-- @handleType@, but either 'ExportMemoryWin32HandleInfoKHR' is not present
+-- in the @pNext@ chain, or if it is but @pAttributes@ is set to @NULL@,
 -- default security descriptor values will be used, and child processes
 -- created by the application will not inherit the handle, as described in
 -- the MSDN documentation for “Synchronization Object Security and Access
@@ -328,7 +337,7 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     a 'ExportMemoryWin32HandleInfoKHR' structure /must/ not be included
 --     in the @pNext@ chain of
---     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo'.
+--     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -460,14 +469,14 @@ instance Zero MemoryWin32HandlePropertiesKHR where
 --
 -- -   @handleType@ /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
---     when @memory@ was created.
+--     when @memory@ was created
 --
 -- -   If @handleType@ is defined as an NT handle,
 --     'getMemoryWin32HandleKHR' /must/ be called no more than once for
---     each valid unique combination of @memory@ and @handleType@.
+--     each valid unique combination of @memory@ and @handleType@
 --
 -- -   @handleType@ /must/ be defined as an NT handle or a global share
---     handle.
+--     handle
 --
 -- == Valid Usage (Implicit)
 --

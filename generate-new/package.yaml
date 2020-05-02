@@ -76,6 +76,7 @@ executables:
 dependencies:
   - algebraic-graphs
   - ascii-progress
+  - safe
   - async-pool
   - base
   - bytestring
@@ -92,6 +93,7 @@ dependencies:
   - mtl
   - pandoc
   - parsec
+  - parsers
   - polysemy
   - polysemy-plugin
   - pretty-show
@@ -102,6 +104,7 @@ dependencies:
   - tagsoup
   - template-haskell
   - text
+  - th-abstraction
   - th-orphans
   - timeit
   - transformers
@@ -109,7 +112,6 @@ dependencies:
   - uniplate
   - unordered-containers
   - vector
-  - vector-sized
   - vector-algorithms
   - word-wrap
   - xeno

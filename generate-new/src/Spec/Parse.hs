@@ -188,7 +188,7 @@ sizeAll typeSizes constantMap unions structs = do
           Left u -> for (sizeUnion g u) $ \u' -> do
             modify' (Map.insert (sName u') (sSize u', sAlignment u'))
             pure (Left u')
-          Right s -> for (sizeStruct g s) $ \s' -> do
+          Right s -> for (structSizeOverrides s <|> sizeStruct g s) $ \s' -> do
             modify' (Map.insert (sName s') (sSize s', sAlignment s'))
             pure (Right s')
   (m, r) <- runState initial $ tryTwice both try
@@ -198,6 +198,61 @@ sizeAll typeSizes constantMap unions structs = do
     ("Unable to calculate size for " <> (unCName . either sName sName) s)
   let (us, ss) = bimap V.fromList V.fromList $ partitionEithers succeeded
   pure (us, ss, getSize m)
+
+-- Structs which are too tricky to size in code
+-- Contains bitfields, TODO implement these properly
+structSizeOverrides
+  :: StructOrUnion AStruct WithoutSize sc
+  -> Maybe (StructOrUnion AStruct 'WithSize sc)
+structSizeOverrides = \case
+  -- This is provisional, so match exactly in case it changes
+  s@(Struct "VkAccelerationStructureInstanceKHR" ms () () _ _)
+    | ms == V.fromList
+      [ StructMember "transform"
+                     (TypeName "VkTransformMatrixKHR")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceCustomIndex"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "mask"
+                     (Bitfield (TypeName "uint32_t") 8)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceShaderBindingTableRecordOffset"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "flags"
+                     (Bitfield (TypeName "VkGeometryInstanceFlagsKHR") 8)
+                     mempty
+                     mempty
+                     (V.singleton True)
+                     ()
+      , StructMember "accelerationStructureReference"
+                     (TypeName "uint64_t")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      ]
+    -> Just s
+      { sSize      = 64
+      , sAlignment = 8
+      , sMembers   = V.zipWith (\o m -> m { smOffset = o })
+                               (V.fromList [0, 48, 48, 52, 52, 56])
+                               ms
+      }
+  _ -> Nothing
 
 sizeStruct
   :: Monad m
@@ -887,8 +942,8 @@ boolListAttr = listAttr $ \case
 
 lenListAttr :: ByteString -> Node -> P (Vector ParameterLength)
 lenListAttr = listAttr $ \case
-  "null-terminated"                      -> pure NullTerminated
-  l | [param, member] <- tokenise "::" l -> do
+  "null-terminated" -> pure NullTerminated
+  l | [param, member] <- tokenise "-&gt;" =<< tokenise "::" l -> do
     s <- decode param
     m <- decode member
     pure $ NamedMemberLength (CName s) (CName m)

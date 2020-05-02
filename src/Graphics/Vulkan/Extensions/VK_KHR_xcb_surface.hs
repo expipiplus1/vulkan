@@ -175,7 +175,8 @@ foreign import ccall
 -- -   @queueFamilyIndex@ is the queue family index.
 --
 -- -   @connection@ is a pointer to an @xcb_connection_t@ to the X server.
---     @visual_id@ is an X11 visual (@xcb_visualid_t@).
+--
+-- -   @visual_id@ is an X11 visual (@xcb_visualid_t@).
 --
 -- = Description
 --
@@ -206,9 +207,9 @@ getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex conne
 data XcbSurfaceCreateInfoKHR = XcbSurfaceCreateInfoKHR
   { -- | @flags@ /must/ be @0@
     flags :: XcbSurfaceCreateFlagsKHR
-  , -- | @connection@ /must/ point to a valid X11 @xcb_connection_t@.
+  , -- | @connection@ /must/ point to a valid X11 @xcb_connection_t@
     connection :: Ptr Xcb_connection_t
-  , -- | @window@ /must/ be a valid X11 @xcb_window_t@.
+  , -- | @window@ /must/ be a valid X11 @xcb_window_t@
     window :: Xcb_window_t
   }
   deriving (Typeable)

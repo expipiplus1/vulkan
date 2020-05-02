@@ -207,7 +207,22 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 
 -- | VkBufferMemoryRequirementsInfo2 - (None)
 --
+-- == Valid Usage
+--
+-- -   If @buffer@ was created with the
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     external memory handle type, then @buffer@ /must/ be bound to
+--     memory.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- = See Also
 --
@@ -216,8 +231,7 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 -- 'getBufferMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR'
 data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
-  { -- | @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
-    -- handle
+  { -- | @buffer@ is the buffer to query.
     buffer :: Buffer }
   deriving (Typeable)
 deriving instance Show BufferMemoryRequirementsInfo2
@@ -291,7 +305,7 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --
 -- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @image@ /must/ be bound to memory.
+--     external memory handle type, then @image@ /must/ be bound to memory
 --
 -- == Valid Usage (Implicit)
 --
@@ -427,8 +441,10 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.getAccelerationStructureMemoryRequirementsKHR',
 -- 'getBufferMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'getImageMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
 data MemoryRequirements2 (es :: [Type]) = MemoryRequirements2

@@ -1,0 +1,54 @@
+name: vulkan-utils
+version: 0.1.0.0
+synopsis: Utils for the vulkan package
+category: Graphics
+maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+github: expipiplus1/vulkan
+extra-source-files:
+  - readme.md
+
+library:
+  source-dirs: src
+  dependencies:
+    - base < 4.14
+    - bytestring
+    - extra
+    - file-embed
+    - template-haskell
+    - temporary
+    - typed-process
+    - vulkan
+
+default-extensions:
+  - AllowAmbiguousTypes
+  - CPP
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DerivingStrategies
+  - DuplicateRecordFields
+  - FlexibleContexts
+  - FlexibleInstances
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - LambdaCase
+  - MagicHash
+  - NoMonomorphismRestriction
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternSynonyms
+  - PolyKinds
+  - QuantifiedConstraints
+  - RankNTypes
+  - RecordWildCards
+  - RoleAnnotations
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - Strict
+  - TypeApplications
+  - TypeFamilyDependencies
+  - TypeOperators
+  - TypeSynonymInstances
+  - UndecidableInstances
+  - ViewPatterns

@@ -152,7 +152,7 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
   pDescriptorUpdateTemplate <- lift $ peek @DescriptorUpdateTemplate pPDescriptorUpdateTemplate
   pure $ (pDescriptorUpdateTemplate)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDescriptorUpdateTemplate' and 'destroyDescriptorUpdateTemplate'
 --
 -- To ensure that 'destroyDescriptorUpdateTemplate' is always called: pass
@@ -389,7 +389,7 @@ updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate da
 --
 -- -   @dstBinding@ /must/ be a valid binding in the descriptor set layout
 --     implicitly specified when using a descriptor update template to
---     update descriptors.
+--     update descriptors
 --
 -- -   @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
 --     to the number of array elements in the descriptor set binding

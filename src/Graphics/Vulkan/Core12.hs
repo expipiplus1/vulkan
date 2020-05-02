@@ -50,6 +50,7 @@ import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_type
 import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout
 import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -69,7 +70,6 @@ import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -355,9 +355,10 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- are available in all stages, or are restricted to fragment and compute
     -- stages.
     subgroupQuadOperationsInAllStages :: Bool
-  , -- | @pointClippingBehavior@ /must/ be a valid
+  , -- | @pointClippingBehavior@ is a
     -- 'Graphics.Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
-    -- value
+    -- value specifying the point clipping behavior supported by the
+    -- implementation.
     pointClippingBehavior :: PointClippingBehavior
   , -- | @maxMultiviewViewCount@ is one greater than the maximum view index that
     -- /can/ be used in a subpass.
@@ -392,9 +393,9 @@ instance ToCStruct PhysicalDeviceVulkan11Properties where
   pokeCStruct p PhysicalDeviceVulkan11Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (deviceUUID)
-    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (driverUUID)
-    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8))) (deviceLUID)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (deviceUUID)
+    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8))) (driverUUID)
+    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8))) (deviceLUID)
     poke ((p `plusPtr` 56 :: Ptr Word32)) (deviceNodeMask)
     poke ((p `plusPtr` 60 :: Ptr Bool32)) (boolToBool32 (deviceLUIDValid))
     poke ((p `plusPtr` 64 :: Ptr Word32)) (subgroupSize)
@@ -413,9 +414,9 @@ instance ToCStruct PhysicalDeviceVulkan11Properties where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
-    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
-    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    pokeFixedLengthByteString ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8))) (mempty)
     poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 60 :: Ptr Bool32)) (boolToBool32 (zero))
     poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
@@ -432,9 +433,9 @@ instance ToCStruct PhysicalDeviceVulkan11Properties where
 
 instance FromCStruct PhysicalDeviceVulkan11Properties where
   peekCStruct p = do
-    deviceUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
-    driverUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 32 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
-    deviceLUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector LUID_SIZE Word8)))
+    deviceUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8)))
+    driverUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 32 :: Ptr (FixedArray UUID_SIZE Word8)))
+    deviceLUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 48 :: Ptr (FixedArray LUID_SIZE Word8)))
     deviceNodeMask <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
     deviceLUIDValid <- peek @Bool32 ((p `plusPtr` 60 :: Ptr Bool32))
     subgroupSize <- peek @Word32 ((p `plusPtr` 64 :: Ptr Word32))
@@ -798,10 +799,11 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     trace capture and replay.
 --
 -- -   @bufferDeviceAddressMultiDevice@ indicates that the implementation
---     supports the @bufferDeviceAddress@ feature for logical devices
---     created with multiple physical devices. If this feature is not
---     supported, buffer addresses /must/ not be queried on a logical
---     device created with more than one physical device.
+--     supports the @bufferDeviceAddress@ and @rayTracing@ features for
+--     logical devices created with multiple physical devices. If this
+--     feature is not supported, buffer and acceleration structure
+--     addresses /must/ not be queried on a logical device created with
+--     more than one physical device.
 --
 -- -   @vulkanMemoryModel@ indicates whether the Vulkan Memory Model is
 --     supported, as defined in
@@ -1201,26 +1203,31 @@ instance Zero PhysicalDeviceVulkan12Features where
 -- 'Graphics.Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
-  { -- | @driverID@ /must/ be a valid
-    -- 'Graphics.Vulkan.Core12.Enums.DriverId.DriverId' value
+  { -- | @driverID@ is a unique identifier for the driver of the physical device.
     driverID :: DriverId
-  , -- | @driverName@ /must/ be a null-terminated UTF-8 string whose length is
-    -- less than or equal to VK_MAX_DRIVER_NAME_SIZE
+  , -- | @driverName@ is an array of
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@
+    -- containing a null-terminated UTF-8 string which is the name of the
+    -- driver.
     driverName :: ByteString
-  , -- | @driverInfo@ /must/ be a null-terminated UTF-8 string whose length is
-    -- less than or equal to VK_MAX_DRIVER_INFO_SIZE
+  , -- | @driverInfo@ is an array of
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@
+    -- containing a null-terminated UTF-8 string with additional information
+    -- about the driver.
     driverInfo :: ByteString
   , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
     -- driver is conformant against (see
     -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion').
     conformanceVersion :: ConformanceVersion
-  , -- | @denormBehaviorIndependence@ /must/ be a valid
+  , -- | @denormBehaviorIndependence@ is a
     -- 'Graphics.Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
-    -- value
+    -- value indicating whether, and how, denorm behavior can be set
+    -- independently for different bit widths.
     denormBehaviorIndependence :: ShaderFloatControlsIndependence
-  , -- | @roundingModeIndependence@ /must/ be a valid
+  , -- | @roundingModeIndependence@ is a
     -- 'Graphics.Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
-    -- value
+    -- value indicating whether, and how, rounding modes can be set
+    -- independently for different bit widths.
     roundingModeIndependence :: ShaderFloatControlsIndependence
   , -- | @shaderSignedZeroInfNanPreserveFloat16@ is a boolean value indicating
     -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
@@ -1457,9 +1464,21 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set.
     maxDescriptorSetUpdateAfterBindInputAttachments :: Word32
-  , -- | @supportedDepthResolveModes@ /must/ not be @0@
+  , -- | @supportedDepthResolveModes@ is a bitmask of
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits'
+    -- indicating the set of supported depth resolve modes.
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
+    -- /must/ be included in the set but implementations /may/ support
+    -- additional modes.
     supportedDepthResolveModes :: ResolveModeFlags
-  , -- | @supportedStencilResolveModes@ /must/ not be @0@
+  , -- | @supportedStencilResolveModes@ is a bitmask of
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlagBits'
+    -- indicating the set of supported stencil resolve modes.
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_SAMPLE_ZERO_BIT'
+    -- /must/ be included in the set but implementations /may/ support
+    -- additional modes.
+    -- 'Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_AVERAGE_BIT'
+    -- /must/ not be included in the set.
     supportedStencilResolveModes :: ResolveModeFlags
   , -- | @independentResolveNone@ is 'Graphics.Vulkan.Core10.BaseType.TRUE' if
     -- the implementation supports setting the depth and stencil resolve modes
@@ -1487,9 +1506,10 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- allowed by the implementation between the current value of a timeline
     -- semaphore and any pending signal or wait operations.
     maxTimelineSemaphoreValueDifference :: Word64
-  , -- | @framebufferIntegerColorSampleCounts@ /must/ be a valid combination of
+  , -- | @framebufferIntegerColorSampleCounts@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-    -- values
+    -- indicating the color sample counts that are supported for all
+    -- framebuffer color attachments with integer formats.
     framebufferIntegerColorSampleCounts :: SampleCountFlags
   }
   deriving (Typeable)
@@ -1501,8 +1521,8 @@ instance ToCStruct PhysicalDeviceVulkan12Properties where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (driverID)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))) (driverName)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (driverName)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
     ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (conformanceVersion) . ($ ())
     lift $ poke ((p `plusPtr` 536 :: Ptr ShaderFloatControlsIndependence)) (denormBehaviorIndependence)
     lift $ poke ((p `plusPtr` 540 :: Ptr ShaderFloatControlsIndependence)) (roundingModeIndependence)
@@ -1559,8 +1579,8 @@ instance ToCStruct PhysicalDeviceVulkan12Properties where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (zero)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (mempty)
     ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (zero) . ($ ())
     lift $ poke ((p `plusPtr` 536 :: Ptr ShaderFloatControlsIndependence)) (zero)
     lift $ poke ((p `plusPtr` 540 :: Ptr ShaderFloatControlsIndependence)) (zero)
@@ -1614,8 +1634,8 @@ instance ToCStruct PhysicalDeviceVulkan12Properties where
 instance FromCStruct PhysicalDeviceVulkan12Properties where
   peekCStruct p = do
     driverID <- peek @DriverId ((p `plusPtr` 16 :: Ptr DriverId))
-    driverName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))))
-    driverInfo <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))))
+    driverName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))))
+    driverInfo <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))))
     conformanceVersion <- peekCStruct @ConformanceVersion ((p `plusPtr` 532 :: Ptr ConformanceVersion))
     denormBehaviorIndependence <- peek @ShaderFloatControlsIndependence ((p `plusPtr` 536 :: Ptr ShaderFloatControlsIndependence))
     roundingModeIndependence <- peek @ShaderFloatControlsIndependence ((p `plusPtr` 540 :: Ptr ShaderFloatControlsIndependence))

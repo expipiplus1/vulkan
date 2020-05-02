@@ -18,9 +18,15 @@ module Graphics.Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                                    , ERROR_FORMAT_NOT_SUPPORTED
                                                    , ERROR_FRAGMENTED_POOL
                                                    , ERROR_UNKNOWN
+                                                   , PIPELINE_COMPILE_REQUIRED_EXT
+                                                   , OPERATION_NOT_DEFERRED_KHR
+                                                   , OPERATION_DEFERRED_KHR
+                                                   , THREAD_DONE_KHR
+                                                   , THREAD_IDLE_KHR
                                                    , ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
                                                    , ERROR_NOT_PERMITTED_EXT
                                                    , ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
+                                                   , ERROR_INCOMPATIBLE_VERSION_KHR
                                                    , ERROR_INVALID_SHADER_NV
                                                    , ERROR_VALIDATION_FAILED_EXT
                                                    , ERROR_INCOMPATIBLE_DISPLAY_KHR
@@ -66,18 +72,17 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- 'ERROR_UNKNOWN' will be returned by an implementation when an unexpected
 -- error occurs that cannot be attributed to valid behavior of the
--- application and implementation.
+-- application and implementation. Under these conditions, it /may/ be
+-- returned from any command returning a 'Result'.
 --
 -- Note
 --
--- If 'ERROR_UNKNOWN' is received, the application should be checked
--- against the latest validation layers to verify correct behavior as much
--- as possible. If no issues are identified it could be an implementation
+-- 'ERROR_UNKNOWN' is not expected to ever be returned if the application
+-- behavior is valid, and if the implementation is bug-free. If
+-- 'ERROR_UNKNOWN' is received, the application should be checked against
+-- the latest validation layers to verify correct behavior as much as
+-- possible. If no issues are identified it could be an implementation
 -- issue, and the implementor should be contacted for support.
---
--- This error should not be expected from any command if application
--- behavior is valid, and if the implementation is bug-free, but it can be
--- returned by /any/ error returning command when that is not the case.
 --
 -- Performance-critical commands generally do not have return codes. If a
 -- run time error occurs in such commands, the implementation will defer
@@ -142,6 +147,22 @@ pattern ERROR_FRAGMENTED_POOL = Result (-12)
 -- | 'ERROR_UNKNOWN' An unknown error has occurred; either the application
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN = Result (-13)
+-- | 'PIPELINE_COMPILE_REQUIRED_EXT' A requested pipeline creation would have
+-- required compilation, but the application requested compilation to not
+-- be performed.
+pattern PIPELINE_COMPILE_REQUIRED_EXT = Result 1000297000
+-- | 'OPERATION_NOT_DEFERRED_KHR' A deferred operation was requested and no
+-- operations were deferred.
+pattern OPERATION_NOT_DEFERRED_KHR = Result 1000268003
+-- | 'OPERATION_DEFERRED_KHR' A deferred operation was requested and at least
+-- some of the work was deferred.
+pattern OPERATION_DEFERRED_KHR = Result 1000268002
+-- | 'THREAD_DONE_KHR' A deferred operation is not complete but there is no
+-- work remaining to assign to additional threads.
+pattern THREAD_DONE_KHR = Result 1000268001
+-- | 'THREAD_IDLE_KHR' A deferred operation is not complete but there is
+-- currently no work for this thread to do at the time of this call.
+pattern THREAD_IDLE_KHR = Result 1000268000
 -- | 'ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT' An operation on a swapchain
 -- created with
 -- 'Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
@@ -153,10 +174,11 @@ pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = Result (-1000255000)
 pattern ERROR_NOT_PERMITTED_EXT = Result (-1000174001)
 -- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"
 pattern ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT = Result (-1000158000)
+-- No documentation found for Nested "VkResult" "VK_ERROR_INCOMPATIBLE_VERSION_KHR"
+pattern ERROR_INCOMPATIBLE_VERSION_KHR = Result (-1000150000)
 -- | 'ERROR_INVALID_SHADER_NV' One or more shaders failed to compile or link.
 -- More details are reported back to the application via
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_debug_report@
--- if enabled.
+-- @VK_EXT_debug_report@ if enabled.
 pattern ERROR_INVALID_SHADER_NV = Result (-1000012000)
 -- No documentation found for Nested "VkResult" "VK_ERROR_VALIDATION_FAILED_EXT"
 pattern ERROR_VALIDATION_FAILED_EXT = Result (-1000011001)
@@ -180,7 +202,9 @@ pattern ERROR_NATIVE_WINDOW_IN_USE_KHR = Result (-1000000001)
 -- | 'ERROR_SURFACE_LOST_KHR' A surface is no longer available.
 pattern ERROR_SURFACE_LOST_KHR = Result (-1000000000)
 -- | 'ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS' A buffer creation or memory
--- allocation failed because the requested address is not available.
+-- allocation failed because the requested address is not available. A
+-- shader group handle assignment failed because the requested shader group
+-- handle information is no longer valid.
 pattern ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS = Result (-1000257000)
 -- | 'ERROR_FRAGMENTATION' A descriptor pool creation has failed due to
 -- fragmentation.
@@ -213,9 +237,15 @@ pattern ERROR_OUT_OF_POOL_MEMORY = Result (-1000069000)
              ERROR_FORMAT_NOT_SUPPORTED,
              ERROR_FRAGMENTED_POOL,
              ERROR_UNKNOWN,
+             PIPELINE_COMPILE_REQUIRED_EXT,
+             OPERATION_NOT_DEFERRED_KHR,
+             OPERATION_DEFERRED_KHR,
+             THREAD_DONE_KHR,
+             THREAD_IDLE_KHR,
              ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
              ERROR_NOT_PERMITTED_EXT,
              ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT,
+             ERROR_INCOMPATIBLE_VERSION_KHR,
              ERROR_INVALID_SHADER_NV,
              ERROR_VALIDATION_FAILED_EXT,
              ERROR_INCOMPATIBLE_DISPLAY_KHR,
@@ -249,9 +279,15 @@ instance Show Result where
     ERROR_FORMAT_NOT_SUPPORTED -> showString "ERROR_FORMAT_NOT_SUPPORTED"
     ERROR_FRAGMENTED_POOL -> showString "ERROR_FRAGMENTED_POOL"
     ERROR_UNKNOWN -> showString "ERROR_UNKNOWN"
+    PIPELINE_COMPILE_REQUIRED_EXT -> showString "PIPELINE_COMPILE_REQUIRED_EXT"
+    OPERATION_NOT_DEFERRED_KHR -> showString "OPERATION_NOT_DEFERRED_KHR"
+    OPERATION_DEFERRED_KHR -> showString "OPERATION_DEFERRED_KHR"
+    THREAD_DONE_KHR -> showString "THREAD_DONE_KHR"
+    THREAD_IDLE_KHR -> showString "THREAD_IDLE_KHR"
     ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> showString "ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"
     ERROR_NOT_PERMITTED_EXT -> showString "ERROR_NOT_PERMITTED_EXT"
     ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT -> showString "ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"
+    ERROR_INCOMPATIBLE_VERSION_KHR -> showString "ERROR_INCOMPATIBLE_VERSION_KHR"
     ERROR_INVALID_SHADER_NV -> showString "ERROR_INVALID_SHADER_NV"
     ERROR_VALIDATION_FAILED_EXT -> showString "ERROR_VALIDATION_FAILED_EXT"
     ERROR_INCOMPATIBLE_DISPLAY_KHR -> showString "ERROR_INCOMPATIBLE_DISPLAY_KHR"
@@ -285,9 +321,15 @@ instance Read Result where
                             , ("ERROR_FORMAT_NOT_SUPPORTED", pure ERROR_FORMAT_NOT_SUPPORTED)
                             , ("ERROR_FRAGMENTED_POOL", pure ERROR_FRAGMENTED_POOL)
                             , ("ERROR_UNKNOWN", pure ERROR_UNKNOWN)
+                            , ("PIPELINE_COMPILE_REQUIRED_EXT", pure PIPELINE_COMPILE_REQUIRED_EXT)
+                            , ("OPERATION_NOT_DEFERRED_KHR", pure OPERATION_NOT_DEFERRED_KHR)
+                            , ("OPERATION_DEFERRED_KHR", pure OPERATION_DEFERRED_KHR)
+                            , ("THREAD_DONE_KHR", pure THREAD_DONE_KHR)
+                            , ("THREAD_IDLE_KHR", pure THREAD_IDLE_KHR)
                             , ("ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT", pure ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT)
                             , ("ERROR_NOT_PERMITTED_EXT", pure ERROR_NOT_PERMITTED_EXT)
                             , ("ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT", pure ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT)
+                            , ("ERROR_INCOMPATIBLE_VERSION_KHR", pure ERROR_INCOMPATIBLE_VERSION_KHR)
                             , ("ERROR_INVALID_SHADER_NV", pure ERROR_INVALID_SHADER_NV)
                             , ("ERROR_VALIDATION_FAILED_EXT", pure ERROR_VALIDATION_FAILED_EXT)
                             , ("ERROR_INCOMPATIBLE_DISPLAY_KHR", pure ERROR_INCOMPATIBLE_DISPLAY_KHR)

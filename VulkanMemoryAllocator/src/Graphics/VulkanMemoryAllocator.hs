@@ -43,6 +43,8 @@ module Graphics.VulkanMemoryAllocator  ( createAllocator
                                        , unmapMemory
                                        , flushAllocation
                                        , invalidateAllocation
+                                       , flushAllocations
+                                       , invalidateAllocations
                                        , checkCorruption
                                        , defragmentationBegin
                                        , withDefragmentation
@@ -168,6 +170,7 @@ import Graphics.Vulkan (PhysicalDeviceMemoryProperties2)
 import Graphics.Vulkan (PhysicalDeviceProperties)
 import Graphics.Vulkan (PhysicalDevice_T)
 import Graphics.Vulkan (Result)
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
@@ -200,6 +203,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Graphics.Vulkan.Core10.APIConstants (pattern MAX_MEMORY_HEAPS)
 import Graphics.Vulkan.Core10.APIConstants (pattern MAX_MEMORY_TYPES)
 import Graphics.Vulkan.Core10.Enums.Result (pattern SUCCESS)
@@ -246,7 +250,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -265,14 +268,17 @@ createAllocator createInfo = liftIO . evalContT $ do
   pAllocator <- lift $ peek @Allocator pPAllocator
   pure $ (pAllocator)
 
--- | A safe wrapper for 'createAllocator' and 'destroyAllocator' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createAllocator' and 'destroyAllocator'
 --
--- The allocated value must not be returned from the provided computation
-withAllocator :: forall r . AllocatorCreateInfo -> ((Allocator) -> IO r) -> IO r
-withAllocator pCreateInfo =
-  bracket
-    (createAllocator pCreateInfo)
+-- To ensure that 'destroyAllocator' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withAllocator :: forall io r . MonadIO io => (io (Allocator) -> ((Allocator) -> io ()) -> r) -> AllocatorCreateInfo -> r
+withAllocator b pCreateInfo =
+  b (createAllocator pCreateInfo)
     (\(o0) -> destroyAllocator o0)
 
 
@@ -610,13 +616,17 @@ createPool allocator createInfo = liftIO . evalContT $ do
   pPool <- lift $ peek @Pool pPPool
   pure $ (pPool)
 
--- | A safe wrapper for 'createPool' and 'destroyPool' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to 'createPool'
+-- and 'destroyPool'
 --
--- The allocated value must not be returned from the provided computation
-withPool :: forall r . Allocator -> PoolCreateInfo -> ((Pool) -> IO r) -> IO r
-withPool allocator pCreateInfo =
-  bracket
-    (createPool allocator pCreateInfo)
+-- To ensure that 'destroyPool' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withPool :: forall io r . MonadIO io => (io (Pool) -> ((Pool) -> io ()) -> r) -> Allocator -> PoolCreateInfo -> r
+withPool b allocator pCreateInfo =
+  b (createPool allocator pCreateInfo)
     (\(o0) -> destroyPool allocator o0)
 
 
@@ -801,13 +811,17 @@ allocateMemory allocator vkMemoryRequirements createInfo = liftIO . evalContT $ 
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pAllocation, pAllocationInfo)
 
--- | A safe wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'allocateMemory' and 'freeMemory'
 --
--- The allocated value must not be returned from the provided computation
-withMemory :: forall r . Allocator -> MemoryRequirements -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
-withMemory allocator pVkMemoryRequirements pCreateInfo =
-  bracket
-    (allocateMemory allocator pVkMemoryRequirements pCreateInfo)
+-- To ensure that 'freeMemory' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withMemory :: forall io r . MonadIO io => (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> MemoryRequirements -> AllocationCreateInfo -> r
+withMemory b allocator pVkMemoryRequirements pCreateInfo =
+  b (allocateMemory allocator pVkMemoryRequirements pCreateInfo)
     (\(o0, _) -> freeMemory allocator o0)
 
 
@@ -872,14 +886,17 @@ allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalCon
   pAllocationInfo <- lift $ generateM (fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) (\i -> peekCStruct @AllocationInfo (((pPAllocationInfo) `advancePtrBytes` (48 * (i)) :: Ptr AllocationInfo)))
   pure $ (pAllocations, pAllocationInfo)
 
--- | A safe wrapper for 'allocateMemoryPages' and 'freeMemoryPages' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'allocateMemoryPages' and 'freeMemoryPages'
 --
--- The allocated value must not be returned from the provided computation
-withMemoryPages :: forall r . Allocator -> Vector MemoryRequirements -> Vector AllocationCreateInfo -> ((Vector Allocation, Vector AllocationInfo) -> IO r) -> IO r
-withMemoryPages allocator pVkMemoryRequirements pCreateInfo =
-  bracket
-    (allocateMemoryPages allocator pVkMemoryRequirements pCreateInfo)
+-- To ensure that 'freeMemoryPages' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withMemoryPages :: forall io r . MonadIO io => (io (Vector Allocation, Vector AllocationInfo) -> ((Vector Allocation, Vector AllocationInfo) -> io ()) -> r) -> Allocator -> Vector MemoryRequirements -> Vector AllocationCreateInfo -> r
+withMemoryPages b allocator pVkMemoryRequirements pCreateInfo =
+  b (allocateMemoryPages allocator pVkMemoryRequirements pCreateInfo)
     (\(o0, _) -> freeMemoryPages allocator o0)
 
 
@@ -912,14 +929,17 @@ allocateMemoryForBuffer allocator buffer createInfo = liftIO . evalContT $ do
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pAllocation, pAllocationInfo)
 
--- | A safe wrapper for 'allocateMemoryForBuffer' and 'freeMemory' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'allocateMemoryForBuffer' and 'freeMemory'
 --
--- The allocated value must not be returned from the provided computation
-withMemoryForBuffer :: forall r . Allocator -> Buffer -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
-withMemoryForBuffer allocator buffer pCreateInfo =
-  bracket
-    (allocateMemoryForBuffer allocator buffer pCreateInfo)
+-- To ensure that 'freeMemory' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withMemoryForBuffer :: forall io r . MonadIO io => (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> Buffer -> AllocationCreateInfo -> r
+withMemoryForBuffer b allocator buffer pCreateInfo =
+  b (allocateMemoryForBuffer allocator buffer pCreateInfo)
     (\(o0, _) -> freeMemory allocator o0)
 
 
@@ -942,14 +962,17 @@ allocateMemoryForImage allocator image createInfo = liftIO . evalContT $ do
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pAllocation, pAllocationInfo)
 
--- | A safe wrapper for 'allocateMemoryForImage' and 'freeMemory' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'allocateMemoryForImage' and 'freeMemory'
 --
--- The allocated value must not be returned from the provided computation
-withMemoryForImage :: forall r . Allocator -> Image -> AllocationCreateInfo -> ((Allocation, AllocationInfo) -> IO r) -> IO r
-withMemoryForImage allocator image pCreateInfo =
-  bracket
-    (allocateMemoryForImage allocator image pCreateInfo)
+-- To ensure that 'freeMemory' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withMemoryForImage :: forall io r . MonadIO io => (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> Image -> AllocationCreateInfo -> r
+withMemoryForImage b allocator image pCreateInfo =
+  b (allocateMemoryForImage allocator image pCreateInfo)
     (\(o0, _) -> freeMemory allocator o0)
 
 
@@ -1135,14 +1158,17 @@ createLostAllocation allocator = liftIO . evalContT $ do
   pAllocation <- lift $ peek @Allocation pPAllocation
   pure $ (pAllocation)
 
--- | A safe wrapper for 'createLostAllocation' and 'freeMemory' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createLostAllocation' and 'freeMemory'
 --
--- The allocated value must not be returned from the provided computation
-withLostAllocation :: forall r . Allocator -> ((Allocation) -> IO r) -> IO r
-withLostAllocation allocator =
-  bracket
-    (createLostAllocation allocator)
+-- To ensure that 'freeMemory' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withLostAllocation :: forall io r . MonadIO io => (io (Allocation) -> ((Allocation) -> io ()) -> r) -> Allocator -> r
+withLostAllocation b allocator =
+  b (createLostAllocation allocator)
     (\(o0) -> freeMemory allocator o0)
 
 
@@ -1201,13 +1227,17 @@ mapMemory allocator allocation = liftIO . evalContT $ do
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
 
--- | A safe wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to 'mapMemory'
+-- and 'unmapMemory'
 --
--- The allocated value must not be returned from the provided computation
-withMappedMemory :: forall r . Allocator -> Allocation -> ((Ptr ()) -> IO r) -> IO r
-withMappedMemory allocator allocation =
-  bracket
-    (mapMemory allocator allocation)
+-- To ensure that 'unmapMemory' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withMappedMemory :: forall io r . MonadIO io => (io (Ptr ()) -> ((Ptr ()) -> io ()) -> r) -> Allocator -> Allocation -> r
+withMappedMemory b allocator allocation =
+  b (mapMemory allocator allocation)
     (\(_) -> unmapMemory allocator allocation)
 
 
@@ -1312,6 +1342,129 @@ invalidateAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("o
 invalidateAllocation allocator allocation offset size = liftIO $ do
   r <- (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
   when (r < SUCCESS) (throwIO (VulkanException r))
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaFlushAllocations" ffiVmaFlushAllocations
+  :: Allocator -> Word32 -> Ptr Allocation -> Ptr DeviceSize -> Ptr DeviceSize -> IO Result
+
+-- | Flushes memory of given set of allocations.
+--
+-- Calls @vkFlushMappedMemoryRanges()@ for memory associated with given
+-- ranges of given allocations. For more information, see documentation of
+-- 'flushAllocation'.
+--
+-- __Parameters.__
+--
+-- +-----------------+--------------------------------------------------------+
+-- | allocator       |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocationCount |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocations     |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | offsets         | If not null, it must point to an array of offsets of   |
+-- |                 | regions to flush, relative to the beginning of         |
+-- |                 | respective allocations. Null means all ofsets are      |
+-- |                 | zero.                                                  |
+-- +-----------------+--------------------------------------------------------+
+-- | sizes           | If not null, it must point to an array of sizes of     |
+-- |                 | regions to flush in respective allocations. Null means |
+-- |                 | @VK_WHOLE_SIZE@ for all allocations.                   |
+-- +-----------------+--------------------------------------------------------+
+--
+-- This function returns the @VkResult@ from @vkFlushMappedMemoryRanges@ if
+-- it is called, otherwise @VK_SUCCESS@.
+flushAllocations :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
+flushAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
+  let allocationsLength = Data.Vector.length $ (allocations)
+  let offsetsLength = Data.Vector.length $ (offsets)
+  lift $ unless (fromIntegral offsetsLength == allocationsLength || offsetsLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "offsets and allocations must have the same length" Nothing Nothing
+  let sizesLength = Data.Vector.length $ (sizes)
+  lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
+  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
+  offsets' <- if Data.Vector.null (offsets)
+    then pure nullPtr
+    else do
+      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
+      pure $ pOffsets
+  sizes' <- if Data.Vector.null (sizes)
+    then pure nullPtr
+    else do
+      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
+      pure $ pSizes
+  r <- lift $ (ffiVmaFlushAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes'
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaInvalidateAllocations" ffiVmaInvalidateAllocations
+  :: Allocator -> Word32 -> Ptr Allocation -> Ptr DeviceSize -> Ptr DeviceSize -> IO Result
+
+-- | Invalidates memory of given set of allocations.
+--
+-- Calls @vkInvalidateMappedMemoryRanges()@ for memory associated with
+-- given ranges of given allocations. For more information, see
+-- documentation of 'invalidateAllocation'.
+--
+-- __Parameters.__
+--
+-- +-----------------+--------------------------------------------------------+
+-- | allocator       |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocationCount |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | allocations     |                                                        |
+-- +-----------------+--------------------------------------------------------+
+-- | offsets         | If not null, it must point to an array of offsets of   |
+-- |                 | regions to flush, relative to the beginning of         |
+-- |                 | respective allocations. Null means all ofsets are      |
+-- |                 | zero.                                                  |
+-- +-----------------+--------------------------------------------------------+
+-- | sizes           | If not null, it must point to an array of sizes of     |
+-- |                 | regions to flush in respective allocations. Null means |
+-- |                 | @VK_WHOLE_SIZE@ for all allocations.                   |
+-- +-----------------+--------------------------------------------------------+
+--
+-- This function returns the @VkResult@ from
+-- @vkInvalidateMappedMemoryRanges@ if it is called, otherwise
+-- @VK_SUCCESS@.
+invalidateAllocations :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
+invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
+  let allocationsLength = Data.Vector.length $ (allocations)
+  let offsetsLength = Data.Vector.length $ (offsets)
+  lift $ unless (fromIntegral offsetsLength == allocationsLength || offsetsLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "offsets and allocations must have the same length" Nothing Nothing
+  let sizesLength = Data.Vector.length $ (sizes)
+  lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
+    throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
+  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
+  offsets' <- if Data.Vector.null (offsets)
+    then pure nullPtr
+    else do
+      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
+      pure $ pOffsets
+  sizes' <- if Data.Vector.null (sizes)
+    then pure nullPtr
+    else do
+      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
+      pure $ pSizes
+  r <- lift $ (ffiVmaInvalidateAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes'
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
@@ -1425,14 +1578,17 @@ defragmentationBegin allocator info = liftIO . evalContT $ do
   pContext <- lift $ peek @DefragmentationContext pPContext
   pure $ (r, pStats, pContext)
 
--- | A safe wrapper for 'defragmentationBegin' and 'defragmentationEnd' using
--- 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'defragmentationBegin' and 'defragmentationEnd'
 --
--- The allocated value must not be returned from the provided computation
-withDefragmentation :: forall r . Allocator -> DefragmentationInfo2 -> ((Result, DefragmentationStats, DefragmentationContext) -> IO r) -> IO r
-withDefragmentation allocator pInfo =
-  bracket
-    (defragmentationBegin allocator pInfo)
+-- To ensure that 'defragmentationEnd' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDefragmentation :: forall io r . MonadIO io => (io (Result, DefragmentationStats, DefragmentationContext) -> ((Result, DefragmentationStats, DefragmentationContext) -> io ()) -> r) -> Allocator -> DefragmentationInfo2 -> r
+withDefragmentation b allocator pInfo =
+  b (defragmentationBegin allocator pInfo)
     (\(_, _, o2) -> defragmentationEnd allocator o2)
 
 
@@ -1470,14 +1626,17 @@ beginDefragmentationPass allocator context = liftIO . evalContT $ do
   pInfo <- lift $ peekCStruct @DefragmentationPassInfo pPInfo
   pure $ (pInfo)
 
--- | A safe wrapper for 'beginDefragmentationPass' and
--- 'endDefragmentationPass' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'beginDefragmentationPass' and 'endDefragmentationPass'
 --
--- The allocated value must not be returned from the provided computation
-withDefragmentationPass :: forall r . Allocator -> DefragmentationContext -> ((DefragmentationPassInfo) -> IO r) -> IO r
-withDefragmentationPass allocator context =
-  bracket
-    (beginDefragmentationPass allocator context)
+-- To ensure that 'endDefragmentationPass' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withDefragmentationPass :: forall io r . MonadIO io => (io (DefragmentationPassInfo) -> ((DefragmentationPassInfo) -> io ()) -> r) -> Allocator -> DefragmentationContext -> r
+withDefragmentationPass b allocator context =
+  b (beginDefragmentationPass allocator context)
     (\(_) -> endDefragmentationPass allocator context)
 
 
@@ -1769,13 +1928,17 @@ createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalCont
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pBuffer, pAllocation, pAllocationInfo)
 
--- | A safe wrapper for 'createBuffer' and 'destroyBuffer' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createBuffer' and 'destroyBuffer'
 --
--- The allocated value must not be returned from the provided computation
-withBuffer :: forall a r . PokeChain a => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> ((Buffer, Allocation, AllocationInfo) -> IO r) -> IO r
-withBuffer allocator pBufferCreateInfo pAllocationCreateInfo =
-  bracket
-    (createBuffer allocator pBufferCreateInfo pAllocationCreateInfo)
+-- To ensure that 'destroyBuffer' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withBuffer :: forall a io r . (PokeChain a, MonadIO io) => (io (Buffer, Allocation, AllocationInfo) -> ((Buffer, Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> r
+withBuffer b allocator pBufferCreateInfo pAllocationCreateInfo =
+  b (createBuffer allocator pBufferCreateInfo pAllocationCreateInfo)
     (\(o0, o1, _) -> destroyBuffer allocator o0 o1)
 
 
@@ -1823,13 +1986,17 @@ createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT 
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pImage, pAllocation, pAllocationInfo)
 
--- | A safe wrapper for 'createImage' and 'destroyImage' using 'bracket'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createImage' and 'destroyImage'
 --
--- The allocated value must not be returned from the provided computation
-withImage :: forall a r . PokeChain a => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> ((Image, Allocation, AllocationInfo) -> IO r) -> IO r
-withImage allocator pImageCreateInfo pAllocationCreateInfo =
-  bracket
-    (createImage allocator pImageCreateInfo pAllocationCreateInfo)
+-- To ensure that 'destroyImage' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the first argument.
+-- To just extract the pair pass '(,)' as the first argument.
+--
+withImage :: forall a io r . (PokeChain a, MonadIO io) => (io (Image, Allocation, AllocationInfo) -> ((Image, Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> r
+withImage b allocator pImageCreateInfo pAllocationCreateInfo =
+  b (createImage allocator pImageCreateInfo pAllocationCreateInfo)
     (\(o0, o1, _) -> destroyImage allocator o0 o1)
 
 
@@ -2781,10 +2948,10 @@ instance ToCStruct Stats where
   pokeCStruct p Stats{..} f = do
     unless ((Data.Vector.length $ (memoryType)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryType is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (memoryType)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray MAX_MEMORY_TYPES StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (memoryType)
     unless ((Data.Vector.length $ (memoryHeap)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeap is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 2560 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (memoryHeap)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 2560 :: Ptr (FixedArray MAX_MEMORY_HEAPS StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (memoryHeap)
     poke ((p `plusPtr` 3840 :: Ptr StatInfo)) (total)
     f
   cStructSize = 3920
@@ -2792,17 +2959,17 @@ instance ToCStruct Stats where
   pokeZeroCStruct p f = do
     unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryType is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (mempty)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray MAX_MEMORY_TYPES StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (mempty)
     unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeap is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 2560 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (mempty)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 2560 :: Ptr (FixedArray MAX_MEMORY_HEAPS StatInfo)))) `plusPtr` (80 * (i)) :: Ptr StatInfo) (e)) (mempty)
     poke ((p `plusPtr` 3840 :: Ptr StatInfo)) (zero)
     f
 
 instance FromCStruct Stats where
   peekCStruct p = do
-    memoryType <- generateM (MAX_MEMORY_TYPES) (\i -> peekCStruct @StatInfo (((lowerArrayPtr @StatInfo ((p `plusPtr` 0 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES StatInfo)))) `advancePtrBytes` (80 * (i)) :: Ptr StatInfo)))
-    memoryHeap <- generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @StatInfo (((lowerArrayPtr @StatInfo ((p `plusPtr` 2560 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS StatInfo)))) `advancePtrBytes` (80 * (i)) :: Ptr StatInfo)))
+    memoryType <- generateM (MAX_MEMORY_TYPES) (\i -> peekCStruct @StatInfo (((lowerArrayPtr @StatInfo ((p `plusPtr` 0 :: Ptr (FixedArray MAX_MEMORY_TYPES StatInfo)))) `advancePtrBytes` (80 * (i)) :: Ptr StatInfo)))
+    memoryHeap <- generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @StatInfo (((lowerArrayPtr @StatInfo ((p `plusPtr` 2560 :: Ptr (FixedArray MAX_MEMORY_HEAPS StatInfo)))) `advancePtrBytes` (80 * (i)) :: Ptr StatInfo)))
     total <- peekCStruct @StatInfo ((p `plusPtr` 3840 :: Ptr StatInfo))
     pure $ Stats
              memoryType memoryHeap total

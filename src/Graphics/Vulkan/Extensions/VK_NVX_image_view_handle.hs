@@ -1,6 +1,8 @@
 {-# language CPP #-}
 module Graphics.Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandleNVX
+                                                            , getImageViewAddressNVX
                                                             , ImageViewHandleInfoNVX(..)
+                                                            , ImageViewAddressPropertiesNVX(..)
                                                             , NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
                                                             , pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
                                                             , NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
@@ -9,6 +11,8 @@ module Graphics.Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandle
 
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base (when)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -28,17 +32,26 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Graphics.Vulkan.Core10.Enums.DescriptorType (DescriptorType)
 import Graphics.Vulkan.Core10.Handles (Device)
 import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Core10.BaseType (DeviceAddress)
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetImageViewAddressNVX))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandleNVX))
+import Graphics.Vulkan.Core10.BaseType (DeviceSize)
 import Graphics.Vulkan.Core10.Handles (Device_T)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
 import Graphics.Vulkan.Core10.Handles (ImageView)
+import Graphics.Vulkan.Core10.Handles (ImageView(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
 import Graphics.Vulkan.Core10.Handles (Sampler)
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
 import Graphics.Vulkan.CStruct (ToCStruct)
 import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
 import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -66,6 +79,49 @@ getImageViewHandleNVX device info = liftIO . evalContT $ do
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetImageViewHandleNVX' (deviceHandle (device)) pInfo
   pure $ (r)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetImageViewAddressNVX
+  :: FunPtr (Ptr Device_T -> ImageView -> Ptr ImageViewAddressPropertiesNVX -> IO Result) -> Ptr Device_T -> ImageView -> Ptr ImageViewAddressPropertiesNVX -> IO Result
+
+-- | vkGetImageViewAddressNVX - Get the device address of an image view
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the image view.
+--
+-- -   @imageView@ is a handle to the image view.
+--
+-- -   @pProperties@ contains the device address and size when the call
+--     returns.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_UNKNOWN'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.ImageView',
+-- 'ImageViewAddressPropertiesNVX'
+getImageViewAddressNVX :: forall io . MonadIO io => Device -> ImageView -> io (ImageViewAddressPropertiesNVX)
+getImageViewAddressNVX device imageView = liftIO . evalContT $ do
+  let vkGetImageViewAddressNVX' = mkVkGetImageViewAddressNVX (pVkGetImageViewAddressNVX (deviceCmds (device :: Device)))
+  pPProperties <- ContT (withZeroCStruct @ImageViewAddressPropertiesNVX)
+  r <- lift $ vkGetImageViewAddressNVX' (deviceHandle (device)) (imageView) (pPProperties)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pProperties <- lift $ peekCStruct @ImageViewAddressPropertiesNVX pPProperties
+  pure $ (pProperties)
 
 
 -- | VkImageViewHandleInfoNVX - Structure specifying the image view for
@@ -178,11 +234,67 @@ instance Zero ImageViewHandleInfoNVX where
            zero
 
 
-type NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 1
+-- | VkImageViewAddressPropertiesNVX - Structure specifying the image view
+-- for handle queries
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceAddress',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'getImageViewAddressNVX'
+data ImageViewAddressPropertiesNVX = ImageViewAddressPropertiesNVX
+  { -- | @deviceAddress@ is the device address of the image view.
+    deviceAddress :: DeviceAddress
+  , -- | @size@ is the size in bytes of the image view device memory.
+    size :: DeviceSize
+  }
+  deriving (Typeable)
+deriving instance Show ImageViewAddressPropertiesNVX
+
+instance ToCStruct ImageViewAddressPropertiesNVX where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ImageViewAddressPropertiesNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DeviceAddress)) (deviceAddress)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (size)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DeviceAddress)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
+    f
+
+instance FromCStruct ImageViewAddressPropertiesNVX where
+  peekCStruct p = do
+    deviceAddress <- peek @DeviceAddress ((p `plusPtr` 16 :: Ptr DeviceAddress))
+    size <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
+    pure $ ImageViewAddressPropertiesNVX
+             deviceAddress size
+
+instance Storable ImageViewAddressPropertiesNVX where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ImageViewAddressPropertiesNVX where
+  zero = ImageViewAddressPropertiesNVX
+           zero
+           zero
+
+
+type NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"
 pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION :: forall a . Integral a => a
-pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 1
+pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 2
 
 
 type NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME = "VK_NVX_image_view_handle"

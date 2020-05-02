@@ -861,7 +861,7 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 --     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo'::@pSetLayouts@[i]
 --     has a variable descriptor count binding, then @pDescriptorCounts@[i]
 --     /must/ be less than or equal to the descriptor count specified for
---     that binding when the descriptor set layout was created.
+--     that binding when the descriptor set layout was created
 --
 -- == Valid Usage (Implicit)
 --

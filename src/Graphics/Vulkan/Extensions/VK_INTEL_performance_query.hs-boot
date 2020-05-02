@@ -5,7 +5,7 @@ module Graphics.Vulkan.Extensions.VK_INTEL_performance_query  ( InitializePerfor
                                                               , PerformanceOverrideInfoINTEL
                                                               , PerformanceStreamMarkerInfoINTEL
                                                               , PerformanceValueINTEL
-                                                              , QueryPoolCreateInfoINTEL
+                                                              , QueryPoolPerformanceQueryCreateInfoINTEL
                                                               , PerformanceParameterTypeINTEL
                                                               ) where
 
@@ -60,12 +60,12 @@ instance Show PerformanceValueINTEL
 instance FromCStruct PerformanceValueINTEL
 
 
-data QueryPoolCreateInfoINTEL
+data QueryPoolPerformanceQueryCreateInfoINTEL
 
-instance ToCStruct QueryPoolCreateInfoINTEL
-instance Show QueryPoolCreateInfoINTEL
+instance ToCStruct QueryPoolPerformanceQueryCreateInfoINTEL
+instance Show QueryPoolPerformanceQueryCreateInfoINTEL
 
-instance FromCStruct QueryPoolCreateInfoINTEL
+instance FromCStruct QueryPoolPerformanceQueryCreateInfoINTEL
 
 
 data PerformanceParameterTypeINTEL

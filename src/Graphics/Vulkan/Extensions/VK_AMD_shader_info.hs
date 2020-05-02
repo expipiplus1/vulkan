@@ -13,6 +13,7 @@ module Graphics.Vulkan.Extensions.VK_AMD_shader_info  ( getShaderInfoAMD
                                                       , pattern AMD_SHADER_INFO_EXTENSION_NAME
                                                       ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -56,7 +57,6 @@ import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.NamedType ((:::))
@@ -102,7 +102,7 @@ foreign import ccall
 -- -   @pInfoSize@ is a pointer to a value related to the amount of data
 --     the query returns, as described below.
 --
--- -   @pInfo@ is either NULL or a pointer to a buffer.
+-- -   @pInfo@ is either @NULL@ or a pointer to a buffer.
 --
 -- = Description
 --
@@ -327,7 +327,7 @@ instance ToCStruct ShaderStatisticsInfoAMD where
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (numPhysicalSgprs)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (numAvailableVgprs)
     lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (numAvailableSgprs)
-    let pComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (FixedArray 3 Word32)))
     lift $ case (computeWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pComputeWorkGroupSize' :: Ptr Word32) (e0)
@@ -343,7 +343,7 @@ instance ToCStruct ShaderStatisticsInfoAMD where
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
-    let pComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 56 :: Ptr (FixedArray 3 Word32)))
     lift $ case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pComputeWorkGroupSize' :: Ptr Word32) (e0)
@@ -359,7 +359,7 @@ instance FromCStruct ShaderStatisticsInfoAMD where
     numPhysicalSgprs <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     numAvailableVgprs <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     numAvailableSgprs <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
-    let pcomputeWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 56 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pcomputeWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 56 :: Ptr (FixedArray 3 Word32)))
     computeWorkGroupSize0 <- peek @Word32 ((pcomputeWorkGroupSize `advancePtrBytes` 0 :: Ptr Word32))
     computeWorkGroupSize1 <- peek @Word32 ((pcomputeWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     computeWorkGroupSize2 <- peek @Word32 ((pcomputeWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))

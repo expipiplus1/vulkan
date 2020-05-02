@@ -44,6 +44,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                                     , SurfaceTransformFlagsKHR
                                                     ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -90,7 +91,6 @@ import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -253,10 +253,10 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pCreateInfo.surface@ /must/ be externally
+-- -   Host access to @pCreateInfo->surface@ /must/ be externally
 --     synchronized
 --
--- -   Host access to @pCreateInfo.oldSwapchain@ /must/ be externally
+-- -   Host access to @pCreateInfo->oldSwapchain@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -297,8 +297,8 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
   pSwapchain <- lift $ peek @SwapchainKHR pPSwapchain
   pure $ (pSwapchain)
 
--- | A convenience wrapper to make a compatible pair of 'createSwapchainKHR'
--- and 'destroySwapchainKHR'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createSwapchainKHR' and 'destroySwapchainKHR'
 --
 -- To ensure that 'destroySwapchainKHR' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -682,22 +682,22 @@ foreign import ccall
 -- -   When a semaphore wait operation referring to a binary semaphore
 --     defined by the elements of the @pWaitSemaphores@ member of
 --     @pPresentInfo@ executes on @queue@, there /must/ be no other queues
---     waiting on the same semaphore.
+--     waiting on the same semaphore
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ be semaphores that are signaled, or have
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
---     previously submitted for execution.
+--     previously submitted for execution
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ be created with a
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
---     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
+--     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ reference a semaphore signal operation that has been
 --     submitted for execution and any semaphore signal operations on which
---     it depends (if any) /must/ have also been submitted for execution.
+--     it depends (if any) /must/ have also been submitted for execution
 --
 -- Any writes to memory backing the images referenced by the
 -- @pImageIndices@ and @pSwapchains@ members of @pPresentInfo@, that are
@@ -713,6 +713,17 @@ foreign import ccall
 -- queue operations does not include the actual processing of the image by
 -- the presentation engine.
 --
+-- Note
+--
+-- The origin of the native orientation of the surface coordinate system is
+-- not specified in the Vulkan specification; it depends on the platform.
+-- For most platforms the origin is by default upper-left, meaning the
+-- pixel of the presented 'Graphics.Vulkan.Core10.Handles.Image' at
+-- coordinates (0,0) would appear at the upper left pixel of the platform
+-- surface (assuming
+-- 'Graphics.Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- and the display standing the right way up).
+--
 -- If 'queuePresentKHR' fails to enqueue the corresponding set of queue
 -- operations, it /may/ return
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' or
@@ -727,9 +738,10 @@ foreign import ccall
 --
 -- However, if the presentation request is rejected by the presentation
 -- engine with an error
--- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR' or
--- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set of
--- queue operations are still considered to be enqueued and thus any
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR',
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT',
+-- or 'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR', the set
+-- of queue operations are still considered to be enqueued and thus any
 -- semaphore wait operation specified in 'PresentInfoKHR' will execute when
 -- the corresponding queue operation is complete.
 --
@@ -752,10 +764,10 @@ foreign import ccall
 --
 -- -   Host access to @queue@ /must/ be externally synchronized
 --
--- -   Host access to @pPresentInfo.pWaitSemaphores@[] /must/ be externally
---     synchronized
+-- -   Host access to @pPresentInfo->pWaitSemaphores@[] /must/ be
+--     externally synchronized
 --
--- -   Host access to @pPresentInfo.pSwapchains@[] /must/ be externally
+-- -   Host access to @pPresentInfo->pSwapchains@[] /must/ be externally
 --     synchronized
 --
 -- == Command Properties
@@ -1844,7 +1856,7 @@ instance ToCStruct DeviceGroupPresentCapabilitiesKHR where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     unless ((Data.Vector.length $ (presentMask)) <= MAX_DEVICE_GROUP_SIZE) $
       throwIO $ IOError Nothing InvalidArgument "" "presentMask is too long, a maximum of MAX_DEVICE_GROUP_SIZE elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (presentMask)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (presentMask)
     poke ((p `plusPtr` 144 :: Ptr DeviceGroupPresentModeFlagsKHR)) (modes)
     f
   cStructSize = 152
@@ -1854,13 +1866,13 @@ instance ToCStruct DeviceGroupPresentCapabilitiesKHR where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     unless ((Data.Vector.length $ (mempty)) <= MAX_DEVICE_GROUP_SIZE) $
       throwIO $ IOError Nothing InvalidArgument "" "presentMask is too long, a maximum of MAX_DEVICE_GROUP_SIZE elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
+    Data.Vector.imapM_ (\i e -> poke ((lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE Word32)))) `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
     poke ((p `plusPtr` 144 :: Ptr DeviceGroupPresentModeFlagsKHR)) (zero)
     f
 
 instance FromCStruct DeviceGroupPresentCapabilitiesKHR where
   peekCStruct p = do
-    presentMask <- generateM (MAX_DEVICE_GROUP_SIZE) (\i -> peek @Word32 (((lowerArrayPtr @Word32 ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DEVICE_GROUP_SIZE Word32)))) `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
+    presentMask <- generateM (MAX_DEVICE_GROUP_SIZE) (\i -> peek @Word32 (((lowerArrayPtr @Word32 ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DEVICE_GROUP_SIZE Word32)))) `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     modes <- peek @DeviceGroupPresentModeFlagsKHR ((p `plusPtr` 144 :: Ptr DeviceGroupPresentModeFlagsKHR))
     pure $ DeviceGroupPresentCapabilitiesKHR
              presentMask modes
@@ -2218,7 +2230,7 @@ instance Zero AcquireNextImageInfoKHR where
 -- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR', then each
 --     element of @pDeviceMasks@ /must/ have exactly one bit set, and some
 --     physical device in the logical device /must/ include that bit in its
---     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@.
+--     'DeviceGroupPresentCapabilitiesKHR'::@presentMask@
 --
 -- -   If @mode@ is 'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR', then each
 --     element of @pDeviceMasks@ /must/ have a value for which all set bits

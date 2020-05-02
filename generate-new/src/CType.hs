@@ -1,7 +1,8 @@
 module CType
   where
 
-import           Data.ByteString.Char8         as BS
+import qualified Data.ByteString.Char8         as BS
+import           Data.List.Extra               as List
 import qualified Language.C.Types              as C
 import           Language.C.Types.Parse  hiding ( Array
                                                 , Proto
@@ -12,6 +13,7 @@ import           Polysemy.Input
 import           Relude                  hiding ( Const )
 import           Spec.Name
 import qualified Text.Parsec.Char              as Parsec
+import qualified Text.Parser.Token             as Parser
 import qualified Text.ParserCombinators.Parsec.Combinator
                                                as Parsec
 
@@ -31,11 +33,14 @@ data CType
     -- ^ Qualifies the pointed to type
   | TypeName CName
   | Proto CType [(Maybe Text, CType)]
+  | Bitfield CType Int
+    -- ^ A type and some number of bits
   deriving (Show, Eq, Ord)
 
 data ArraySize
   = NumericArraySize Word
   | SymbolicArraySize CName
+  | MultipleArraySize Word ArraySize
   deriving (Show, Eq, Ord)
 
 data Qualifier
@@ -61,12 +66,24 @@ parseCType bs = do
         parseContext
         "no source"
         (typeStringWorkarounds bs)
-        (  C.parseParameterDeclaration
-        <* ReaderT (const (optional (Parsec.char ';') >> Parsec.eof))
+        (do
+          t    <- C.parseParameterDeclaration
+          bits <- ReaderT (const (optional (Parsec.char ':' *> Parser.natural)))
+          ReaderT (const (optional (Parsec.char ';') >> Parsec.eof))
+          pure (t, bits)
         )
     of
-      Left  err                          -> throw (show err)
-      Right (C.ParameterDeclaration _ t) -> cTypeToType t
+      Left  err -> throw (show err)
+      Right (C.ParameterDeclaration _ t, bits) -> do
+        r <- cTypeToType t
+        pure $ case bits of
+          Nothing -> r
+          Just b  -> Bitfield r (fromIntegral b)
+
+unBitfield :: CType -> CType
+unBitfield = \case
+  Bitfield ty _ -> ty
+  ty            -> ty
 
 cTypeToType :: HasErr r => C -> Sem r CType
 cTypeToType = \case
@@ -101,8 +118,16 @@ arraySize :: HasErr r => C.ArrayType C.CIdentifier -> Sem r ArraySize
 arraySize = \case
   C.SizedByInteger i | i >= 0    -> pure $ NumericArraySize (fromInteger i)
                      | otherwise -> throw "Negative C array size"
-  C.SizedByIdentifier t ->
-    pure $ SymbolicArraySize (CName . fromString . unCIdentifier $ t)
+  C.SizedByIdentifier t
+    | xs <- List.splitOn "*" . unCIdentifier $ t
+    , length xs >= 2
+    , Just ms <- traverse readMaybe (List.init xs)
+    -> let end' = case List.last xs of
+             l | Just i <- readMaybe l -> NumericArraySize i
+               | otherwise -> SymbolicArraySize . CName . fromString $ l
+       in  pure $ Relude.foldr MultipleArraySize end' ms
+    | otherwise
+    -> pure $ SymbolicArraySize (CName . fromString . unCIdentifier $ t)
   _ -> throw "Unhandled C Array size"
 
 nameToType :: HasErr r => C.TypeSpecifier -> Sem r CType
@@ -132,6 +157,7 @@ getAllTypeNames = \case
   TypeName n  -> [n]
   Proto t ts ->
     getAllTypeNames t <> Relude.concatMap (getAllTypeNames . snd) ts
+  Bitfield t _ -> getAllTypeNames t
 
 ----------------------------------------------------------------
 -- Utils

@@ -53,7 +53,7 @@ data MarshalScheme a
   | Maybe (MarshalScheme a)
     -- ^ Any other scheme, but optional on the C side, This usually means it's
     -- represented as 0 (integral 0 or NULL) there
-  | Vector (MarshalScheme a)
+  | Vector Nullable (MarshalScheme a)
     -- ^ A pointer on the C side, usually paired with an ElidedLength scheme,
     -- The sub-scheme here is for elements
   | EitherWord32 (MarshalScheme a)
@@ -82,29 +82,23 @@ data MarshalScheme a
     -- ^ An elided scheme with some complex behavior
   deriving (Show, Eq, Ord)
 
+data Nullable = Nullable | NotNullable
+  deriving (Show, Eq, Ord)
+
 data CustomScheme a = CustomScheme
   { csName :: Text
     -- ^ A name for Eq and Ord, also useful for debugging
   , csZero :: Maybe (Doc ())
     -- ^ The 'zero' value for this scheme if possible
+  , csZeroIsZero :: Bool
+    -- ^ Does the 'zero' value write zero bytes (and can be omitted if we know
+    -- the bytes are zero already).
+    -- TODO, better name for this
   , csType
       :: forall r
        . (HasErr r, HasRenderParams r, HasSpecInfo r)
       => Sem r H.Type
-  , csDirectPoke
-      :: forall k (s :: k) r
-       . ( Marshalable a
-         , HasRenderElem r
-         , HasRenderParams r
-         , HasErr r
-         , HasSpecInfo r
-         , HasSiblingInfo a r
-         , HasStmts r
-         , HasRenderedNames r
-         , Show a
-         )
-      => Ref s ValueDoc
-      -> Stmt s r (Ref s ValueDoc)
+  , csDirectPoke :: CSPoke a
   , csPeek
       :: forall k r (s :: k)
        . ( HasErr r
@@ -118,6 +112,22 @@ data CustomScheme a = CustomScheme
       => Ref s AddrDoc
       -> Stmt s r (Ref s ValueDoc)
   }
+
+data CSPoke a
+  = NoPoke
+  | APoke
+       (forall k (s :: k) r
+       . ( Marshalable a
+         , HasRenderElem r
+         , HasRenderParams r
+         , HasErr r
+         , HasSpecInfo r
+         , HasSiblingInfo a r
+         , HasStmts r
+         , HasRenderedNames r
+         , Show a
+         )
+      => Ref s ValueDoc -> Stmt s r (Ref s ValueDoc))
 
 instance Eq (CustomScheme a) where
   (==) = (==) `on` csName
@@ -137,6 +147,7 @@ data CustomSchemeElided a = CustomSchemeElided
          , HasSpecInfo r
          , HasStmts r
          , HasRenderedNames r
+         , HasSiblingInfo a r
          , Show a
          )
       => Stmt s r (Ref s ValueDoc)
@@ -158,7 +169,7 @@ instance Ord (CustomSchemeElided a) where
   compare = compare `on` cseName
 
 instance P.Show (CustomScheme a) where
-  showsPrec d (CustomScheme name _ _ _ _) =
+  showsPrec d (CustomScheme name _ _ _ _ _) =
     P.showParen (d > 10)
       $ P.showString "CustomScheme "
       . P.showsPrec 11 name
@@ -282,7 +293,7 @@ returnPointerScheme p = do
         pure $ Returned (Normal t)
       array = do
         _ :<| _ <- pure $ lengths p
-        pure $ Returned (Vector (Normal t))
+        pure $ Returned (Vector NotNullable (Normal t))
   asum [inout, normal, array]
 
 -- | If we have a non-const pointer in a struct leave it as it is
@@ -297,9 +308,11 @@ arrayScheme
   :: Marshalable a
   => WrapExtensibleStructs
   -> WrapDispatchableHandles
+  -> Vector a
+  -- ^ Siblings
   -> a
   -> ND r (MarshalScheme a)
-arrayScheme wes wdh p = case lengths p of
+arrayScheme wes wdh sibs p = case lengths p of
   -- Not an array
   Empty                    -> empty
 
@@ -314,7 +327,7 @@ arrayScheme wes wdh p = case lengths p of
 
   -- TODO: Don't ignore the tail here
   -- TODO: Handle NamedMemberLength here
-  NamedLength _ :<| _ -> do
+  NamedLength l :<| _ -> do
     -- It's a const pointer
     Ptr Const t <- pure $ type' p
     -- TODO: What's the impact of isTopOptional here
@@ -327,7 +340,19 @@ arrayScheme wes wdh p = case lengths p of
         Singleton True -> Maybe ByteString
         _              -> ByteString
       _ -> dropPtrToStruct t >>= innerType wes wdh
-    pure $ if isOpt then EitherWord32 elemType else Vector elemType
+
+    -- Is the length constrained by a non-optional sibling
+    let constrainedLength = not isOpt || (not . null)
+          [ ()
+          | s                    <- toList sibs
+          , NamedLength l' :<| _ <- pure $ lengths s
+          , l == l'
+          , not (isTopOptional s)
+          ]
+        nullable = bool NotNullable Nullable isOpt
+    pure $ if constrainedLength
+      then Vector nullable elemType
+      else EitherWord32 elemType
 
   _ -> empty
 
@@ -343,7 +368,7 @@ fixedArrayScheme wes wdh p = do
   case type' p of
     Array _ (SymbolicArraySize _) t
       | isByteArrayElem t -> pure ByteString
-      | otherwise         -> Vector <$> innerType wes wdh t
+      | otherwise         -> Vector NotNullable <$> innerType wes wdh t
     Array _ (NumericArraySize n) t -> do
       e <- if isByteArrayElem t then pure ByteString else innerType wes wdh t
       pure $ Tupled n e
@@ -449,6 +474,11 @@ innerType wes wdh t = do
     .  asum @[]
     $  [ unwrapDispatchableHandles t | wdh == DoNotWrapDispatchableHandles ]
     <> [ wrapExtensibleStruct t | wes == WrapExtensibleStructs ]
+    <> [ do
+           i <- raise $ innerType wes wdh tElem
+           pure (Tupled n i)
+       | Array _ (NumericArraySize n) tElem <- pure t
+       ]
 
   pure $ fromMaybe (Normal t) r
 
@@ -512,8 +542,8 @@ isElided = \case
   ElidedVoid        -> True
   VoidPtr           -> False
   ByteString        -> False
-  Maybe        _    -> False
-  Vector       _    -> False
+  Maybe _           -> False
+  Vector _ _        -> False
   EitherWord32 _    -> False
   Tupled _ _        -> False
   Returned      _   -> False
@@ -532,8 +562,8 @@ isNegative = \case
   ElidedVoid        -> False
   VoidPtr           -> True
   ByteString        -> True
-  Maybe        _    -> True
-  Vector       _    -> True
+  Maybe _           -> True
+  Vector _ _        -> True
   EitherWord32 _    -> True
   Tupled _ _        -> True
   Returned      _   -> False

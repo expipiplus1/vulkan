@@ -52,6 +52,9 @@ brackets marshaledCommands handles = context "brackets" $ do
       cmdBeBracket h = autoBracket' (CName ("vkCmdBegin" <> h))
                                     (CName ("vkCmdEnd" <> h))
                                     (CName ("vkCmdWith" <> h))
+
+  -- TODO: Missing functions here should be warnings, because we might be
+  -- generating a different version of the spec.
   bs <- sequenceV
     [ cdBracket "Instance"
     , cdBracket "Device"
@@ -72,15 +75,15 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "Framebuffer"
     , cdBracket "RenderPass"
     , cdBracket "PipelineCache"
-    , cdBracket "ObjectTableNVX"
-    , cdBracket "IndirectCommandsLayoutNVX"
+    , cdBracket "IndirectCommandsLayoutNV"
     , cdBracket "DescriptorUpdateTemplate"
     , cdBracket "SamplerYcbcrConversion"
     , cdBracket "ValidationCacheEXT"
-    , cdBracket "AccelerationStructureNV"
+    , cdBracket "AccelerationStructureKHR"
     , cdBracket "SwapchainKHR"
     , cdBracket "DebugReportCallbackEXT"
     , cdBracket "DebugUtilsMessengerEXT"
+    , cdBracket "DeferredOperationKHR"
     , pure commandBuffersBracket
     , afBracket "Memory"
     , afBracket "DescriptorSets"
@@ -94,9 +97,6 @@ brackets marshaledCommands handles = context "brackets" $ do
     , autoBracket' "vkBeginCommandBuffer"
                    "vkEndCommandBuffer"
                    "vkUseCommandBuffer"
-    , autoBracket' "vkRegisterObjectsNVX"
-                   "vkUnregisterObjectsNVX"
-                   "vkWithRegisteredObjectsNVX"
     , cmdBeBracket "Query"
     , cmdBeBracket "ConditionalRenderingEXT"
     , cmdBeBracket "RenderPass"
@@ -124,7 +124,7 @@ brackets marshaledCommands handles = context "brackets" $ do
         | Bracket {..} <- bs
         , TypeName n   <-
           [ t | Normal t <- bInnerTypes ]
-            <> [ t | Vector (Normal t) <- bInnerTypes ]
+            <> [ t | Vector _ (Normal t) <- bInnerTypes ]
         ]
       unhandledHandles =
         toList handleNames \\ (createdBracketNames ++ ignoredHandles)
@@ -135,7 +135,7 @@ brackets marshaledCommands handles = context "brackets" $ do
 
 commandBuffersBracket :: Bracket
 commandBuffersBracket = Bracket
-  { bInnerTypes          = [Vector (Normal (TypeName "VkCommandBuffer"))]
+  { bInnerTypes = [Vector NotNullable (Normal (TypeName "VkCommandBuffer"))]
   , bWrapperName         = "vkWithCommandBuffers"
   , bCreate              = "vkAllocateCommandBuffers"
   , bDestroy             = "vkFreeCommandBuffers"

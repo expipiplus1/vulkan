@@ -9,6 +9,7 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties  ( Conforma
                                                                       , pattern MAX_DRIVER_INFO_SIZE
                                                                       ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -26,7 +27,6 @@ import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
 import Graphics.Vulkan.Core12.Enums.DriverId (DriverId)
@@ -123,12 +123,12 @@ data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties
   { -- | @driverID@ is a unique identifier for the driver of the physical device.
     driverID :: DriverId
   , -- | @driverName@ is an array of
-    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE_KHR' @char@
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@
     -- containing a null-terminated UTF-8 string which is the name of the
     -- driver.
     driverName :: ByteString
   , -- | @driverInfo@ is an array of
-    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE_KHR' @char@
+    -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@
     -- containing a null-terminated UTF-8 string with additional information
     -- about the driver.
     driverInfo :: ByteString
@@ -145,8 +145,8 @@ instance ToCStruct PhysicalDeviceDriverProperties where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (driverID)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))) (driverName)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (driverName)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (driverInfo)
     ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (conformanceVersion) . ($ ())
     lift $ f
   cStructSize = 536
@@ -155,16 +155,16 @@ instance ToCStruct PhysicalDeviceDriverProperties where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DriverId)) (zero)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))) (mempty)
     ContT $ pokeCStruct ((p `plusPtr` 532 :: Ptr ConformanceVersion)) (zero) . ($ ())
     lift $ f
 
 instance FromCStruct PhysicalDeviceDriverProperties where
   peekCStruct p = do
     driverID <- peek @DriverId ((p `plusPtr` 16 :: Ptr DriverId))
-    driverName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_NAME_SIZE CChar))))
-    driverInfo <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DRIVER_INFO_SIZE CChar))))
+    driverName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar))))
+    driverInfo <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DRIVER_INFO_SIZE CChar))))
     conformanceVersion <- peekCStruct @ConformanceVersion ((p `plusPtr` 532 :: Ptr ConformanceVersion))
     pure $ PhysicalDeviceDriverProperties
              driverID driverName driverInfo conformanceVersion

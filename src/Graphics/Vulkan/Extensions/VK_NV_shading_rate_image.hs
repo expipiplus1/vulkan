@@ -125,17 +125,17 @@ foreign import ccall
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- -   If @imageView@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be a
 --     valid 'Graphics.Vulkan.Core10.Handles.ImageView' handle of type
 --     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
---     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'.
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
 -- -   If @imageView@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have a
---     format of 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'.
+--     format of 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
 --
 -- -   If @imageView@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have
@@ -147,13 +147,13 @@ foreign import ccall
 --     /must/ match the actual
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' of each
 --     subresource accessible from @imageView@ at the time the subresource
---     is accessed.
+--     is accessed
 --
 -- -   If @imageView@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@
 --     /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
---     or 'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'.
+--     or 'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -237,7 +237,7 @@ foreign import ccall
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- -   @firstViewport@ /must/ be less than
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
@@ -342,7 +342,7 @@ foreign import ccall
 --
 -- -   The array @pCustomSampleOrders@ /must/ not contain two structures
 --     with matching values for both the @shadingRate@ and @sampleCount@
---     members.
+--     members
 --
 -- == Valid Usage (Implicit)
 --
@@ -693,12 +693,12 @@ instance Zero PhysicalDeviceShadingRateImagePropertiesNV where
 --
 -- 'CoarseSampleOrderCustomNV'
 data CoarseSampleLocationNV = CoarseSampleLocationNV
-  { -- | @pixelX@ /must/ be less than the width (in pixels) of the fragment.
+  { -- | @pixelX@ /must/ be less than the width (in pixels) of the fragment
     pixelX :: Word32
-  , -- | @pixelY@ /must/ be less than the height (in pixels) of the fragment.
+  , -- | @pixelY@ /must/ be less than the height (in pixels) of the fragment
     pixelY :: Word32
   , -- | @sample@ /must/ be less than the number of coverage samples in each
-    -- pixel belonging to the fragment.
+    -- pixel belonging to the fragment
     sample :: Word32
   }
   deriving (Typeable)
@@ -753,23 +753,23 @@ instance Zero CoarseSampleLocationNV where
 -- == Valid Usage
 --
 -- -   @shadingRate@ /must/ be a shading rate that generates fragments with
---     more than one pixel.
+--     more than one pixel
 --
 -- -   @sampleCount@ /must/ correspond to a sample count enumerated in
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags'
 --     whose corresponding bit is set in
---     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@framebufferNoAttachmentsSampleCounts@.
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@framebufferNoAttachmentsSampleCounts@
 --
 -- -   @sampleLocationCount@ /must/ be equal to the product of
 --     @sampleCount@, the fragment width for @shadingRate@, and the
---     fragment height for @shadingRate@.
+--     fragment height for @shadingRate@
 --
 -- -   @sampleLocationCount@ /must/ be less than or equal to the value of
---     'PhysicalDeviceShadingRateImagePropertiesNV'::@shadingRateMaxCoarseSamples@.
+--     'PhysicalDeviceShadingRateImagePropertiesNV'::@shadingRateMaxCoarseSamples@
 --
 -- -   The array @pSampleLocations@ /must/ contain exactly one entry for
 --     every combination of valid values for @pixelX@, @pixelY@, and
---     @sample@ in the structure 'CoarseSampleOrderCustomNV'.
+--     @sample@ in the structure 'CoarseSampleOrderCustomNV'
 --
 -- == Valid Usage (Implicit)
 --
@@ -864,7 +864,7 @@ instance Zero CoarseSampleOrderCustomNV where
 --
 -- -   The array @pCustomSampleOrders@ /must/ not contain two structures
 --     with matching values for both the @shadingRate@ and @sampleCount@
---     members.
+--     members
 --
 -- == Valid Usage (Implicit)
 --

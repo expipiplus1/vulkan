@@ -22,6 +22,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( getPi
                                                                          , pattern KHR_PIPELINE_EXECUTABLE_PROPERTIES_EXTENSION_NAME
                                                                          ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -70,7 +71,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -141,10 +141,10 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled.
+--     /must/ be enabled
 --
 -- -   @pipeline@ member of @pPipelineInfo@ /must/ have been created with
---     @device@.
+--     @device@
 --
 -- == Valid Usage (Implicit)
 --
@@ -235,16 +235,16 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled.
+--     /must/ be enabled
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     @device@.
+--     @device@
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
 --     set in the @flags@ field of
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'.
+--     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -343,16 +343,16 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled.
+--     /must/ be enabled
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     @device@.
+--     @device@
 --
 -- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
 --     set in the @flags@ field of
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
---     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'.
+--     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -573,8 +573,8 @@ instance ToCStruct PipelineExecutablePropertiesKHR where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr ShaderStageFlags)) (stages)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (name)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (description)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (name)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
     poke ((p `plusPtr` 532 :: Ptr Word32)) (subgroupSize)
     f
   cStructSize = 536
@@ -583,16 +583,16 @@ instance ToCStruct PipelineExecutablePropertiesKHR where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr ShaderStageFlags)) (zero)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
     poke ((p `plusPtr` 532 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct PipelineExecutablePropertiesKHR where
   peekCStruct p = do
     stages <- peek @ShaderStageFlags ((p `plusPtr` 16 :: Ptr ShaderStageFlags))
-    name <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
+    name <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
+    description <- packCString (lowerArrayPtr ((p `plusPtr` 276 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
     subgroupSize <- peek @Word32 ((p `plusPtr` 532 :: Ptr Word32))
     pure $ PipelineExecutablePropertiesKHR
              stages name description subgroupSize
@@ -628,7 +628,7 @@ data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
     pipeline :: Pipeline
   , -- | @executableIndex@ /must/ be less than the number of executables
     -- associated with @pipeline@ as returned in the @pExecutableCount@
-    -- parameter of 'getPipelineExecutablePropertiesKHR'.
+    -- parameter of 'getPipelineExecutablePropertiesKHR'
     executableIndex :: Word32
   }
   deriving (Typeable)
@@ -706,8 +706,8 @@ instance ToCStruct PipelineExecutableStatisticKHR where
   pokeCStruct p PipelineExecutableStatisticKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (name)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (description)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (name)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
     lift $ poke ((p `plusPtr` 528 :: Ptr PipelineExecutableStatisticFormatKHR)) (format)
     ContT $ pokeCStruct ((p `plusPtr` 536 :: Ptr PipelineExecutableStatisticValueKHR)) (value) . ($ ())
     lift $ f
@@ -716,16 +716,16 @@ instance ToCStruct PipelineExecutableStatisticKHR where
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
     lift $ poke ((p `plusPtr` 528 :: Ptr PipelineExecutableStatisticFormatKHR)) (zero)
     ContT $ pokeCStruct ((p `plusPtr` 536 :: Ptr PipelineExecutableStatisticValueKHR)) (zero) . ($ ())
     lift $ f
 
 instance FromCStruct PipelineExecutableStatisticKHR where
   peekCStruct p = do
-    name <- packCString (lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
+    name <- packCString (lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
+    description <- packCString (lowerArrayPtr ((p `plusPtr` 272 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
     format <- peek @PipelineExecutableStatisticFormatKHR ((p `plusPtr` 528 :: Ptr PipelineExecutableStatisticFormatKHR))
     value <- peekPipelineExecutableStatisticValueKHR format ((p `plusPtr` 536 :: Ptr PipelineExecutableStatisticValueKHR))
     pure $ PipelineExecutableStatisticKHR
@@ -796,8 +796,8 @@ instance ToCStruct PipelineExecutableInternalRepresentationKHR where
   pokeCStruct p PipelineExecutableInternalRepresentationKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (name)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (description)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (name)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
     poke ((p `plusPtr` 528 :: Ptr Bool32)) (boolToBool32 (isText))
     poke ((p `plusPtr` 536 :: Ptr CSize)) (CSize (dataSize))
     poke ((p `plusPtr` 544 :: Ptr (Ptr ()))) (data')
@@ -807,15 +807,15 @@ instance ToCStruct PipelineExecutableInternalRepresentationKHR where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 272 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
     poke ((p `plusPtr` 528 :: Ptr Bool32)) (boolToBool32 (zero))
     f
 
 instance FromCStruct PipelineExecutableInternalRepresentationKHR where
   peekCStruct p = do
-    name <- packCString (lowerArrayPtr ((p `plusPtr` 16 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 272 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_DESCRIPTION_SIZE CChar))))
+    name <- packCString (lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
+    description <- packCString (lowerArrayPtr ((p `plusPtr` 272 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
     isText <- peek @Bool32 ((p `plusPtr` 528 :: Ptr Bool32))
     dataSize <- peek @CSize ((p `plusPtr` 536 :: Ptr CSize))
     pData <- peek @(Ptr ()) ((p `plusPtr` 544 :: Ptr (Ptr ())))

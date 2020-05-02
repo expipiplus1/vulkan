@@ -44,11 +44,9 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallba
                                                                                  , DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT
                                                                                  , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT
                                                                                  , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
-                                                                                 , DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT
-                                                                                 , DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT
                                                                                  , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
-                                                                                 , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
                                                                                  , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
+                                                                                 , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
                                                                                  , DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
                                                                                  , ..
                                                                                  )
@@ -141,7 +139,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   @instance@ the instance the callback will be logged on.
+-- -   @instance@ is the instance the callback will be logged on.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DebugReportCallbackCreateInfoEXT'
 --     structure defining the conditions under which this callback will be
@@ -200,7 +198,7 @@ createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT
   pCallback <- lift $ peek @DebugReportCallbackEXT pPCallback
   pure $ (pCallback)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDebugReportCallbackEXT' and 'destroyDebugReportCallbackEXT'
 --
 -- To ensure that 'destroyDebugReportCallbackEXT' is always called: pass
@@ -225,9 +223,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   @instance@ the instance where the callback was created.
+-- -   @instance@ is the instance where the callback was created.
 --
--- -   @callback@ the
+-- -   @callback@ is the
 --     'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT' object
 --     to destroy. @callback@ is an externally synchronized object and
 --     /must/ not be used on more than one thread at a time. This means
@@ -304,9 +302,9 @@ foreign import ccall
 -- -   @objectType@ is a 'DebugReportObjectTypeEXT' specifying the type of
 --     object being used or created at the time the event was triggered.
 --
--- -   @object@ this is the object where the issue was detected. @object@
---     /can/ be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if there
---     is no object associated with the event.
+-- -   @object@ is the object where the issue was detected. @object@ /can/
+--     be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if there is no
+--     object associated with the event.
 --
 -- -   @location@ is an application defined value.
 --
@@ -334,7 +332,7 @@ foreign import ccall
 --     @object@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @object@ /must/ be a Vulkan object of the corresponding type
 --     associated with @objectType@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
 --
 -- == Valid Usage (Implicit)
 --
@@ -515,79 +513,75 @@ instance Read DebugReportFlagBitsEXT where
 --
 -- \'
 --
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DebugReportObjectTypeEXT'                                  | Vulkan Handle Type                                             |
--- +=============================================================+================================================================+
--- | 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'                      | Unknown\/Undefined Handle                                      |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT'                     | 'Graphics.Vulkan.Core10.Handles.Instance'                      |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT'              | 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'                |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT'                       | 'Graphics.Vulkan.Core10.Handles.Device'                        |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT'                        | 'Graphics.Vulkan.Core10.Handles.Queue'                         |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT'                    | 'Graphics.Vulkan.Core10.Handles.Semaphore'                     |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT'               | 'Graphics.Vulkan.Core10.Handles.CommandBuffer'                 |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT'                        | 'Graphics.Vulkan.Core10.Handles.Fence'                         |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT'                | 'Graphics.Vulkan.Core10.Handles.DeviceMemory'                  |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT'                       | 'Graphics.Vulkan.Core10.Handles.Buffer'                        |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT'                        | 'Graphics.Vulkan.Core10.Handles.Image'                         |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT'                        | 'Graphics.Vulkan.Core10.Handles.Event'                         |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT'                   | 'Graphics.Vulkan.Core10.Handles.QueryPool'                     |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT'                  | 'Graphics.Vulkan.Core10.Handles.BufferView'                    |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT'                   | 'Graphics.Vulkan.Core10.Handles.ImageView'                     |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT'                | 'Graphics.Vulkan.Core10.Handles.ShaderModule'                  |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT'               | 'Graphics.Vulkan.Core10.Handles.PipelineCache'                 |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT'              | 'Graphics.Vulkan.Core10.Handles.PipelineLayout'                |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT'                  | 'Graphics.Vulkan.Core10.Handles.RenderPass'                    |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT'                     | 'Graphics.Vulkan.Core10.Handles.Pipeline'                      |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT'        | 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout'           |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT'                      | 'Graphics.Vulkan.Core10.Handles.Sampler'                       |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT'              | 'Graphics.Vulkan.Core10.Handles.DescriptorPool'                |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT'               | 'Graphics.Vulkan.Core10.Handles.DescriptorSet'                 |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT'                  | 'Graphics.Vulkan.Core10.Handles.Framebuffer'                   |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT'                 | 'Graphics.Vulkan.Core10.Handles.CommandPool'                   |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT'                  | 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'                |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT'                | 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'              |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT'    | 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT'    |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT'                  | 'Graphics.Vulkan.Extensions.Handles.DisplayKHR'                |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT'             | 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR'            |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT'             | 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'            |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT' | 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX' |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
--- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT'   | 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'      |
--- +-------------------------------------------------------------+----------------------------------------------------------------+
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DebugReportObjectTypeEXT'                                | Vulkan Handle Type                                          |
+-- +===========================================================+=============================================================+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'                    | Unknown\/Undefined Handle                                   |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT'                   | 'Graphics.Vulkan.Core10.Handles.Instance'                   |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT'            | 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'             |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT'                     | 'Graphics.Vulkan.Core10.Handles.Device'                     |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT'                      | 'Graphics.Vulkan.Core10.Handles.Queue'                      |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT'                  | 'Graphics.Vulkan.Core10.Handles.Semaphore'                  |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT'             | 'Graphics.Vulkan.Core10.Handles.CommandBuffer'              |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT'                      | 'Graphics.Vulkan.Core10.Handles.Fence'                      |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT'              | 'Graphics.Vulkan.Core10.Handles.DeviceMemory'               |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT'                     | 'Graphics.Vulkan.Core10.Handles.Buffer'                     |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT'                      | 'Graphics.Vulkan.Core10.Handles.Image'                      |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT'                      | 'Graphics.Vulkan.Core10.Handles.Event'                      |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT'                 | 'Graphics.Vulkan.Core10.Handles.QueryPool'                  |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT'                | 'Graphics.Vulkan.Core10.Handles.BufferView'                 |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT'                 | 'Graphics.Vulkan.Core10.Handles.ImageView'                  |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT'              | 'Graphics.Vulkan.Core10.Handles.ShaderModule'               |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT'             | 'Graphics.Vulkan.Core10.Handles.PipelineCache'              |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT'            | 'Graphics.Vulkan.Core10.Handles.PipelineLayout'             |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT'                | 'Graphics.Vulkan.Core10.Handles.RenderPass'                 |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT'                   | 'Graphics.Vulkan.Core10.Handles.Pipeline'                   |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT'      | 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout'        |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT'                    | 'Graphics.Vulkan.Core10.Handles.Sampler'                    |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT'            | 'Graphics.Vulkan.Core10.Handles.DescriptorPool'             |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT'             | 'Graphics.Vulkan.Core10.Handles.DescriptorSet'              |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT'                | 'Graphics.Vulkan.Core10.Handles.Framebuffer'                |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT'               | 'Graphics.Vulkan.Core10.Handles.CommandPool'                |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT'                | 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'             |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT'              | 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'           |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT'  | 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT' |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT'                | 'Graphics.Vulkan.Extensions.Handles.DisplayKHR'             |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT'           | 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR'         |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
+-- | 'DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT' | 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'   |
+-- +-----------------------------------------------------------+-------------------------------------------------------------+
 --
--- VkDebugReportObjectTypeEXT and Vulkan Handle Relationship
+-- 'DebugReportObjectTypeEXT' and Vulkan Handle Relationship
 --
 -- Note
 --
@@ -666,16 +660,12 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT = DebugReportObje
 pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT = DebugReportObjectTypeEXT 29
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT = DebugReportObjectTypeEXT 30
--- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT = DebugReportObjectTypeEXT 31
--- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT = DebugReportObjectTypeEXT 32
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = DebugReportObjectTypeEXT 33
--- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT = DebugReportObjectTypeEXT 1000165000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT = DebugReportObjectTypeEXT 1000156000
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT = DebugReportObjectTypeEXT 1000165000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObjectTypeEXT 1000085000
 {-# complete DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT,
@@ -709,11 +699,9 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObj
              DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT,
              DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT,
              DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT,
              DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT,
              DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT,
+             DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT,
              DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT :: DebugReportObjectTypeEXT #-}
 
 instance Show DebugReportObjectTypeEXT where
@@ -749,11 +737,9 @@ instance Show DebugReportObjectTypeEXT where
     DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT"
     DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT"
     DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT"
-    DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT"
-    DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT"
     DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT"
-    DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
     DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT"
+    DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT"
     DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT -> showString "DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT"
     DebugReportObjectTypeEXT x -> showParen (p >= 11) (showString "DebugReportObjectTypeEXT " . showsPrec 11 x)
 
@@ -789,11 +775,9 @@ instance Read DebugReportObjectTypeEXT where
                             , ("DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT", pure DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT)
                             , ("DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT", pure DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT)
                             , ("DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT", pure DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT)
-                            , ("DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT", pure DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT)
-                            , ("DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT", pure DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT)
                             , ("DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT", pure DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT)
-                            , ("DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT", pure DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT)
                             , ("DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT", pure DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT)
+                            , ("DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT", pure DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT)
                             , ("DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT", pure DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT)]
                      +++
                      prec 10 (do

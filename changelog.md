@@ -1,8 +1,13 @@
 # Change Log
 
 ## WIP
+  - Update API version 1.2.135
   - Bracket functions now take as an argument a function to consume a pair of
     begin/end actions
+  - Change `Either Word32 vec` to `vec` where the non-empty length is
+    constrained to be the length of another known vector
+  - Move `Counter` prefix on `PerformanceCounterResult` to be a suffix
+  - Drop dependency on `vector-sized`, it was only used internally
 
 ## [3.1.0.0] - 2020-03-10
   - Commands are now in MonadIO

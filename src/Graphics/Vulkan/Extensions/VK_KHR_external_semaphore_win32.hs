@@ -211,31 +211,31 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 -- == Valid Usage
 --
 -- -   @handleType@ /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphore-handletypes-win32 Handle Types Supported by VkImportSemaphoreWin32HandleInfoKHR>
---     table.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphore-handletypes-win32 Handle Types Supported by >
+--     table
 --
 -- -   If @handleType@ is not
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --     or
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT',
---     @name@ /must/ be @NULL@.
+--     @name@ /must/ be @NULL@
 --
 -- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
 --     name a valid synchronization primitive of the type specified by
---     @handleType@.
+--     @handleType@
 --
 -- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
---     a valid handle of the type specified by @handleType@.
+--     a valid handle of the type specified by @handleType@
 --
--- -   If @handle@ is not @NULL@, @name@ must be @NULL@.
+-- -   If @handle@ is not @NULL@, @name@ /must/ be @NULL@
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
 --     @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   If @handleType@ is
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
@@ -244,7 +244,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     the
 --     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@flags@
 --     field /must/ match that of the semaphore from which @handle@ or
---     @name@ was exported.
+--     @name@ was exported
 --
 -- -   If @handleType@ is
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
@@ -253,7 +253,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     the
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
 --     field /must/ match that of the semaphore from which @handle@ or
---     @name@ was exported.
+--     @name@ was exported
 --
 -- -   If @flags@ contains
 --     'Graphics.Vulkan.Core11.Enums.SemaphoreImportFlagBits.SEMAPHORE_IMPORT_TEMPORARY_BIT',
@@ -261,7 +261,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
 --     field of the semaphore from which @handle@ or @name@ was exported
 --     /must/ not be
---     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'.
+--     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -360,11 +360,21 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- = Description
 --
--- If this structure is not present, or if @pAttributes@ is set to @NULL@,
--- default security descriptor values will be used, and child processes
--- created by the application will not inherit the handle, as described in
--- the MSDN documentation for “Synchronization Object Security and Access
--- Rights”1.
+-- If
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
+-- is not present in the same @pNext@ chain, this structure is ignored.
+--
+-- If
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
+-- is present in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo' with a
+-- Windows @handleType@, but either 'ExportSemaphoreWin32HandleInfoKHR' is
+-- not present in the @pNext@ chain, or if it is but @pAttributes@ is set
+-- to @NULL@, default security descriptor values will be used, and child
+-- processes created by the application will not inherit the handle, as
+-- described in the MSDN documentation for “Synchronization Object Security
+-- and Access Rights”1. Further, if the structure is not present, the
+-- access rights used depend on the handle type.
 --
 -- For handles of the following types:
 --
@@ -394,7 +404,7 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT',
 --     'ExportSemaphoreWin32HandleInfoKHR' /must/ not be included in the
 --     @pNext@ chain of
---     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'.
+--     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
@@ -500,12 +510,12 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 -- -   @waitSemaphoreValuesCount@ /must/ be the same value as
 --     'Graphics.Vulkan.Core10.Queue.SubmitInfo'::@waitSemaphoreCount@,
 --     where 'Graphics.Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@
---     chain of this 'D3D12FenceSubmitInfoKHR' structure.
+--     chain of this 'D3D12FenceSubmitInfoKHR' structure
 --
 -- -   @signalSemaphoreValuesCount@ /must/ be the same value as
 --     'Graphics.Vulkan.Core10.Queue.SubmitInfo'::@signalSemaphoreCount@,
 --     where 'Graphics.Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@
---     chain of this 'D3D12FenceSubmitInfoKHR' structure.
+--     chain of this 'D3D12FenceSubmitInfoKHR' structure
 --
 -- == Valid Usage (Implicit)
 --
@@ -602,32 +612,32 @@ instance Zero D3D12FenceSubmitInfoKHR where
 --
 -- -   @handleType@ /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'::@handleTypes@
---     when the @semaphore@’s current payload was created.
+--     when the @semaphore@’s current payload was created
 --
 -- -   If @handleType@ is defined as an NT handle,
 --     'getSemaphoreWin32HandleKHR' /must/ be called no more than once for
---     each valid unique combination of @semaphore@ and @handleType@.
+--     each valid unique combination of @semaphore@ and @handleType@
 --
 -- -   @semaphore@ /must/ not currently have its payload replaced by an
 --     imported payload as described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
---     for @handleType@.
+--     for @handleType@
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, as defined below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
---     there /must/ be no queue waiting on @semaphore@.
+--     there /must/ be no queue waiting on @semaphore@
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @semaphore@ /must/ be signaled, or have an
 --     associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
---     pending execution.
+--     pending execution
 --
 -- -   @handleType@ /must/ be defined as an NT handle or a global share
---     handle.
+--     handle
 --
 -- == Valid Usage (Implicit)
 --

@@ -158,12 +158,12 @@ foreign import ccall
 --
 -- -   @deviceMask@ /must/ not include any set bits that were not in the
 --     'DeviceGroupCommandBufferBeginInfo'::@deviceMask@ value when the
---     command buffer began recording.
+--     command buffer began recording
 --
 -- -   If 'cmdSetDeviceMask' is called inside a render pass instance,
 --     @deviceMask@ /must/ not include any set bits that were not in the
 --     'DeviceGroupRenderPassBeginInfo'::@deviceMask@ value when the render
---     pass instance began recording.
+--     pass instance began recording
 --
 -- == Valid Usage (Implicit)
 --
@@ -298,7 +298,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -417,7 +417,7 @@ foreign import ccall
 --
 -- -   If any of @baseGroupX@, @baseGroupY@, or @baseGroupZ@ are not zero,
 --     then the bound compute pipeline /must/ have been created with the
---     'PIPELINE_CREATE_DISPATCH_BASE' flag.
+--     'PIPELINE_CREATE_DISPATCH_BASE' flag
 --
 -- == Valid Usage (Implicit)
 --
@@ -499,7 +499,7 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 --
 -- -   If
 --     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_MASK_BIT'
---     is set, @deviceMask@ /must/ be a valid device mask.
+--     is set, @deviceMask@ /must/ be a valid device mask
 --
 -- -   If
 --     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_MASK_BIT'
@@ -609,7 +609,7 @@ instance Zero MemoryAllocateFlagsInfo where
 --     device mask
 --
 -- -   @deviceRenderAreaCount@ /must/ either be zero or equal to the number
---     of physical devices in the logical device.
+--     of physical devices in the logical device
 --
 -- == Valid Usage (Implicit)
 --
@@ -865,10 +865,10 @@ instance Zero DeviceGroupSubmitInfo where
 -- == Valid Usage
 --
 -- -   @resourceDeviceIndex@ and @memoryDeviceIndex@ /must/ both be valid
---     device indices.
+--     device indices
 --
 -- -   Each memory allocation bound in this batch /must/ have allocated an
---     instance for @memoryDeviceIndex@.
+--     instance for @memoryDeviceIndex@
 --
 -- == Valid Usage (Implicit)
 --

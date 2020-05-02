@@ -79,7 +79,7 @@ foreign import ccall
 --
 -- -   It is only valid to call 'setLocalDimmingAMD' if
 --     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
---     supported.
+--     supported
 --
 -- = See Also
 --
@@ -166,7 +166,7 @@ instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
 -- -   It is only valid to set @localDimmingEnable@ to
 --     'Graphics.Vulkan.Core10.BaseType.TRUE' if
 --     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
---     supported.
+--     supported
 --
 -- = See Also
 --

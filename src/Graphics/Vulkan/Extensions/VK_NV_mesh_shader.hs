@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_NV_mesh_shader  ( cmdDrawMeshTasksNV
                                                      , pattern NV_MESH_SHADER_EXTENSION_NAME
                                                      ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
@@ -26,7 +27,6 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -125,7 +125,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -227,25 +227,25 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
---     this command.
+--     this command
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -385,7 +385,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -487,25 +487,25 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
---     this command.
+--     this command
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -687,7 +687,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -789,25 +789,25 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
---     this command.
+--     this command
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -1067,7 +1067,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (maxDrawMeshTasksCount)
     poke ((p `plusPtr` 20 :: Ptr Word32)) (maxTaskWorkGroupInvocations)
-    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 3 Word32)))
     case (maxTaskWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pMaxTaskWorkGroupSize' :: Ptr Word32) (e0)
@@ -1076,7 +1076,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 36 :: Ptr Word32)) (maxTaskTotalMemorySize)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (maxTaskOutputCount)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (maxMeshWorkGroupInvocations)
-    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (FixedArray 3 Word32)))
     case (maxMeshWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pMaxMeshWorkGroupSize' :: Ptr Word32) (e0)
@@ -1096,7 +1096,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxTaskWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxTaskWorkGroupSize' :: Ptr Word32) (e0)
@@ -1105,7 +1105,7 @@ instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
     poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
-    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxMeshWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 48 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxMeshWorkGroupSize' :: Ptr Word32) (e0)
@@ -1123,14 +1123,14 @@ instance FromCStruct PhysicalDeviceMeshShaderPropertiesNV where
   peekCStruct p = do
     maxDrawMeshTasksCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     maxTaskWorkGroupInvocations <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    let pmaxTaskWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxTaskWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 24 :: Ptr (FixedArray 3 Word32)))
     maxTaskWorkGroupSize0 <- peek @Word32 ((pmaxTaskWorkGroupSize `advancePtrBytes` 0 :: Ptr Word32))
     maxTaskWorkGroupSize1 <- peek @Word32 ((pmaxTaskWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     maxTaskWorkGroupSize2 <- peek @Word32 ((pmaxTaskWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))
     maxTaskTotalMemorySize <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
     maxTaskOutputCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     maxMeshWorkGroupInvocations <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    let pmaxMeshWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 48 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxMeshWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 48 :: Ptr (FixedArray 3 Word32)))
     maxMeshWorkGroupSize0 <- peek @Word32 ((pmaxMeshWorkGroupSize `advancePtrBytes` 0 :: Ptr Word32))
     maxMeshWorkGroupSize1 <- peek @Word32 ((pmaxMeshWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     maxMeshWorkGroupSize2 <- peek @Word32 ((pmaxMeshWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))

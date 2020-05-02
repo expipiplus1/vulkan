@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Graphics.Vulkan.Core10.Enums.AttachmentStoreOp  (AttachmentStoreOp( ATTACHMENT_STORE_OP_STORE
                                                                          , ATTACHMENT_STORE_OP_DONT_CARE
+                                                                         , ATTACHMENT_STORE_OP_NONE_QCOM
                                                                          , ..
                                                                          )) where
 
@@ -51,18 +52,26 @@ pattern ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
 -- For attachments with a color format, this uses the access type
 -- 'Graphics.Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
 pattern ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
+-- | 'ATTACHMENT_STORE_OP_NONE_QCOM' specifies that the contents within the
+-- render area were not written during rendering, and /may/ not be written
+-- to memory. If the attachment was written to during the renderpass, the
+-- contents of the attachment will be undefined inside the render area.
+pattern ATTACHMENT_STORE_OP_NONE_QCOM = AttachmentStoreOp 1000301000
 {-# complete ATTACHMENT_STORE_OP_STORE,
-             ATTACHMENT_STORE_OP_DONT_CARE :: AttachmentStoreOp #-}
+             ATTACHMENT_STORE_OP_DONT_CARE,
+             ATTACHMENT_STORE_OP_NONE_QCOM :: AttachmentStoreOp #-}
 
 instance Show AttachmentStoreOp where
   showsPrec p = \case
     ATTACHMENT_STORE_OP_STORE -> showString "ATTACHMENT_STORE_OP_STORE"
     ATTACHMENT_STORE_OP_DONT_CARE -> showString "ATTACHMENT_STORE_OP_DONT_CARE"
+    ATTACHMENT_STORE_OP_NONE_QCOM -> showString "ATTACHMENT_STORE_OP_NONE_QCOM"
     AttachmentStoreOp x -> showParen (p >= 11) (showString "AttachmentStoreOp " . showsPrec 11 x)
 
 instance Read AttachmentStoreOp where
   readPrec = parens (choose [("ATTACHMENT_STORE_OP_STORE", pure ATTACHMENT_STORE_OP_STORE)
-                            , ("ATTACHMENT_STORE_OP_DONT_CARE", pure ATTACHMENT_STORE_OP_DONT_CARE)]
+                            , ("ATTACHMENT_STORE_OP_DONT_CARE", pure ATTACHMENT_STORE_OP_DONT_CARE)
+                            , ("ATTACHMENT_STORE_OP_NONE_QCOM", pure ATTACHMENT_STORE_OP_NONE_QCOM)]
                      +++
                      prec 10 (do
                        expectP (Ident "AttachmentStoreOp")

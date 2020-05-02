@@ -1,9 +1,9 @@
 {-# language CPP #-}
-module Graphics.Vulkan.Extensions.Handles  ( ObjectTableNVX(..)
-                                           , IndirectCommandsLayoutNVX(..)
+module Graphics.Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                            , ValidationCacheEXT(..)
-                                           , AccelerationStructureNV(..)
+                                           , AccelerationStructureKHR(..)
                                            , PerformanceConfigurationINTEL(..)
+                                           , DeferredOperationKHR(..)
                                            , DisplayKHR(..)
                                            , DisplayModeKHR(..)
                                            , SurfaceKHR(..)
@@ -68,37 +68,20 @@ import Graphics.Vulkan.Core10.Handles (Sampler(..))
 import Graphics.Vulkan.Core11.Handles (SamplerYcbcrConversion(..))
 import Graphics.Vulkan.Core10.Handles (Semaphore(..))
 import Graphics.Vulkan.Core10.Handles (ShaderModule(..))
--- | VkObjectTableNVX - Opaque handle to an object table
---
--- = See Also
---
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdProcessCommandsInfoNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdReserveSpaceForCommandsInfoNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.createObjectTableNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.destroyObjectTableNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.registerObjectsNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.unregisterObjectsNVX'
-newtype ObjectTableNVX = ObjectTableNVX Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance Show ObjectTableNVX where
-  showsPrec p (ObjectTableNVX x) = showParen (p >= 11) (showString "ObjectTableNVX 0x" . showHex x)
-
-
--- | VkIndirectCommandsLayoutNVX - Opaque handle to an indirect commands
+-- | VkIndirectCommandsLayoutNV - Opaque handle to an indirect commands
 -- layout object
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdProcessCommandsInfoNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdReserveSpaceForCommandsInfoNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.createIndirectCommandsLayoutNVX',
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.destroyIndirectCommandsLayoutNVX'
-newtype IndirectCommandsLayoutNVX = IndirectCommandsLayoutNVX Word64
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.createIndirectCommandsLayoutNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.destroyIndirectCommandsLayoutNV'
+newtype IndirectCommandsLayoutNV = IndirectCommandsLayoutNV Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
-instance Show IndirectCommandsLayoutNVX where
-  showsPrec p (IndirectCommandsLayoutNVX x) = showParen (p >= 11) (showString "IndirectCommandsLayoutNVX 0x" . showHex x)
+instance Show IndirectCommandsLayoutNV where
+  showsPrec p (IndirectCommandsLayoutNV x) = showParen (p >= 11) (showString "IndirectCommandsLayoutNV 0x" . showHex x)
 
 
 -- | VkValidationCacheEXT - Opaque handle to a validation cache object
@@ -117,25 +100,33 @@ instance Show ValidationCacheEXT where
   showsPrec p (ValidationCacheEXT x) = showParen (p >= 11) (showString "ValidationCacheEXT 0x" . showHex x)
 
 
--- | VkAccelerationStructureNV - Opaque handle to an acceleration structure
+-- | VkAccelerationStructureKHR - Opaque handle to an acceleration structure
 -- object
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureBuildGeometryInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureDeviceAddressInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureMemoryRequirementsInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.BindAccelerationStructureMemoryInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureToMemoryInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.CopyMemoryToAccelerationStructureInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdCopyAccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdWriteAccelerationStructuresPropertiesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.createAccelerationStructureKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.destroyAccelerationStructureKHR',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.destroyAccelerationStructureNV',
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureHandleNV'
-newtype AccelerationStructureNV = AccelerationStructureNV Word64
+-- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureHandleNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.writeAccelerationStructuresPropertiesKHR'
+newtype AccelerationStructureKHR = AccelerationStructureKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
-instance Show AccelerationStructureNV where
-  showsPrec p (AccelerationStructureNV x) = showParen (p >= 11) (showString "AccelerationStructureNV 0x" . showHex x)
+instance Show AccelerationStructureKHR where
+  showsPrec p (AccelerationStructureKHR x) = showParen (p >= 11) (showString "AccelerationStructureKHR 0x" . showHex x)
 
 
 -- | VkPerformanceConfigurationINTEL - Device configuration for performance
@@ -151,6 +142,28 @@ newtype PerformanceConfigurationINTEL = PerformanceConfigurationINTEL Word64
   deriving anyclass (IsHandle)
 instance Show PerformanceConfigurationINTEL where
   showsPrec p (PerformanceConfigurationINTEL x) = showParen (p >= 11) (showString "PerformanceConfigurationINTEL 0x" . showHex x)
+
+
+-- | VkDeferredOperationKHR - A deferred operation
+--
+-- = Description
+--
+-- This handle refers to a tracking structure which manages the execution
+-- state for a deferred command.
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.DeferredOperationInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.createDeferredOperationKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.deferredOperationJoinKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.destroyDeferredOperationKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.getDeferredOperationMaxConcurrencyKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations.getDeferredOperationResultKHR'
+newtype DeferredOperationKHR = DeferredOperationKHR Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show DeferredOperationKHR where
+  showsPrec p (DeferredOperationKHR x) = showParen (p >= 11) (showString "DeferredOperationKHR 0x" . showHex x)
 
 
 -- | VkDisplayKHR - Opaque handle to a display object

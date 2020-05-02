@@ -34,7 +34,6 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -404,8 +403,8 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
   lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) pRenderPassBegin pSubpassBeginInfo
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of 'cmdBeginRenderPass2'
--- and 'cmdEndRenderPass2'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'cmdBeginRenderPass2' and 'cmdEndRenderPass2'
 --
 -- To ensure that 'cmdEndRenderPass2' is always called: pass
 -- 'Control.Exception.bracket_' (or the allocate function from your
@@ -890,10 +889,8 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 -- 'Graphics.Vulkan.Core10.Pass.AttachmentReference' have the identical
 -- effect to those parameters.
 --
--- @aspectMask@ has the same effect for the described attachment as
--- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.InputAttachmentAspectReference'::@aspectMask@
--- has on each corresponding attachment. It is ignored when this structure
--- is used to describe anything other than an input attachment reference.
+-- @aspectMask@ is ignored when this structure is used to describe anything
+-- other than an input attachment reference.
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
@@ -1124,6 +1121,28 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
 --     the same sample count
 --
+-- -   All attachments in @pInputAttachments@ that are not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
+--     formats whose features contain at least one of
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   All attachments in @pColorAttachments@ that are not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
+--     formats whose features contain
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   All attachments in @pResolveAttachments@ that are not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
+--     formats whose features contain
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   If @pDepthStencilAttachment@ is not @NULL@ and the attachment is not
+--     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it
+--     /must/ have a format whose features contain
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
 -- -   If the @VK_AMD_mixed_attachment_samples@ extension is enabled, all
 --     attachments in @pColorAttachments@ that are not
 --     'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have
@@ -1153,7 +1172,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
 --     it /must/ also include
---     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'.
+--     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
 --
 -- -   If the @attachment@ member of any element of @pInputAttachments@ is
 --     not 'Graphics.Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then
@@ -1235,7 +1254,7 @@ data SubpassDescription2 (es :: [Type]) = SubpassDescription2
   , -- | @pResolveAttachments@ is an optional array of @colorAttachmentCount@
     -- 'AttachmentReference2' structures defining the resolve attachments for
     -- this subpass and their layouts.
-    resolveAttachments :: Either Word32 (Vector (SomeStruct AttachmentReference2))
+    resolveAttachments :: Vector (SomeStruct AttachmentReference2)
   , -- | @pDepthStencilAttachment@ is a pointer to a 'AttachmentReference2'
     -- structure specifying the depth\/stencil attachment for this subpass and
     -- its layout.
@@ -1272,19 +1291,19 @@ instance PokeChain es => ToCStruct (SubpassDescription2 es) where
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPInputAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (inputAttachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr (AttachmentReference2 _)))) (pPInputAttachments')
     let pColorAttachmentsLength = Data.Vector.length $ (colorAttachments)
-    let pResolveAttachmentsLength = either id (fromIntegral . Data.Vector.length) (resolveAttachments)
+    let pResolveAttachmentsLength = Data.Vector.length $ (resolveAttachments)
     lift $ unless (fromIntegral pResolveAttachmentsLength == pColorAttachmentsLength || pResolveAttachmentsLength == 0) $
       throwIO $ IOError Nothing InvalidArgument "" "pResolveAttachments and pColorAttachments must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral pColorAttachmentsLength :: Word32))
     pPColorAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (colorAttachments)) * 32) 8
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPColorAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (colorAttachments)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 _)))) (pPColorAttachments')
-    pResolveAttachments'' <- case (resolveAttachments) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPResolveAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (v)) * 32) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPResolveAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (v)
-        pure $ pPResolveAttachments'
+    pResolveAttachments'' <- if Data.Vector.null (resolveAttachments)
+      then pure nullPtr
+      else do
+        pPResolveAttachments <- ContT $ allocaBytesAligned @(AttachmentReference2 _) (((Data.Vector.length (resolveAttachments))) * 32) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPResolveAttachments `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) ((resolveAttachments))
+        pure $ pPResolveAttachments
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 _)))) pResolveAttachments''
     pDepthStencilAttachment'' <- case (depthStencilAttachment) of
       Nothing -> pure nullPtr
@@ -1328,15 +1347,15 @@ instance PeekChain es => FromCStruct (SubpassDescription2 es) where
     pColorAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 a))))
     pColorAttachments' <- generateM (fromIntegral colorAttachmentCount) (\i -> peekSomeCStruct (forgetExtensions ((pColorAttachments `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))
     pResolveAttachments <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 a))))
-    pResolveAttachments' <- maybePeek (\j -> generateM (fromIntegral colorAttachmentCount) (\i -> peekSomeCStruct (forgetExtensions (((j) `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))) pResolveAttachments
-    let pResolveAttachments'' = maybe (Left colorAttachmentCount) Right pResolveAttachments'
+    let pResolveAttachmentsLength = if pResolveAttachments == nullPtr then 0 else (fromIntegral colorAttachmentCount)
+    pResolveAttachments' <- generateM pResolveAttachmentsLength (\i -> peekSomeCStruct (forgetExtensions ((pResolveAttachments `advancePtrBytes` (32 * (i)) :: Ptr (AttachmentReference2 _)))))
     pDepthStencilAttachment <- peek @(Ptr (AttachmentReference2 _)) ((p `plusPtr` 64 :: Ptr (Ptr (AttachmentReference2 a))))
     pDepthStencilAttachment' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pDepthStencilAttachment
     preserveAttachmentCount <- peek @Word32 ((p `plusPtr` 72 :: Ptr Word32))
     pPreserveAttachments <- peek @(Ptr Word32) ((p `plusPtr` 80 :: Ptr (Ptr Word32)))
     pPreserveAttachments' <- generateM (fromIntegral preserveAttachmentCount) (\i -> peek @Word32 ((pPreserveAttachments `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     pure $ SubpassDescription2
-             next flags pipelineBindPoint viewMask pInputAttachments' pColorAttachments' pResolveAttachments'' pDepthStencilAttachment' pPreserveAttachments'
+             next flags pipelineBindPoint viewMask pInputAttachments' pColorAttachments' pResolveAttachments' pDepthStencilAttachment' pPreserveAttachments'
 
 instance es ~ '[] => Zero (SubpassDescription2 es) where
   zero = SubpassDescription2
@@ -1346,7 +1365,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
            zero
            mempty
            mempty
-           (Left 0)
+           mempty
            Nothing
            mempty
 
@@ -1440,7 +1459,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     @viewOffset@ /must/ be @0@
 --
 -- -   If @viewOffset@ is not @0@, @srcSubpass@ /must/ not be equal to
---     @dstSubpass@.
+--     @dstSubpass@
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -1654,7 +1673,7 @@ instance Zero SubpassDependency2 where
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
 --     or
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'.
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- -   For any element of @pDependencies@, if the @srcSubpass@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage

@@ -13,7 +13,6 @@ import           Relude                  hiding ( Handle
 import           Say
 import           System.TimeIt
 
-import           AssignModules
 import           Bespoke                        ( assignBespokeModules )
 import           Bespoke.MarshalParams
 import           Bespoke.RenderParams
@@ -27,6 +26,7 @@ import           Render.SpecInfo
 import           Spec.Parse
 
 import           VK.Render
+import           VK.AssignModules
 
 main :: IO ()
 main =
@@ -63,7 +63,7 @@ main =
       . withTypeInfo spec
       $ do
 
-          mps <- marshalParams spec
+          mps          <- marshalParams spec
 
           (ss, us, cs) <- runInputConst mps $ do
             ss <- timeItNamed "Marshaling structs"

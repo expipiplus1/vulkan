@@ -2,8 +2,10 @@
 
 module Render.Stmts.Poke
   ( getPokeDirect
+  , getPokeDirect'
   , getPokeDirectElided
   , getPokeIndirect
+  , elidedLengthPoke
   , ValueDoc(..)
   , AddrDoc(..)
   , UnitDoc(..)
@@ -18,6 +20,7 @@ module Render.Stmts.Poke
   ) where
 
 import           Data.Char                      ( isUpper )
+import           Data.List                      ( (!!) )
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Vector.Extra              ( pattern Empty
@@ -89,11 +92,13 @@ getPokeIndirect'
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
 getPokeIndirect' name toType scheme value addr = runNonDetMaybe go >>= \case
+  Nothing | Custom CustomScheme {..} <- scheme, NoPoke <- csDirectPoke ->
+    unitStmt (pure . Pure AlwaysInline . ValueDoc $ "()")
   Nothing -> storablePoke addr =<< getPokeDirect' name toType scheme value
   Just r  -> pure r
  where
   go = case scheme of
-    Vector fromElem | Array _ size toElem <- toType ->
+    Vector NotNullable fromElem | Array _ size toElem <- toType ->
       raise $ fixedArrayIndirect name size toElem fromElem value addr
     Tupled _ fromElem | Array _ (NumericArraySize size) toElem <- toType ->
       raise $ tupleIndirect name size toElem fromElem value addr
@@ -136,20 +141,23 @@ getPokeDirect'
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 getPokeDirect' name toType fromType value = case fromType of
-  Unit                    -> throw "Getting poke for a unit member"
-  Normal   from           -> normal name toType from value
-  Preserve _              -> pure value
-  ElidedLength ty os rs   -> elidedLength name ty os rs
-  ElidedUnivalued value   -> elidedUnivalued name toType value
+  Unit                            -> throw "Getting poke for a unit member"
+  Normal   from                   -> normal name toType from value
+  Preserve _                      -> pure value
+  ElidedLength ty os rs           -> elidedLength name ty os rs
+  ElidedUnivalued value           -> elidedUnivalued name toType value
   VoidPtr -> normal name (Ptr NonConst Void) (Ptr NonConst Void) value
-  ByteString              -> byteString name toType value
-  Vector       fromElem   -> vector name toType fromElem value
-  EitherWord32 fromElem   -> eitherWord32 name toType fromElem value
-  Maybe        (Vector _) -> throw "TODO: optional vectors without length"
-  Maybe        from       -> maybe' name toType from value
-  Tupled size fromElem    -> tuple name size toType fromElem value
-  WrappedStruct fromName  -> wrappedStruct name toType fromName value
-  Custom CustomScheme {..} -> csDirectPoke value
+  ByteString                      -> byteString name toType value
+  Vector nullable fromElem        -> vector name toType fromElem nullable value
+  EitherWord32 fromElem           -> eitherWord32 name toType fromElem value
+  Maybe (Vector _ _) -> throw "TODO: optional vectors without length"
+  Maybe        from               -> maybe' name toType from value
+  Tupled size fromElem            -> tuple name size toType fromElem value
+  WrappedStruct fromName          -> wrappedStruct name toType fromName value
+  Custom        CustomScheme {..} -> case csDirectPoke of
+    NoPoke ->
+      throw $ "Getting direct poke for custom scheme with no poke: " <> csName
+    APoke p -> p value
   ElidedCustom CustomSchemeElided {..} -> cseDirectPoke
   s -> throw $ "Unhandled direct poke from " <> show s <> " to " <> show toType
 
@@ -277,12 +285,21 @@ elidedLength
   -> Vector a
   -> Vector a
   -> Stmt s r (Ref s ValueDoc)
-elidedLength _ _       Empty Empty = throw "No vectors to get length from"
-elidedLength _ lenType os    rs    = do
-  rsLengthRefs <- forV rs
-    $ \r -> (name r, False, ) <$> lenRefFromSibling @a (name r)
-  osLengthRefs <- forV os
-    $ \o -> (name o, True, ) <$> lenRefFromSibling @a (name o)
+elidedLength n t os rs = elidedLengthFromNames @_ @a n t (name <$> os) (name <$> rs)
+
+elidedLengthFromNames, elidedLengthPoke
+  :: forall r a s
+   . HasPoke a r
+  => CName
+  -> CType
+  -> Vector CName
+  -> Vector CName
+  -> Stmt s r (Ref s ValueDoc)
+elidedLengthPoke = elidedLengthFromNames @r @a @s
+elidedLengthFromNames _ _ Empty Empty = throw "No vectors to get length from"
+elidedLengthFromNames _ lenType os rs = do
+  rsLengthRefs <- forV rs $ \r -> (r, False, ) <$> lenRefFromSibling @a r
+  osLengthRefs <- forV os $ \o -> (o, True, ) <$> lenRefFromSibling @a o
   let
     assertSame
       :: (CName, Bool, Ref s (Doc ()))
@@ -294,11 +311,7 @@ elidedLength _ lenType os    rs    = do
       l1     <- use ref1
       l2     <- use ref2
       l2'    <- fi <$> use ref2
-      orNull <- if opt2
-        then do
-          tellQualImport 'V.null
-          pure $ " ||" <+> l2 <+> "== 0"
-        else pure mempty
+      orNull <- if opt2 then pure $ " ||" <+> l2 <+> "== 0" else pure mempty
       let err :: Text
           -- TODO: these should be the names we give to the variable, not the C names
           err =
@@ -319,20 +332,19 @@ elidedLength _ lenType os    rs    = do
         pure $ parens ("fromIntegral" <+> l1 <+> "::" <+> lenTyDoc)
 
 lenRefFromSibling
-  :: forall a r s
-   . HasPoke a r
-  => CName
-  -> Stmt s r (Ref s (Doc ()))
+  :: forall a r s . HasPoke a r => CName -> Stmt s r (Ref s (Doc ()))
 lenRefFromSibling name = stmt Nothing (Just (unCName name <> "Length")) $ do
   SiblingInfo {..} <- getSiblingInfo @a name
   tellQualImport 'V.length
   ValueDoc vec <- useViaName (unCName name)
   case siScheme of
-    Vector       _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
+    Vector _ _     -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
     EitherWord32 _ -> pure $ Pure
       InlineOnce
       ("either id (fromIntegral . Data.Vector.length)" <+> vec)
-    _ -> throw "Trying to get the length of a non vector type sibling"
+    -- Assume vector for now, TODO, put this in CustomScheme
+    Custom _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
+    _        -> throw "Trying to get the length of a non vector type sibling"
 
 
 -- TODO: the type of the value here could be improved
@@ -373,7 +385,7 @@ eitherWord32 name toType fromElem valueRef = case toType of
       let vecName = "v"
       subPoke <- renderSubStmts $ do
         valueRef' <- pureStmt . ValueDoc $ vecName
-        getPokeDirect' name toType (Vector fromElem) valueRef'
+        getPokeDirect' name toType (Vector NotNullable fromElem) valueRef'
 
       let (con, d) = case subPoke of
             IOStmts    d -> (IOAction, d)
@@ -420,18 +432,46 @@ vector, getVectorPoke
   => CName
   -> CType
   -> MarshalScheme a
+  -> Nullable
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
-vector name toType fromElem valueRef = case toType of
+vector name toType fromElem nullable valueRef = case toType of
   Ptr Const toElem -> do
     lenRef <- stmt Nothing Nothing $ do
       ValueDoc value <- use valueRef
       tellQualImport 'V.length
       pure . Pure AlwaysInline . ValueDoc $ "Data.Vector.length" <+> value
 
-    addrRef <- allocArray Uninitialized name toElem (Right lenRef)
-    store   <- vectorIndirect name toElem fromElem valueRef addrRef
-    addrWithStore toElem addrRef store
+    case nullable of
+      NotNullable -> do
+        addrRef <- allocArray Uninitialized name toElem (Right lenRef)
+        store   <- vectorIndirect name toElem fromElem valueRef addrRef
+        addrWithStore toElem addrRef store
+      Nullable -> do
+        subPoke <- renderSubStmts $ do
+          lenRef' <-
+            stmt Nothing Nothing . fmap (Pure AlwaysInline) $ raise $ use lenRef
+          valueRef' <-
+            stmt Nothing Nothing . fmap (Pure AlwaysInline) $ raise $ use
+              valueRef
+          addrRef <- allocArray Uninitialized name toElem (Right lenRef')
+          store   <- vectorIndirect name toElem fromElem valueRef' addrRef
+          addrWithStore toElem addrRef store
+        let (con, d) = case subPoke of
+              IOStmts    d -> (IOAction, d)
+              ContTStmts d -> (ContTAction, d)
+        elemTy <- cToHsTypeWithHoles DoPreserve toElem
+        stmt (Just (ConT ''Ptr :@ elemTy)) (Just (unCName name)) $ do
+          tellQualImport 'V.null
+          tellImport 'nullPtr
+          ValueDoc value <- use valueRef
+          pure
+            .   con
+            .   ValueDoc
+            $   "if Data.Vector.null"
+            <+> value
+            <>  line
+            <>  indent 2 (vsep ["then pure nullPtr", "else" <+> d])
   _ -> throw $ "Unhandled Vector conversion to " <> show toType
 
 -- A nicer name for exporting
@@ -614,8 +654,8 @@ tupleIndirect
 tupleIndirect name size toElem fromElem valueRef firstAddrRef =
   stmtC Nothing name $ do
     let indices = [0 .. size - 1]
-        elemName n = "e" <> show n :: Text
-        elemNames = [ elemName n | n <- indices ]
+    elemNames <- traverse (freshName . Just . ("e" <>) . show) indices
+    let elemName = (elemNames !!)
 
     castFirstAddrRef <-
       stmt Nothing (Just ("p" <> T.upperCaseFirst (unCName name))) $ do
@@ -634,6 +674,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
           . ValueDoc
           . pretty
           . elemName
+          . fromIntegral
           $ i
         addrRef <- elemAddrRef toElem castFirstAddrRef (Left (fromIntegral i))
         getPokeIndirect' (CName (unCName name <> show i))
@@ -646,6 +687,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
         traverse_ after es
         pure $ Pure AlwaysInline ("()" :: Doc ())
 
+    freeNames elemNames
 
     let (con, d) = case subPokes of
           IOStmts    d -> (IOAction, d)
@@ -671,12 +713,18 @@ fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
   RenderParams {..} <- input
   checkLength       <- stmtC Nothing name $ do
     len     <- use =<< lenRefFromSibling @a name
-    maxSize <- case size of
-      NumericArraySize  n -> pure $ viaShow n
-      SymbolicArraySize n -> do
-        let n' = mkPatternName n
-        tellImport n'
-        pure (pretty n')
+    maxSize <-
+      let arraySizeDoc = \case
+            NumericArraySize  n -> pure $ viaShow n
+            SymbolicArraySize n -> do
+              let n' = mkPatternName n
+              tellImport n'
+              pure (pretty n')
+            MultipleArraySize a b -> do
+              a' <- arraySizeDoc (NumericArraySize a)
+              b' <- arraySizeDoc b
+              pure (a' <+> "*" <+> b')
+      in  arraySizeDoc size
     let err :: Text
         err =
           unCName name

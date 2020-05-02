@@ -57,9 +57,11 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_EXT_memory_priority
                                    , module Graphics.Vulkan.Extensions.VK_EXT_metal_surface
                                    , module Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
+                                   , module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                                    , module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                                    , module Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
                                    , module Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
+                                   , module Graphics.Vulkan.Extensions.VK_EXT_robustness2
                                    , module Graphics.Vulkan.Extensions.VK_EXT_sample_locations
                                    , module Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
                                    , module Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
@@ -98,6 +100,7 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address
                                    , module Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
                                    , module Graphics.Vulkan.Extensions.VK_KHR_dedicated_allocation
+                                   , module Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations
                                    , module Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
                                    , module Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
                                    , module Graphics.Vulkan.Extensions.VK_KHR_device_group
@@ -131,7 +134,9 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_KHR_multiview
                                    , module Graphics.Vulkan.Extensions.VK_KHR_performance_query
                                    , module Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties
+                                   , module Graphics.Vulkan.Extensions.VK_KHR_pipeline_library
                                    , module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
+                                   , module Graphics.Vulkan.Extensions.VK_KHR_ray_tracing
                                    , module Graphics.Vulkan.Extensions.VK_KHR_relaxed_block_layout
                                    , module Graphics.Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
                                    , module Graphics.Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
@@ -162,7 +167,6 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_MVK_ios_surface
                                    , module Graphics.Vulkan.Extensions.VK_MVK_macos_surface
                                    , module Graphics.Vulkan.Extensions.VK_NN_vi_surface
-                                   , module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
                                    , module Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
                                    , module Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
                                    , module Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling
@@ -173,6 +177,8 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
                                    , module Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
                                    , module Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
+                                   , module Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config
+                                   , module Graphics.Vulkan.Extensions.VK_NV_device_generated_commands
                                    , module Graphics.Vulkan.Extensions.VK_NV_external_memory
                                    , module Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
                                    , module Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
@@ -194,6 +200,8 @@ module Graphics.Vulkan.Extensions  ( module Graphics.Vulkan.Extensions.Handles
                                    , module Graphics.Vulkan.Extensions.VK_NV_viewport_array2
                                    , module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
                                    , module Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+                                   , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
+                                   , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                                    , module Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
                                    , module Graphics.Vulkan.Extensions.WSITypes
                                    ) where
@@ -255,9 +263,11 @@ import Graphics.Vulkan.Extensions.VK_EXT_memory_budget
 import Graphics.Vulkan.Extensions.VK_EXT_memory_priority
 import Graphics.Vulkan.Extensions.VK_EXT_metal_surface
 import Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
+import Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
+import Graphics.Vulkan.Extensions.VK_EXT_robustness2
 import Graphics.Vulkan.Extensions.VK_EXT_sample_locations
 import Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
 import Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
@@ -296,6 +306,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_bind_memory2
 import Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address
 import Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
 import Graphics.Vulkan.Extensions.VK_KHR_dedicated_allocation
+import Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations
 import Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
 import Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
 import Graphics.Vulkan.Extensions.VK_KHR_device_group
@@ -329,7 +340,9 @@ import Graphics.Vulkan.Extensions.VK_KHR_maintenance3
 import Graphics.Vulkan.Extensions.VK_KHR_multiview
 import Graphics.Vulkan.Extensions.VK_KHR_performance_query
 import Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties
+import Graphics.Vulkan.Extensions.VK_KHR_pipeline_library
 import Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
+import Graphics.Vulkan.Extensions.VK_KHR_ray_tracing
 import Graphics.Vulkan.Extensions.VK_KHR_relaxed_block_layout
 import Graphics.Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
 import Graphics.Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
@@ -360,7 +373,6 @@ import Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
 import Graphics.Vulkan.Extensions.VK_MVK_ios_surface
 import Graphics.Vulkan.Extensions.VK_MVK_macos_surface
 import Graphics.Vulkan.Extensions.VK_NN_vi_surface
-import Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
 import Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
 import Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
 import Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling
@@ -371,6 +383,8 @@ import Graphics.Vulkan.Extensions.VK_NV_coverage_reduction_mode
 import Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
 import Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
 import Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
+import Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config
+import Graphics.Vulkan.Extensions.VK_NV_device_generated_commands
 import Graphics.Vulkan.Extensions.VK_NV_external_memory
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
@@ -392,6 +406,8 @@ import Graphics.Vulkan.Extensions.VK_NV_shading_rate_image
 import Graphics.Vulkan.Extensions.VK_NV_viewport_array2
 import Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
 import Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
+import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
 import Graphics.Vulkan.Extensions.WSITypes
 

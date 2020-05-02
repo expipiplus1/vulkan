@@ -359,10 +359,12 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
     , ('castFunPtr, Just (mkName "Foreign.Ptr.castFunPtr"))
     , ('plusPtr    , Just (mkName "Foreign.Ptr.plusPtr"))
     , (''Type      , Just (mkName "Data.Kind.Type"))
+    , (''Nat       , Just (mkName "GHC.TypeNats.Nat"))
     , (''Constraint, Just (mkName "Data.Kind.Constraint"))
     , (''Typeable, Just (mkName "Data.Typeable.Typeable"))
     , ('typeRep, Just (mkName "Type.Reflection.typeRep"))
     , (''TypeRep, Just (mkName "Type.Reflection.TypeRep"))
+    , ('coerce     , Just (mkName "Data.Coerce.coerce"))
     ,
       -- Other
       (''ByteString, Just (mkName "Data.ByteString.ByteString"))

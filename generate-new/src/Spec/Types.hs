@@ -164,6 +164,7 @@ data StructMember' (s :: WithSize) = StructMember
 type StructMember = StructMember' 'WithSize
 
 deriving instance Show StructMember
+deriving instance Eq (StructMember' WithoutSize)
 
 instance M.Marshalable StructMember where
   name       = smName

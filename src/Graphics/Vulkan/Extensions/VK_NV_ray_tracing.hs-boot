@@ -2,7 +2,6 @@
 module Graphics.Vulkan.Extensions.VK_NV_ray_tracing  ( AccelerationStructureCreateInfoNV
                                                      , AccelerationStructureInfoNV
                                                      , AccelerationStructureMemoryRequirementsInfoNV
-                                                     , BindAccelerationStructureMemoryInfoNV
                                                      , GeometryAABBNV
                                                      , GeometryDataNV
                                                      , GeometryNV
@@ -10,11 +9,11 @@ module Graphics.Vulkan.Extensions.VK_NV_ray_tracing  ( AccelerationStructureCrea
                                                      , PhysicalDeviceRayTracingPropertiesNV
                                                      , RayTracingPipelineCreateInfoNV
                                                      , RayTracingShaderGroupCreateInfoNV
-                                                     , WriteDescriptorSetAccelerationStructureNV
-                                                     , CopyAccelerationStructureModeNV
+                                                     , AccelerationStructureNV
                                                      ) where
 
 import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.Handles (AccelerationStructureKHR)
 import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
@@ -42,14 +41,6 @@ instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV
 instance Show AccelerationStructureMemoryRequirementsInfoNV
 
 instance FromCStruct AccelerationStructureMemoryRequirementsInfoNV
-
-
-data BindAccelerationStructureMemoryInfoNV
-
-instance ToCStruct BindAccelerationStructureMemoryInfoNV
-instance Show BindAccelerationStructureMemoryInfoNV
-
-instance FromCStruct BindAccelerationStructureMemoryInfoNV
 
 
 data GeometryAABBNV
@@ -109,13 +100,6 @@ instance Show RayTracingShaderGroupCreateInfoNV
 instance FromCStruct RayTracingShaderGroupCreateInfoNV
 
 
-data WriteDescriptorSetAccelerationStructureNV
-
-instance ToCStruct WriteDescriptorSetAccelerationStructureNV
-instance Show WriteDescriptorSetAccelerationStructureNV
-
-instance FromCStruct WriteDescriptorSetAccelerationStructureNV
-
-
-data CopyAccelerationStructureModeNV
+-- No documentation found for TopLevel "VkAccelerationStructureNV"
+type AccelerationStructureNV = AccelerationStructureKHR
 

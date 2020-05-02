@@ -51,7 +51,7 @@ module Graphics.Vulkan.Core10.Enums  ( module Graphics.Vulkan.Core10.Enums.Acces
                                      , module Graphics.Vulkan.Core10.Enums.ObjectType
                                      , module Graphics.Vulkan.Core10.Enums.PhysicalDeviceType
                                      , module Graphics.Vulkan.Core10.Enums.PipelineBindPoint
-                                     , module Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags
+                                     , module Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
                                      , module Graphics.Vulkan.Core10.Enums.PipelineCacheHeaderVersion
                                      , module Graphics.Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
                                      , module Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits
@@ -147,7 +147,7 @@ import Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits
 import Graphics.Vulkan.Core10.Enums.ObjectType
 import Graphics.Vulkan.Core10.Enums.PhysicalDeviceType
 import Graphics.Vulkan.Core10.Enums.PipelineBindPoint
-import Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags
+import Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
 import Graphics.Vulkan.Core10.Enums.PipelineCacheHeaderVersion
 import Graphics.Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
 import Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits

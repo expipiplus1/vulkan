@@ -97,6 +97,9 @@ import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable (Physi
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (PhysicalDeviceDepthStencilResolveProperties)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingProperties)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsPropertiesNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config (PhysicalDeviceDiagnosticsConfigFeaturesNV)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles (PhysicalDeviceDiscardRectanglePropertiesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
@@ -130,14 +133,19 @@ import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview (Phy
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info (PhysicalDevicePCIBusInfoPropertiesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryPropertiesKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeaturesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PhysicalDevicePointClippingProperties)
 import Graphics.Vulkan.Core10.DeviceInitialization (PhysicalDeviceProperties)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryFeatures)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryProperties)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_push_descriptor (PhysicalDevicePushDescriptorPropertiesKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (PhysicalDeviceRayTracingFeaturesKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (PhysicalDeviceRayTracingPropertiesKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_ray_tracing (PhysicalDeviceRayTracingPropertiesNV)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2PropertiesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_sample_locations (PhysicalDeviceSampleLocationsPropertiesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (PhysicalDeviceSamplerFilterMinmaxProperties)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
@@ -361,7 +369,7 @@ foreign import ccall
 --     structure, the @pNext@ chain of @pImageFormatInfo@ /must/ include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo'
 --     structure with @handleType@ set to
---     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'.
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 --
 -- == Valid Usage (Implicit)
 --
@@ -613,9 +621,12 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRobustness2FeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDiagnosticsConfigFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCoherentMemoryFeaturesAMD = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan12Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan11Features = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePipelineCreationCacheControlFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLineRasterizationFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubgroupSizeControlFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceTexelBufferAlignmentFeaturesEXT = Just f
@@ -640,6 +651,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceUniformBufferStandardLayoutFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceScalarBlockLayoutFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentDensityMapFeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceRayTracingFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMeshShaderFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShadingRateImageFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = Just f
@@ -669,6 +681,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDevice16BitStorageFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMultiviewFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVariablePointersFeatures = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
     | otherwise = Nothing
 
 instance PokeChain es => ToCStruct (PhysicalDeviceFeatures2 es) where
@@ -723,6 +736,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesNV',
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties',
+--     'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsPropertiesNV',
 --     'Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles.PhysicalDeviceDiscardRectanglePropertiesEXT',
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
 --     'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.PhysicalDeviceExternalMemoryHostPropertiesEXT',
@@ -740,7 +754,9 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
 --     'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
 --     'Graphics.Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR',
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR',
 --     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV',
+--     'Graphics.Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
 --     'Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties2.PhysicalDeviceShaderCoreProperties2AMD',
@@ -784,6 +800,7 @@ instance Extensible PhysicalDeviceProperties2 where
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRobustness2PropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan12Properties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan11Properties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLineRasterizationPropertiesEXT = Just f
@@ -794,6 +811,7 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceCooperativeMatrixPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentDensityMapPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRayTracingPropertiesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceRayTracingPropertiesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMeshShaderPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShadingRateImagePropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceTransformFeedbackPropertiesEXT = Just f
@@ -821,6 +839,7 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceIDProperties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDriverProperties = Just f
     | Just Refl <- eqT @e @PhysicalDevicePushDescriptorPropertiesKHR = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = Just f
     | otherwise = Nothing
 
 instance PokeChain es => ToCStruct (PhysicalDeviceProperties2 es) where
@@ -1040,7 +1059,7 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 -- -   @tiling@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --     if and only if the @pNext@ chain includes
---     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'.
+--     'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
 -- -   If @tiling@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
@@ -1048,7 +1067,7 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
 --     then the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---     structure with non-zero @viewFormatCount@.
+--     structure with non-zero @viewFormatCount@
 --
 -- == Valid Usage (Implicit)
 --

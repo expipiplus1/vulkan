@@ -122,7 +122,7 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInf
 -- 'getPhysicalDeviceExternalSemaphoreProperties',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_capabilities.getPhysicalDeviceExternalSemaphorePropertiesKHR'
 data PhysicalDeviceExternalSemaphoreInfo (es :: [Type]) = PhysicalDeviceExternalSemaphoreInfo
-  { -- | @pNext@ is NULL or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
   , -- | @handleType@ is a
     -- 'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'

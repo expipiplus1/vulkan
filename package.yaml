@@ -17,7 +17,6 @@ library:
     - bytestring
     - transformers
     - vector
-    - vector-sized
   when:
     - condition: os(windows)
       then:
@@ -34,71 +33,12 @@ library:
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
 
-internal-libraries:
-  utils:
-    source-dirs: utils
-    dependencies:
-      - base < 4.14
-      - bytestring
-      - extra
-      - file-embed
-      - template-haskell
-      - temporary
-      - typed-process
-      - vulkan
-
-executables:
-  info:
-    main: Main.hs
-    source-dirs: examples/info
-    when:
-    - condition: flag(build-examples)
-      then:
-        buildable: true
-        dependencies:
-          - base < 4.14
-          - vulkan
-          - pretty-simple
-          - bytestring
-      else:
-        buildable: false
-
-  sdl-triangle:
-    main: Main.hs
-    source-dirs: examples/sdl-triangle
-    when:
-    - condition: flag(build-examples)
-      then:
-        buildable: true
-        dependencies:
-          - base < 4.14
-          - bytestring
-          - extra
-          - managed
-          - pretty-show
-          - say
-          - sdl2 >= 2.5.2.0
-          - text
-          - transformers
-          - utils
-          - vector
-          - vulkan
-      else:
-        buildable: false
-    c-sources: examples/sdl-triangle/DebugCallback.c
-
 flags:
   safe-foreign-calls:
     description:
       Do not mark foreign imports as 'unsafe'. This means that
       callbacks from Vulkan to Haskell will work. If you are using
       these then make sure this flag is enabled.
-    default: no
-    manual: yes
-
-  build-examples:
-    description:
-      Build example executables
     default: no
     manual: yes
 

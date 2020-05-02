@@ -49,8 +49,7 @@ pattern COLOR_SPACE_DCI_P3_LINEAR_EXT = COLOR_SPACE_DISPLAY_P3_LINEAR_EXT
 --
 -- Note
 --
--- In the initial release of the @VK_KHR_surface@ and
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_KHR_swapchain@
+-- In the initial release of the @VK_KHR_surface@ and @VK_KHR_swapchain@
 -- extensions, the token @VK_COLORSPACE_SRGB_NONLINEAR_KHR@ was used.
 -- Starting in the 2016-05-13 updates to the extension branches, matching
 -- release 1.0.13 of the core API specification,

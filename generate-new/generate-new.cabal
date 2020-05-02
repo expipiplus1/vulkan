@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6c12383d1a50ee3ff29c4b9943470d00a22d711604a1eca895cb37ea90175a5c
+-- hash: c766a4420d747ecfae41da16d704d805be5150bf84f7c5a10f6c02473c741ca0
 
 name:           generate-new
 version:        0.0.0
@@ -17,7 +17,6 @@ build-type:     Simple
 
 library
   exposed-modules:
-      AssignModules
       Bespoke
       Bespoke.MarshalParams
       Bespoke.RenderParams
@@ -101,16 +100,19 @@ library
     , mtl
     , pandoc
     , parsec
+    , parsers
     , polysemy
     , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , safe
     , say
     , tagsoup
     , template-haskell
     , text
+    , th-abstraction
     , th-orphans
     , timeit
     , transformers
@@ -119,7 +121,6 @@ library
     , unordered-containers
     , vector
     , vector-algorithms
-    , vector-sized
     , word-wrap
     , xeno
   default-language: Haskell2010
@@ -127,6 +128,7 @@ library
 executable vk
   main-is: Main.hs
   other-modules:
+      VK.AssignModules
       VK.Bracket
       VK.Render
       Paths_generate_new
@@ -154,16 +156,19 @@ executable vk
     , mtl
     , pandoc
     , parsec
+    , parsers
     , polysemy
     , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , safe
     , say
     , tagsoup
     , template-haskell
     , text
+    , th-abstraction
     , th-orphans
     , timeit
     , transformers
@@ -172,7 +177,6 @@ executable vk
     , unordered-containers
     , vector
     , vector-algorithms
-    , vector-sized
     , word-wrap
     , xeno
   default-language: Haskell2010
@@ -210,16 +214,19 @@ executable vma
     , mtl
     , pandoc
     , parsec
+    , parsers
     , polysemy
     , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , safe
     , say
     , tagsoup
     , template-haskell
     , text
+    , th-abstraction
     , th-orphans
     , timeit
     , transformers
@@ -228,7 +235,6 @@ executable vma
     , unordered-containers
     , vector
     , vector-algorithms
-    , vector-sized
     , word-wrap
     , xeno
   default-language: Haskell2010

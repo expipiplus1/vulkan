@@ -185,13 +185,13 @@ instance Zero DedicatedAllocationBufferCreateInfoNV where
 --     and 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a
 --     memory import operation, the memory being imported /must/ also be a
 --     dedicated image allocation and @image@ /must/ be identical to the
---     image associated with the imported memory.
+--     image associated with the imported memory
 --
 -- -   If @buffer@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --     and 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a
 --     memory import operation, the memory being imported /must/ also be a
 --     dedicated buffer allocation and @buffer@ /must/ be identical to the
---     buffer associated with the imported memory.
+--     buffer associated with the imported memory
 --
 -- == Valid Usage (Implicit)
 --

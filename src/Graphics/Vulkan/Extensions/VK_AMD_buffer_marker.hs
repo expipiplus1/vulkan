@@ -84,7 +84,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   @dstOffset@ /must/ be less than or equal to the size of @dstBuffer@
---     minus @4@.
+--     minus @4@
 --
 -- -   @dstBuffer@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'

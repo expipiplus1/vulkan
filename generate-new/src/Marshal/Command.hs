@@ -74,7 +74,9 @@ parameterScheme Command {..} param = do
         -- Pointers to return values in
       , returnPointerScheme
         -- Optional and non optional arrays
-      , arrayScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
+      , arrayScheme DoNotWrapExtensibleStructs
+                    WrapDispatchableHandles
+                    cParameters
       , fixedArrayScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
         -- Optional things:
       , optionalDefaultScheme DoNotWrapExtensibleStructs WrapDispatchableHandles

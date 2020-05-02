@@ -382,7 +382,7 @@ instance Zero PastPresentationTimingGOOGLE where
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@swapchainCount@,
 --     where 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
 --     is included in the @pNext@ chain of this 'PresentTimesInfoGOOGLE'
---     structure.
+--     structure
 --
 -- == Valid Usage (Implicit)
 --

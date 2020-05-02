@@ -41,6 +41,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
                                                       , DebugUtilsMessengerEXT(..)
                                                       ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -91,7 +92,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.NamedType ((:::))
@@ -175,7 +175,7 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pNameInfo.objectHandle@ /must/ be externally
+-- -   Host access to @pNameInfo->objectHandle@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -227,7 +227,7 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pTagInfo.objectHandle@ /must/ be externally
+-- -   Host access to @pTagInfo->objectHandle@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -433,7 +433,7 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'cmdBeginDebugUtilsLabelEXT' and 'cmdEndDebugUtilsLabelEXT'
 --
 -- To ensure that 'cmdEndDebugUtilsLabelEXT' is always called: pass
@@ -480,7 +480,7 @@ foreign import ccall
 -- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
 --     outstanding 'cmdBeginDebugUtilsLabelEXT' command recorded to
 --     @commandBuffer@ that has not previously been ended by a call to
---     'cmdEndDebugUtilsLabelEXT'.
+--     'cmdEndDebugUtilsLabelEXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -590,7 +590,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   @instance@ the instance the messenger will be used with.
+-- -   @instance@ is the instance the messenger will be used with.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DebugUtilsMessengerCreateInfoEXT'
 --     structure containing the callback pointer, as well as defining
@@ -653,7 +653,7 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
   pMessenger <- lift $ peek @DebugUtilsMessengerEXT pPMessenger
   pure $ (pMessenger)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDebugUtilsMessengerEXT' and 'destroyDebugUtilsMessengerEXT'
 --
 -- To ensure that 'destroyDebugUtilsMessengerEXT' is always called: pass
@@ -678,9 +678,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   @instance@ the instance where the callback was created.
+-- -   @instance@ is the instance where the callback was created.
 --
--- -   @messenger@ the
+-- -   @messenger@ is the
 --     'Graphics.Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' object
 --     to destroy. @messenger@ is an externally synchronized object and
 --     /must/ not be used on more than one thread at a time. This means
@@ -813,8 +813,8 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- Applications /may/ change the name associated with an object simply by
 -- calling 'setDebugUtilsObjectNameEXT' again with a new string. If
--- @pObjectName@ is an empty string, then any previously set name is
--- removed.
+-- @pObjectName@ is either @NULL@ or an empty string, then any previously
+-- set name is removed.
 --
 -- == Valid Usage
 --
@@ -841,7 +841,8 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 -- -   @objectType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' value
 --
--- -   @pObjectName@ /must/ be a null-terminated UTF-8 string
+-- -   If @pObjectName@ is not @NULL@, @pObjectName@ /must/ be a
+--     null-terminated UTF-8 string
 --
 -- = See Also
 --
@@ -855,9 +856,9 @@ data DebugUtilsObjectNameInfoEXT = DebugUtilsObjectNameInfoEXT
     objectType :: ObjectType
   , -- | @objectHandle@ is the object to be named.
     objectHandle :: Word64
-  , -- | @pObjectName@ is a null-terminated UTF-8 string specifying the name to
-    -- apply to @objectHandle@.
-    objectName :: ByteString
+  , -- | @pObjectName@ is either @NULL@ or a null-terminated UTF-8 string
+    -- specifying the name to apply to @objectHandle@.
+    objectName :: Maybe ByteString
   }
   deriving (Typeable)
 deriving instance Show DebugUtilsObjectNameInfoEXT
@@ -869,33 +870,34 @@ instance ToCStruct DebugUtilsObjectNameInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr ObjectType)) (objectType)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word64)) (objectHandle)
-    pObjectName'' <- ContT $ useAsCString (objectName)
+    pObjectName'' <- case (objectName) of
+      Nothing -> pure nullPtr
+      Just j -> ContT $ useAsCString (j)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CChar))) pObjectName''
     lift $ f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr ObjectType)) (zero)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
-    pObjectName'' <- ContT $ useAsCString (mempty)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CChar))) pObjectName''
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ObjectType)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
+    f
 
 instance FromCStruct DebugUtilsObjectNameInfoEXT where
   peekCStruct p = do
     objectType <- peek @ObjectType ((p `plusPtr` 16 :: Ptr ObjectType))
     objectHandle <- peek @Word64 ((p `plusPtr` 24 :: Ptr Word64))
-    pObjectName <- packCString =<< peek ((p `plusPtr` 32 :: Ptr (Ptr CChar)))
+    pObjectName <- peek @(Ptr CChar) ((p `plusPtr` 32 :: Ptr (Ptr CChar)))
+    pObjectName' <- maybePeek (\j -> packCString  (j)) pObjectName
     pure $ DebugUtilsObjectNameInfoEXT
-             objectType objectHandle pObjectName
+             objectType objectHandle pObjectName'
 
 instance Zero DebugUtilsObjectNameInfoEXT where
   zero = DebugUtilsObjectNameInfoEXT
            zero
            zero
-           mempty
+           Nothing
 
 
 -- | VkDebugUtilsObjectTagInfoEXT - Specify parameters of a tag to attach to
@@ -1010,7 +1012,7 @@ instance ToCStruct DebugUtilsLabelEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pLabelName'' <- ContT $ useAsCString (labelName)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CChar))) pLabelName''
-    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (color) of
       (e0, e1, e2, e3) -> do
         poke (pColor' :: Ptr CFloat) (CFloat (e0))
@@ -1030,7 +1032,7 @@ instance ToCStruct DebugUtilsLabelEXT where
 instance FromCStruct DebugUtilsLabelEXT where
   peekCStruct p = do
     pLabelName <- packCString =<< peek ((p `plusPtr` 16 :: Ptr (Ptr CChar)))
-    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     color0 <- peek @CFloat ((pcolor `advancePtrBytes` 0 :: Ptr CFloat))
     color1 <- peek @CFloat ((pcolor `advancePtrBytes` 4 :: Ptr CFloat))
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))
@@ -1175,13 +1177,13 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --
 -- Note
 --
--- @pQueueLabels@ will only be non-NULL if one of the objects in @pObjects@
--- can be related directly to a defined
+-- @pQueueLabels@ will only be non-@NULL@ if one of the objects in
+-- @pObjects@ can be related directly to a defined
 -- 'Graphics.Vulkan.Core10.Handles.Queue' which has had one or more labels
 -- associated with it.
 --
--- Likewise, @pCmdBufLabels@ will only be non-NULL if one of the objects in
--- @pObjects@ can be related directly to a defined
+-- Likewise, @pCmdBufLabels@ will only be non-@NULL@ if one of the objects
+-- in @pObjects@ can be related directly to a defined
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer' which has had one or more
 -- labels associated with it. Additionally, while command buffer labels
 -- allow for beginning and ending across different command buffers, the
@@ -1224,7 +1226,7 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'submitDebugUtilsMessageEXT'
 data DebugUtilsMessengerCallbackDataEXT = DebugUtilsMessengerCallbackDataEXT
-  { -- | @flags@ is 0 and reserved for future use.
+  { -- | @flags@ is @0@ and is reserved for future use.
     flags :: DebugUtilsMessengerCallbackDataFlagsEXT
   , -- | @pMessageIdName@ is a null-terminated string that identifies the
     -- particular message ID that is associated with the provided message. If
@@ -1239,15 +1241,17 @@ data DebugUtilsMessengerCallbackDataEXT = DebugUtilsMessengerCallbackDataEXT
     messageIdNumber :: Int32
   , -- | @pMessage@ is a null-terminated string detailing the trigger conditions.
     message :: ByteString
-  , -- | @pQueueLabels@ is NULL or a pointer to an array of 'DebugUtilsLabelEXT'
-    -- active in the current 'Graphics.Vulkan.Core10.Handles.Queue' at the time
-    -- the callback was triggered. Refer to
+  , -- | @pQueueLabels@ is @NULL@ or a pointer to an array of
+    -- 'DebugUtilsLabelEXT' active in the current
+    -- 'Graphics.Vulkan.Core10.Handles.Queue' at the time the callback was
+    -- triggered. Refer to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-queue-labels Queue Labels>
     -- for more information.
     queueLabels :: Vector DebugUtilsLabelEXT
-  , -- | @pCmdBufLabels@ is NULL or a pointer to an array of 'DebugUtilsLabelEXT'
-    -- active in the current 'Graphics.Vulkan.Core10.Handles.CommandBuffer' at
-    -- the time the callback was triggered. Refer to
+  , -- | @pCmdBufLabels@ is @NULL@ or a pointer to an array of
+    -- 'DebugUtilsLabelEXT' active in the current
+    -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer' at the time the callback
+    -- was triggered. Refer to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-command-buffer-labels Command Buffer Labels>
     -- for more information.
     cmdBufLabels :: Vector DebugUtilsLabelEXT
@@ -1503,11 +1507,11 @@ type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT 
 type PFN_vkDebugUtilsMessengerCallbackEXT = FunPtr FN_vkDebugUtilsMessengerCallbackEXT
 
 
-type EXT_DEBUG_UTILS_SPEC_VERSION = 1
+type EXT_DEBUG_UTILS_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_DEBUG_UTILS_SPEC_VERSION"
 pattern EXT_DEBUG_UTILS_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_DEBUG_UTILS_SPEC_VERSION = 1
+pattern EXT_DEBUG_UTILS_SPEC_VERSION = 2
 
 
 type EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils"

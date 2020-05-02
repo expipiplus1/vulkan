@@ -25,6 +25,7 @@ module Graphics.Vulkan.Core10.DeviceInitialization  ( createInstance
                                                     , PhysicalDeviceLimits(..)
                                                     ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -72,7 +73,6 @@ import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -197,7 +197,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
 --     for each extension in the
 --     'InstanceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also be
---     present in that list.
+--     present in that list
 --
 -- == Valid Usage (Implicit)
 --
@@ -250,8 +250,8 @@ createInstance createInfo allocator = liftIO . evalContT $ do
   pInstance' <- lift $ (\h -> Instance h <$> initInstanceCmds h) pInstance
   pure $ (pInstance')
 
--- | A convenience wrapper to make a compatible pair of 'createInstance' and
--- 'destroyInstance'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createInstance' and 'destroyInstance'
 --
 -- To ensure that 'destroyInstance' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -308,6 +308,9 @@ foreign import ccall
 -- == Host Synchronization
 --
 -- -   Host access to @instance@ /must/ be externally synchronized
+--
+-- -   Host access to all 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+--     objects enumerated from @instance@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -428,10 +431,10 @@ foreign import ccall
 -- = Description
 --
 -- The returned function pointer is of type
--- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and must be
--- cast to the type of the command being queried. The function pointer
--- /must/ only be called with a dispatchable object (the first parameter)
--- that is @device@ or a child of @device@.
+-- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be
+-- cast to the type of the command being queried before use. The function
+-- pointer /must/ only be called with a dispatchable object (the first
+-- parameter) that is @device@ or a child of @device@.
 --
 -- +----------------------+----------------------+-----------------------+
 -- | @device@             | @pName@              | return value          |
@@ -453,7 +456,7 @@ foreign import ccall
 -- | covered above        |                      |                       |
 -- +----------------------+----------------------+-----------------------+
 --
--- vkGetDeviceProcAddr behavior
+-- 'getDeviceProcAddr' behavior
 --
 -- [1]
 --     \"*\" means any representable value for the parameter (including
@@ -509,8 +512,8 @@ foreign import ccall
 -- and expected return value (“fp” is “function pointer”) for each case.
 --
 -- The returned function pointer is of type
--- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and must be
--- cast to the type of the command being queried.
+-- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be
+-- cast to the type of the command being queried before use.
 --
 -- +----------------------+----------------------------------------------------------------------------------+-----------------------+
 -- | @instance@           | @pName@                                                                          | return value          |
@@ -538,7 +541,7 @@ foreign import ccall
 -- | covered above        |                                                                                  |                       |
 -- +----------------------+----------------------------------------------------------------------------------+-----------------------+
 --
--- vkGetInstanceProcAddr behavior
+-- 'getInstanceProcAddr' behavior
 --
 -- [1]
 --     \"*\" means any representable value for the parameter (including
@@ -998,8 +1001,8 @@ instance ToCStruct PhysicalDeviceProperties where
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (vendorID)
     lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (deviceID)
     lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (deviceType)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (deviceName)
-    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (pipelineCacheUUID)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (deviceName)
+    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (pipelineCacheUUID)
     ContT $ pokeCStruct ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (limits) . ($ ())
     ContT $ pokeCStruct ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (sparseProperties) . ($ ())
     lift $ f
@@ -1011,8 +1014,8 @@ instance ToCStruct PhysicalDeviceProperties where
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceType)) (zero)
-    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (mempty)
-    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8))) (mempty)
+    lift $ pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))) (mempty)
+    lift $ pokeFixedLengthByteString ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
     ContT $ pokeCStruct ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits)) (zero) . ($ ())
     ContT $ pokeCStruct ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties)) (zero) . ($ ())
     lift $ f
@@ -1024,8 +1027,8 @@ instance FromCStruct PhysicalDeviceProperties where
     vendorID <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
     deviceID <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
     deviceType <- peek @PhysicalDeviceType ((p `plusPtr` 16 :: Ptr PhysicalDeviceType))
-    deviceName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))))
-    pipelineCacheUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 276 :: Ptr (Data.Vector.Storable.Sized.Vector UUID_SIZE Word8)))
+    deviceName <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_PHYSICAL_DEVICE_NAME_SIZE CChar))))
+    pipelineCacheUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 276 :: Ptr (FixedArray UUID_SIZE Word8)))
     limits <- peekCStruct @PhysicalDeviceLimits ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits))
     sparseProperties <- peekCStruct @PhysicalDeviceSparseProperties ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties))
     pure $ PhysicalDeviceProperties
@@ -1251,7 +1254,10 @@ data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
     applicationInfo :: Maybe ApplicationInfo
   , -- | @ppEnabledLayerNames@ is a pointer to an array of @enabledLayerCount@
     -- null-terminated UTF-8 strings containing the names of layers to enable
-    -- for the created instance. See the
+    -- for the created instance. The layers are loaded in the order they are
+    -- listed in this array, with the first array element being the closest to
+    -- the application, and the last array element being the closest to the
+    -- driver. See the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-layers>
     -- section for further details.
     enabledLayerNames :: Vector ByteString
@@ -1657,19 +1663,19 @@ instance Zero QueueFamilyProperties where
 -- For each pair of elements __X__ and __Y__ returned in @memoryTypes@,
 -- __X__ /must/ be placed at a lower index position than __Y__ if:
 --
--- -   either the set of bit flags returned in the @propertyFlags@ member
---     of __X__ is a strict subset of the set of bit flags returned in the
+-- -   the set of bit flags returned in the @propertyFlags@ member of __X__
+--     is a strict subset of the set of bit flags returned in the
 --     @propertyFlags@ member of __Y__; or
 --
 -- -   the @propertyFlags@ members of __X__ and __Y__ are equal, and __X__
 --     belongs to a memory heap with greater performance (as determined in
 --     an implementation-specific manner) ; or
 --
--- -   or the @propertyFlags@ members of __X__ includes
+-- -   the @propertyFlags@ members of __Y__ includes
 --     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD'
---     and __Y__ does not
+--     and __X__ does not
 --
 -- Note
 --
@@ -1762,11 +1768,11 @@ instance ToCStruct PhysicalDeviceMemoryProperties where
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeCount)
     lift $ unless ((Data.Vector.length $ (memoryTypes)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (memoryTypes)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (memoryTypes)
     lift $ poke ((p `plusPtr` 260 :: Ptr Word32)) (memoryHeapCount)
     lift $ unless ((Data.Vector.length $ (memoryHeaps)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (memoryHeaps)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (memoryHeaps)
     lift $ f
   cStructSize = 520
   cStructAlignment = 8
@@ -1774,19 +1780,19 @@ instance ToCStruct PhysicalDeviceMemoryProperties where
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
     lift $ unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryTypes is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (mempty)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `plusPtr` (8 * (i)) :: Ptr MemoryType) (e) . ($ ())) (mempty)
     lift $ poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
     lift $ unless ((Data.Vector.length $ (mempty)) <= MAX_MEMORY_HEAPS) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryHeaps is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed" Nothing Nothing
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (mempty)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((lowerArrayPtr ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `plusPtr` (16 * (i)) :: Ptr MemoryHeap) (e) . ($ ())) (mempty)
     lift $ f
 
 instance FromCStruct PhysicalDeviceMemoryProperties where
   peekCStruct p = do
     memoryTypeCount <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
-    memoryTypes <- generateM (MAX_MEMORY_TYPES) (\i -> peekCStruct @MemoryType (((lowerArrayPtr @MemoryType ((p `plusPtr` 4 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_TYPES MemoryType)))) `advancePtrBytes` (8 * (i)) :: Ptr MemoryType)))
+    memoryTypes <- generateM (MAX_MEMORY_TYPES) (\i -> peekCStruct @MemoryType (((lowerArrayPtr @MemoryType ((p `plusPtr` 4 :: Ptr (FixedArray MAX_MEMORY_TYPES MemoryType)))) `advancePtrBytes` (8 * (i)) :: Ptr MemoryType)))
     memoryHeapCount <- peek @Word32 ((p `plusPtr` 260 :: Ptr Word32))
-    memoryHeaps <- generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @MemoryHeap (((lowerArrayPtr @MemoryHeap ((p `plusPtr` 264 :: Ptr (Data.Vector.Storable.Sized.Vector MAX_MEMORY_HEAPS MemoryHeap)))) `advancePtrBytes` (16 * (i)) :: Ptr MemoryHeap)))
+    memoryHeaps <- generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @MemoryHeap (((lowerArrayPtr @MemoryHeap ((p `plusPtr` 264 :: Ptr (FixedArray MAX_MEMORY_HEAPS MemoryHeap)))) `advancePtrBytes` (16 * (i)) :: Ptr MemoryHeap)))
     pure $ PhysicalDeviceMemoryProperties
              memoryTypeCount memoryTypes memoryHeapCount memoryHeaps
 
@@ -2176,13 +2182,72 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --         structure are considered out of bounds even if the members at
     --         the end are not statically used.
     --
-    --     -   If any buffer access is determined to be out of bounds, then any
-    --         other access of the same type (load, store, or atomic) to the
-    --         same buffer that accesses an address less than 16 bytes away
-    --         from the out of bounds address /may/ also be considered out of
-    --         bounds.
+    --     -   If
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is not enabled and any buffer access is determined to be out of
+    --         bounds, then any other access of the same type (load, store, or
+    --         atomic) to the same buffer that accesses an address less than 16
+    --         bytes away from the out of bounds address /may/ also be
+    --         considered out of bounds.
+    --
+    --     -   If the access is a load that reads from the same memory
+    --         locations as a prior store in the same shader invocation, with
+    --         no other intervening accesses to the same memory locations in
+    --         that shader invocation, then the result of the load /may/ be the
+    --         value stored by the store instruction, even if the access is out
+    --         of bounds. If the load is @Volatile@, then an out of bounds load
+    --         /must/ return the appropriate out of bounds value.
+    --
+    -- -   Accesses to descriptors written with a
+    --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' resource or view
+    --     are not considered to be out of bounds. Instead, each type of
+    --     descriptor access defines a specific behavior for accesses to a null
+    --     descriptor.
     --
     -- -   Out-of-bounds buffer loads will return any of the following values:
+    --
+    --     -   If the access is to a uniform buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, loads of offsets between the end of the descriptor
+    --         range and the end of the descriptor range rounded up to a
+    --         multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
+    --         bytes /must/ return either zero values or the contents of the
+    --         memory at the offset being loaded. Loads of offsets past the
+    --         descriptor range rounded up to a multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
+    --         bytes /must/ return zero values.
+    --
+    --     -   If the access is to a storage buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, loads of offsets between the end of the descriptor
+    --         range and the end of the descriptor range rounded up to a
+    --         multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         bytes /must/ return either zero values or the contents of the
+    --         memory at the offset being loaded. Loads of offsets past the
+    --         descriptor range rounded up to a multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         bytes /must/ return zero values. Similarly, stores to addresses
+    --         between the end of the descriptor range and the end of the
+    --         descriptor range rounded up to a multiple of
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         bytes /may/ be discarded.
+    --
+    --     -   Non-atomic accesses to storage buffers that are a multiple of 32
+    --         bits /may/ be decomposed into 32-bit accesses that are
+    --         individually bounds-checked.
+    --
+    --     -   If the access is to an index buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, zero values /must/ be returned.
+    --
+    --     -   If the access is to a uniform texel buffer or storage texel
+    --         buffer and
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, zero values /must/ be returned, and then
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>
+    --         is applied based on the buffer view’s format.
     --
     --     -   Values from anywhere within the memory range(s) bound to the
     --         buffer (possibly including bytes of memory past the end of the
@@ -2200,13 +2265,24 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- -   Out-of-bounds writes /may/ modify values within the memory range(s)
     --     bound to the buffer, but /must/ not modify any other memory.
     --
+    --     -   If
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, out of bounds writes /must/ not modify any memory.
+    --
     -- -   Out-of-bounds atomics /may/ modify values within the memory range(s)
     --     bound to the buffer, but /must/ not modify any other memory, and
     --     return an undefined value.
     --
-    -- -   Vertex input attributes are considered out of bounds if the offset
-    --     of the attribute in the bound vertex buffer range plus the size of
-    --     the attribute is greater than either:
+    --     -   If
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         is enabled, out of bounds atomics /must/ not modify any memory,
+    --         and return an undefined value.
+    --
+    -- -   If
+    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --     is disabled, vertex input attributes are considered out of bounds if
+    --     the offset of the attribute in the bound vertex buffer range plus
+    --     the size of the attribute is greater than either:
     --
     --     -   @vertexBufferRangeSize@, if @bindingStride@ == 0; or
     --
@@ -2231,6 +2307,18 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --             attribute.
     --
     --         -   Zero values, or (0,0,0,x) vectors, as described above.
+    --
+    -- -   If
+    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --     is enabled, vertex input attributes are considered out of bounds if
+    --     the offset of the attribute in the bound vertex buffer range plus
+    --     the size of the attribute is greater than the byte size of the
+    --     memory range bound to the vertex buffer binding.
+    --
+    --     -   If a vertex input attribute is out of bounds, the
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction raw data>
+    --         extracted are zero values, and missing G, B, or A components are
+    --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
     --
     -- -   If @robustBufferAccess@ is not enabled, applications /must/ not
     --     perform out of bounds accesses.
@@ -2913,14 +3001,15 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structures, respectively.
     sparseResidencyAliased :: Bool
   , -- | @variableMultisampleRate@ specifies whether all pipelines that will be
-    -- bound to a command buffer during a subpass with no attachments /must/
-    -- have the same value for
+    -- bound to a command buffer during a
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>
+    -- /must/ have the same value for
     -- 'Graphics.Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
     -- If set to 'Graphics.Vulkan.Core10.BaseType.TRUE', the implementation
-    -- supports variable multisample rates in a subpass with no attachments. If
-    -- set to 'Graphics.Vulkan.Core10.BaseType.FALSE', then all pipelines bound
-    -- in such a subpass /must/ have the same multisample rate. This has no
-    -- effect in situations where a subpass uses any attachments.
+    -- supports variable multisample rates in a subpass which uses no
+    -- attachments. If set to 'Graphics.Vulkan.Core10.BaseType.FALSE', then all
+    -- pipelines bound in such a subpass /must/ have the same multisample rate.
+    -- This has no effect in situations where a subpass uses any attachments.
     variableMultisampleRate :: Bool
   , -- | @inheritedQueries@ specifies whether a secondary command buffer /may/ be
     -- executed while a query is active.
@@ -3951,8 +4040,8 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     framebufferStencilSampleCounts :: SampleCountFlags
   , -- | @framebufferNoAttachmentsSampleCounts@ is a bitmask1 of
     -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-    -- indicating the supported sample counts for a framebuffer with no
-    -- attachments.
+    -- indicating the supported sample counts for a
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>.
     framebufferNoAttachmentsSampleCounts :: SampleCountFlags
   , -- | @maxColorAttachments@ is the maximum number of color attachments that
     -- /can/ be used by a subpass in a render pass. The @colorAttachmentCount@
@@ -4154,14 +4243,14 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 208 :: Ptr Word32)) (maxFragmentDualSrcAttachments)
     poke ((p `plusPtr` 212 :: Ptr Word32)) (maxFragmentCombinedOutputResources)
     poke ((p `plusPtr` 216 :: Ptr Word32)) (maxComputeSharedMemorySize)
-    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (FixedArray 3 Word32)))
     case (maxComputeWorkGroupCount) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupCount' :: Ptr Word32) (e0)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 4 :: Ptr Word32) (e1)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 8 :: Ptr Word32) (e2)
     poke ((p `plusPtr` 232 :: Ptr Word32)) (maxComputeWorkGroupInvocations)
-    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (FixedArray 3 Word32)))
     case (maxComputeWorkGroupSize) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupSize' :: Ptr Word32) (e0)
@@ -4175,12 +4264,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 268 :: Ptr CFloat)) (CFloat (maxSamplerLodBias))
     poke ((p `plusPtr` 272 :: Ptr CFloat)) (CFloat (maxSamplerAnisotropy))
     poke ((p `plusPtr` 276 :: Ptr Word32)) (maxViewports)
-    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Word32)))
+    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (FixedArray 2 Word32)))
     case (maxViewportDimensions) of
       (e0, e1) -> do
         poke (pMaxViewportDimensions' :: Ptr Word32) (e0)
         poke (pMaxViewportDimensions' `plusPtr` 4 :: Ptr Word32) (e1)
-    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (FixedArray 2 CFloat)))
     case (viewportBoundsRange) of
       (e0, e1) -> do
         poke (pViewportBoundsRange' :: Ptr CFloat) (CFloat (e0))
@@ -4217,12 +4306,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 432 :: Ptr Word32)) (maxCullDistances)
     poke ((p `plusPtr` 436 :: Ptr Word32)) (maxCombinedClipAndCullDistances)
     poke ((p `plusPtr` 440 :: Ptr Word32)) (discreteQueuePriorities)
-    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (FixedArray 2 CFloat)))
     case (pointSizeRange) of
       (e0, e1) -> do
         poke (pPointSizeRange' :: Ptr CFloat) (CFloat (e0))
         poke (pPointSizeRange' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (FixedArray 2 CFloat)))
     case (lineWidthRange) of
       (e0, e1) -> do
         poke (pLineWidthRange' :: Ptr CFloat) (CFloat (e0))
@@ -4290,14 +4379,14 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 208 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 212 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 216 :: Ptr Word32)) (zero)
-    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupCount' = lowerArrayPtr ((p `plusPtr` 220 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupCount' :: Ptr Word32) (e0)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 4 :: Ptr Word32) (e1)
         poke (pMaxComputeWorkGroupCount' `plusPtr` 8 :: Ptr Word32) (e2)
     poke ((p `plusPtr` 232 :: Ptr Word32)) (zero)
-    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pMaxComputeWorkGroupSize' = lowerArrayPtr ((p `plusPtr` 236 :: Ptr (FixedArray 3 Word32)))
     case ((zero, zero, zero)) of
       (e0, e1, e2) -> do
         poke (pMaxComputeWorkGroupSize' :: Ptr Word32) (e0)
@@ -4311,12 +4400,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 268 :: Ptr CFloat)) (CFloat (zero))
     poke ((p `plusPtr` 272 :: Ptr CFloat)) (CFloat (zero))
     poke ((p `plusPtr` 276 :: Ptr Word32)) (zero)
-    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Word32)))
+    let pMaxViewportDimensions' = lowerArrayPtr ((p `plusPtr` 280 :: Ptr (FixedArray 2 Word32)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pMaxViewportDimensions' :: Ptr Word32) (e0)
         poke (pMaxViewportDimensions' `plusPtr` 4 :: Ptr Word32) (e1)
-    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pViewportBoundsRange' = lowerArrayPtr ((p `plusPtr` 288 :: Ptr (FixedArray 2 CFloat)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pViewportBoundsRange' :: Ptr CFloat) (CFloat (e0))
@@ -4344,12 +4433,12 @@ instance ToCStruct PhysicalDeviceLimits where
     poke ((p `plusPtr` 432 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 436 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 440 :: Ptr Word32)) (zero)
-    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pPointSizeRange' = lowerArrayPtr ((p `plusPtr` 444 :: Ptr (FixedArray 2 CFloat)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pPointSizeRange' :: Ptr CFloat) (CFloat (e0))
         poke (pPointSizeRange' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
-    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pLineWidthRange' = lowerArrayPtr ((p `plusPtr` 452 :: Ptr (FixedArray 2 CFloat)))
     case ((zero, zero)) of
       (e0, e1) -> do
         poke (pLineWidthRange' :: Ptr CFloat) (CFloat (e0))
@@ -4417,12 +4506,12 @@ instance FromCStruct PhysicalDeviceLimits where
     maxFragmentDualSrcAttachments <- peek @Word32 ((p `plusPtr` 208 :: Ptr Word32))
     maxFragmentCombinedOutputResources <- peek @Word32 ((p `plusPtr` 212 :: Ptr Word32))
     maxComputeSharedMemorySize <- peek @Word32 ((p `plusPtr` 216 :: Ptr Word32))
-    let pmaxComputeWorkGroupCount = lowerArrayPtr @Word32 ((p `plusPtr` 220 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxComputeWorkGroupCount = lowerArrayPtr @Word32 ((p `plusPtr` 220 :: Ptr (FixedArray 3 Word32)))
     maxComputeWorkGroupCount0 <- peek @Word32 ((pmaxComputeWorkGroupCount `advancePtrBytes` 0 :: Ptr Word32))
     maxComputeWorkGroupCount1 <- peek @Word32 ((pmaxComputeWorkGroupCount `advancePtrBytes` 4 :: Ptr Word32))
     maxComputeWorkGroupCount2 <- peek @Word32 ((pmaxComputeWorkGroupCount `advancePtrBytes` 8 :: Ptr Word32))
     maxComputeWorkGroupInvocations <- peek @Word32 ((p `plusPtr` 232 :: Ptr Word32))
-    let pmaxComputeWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 236 :: Ptr (Data.Vector.Storable.Sized.Vector 3 Word32)))
+    let pmaxComputeWorkGroupSize = lowerArrayPtr @Word32 ((p `plusPtr` 236 :: Ptr (FixedArray 3 Word32)))
     maxComputeWorkGroupSize0 <- peek @Word32 ((pmaxComputeWorkGroupSize `advancePtrBytes` 0 :: Ptr Word32))
     maxComputeWorkGroupSize1 <- peek @Word32 ((pmaxComputeWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     maxComputeWorkGroupSize2 <- peek @Word32 ((pmaxComputeWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))
@@ -4434,10 +4523,10 @@ instance FromCStruct PhysicalDeviceLimits where
     maxSamplerLodBias <- peek @CFloat ((p `plusPtr` 268 :: Ptr CFloat))
     maxSamplerAnisotropy <- peek @CFloat ((p `plusPtr` 272 :: Ptr CFloat))
     maxViewports <- peek @Word32 ((p `plusPtr` 276 :: Ptr Word32))
-    let pmaxViewportDimensions = lowerArrayPtr @Word32 ((p `plusPtr` 280 :: Ptr (Data.Vector.Storable.Sized.Vector 2 Word32)))
+    let pmaxViewportDimensions = lowerArrayPtr @Word32 ((p `plusPtr` 280 :: Ptr (FixedArray 2 Word32)))
     maxViewportDimensions0 <- peek @Word32 ((pmaxViewportDimensions `advancePtrBytes` 0 :: Ptr Word32))
     maxViewportDimensions1 <- peek @Word32 ((pmaxViewportDimensions `advancePtrBytes` 4 :: Ptr Word32))
-    let pviewportBoundsRange = lowerArrayPtr @CFloat ((p `plusPtr` 288 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pviewportBoundsRange = lowerArrayPtr @CFloat ((p `plusPtr` 288 :: Ptr (FixedArray 2 CFloat)))
     viewportBoundsRange0 <- peek @CFloat ((pviewportBoundsRange `advancePtrBytes` 0 :: Ptr CFloat))
     viewportBoundsRange1 <- peek @CFloat ((pviewportBoundsRange `advancePtrBytes` 4 :: Ptr CFloat))
     viewportSubPixelBits <- peek @Word32 ((p `plusPtr` 296 :: Ptr Word32))
@@ -4472,10 +4561,10 @@ instance FromCStruct PhysicalDeviceLimits where
     maxCullDistances <- peek @Word32 ((p `plusPtr` 432 :: Ptr Word32))
     maxCombinedClipAndCullDistances <- peek @Word32 ((p `plusPtr` 436 :: Ptr Word32))
     discreteQueuePriorities <- peek @Word32 ((p `plusPtr` 440 :: Ptr Word32))
-    let ppointSizeRange = lowerArrayPtr @CFloat ((p `plusPtr` 444 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let ppointSizeRange = lowerArrayPtr @CFloat ((p `plusPtr` 444 :: Ptr (FixedArray 2 CFloat)))
     pointSizeRange0 <- peek @CFloat ((ppointSizeRange `advancePtrBytes` 0 :: Ptr CFloat))
     pointSizeRange1 <- peek @CFloat ((ppointSizeRange `advancePtrBytes` 4 :: Ptr CFloat))
-    let plineWidthRange = lowerArrayPtr @CFloat ((p `plusPtr` 452 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let plineWidthRange = lowerArrayPtr @CFloat ((p `plusPtr` 452 :: Ptr (FixedArray 2 CFloat)))
     lineWidthRange0 <- peek @CFloat ((plineWidthRange `advancePtrBytes` 0 :: Ptr CFloat))
     lineWidthRange1 <- peek @CFloat ((plineWidthRange `advancePtrBytes` 4 :: Ptr CFloat))
     pointSizeGranularity <- peek @CFloat ((p `plusPtr` 460 :: Ptr CFloat))

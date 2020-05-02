@@ -79,7 +79,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
---     family available in the logical device @device@.
+--     family available in the logical device @device@
 --
 -- == Valid Usage (Implicit)
 --
@@ -127,8 +127,8 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
   pCommandPool <- lift $ peek @CommandPool pPCommandPool
   pure $ (pCommandPool)
 
--- | A convenience wrapper to make a compatible pair of 'createCommandPool'
--- and 'destroyCommandPool'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createCommandPool' and 'destroyCommandPool'
 --
 -- To ensure that 'destroyCommandPool' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -163,8 +163,7 @@ foreign import ccall
 -- = Description
 --
 -- When a pool is destroyed, all command buffers allocated from the pool
--- are
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkFreeCommandBuffers freed>.
+-- are <vkFreeCommandBuffers.html freed>.
 --
 -- Any primary command buffer allocated from another
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the
@@ -177,7 +176,7 @@ foreign import ccall
 --
 -- -   All 'Graphics.Vulkan.Core10.Handles.CommandBuffer' objects allocated
 --     from @commandPool@ /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     were provided when @commandPool@ was created, a compatible set of
@@ -315,7 +314,7 @@ resetCommandPool device commandPool flags = liftIO $ do
 --
 -- -   If the protected memory feature is not enabled, the
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_PROTECTED_BIT'
---     bit of @flags@ /must/ not be set.
+--     bit of @flags@ /must/ not be set
 --
 -- == Valid Usage (Implicit)
 --

@@ -8,7 +8,7 @@ module Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlagBits( 
                                                                               , BUFFER_USAGE_INDEX_BUFFER_BIT
                                                                               , BUFFER_USAGE_VERTEX_BUFFER_BIT
                                                                               , BUFFER_USAGE_INDIRECT_BUFFER_BIT
-                                                                              , BUFFER_USAGE_RAY_TRACING_BIT_NV
+                                                                              , BUFFER_USAGE_RAY_TRACING_BIT_KHR
                                                                               , BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT
                                                                               , BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
                                                                               , BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
@@ -92,15 +92,16 @@ pattern BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlagBits 0x00000080
 -- 'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
 -- or 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'.
 -- It is also suitable for passing as the @buffer@ member of
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.IndirectCommandsTokenNVX',
--- or @sequencesCountBuffer@ or @sequencesIndexBuffer@ member of
--- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdProcessCommandsInfoNVX'
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsStreamNV',
+-- or @sequencesCountBuffer@ or @sequencesIndexBuffer@ or
+-- @preprocessedBuffer@ member of
+-- 'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV'
 pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT = BufferUsageFlagBits 0x00000100
--- | 'BUFFER_USAGE_RAY_TRACING_BIT_NV' specifies that the buffer is suitable
--- for use in 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV'
--- and
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV'.
-pattern BUFFER_USAGE_RAY_TRACING_BIT_NV = BufferUsageFlagBits 0x00000400
+-- | 'BUFFER_USAGE_RAY_TRACING_BIT_KHR' specifies that the buffer is suitable
+-- for use in
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysKHR' and
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.cmdBuildAccelerationStructureKHR'.
+pattern BUFFER_USAGE_RAY_TRACING_BIT_KHR = BufferUsageFlagBits 0x00000400
 -- | 'BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies that the buffer
 -- is suitable for passing as the @buffer@ parameter to
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.cmdBeginConditionalRenderingEXT'.
@@ -135,7 +136,7 @@ instance Show BufferUsageFlagBits where
     BUFFER_USAGE_INDEX_BUFFER_BIT -> showString "BUFFER_USAGE_INDEX_BUFFER_BIT"
     BUFFER_USAGE_VERTEX_BUFFER_BIT -> showString "BUFFER_USAGE_VERTEX_BUFFER_BIT"
     BUFFER_USAGE_INDIRECT_BUFFER_BIT -> showString "BUFFER_USAGE_INDIRECT_BUFFER_BIT"
-    BUFFER_USAGE_RAY_TRACING_BIT_NV -> showString "BUFFER_USAGE_RAY_TRACING_BIT_NV"
+    BUFFER_USAGE_RAY_TRACING_BIT_KHR -> showString "BUFFER_USAGE_RAY_TRACING_BIT_KHR"
     BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT -> showString "BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT"
     BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT -> showString "BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"
     BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT -> showString "BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"
@@ -152,7 +153,7 @@ instance Read BufferUsageFlagBits where
                             , ("BUFFER_USAGE_INDEX_BUFFER_BIT", pure BUFFER_USAGE_INDEX_BUFFER_BIT)
                             , ("BUFFER_USAGE_VERTEX_BUFFER_BIT", pure BUFFER_USAGE_VERTEX_BUFFER_BIT)
                             , ("BUFFER_USAGE_INDIRECT_BUFFER_BIT", pure BUFFER_USAGE_INDIRECT_BUFFER_BIT)
-                            , ("BUFFER_USAGE_RAY_TRACING_BIT_NV", pure BUFFER_USAGE_RAY_TRACING_BIT_NV)
+                            , ("BUFFER_USAGE_RAY_TRACING_BIT_KHR", pure BUFFER_USAGE_RAY_TRACING_BIT_KHR)
                             , ("BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT", pure BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT)
                             , ("BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT", pure BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT)
                             , ("BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT", pure BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT)

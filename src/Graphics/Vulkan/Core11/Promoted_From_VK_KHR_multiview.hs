@@ -81,10 +81,10 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- == Valid Usage
 --
 -- -   If @multiviewGeometryShader@ is enabled then @multiview@ /must/ also
---     be enabled.
+--     be enabled
 --
 -- -   If @multiviewTessellationShader@ is enabled then @multiview@ /must/
---     also be enabled.
+--     also be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -275,10 +275,9 @@ instance Zero PhysicalDeviceMultiviewProperties where
 -- bit in the subpass description. The only supported per-view attributes
 -- are position and viewport mask, and per-view position and viewport masks
 -- are written to output array variables decorated with @PositionPerViewNV@
--- and @ViewportMaskPerViewNV@, respectively. If
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_NV_viewport_array2@
--- is not supported and enabled, @ViewportMaskPerViewNV@ /must/ not be
--- used. Values written to elements of @PositionPerViewNV@ and
+-- and @ViewportMaskPerViewNV@, respectively. If @VK_NV_viewport_array2@ is
+-- not supported and enabled, @ViewportMaskPerViewNV@ /must/ not be used.
+-- Values written to elements of @PositionPerViewNV@ and
 -- @ViewportMaskPerViewNV@ /must/ not depend on the @ViewIndex@. The shader
 -- /must/ also write to an output variable decorated with @Position@, and
 -- the value written to @Position@ /must/ equal the value written to

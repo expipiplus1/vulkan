@@ -4,7 +4,6 @@
 
 module Main where
 
-import           Control.Arrow                  ( (&&&) )
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Extra
@@ -31,7 +30,6 @@ import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
 import           Graphics.Vulkan.Extensions.VK_KHR_surface
 import           Graphics.Vulkan.Extensions.VK_KHR_swapchain
 import           Graphics.Vulkan.Utils.ShaderQQ
-import           Graphics.Vulkan.Version
 import           Graphics.Vulkan.Zero
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
@@ -313,8 +311,9 @@ createGraphicsPipeline dev renderPass swapchainExtent swapchainImageFormat = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  fmap V.head
-    $ withGraphicsPipelines allocate dev zero [pipelineCreateInfo] Nothing
+  V.head
+    .   snd
+    <$> withGraphicsPipelines allocate dev zero [pipelineCreateInfo] Nothing
 
 createFramebuffers
   :: Device

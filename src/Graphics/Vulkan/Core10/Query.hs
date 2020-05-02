@@ -55,8 +55,8 @@ import Graphics.Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits (QueryPipelin
 import Graphics.Vulkan.Core10.Handles (QueryPool)
 import Graphics.Vulkan.Core10.Handles (QueryPool(..))
 import Graphics.Vulkan.Core10.Enums.QueryPoolCreateFlags (QueryPoolCreateFlags)
-import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_INTEL_performance_query (QueryPoolCreateInfoINTEL)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_performance_query (QueryPoolPerformanceCreateInfoKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_INTEL_performance_query (QueryPoolPerformanceQueryCreateInfoINTEL)
 import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlagBits(..))
 import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
 import Graphics.Vulkan.Core10.Enums.QueryType (QueryType)
@@ -139,8 +139,8 @@ createQueryPool device createInfo allocator = liftIO . evalContT $ do
   pQueryPool <- lift $ peek @QueryPool pPQueryPool
   pure $ (pQueryPool)
 
--- | A convenience wrapper to make a compatible pair of 'createQueryPool' and
--- 'destroyQueryPool'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createQueryPool' and 'destroyQueryPool'
 --
 -- To ensure that 'destroyQueryPool' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -496,9 +496,9 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolCreateInfoINTEL'
---     or
 --     'Graphics.Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
+--     or
+--     'Graphics.Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL'
 --
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
@@ -541,7 +541,7 @@ instance Extensible QueryPoolCreateInfo where
   getNext QueryPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends QueryPoolCreateInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @QueryPoolCreateInfoINTEL = Just f
+    | Just Refl <- eqT @e @QueryPoolPerformanceQueryCreateInfoINTEL = Just f
     | Just Refl <- eqT @e @QueryPoolPerformanceCreateInfoKHR = Just f
     | otherwise = Nothing
 

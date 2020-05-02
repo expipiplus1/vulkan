@@ -5,6 +5,7 @@ module Graphics.Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                             , MAX_DEVICE_GROUP_SIZE_KHR
                                             , MAX_DRIVER_NAME_SIZE_KHR
                                             , MAX_DRIVER_INFO_SIZE_KHR
+                                            , SHADER_UNUSED_NV
                                             , MAX_PHYSICAL_DEVICE_NAME_SIZE
                                             , pattern MAX_PHYSICAL_DEVICE_NAME_SIZE
                                             , UUID_SIZE
@@ -41,8 +42,8 @@ module Graphics.Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                             , pattern MAX_DRIVER_NAME_SIZE
                                             , MAX_DRIVER_INFO_SIZE
                                             , pattern MAX_DRIVER_INFO_SIZE
-                                            , SHADER_UNUSED_NV
-                                            , pattern SHADER_UNUSED_NV
+                                            , SHADER_UNUSED_KHR
+                                            , pattern SHADER_UNUSED_KHR
                                             , pattern NULL_HANDLE
                                             , IsHandle
                                             , Bool32(..)
@@ -77,6 +78,10 @@ type MAX_DRIVER_NAME_SIZE_KHR = MAX_DRIVER_NAME_SIZE
 
 -- No documentation found for TopLevel "VK_MAX_DRIVER_INFO_SIZE_KHR"
 type MAX_DRIVER_INFO_SIZE_KHR = MAX_DRIVER_INFO_SIZE
+
+
+-- No documentation found for TopLevel "VK_SHADER_UNUSED_NV"
+type SHADER_UNUSED_NV = SHADER_UNUSED_KHR
 
 
 type MAX_PHYSICAL_DEVICE_NAME_SIZE = 256
@@ -205,11 +210,11 @@ pattern MAX_DRIVER_INFO_SIZE :: forall a . Integral a => a
 pattern MAX_DRIVER_INFO_SIZE = 256
 
 
-type SHADER_UNUSED_NV = 0xffffffff
+type SHADER_UNUSED_KHR = 0xffffffff
 
--- No documentation found for TopLevel "VK_SHADER_UNUSED_NV"
-pattern SHADER_UNUSED_NV :: Word32
-pattern SHADER_UNUSED_NV = 0xffffffff
+-- No documentation found for TopLevel "VK_SHADER_UNUSED_KHR"
+pattern SHADER_UNUSED_KHR :: Word32
+pattern SHADER_UNUSED_KHR = 0xffffffff
 
 
 -- | VK_NULL_HANDLE - Reserved non-valid object handle

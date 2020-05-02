@@ -105,7 +105,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
 import Graphics.Vulkan.CStruct (ToCStruct)
 import Graphics.Vulkan.CStruct (ToCStruct(..))
 import Graphics.Vulkan.Exception (VulkanException(..))
-import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_ray_tracing (WriteDescriptorSetAccelerationStructureNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (WriteDescriptorSetAccelerationStructureKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block (WriteDescriptorSetInlineUniformBlockEXT)
 import Graphics.Vulkan.Zero (Zero(..))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COPY_DESCRIPTOR_SET))
@@ -185,7 +185,7 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   pSetLayout <- lift $ peek @DescriptorSetLayout pPSetLayout
   pure $ (pSetLayout)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDescriptorSetLayout' and 'destroyDescriptorSetLayout'
 --
 -- To ensure that 'destroyDescriptorSetLayout' is always called: pass
@@ -348,7 +348,7 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   pDescriptorPool <- lift $ peek @DescriptorPool pPDescriptorPool
   pure $ (pDescriptorPool)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'createDescriptorPool' and 'destroyDescriptorPool'
 --
 -- To ensure that 'destroyDescriptorPool' is always called: pass
@@ -595,15 +595,15 @@ foreign import ccall
 --     'DescriptorSetAllocateInfo' structure
 --
 -- -   @pDescriptorSets@ /must/ be a valid pointer to an array of
---     @pAllocateInfo@::descriptorSetCount
+--     @pAllocateInfo->descriptorSetCount@
 --     'Graphics.Vulkan.Core10.Handles.DescriptorSet' handles
 --
--- -   The value referenced by @pAllocateInfo@::@descriptorSetCount@ /must/
+-- -   The value referenced by @pAllocateInfo->descriptorSetCount@ /must/
 --     be greater than @0@
 --
 -- == Host Synchronization
 --
--- -   Host access to @pAllocateInfo@::descriptorPool /must/ be externally
+-- -   Host access to @pAllocateInfo->descriptorPool@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -636,7 +636,7 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   pDescriptorSets <- lift $ generateM (fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) (\i -> peek @DescriptorSet ((pPDescriptorSets `advancePtrBytes` (8 * (i)) :: Ptr DescriptorSet)))
   pure $ (pDescriptorSets)
 
--- | A convenience wrapper to make a compatible pair of
+-- | A convenience wrapper to make a compatible pair of calls to
 -- 'allocateDescriptorSets' and 'freeDescriptorSets'
 --
 -- To ensure that 'freeDescriptorSets' is always called: pass
@@ -797,7 +797,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT'
 --     bits set /must/ not be used by any command that was recorded to a
 --     command buffer which is in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
@@ -872,17 +872,28 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be
 --     less than or equal to the size of @buffer@ minus @offset@
 --
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, @buffer@ /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If @buffer@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @offset@ /must/ be zero and @range@ /must/ be
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE'
+--
 -- == Valid Usage (Implicit)
 --
--- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
---     handle
+-- -   If @buffer@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/
+--     be a valid 'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize', 'WriteDescriptorSet'
 data DescriptorBufferInfo = DescriptorBufferInfo
-  { -- | @buffer@ is the buffer resource.
+  { -- | @buffer@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or the
+    -- buffer resource.
     buffer :: Buffer
   , -- | @offset@ is the offset in bytes from the start of @buffer@. Access to
     -- buffer memory via this descriptor uses addressing that is relative to
@@ -906,7 +917,6 @@ instance ToCStruct DescriptorBufferInfo where
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr Buffer)) (zero)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
     poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
     f
@@ -949,7 +959,7 @@ instance Zero DescriptorBufferInfo where
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---     but not both.
+--     but not both
 --
 -- -   @imageLayout@ /must/ match the actual
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' of each
@@ -987,8 +997,8 @@ data DescriptorImageInfo = DescriptorImageInfo
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
     -- if the binding being updated does not use immutable samplers.
     sampler :: Sampler
-  , -- | @imageView@ is an image view handle, and is used in descriptor updates
-    -- for types
+  , -- | @imageView@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or an
+    -- image view handle, and is used in descriptor updates for types
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -1059,12 +1069,19 @@ instance Zero DescriptorImageInfo where
 -- 'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 -- structure included in the @pNext@ chain of 'WriteDescriptorSet', or if
 -- @descriptorType@ is
--- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+-- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 -- in which case the source data for the descriptor writes is taken from
 -- the
--- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+-- 'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 -- structure in the @pNext@ chain of 'WriteDescriptorSet', as specified
 -- below.
+--
+-- If the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- feature is enabled, the buffer, imageView, or bufferView /can/ be
+-- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'. Loads from a null
+-- descriptor return zero values and stores and atomics to a null
+-- descriptor are discarded.
 --
 -- If the @dstBinding@ has fewer than @descriptorCount@ array elements
 -- remaining starting from @dstArrayElement@, then the remainder will be
@@ -1095,12 +1112,12 @@ instance Zero DescriptorImageInfo where
 --
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/
---     have identical @descriptorType@ and @stageFlags@.
+--     have identical @descriptorType@ and @stageFlags@
 --
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/ all
 --     either use immutable samplers or /must/ all not use immutable
---     samplers.
+--     samplers
 --
 -- -   @descriptorType@ /must/ match the type of @dstBinding@ within
 --     @dstSet@
@@ -1136,9 +1153,18 @@ instance Zero DescriptorImageInfo where
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
---     @pTexelBufferView@ /must/ be a valid pointer to an array of
---     @descriptorCount@ valid 'Graphics.Vulkan.Core10.Handles.BufferView'
---     handles
+--     each element of @pTexelBufferView@ /must/ be either a valid
+--     'Graphics.Vulkan.Core10.Handles.BufferView' handle or
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If @descriptorType@ is
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, each element of @pTexelBufferView@ /must/
+--     not be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
@@ -1164,10 +1190,21 @@ instance Zero DescriptorImageInfo where
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the @imageView@ and @imageLayout@ members of each element of
---     @pImageInfo@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.ImageView' and
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout', respectively
+--     the @imageView@ member of each element of @pImageInfo@ /must/ be
+--     either a valid 'Graphics.Vulkan.Core10.Handles.ImageView' handle or
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If @descriptorType@ is
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, the @imageView@ member of each element of
+--     @pImageInfo@ /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
@@ -1176,9 +1213,9 @@ instance Zero DescriptorImageInfo where
 --     structure whose @dataSize@ member equals @descriptorCount@
 --
 -- -   If @descriptorType@ is
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+--     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
 --     the @pNext@ chain /must/ include a
---     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 --     structure whose @accelerationStructureCount@ member equals
 --     @descriptorCount@
 --
@@ -1344,7 +1381,7 @@ instance Zero DescriptorImageInfo where
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/
 --     have identical
---     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'.
+--     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
@@ -1359,7 +1396,7 @@ instance Zero DescriptorImageInfo where
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
 --     or
 --     'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 --
@@ -1427,7 +1464,7 @@ instance Extensible WriteDescriptorSet where
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureNV = Just f
+    | Just Refl <- eqT @e @WriteDescriptorSetAccelerationStructureKHR = Just f
     | Just Refl <- eqT @e @WriteDescriptorSetInlineUniformBlockEXT = Just f
     | otherwise = Nothing
 
@@ -1869,7 +1906,7 @@ instance Zero DescriptorSetLayoutBinding where
 -- == Valid Usage
 --
 -- -   The 'DescriptorSetLayoutBinding'::@binding@ members of the elements
---     of the @pBindings@ array /must/ each have different values.
+--     of the @pBindings@ array /must/ each have different values
 --
 -- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',

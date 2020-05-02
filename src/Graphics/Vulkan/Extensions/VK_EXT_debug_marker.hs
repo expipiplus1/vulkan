@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_marker  ( debugMarkerSetObjectNam
                                                        , DebugReportObjectTypeEXT(..)
                                                        ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
@@ -42,7 +43,6 @@ import Data.Word (Word64)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
 import Graphics.Vulkan.Core10.Handles (CommandBuffer)
@@ -98,7 +98,7 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pNameInfo.object@ /must/ be externally synchronized
+-- -   Host access to @pNameInfo->object@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -149,7 +149,7 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to @pTagInfo.object@ /must/ be externally synchronized
+-- -   Host access to @pTagInfo->object@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -266,7 +266,7 @@ foreign import ccall
 -- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
 --     outstanding 'cmdDebugMarkerBeginEXT' command recorded to
 --     @commandBuffer@ that has not previously been ended by a call to
---     'cmdDebugMarkerEndEXT'.
+--     'cmdDebugMarkerEndEXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -389,7 +389,7 @@ data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
     -- @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @pObjectName@ /must/ be a null-terminated UTF-8 string
     objectName :: ByteString
@@ -456,7 +456,7 @@ data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
     -- @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
     tagName :: Word64
@@ -544,7 +544,7 @@ instance ToCStruct DebugMarkerMarkerInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pMarkerName'' <- ContT $ useAsCString (markerName)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CChar))) pMarkerName''
-    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pColor' = lowerArrayPtr ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (color) of
       (e0, e1, e2, e3) -> do
         poke (pColor' :: Ptr CFloat) (CFloat (e0))
@@ -564,7 +564,7 @@ instance ToCStruct DebugMarkerMarkerInfoEXT where
 instance FromCStruct DebugMarkerMarkerInfoEXT where
   peekCStruct p = do
     pMarkerName <- packCString =<< peek ((p `plusPtr` 16 :: Ptr (Ptr CChar)))
-    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (Data.Vector.Storable.Sized.Vector 4 CFloat)))
+    let pcolor = lowerArrayPtr @CFloat ((p `plusPtr` 24 :: Ptr (FixedArray 4 CFloat)))
     color0 <- peek @CFloat ((pcolor `advancePtrBytes` 0 :: Ptr CFloat))
     color1 <- peek @CFloat ((pcolor `advancePtrBytes` 4 :: Ptr CFloat))
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))

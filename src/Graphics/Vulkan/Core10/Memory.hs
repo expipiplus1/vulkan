@@ -161,9 +161,7 @@ foreign import ccall
 -- size of the specified heap. In such cases, allocated memory is tracked
 -- on a per-device and per-heap basis. Some platforms allow overallocation
 -- into other heaps. The overallocation behavior /can/ be specified through
--- the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_AMD_memory_overallocation_behavior@
--- extension.
+-- the @VK_AMD_memory_overallocation_behavior@ extension.
 --
 -- == Valid Usage
 --
@@ -174,14 +172,14 @@ foreign import ccall
 --     as returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that
---     @device@ was created from.
+--     @device@ was created from
 --
 -- -   @pAllocateInfo->memoryTypeIndex@ /must/ be less than
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypeCount@
 --     as returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that
---     @device@ was created from.
+--     @device@ was created from
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
@@ -241,8 +239,8 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   pMemory <- lift $ peek @DeviceMemory pPMemory
   pure $ (pMemory)
 
--- | A convenience wrapper to make a compatible pair of 'allocateMemory' and
--- 'freeMemory'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'allocateMemory' and 'freeMemory'
 --
 -- To ensure that 'freeMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -439,7 +437,7 @@ foreign import ccall
 -- -   @memory@ /must/ have been created with a memory type that reports
 --     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_VISIBLE_BIT'
 --
--- -   @memory@ /must/ not have been allocated with multiple instances.
+-- -   @memory@ /must/ not have been allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
 --
@@ -489,8 +487,8 @@ mapMemory device memory offset size flags = liftIO . evalContT $ do
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
 
--- | A convenience wrapper to make a compatible pair of 'mapMemory' and
--- 'unmapMemory'
+-- | A convenience wrapper to make a compatible pair of calls to 'mapMemory'
+-- and 'unmapMemory'
 --
 -- To ensure that 'unmapMemory' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -791,7 +789,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@
 --     or
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.externalMemoryFeatures@,
---     the @pNext@ chain must include a
+--     the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     or
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
@@ -804,13 +802,13 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV'
 --     or
 --     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.ExportMemoryWin32HandleInfoNV'
---     structure.
+--     structure
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'
 --     structure, it /must/ not include a
 --     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV'
---     structure.
+--     structure
 --
 -- -   If the parameters define an import operation, the external handle
 --     specified was created by the Vulkan API, and the external handle
@@ -818,26 +816,26 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
 --     match those specified when the memory object being imported was
---     created.
+--     created
 --
 -- -   If the parameters define an import operation and the external handle
 --     specified was created by the Vulkan API, the device mask specified
 --     by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'
 --     /must/ match that specified when the memory object being imported
---     was allocated.
+--     was allocated
 --
 -- -   If the parameters define an import operation and the external handle
 --     specified was created by the Vulkan API, the list of physical
 --     devices that comprise the logical device passed to 'allocateMemory'
 --     /must/ match the list of physical devices that comprise the logical
---     device on which the memory was originally allocated.
+--     device on which the memory was originally allocated
 --
 -- -   If the parameters define an import operation and the external handle
 --     is an NT handle or a global share handle created outside of the
 --     Vulkan API, the value of @memoryTypeIndex@ /must/ be one of those
 --     returned by
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR'.
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR'
 --
 -- -   If the parameters define an import operation, the external handle
 --     was created by the Vulkan API, and the external handle type is
@@ -846,7 +844,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
 --     match those specified when the memory object being imported was
---     created.
+--     created
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
@@ -857,23 +855,23 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     @allocationSize@ /must/ match the size reported in the memory
 --     requirements of the @image@ or @buffer@ member of the
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
---     structure included in the @pNext@ chain.
+--     structure included in the @pNext@ chain
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
 --     @allocationSize@ /must/ match the size specified when creating the
---     Direct3D 12 heap from which the external handle was extracted.
+--     Direct3D 12 heap from which the external handle was extracted
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a POSIX file descriptor created outside of the Vulkan API, the
 --     value of @memoryTypeIndex@ /must/ be one of those returned by
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR'.
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR'
 --
 -- -   If the protected memory feature is not enabled, the
 --     'MemoryAllocateInfo'::@memoryTypeIndex@ /must/ not indicate a memory
 --     type that reports
---     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a host pointer, the value of @memoryTypeIndex@ /must/ be one of
@@ -888,20 +886,20 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     is a host pointer, the @pNext@ chain /must/ not include a
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
 --     structure with either its @image@ or @buffer@ field set to a value
---     other than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     other than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a host pointer, the @pNext@ chain /must/ not include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with either its @image@ or @buffer@ field set to a value
---     other than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     other than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
 --     @allocationSize@ /must/ be the size returned by
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
---     for the Android hardware buffer.
+--     for the Android hardware buffer
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
@@ -913,14 +911,14 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the Android
 --     hardware buffer /must/ have a @AHardwareBuffer_Desc@::@format@ of
 --     @AHARDWAREBUFFER_FORMAT_BLOB@ and a @AHardwareBuffer_Desc@::@usage@
---     that includes @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@.
+--     that includes @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
 --     @memoryTypeIndex@ /must/ be one of those returned by
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
---     for the Android hardware buffer.
+--     for the Android hardware buffer
 --
 -- -   If the parameters do not define an import operation, and the @pNext@
 --     chain includes a
@@ -933,7 +931,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     structure with @image@ not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
 --     @allocationSize@ /must/ be @0@, otherwise @allocationSize@ /must/ be
---     greater than @0@.
+--     greater than @0@
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
@@ -944,7 +942,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
 --     /must/ include at least one of
 --     @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
---     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@.
+--     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
@@ -957,7 +955,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
 --     in
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID'::@format@
---     for the Android hardware buffer.
+--     for the Android hardware buffer
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
@@ -965,7 +963,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     structure with @image@ that is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the width,
 --     height, and array layer dimensions of @image@ and the Android
---     hardware buffer’s @AHardwareBuffer_Desc@ /must/ be identical.
+--     hardware buffer’s @AHardwareBuffer_Desc@ /must/ be identical
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
@@ -975,7 +973,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     hardware buffer’s
 --     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
 --     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
---     /must/ have a complete mipmap chain.
+--     /must/ have a complete mipmap chain
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
@@ -985,7 +983,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     hardware buffer’s
 --     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@ does
 --     not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
---     /must/ have exactly one mipmap level.
+--     /must/ have exactly one mipmap level
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
@@ -996,7 +994,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
 --     and if there is a corresponding @AHARDWAREBUFFER_USAGE@ bit listed
 --     that bit /must/ be included in the Android hardware buffer’s
---     @AHardwareBuffer_Desc@::@usage@.
+--     @AHardwareBuffer_Desc@::@usage@
 --
 -- -   If
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
@@ -1153,7 +1151,7 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', the end of the
 --     current mapping of @memory@ /must/ be a multiple of
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
---     bytes from the beginning of the memory object.
+--     bytes from the beginning of the memory object
 --
 -- -   @offset@ /must/ be a multiple of
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
@@ -1162,7 +1160,7 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/
 --     either be a multiple of
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@,
---     or @offset@ plus @size@ /must/ equal the size of @memory@.
+--     or @offset@ plus @size@ /must/ equal the size of @memory@
 --
 -- == Valid Usage (Implicit)
 --

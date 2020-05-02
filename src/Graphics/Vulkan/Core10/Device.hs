@@ -53,6 +53,7 @@ import Graphics.Vulkan.Core10.Handles (Device(..))
 import Graphics.Vulkan.Core10.Handles (Device(Device))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyDevice))
 import Graphics.Vulkan.Core10.Enums.DeviceCreateFlags (DeviceCreateFlags)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config (DeviceDiagnosticsConfigCreateInfoNV)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (DeviceGroupDeviceCreateInfo)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior (DeviceMemoryOverallocationCreateInfoAMD)
 import Graphics.Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
@@ -82,6 +83,8 @@ import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_coverage_reduction_mode (
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing (PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDeviceDepthClipEnableFeaturesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config (PhysicalDeviceDiagnosticsConfigFeaturesNV)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
 import Graphics.Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceFeatures2)
@@ -97,9 +100,12 @@ import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_memory_priority (Physica
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_mesh_shader (PhysicalDeviceMeshShaderFeaturesNV)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeaturesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryFeatures)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_ray_tracing (PhysicalDeviceRayTracingFeaturesKHR)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_robustness2 (PhysicalDeviceRobustness2FeaturesEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (PhysicalDeviceSamplerYcbcrConversionFeatures)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout (PhysicalDeviceScalarBlockLayoutFeatures)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
@@ -199,7 +205,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
 --     for each extension in the
 --     'DeviceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also be
---     present in that list.
+--     present in that list
 --
 -- == Valid Usage (Implicit)
 --
@@ -259,8 +265,8 @@ createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
   pDevice' <- lift $ (\h -> Device h <$> initDeviceCmds cmds h) pDevice
   pure $ (pDevice')
 
--- | A convenience wrapper to make a compatible pair of 'createDevice' and
--- 'destroyDevice'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createDevice' and 'destroyDevice'
 --
 -- To ensure that 'destroyDevice' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -371,7 +377,7 @@ destroyDevice device allocator = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-protectedMemory protected memory>
 --     feature is not enabled, the
 --     'Graphics.Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
---     bit of @flags@ /must/ not be set.
+--     bit of @flags@ /must/ not be set
 --
 -- == Valid Usage (Implicit)
 --
@@ -490,12 +496,10 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     structure, then @pEnabledFeatures@ /must/ be @NULL@
 --
 -- -   @ppEnabledExtensionNames@ /must/ not contain
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_AMD_negative_viewport_height@
+--     @VK_AMD_negative_viewport_height@
 --
 -- -   @ppEnabledExtensionNames@ /must/ not contain both
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_KHR_buffer_device_address@
---     and
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_EXT_buffer_device_address@
+--     @VK_KHR_buffer_device_address@ and @VK_EXT_buffer_device_address@
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core12.PhysicalDeviceVulkan11Features' structure,
@@ -573,6 +577,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
+--     'Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config.DeviceDiagnosticsConfigCreateInfoNV',
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 --     'Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior.DeviceMemoryOverallocationCreateInfoAMD',
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage.PhysicalDevice16BitStorageFeatures',
@@ -590,6 +595,8 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing.PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
 --     'Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
+--     'Graphics.Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
+--     'Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config.PhysicalDeviceDiagnosticsConfigFeaturesNV',
 --     'Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive.PhysicalDeviceExclusiveScissorFeaturesNV',
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapFeaturesEXT',
@@ -604,9 +611,12 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderFeaturesNV',
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
 --     'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
+--     'Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeaturesEXT',
 --     'Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
 --     'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
+--     'Graphics.Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingFeaturesKHR',
 --     'Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test.PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
+--     'Graphics.Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2FeaturesEXT',
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.PhysicalDeviceSamplerYcbcrConversionFeatures',
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_scalar_block_layout.PhysicalDeviceScalarBlockLayoutFeatures',
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.PhysicalDeviceSeparateDepthStencilLayoutsFeatures',
@@ -701,9 +711,13 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRobustness2FeaturesEXT = Just f
+    | Just Refl <- eqT @e @DeviceDiagnosticsConfigCreateInfoNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDiagnosticsConfigFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceCoherentMemoryFeaturesAMD = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan12Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan11Features = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePipelineCreationCacheControlFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLineRasterizationFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubgroupSizeControlFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceTexelBufferAlignmentFeaturesEXT = Just f
@@ -729,6 +743,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceScalarBlockLayoutFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentDensityMapFeaturesEXT = Just f
     | Just Refl <- eqT @e @DeviceMemoryOverallocationCreateInfoAMD = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceRayTracingFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMeshShaderFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShadingRateImageFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = Just f
@@ -760,6 +775,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceMultiviewFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVariablePointersFeatures = Just f
     | Just Refl <- eqT @e @(PhysicalDeviceFeatures2 '[]) = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
     | otherwise = Nothing
 
 instance PokeChain es => ToCStruct (DeviceCreateInfo es) where

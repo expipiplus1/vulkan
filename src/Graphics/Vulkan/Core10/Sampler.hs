@@ -139,8 +139,8 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
   pSampler <- lift $ peek @Sampler pPSampler
   pure $ (pSampler)
 
--- | A convenience wrapper to make a compatible pair of 'createSampler' and
--- 'destroySampler'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createSampler' and 'destroySampler'
 --
 -- To ensure that 'destroySampler' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -290,10 +290,12 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- -   If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
---     is enabled and
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT'
---     is not set for the format, @minFilter@ and @magFilter@ /must/ be
---     equal to the sampler Y′CBCR conversion’s @chromaFilter@
+--     is enabled and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
+--     do not support
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT',
+--     @minFilter@ and @magFilter@ /must/ be equal to the sampler Y′CBCR
+--     conversion’s @chromaFilter@
 --
 -- -   If @unnormalizedCoordinates@ is
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', @minFilter@ and @magFilter@
@@ -345,8 +347,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- -   If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
---     is not enabled, and if the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_KHR_sampler_mirror_clamp_to_edge@
+--     is not enabled, and if the @VK_KHR_sampler_mirror_clamp_to_edge@
 --     extension is not enabled, @addressModeU@, @addressModeV@ and
 --     @addressModeW@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
@@ -367,38 +368,38 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @minFilter@ and @magFilter@ /must/ be equal.
+--     then @minFilter@ and @magFilter@ /must/ be equal
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @mipmapMode@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @minLod@ and @maxLod@ /must/ be zero.
+--     then @minLod@ and @maxLod@ /must/ be zero
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @addressModeU@ and @addressModeV@ /must/ each be either
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --     or
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @anisotropyEnable@ /must/ be
---     'Graphics.Vulkan.Core10.BaseType.FALSE'.
+--     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @compareEnable@ /must/ be
---     'Graphics.Vulkan.Core10.BaseType.FALSE'.
+--     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
 -- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @unnormalizedCoordinates@ /must/ be
---     'Graphics.Vulkan.Core10.BaseType.FALSE'.
+--     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
 -- == Valid Usage (Implicit)
 --

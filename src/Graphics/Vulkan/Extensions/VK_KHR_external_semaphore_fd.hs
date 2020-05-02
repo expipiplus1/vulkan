@@ -195,32 +195,32 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 -- == Valid Usage
 --
 -- -   @handleType@ /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd Handle Types Supported by VkImportSemaphoreFdInfoKHR>
---     table.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd Handle Types Supported by >
+--     table
 --
 -- -   @fd@ /must/ obey any requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   If @handleType@ is
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     the
 --     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@flags@
 --     field /must/ match that of the semaphore from which @fd@ was
---     exported.
+--     exported
 --
 -- -   If @handleType@ is
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     the
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
 --     field /must/ match that of the semaphore from which @fd@ was
---     exported.
+--     exported
 --
 -- -   If @flags@ contains
 --     'Graphics.Vulkan.Core11.Enums.SemaphoreImportFlagBits.SEMAPHORE_IMPORT_TEMPORARY_BIT',
 --     the
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
 --     field of the semaphore from which @fd@ was exported /must/ not be
---     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'.
+--     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -325,38 +325,38 @@ instance Zero ImportSemaphoreFdInfoKHR where
 --
 -- -   @handleType@ /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'::@handleTypes@
---     when @semaphore@’s current payload was created.
+--     when @semaphore@’s current payload was created
 --
 -- -   @semaphore@ /must/ not currently have its payload replaced by an
 --     imported payload as described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
---     for @handleType@.
+--     for @handleType@
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, as defined below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
---     there /must/ be no queue waiting on @semaphore@.
+--     there /must/ be no queue waiting on @semaphore@
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @semaphore@ /must/ be signaled, or have an
 --     associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
---     pending execution.
+--     pending execution
 --
--- -   @handleType@ /must/ be defined as a POSIX file descriptor handle.
+-- -   @handleType@ /must/ be defined as a POSIX file descriptor handle
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @semaphore@ /must/ have been created with a
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
---     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
+--     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @semaphore@ /must/ have an associated
 --     semaphore signal operation that has been submitted for execution and
 --     any semaphore signal operations on which it depends (if any) /must/
---     have also been submitted for execution.
+--     have also been submitted for execution
 --
 -- == Valid Usage (Implicit)
 --

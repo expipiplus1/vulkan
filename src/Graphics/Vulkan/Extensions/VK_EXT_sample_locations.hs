@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_sample_locations  ( cmdSetSampleLocatio
                                                            , pattern EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
                                                            ) where
 
+import Graphics.Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
@@ -39,7 +40,6 @@ import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import qualified Data.Vector.Storable.Sized (Vector)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Graphics.Vulkan.Core10.BaseType (boolToBool32)
@@ -675,7 +675,7 @@ instance ToCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (sampleLocationSampleCounts)
     ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (maxSampleLocationGridSize) . ($ ())
-    let pSampleLocationCoordinateRange' = lowerArrayPtr ((p `plusPtr` 28 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pSampleLocationCoordinateRange' = lowerArrayPtr ((p `plusPtr` 28 :: Ptr (FixedArray 2 CFloat)))
     lift $ case (sampleLocationCoordinateRange) of
       (e0, e1) -> do
         poke (pSampleLocationCoordinateRange' :: Ptr CFloat) (CFloat (e0))
@@ -690,7 +690,7 @@ instance ToCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlags)) (zero)
     ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (zero) . ($ ())
-    let pSampleLocationCoordinateRange' = lowerArrayPtr ((p `plusPtr` 28 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let pSampleLocationCoordinateRange' = lowerArrayPtr ((p `plusPtr` 28 :: Ptr (FixedArray 2 CFloat)))
     lift $ case ((zero, zero)) of
       (e0, e1) -> do
         poke (pSampleLocationCoordinateRange' :: Ptr CFloat) (CFloat (e0))
@@ -703,7 +703,7 @@ instance FromCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
   peekCStruct p = do
     sampleLocationSampleCounts <- peek @SampleCountFlags ((p `plusPtr` 16 :: Ptr SampleCountFlags))
     maxSampleLocationGridSize <- peekCStruct @Extent2D ((p `plusPtr` 20 :: Ptr Extent2D))
-    let psampleLocationCoordinateRange = lowerArrayPtr @CFloat ((p `plusPtr` 28 :: Ptr (Data.Vector.Storable.Sized.Vector 2 CFloat)))
+    let psampleLocationCoordinateRange = lowerArrayPtr @CFloat ((p `plusPtr` 28 :: Ptr (FixedArray 2 CFloat)))
     sampleLocationCoordinateRange0 <- peek @CFloat ((psampleLocationCoordinateRange `advancePtrBytes` 0 :: Ptr CFloat))
     sampleLocationCoordinateRange1 <- peek @CFloat ((psampleLocationCoordinateRange `advancePtrBytes` 4 :: Ptr CFloat))
     sampleLocationSubPixelBits <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))

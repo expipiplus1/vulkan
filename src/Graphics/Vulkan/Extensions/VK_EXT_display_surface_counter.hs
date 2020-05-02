@@ -198,7 +198,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     supportedUsageFlags :: ImageUsageFlags
   , -- | @supportedSurfaceCounters@ /must/ not include
     -- 'SURFACE_COUNTER_VBLANK_EXT' unless the surface queried is a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#wsi-display-surfaces display surface>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#wsi-display-surfaces display surface>
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT
   }
   deriving (Typeable)

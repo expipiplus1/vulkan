@@ -297,7 +297,12 @@ unitCommands ds =
                   ("vmaGetPoolName", "ppName") -> [NullTerminated]
                   ("vmaSetPoolName", "pName" ) -> [NullTerminated]
                   _                            -> lengths
-                pIsOptional = fromList opts
+                pIsOptional = fromList $ case (cName, pName) of
+                  -- allocations can only be null when 'allocationCount' is zero
+                  ("vmaFlushAllocations", "allocations") -> [False]
+                  -- allocations can only be null when 'allocationCount' is zero
+                  ("vmaInvalidateAllocations", "allocations") -> [False]
+                  _ -> opts
             pure Parameter { .. }
           -- TODO: Make pName in Parameter optional
           ParamDecl (VarDecl NoName _ _) _ ->

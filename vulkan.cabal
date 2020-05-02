@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 59eeb441818279116059411d7298256fcacd3c61027b86fd5f007eafc805a9ae
+-- hash: 67c6de37266ab013ec09b7a19a18aecf84ae11247ab1a8f7f7d19f4019cbd256
 
 name:           vulkan
 version:        3.1.0.0
@@ -24,11 +24,6 @@ extra-source-files:
 source-repository head
   type: git
   location: https://github.com/expipiplus1/vulkan
-
-flag build-examples
-  description: Build example executables
-  manual: True
-  default: False
 
 flag safe-foreign-calls
   description: Do not mark foreign imports as 'unsafe'. This means that callbacks from Vulkan to Haskell will work. If you are using these then make sure this flag is enabled.
@@ -103,7 +98,7 @@ library
       Graphics.Vulkan.Core10.Enums.ObjectType
       Graphics.Vulkan.Core10.Enums.PhysicalDeviceType
       Graphics.Vulkan.Core10.Enums.PipelineBindPoint
-      Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags
+      Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
       Graphics.Vulkan.Core10.Enums.PipelineCacheHeaderVersion
       Graphics.Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
       Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits
@@ -309,9 +304,11 @@ library
       Graphics.Vulkan.Extensions.VK_EXT_memory_priority
       Graphics.Vulkan.Extensions.VK_EXT_metal_surface
       Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
+      Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
       Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
       Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
+      Graphics.Vulkan.Extensions.VK_EXT_robustness2
       Graphics.Vulkan.Extensions.VK_EXT_sample_locations
       Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
       Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
@@ -350,6 +347,7 @@ library
       Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address
       Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
       Graphics.Vulkan.Extensions.VK_KHR_dedicated_allocation
+      Graphics.Vulkan.Extensions.VK_KHR_deferred_host_operations
       Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
       Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
       Graphics.Vulkan.Extensions.VK_KHR_device_group
@@ -383,7 +381,9 @@ library
       Graphics.Vulkan.Extensions.VK_KHR_multiview
       Graphics.Vulkan.Extensions.VK_KHR_performance_query
       Graphics.Vulkan.Extensions.VK_KHR_pipeline_executable_properties
+      Graphics.Vulkan.Extensions.VK_KHR_pipeline_library
       Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
+      Graphics.Vulkan.Extensions.VK_KHR_ray_tracing
       Graphics.Vulkan.Extensions.VK_KHR_relaxed_block_layout
       Graphics.Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
       Graphics.Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
@@ -422,6 +422,8 @@ library
       Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
       Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
       Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
+      Graphics.Vulkan.Extensions.VK_NV_device_diagnostics_config
+      Graphics.Vulkan.Extensions.VK_NV_device_generated_commands
       Graphics.Vulkan.Extensions.VK_NV_external_memory
       Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
       Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
@@ -443,9 +445,10 @@ library
       Graphics.Vulkan.Extensions.VK_NV_viewport_array2
       Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
       Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
-      Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
       Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
       Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
+      Graphics.Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
+      Graphics.Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform
       Graphics.Vulkan.Extensions.WSITypes
       Graphics.Vulkan.NamedType
@@ -462,7 +465,6 @@ library
     , bytestring
     , transformers
     , vector
-    , vector-sized
   if os(windows)
     extra-libraries:
         vulkan-1
@@ -471,69 +473,4 @@ library
         vulkan
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
-  default-language: Haskell2010
-
-library utils
-  exposed-modules:
-      Graphics.Vulkan.Utils.ShaderQQ
-  other-modules:
-      Paths_vulkan
-  hs-source-dirs:
-      utils
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  build-depends:
-      base <4.14
-    , bytestring
-    , extra
-    , file-embed
-    , template-haskell
-    , temporary
-    , typed-process
-    , vulkan
-  default-language: Haskell2010
-
-executable info
-  main-is: Main.hs
-  other-modules:
-      Paths_vulkan
-  hs-source-dirs:
-      examples/info
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  if flag(build-examples)
-    build-depends:
-        base <4.14
-      , bytestring
-      , pretty-simple
-      , vulkan
-    buildable: True
-  else
-    buildable: False
-  default-language: Haskell2010
-
-executable sdl-triangle
-  main-is: Main.hs
-  other-modules:
-      Paths_vulkan
-  hs-source-dirs:
-      examples/sdl-triangle
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  c-sources:
-      examples/sdl-triangle/DebugCallback.c
-  if flag(build-examples)
-    build-depends:
-        base <4.14
-      , bytestring
-      , extra
-      , managed
-      , pretty-show
-      , say
-      , sdl2 >=2.5.2.0
-      , text
-      , transformers
-      , utils
-      , vector
-      , vulkan
-    buildable: True
-  else
-    buildable: False
   default-language: Haskell2010

@@ -403,7 +403,7 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 --
 -- -   If @semaphoreType@ is
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY',
---     @initialValue@ /must/ be zero.
+--     @initialValue@ /must/ be zero
 --
 -- If no 'SemaphoreTypeCreateInfo' structure is included in the @pNext@
 -- chain of 'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo',
@@ -678,7 +678,7 @@ data SemaphoreSignalInfo = SemaphoreSignalInfo
   , -- | @value@ /must/ have a value which does not differ from the current value
     -- of the semaphore or the value of any outstanding semaphore wait or
     -- signal operation on @semaphore@ by more than
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
     value :: Word64
   }
   deriving (Typeable)

@@ -135,8 +135,8 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
   pView <- lift $ peek @ImageView pPView
   pure $ (pView)
 
--- | A convenience wrapper to make a compatible pair of 'createImageView' and
--- 'destroyImageView'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createImageView' and 'destroyImageView'
 --
 -- To ensure that 'destroyImageView' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
@@ -551,35 +551,35 @@ instance Zero ComponentMapping where
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     of the resultant image view /must/ contain at least one bit.
+--     of the resultant image view /must/ contain at least one bit
 --
 -- -   If @usage@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     of the resultant image view /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
 --
 -- -   If @usage@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_BIT'
 --
 -- -   If @usage@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   If @usage@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If @usage@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
@@ -588,7 +588,7 @@ instance Zero ComponentMapping where
 --     /must/ contain at least one of
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
---     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'.
+--     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
 --     specified in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when
@@ -637,7 +637,7 @@ instance Zero ComponentMapping where
 --     computed from @baseMipLevel@ and @extent.depth@ specified in
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
 --     created, according to the formula defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
 --
 -- -   If @subresourceRange.layerCount@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
@@ -652,13 +652,7 @@ instance Zero ComponentMapping where
 --     @baseMipLevel@ and @extent.depth@ specified in
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
 --     created, according to the formula defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
---
--- -   If @image@ was created with the
---     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
---     flag, @format@ /must/ be compatible with the @format@ used to create
---     @image@, as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
 --
 -- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
@@ -674,12 +668,12 @@ instance Zero ComponentMapping where
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 --     flag, @format@ /must/ be compatible with, or /must/ be an
 --     uncompressed format that is size-compatible with, the @format@ used
---     to create @image@.
+--     to create @image@
 --
 -- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 --     flag, the @levelCount@ and @layerCount@ members of
---     @subresourceRange@ /must/ both be @1@.
+--     @subresourceRange@ /must/ both be @1@
 --
 -- -   If a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
@@ -688,7 +682,7 @@ instance Zero ComponentMapping where
 --     creating @image@ and the @viewFormatCount@ field of
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     is not zero then @format@ /must/ be one of the formats in
---     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@.
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
 --
 -- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
@@ -718,7 +712,7 @@ instance Zero ComponentMapping where
 --     structure with a @conversion@ value other than
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', all members of
 --     @components@ /must/ have the value
---     'Graphics.Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'.
+--     'Graphics.Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'
 --
 -- -   If @image@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single
@@ -731,19 +725,19 @@ instance Zero ComponentMapping where
 -- -   If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     @format@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
+--     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a @conversion@ object created with the same external
---     format as @image@.
+--     format as @image@
 --
 -- -   If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     all members of @components@ /must/ be
---     'Graphics.Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'.
+--     'Graphics.Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'
 --
 -- -   If @image@ was created with @usage@ containing
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
@@ -811,6 +805,30 @@ instance Zero ComponentMapping where
 --     structure /must/ not include any bits that were not set in the
 --     @usage@ member of the 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'
 --     structure used to create @image@
+--
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE'
+--     and @subresourceRange.layerCount@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
+--     @subresourceRange.layerCount@ /must/ be @6@
+--
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
+--     and @subresourceRange.layerCount@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
+--     @subresourceRange.layerCount@ /must/ be a multiple of @6@
+--
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE'
+--     and @subresourceRange.layerCount@ is
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     remaining number of layers /must/ be @6@
+--
+-- -   If @viewType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
+--     and @subresourceRange.layerCount@ is
+--     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the
+--     remaining number of layers /must/ be a multiple of @6@
 --
 -- == Valid Usage (Implicit)
 --

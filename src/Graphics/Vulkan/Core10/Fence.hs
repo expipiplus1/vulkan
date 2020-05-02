@@ -140,8 +140,8 @@ createFence device createInfo allocator = liftIO . evalContT $ do
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
 
--- | A convenience wrapper to make a compatible pair of 'createFence' and
--- 'destroyFence'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createFence' and 'destroyFence'
 --
 -- To ensure that 'destroyFence' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your

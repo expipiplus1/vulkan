@@ -155,7 +155,7 @@ data MacOSSurfaceCreateInfoMVK = MacOSSurfaceCreateInfoMVK
   { -- | @flags@ /must/ be @0@
     flags :: MacOSSurfaceCreateFlagsMVK
   , -- | @pView@ /must/ be a valid @NSView@ and /must/ be backed by a @CALayer@
-    -- instance of type 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer'.
+    -- instance of type 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer'
     view :: Ptr ()
   }
   deriving (Typeable)

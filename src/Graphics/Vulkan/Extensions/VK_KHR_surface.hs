@@ -359,9 +359,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @surface@ must be supported by @physicalDevice@, as reported by
+-- -   @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
---     platform-specific mechanism.
+--     platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --

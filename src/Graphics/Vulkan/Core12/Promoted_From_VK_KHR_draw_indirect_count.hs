@@ -108,7 +108,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -210,25 +210,25 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
---     this command.
+--     this command
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -240,7 +240,15 @@ foreign import ccall
 --
 -- -   All vertex input bindings accessed via vertex input variables
 --     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
+--     either valid or 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     buffers bound
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, all vertex input bindings accessed via
+--     vertex input variables declared in the vertex shader entry point’s
+--     interface /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   For a given vertex buffer binding, any attribute data fetched /must/
 --     be entirely contained within the corresponding vertex buffer
@@ -439,7 +447,7 @@ foreign import ccall
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
 --     of
---     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+--     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
 -- -   For each set /n/ that is statically used by the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -541,25 +549,25 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
 --     @subpass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'.
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
---     this command.
+--     this command
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
@@ -571,7 +579,15 @@ foreign import ccall
 --
 -- -   All vertex input bindings accessed via vertex input variables
 --     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
+--     either valid or 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     buffers bound
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     feature is not enabled, all vertex input bindings accessed via
+--     vertex input variables declared in the vertex shader entry point’s
+--     interface /must/ not be
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   For a given vertex buffer binding, any attribute data fetched /must/
 --     be entirely contained within the corresponding vertex buffer

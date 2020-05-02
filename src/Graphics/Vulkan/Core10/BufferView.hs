@@ -120,8 +120,8 @@ createBufferView device createInfo allocator = liftIO . evalContT $ do
   pView <- lift $ peek @BufferView pPView
   pure $ (pView)
 
--- | A convenience wrapper to make a compatible pair of 'createBufferView'
--- and 'destroyBufferView'
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createBufferView' and 'destroyBufferView'
 --
 -- To ensure that 'destroyBufferView' is always called: pass
 -- 'Control.Exception.bracket' (or the allocate function from your
