@@ -160,7 +160,9 @@ main = runResourceT $ do
   -- Run our application
   runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator $ do
     image <- render
-    liftIO $ BSL.writeFile "triangle.png" (JP.encodePng image)
+    let filename = "triangle.png"
+    sayErr $ "Writing " <> filename
+    liftIO $ BSL.writeFile filename (JP.encodePng image)
     deviceWaitIdle
 
 render :: V (JP.Image JP.PixelRGBA8)
