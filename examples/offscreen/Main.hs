@@ -375,12 +375,12 @@ render = do
         -- Transition render target to transfer source
         cmdPipelineBarrier
           commandBuffer
-          PIPELINE_STAGE_TRANSFER_BIT
+          PIPELINE_STAGE_ALL_GRAPHICS_BIT
           PIPELINE_STAGE_TRANSFER_BIT
           zero
           []
           []
-          [ zero { srcAccessMask    = ACCESS_MEMORY_READ_BIT
+          [ zero { srcAccessMask    = ACCESS_COLOR_ATTACHMENT_WRITE_BIT
                  , dstAccessMask    = ACCESS_TRANSFER_READ_BIT
                  , oldLayout        = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
                  , newLayout        = IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
