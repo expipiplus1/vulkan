@@ -5,3 +5,6 @@ cradle:
 
     - path: "./sdl-triangle/"
       component: "exe:sdl-triangle"
+
+    - path: "./offscreen/"
+      component: "exe:offscreen"

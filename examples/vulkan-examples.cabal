@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c57104dcc8733137c1bfff46dd514d31663d76d918e5f38a73fbdca65f88c59c
+-- hash: 5b8070bb567ef3e3f631704e84eabd521b7047aa787e0f4610814d314e6ff4a5
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -28,12 +28,42 @@ executable info
       Paths_vulkan_examples
   hs-source-dirs:
       info
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall
   build-depends:
       base <4.14
     , bytestring
     , pretty-simple
     , vulkan
+  default-language: Haskell2010
+
+executable offscreen
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      offscreen
+  default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall
+  c-sources:
+      sdl-triangle/DebugCallback.c
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , autoapply
+    , base <4.14
+    , bytestring
+    , extra
+    , pretty-show
+    , resourcet
+    , safe
+    , safe-exceptions
+    , say
+    , text
+    , transformers
+    , vector
+    , vulkan
+    , vulkan-utils
   default-language: Haskell2010
 
 executable sdl-triangle
@@ -42,7 +72,8 @@ executable sdl-triangle
       Paths_vulkan_examples
   hs-source-dirs:
       sdl-triangle
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall
   c-sources:
       sdl-triangle/DebugCallback.c
   build-depends:

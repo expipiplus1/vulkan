@@ -36,9 +36,30 @@ executables:
       - vulkan
     c-sources: sdl-triangle/DebugCallback.c
 
+  offscreen:
+    main: Main.hs
+    source-dirs: offscreen
+    dependencies:
+      - JuicyPixels
+      - VulkanMemoryAllocator
+      - autoapply
+      - base < 4.14
+      - bytestring
+      - extra
+      - pretty-show
+      - resourcet
+      - safe
+      - safe-exceptions
+      - say
+      - text
+      - transformers
+      - vector
+      - vulkan
+      - vulkan-utils
+    c-sources: sdl-triangle/DebugCallback.c
+
 default-extensions:
   - AllowAmbiguousTypes
-  - CPP
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
@@ -52,6 +73,7 @@ default-extensions:
   - LambdaCase
   - MagicHash
   - NoMonomorphismRestriction
+  - NumDecimals
   - OverloadedStrings
   - PartialTypeSignatures
   - PatternSynonyms
@@ -63,9 +85,13 @@ default-extensions:
   - ScopedTypeVariables
   - StandaloneDeriving
   - Strict
+  - TupleSections
   - TypeApplications
   - TypeFamilyDependencies
   - TypeOperators
   - TypeSynonymInstances
   - UndecidableInstances
   - ViewPatterns
+
+ghc-options:
+  - -Wall

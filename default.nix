@@ -34,6 +34,7 @@ let
             };
           };
           bytes = self.bytes_0_17;
+          autoapply = self.callCabal2nix "" ../autoapply {};
 
           #
           # Generate
@@ -103,7 +104,7 @@ let
             # for VMA
             vulkan-utils = null;
           });
-    in if name == "vulkan" then
+    in if name == "vulkan-examples" then
       with pkgs.haskell.lib;
       addExtraLibrary (addBuildTool drv pkgs.glslang) pkgs.vulkan-headers
     else
