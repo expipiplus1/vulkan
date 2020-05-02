@@ -25,13 +25,17 @@ import           Data.Ord                       ( comparing )
 import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
+import qualified Data.Vector.Storable          as VS
 import           Data.Word
+import           Foreign.ForeignPtr             ( withForeignPtr )
+import           Foreign.Marshal.Utils          ( copyBytes )
 import           Foreign.Ptr
-import           Say
-
-import           Foreign.Storable               ( peek
+import           Foreign.Storable               ( Storable
+                                                , peek
                                                 , sizeOf
                                                 )
+import           Say
+
 import           Graphics.Vulkan.CStruct.Extends
 import qualified Graphics.Vulkan.Core10        as Vk
 import           Graphics.Vulkan.Core10  hiding ( deviceWaitIdle
@@ -61,6 +65,7 @@ import qualified Graphics.VulkanMemoryAllocator
                                                as VMA
 import           Graphics.VulkanMemoryAllocator
                                          hiding ( getPhysicalDeviceProperties
+                                                , withBuffer
                                                 , withImage
                                                 )
 
@@ -134,8 +139,8 @@ autoapplyDecs
   , 'getAllocator
   , 'noAllocationCallbacks
   ]
-  [ 'VMA.withImage
-  , 'Vk.withInstance
+  [ 'VMA.withBuffer
+  , 'VMA.withImage
   , 'Vk.deviceWaitIdle
   , 'Vk.getDeviceQueue
   , 'Vk.getImageSubresourceLayout
@@ -146,6 +151,7 @@ autoapplyDecs
   , 'Vk.withFramebuffer
   , 'Vk.withGraphicsPipelines
   , 'Vk.withImageView
+  , 'Vk.withInstance
   , 'Vk.withPipelineLayout
   , 'Vk.withRenderPass
   , 'Vk.withShaderModule
@@ -172,7 +178,7 @@ main = runResourceT $ do
   -- Run our application
   runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator $ do
     image <- render
-    let filename = "triangle.png"
+    let filename = "square.png"
     sayErr $ "Writing " <> filename
     liftIO $ BSL.writeFile filename (JP.encodePng image)
     deviceWaitIdle
@@ -224,6 +230,9 @@ render = do
   (_, (cpuImage, _, cpuImageAllocationInfo)) <- withImage
     cpuImageCreateInfo
     cpuAllocationCreateInfo
+
+  -- Create the vertex and index buffers
+  ((vertexBuffer, vertexBindDesc, vertexAttrDesc), indexBuffer) <- createBuffers
 
   -- Create an image view
   let imageSubresourceRange = ImageSubresourceRange
@@ -299,7 +308,10 @@ render = do
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo = zero
       { stages             = shaderStages
-      , vertexInputState   = Just zero
+      , vertexInputState   = Just . SomeStruct $ zero
+                               { vertexBindingDescriptions   = [vertexBindDesc]
+                               , vertexAttributeDescriptions = vertexAttrDesc
+                               }
       , inputAssemblyState = Just zero
                                { topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
                                , primitiveRestartEnable = False
@@ -389,7 +401,9 @@ render = do
               cmdBindPipeline commandBuffer
                               PIPELINE_BIND_POINT_GRAPHICS
                               graphicsPipeline
-              cmdDraw commandBuffer 3 1 0 0
+              cmdBindVertexBuffers commandBuffer 0 [vertexBuffer] [0]
+              cmdBindIndexBuffer commandBuffer indexBuffer 0 INDEX_TYPE_UINT32
+              cmdDrawIndexed commandBuffer 6 1 0 0 0
 
         -- Transition render target to transfer source
         cmdPipelineBarrier
@@ -506,22 +520,14 @@ createShaders = do
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
 
+        layout(location = 0) in vec2 inPosition;
+        layout(location = 1) in vec3 inColor;
+
         layout(location = 0) out vec3 fragColor;
 
-        vec2 positions[3] = vec2[](
-          vec2(0.0, -0.5),
-          vec2(0.5, 0.5),
-          vec2(-0.5, 0.5)
-        );
-        vec3 colors[3] = vec3[](
-          vec3(1.0, 1.0, 0.0),
-          vec3(0.0, 1.0, 1.0),
-          vec3(1.0, 0.0, 1.0)
-        );
-
         void main() {
-          gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
-          fragColor = colors[gl_VertexIndex];
+            gl_Position = vec4(inPosition, 0.0, 1.0);
+            fragColor = inColor;
         }
       |]
   (_, fragModule) <- withShaderModule zero { code = fragCode }
@@ -537,6 +543,117 @@ createShaders = do
   pure
     [SomeStruct vertShaderStageCreateInfo, SomeStruct fragShaderStageCreateInfo]
 
+-- | Create a vertex and index buffer
+createBuffers
+  :: V
+       ( ( Buffer
+         , VertexInputBindingDescription
+         , V.Vector VertexInputAttributeDescription
+         )
+       , Buffer
+       )
+  -- ^ (Vertex, Index)
+createBuffers = do
+  let -- TODO: Nicer representation here
+      vertexData =
+        [ -0.5 , -0.5 , 1.0 , 0.0 , 0.0
+        , 0.5 , -0.5 , 0.0 , 1.0 , 0.0
+        , 0.5 , 0.5 , 0.0 , 0.0 , 1.0
+        , -0.5 , 0.5 , 1.0 , 1.0 , 1.0 :: Float
+        ]
+      indexData = [0, 1, 2, 2, 3, 0 :: Word32]
+
+  graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
+  let commandPoolCreateInfo :: CommandPoolCreateInfo
+      commandPoolCreateInfo = zero
+        { queueFamilyIndex = graphicsQueueFamilyIndex
+        , flags            = COMMAND_POOL_CREATE_TRANSIENT_BIT
+        }
+  (_, commandPool) <- withCommandPool commandPoolCreateInfo
+  (vFence, vertex) <- createAndInitializeBuffer commandPool
+                                                vertexData
+                                                BUFFER_USAGE_VERTEX_BUFFER_BIT
+  (iFence, index) <- createAndInitializeBuffer commandPool
+                                               indexData
+                                               BUFFER_USAGE_INDEX_BUFFER_BIT
+
+  waitForFences [vFence, iFence] True 1e9 >>= \case
+    TIMEOUT -> throwString "Timed out waiting for buffers to copy"
+    _       -> pure ()
+
+
+  let vertexInputBindingDesc = VertexInputBindingDescription
+        { binding   = 0
+        , stride    = fromIntegral $ 5 * sizeOf (0 :: Float)
+        , inputRate = VERTEX_INPUT_RATE_VERTEX
+        }
+      attributeDescs =
+        [ VertexInputAttributeDescription { binding  = 0
+                                          , location = 0
+                                          , format   = FORMAT_R32G32_SFLOAT
+                                          , offset   = 0
+                                          }
+        , VertexInputAttributeDescription
+          { binding  = 0
+          , location = 1
+          , format   = FORMAT_R32G32B32_SFLOAT
+          , offset   = fromIntegral $ 2 * sizeOf (0 :: Float)
+          }
+        ]
+
+  pure ((vertex, vertexInputBindingDesc, attributeDescs), index)
+
+-- | Create a buffer on the GPU, initialized with the given data
+createAndInitializeBuffer
+  :: forall a
+   . Storable a
+  => CommandPool
+  -- ^ The pool for the copy commmand
+  -> VS.Vector a
+  -- ^ The initialization data
+  -> BufferUsageFlags
+  -- ^ The usage flags, BUFFER_USAGE_TRANSFER_DST_BIT will be added
+  -> V (Fence, Buffer)
+  -- ^ (The fence to wait on for the transfer to complete, the GPU buffer)
+createAndInitializeBuffer commandPool data' usage = do
+  let (ptr, numElems) = VS.unsafeToForeignPtr0 data'
+      size = numElems * sizeOf (undefined :: a)
+
+  -- Create the staging and destination buffers
+  (_, (staging, _, stagingAllocInfo)) <- withBuffer
+    zero { size = fromIntegral size, usage = BUFFER_USAGE_TRANSFER_SRC_BIT }
+    zero { flags = ALLOCATION_CREATE_MAPPED_BIT
+         , usage = MEMORY_USAGE_CPU_TO_GPU
+         }
+  (_, (dst, _, _)) <- withBuffer
+    zero { size  = fromIntegral size
+         , usage = BUFFER_USAGE_TRANSFER_DST_BIT .|. usage
+         }
+    zero { usage = MEMORY_USAGE_GPU_ONLY }
+
+  -- Fill the staging buffer
+  liftIO $ withForeignPtr ptr $ \p ->
+    copyBytes (mappedData stagingAllocInfo) (castPtr p) (fromIntegral size)
+
+  -- Copy to the gpu buffer
+  (_, [cmdBuffer]) <- withCommandBuffers zero
+    { commandPool        = commandPool
+    , level              = COMMAND_BUFFER_LEVEL_PRIMARY
+    , commandBufferCount = 1
+    }
+  useCommandBuffer bracket_
+                   cmdBuffer
+                   zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+    $ cmdCopyBuffer cmdBuffer staging dst [BufferCopy 0 0 (fromIntegral size)]
+
+  let submitInfo = zero { commandBuffers = [commandBufferHandle cmdBuffer] }
+
+  (_, fence)               <- withFence zero
+  graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
+  graphicsQueue            <- getDeviceQueue graphicsQueueFamilyIndex 0
+  queueSubmit graphicsQueue [submitInfo] fence
+
+  pure (fence, dst)
 
 ----------------------------------------------------------------
 -- Initialization
