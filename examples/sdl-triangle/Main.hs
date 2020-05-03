@@ -29,6 +29,7 @@ import           Graphics.Vulkan.Core11
 import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
 import           Graphics.Vulkan.Extensions.VK_KHR_surface
 import           Graphics.Vulkan.Extensions.VK_KHR_swapchain
+import           Graphics.Vulkan.Utils.DebugCallback
 import           Graphics.Vulkan.Utils.ShaderQQ
 import           Graphics.Vulkan.Zero
 import qualified SDL
@@ -624,9 +625,6 @@ debugUtilsMessengerCreateInfo = zero
                       .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
   , pfnUserCallback = debugCallbackPtr
   }
-
-foreign import ccall unsafe "DebugCallback.c &debugCallback"
-  debugCallbackPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
 
 ----------------------------------------------------------------
 -- SDL helpers

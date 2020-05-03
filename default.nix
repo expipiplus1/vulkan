@@ -113,8 +113,10 @@ let
           });
     in with pkgs.haskell.lib;
     if name == "vulkan-examples" then
-      addExtraLibrary (addBuildTool drv pkgs.glslang) pkgs.vulkan-headers
+      addBuildTool drv pkgs.glslang
     else if name == "VulkanMemoryAllocator" then
+      addExtraLibrary drv pkgs.vulkan-headers
+    else if name == "vulkan-utils" then
       addExtraLibrary drv pkgs.vulkan-headers
     else
       drv;

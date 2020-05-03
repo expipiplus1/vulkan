@@ -55,14 +55,15 @@ import           Graphics.Vulkan.Core10  hiding ( deviceWaitIdle
                                                 )
 import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
                                          hiding ( setDebugUtilsObjectNameEXT )
+import           Graphics.Vulkan.Utils.DebugCallback
 import           Graphics.Vulkan.Utils.ShaderQQ
 import           Graphics.Vulkan.Zero
 import qualified Graphics.VulkanMemoryAllocator
                                                as VMA
 import           Graphics.VulkanMemoryAllocator
                                          hiding ( getPhysicalDeviceProperties
-                                                , withImage
                                                 , invalidateAllocation
+                                                , withImage
                                                 )
 
 ----------------------------------------------------------------
@@ -622,9 +623,6 @@ createInstance = do
           :&  ()
   (_, inst) <- withInstance instanceCreateInfo
   pure inst
-
-foreign import ccall unsafe "DebugCallback.c &debugCallback"
-  debugCallbackPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
 
 createDevice
   :: (MonadResource m, MonadThrow m)
