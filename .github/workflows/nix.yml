@@ -12,7 +12,8 @@ jobs:
       with:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
-    - run: |
+    - name: nix-build
+      run: |
         mkdir -p ~/.config/nixpkgs
         echo '{ allowBroken = true; }' > ~/.config/nixpkgs/config.nix
         nix-build
