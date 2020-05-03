@@ -1,7 +1,7 @@
 name: "Nix Build"
 on: [pull_request]
 jobs:
-  tests:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
