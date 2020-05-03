@@ -197,8 +197,8 @@ createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withValidationCacheEXT :: forall io r . MonadIO io => (io (ValidationCacheEXT) -> ((ValidationCacheEXT) -> io ()) -> r) -> Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> r
-withValidationCacheEXT b device pCreateInfo pAllocator =
+withValidationCacheEXT :: forall io r . MonadIO io => Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> (io (ValidationCacheEXT) -> ((ValidationCacheEXT) -> io ()) -> r) -> r
+withValidationCacheEXT device pCreateInfo pAllocator b =
   b (createValidationCacheEXT device pCreateInfo pAllocator)
     (\(o0) -> destroyValidationCacheEXT device o0 pAllocator)
 

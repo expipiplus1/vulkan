@@ -144,8 +144,8 @@ createQueryPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withQueryPool :: forall a io r . (PokeChain a, MonadIO io) => (io (QueryPool) -> ((QueryPool) -> io ()) -> r) -> Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> r
-withQueryPool b device pCreateInfo pAllocator =
+withQueryPool :: forall a io r . (PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (QueryPool) -> ((QueryPool) -> io ()) -> r) -> r
+withQueryPool device pCreateInfo pAllocator b =
   b (createQueryPool device pCreateInfo pAllocator)
     (\(o0) -> destroyQueryPool device o0 pAllocator)
 

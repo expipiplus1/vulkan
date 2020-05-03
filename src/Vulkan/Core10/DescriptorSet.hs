@@ -191,8 +191,8 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorSetLayout :: forall a io r . (PokeChain a, MonadIO io) => (io (DescriptorSetLayout) -> ((DescriptorSetLayout) -> io ()) -> r) -> Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> r
-withDescriptorSetLayout b device pCreateInfo pAllocator =
+withDescriptorSetLayout :: forall a io r . (PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorSetLayout) -> ((DescriptorSetLayout) -> io ()) -> r) -> r
+withDescriptorSetLayout device pCreateInfo pAllocator b =
   b (createDescriptorSetLayout device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorSetLayout device o0 pAllocator)
 
@@ -348,8 +348,8 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorPool :: forall a io r . (PokeChain a, MonadIO io) => (io (DescriptorPool) -> ((DescriptorPool) -> io ()) -> r) -> Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> r
-withDescriptorPool b device pCreateInfo pAllocator =
+withDescriptorPool :: forall a io r . (PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorPool) -> ((DescriptorPool) -> io ()) -> r) -> r
+withDescriptorPool device pCreateInfo pAllocator b =
   b (createDescriptorPool device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorPool device o0 pAllocator)
 
@@ -627,8 +627,8 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorSets :: forall a io r . (PokeChain a, MonadIO io) => (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> r
-withDescriptorSets b device pAllocateInfo descriptorPool =
+withDescriptorSets :: forall a io r . (PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> r
+withDescriptorSets device pAllocateInfo descriptorPool b =
   b (allocateDescriptorSets device pAllocateInfo)
     (\(o0) -> freeDescriptorSets device descriptorPool o0)
 

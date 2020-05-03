@@ -276,8 +276,8 @@ createAllocator createInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withAllocator :: forall io r . MonadIO io => (io (Allocator) -> ((Allocator) -> io ()) -> r) -> AllocatorCreateInfo -> r
-withAllocator b pCreateInfo =
+withAllocator :: forall io r . MonadIO io => AllocatorCreateInfo -> (io (Allocator) -> ((Allocator) -> io ()) -> r) -> r
+withAllocator pCreateInfo b =
   b (createAllocator pCreateInfo)
     (\(o0) -> destroyAllocator o0)
 
@@ -624,8 +624,8 @@ createPool allocator createInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withPool :: forall io r . MonadIO io => (io (Pool) -> ((Pool) -> io ()) -> r) -> Allocator -> PoolCreateInfo -> r
-withPool b allocator pCreateInfo =
+withPool :: forall io r . MonadIO io => Allocator -> PoolCreateInfo -> (io (Pool) -> ((Pool) -> io ()) -> r) -> r
+withPool allocator pCreateInfo b =
   b (createPool allocator pCreateInfo)
     (\(o0) -> destroyPool allocator o0)
 
@@ -819,8 +819,8 @@ allocateMemory allocator vkMemoryRequirements createInfo = liftIO . evalContT $ 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMemory :: forall io r . MonadIO io => (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> MemoryRequirements -> AllocationCreateInfo -> r
-withMemory b allocator pVkMemoryRequirements pCreateInfo =
+withMemory :: forall io r . MonadIO io => Allocator -> MemoryRequirements -> AllocationCreateInfo -> (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> r
+withMemory allocator pVkMemoryRequirements pCreateInfo b =
   b (allocateMemory allocator pVkMemoryRequirements pCreateInfo)
     (\(o0, _) -> freeMemory allocator o0)
 
@@ -894,8 +894,8 @@ allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalCon
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMemoryPages :: forall io r . MonadIO io => (io (Vector Allocation, Vector AllocationInfo) -> ((Vector Allocation, Vector AllocationInfo) -> io ()) -> r) -> Allocator -> Vector MemoryRequirements -> Vector AllocationCreateInfo -> r
-withMemoryPages b allocator pVkMemoryRequirements pCreateInfo =
+withMemoryPages :: forall io r . MonadIO io => Allocator -> Vector MemoryRequirements -> Vector AllocationCreateInfo -> (io (Vector Allocation, Vector AllocationInfo) -> ((Vector Allocation, Vector AllocationInfo) -> io ()) -> r) -> r
+withMemoryPages allocator pVkMemoryRequirements pCreateInfo b =
   b (allocateMemoryPages allocator pVkMemoryRequirements pCreateInfo)
     (\(o0, _) -> freeMemoryPages allocator o0)
 
@@ -937,8 +937,8 @@ allocateMemoryForBuffer allocator buffer createInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMemoryForBuffer :: forall io r . MonadIO io => (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> Buffer -> AllocationCreateInfo -> r
-withMemoryForBuffer b allocator buffer pCreateInfo =
+withMemoryForBuffer :: forall io r . MonadIO io => Allocator -> Buffer -> AllocationCreateInfo -> (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> r
+withMemoryForBuffer allocator buffer pCreateInfo b =
   b (allocateMemoryForBuffer allocator buffer pCreateInfo)
     (\(o0, _) -> freeMemory allocator o0)
 
@@ -970,8 +970,8 @@ allocateMemoryForImage allocator image createInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMemoryForImage :: forall io r . MonadIO io => (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> Image -> AllocationCreateInfo -> r
-withMemoryForImage b allocator image pCreateInfo =
+withMemoryForImage :: forall io r . MonadIO io => Allocator -> Image -> AllocationCreateInfo -> (io (Allocation, AllocationInfo) -> ((Allocation, AllocationInfo) -> io ()) -> r) -> r
+withMemoryForImage allocator image pCreateInfo b =
   b (allocateMemoryForImage allocator image pCreateInfo)
     (\(o0, _) -> freeMemory allocator o0)
 
@@ -1166,8 +1166,8 @@ createLostAllocation allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withLostAllocation :: forall io r . MonadIO io => (io (Allocation) -> ((Allocation) -> io ()) -> r) -> Allocator -> r
-withLostAllocation b allocator =
+withLostAllocation :: forall io r . MonadIO io => Allocator -> (io (Allocation) -> ((Allocation) -> io ()) -> r) -> r
+withLostAllocation allocator b =
   b (createLostAllocation allocator)
     (\(o0) -> freeMemory allocator o0)
 
@@ -1235,8 +1235,8 @@ mapMemory allocator allocation = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMappedMemory :: forall io r . MonadIO io => (io (Ptr ()) -> ((Ptr ()) -> io ()) -> r) -> Allocator -> Allocation -> r
-withMappedMemory b allocator allocation =
+withMappedMemory :: forall io r . MonadIO io => Allocator -> Allocation -> (io (Ptr ()) -> ((Ptr ()) -> io ()) -> r) -> r
+withMappedMemory allocator allocation b =
   b (mapMemory allocator allocation)
     (\(_) -> unmapMemory allocator allocation)
 
@@ -1586,8 +1586,8 @@ defragmentationBegin allocator info = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDefragmentation :: forall io r . MonadIO io => (io (Result, DefragmentationStats, DefragmentationContext) -> ((Result, DefragmentationStats, DefragmentationContext) -> io ()) -> r) -> Allocator -> DefragmentationInfo2 -> r
-withDefragmentation b allocator pInfo =
+withDefragmentation :: forall io r . MonadIO io => Allocator -> DefragmentationInfo2 -> (io (Result, DefragmentationStats, DefragmentationContext) -> ((Result, DefragmentationStats, DefragmentationContext) -> io ()) -> r) -> r
+withDefragmentation allocator pInfo b =
   b (defragmentationBegin allocator pInfo)
     (\(_, _, o2) -> defragmentationEnd allocator o2)
 
@@ -1634,8 +1634,8 @@ beginDefragmentationPass allocator context = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDefragmentationPass :: forall io r . MonadIO io => (io (DefragmentationPassInfo) -> ((DefragmentationPassInfo) -> io ()) -> r) -> Allocator -> DefragmentationContext -> r
-withDefragmentationPass b allocator context =
+withDefragmentationPass :: forall io r . MonadIO io => Allocator -> DefragmentationContext -> (io (DefragmentationPassInfo) -> ((DefragmentationPassInfo) -> io ()) -> r) -> r
+withDefragmentationPass allocator context b =
   b (beginDefragmentationPass allocator context)
     (\(_) -> endDefragmentationPass allocator context)
 
@@ -1936,8 +1936,8 @@ createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalCont
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withBuffer :: forall a io r . (PokeChain a, MonadIO io) => (io (Buffer, Allocation, AllocationInfo) -> ((Buffer, Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> r
-withBuffer b allocator pBufferCreateInfo pAllocationCreateInfo =
+withBuffer :: forall a io r . (PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> (io (Buffer, Allocation, AllocationInfo) -> ((Buffer, Allocation, AllocationInfo) -> io ()) -> r) -> r
+withBuffer allocator pBufferCreateInfo pAllocationCreateInfo b =
   b (createBuffer allocator pBufferCreateInfo pAllocationCreateInfo)
     (\(o0, o1, _) -> destroyBuffer allocator o0 o1)
 
@@ -1994,8 +1994,8 @@ createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withImage :: forall a io r . (PokeChain a, MonadIO io) => (io (Image, Allocation, AllocationInfo) -> ((Image, Allocation, AllocationInfo) -> io ()) -> r) -> Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> r
-withImage b allocator pImageCreateInfo pAllocationCreateInfo =
+withImage :: forall a io r . (PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> (io (Image, Allocation, AllocationInfo) -> ((Image, Allocation, AllocationInfo) -> io ()) -> r) -> r
+withImage allocator pImageCreateInfo pAllocationCreateInfo b =
   b (createImage allocator pImageCreateInfo pAllocationCreateInfo)
     (\(o0, o1, _) -> destroyImage allocator o0 o1)
 

@@ -157,8 +157,8 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorUpdateTemplate :: forall io r . MonadIO io => (io (DescriptorUpdateTemplate) -> ((DescriptorUpdateTemplate) -> io ()) -> r) -> Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> r
-withDescriptorUpdateTemplate b device pCreateInfo pAllocator =
+withDescriptorUpdateTemplate :: forall io r . MonadIO io => Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> (io (DescriptorUpdateTemplate) -> ((DescriptorUpdateTemplate) -> io ()) -> r) -> r
+withDescriptorUpdateTemplate device pCreateInfo pAllocator b =
   b (createDescriptorUpdateTemplate device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorUpdateTemplate device o0 pAllocator)
 

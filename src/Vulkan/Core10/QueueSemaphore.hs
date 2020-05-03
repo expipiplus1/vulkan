@@ -133,8 +133,8 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withSemaphore :: forall a io r . (PokeChain a, MonadIO io) => (io (Semaphore) -> ((Semaphore) -> io ()) -> r) -> Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> r
-withSemaphore b device pCreateInfo pAllocator =
+withSemaphore :: forall a io r . (PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> (io (Semaphore) -> ((Semaphore) -> io ()) -> r) -> r
+withSemaphore device pCreateInfo pAllocator b =
   b (createSemaphore device pCreateInfo pAllocator)
     (\(o0) -> destroySemaphore device o0 pAllocator)
 

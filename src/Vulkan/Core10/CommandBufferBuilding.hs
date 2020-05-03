@@ -6420,8 +6420,8 @@ cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
 -- To just extract the pair pass '(,)' as the first argument.
 --
 -- Note that there is no inner resource
-cmdWithQuery :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> r
-cmdWithQuery b commandBuffer queryPool query flags =
+cmdWithQuery :: forall io r . MonadIO io => CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> (io () -> io () -> r) -> r
+cmdWithQuery commandBuffer queryPool query flags b =
   b (cmdBeginQuery commandBuffer queryPool query flags)
     (cmdEndQuery commandBuffer queryPool query)
 
@@ -7328,8 +7328,8 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $
 -- To just extract the pair pass '(,)' as the first argument.
 --
 -- Note that there is no inner resource
-cmdWithRenderPass :: forall a io r . (PokeChain a, MonadIO io) => (io () -> io () -> r) -> CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> r
-cmdWithRenderPass b commandBuffer pRenderPassBegin contents =
+cmdWithRenderPass :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> (io () -> io () -> r) -> r
+cmdWithRenderPass commandBuffer pRenderPassBegin contents b =
   b (cmdBeginRenderPass commandBuffer pRenderPassBegin contents)
     (cmdEndRenderPass commandBuffer)
 

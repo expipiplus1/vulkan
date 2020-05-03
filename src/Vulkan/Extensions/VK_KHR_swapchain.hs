@@ -302,8 +302,8 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withSwapchainKHR :: forall a io r . (PokeChain a, MonadIO io) => (io (SwapchainKHR) -> ((SwapchainKHR) -> io ()) -> r) -> Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> r
-withSwapchainKHR b device pCreateInfo pAllocator =
+withSwapchainKHR :: forall a io r . (PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> (io (SwapchainKHR) -> ((SwapchainKHR) -> io ()) -> r) -> r
+withSwapchainKHR device pCreateInfo pAllocator b =
   b (createSwapchainKHR device pCreateInfo pAllocator)
     (\(o0) -> destroySwapchainKHR device o0 pAllocator)
 

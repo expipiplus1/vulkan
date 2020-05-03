@@ -2294,8 +2294,8 @@ createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withAccelerationStructureKHR :: forall io r . MonadIO io => (io (AccelerationStructureKHR) -> ((AccelerationStructureKHR) -> io ()) -> r) -> Device -> AccelerationStructureCreateInfoKHR -> Maybe AllocationCallbacks -> r
-withAccelerationStructureKHR b device pCreateInfo pAllocator =
+withAccelerationStructureKHR :: forall io r . MonadIO io => Device -> AccelerationStructureCreateInfoKHR -> Maybe AllocationCallbacks -> (io (AccelerationStructureKHR) -> ((AccelerationStructureKHR) -> io ()) -> r) -> r
+withAccelerationStructureKHR device pCreateInfo pAllocator b =
   b (createAccelerationStructureKHR device pCreateInfo pAllocator)
     (\(o0) -> destroyAccelerationStructureKHR device o0 pAllocator)
 
