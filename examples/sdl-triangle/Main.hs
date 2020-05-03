@@ -251,7 +251,7 @@ createRenderPass dev swapchainImageFormat = do
 
 createGraphicsPipeline
   :: Device -> RenderPass -> Extent2D -> Format -> Managed Pipeline
-createGraphicsPipeline dev renderPass swapchainExtent swapchainImageFormat = do
+createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
   shaderStages   <- createShaders dev
   pipelineLayout <- withPipelineLayout allocate dev zero Nothing
   let
@@ -523,7 +523,7 @@ pickGraphicalPhysicalDevice
        , PresentModeKHR
        , SurfaceCapabilitiesKHR
        )
-pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
+pickGraphicalPhysicalDevice inst surface _requiredExtensions desiredFormat = do
   (_, devs)    <- enumeratePhysicalDevices inst
   -- All devices with support for all the graphical features we want
   graphicsDevs <- fmap (V.mapMaybe id) . for devs $ \dev -> runMaybeT $ do

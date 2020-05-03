@@ -4,7 +4,6 @@ module Main
 import           Control.Exception
 import           Data.Foldable
 import           Graphics.Vulkan.Core10
-import           Graphics.Vulkan.Version
 import           Graphics.Vulkan.Zero
 import           Text.Pretty.Simple
 
