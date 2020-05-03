@@ -313,8 +313,8 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
-withGraphicsPipelines b device pipelineCache pCreateInfos pAllocator =
+withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
+withGraphicsPipelines device pipelineCache pCreateInfos pAllocator b =
   b (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
     (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 
@@ -438,8 +438,8 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> r
-withComputePipelines b device pipelineCache pCreateInfos pAllocator =
+withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
+withComputePipelines device pipelineCache pCreateInfos pAllocator b =
   b (createComputePipelines device pipelineCache pCreateInfos pAllocator)
     (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
 

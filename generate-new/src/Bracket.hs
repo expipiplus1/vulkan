@@ -168,7 +168,7 @@ renderBracket paramName b@Bracket {..} =
           )
           [ t | Provided _ t <- arguments ]
         let argHsVars =
-              "b" : [ pretty (paramName v) | Provided v _ <- arguments ]
+              [ pretty (paramName v) | Provided v _ <- arguments ] <> ["b"]
         innerHsType <- do
           ts <- traverse
             (   note "Inner type has no representation in a negative position"
@@ -182,14 +182,14 @@ renderBracket paramName b@Bracket {..} =
           ioVar                = VarT (mkName "io")
           rVar                 = VarT (mkName "r")
           bracketTy            = if noResource
-            then (ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar)
+            then ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar
             else
-              (  ioVar
+              ioVar
               :@ innerHsType
               ~> (innerHsType ~> ioVar :@ ConT ''())
               ~> rVar
-              )
-          wrapperType   = foldr (~>) rVar (bracketTy : argHsTypes)
+
+          wrapperType   = foldr (~>) rVar (argHsTypes <> [bracketTy])
           bracketSuffix = bool "" "_" noResource
         constrainedType <- addConstraints [ConT ''MonadIO :@ ioVar]
           <$> constrainStructVariables wrapperType

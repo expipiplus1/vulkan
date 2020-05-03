@@ -132,8 +132,8 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withCommandPool :: forall io r . MonadIO io => (io (CommandPool) -> ((CommandPool) -> io ()) -> r) -> Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> r
-withCommandPool b device pCreateInfo pAllocator =
+withCommandPool :: forall io r . MonadIO io => Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> (io (CommandPool) -> ((CommandPool) -> io ()) -> r) -> r
+withCommandPool device pCreateInfo pAllocator b =
   b (createCommandPool device pCreateInfo pAllocator)
     (\(o0) -> destroyCommandPool device o0 pAllocator)
 

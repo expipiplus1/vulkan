@@ -398,8 +398,8 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
 -- To just extract the pair pass '(,)' as the first argument.
 --
 -- Note that there is no inner resource
-cmdWithRenderPass2 :: forall a io r . (PokeChain a, MonadIO io) => (io () -> io () -> r) -> CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> r
-cmdWithRenderPass2 b commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo =
+cmdWithRenderPass2 :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> (io () -> io () -> r) -> r
+cmdWithRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo b =
   b (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo)
     (cmdEndRenderPass2 commandBuffer pSubpassEndInfo)
 

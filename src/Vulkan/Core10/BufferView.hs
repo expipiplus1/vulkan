@@ -125,8 +125,8 @@ createBufferView device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withBufferView :: forall io r . MonadIO io => (io (BufferView) -> ((BufferView) -> io ()) -> r) -> Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> r
-withBufferView b device pCreateInfo pAllocator =
+withBufferView :: forall io r . MonadIO io => Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> (io (BufferView) -> ((BufferView) -> io ()) -> r) -> r
+withBufferView device pCreateInfo pAllocator b =
   b (createBufferView device pCreateInfo pAllocator)
     (\(o0) -> destroyBufferView device o0 pAllocator)
 

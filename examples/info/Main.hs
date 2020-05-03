@@ -8,7 +8,7 @@ import           Vulkan.Core10
 import           Vulkan.Zero
 
 main :: IO ()
-main = withInstance bracket zero Nothing $ \i -> do
+main = withInstance zero Nothing bracket $ \i -> do
   pPrint i
   (_, layers    ) <- enumerateInstanceLayerProperties
   (_, extensions) <- enumerateInstanceExtensionProperties Nothing

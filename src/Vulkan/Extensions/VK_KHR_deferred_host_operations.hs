@@ -126,8 +126,8 @@ createDeferredOperationKHR device allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDeferredOperationKHR :: forall io r . MonadIO io => (io (DeferredOperationKHR) -> ((DeferredOperationKHR) -> io ()) -> r) -> Device -> Maybe AllocationCallbacks -> r
-withDeferredOperationKHR b device pAllocator =
+withDeferredOperationKHR :: forall io r . MonadIO io => Device -> Maybe AllocationCallbacks -> (io (DeferredOperationKHR) -> ((DeferredOperationKHR) -> io ()) -> r) -> r
+withDeferredOperationKHR device pAllocator b =
   b (createDeferredOperationKHR device pAllocator)
     (\(o0) -> destroyDeferredOperationKHR device o0 pAllocator)
 

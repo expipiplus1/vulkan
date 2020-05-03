@@ -141,8 +141,8 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO
 -- To just extract the pair pass '(,)' as the first argument.
 --
 -- Note that there is no inner resource
-cmdWithConditionalRenderingEXT :: forall io r . MonadIO io => (io () -> io () -> r) -> CommandBuffer -> ConditionalRenderingBeginInfoEXT -> r
-cmdWithConditionalRenderingEXT b commandBuffer pConditionalRenderingBegin =
+cmdWithConditionalRenderingEXT :: forall io r . MonadIO io => CommandBuffer -> ConditionalRenderingBeginInfoEXT -> (io () -> io () -> r) -> r
+cmdWithConditionalRenderingEXT commandBuffer pConditionalRenderingBegin b =
   b (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin)
     (cmdEndConditionalRenderingEXT commandBuffer)
 

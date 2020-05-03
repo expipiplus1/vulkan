@@ -197,8 +197,8 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withSamplerYcbcrConversion :: forall a io r . (PokeChain a, MonadIO io) => (io (SamplerYcbcrConversion) -> ((SamplerYcbcrConversion) -> io ()) -> r) -> Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> r
-withSamplerYcbcrConversion b device pCreateInfo pAllocator =
+withSamplerYcbcrConversion :: forall a io r . (PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> (io (SamplerYcbcrConversion) -> ((SamplerYcbcrConversion) -> io ()) -> r) -> r
+withSamplerYcbcrConversion device pCreateInfo pAllocator b =
   b (createSamplerYcbcrConversion device pCreateInfo pAllocator)
     (\(o0) -> destroySamplerYcbcrConversion device o0 pAllocator)
 

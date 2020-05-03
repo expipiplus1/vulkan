@@ -132,8 +132,8 @@ createEvent device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withEvent :: forall io r . MonadIO io => (io (Event) -> ((Event) -> io ()) -> r) -> Device -> EventCreateInfo -> Maybe AllocationCallbacks -> r
-withEvent b device pCreateInfo pAllocator =
+withEvent :: forall io r . MonadIO io => Device -> EventCreateInfo -> Maybe AllocationCallbacks -> (io (Event) -> ((Event) -> io ()) -> r) -> r
+withEvent device pCreateInfo pAllocator b =
   b (createEvent device pCreateInfo pAllocator)
     (\(o0) -> destroyEvent device o0 pAllocator)
 

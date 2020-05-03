@@ -183,8 +183,8 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withFramebuffer :: forall a io r . (PokeChain a, MonadIO io) => (io (Framebuffer) -> ((Framebuffer) -> io ()) -> r) -> Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> r
-withFramebuffer b device pCreateInfo pAllocator =
+withFramebuffer :: forall a io r . (PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> (io (Framebuffer) -> ((Framebuffer) -> io ()) -> r) -> r
+withFramebuffer device pCreateInfo pAllocator b =
   b (createFramebuffer device pCreateInfo pAllocator)
     (\(o0) -> destroyFramebuffer device o0 pAllocator)
 
@@ -329,8 +329,8 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withRenderPass :: forall a io r . (PokeChain a, MonadIO io) => (io (RenderPass) -> ((RenderPass) -> io ()) -> r) -> Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> r
-withRenderPass b device pCreateInfo pAllocator =
+withRenderPass :: forall a io r . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> (io (RenderPass) -> ((RenderPass) -> io ()) -> r) -> r
+withRenderPass device pCreateInfo pAllocator b =
   b (createRenderPass device pCreateInfo pAllocator)
     (\(o0) -> destroyRenderPass device o0 pAllocator)
 

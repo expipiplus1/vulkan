@@ -186,8 +186,8 @@ allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withCommandBuffers :: forall io r . MonadIO io => (io (Vector CommandBuffer) -> ((Vector CommandBuffer) -> io ()) -> r) -> Device -> CommandBufferAllocateInfo -> r
-withCommandBuffers b device pAllocateInfo =
+withCommandBuffers :: forall io r . MonadIO io => Device -> CommandBufferAllocateInfo -> (io (Vector CommandBuffer) -> ((Vector CommandBuffer) -> io ()) -> r) -> r
+withCommandBuffers device pAllocateInfo b =
   b (allocateCommandBuffers device pAllocateInfo)
     (\(o0) -> freeCommandBuffers device (commandPool (pAllocateInfo :: CommandBufferAllocateInfo)) o0)
 
@@ -357,8 +357,8 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
 -- To just extract the pair pass '(,)' as the first argument.
 --
 -- Note that there is no inner resource
-useCommandBuffer :: forall a io r . (PokeChain a, MonadIO io) => (io () -> io () -> r) -> CommandBuffer -> CommandBufferBeginInfo a -> r
-useCommandBuffer b commandBuffer pBeginInfo =
+useCommandBuffer :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> (io () -> io () -> r) -> r
+useCommandBuffer commandBuffer pBeginInfo b =
   b (beginCommandBuffer commandBuffer pBeginInfo)
     (endCommandBuffer commandBuffer)
 

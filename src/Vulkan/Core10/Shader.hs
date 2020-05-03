@@ -160,8 +160,8 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withShaderModule :: forall a io r . (PokeChain a, MonadIO io) => (io (ShaderModule) -> ((ShaderModule) -> io ()) -> r) -> Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> r
-withShaderModule b device pCreateInfo pAllocator =
+withShaderModule :: forall a io r . (PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> (io (ShaderModule) -> ((ShaderModule) -> io ()) -> r) -> r
+withShaderModule device pCreateInfo pAllocator b =
   b (createShaderModule device pCreateInfo pAllocator)
     (\(o0) -> destroyShaderModule device o0 pAllocator)
 
