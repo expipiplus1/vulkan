@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Move package from `Graphics.Vulkan` to just `Vulkan`
 
 ## [3.2.0.0] - 2020-05-02
   - Update API version 1.2.139
