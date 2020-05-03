@@ -4,6 +4,7 @@
   - Move package from `Graphics.Vulkan` to just `Vulkan`
   - Bump API version to 1.2.140
   - Make the continuation the last argument to 'bracket' functions
+  - Begin/End bracket pairs are now called 'useXXX' rather than 'withXXX'
 
 ## [3.2.0.0] - 2020-05-02
   - Update API version 1.2.139
