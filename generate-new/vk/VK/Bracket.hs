@@ -51,7 +51,7 @@ brackets marshaledCommands handles = context "brackets" $ do
                                  (CName ("vkWith" <> h))
       cmdBeBracket h = autoBracket' (CName ("vkCmdBegin" <> h))
                                     (CName ("vkCmdEnd" <> h))
-                                    (CName ("vkCmdWith" <> h))
+                                    (CName ("vkCmdUse" <> h))
 
   -- TODO: Missing functions here should be warnings, because we might be
   -- generating a different version of the spec.

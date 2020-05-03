@@ -45,7 +45,7 @@ brackets marshaledCommands = context "brackets" $ do
     , autoBracket' "vmaCreateLostAllocation" "vmaFreeMemory" "vmaWithLostAllocation"
     , autoBracket' "vmaMapMemory" "vmaUnmapMemory" "vmaWithMappedMemory"
     , autoBracket' "vmaDefragmentationBegin" "vmaDefragmentationEnd" "vmaWithDefragmentation"
-    , autoBracket' "vmaBeginDefragmentationPass" "vmaEndDefragmentationPass" "vmaWithDefragmentationPass"
+    , autoBracket' "vmaBeginDefragmentationPass" "vmaEndDefragmentationPass" "vmaUseDefragmentationPass"
     , autoBracket' "vmaCreateBuffer" "vmaDestroyBuffer" "vmaWithBuffer"
     , autoBracket' "vmaCreateImage"  "vmaDestroyImage"  "vmaWithImage"
     ]
