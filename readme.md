@@ -153,8 +153,9 @@ There are certain sets commands which must be called in pairs, for instance the
 `create` and `destroy` commands for using resources. In order to facilitate
 safe use of these commands, (i.e. ensure that the corresponding `destroy`
 command is always called) these bindings expose similarly named commands
-prefixed with `with` (or `cmdWith` if they are used in command buffer
-building).
+prefixed with `with` (for `Create`/`Destroy` and `Allocate`/`Free` pairs) or
+`use` for (`Begin`/`End` pairs). If the command is used in command buffer
+building then it is additionally prefixed with `cmd`.
 
 These are higher order functions which take as their first argument a consumer
 for a pair of `create` and `destroy` commands.  Values which fit this hole
@@ -193,9 +194,17 @@ Example usage:
 
 ```haskell
 import Control.Monad.Trans.Resource (runResourceT, allocate)
+-- Create an instance and print its value
 main = runResourceT $ do
   (instanceReleaseKey, inst) <- withInstance allocate zero Nothing
   liftIO $ print inst
+
+-- Begin a render pass, draw something and end the render pass
+drawTriangle =
+  cmdUseRenderPass buffer renderPassBeginInfo SUBPASS_CONTENTS_INLINE bracket_
+    $ do
+        cmdBindPipeline buffer PIPELINE_BIND_POINT_GRAPHICS graphicsPipeline
+        cmdDraw buffer 3 1 0 0
 ```
 
 These pairs of commands aren't explicit in the specification, so
