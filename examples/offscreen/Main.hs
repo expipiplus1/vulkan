@@ -62,6 +62,7 @@ import qualified Graphics.VulkanMemoryAllocator
 import           Graphics.VulkanMemoryAllocator
                                          hiding ( getPhysicalDeviceProperties
                                                 , withImage
+                                                , invalidateAllocation
                                                 )
 
 ----------------------------------------------------------------
@@ -134,7 +135,8 @@ autoapplyDecs
   , 'getAllocator
   , 'noAllocationCallbacks
   ]
-  [ 'VMA.withImage
+  [ 'VMA.invalidateAllocation
+  , 'VMA.withImage
   , 'Vk.withInstance
   , 'Vk.deviceWaitIdle
   , 'Vk.getDeviceQueue
@@ -221,7 +223,7 @@ render = do
       cpuAllocationCreateInfo = zero { flags = ALLOCATION_CREATE_MAPPED_BIT
                                      , usage = MEMORY_USAGE_GPU_TO_CPU
                                      }
-  (_, (cpuImage, _, cpuImageAllocationInfo)) <- withImage
+  (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage
     cpuImageCreateInfo
     cpuAllocationCreateInfo
 
@@ -411,7 +413,7 @@ render = do
         -- Transition cpu image to transfer dest
         cmdPipelineBarrier
           commandBuffer
-          PIPELINE_STAGE_TRANSFER_BIT
+          PIPELINE_STAGE_TOP_OF_PIPE_BIT
           PIPELINE_STAGE_TRANSFER_BIT
           zero
           []
@@ -451,6 +453,23 @@ render = do
               }
           ]
 
+        -- Transition cpu image to LAYOUT_GENERAL for reading
+        cmdPipelineBarrier
+          commandBuffer
+          PIPELINE_STAGE_TRANSFER_BIT
+          PIPELINE_STAGE_HOST_BIT
+          zero
+          []
+          []
+          [ zero { srcAccessMask    = ACCESS_TRANSFER_WRITE_BIT
+                 , dstAccessMask    = ACCESS_HOST_READ_BIT
+                 , oldLayout        = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+                 , newLayout        = IMAGE_LAYOUT_GENERAL
+                 , image            = cpuImage
+                 , subresourceRange = imageSubresourceRange
+                 }
+          ]
+
   -- Create a fence so we can know when render is finished
   (_, fence) <- withFence zero
 
@@ -466,6 +485,10 @@ render = do
   waitForFences [fence] True fenceTimeout >>= \case
     TIMEOUT -> throwString "Timed out waiting for image render and copy"
     _       -> pure ()
+
+  -- If the cpu image allocation is not HOST_COHERENT this will ensure the
+  -- changes are present on the CPU.
+  invalidateAllocation cpuImageAllocation 0 WHOLE_SIZE
 
   -- Find the image layout and read it into a JuicyPixels Image
   cpuImageLayout <- getImageSubresourceLayout
