@@ -3,9 +3,9 @@ module Main
 
 import           Control.Exception
 import           Data.Foldable
-import           Graphics.Vulkan.Core10
-import           Graphics.Vulkan.Zero
 import           Text.Pretty.Simple
+import           Vulkan.Core10
+import           Vulkan.Zero
 
 main :: IO ()
 main = withInstance bracket zero Nothing $ \i -> do

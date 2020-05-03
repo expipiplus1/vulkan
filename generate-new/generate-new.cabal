@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c766a4420d747ecfae41da16d704d805be5150bf84f7c5a10f6c02473c741ca0
+-- hash: c730f87dceb5cb1336d482a643166339c542b7557cab6e19d31114c1dc23b1e9
 
 name:           generate-new
 version:        0.0.0
@@ -74,6 +74,7 @@ library
       Spec.Types
       Text.InterpolatedString.Perl6.Unindented
       TrackDepends
+      VkModulePrefix
       Write.Segment
   other-modules:
       Paths_generate_new

@@ -121,7 +121,7 @@ main =
             let sortedRenderElems =
                   snd <$> V.modify (V.sortBy (comparing fst)) renderElems
                 segments =
-                  [ Segment (ModName "Graphics.VulkanMemoryAllocator")
+                  [ Segment (ModName "VulkanMemoryAllocator")
                             (sortedRenderElems <> renderedVulkanFuncPointers)
                   ]
             renderSegments getDocumentation "out-vma" segments

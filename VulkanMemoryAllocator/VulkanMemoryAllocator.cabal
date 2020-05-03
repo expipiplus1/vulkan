@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5232652a8c1dabb7eb375d6b33bec1545d620d5f9b9aab94a2a5e98ecec5fc90
+-- hash: 51acfbfc19b8670dd48f31069e4b804dfaa006d578be282cb03586d0ba80d421
 
 name:           VulkanMemoryAllocator
 version:        0.2.0.0
@@ -42,7 +42,7 @@ flag vma-recording
 
 library
   exposed-modules:
-      Graphics.VulkanMemoryAllocator
+      VulkanMemoryAllocator
   hs-source-dirs:
       src
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns

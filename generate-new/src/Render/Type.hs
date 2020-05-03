@@ -129,7 +129,7 @@ cToHsType' structStyle preserve t = do
       e' <- cToHsType' structStyle preserve e
       s' <- arraySizeType s
       let arrayTy =
-            ConT (mkName "Graphics.Vulkan.CStruct.Utils.FixedArray") :@ s' :@ e'
+            ConT (mkName "Vulkan.CStruct.Utils.FixedArray") :@ s' :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy

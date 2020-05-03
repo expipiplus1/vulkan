@@ -22,6 +22,7 @@ import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
 import           Spec.Types
+import           VkModulePrefix
 
 vkExceptionRenderElement
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -30,7 +31,7 @@ vkExceptionRenderElement
   -> Sem r RenderElement
 vkExceptionRenderElement getDocumentation vkResultEnum =
   genRe "VulkanException declaration" $ do
-    tellExplicitModule (ModName "Graphics.Vulkan.Exception")
+    tellExplicitModule (vulkanModule ["Exception"])
     tellNotReexportable
     RenderParams {..} <- input
     tellImportWithAll ''Control.Exception.Exception

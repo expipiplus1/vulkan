@@ -21,6 +21,7 @@ import           Foreign.Ptr
 import           Error
 import           Haskell.Name
 import           Render.Element
+import           VkModulePrefix
 
 cStructDocs :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
 cStructDocs = V.fromList [toCStruct, fromCStruct]
@@ -29,7 +30,7 @@ toCStruct :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 toCStruct = do
   RenderParams {..} <- input
   genRe "ToCStruct" $ do
-    tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
+    tellExplicitModule (vulkanModule ["CStruct"])
     tellNotReexportable
     tellExport (EClass (TyConName "ToCStruct"))
     tellImport ''Ptr
@@ -73,13 +74,11 @@ toCStruct = do
         cStructAlignment :: Int
     |]
 
-fromCStruct
-  :: (HasErr r, HasRenderParams r)
-  => Sem r RenderElement
+fromCStruct :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 fromCStruct = do
   RenderParams {..} <- input
   genRe "ToCStruct" $ do
-    tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
+    tellExplicitModule (vulkanModule ["CStruct"])
     tellNotReexportable
     tellExport (EClass (TyConName "FromCStruct"))
     tellImport ''Ptr

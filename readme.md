@@ -33,9 +33,9 @@ Types and functions are placed into modules according to the `features` and
 functions, a best guess has to be made for types. Types and constants are drawn
 in transitively according to the dependencies of the functions.
 
-It should be sufficient to import `Graphics.Vulkan.CoreXX` along with
-`Graphics.Vulkan.Extensions.{whatever extensions you want}`. You might want to
-import `Graphics.Vulkan.Zero` too.
+It should be sufficient to import `Vulkan.CoreXX` along with
+`Vulkan.Extensions.{whatever extensions you want}`. You might want to import
+`Vulkan.Zero` too.
 
 These bindings are intended to be imported qualified and do not feature the
 `Vk` prefixes on commands, structures, members or constants.
@@ -52,10 +52,10 @@ These bindings are intended to be imported qualified and do not feature the
   operator simply ignores the string on the left.
 
 - There exists a `Zero` type class defined in
-  [Graphics.Vulkan.Zero](src/Graphics/Vulkan/Zero.hs). This is a class for
-  initializing values with all zero contents and empty arrays. It's very handy
-  when initializing structs to use something like `zero { only = _, members =
-  _, i = _, care = _, about = _ }`.
+  [Vulkan.Zero](src/Vulkan/Zero.hs). This is a class for initializing values
+  with all zero contents and empty arrays. It's very handy when initializing
+  structs to use something like `zero { only = _, members = _, i = _, care = _,
+  about = _ }`.
 
 - The library is compiled with `-XStrict` so expect all record members to be
   strict (and unboxed when they're small)
@@ -77,8 +77,7 @@ These bindings are intended to be imported qualified and do not feature the
     `vkGetDeviceProcAddr`.  These are stored in two records `InstanceCmds` and
     `DeviceCmds` which store instance level and device level commands
     respectively. These tables can be initialized with the `initInstanceCmds`
-    and `initDeviceCmds` found in
-    [Graphics.Vulkan.Dynamic](src/Graphics/Vulkan/Dynamic.hs).
+    and `initDeviceCmds` found in [Vulkan.Dynamic](src/Vulkan/Dynamic.hs).
 
 - There are nice `Read` and `Show` instances for the enums and bitmasks. These
   will, where possible, print and parse the pattern synonyms. For example one
