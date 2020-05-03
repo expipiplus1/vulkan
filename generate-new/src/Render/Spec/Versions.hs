@@ -16,6 +16,7 @@ import           Error
 import           Haskell.Name
 import           Render.Element
 import           Spec.Parse
+import           VK.ModulePrefix
 
 specVersions
   :: forall r
@@ -33,7 +34,7 @@ specVersions Spec {..} = fromList
 headerVersion :: (HasErr r, HasRenderParams r) => Word -> Sem r RenderElement
 headerVersion version = genRe "header version" $ do
   RenderParams {..} <- input
-  tellExplicitModule (ModName "Graphics.Vulkan.Version")
+  tellExplicitModule (vulkanModule ["Version"])
   let pat = mkPatternName "VK_HEADER_VERSION"
   tellExport (EPat pat)
   tellImport ''Word32
@@ -47,7 +48,7 @@ headerVersionComplete
 headerVersionComplete lastFeatureVersion headerVersion =
   genRe "header version complete" $ do
     RenderParams {..} <- input
-    tellExplicitModule (ModName "Graphics.Vulkan.Version")
+    tellExplicitModule (vulkanModule ["Version"])
     let pat               = mkPatternName "VK_HEADER_VERSION_COMPLETE"
         major : minor : _ = versionBranch lastFeatureVersion
         makeVersion       = mkPatternName "VK_MAKE_VERSION"
@@ -69,8 +70,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
   tellExport (EPat pat)
   tellImport ''Word32
   tellImport make
-  tellExplicitModule
-    (ModName ("Graphics.Vulkan.Core" <> show major <> show minor))
+  tellExplicitModule (vulkanModule ["Core" <> show major <> show minor])
   tellDoc [qqi|
     pattern {pat} :: Word32
     pattern {pat} = {make} {major} {minor} 0
@@ -79,7 +79,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
 versionConstruction :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 versionConstruction = genRe "version construction" $ do
   RenderParams {..} <- input
-  tellExplicitModule (ModName "Graphics.Vulkan.Version")
+  tellExplicitModule (vulkanModule ["Version"])
   tellImport ''Word32
   tellImport '(.&.)
   tellImport '(.|.)

@@ -31,6 +31,7 @@ import           Render.SpecInfo
 import           Render.Type
 import           Render.Utils
 import           Spec.Parse
+import           VK.ModulePrefix
 
 renderDynamicLoader
   :: (HasErr r, HasRenderParams r, HasTypeInfo r, HasSpecInfo r)
@@ -39,7 +40,7 @@ renderDynamicLoader
 renderDynamicLoader cs = do
   RenderParams {..} <- input
   genRe "dynamic loader" $ do
-    tellExplicitModule (ModName "Graphics.Vulkan.Dynamic")
+    tellExplicitModule (vulkanModule ["Dynamic"])
     tellNotReexportable
     enabledCommands <- V.filterM
       (fmap isNothing . getDisabledCommand . cName . mcCommand)

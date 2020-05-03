@@ -49,6 +49,8 @@ import           Render.Stmts.Utils
 import           Render.Type
 import           Render.Utils
 import           Spec.Types
+import           VK.ModulePrefix
+
 
 ----------------------------------------------------------------
 -- Changes to the spec
@@ -85,17 +87,13 @@ assignBespokeModules es = do
 bespokeModules :: HasRenderParams r => Sem r [(HName, ModName)]
 bespokeModules = do
   RenderParams {..} <- input
-  let core10Base n = (mkTyName n, ModName "Graphics.Vulkan.Core10.SharedTypes")
+  let core10Base n = (mkTyName n, vulkanModule ["Core10", "SharedTypes"])
   pure
     $  [ ( mkTyName "VkAllocationCallbacks"
-         , ModName "Graphics.Vulkan.Core10.AllocationCallbacks"
+         , vulkanModule ["Core10", "AllocationCallbacks"]
          )
-       , ( mkTyName "VkBaseInStructure"
-         , ModName "Graphics.Vulkan.CStruct.Extends"
-         )
-       , ( mkTyName "VkBaseOutStructure"
-         , ModName "Graphics.Vulkan.CStruct.Extends"
-         )
+       , (mkTyName "VkBaseInStructure" , vulkanModule ["CStruct", "Extends"])
+       , (mkTyName "VkBaseOutStructure", vulkanModule ["CStruct", "Extends"])
        ]
     <> (   core10Base
        <$> [ "VkExtent2D"
@@ -109,7 +107,7 @@ bespokeModules = do
            , "VkClearDepthStencilValue"
            ]
        )
-    <> (   (, ModName "Graphics.Vulkan.Core10.BaseType")
+    <> (   (, vulkanModule ["Core10", "BaseType"])
        <$> [ mkTyName "VkBool32"
            , TermName "boolToBool32"
            , TermName "bool32ToBool"
@@ -698,13 +696,13 @@ wsiTypes =
  where
   putInWSI = fmap $ \re -> re
     { reExplicitModule = reExplicitModule re
-      <|> Just (ModName "Graphics.Vulkan.Extensions.WSITypes")
+                           <|> Just (vulkanModule ["Extensions", "WSITypes"])
     }
 
 
 namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
-  tellExplicitModule (ModName "Graphics.Vulkan.NamedType")
+  tellExplicitModule (vulkanModule ["NamedType"])
   tellNotReexportable
   tellExport (EType (TyConName ":::"))
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
@@ -714,7 +712,7 @@ baseType
 baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   RenderParams {..} <- input
   let n' = mkTyName n
-  tellExplicitModule (ModName "Graphics.Vulkan.Core10.BaseType")
+  tellExplicitModule (vulkanModule ["Core10", "BaseType"])
   tellExport (EType n')
   tDoc <- renderType (ConT t)
   tellDocWithHaddock $ \getDoc ->
@@ -728,7 +726,7 @@ nullHandle :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   RenderParams {..} <- input
   let patName = mkPatternName "VK_NULL_HANDLE"
-  tellExplicitModule (ModName "Graphics.Vulkan.Core10.APIConstants")
+  tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
   tellNotReexportable
   tellExport (EPat patName)
   tellExport (EType (TyConName "IsHandle"))

@@ -23,6 +23,7 @@ import           GHC.TypeNats
 import           Error
 import           Haskell.Name
 import           Render.Element
+import           VK.ModulePrefix
 
 zeroClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 zeroClass = genRe "zero class" $ do
@@ -49,7 +50,7 @@ zeroClass = genRe "zero class" $ do
     ]
 
   tellExport (EClass (TyConName "Zero"))
-  tellExplicitModule (ModName "Graphics.Vulkan.Zero")
+  tellExplicitModule (vulkanModule ["Zero"])
   tellNotReexportable
 
   tellDoc [qi|
@@ -116,7 +117,7 @@ zeroClass = genRe "zero class" $ do
 
 marshalUtils :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 marshalUtils = genRe "marshal utils" $ do
-  tellExplicitModule (ModName "Graphics.Vulkan.CStruct.Utils")
+  tellExplicitModule (vulkanModule ["CStruct", "Utils"])
   tellNotReexportable
   traverseV_ tellImportWithAll [''Proxy, ''CChar]
   traverseV_

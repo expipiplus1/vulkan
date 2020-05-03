@@ -15,6 +15,7 @@ import           Polysemy
 import           Prelude
 
 import           Render.Element
+import           VK.ModulePrefix
 import           Write.Segment
 
 mergeElements
@@ -25,10 +26,10 @@ mergeElements ss =
       allModNames      = nubOrd
         [ ancestorOrSelf
         | m              <- initialModNames
-        , -- drop 2 for (ModName "") and (ModName "Graphics")
+        , -- tail for (ModName "")
           ancestorOrSelf <-
           fmap (ModName . intercalate ".")
-          . drop 2
+          . tail
           . inits
           . splitOn "."
           . unModName
@@ -56,10 +57,10 @@ makeAggregateRenderElements ms =
 
 noAggregateModules :: [ModName]
 noAggregateModules =
-  [ ModName "Graphics.Vulkan.CStruct.Utils"
-  , ModName "Graphics.Vulkan.CStruct.Extends"
-  , ModName "Graphics.Vulkan.Dynamic"
-  , ModName "Graphics.Vulkan.Exception"
-  , ModName "Graphics.Vulkan"
-  , ModName "Graphics"
-  ]
+  vulkanModule
+    <$> [ ["CStruct", "Utils"]
+        , ["CStruct", "Extends"]
+        , ["Dynamic"]
+        , ["Exception"]
+        , []
+        ]

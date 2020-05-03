@@ -32,6 +32,7 @@ import           Haskell
 import           Render.Element
 import           Render.SpecInfo
 import           Spec.Types
+import           VK.ModulePrefix
 
 import           VK.Render
 
@@ -160,8 +161,10 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
       :: (Feature -> Text -> (Maybe Text -> ModName) -> Sem r a)
       -> Sem r (Vector a)
     forFeatures f = forV specFeatures $ \feat@Feature {..} -> do
-      let prefix =
-            modPrefix <> ".Core" <> foldMap show (versionBranch fVersion)
+      let
+        prefix = vulkanModulePrefix <> ".Core" <> foldMap
+          show
+          (versionBranch fVersion)
       f feat prefix (featureCommentToModuleName prefix)
     forFeatures_ = void . forFeatures
 
@@ -232,7 +235,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   -- API Constants
   ----------------------------------------------------------------
-  let constantModule = ModName $ modPrefix <> ".Core10.APIConstants"
+  let constantModule = vulkanModule ["Core10", "APIConstants"]
   forV_ rsAPIConstants $ \(i, _) -> export constantModule i
 
   ----------------------------------------------------------------
@@ -348,11 +351,8 @@ exportManyNoReexport m is =
 -- Making module names
 ----------------------------------------------------------------
 
-modPrefix :: Text
-modPrefix = "Graphics.Vulkan"
-
 extensionModulePrefix :: Text
-extensionModulePrefix = modPrefix <> ".Extensions"
+extensionModulePrefix = vulkanModulePrefix <> ".Extensions"
 
 extensionNameToModuleName :: Text -> ModName
 extensionNameToModuleName = ModName . ((extensionModulePrefix <> ".") <>)

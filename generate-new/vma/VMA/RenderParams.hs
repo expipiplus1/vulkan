@@ -54,7 +54,7 @@ renderParams handles = r
     , mkIdiomaticType             =
       let
         dropVulkanModule = transformBi
-          (\n -> if nameModule n == Just "Graphics.Vulkan"
+          (\n -> if nameModule n == Just vulkanModulePrefix
             then mkName (nameBase n)
             else n
           )
@@ -76,8 +76,8 @@ renderParams handles = r
                                               . pure
                                               $ ConT ''Ptr
                                               :@ ConT
-                                                   ( mkName
-                                                   . ("Graphics.Vulkan." <>)
+                                                   (mkName
+                                                   . ((vulkanModulePrefix <> ".") <>)
                                                    . T.unpack
                                                    . unName
                                                    . mkEmptyDataName vulkanParams
@@ -91,7 +91,7 @@ renderParams handles = r
     , exceptionTypeName           = TyConName "VulkanException"
     , complexMemberLengthFunction = \_ _ _ -> Nothing
     , isExternalName              =
-      let vk s = Just (ModName $ "Graphics.Vulkan." <> s)
+      let vk s = Just (ModName $ vulkanModulePrefix <> "." <> s)
       in  \case
             TermName  "advancePtrBytes"  -> vk "CStruct.Utils"
             TermName  "lowerArrayPtr"    -> vk "CStruct.Utils"
@@ -152,7 +152,7 @@ vulkanManifest structStyle RenderParams {..} =
           . ConT
           . mkName
           . T.unpack
-          . ("Graphics.Vulkan." <>)
+          . ((vulkanModulePrefix <> ".") <>)
           . unName
           . mkTyName
       someVk t = Just $ do
@@ -160,7 +160,7 @@ vulkanManifest structStyle RenderParams {..} =
               ConT
                 . mkName
                 . T.unpack
-                . ("Graphics.Vulkan." <>)
+                . ((vulkanModulePrefix <> ".") <>)
                 . unName
                 . mkTyName
                 $ t
@@ -207,3 +207,5 @@ vulkanManifest structStyle RenderParams {..} =
                    ]
           -> someVk n
         _ -> Nothing
+
+vulkanModulePrefix = "Vulkan"
