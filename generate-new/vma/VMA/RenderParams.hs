@@ -19,12 +19,13 @@ import           Polysemy
 
 import           Foreign.Ptr
 
-import           CType
-import           Render.Element
-import           Spec.Parse
-import           Render.Type.Preserve
-import           Haskell
 import qualified Bespoke.RenderParams          as Vk
+import           CType
+import           Haskell
+import           Render.Element
+import           Render.Type.Preserve
+import           Spec.Parse
+import           VK.ModulePrefix
 
 renderParams :: Vector Handle -> RenderParams
 renderParams handles = r
@@ -51,39 +52,38 @@ renderParams handles = r
                                     . lowerCaseFirst
                                     . dropVma
     , alwaysQualifiedNames        = mempty
-    , mkIdiomaticType             =
-      let
-        dropVulkanModule = transformBi
-          (\n -> if nameModule n == Just vulkanModulePrefix
-            then mkName (nameBase n)
-            else n
-          )
-      in  mkIdiomaticType vulkanParams . dropVulkanModule
+    , mkIdiomaticType = let dropVulkanModule = transformBi
+                              (\n ->
+                                if nameModule n
+                                   == Just (T.unpack vulkanModulePrefix)
+                                then
+                                  mkName (nameBase n)
+                                else
+                                  n
+                              )
+                        in  mkIdiomaticType vulkanParams . dropVulkanModule
     , mkHsTypeOverride            = \structStyle preserve t ->
-                                      case vulkanManifest structStyle vulkanParams t of
-                                        Just t -> Just $ do
-                                          t <- t
-                                          case preserve of
-                                            DoNotPreserve -> case mkIdiomaticType r t of
-                                              Just i  -> pure $ itType i
-                                              Nothing -> pure t
-                                            _ -> pure t
-                                        _ -> case preserve of
-                                          DoNotPreserve -> Nothing
-                                          _             -> case t of
-                                            TypeName n
-                                              | Set.member n dispatchableHandleNames -> Just
-                                              . pure
-                                              $ ConT ''Ptr
-                                              :@ ConT
-                                                   (mkName
-                                                   . ((vulkanModulePrefix <> ".") <>)
-                                                   . T.unpack
-                                                   . unName
-                                                   . mkEmptyDataName vulkanParams
-                                                   $ n
-                                                   )
-                                            _ -> Nothing
+      case vulkanManifest structStyle vulkanParams t of
+        Just t -> Just $ do
+          t <- t
+          case preserve of
+            DoNotPreserve -> case mkIdiomaticType r t of
+              Just i  -> pure $ itType i
+              Nothing -> pure t
+            _ -> pure t
+        _ -> case preserve of
+          DoNotPreserve -> Nothing
+          _             -> case t of
+            TypeName n | Set.member n dispatchableHandleNames ->
+              Just . pure $ ConT ''Ptr :@ ConT
+                ( mkName
+                . ((T.unpack vulkanModulePrefix <> ".") <>)
+                . T.unpack
+                . unName
+                . mkEmptyDataName vulkanParams
+                $ n
+                )
+            _ -> Nothing
     , unionDiscriminators         = mempty
     , successCodeType             = TypeName "VkResult"
     , isSuccessCodeReturned       = (/= "VK_SUCCESS")
@@ -208,4 +208,3 @@ vulkanManifest structStyle RenderParams {..} =
           -> someVk n
         _ -> Nothing
 
-vulkanModulePrefix = "Vulkan"

@@ -51,7 +51,6 @@ import           Render.Utils
 import           Spec.Types
 import           VK.ModulePrefix
 
-
 ----------------------------------------------------------------
 -- Changes to the spec
 ----------------------------------------------------------------

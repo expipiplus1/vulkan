@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c766a4420d747ecfae41da16d704d805be5150bf84f7c5a10f6c02473c741ca0
+-- hash: 13ce505ec3306dfcc0b02be01814e5b18ba20397187da7901960eeb8bce44673
 
 name:           generate-new
 version:        0.0.0
@@ -130,6 +130,7 @@ executable vk
   other-modules:
       VK.AssignModules
       VK.Bracket
+      VK.ModulePrefix
       VK.Render
       Paths_generate_new
   hs-source-dirs:
