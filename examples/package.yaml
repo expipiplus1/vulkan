@@ -34,7 +34,6 @@ executables:
       - vulkan-utils
       - vector
       - vulkan
-    c-sources: sdl-triangle/DebugCallback.c
 
   offscreen:
     main: Main.hs
@@ -56,7 +55,6 @@ executables:
       - vector
       - vulkan
       - vulkan-utils
-    c-sources: sdl-triangle/DebugCallback.c
 
 default-extensions:
   - AllowAmbiguousTypes
