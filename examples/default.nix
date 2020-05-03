@@ -23,7 +23,6 @@ let
             sha256 = "0w3ypr087s2s4fxwn2f6hb31hjrzamvrq76dp293syp8zsyvwna1";
           }) { });
           vulkan = let
-            traceId = x: builtins.trace x x;
             srcFilter = path: type:
               (baseNameOf path == "package.yaml")
               || pkgs.lib.hasInfix "/src" path;
