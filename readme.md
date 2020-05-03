@@ -7,8 +7,24 @@ Haskell and which is much less verbose than the C API. Nevertheless, it retains
 access to all the functionality. If you find something you can do in the C
 bindings but not in these high level bindings please raise an issue.
 
-These bindings are intended to be imported qualified and do not feature the
-`Vk` prefixes on commands, structures, members or constants.
+Practically speaking this means:
+
+- No fiddling with `vkGetInstanceProcAddr` or
+  `vkGetDeviceProcAddr` to get function pointers, this is done automatically on
+  instance and device creation.
+
+- No setting the `sType` member, this is done automatically.
+
+- No passing length/pointer pairs for arrays, `Vector` is used instead.
+
+- No passing pointers for return values, this is done for you and multiple
+  results are returned as elements of a tuple.
+
+- No checking `VkResult` return values for failure, a `VulkanException` will be
+  thrown if a Vulkan command returns an error `VkResult`.
+
+- No manual memory management for command parameters or Vulkan structs. You'll
+  still have to manage buffer and image memory yourself however.
 
 ## Package structure
 
@@ -20,6 +36,9 @@ in transitively according to the dependencies of the functions.
 It should be sufficient to import `Graphics.Vulkan.CoreXX` along with
 `Graphics.Vulkan.Extensions.{whatever extensions you want}`. You might want to
 import `Graphics.Vulkan.Zero` too.
+
+These bindings are intended to be imported qualified and do not feature the
+`Vk` prefixes on commands, structures, members or constants.
 
 ## Things to know
 
@@ -39,7 +58,7 @@ import `Graphics.Vulkan.Zero` too.
   _, i = _, care = _, about = _ }`.
 
 - The library is compiled with `-XStrict` so expect all record members to be
-  strict and unboxed.
+  strict (and unboxed when they're small)
 
 - Calls to Vulkan are marked as `unsafe` by default. This can be turned off by
   setting the `safe-foreign-calls` flag. This is to reduce FFI overhead,
@@ -47,23 +66,18 @@ import `Graphics.Vulkan.Zero` too.
   code. See the [Haskell
   wiki](https://wiki.haskell.org/Foreign_Function_Interface#Unsafe_calls) for
   more information. This is important to consider if you want to write
-  allocation or debug callbacks in Haskell.
-
-- Vulkan structures are represented as Haskell records, may incur a copy
-  when passing them to and from C (if GHC can't optimise this away), if you
-  need an api where Vulkan structures can be handled without copying please
-  check out the [vulkan-api](https://github.com/achirkin/vulkan#readme)
-  package.
+  allocation or debug callbacks in Haskell. It's also important to be aware
+  that the garbage collector will not run during these calls.
 
 - As encouraged by the Vulkan user guide, commands are linked dynamically (with
   the sole exception of `vkGetInstanceProcAddr`).
   - The function pointers are attached to any dispatchable handle to save you
     the trouble of passing them around.
-  - The function pointers are
-    retrieved by calling `vkGetInstanceProcAddr` and `vkGetDeviceProcAddr`. These
-    are stored in two records `InstanceCmds` and `DeviceCmds` which store
-    instance level and device level commands respectively. These tables can be
-    initialized with the `initInstanceCmds` and `initDeviceCmds` found in
+  - The function pointers are retrieved by calling `vkGetInstanceProcAddr` and
+    `vkGetDeviceProcAddr`.  These are stored in two records `InstanceCmds` and
+    `DeviceCmds` which store instance level and device level commands
+    respectively. These tables can be initialized with the `initInstanceCmds`
+    and `initDeviceCmds` found in
     [Graphics.Vulkan.Dynamic](src/Graphics/Vulkan/Dynamic.hs).
 
 - There are nice `Read` and `Show` instances for the enums and bitmasks. These
@@ -93,8 +107,7 @@ import `Graphics.Vulkan.Zero` too.
 ## How the C types relate to Haskell types
 
 These bindings take advantage of the meta information present in the
-specification detailing the validity of structures and arguments. A few
-examples:
+specification detailing the validity of structures and arguments.
 
 - If a structure or set of command parameters in the specification contains a
   pointer to an array and an associated length, this is replaced with a
@@ -109,7 +122,7 @@ examples:
 - If a struct has a member which can only have one possible value (the most
   common example is the `sType` member, then this member is elided.
 
-- C string become `ByteString`. This is also the case for fixed length C
+- C strings become `ByteString`. This is also the case for fixed length C
   strings, the library will truncate overly long strings in this case.
 
 - Pointers to `void` accompanied by a length in bytes become `ByteString`
@@ -139,16 +152,56 @@ return type. If a command can return other success codes, for instance
 
 There are certain sets commands which must be called in pairs, for instance the
 `create` and `destroy` commands for using resources. In order to facilitate
-safe use of these commands, i.e. ensure that the corresponding `destroy`
-command is always called, these bindings expose `with` commands, which use
-`bracket` to. These pairs of commands aren't explicit in the specification, so
-a list of them is maintained in the generation code, if you see something
-missing please open an issue (these pairs are generated in `Bracket.hs`). An
-example is `withInstance` which calls `createInstance` and `destroyInstance`.
+safe use of these commands, (i.e. ensure that the corresponding `destroy`
+command is always called) these bindings expose similarly named commands
+prefixed with `with` (or `cmdWith` if they are used in command buffer
+building).
 
-At the moment only continuation passing style functions are implemented; it
-shouldn't be too hard to implement these functions using `ResourceT` or
-whatever other resource handling Monad though.
+These are higher order functions which take as their first argument a consumer
+for a pair of `create` and `destroy` commands.  Values which fit this hole
+include `Control.Exception.bracket`, `Control.Monad.Trans.Resource.allocate`
+and `(,)`.
+
+An example is `withInstance` which calls `createInstance` and
+`destroyInstance`. Notice how the `AllocationCallbacks` parameter is
+automatically passed to the `createInstance` and `destroyInstance` command.
+
+```haskell
+createInstance
+  :: forall a m
+   . (PokeChain a, MonadIO m)
+  => InstanceCreateInfo a
+  -> Maybe AllocationCallbacks
+  -> m Instance
+
+destroyInstance
+  :: forall m
+   . MonadIO m
+  => Instance
+  -> Maybe AllocationCallbacks
+  -> m ()
+
+withInstance
+  :: forall a m r
+   . (PokeChain a, MonadIO m)
+  => (m Instance -> (Instance -> m ()) -> r)
+  -> InstanceCreateInfo a
+  -> Maybe AllocationCallbacks
+  -> r
+```
+
+Example usage:
+
+```haskell
+import Control.Monad.Trans.Resource (runResourceT, allocate)
+main = runResourceT $ do
+  (instanceReleaseKey, inst) <- withInstance allocate zero Nothing
+  liftIO $ print inst
+```
+
+These pairs of commands aren't explicit in the specification, so
+a list of them is maintained in the generation code, if you see something
+missing please open an issue (these pairs are generated in `VK/Bracket.hs`).
 
 ### Dual use commands
 
@@ -196,16 +249,13 @@ programs. For this reason it's recommended to use the system-provided
 For instructions on how to regenerate the bindings see [the readme in
 ./generate-new](./generate-new/readme.md).
 
-Set the `build-examples` flag on the `vulkan` package to build the example
-programs. You'll need to supply the following system packages:
+To build the example programs. You'll need to supply the following system
+packages:
 
 - `vulkan-loader` (for `libvulkan.so`)
 - `vulkan-headers` (for `vulkan.h`)
-- `pkg-config` and `SDL2` to build the haskell `sdl2` package.
+- `pkg-config` and `SDL2` to build the Haskell `sdl2` package.
 - `glslang` (for the `glslangValidator` binary, to build the shaders)
-
-- For the sdl example you'll need to use the patched `sdl2` package until this
-  PR makes its way to Hackage: https://github.com/haskell-game/sdl2/pull/209
 
 ## Examples
 
@@ -218,3 +268,21 @@ All the core Vulkan 1.0, 1.1, and 1.2 functionality is here as well as all the
 extensions.
 
 This is currently a 64 bit only library.
+
+## See also
+
+The [VulkanMemoryAllocator
+package](https://hackage.haskell.org/package/VulkanMemoryAllocator-0.1.0.0)
+(source in the [VulkanMemoryAllocator directory](./VulkanMemoryAllocator)) has
+similarly styled bindings to the [Vulkan Memory
+Allocator](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator)
+library.
+
+The [vulkan-utils](./utils) package (not currently on Hackage) includes a few
+utilities for writing programs using these bindings.
+
+For an alternative take on Haskell bindings to Vulkan see the
+[vulkan-api](https://github.com/achirkin/vulkan#readme) package. `vulkan-api`
+stores Vulkan structs in their C representation as `ByteArray#` whereas this
+library allocates structs on the stack and keeps them alive for just the
+lifetime of any Vulkan command call.

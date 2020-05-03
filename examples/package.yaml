@@ -45,9 +45,7 @@ executables:
       - base < 4.14
       - bytestring
       - extra
-      - pretty-show
       - resourcet
-      - safe
       - safe-exceptions
       - say
       - text
