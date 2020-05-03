@@ -1,0 +1,19 @@
+name: "Nix Build"
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v8
+    - uses: cachix/cachix-action@v6
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+    - name: nix-build
+      run: |
+        mkdir -p ~/.config/nixpkgs
+        echo '{ allowBroken = true; }' > ~/.config/nixpkgs/config.nix
+        nix-build
