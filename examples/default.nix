@@ -14,7 +14,12 @@ let
     pkgs.haskell.packages.${compiler'}.override {
       overrides = self: super:
         {
-          autoapply = doHaddock (self.callCabal2nix "" ../../autoapply { });
+          autoapply = doHaddock (self.callCabal2nix "" (pkgs.fetchFromGitHub {
+            owner = "expipiplus1";
+            repo = "autoapply";
+            rev = "ca6509a6c406417fe4aa614a81090755c899f02b";
+            sha256 = "0w3ypr087s2s4fxwn2f6hb31hjrzamvrq76dp293syp8zsyvwna1";
+          }) { });
           vulkan = let
             traceId = x: builtins.trace x x;
             srcFilter = path: type:
