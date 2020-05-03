@@ -16,7 +16,7 @@ import           Error
 import           Haskell.Name
 import           Render.Element
 import           Spec.Parse
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 specVersions
   :: forall r

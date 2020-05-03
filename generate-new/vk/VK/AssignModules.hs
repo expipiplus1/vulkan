@@ -32,7 +32,7 @@ import           Haskell
 import           Render.Element
 import           Render.SpecInfo
 import           Spec.Types
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 import           VK.Render
 

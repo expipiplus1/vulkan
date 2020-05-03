@@ -25,7 +25,7 @@ import           Haskell
 import           Render.Element
 import           Render.Type.Preserve
 import           Spec.Parse
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 renderParams :: Vector Handle -> RenderParams
 renderParams handles = r

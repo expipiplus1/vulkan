@@ -49,7 +49,7 @@ import           Render.Stmts.Utils
 import           Render.Type
 import           Render.Utils
 import           Spec.Types
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 ----------------------------------------------------------------
 -- Changes to the spec

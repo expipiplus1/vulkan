@@ -31,7 +31,7 @@ import           Render.SpecInfo
 import           Render.Type
 import           Render.Utils
 import           Spec.Parse
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 renderDynamicLoader
   :: (HasErr r, HasRenderParams r, HasTypeInfo r, HasSpecInfo r)

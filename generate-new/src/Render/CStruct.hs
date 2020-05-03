@@ -21,7 +21,7 @@ import           Foreign.Ptr
 import           Error
 import           Haskell.Name
 import           Render.Element
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 cStructDocs :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
 cStructDocs = V.fromList [toCStruct, fromCStruct]

@@ -22,7 +22,7 @@ import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
 import           Spec.Types
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 vkExceptionRenderElement
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)

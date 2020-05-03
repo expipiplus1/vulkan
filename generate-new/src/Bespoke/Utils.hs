@@ -23,7 +23,7 @@ import           GHC.TypeNats
 import           Error
 import           Haskell.Name
 import           Render.Element
-import           VK.ModulePrefix
+import           VkModulePrefix
 
 zeroClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 zeroClass = genRe "zero class" $ do

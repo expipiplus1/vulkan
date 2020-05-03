@@ -1,4 +1,4 @@
-module VK.ModulePrefix
+module VkModulePrefix
   ( vulkanModule
   , vulkanModulePrefix
   )

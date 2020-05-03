@@ -15,7 +15,7 @@ import           Polysemy
 import           Prelude
 
 import           Render.Element
-import           VK.ModulePrefix
+import           VkModulePrefix
 import           Write.Segment
 
 mergeElements
