@@ -23,19 +23,19 @@ import           Data.Traversable
 import qualified Data.Vector                   as V
 import           Data.Word
 import           Foreign.Ptr                    ( castPtr )
-import           Graphics.Vulkan.CStruct.Extends
-import           Graphics.Vulkan.Core10
-import           Graphics.Vulkan.Core11
-import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
-import           Graphics.Vulkan.Extensions.VK_KHR_surface
-import           Graphics.Vulkan.Extensions.VK_KHR_swapchain
-import           Graphics.Vulkan.Utils.DebugCallback
-import           Graphics.Vulkan.Utils.ShaderQQ
-import           Graphics.Vulkan.Zero
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           Say
 import           System.Exit
+import           Vulkan.CStruct.Extends
+import           Vulkan.Core10
+import           Vulkan.Core11
+import           Vulkan.Extensions.VK_EXT_debug_utils
+import           Vulkan.Extensions.VK_KHR_surface
+import           Vulkan.Extensions.VK_KHR_swapchain
+import           Vulkan.Utils.DebugCallback
+import           Vulkan.Utils.ShaderQQ
+import           Vulkan.Zero
 
 main :: IO ()
 main = runManaged $ do

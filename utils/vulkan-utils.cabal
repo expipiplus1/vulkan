@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 83efc385a46860834222574194037b2d82d7377fb6c787565c72ffb39af15107
+-- hash: 023e71167ebc64fae2f82a29569c74854245ddd594efc4803c46b8b1c781033b
 
 name:           vulkan-utils
 version:        0.1.1.0
@@ -25,8 +25,8 @@ source-repository head
 
 library
   exposed-modules:
-      Graphics.Vulkan.Utils.DebugCallback
-      Graphics.Vulkan.Utils.ShaderQQ
+      Vulkan.Utils.DebugCallback
+      Vulkan.Utils.ShaderQQ
   other-modules:
       Paths_vulkan_utils
   hs-source-dirs:

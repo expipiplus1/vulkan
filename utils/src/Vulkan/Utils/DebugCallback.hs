@@ -1,8 +1,8 @@
-module Graphics.Vulkan.Utils.DebugCallback
+module Vulkan.Utils.DebugCallback
   ( debugCallbackPtr
   ) where
 
-import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
+import           Vulkan.Extensions.VK_EXT_debug_utils
 
 -- | A debug callback which prints the message prefixed with "Validation: " to
 -- stderr.

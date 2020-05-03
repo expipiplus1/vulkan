@@ -32,9 +32,9 @@ import           Say
 import           Foreign.Storable               ( peek
                                                 , sizeOf
                                                 )
-import           Graphics.Vulkan.CStruct.Extends
-import qualified Graphics.Vulkan.Core10        as Vk
-import           Graphics.Vulkan.Core10  hiding ( deviceWaitIdle
+import           Vulkan.CStruct.Extends
+import qualified Vulkan.Core10                 as Vk
+import           Vulkan.Core10           hiding ( deviceWaitIdle
                                                 , getDeviceQueue
                                                 , getImageSubresourceLayout
                                                 , getPhysicalDeviceFormatProperties
@@ -53,15 +53,13 @@ import           Graphics.Vulkan.Core10  hiding ( deviceWaitIdle
                                                 , withSemaphore
                                                 , withShaderModule
                                                 )
-import           Graphics.Vulkan.Extensions.VK_EXT_debug_utils
+import           Vulkan.Extensions.VK_EXT_debug_utils
                                          hiding ( setDebugUtilsObjectNameEXT )
-import           Graphics.Vulkan.Utils.DebugCallback
-import           Graphics.Vulkan.Utils.ShaderQQ
-import           Graphics.Vulkan.Zero
-import qualified Graphics.VulkanMemoryAllocator
-                                               as VMA
-import           Graphics.VulkanMemoryAllocator
-                                         hiding ( getPhysicalDeviceProperties
+import           Vulkan.Utils.DebugCallback
+import           Vulkan.Utils.ShaderQQ
+import           Vulkan.Zero
+import qualified VulkanMemoryAllocator         as VMA
+import           VulkanMemoryAllocator   hiding ( getPhysicalDeviceProperties
                                                 , invalidateAllocation
                                                 , withImage
                                                 )
