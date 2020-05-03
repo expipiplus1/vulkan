@@ -179,7 +179,24 @@ main = runResourceT $ do
     liftIO $ BSL.writeFile filename (JP.encodePng image)
     deviceWaitIdle
 
--- | This function sets up everything necessary to render a triangle.
+-- | This function renders a triangle and reads the image on the CPU
+--
+-- It:
+-- - Initializes two images
+--   - A GPU image which is used as the framebuffer
+--   - A CPU image which is copied to and read on the CPU
+-- - Creates a RenderPass with a single subpass
+-- - Creates a graphics pipeline
+-- - Creates command pool and allocated a single command buffer
+-- - Uses the command buffer to
+--   - Render into the GPU image
+--   - Issue a barrier to make it safe to transfer from the GPU image
+--   - Issue a barrier to make it safe to write to the CPU image
+--   - Perform an image copy
+--   - Issue a barrier to make it safe to read the CPU image on the host
+-- - Submits and waits for the command buffer to finishe executing
+-- - Invalidates the CPU image allocation (if it isn't HOST_COHERENT)
+-- - Copies the data from the CPU image and returns it
 render :: V (JP.Image JP.PixelRGBA8)
 render = do
   -- Some things to reuse
