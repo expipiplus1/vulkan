@@ -136,7 +136,6 @@ autoapplyDecs
   ]
   [ 'VMA.invalidateAllocation
   , 'VMA.withImage
-  , 'Vk.withInstance
   , 'Vk.deviceWaitIdle
   , 'Vk.getDeviceQueue
   , 'Vk.getImageSubresourceLayout
@@ -147,6 +146,7 @@ autoapplyDecs
   , 'Vk.withFramebuffer
   , 'Vk.withGraphicsPipelines
   , 'Vk.withImageView
+  , 'Vk.withInstance
   , 'Vk.withPipelineLayout
   , 'Vk.withRenderPass
   , 'Vk.withShaderModule
@@ -399,10 +399,10 @@ render = do
               , renderArea  = Rect2D zero (Extent2D width height)
               , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
               }
-        cmdWithRenderPass commandBuffer
-                          renderPassBeginInfo
-                          SUBPASS_CONTENTS_INLINE
-                          bracket_
+        cmdUseRenderPass commandBuffer
+                         renderPassBeginInfo
+                         SUBPASS_CONTENTS_INLINE
+                         bracket_
           $ do
               cmdBindPipeline commandBuffer
                               PIPELINE_BIND_POINT_GRAPHICS
