@@ -110,8 +110,8 @@ drawFrame dev swapchain graphicsQueue presentQueue imageAvailableSemaphore rende
 
 createSemaphores :: Device -> Managed (Semaphore, Semaphore)
 createSemaphores dev = do
-  imageAvailableSemaphore <- withSemaphore allocate dev zero Nothing
-  renderFinishedSemaphore <- withSemaphore allocate dev zero Nothing
+  imageAvailableSemaphore <- withSemaphore dev zero Nothing allocate
+  renderFinishedSemaphore <- withSemaphore dev zero Nothing allocate
   pure (imageAvailableSemaphore, renderFinishedSemaphore)
 
 createCommandBuffers
@@ -127,19 +127,19 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
     let commandPoolCreateInfo :: CommandPoolCreateInfo
         commandPoolCreateInfo =
           zero { queueFamilyIndex = graphicsQueueFamilyIndex }
-    commandPool <- withCommandPool allocate dev commandPoolCreateInfo Nothing
+    commandPool <- withCommandPool dev commandPoolCreateInfo Nothing allocate
     let commandBufferAllocateInfo :: CommandBufferAllocateInfo
         commandBufferAllocateInfo = zero
           { commandPool        = commandPool
           , level              = COMMAND_BUFFER_LEVEL_PRIMARY
           , commandBufferCount = fromIntegral $ V.length framebuffers
           }
-    buffers <- withCommandBuffers allocate dev commandBufferAllocateInfo
+    buffers <- withCommandBuffers dev commandBufferAllocateInfo allocate
     _ <- liftIO . for (V.zip framebuffers buffers) $ \(framebuffer, buffer) ->
       useCommandBuffer
-          bracket_
           buffer
           zero { flags = COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT }
+          bracket_
         $ do
             let renderPassBeginInfo = zero
                   { renderPass  = renderPass
@@ -195,8 +195,8 @@ createShaders dev = do
           fragColor = colors[gl_VertexIndex];
         }
       |]
-  fragModule <- withShaderModule allocate dev zero { code = fragCode } Nothing
-  vertModule <- withShaderModule allocate dev zero { code = vertCode } Nothing
+  fragModule <- withShaderModule dev zero { code = fragCode } Nothing allocate
+  vertModule <- withShaderModule dev zero { code = vertCode } Nothing allocate
   let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
                                        , module' = vertModule
                                        , name    = "main"
@@ -242,19 +242,19 @@ createRenderPass dev swapchainImageFormat = do
                           .|. ACCESS_COLOR_ATTACHMENT_WRITE_BIT
       }
   withRenderPass
-    allocate
     dev
     zero { attachments  = [attachmentDescription]
          , subpasses    = [subpass]
          , dependencies = [subpassDependency]
          }
     Nothing
+    allocate
 
 createGraphicsPipeline
   :: Device -> RenderPass -> Extent2D -> Format -> Managed Pipeline
 createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
   shaderStages   <- createShaders dev
-  pipelineLayout <- withPipelineLayout allocate dev zero Nothing
+  pipelineLayout <- withPipelineLayout dev zero Nothing allocate
   let
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo = zero
@@ -314,7 +314,7 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
       }
   V.head
     .   snd
-    <$> withGraphicsPipelines allocate dev zero [pipelineCreateInfo] Nothing
+    <$> withGraphicsPipelines dev zero [pipelineCreateInfo] Nothing allocate
 
 createFramebuffers
   :: Device
@@ -332,7 +332,7 @@ createFramebuffers dev imageViews renderPass swapchainExtent =
           , height      = height (swapchainExtent :: Extent2D)
           , layers      = 1
           }
-    withFramebuffer allocate dev framebufferCreateInfo Nothing
+    withFramebuffer dev framebufferCreateInfo Nothing allocate
 
 data VulkanWindow = VulkanWindow
   { vwSdlWindow                :: SDL.Window
@@ -351,11 +351,11 @@ withVulkanWindow :: Text -> Int -> Int -> Managed VulkanWindow
 withVulkanWindow appName width height = do
   window             <- withWindow appName width height
   instanceCreateInfo <- windowInstanceCreateInfo window
-  inst               <- withInstance allocate instanceCreateInfo Nothing
-  _                  <- withDebugUtilsMessengerEXT allocate
-                                                   inst
+  inst               <- withInstance instanceCreateInfo Nothing allocate
+  _                  <- withDebugUtilsMessengerEXT inst
                                                    debugUtilsMessengerCreateInfo
                                                    Nothing
+                                                   allocate
   submitDebugUtilsMessageEXT inst
                              DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                              DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
@@ -381,7 +381,7 @@ withVulkanWindow appName width height = do
                                   }
         }
   imageViews <- for images
-    $ \i -> withImageView allocate dev (imageViewCreateInfo i) Nothing
+    $ \i -> withImageView dev (imageViewCreateInfo i) Nothing allocate
   pure $ VulkanWindow window
                       dev
                       surface
@@ -456,7 +456,7 @@ createGraphicalDevice inst surface = do
         ]
       , enabledExtensionNames = requiredDeviceExtensions
       }
-  dev           <- withDevice allocate physicalDevice deviceCreateInfo Nothing
+  dev           <- withDevice physicalDevice deviceCreateInfo Nothing allocate
   graphicsQueue <- getDeviceQueue2
     dev
     zero { queueFamilyIndex = graphicsQueueFamilyIndex }
@@ -498,7 +498,7 @@ createGraphicalDevice inst surface = do
           , presentMode        = presentMode
           , clipped            = True
           }
-  swapchain <- withSwapchainKHR allocate dev swapchainCreateInfo Nothing
+  swapchain <- withSwapchainKHR dev swapchainCreateInfo Nothing allocate
   pure
     ( dev
     , graphicsQueue

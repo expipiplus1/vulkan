@@ -162,13 +162,13 @@ main = runResourceT $ do
   inst             <- Main.createInstance
   (phys, pdi, dev) <- Main.createDevice inst
   (_, allocator)   <- withAllocator
-    allocate
     zero { flags            = zero
          , physicalDevice   = physicalDeviceHandle phys
          , device           = deviceHandle dev
          , instance'        = instanceHandle inst
          , vulkanApiVersion = myApiVersion
          }
+    allocate
 
   -- Run our application
   runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator $ do
@@ -389,9 +389,9 @@ render = do
   -- - Execute the renderpass
   -- - Transition the images to be able to perform the copy
   -- - Copy the image to CPU mapped memory
-  useCommandBuffer bracket_
-                   commandBuffer
+  useCommandBuffer commandBuffer
                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+                   bracket_
     $ do
         let renderPassBeginInfo = zero
               { renderPass  = renderPass
@@ -399,10 +399,10 @@ render = do
               , renderArea  = Rect2D zero (Extent2D width height)
               , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
               }
-        cmdWithRenderPass bracket_
-                          commandBuffer
+        cmdWithRenderPass commandBuffer
                           renderPassBeginInfo
                           SUBPASS_CONTENTS_INLINE
+                          bracket_
           $ do
               cmdBindPipeline commandBuffer
                               PIPELINE_BIND_POINT_GRAPHICS
@@ -638,7 +638,7 @@ createDevice inst = do
           ]
         }
 
-  (_, dev) <- withDevice allocate phys deviceCreateInfo Nothing
+  (_, dev) <- withDevice phys deviceCreateInfo Nothing allocate
   pure (phys, pdi, dev)
 
 ----------------------------------------------------------------
