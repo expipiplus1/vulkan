@@ -1,4 +1,6 @@
-{ pkgs ? import <nixpkgs> { }, compiler ? "ghc882", hoogle ? true }:
+{ nixpkgsSrc ? builtins.fetchTarball
+  "https://github.com/NixOS/nixpkgs/archive/dbacfa172f9a6399f180bcd0aef7998fdec0d55a.tar.gz"
+, pkgs ? import nixpkgsSrc { }, compiler ? "ghc882", hoogle ? true }:
 
 let
   src = ./.;
