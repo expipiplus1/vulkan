@@ -390,10 +390,8 @@ render = do
   -- - Execute the renderpass
   -- - Transition the images to be able to perform the copy
   -- - Copy the image to CPU mapped memory
-  let between b e a = b *> a <* e
   useCommandBuffer commandBuffer
                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
-                   between
     $ do
         let renderPassBeginInfo = zero
               { renderPass  = renderPass
@@ -404,7 +402,6 @@ render = do
         cmdUseRenderPass commandBuffer
                          renderPassBeginInfo
                          SUBPASS_CONTENTS_INLINE
-                         between
           $ do
               cmdBindPipeline commandBuffer
                               PIPELINE_BIND_POINT_GRAPHICS
