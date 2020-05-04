@@ -171,12 +171,13 @@ main = runResourceT $ do
     allocate
 
   -- Run our application
-  runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator $ do
-    image <- render
-    let filename = "triangle.png"
-    sayErr $ "Writing " <> filename
-    liftIO $ BSL.writeFile filename (JP.encodePng image)
-    deviceWaitIdle
+  runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator
+    . (`finally` deviceWaitIdle)
+    $ do
+        image <- render
+        let filename = "triangle.png"
+        sayErr $ "Writing " <> filename
+        liftIO $ BSL.writeFile filename (JP.encodePng image)
 
 -- | This function renders a triangle and reads the image on the CPU
 --
@@ -389,9 +390,10 @@ render = do
   -- - Execute the renderpass
   -- - Transition the images to be able to perform the copy
   -- - Copy the image to CPU mapped memory
+  let between b e a = b *> a <* e
   useCommandBuffer commandBuffer
                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
-                   bracket_
+                   between
     $ do
         let renderPassBeginInfo = zero
               { renderPass  = renderPass
@@ -402,7 +404,7 @@ render = do
         cmdUseRenderPass commandBuffer
                          renderPassBeginInfo
                          SUBPASS_CONTENTS_INLINE
-                         bracket_
+                         between
           $ do
               cmdBindPipeline commandBuffer
                               PIPELINE_BIND_POINT_GRAPHICS
