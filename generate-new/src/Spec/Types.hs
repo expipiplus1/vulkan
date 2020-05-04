@@ -78,13 +78,13 @@ data Alias = Alias
   , aTarget :: CName
   , aType :: AliasType
   }
-  deriving (Show)
+  deriving (Show, Eq, Ord)
 
 data AliasType
   = TypeAlias
   | TermAlias
   | PatternAlias
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 --
 -- Function Pointers

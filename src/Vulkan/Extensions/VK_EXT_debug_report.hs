@@ -246,15 +246,16 @@ foreign import ccall
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @callback@ /must/ be a valid
+-- -   If @callback@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @callback@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.DebugReportCallbackEXT' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @callback@ /must/ have been created, allocated, or retrieved from
---     @instance@
+-- -   If @callback@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @instance@
 --
 -- == Host Synchronization
 --

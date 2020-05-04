@@ -479,16 +479,10 @@ foreign import ccall
 -- current state for the scissor index @firstScissor@ + i, for i in [0,
 -- @scissorCount@).
 --
--- Each scissor rectangle is described by a 'Rect2D' structure, with the
--- @offset.x@ and @offset.y@ values determining the upper left corner of
--- the scissor rectangle, and the @extent.width@ and @extent.height@ values
--- determining the size in pixels.
---
--- If a render pass transform is enabled, the (@offset.x@ and @offset.y@)
--- and (@extent.width@ and @extent.height@) values are transformed as
--- described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>
--- before participating in the scissor test.
+-- This command sets the state for a given draw when the graphics pipeline
+-- is created with 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 --
 -- == Valid Usage
 --
@@ -845,10 +839,16 @@ foreign import ccall
 -- -   @commandBuffer@ is the command buffer into which the command will be
 --     recorded.
 --
--- -   @minDepthBounds@ is the lower bound of the range of depth values
---     used in the depth bounds test.
+-- -   @minDepthBounds@ is the minimum depth bound.
 --
--- -   @maxDepthBounds@ is the upper bound of the range.
+-- -   @maxDepthBounds@ is the maximum depth bound.
+--
+-- = Description
+--
+-- This command sets the state for a given draw when the graphics pipeline
+-- is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 --
 -- == Valid Usage
 --
@@ -918,6 +918,14 @@ foreign import ccall
 --
 -- -   @compareMask@ is the new value to use as the stencil compare mask.
 --
+-- = Description
+--
+-- This command sets the state for a given draw when the graphics pipeline
+-- is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_COMPARE_MASK'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -984,6 +992,14 @@ foreign import ccall
 --
 -- -   @writeMask@ is the new value to use as the stencil write mask.
 --
+-- = Description
+--
+-- This command sets the state for a given draw when the graphics pipeline
+-- is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK' set
+-- in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -1049,6 +1065,14 @@ foreign import ccall
 --     reference value, as described above for 'cmdSetStencilCompareMask'.
 --
 -- -   @reference@ is the new value to use as the stencil reference value.
+--
+-- = Description
+--
+-- This command sets the state for a given draw when the graphics pipeline
+-- is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE' set
+-- in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 --
 -- == Valid Usage (Implicit)
 --

@@ -84,8 +84,8 @@ import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR)
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR)
-import Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
+import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -104,7 +104,7 @@ import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagBitsKHR(..)
 import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
 import Vulkan.Extensions.WSITypes (HMONITOR)
 import Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR(..))
-import Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
 foreign import ccall
@@ -133,8 +133,8 @@ foreign import ccall
 --     of presentation modes available or queried, as described below.
 --
 -- -   @pPresentModes@ is either @NULL@ or a pointer to an array of
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
---     values, indicating the supported presentation modes.
+--     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values, indicating
+--     the supported presentation modes.
 --
 -- = Description
 --
@@ -157,8 +157,7 @@ foreign import ccall
 -- -   If the value referenced by @pPresentModeCount@ is not @0@, and
 --     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
 --     pointer to an array of @pPresentModeCount@
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
---     values
+--     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values
 --
 -- == Return Codes
 --
@@ -180,7 +179,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
--- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
+-- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
 getPhysicalDeviceSurfacePresentModes2EXT :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT (pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice)))

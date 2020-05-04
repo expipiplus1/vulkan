@@ -796,15 +796,22 @@ foreign import ccall
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @indirectCommandsLayout@ /must/ be a valid
+-- -   If @indirectCommandsLayout@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @indirectCommandsLayout@
+--     /must/ be a valid
 --     'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @indirectCommandsLayout@ /must/ have been created, allocated, or
---     retrieved from @device@
+-- -   If @indirectCommandsLayout@ is a valid handle, it /must/ have been
+--     created, allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @indirectCommandsLayout@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --

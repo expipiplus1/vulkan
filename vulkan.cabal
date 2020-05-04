@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 904fd0208745e05e6a94663c48fb83357f0aa2e9357278ac440968e76160e1ff
+-- hash: 6f1aefb8850d4e135e68ffd35d48c2a46abb2d6e6fc8e26ff93867f7dd077e4b
 
 name:           vulkan
 version:        3.2.0.0
@@ -275,6 +275,7 @@ library
       Vulkan.Extensions.VK_EXT_calibrated_timestamps
       Vulkan.Extensions.VK_EXT_conditional_rendering
       Vulkan.Extensions.VK_EXT_conservative_rasterization
+      Vulkan.Extensions.VK_EXT_custom_border_color
       Vulkan.Extensions.VK_EXT_debug_marker
       Vulkan.Extensions.VK_EXT_debug_report
       Vulkan.Extensions.VK_EXT_debug_utils
@@ -306,6 +307,7 @@ library
       Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
       Vulkan.Extensions.VK_EXT_post_depth_coverage
+      Vulkan.Extensions.VK_EXT_private_data
       Vulkan.Extensions.VK_EXT_queue_family_foreign
       Vulkan.Extensions.VK_EXT_robustness2
       Vulkan.Extensions.VK_EXT_sample_locations

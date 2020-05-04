@@ -20,6 +20,7 @@ module Vulkan.Extensions.VK_KHR_external_semaphore_capabilities  ( pattern STRUC
                                                                  , KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME
                                                                  , pattern KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME
                                                                  , PhysicalDeviceIDPropertiesKHR
+                                                                 , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES_KHR
                                                                  , pattern LUID_SIZE_KHR
                                                                  ) where
 
@@ -49,6 +50,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO))
 import Vulkan.Extensions.VK_KHR_external_memory_capabilities (PhysicalDeviceIDPropertiesKHR)
 import Vulkan.Extensions.VK_KHR_external_memory_capabilities (pattern LUID_SIZE_KHR)
+import Vulkan.Extensions.VK_KHR_external_memory_capabilities (pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES_KHR)
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
 

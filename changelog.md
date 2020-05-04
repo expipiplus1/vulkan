@@ -2,6 +2,7 @@
 
 ## WIP
   - Move package from `Graphics.Vulkan` to just `Vulkan`
+  - Bump API version to 1.2.140
   - Make the continuation the last argument to 'bracket' functions
 
 ## [3.2.0.0] - 2020-05-02

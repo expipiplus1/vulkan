@@ -27,25 +27,25 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.CommandBufferBuilding (Rect2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagBitsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagBitsKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 -- | VkRenderPassTransformBeginInfoQCOM - Structure describing transform
 -- parameters of a render pass instance
 --
 -- == Valid Usage
 --
 -- -   @transform@ /must/ be
---     'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
---     'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
---     'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
 --     or
---     'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
 --
 -- -   The @renderpass@ /must/ have been created with
 --     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@flags@ containing
@@ -59,10 +59,10 @@ import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagBitsKHR'
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
 data RenderPassTransformBeginInfoQCOM = RenderPassTransformBeginInfoQCOM
   { -- | @transform@ is a
-    -- 'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagBitsKHR' value
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
     -- describing the transform to be applied to rasterization.
     transform :: SurfaceTransformFlagBitsKHR }
   deriving (Typeable)
@@ -119,14 +119,14 @@ instance Zero RenderPassTransformBeginInfoQCOM where
 --
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagBitsKHR'
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
 data CommandBufferInheritanceRenderPassTransformInfoQCOM = CommandBufferInheritanceRenderPassTransformInfoQCOM
   { -- | @transform@ /must/ be
-    -- 'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
-    -- 'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
-    -- 'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
+    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
+    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',
     -- or
-    -- 'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
+    -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'
     transform :: SurfaceTransformFlagBitsKHR
   , -- | @renderArea@ is the render area that is affected by the command buffer.
     renderArea :: Rect2D

@@ -49,26 +49,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- = Description
 --
 -- If @coverageToColorEnable@ is 'Vulkan.Core10.BaseType.TRUE', the
--- fragment coverage information is treated as a bitmask with one bit for
--- each sample (as in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-samplemask Sample Mask>
--- section), and this bitmask replaces the first component of the color
--- value corresponding to the fragment shader output location with
--- @Location@ equal to @coverageToColorLocation@ and @Index@ equal to zero.
--- If the color attachment format has fewer bits than the sample coverage,
--- the low bits of the sample coverage bitmask are taken without any
--- clamping. If the color attachment format has more bits than the sample
--- coverage, the high bits of the sample coverage bitmask are filled with
--- zeros.
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-sampleshading Sample Shading>
--- is in use, the coverage bitmask only has bits set for samples that
--- correspond to the fragment shader invocation that shades those samples.
---
--- This pipeline stage occurs after sample counting and before blending,
--- and is always performed after fragment shading regardless of the setting
--- of @EarlyFragmentTests@.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage mask>
+-- replaces the first component of the color value corresponding to the
+-- fragment shader output location with @Location@ equal to
+-- @coverageToColorLocation@ and @Index@ equal to zero. If the color
+-- attachment format has fewer bits than the coverage mask, the low bits of
+-- the sample coverage mask are taken without any clamping. If the color
+-- attachment format has more bits than the coverage mask, the high bits of
+-- the sample coverage mask are filled with zeros.
 --
 -- If @coverageToColorEnable@ is 'Vulkan.Core10.BaseType.FALSE', these
 -- operations are skipped. If this structure is not present, it is as if

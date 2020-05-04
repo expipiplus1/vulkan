@@ -507,12 +507,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-mode-03410]] @mode@ /must/ be
+-- -   @mode@ /must/ be
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR'
 --     or
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
--- -   [[VUID-{refpage}-src-03411]] @src@ /must/ have been built with
+-- -   @src@ /must/ have been built with
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
 --     if @mode@ is
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR'
@@ -939,48 +939,6 @@ foreign import ccall
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
--- -   @raygenShaderBindingOffset@ /must/ be less than the size of
---     @raygenShaderBindingTableBuffer@
---
--- -   @raygenShaderBindingOffset@ /must/ be a multiple of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingOffset@ /must/ be less than the size of
---     @missShaderBindingTableBuffer@
---
--- -   @missShaderBindingOffset@ /must/ be a multiple of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @hitShaderBindingOffset@ /must/ be less than the size of
---     @hitShaderBindingTableBuffer@
---
--- -   @hitShaderBindingOffset@ /must/ be a multiple of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @callableShaderBindingOffset@ /must/ be less than the size of
---     @callableShaderBindingTableBuffer@
---
--- -   @callableShaderBindingOffset@ /must/ be a multiple of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingStride@ /must/ be a multiple of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @hitShaderBindingStride@ /must/ be a multiple of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @callableShaderBindingStride@ /must/ be a multiple of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @missShaderBindingStride@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
--- -   @hitShaderBindingStride@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
--- -   @callableShaderBindingStride@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
 -- -   Any shader group handle referenced by this call /must/ have been
 --     queried from the currently bound ray tracing shader pipeline
 --
@@ -999,6 +957,64 @@ foreign import ccall
 --     other than the framebuffer-space and compute stages in the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point /must/ not write to any resource
+--
+-- -   If @raygenShaderBindingTableBuffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   @raygenShaderBindingOffset@ /must/ be less than the size of
+--     @raygenShaderBindingTableBuffer@
+--
+-- -   @raygenShaderBindingOffset@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   If @missShaderBindingTableBuffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   @missShaderBindingOffset@ /must/ be less than the size of
+--     @missShaderBindingTableBuffer@
+--
+-- -   @missShaderBindingOffset@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   If @hitShaderBindingTableBuffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   @hitShaderBindingOffset@ /must/ be less than the size of
+--     @hitShaderBindingTableBuffer@
+--
+-- -   @hitShaderBindingOffset@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   If @callableShaderBindingTableBuffer@ is non-sparse then it /must/
+--     be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   @callableShaderBindingOffset@ /must/ be less than the size of
+--     @callableShaderBindingTableBuffer@
+--
+-- -   @callableShaderBindingOffset@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   @missShaderBindingStride@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
+--
+-- -   @hitShaderBindingStride@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
+--
+-- -   @callableShaderBindingStride@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
+--
+-- -   @missShaderBindingStride@ /must/ be less than or equal to
+--     'PhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
+--
+-- -   @hitShaderBindingStride@ /must/ be less than or equal to
+--     'PhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
+--
+-- -   @callableShaderBindingStride@ /must/ be less than or equal to
+--     'PhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
 --
 -- -   @width@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]

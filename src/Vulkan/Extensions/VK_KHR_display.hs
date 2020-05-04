@@ -22,18 +22,6 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
                                                                        , ..
                                                                        )
                                          , DisplayPlaneAlphaFlagsKHR
-                                         , SurfaceTransformFlagBitsKHR( SURFACE_TRANSFORM_IDENTITY_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_ROTATE_90_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_ROTATE_180_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_ROTATE_270_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR
-                                                                      , SURFACE_TRANSFORM_INHERIT_BIT_KHR
-                                                                      , ..
-                                                                      )
-                                         , SurfaceTransformFlagsKHR
                                          , KHR_DISPLAY_SPEC_VERSION
                                          , pattern KHR_DISPLAY_SPEC_VERSION
                                          , KHR_DISPLAY_EXTENSION_NAME
@@ -41,6 +29,8 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
                                          , DisplayKHR(..)
                                          , DisplayModeKHR(..)
                                          , SurfaceKHR(..)
+                                         , SurfaceTransformFlagBitsKHR(..)
+                                         , SurfaceTransformFlagsKHR
                                          ) where
 
 import Control.Exception.Base (bracket)
@@ -119,6 +109,8 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Extensions.Handles (SurfaceKHR)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
@@ -130,6 +122,8 @@ import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (DisplayKHR(..))
 import Vulkan.Extensions.Handles (DisplayModeKHR(..))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -710,7 +704,8 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT
 --
 -- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayProperties2KHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D', 'SurfaceTransformFlagsKHR',
+-- 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagsKHR',
 -- 'getPhysicalDeviceDisplayPropertiesKHR'
 data DisplayPropertiesKHR = DisplayPropertiesKHR
   { -- | @display@ is a handle that is used to refer to the display described
@@ -728,7 +723,8 @@ data DisplayPropertiesKHR = DisplayPropertiesKHR
   , -- | @physicalResolution@ describes the physical, native, or preferred
     -- resolution of the display.
     physicalResolution :: Extent2D
-  , -- | @supportedTransforms@ is a bitmask of 'SurfaceTransformFlagBitsKHR'
+  , -- | @supportedTransforms@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
     -- describing which transforms are supported by this display.
     supportedTransforms :: SurfaceTransformFlagsKHR
   , -- | @planeReorderPossible@ tells whether the planes on this display /can/
@@ -1178,7 +1174,8 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 -- -   @displayMode@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.DisplayModeKHR' handle
 --
--- -   @transform@ /must/ be a valid 'SurfaceTransformFlagBitsKHR' value
+-- -   @transform@ /must/ be a valid
+--     'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
 --
 -- -   @alphaMode@ /must/ be a valid 'DisplayPlaneAlphaFlagBitsKHR' value
 --
@@ -1188,7 +1185,8 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 -- 'DisplayPlaneAlphaFlagBitsKHR', 'DisplaySurfaceCreateFlagsKHR',
 -- 'Vulkan.Core10.SharedTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'SurfaceTransformFlagBitsKHR', 'createDisplayPlaneSurfaceKHR'
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR',
+-- 'createDisplayPlaneSurfaceKHR'
 data DisplaySurfaceCreateInfoKHR = DisplaySurfaceCreateInfoKHR
   { -- | @flags@ is reserved for future use, and /must/ be zero.
     flags :: DisplaySurfaceCreateFlagsKHR
@@ -1199,8 +1197,10 @@ data DisplaySurfaceCreateInfoKHR = DisplaySurfaceCreateInfoKHR
     planeIndex :: Word32
   , -- | @planeStackIndex@ is the z-order of the plane.
     planeStackIndex :: Word32
-  , -- | @transform@ is a 'SurfaceTransformFlagBitsKHR' value specifying the
-    -- transformation to apply to images as part of the scanout operation.
+  , -- | @transform@ is a
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
+    -- specifying the transformation to apply to images as part of the scanout
+    -- operation.
     transform :: SurfaceTransformFlagBitsKHR
   , -- | @globalAlpha@ is the global alpha value. This value is ignored if
     -- @alphaMode@ is not 'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR'.
@@ -1371,85 +1371,6 @@ instance Read DisplayPlaneAlphaFlagBitsKHR where
                        expectP (Ident "DisplayPlaneAlphaFlagBitsKHR")
                        v <- step readPrec
                        pure (DisplayPlaneAlphaFlagBitsKHR v)))
-
-
--- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
--- device
---
--- = See Also
---
--- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
--- 'DisplaySurfaceCreateInfoKHR',
--- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
--- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCapabilities2EXT',
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR',
--- 'SurfaceTransformFlagsKHR',
--- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
-newtype SurfaceTransformFlagBitsKHR = SurfaceTransformFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
-
--- | 'SURFACE_TRANSFORM_IDENTITY_BIT_KHR' specifies that image content is
--- presented without being transformed.
-pattern SURFACE_TRANSFORM_IDENTITY_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000001
--- | 'SURFACE_TRANSFORM_ROTATE_90_BIT_KHR' specifies that image content is
--- rotated 90 degrees clockwise.
-pattern SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000002
--- | 'SURFACE_TRANSFORM_ROTATE_180_BIT_KHR' specifies that image content is
--- rotated 180 degrees clockwise.
-pattern SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000004
--- | 'SURFACE_TRANSFORM_ROTATE_270_BIT_KHR' specifies that image content is
--- rotated 270 degrees clockwise.
-pattern SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000008
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR' specifies that image
--- content is mirrored horizontally.
-pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000010
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR' specifies that
--- image content is mirrored horizontally, then rotated 90 degrees
--- clockwise.
-pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000020
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR' specifies that
--- image content is mirrored horizontally, then rotated 180 degrees
--- clockwise.
-pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000040
--- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR' specifies that
--- image content is mirrored horizontally, then rotated 270 degrees
--- clockwise.
-pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000080
--- | 'SURFACE_TRANSFORM_INHERIT_BIT_KHR' specifies that the presentation
--- transform is not specified, and is instead determined by
--- platform-specific considerations and mechanisms outside Vulkan.
-pattern SURFACE_TRANSFORM_INHERIT_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000100
-
-type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
-
-instance Show SurfaceTransformFlagBitsKHR where
-  showsPrec p = \case
-    SURFACE_TRANSFORM_IDENTITY_BIT_KHR -> showString "SURFACE_TRANSFORM_IDENTITY_BIT_KHR"
-    SURFACE_TRANSFORM_ROTATE_90_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_90_BIT_KHR"
-    SURFACE_TRANSFORM_ROTATE_180_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_180_BIT_KHR"
-    SURFACE_TRANSFORM_ROTATE_270_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_270_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR"
-    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR"
-    SURFACE_TRANSFORM_INHERIT_BIT_KHR -> showString "SURFACE_TRANSFORM_INHERIT_BIT_KHR"
-    SurfaceTransformFlagBitsKHR x -> showParen (p >= 11) (showString "SurfaceTransformFlagBitsKHR 0x" . showHex x)
-
-instance Read SurfaceTransformFlagBitsKHR where
-  readPrec = parens (choose [("SURFACE_TRANSFORM_IDENTITY_BIT_KHR", pure SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_ROTATE_90_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_90_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_ROTATE_180_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_180_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_ROTATE_270_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_270_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR)
-                            , ("SURFACE_TRANSFORM_INHERIT_BIT_KHR", pure SURFACE_TRANSFORM_INHERIT_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "SurfaceTransformFlagBitsKHR")
-                       v <- step readPrec
-                       pure (SurfaceTransformFlagBitsKHR v)))
 
 
 type KHR_DISPLAY_SPEC_VERSION = 23

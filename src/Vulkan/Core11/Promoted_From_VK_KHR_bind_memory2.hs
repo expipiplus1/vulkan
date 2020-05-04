@@ -147,7 +147,7 @@ foreign import ccall
 --     individually in separate @pBindInfos@
 --
 -- -   @pBindInfos@ /must/ not refer to the same image subresource more
---     than once.
+--     than once
 --
 -- == Valid Usage (Implicit)
 --

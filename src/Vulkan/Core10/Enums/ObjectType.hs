@@ -25,6 +25,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_DESCRIPTOR_SET
                                                   , OBJECT_TYPE_FRAMEBUFFER
                                                   , OBJECT_TYPE_COMMAND_POOL
+                                                  , OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
                                                   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
                                                   , OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
@@ -146,7 +147,9 @@ import Vulkan.Zero (Zero)
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
--- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT'
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
+-- 'Vulkan.Extensions.VK_EXT_private_data.setPrivateDataEXT'
 newtype ObjectType = ObjectType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -202,6 +205,8 @@ pattern OBJECT_TYPE_DESCRIPTOR_SET = ObjectType 23
 pattern OBJECT_TYPE_FRAMEBUFFER = ObjectType 24
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern OBJECT_TYPE_COMMAND_POOL = ObjectType 25
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT"
+pattern OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT = ObjectType 1000295000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
 pattern OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV = ObjectType 1000277000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR"
@@ -254,6 +259,7 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = ObjectType 1000156000
              OBJECT_TYPE_DESCRIPTOR_SET,
              OBJECT_TYPE_FRAMEBUFFER,
              OBJECT_TYPE_COMMAND_POOL,
+             OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT,
              OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV,
              OBJECT_TYPE_DEFERRED_OPERATION_KHR,
              OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL,
@@ -296,6 +302,7 @@ instance Show ObjectType where
     OBJECT_TYPE_DESCRIPTOR_SET -> showString "OBJECT_TYPE_DESCRIPTOR_SET"
     OBJECT_TYPE_FRAMEBUFFER -> showString "OBJECT_TYPE_FRAMEBUFFER"
     OBJECT_TYPE_COMMAND_POOL -> showString "OBJECT_TYPE_COMMAND_POOL"
+    OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT -> showString "OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT"
     OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV -> showString "OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
     OBJECT_TYPE_DEFERRED_OPERATION_KHR -> showString "OBJECT_TYPE_DEFERRED_OPERATION_KHR"
     OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL -> showString "OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL"
@@ -338,6 +345,7 @@ instance Read ObjectType where
                             , ("OBJECT_TYPE_DESCRIPTOR_SET", pure OBJECT_TYPE_DESCRIPTOR_SET)
                             , ("OBJECT_TYPE_FRAMEBUFFER", pure OBJECT_TYPE_FRAMEBUFFER)
                             , ("OBJECT_TYPE_COMMAND_POOL", pure OBJECT_TYPE_COMMAND_POOL)
+                            , ("OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT", pure OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT)
                             , ("OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV", pure OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV)
                             , ("OBJECT_TYPE_DEFERRED_OPERATION_KHR", pure OBJECT_TYPE_DEFERRED_OPERATION_KHR)
                             , ("OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL", pure OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL)

@@ -178,16 +178,13 @@ foreign import ccall
 -- -   @pOffsets@ /must/ be a valid pointer to an array of @bindingCount@
 --     'Vulkan.Core10.BaseType.DeviceSize' values
 --
--- -   If @pSizes@ is not @NULL@, @pSizes@ /must/ be a valid pointer to an
---     array of @bindingCount@ 'Vulkan.Core10.BaseType.DeviceSize' values
---
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   If @pSizes@ is not @NULL@, @bindingCount@ /must/ be greater than @0@
+-- -   @bindingCount@ /must/ be greater than @0@
 --
 -- -   Both of @commandBuffer@, and the elements of @pBuffers@ /must/ have
 --     been created, allocated, or retrieved from the same

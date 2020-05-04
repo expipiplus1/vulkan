@@ -2,13 +2,6 @@
 module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurfaceCapabilities2EXT
                                                          , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
                                                          , SurfaceCapabilities2EXT(..)
-                                                         , CompositeAlphaFlagBitsKHR( COMPOSITE_ALPHA_OPAQUE_BIT_KHR
-                                                                                    , COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR
-                                                                                    , COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR
-                                                                                    , COMPOSITE_ALPHA_INHERIT_BIT_KHR
-                                                                                    , ..
-                                                                                    )
-                                                         , CompositeAlphaFlagsKHR
                                                          , SurfaceCounterFlagBitsEXT( SURFACE_COUNTER_VBLANK_EXT
                                                                                     , ..
                                                                                     )
@@ -18,6 +11,8 @@ module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurf
                                                          , EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME
                                                          , pattern EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME
                                                          , SurfaceKHR(..)
+                                                         , CompositeAlphaFlagBitsKHR(..)
+                                                         , CompositeAlphaFlagsKHR
                                                          , SurfaceTransformFlagBitsKHR(..)
                                                          , SurfaceTransformFlagsKHR
                                                          ) where
@@ -53,6 +48,7 @@ import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagsKHR)
 import Vulkan.Core10.SharedTypes (Extent2D)
 import Vulkan.Core10.BaseType (Flags)
 import Vulkan.CStruct (FromCStruct)
@@ -67,8 +63,8 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Extensions.Handles (SurfaceKHR)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagBitsKHR)
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
@@ -76,9 +72,11 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagBitsKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagsKHR)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagBitsKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -167,12 +165,13 @@ pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = STRUCTURE_TYPE_SURFACE_CAPABI
 --
 -- = See Also
 --
--- 'CompositeAlphaFlagsKHR', 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagsKHR',
+-- 'Vulkan.Core10.SharedTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'SurfaceCounterFlagsEXT',
--- 'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagBitsKHR',
--- 'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagsKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagsKHR',
 -- 'getPhysicalDeviceSurfaceCapabilities2EXT'
 data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
   { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
@@ -263,66 +262,6 @@ instance Zero SurfaceCapabilities2EXT where
            zero
            zero
            zero
-
-
--- | VkCompositeAlphaFlagBitsKHR - alpha compositing modes supported on a
--- device
---
--- = Description
---
--- These values are described as follows:
---
--- = See Also
---
--- 'CompositeAlphaFlagsKHR',
--- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
-newtype CompositeAlphaFlagBitsKHR = CompositeAlphaFlagBitsKHR Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits)
-
--- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha channel, if it exists, of
--- the images is ignored in the compositing process. Instead, the image is
--- treated as if it has a constant alpha of 1.0.
-pattern COMPOSITE_ALPHA_OPAQUE_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000001
--- | 'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha channel, if it
--- exists, of the images is respected in the compositing process. The
--- non-alpha channels of the image are expected to already be multiplied by
--- the alpha channel by the application.
-pattern COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000002
--- | 'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha channel, if it
--- exists, of the images is respected in the compositing process. The
--- non-alpha channels of the image are not expected to already be
--- multiplied by the alpha channel by the application; instead, the
--- compositor will multiply the non-alpha channels of the image by the
--- alpha channel during compositing.
-pattern COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000004
--- | 'COMPOSITE_ALPHA_INHERIT_BIT_KHR': The way in which the presentation
--- engine treats the alpha channel in the images is unknown to the Vulkan
--- API. Instead, the application is responsible for setting the composite
--- alpha blending mode using native window system commands. If the
--- application does not set the blending mode using native window system
--- commands, then a platform-specific default will be used.
-pattern COMPOSITE_ALPHA_INHERIT_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000008
-
-type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
-
-instance Show CompositeAlphaFlagBitsKHR where
-  showsPrec p = \case
-    COMPOSITE_ALPHA_OPAQUE_BIT_KHR -> showString "COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
-    COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR -> showString "COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR"
-    COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR -> showString "COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR"
-    COMPOSITE_ALPHA_INHERIT_BIT_KHR -> showString "COMPOSITE_ALPHA_INHERIT_BIT_KHR"
-    CompositeAlphaFlagBitsKHR x -> showParen (p >= 11) (showString "CompositeAlphaFlagBitsKHR 0x" . showHex x)
-
-instance Read CompositeAlphaFlagBitsKHR where
-  readPrec = parens (choose [("COMPOSITE_ALPHA_OPAQUE_BIT_KHR", pure COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-                            , ("COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR", pure COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR)
-                            , ("COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR", pure COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR)
-                            , ("COMPOSITE_ALPHA_INHERIT_BIT_KHR", pure COMPOSITE_ALPHA_INHERIT_BIT_KHR)]
-                     +++
-                     prec 10 (do
-                       expectP (Ident "CompositeAlphaFlagBitsKHR")
-                       v <- step readPrec
-                       pure (CompositeAlphaFlagBitsKHR v)))
 
 
 -- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types

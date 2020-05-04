@@ -7,8 +7,6 @@ module Vulkan.Extensions.VK_EXT_external_memory_host  ( getMemoryHostPointerProp
                                                       , pattern EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION
                                                       , EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
                                                       , pattern EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
-                                                      , ExternalMemoryHandleTypeFlagsKHR
-                                                      , ExternalMemoryHandleTypeFlagBitsKHR
                                                       ) where
 
 import Control.Monad.IO.Class (liftIO)
@@ -52,8 +50,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMPORT_ME
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.VK_KHR_external_memory_capabilities (ExternalMemoryHandleTypeFlagBitsKHR)
-import Vulkan.Extensions.VK_KHR_external_memory_capabilities (ExternalMemoryHandleTypeFlagsKHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

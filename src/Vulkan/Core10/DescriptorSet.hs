@@ -1783,6 +1783,11 @@ instance Zero CopyDescriptorSet where
 --     and @descriptorCount@ is not @0@, then @stageFlags@ /must/ be @0@ or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
 --
+-- -   The sampler objects indicated by @pImmutableSamplers@ /must/ not
+--     have a @borderColor@ with one of the values
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @descriptorType@ /must/ be a valid

@@ -72,8 +72,7 @@ foreign import ccall
 --
 -- -   If @buffer@ was created with the
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @buffer@ /must/ be bound to
---     memory.
+--     external memory handle type, then @buffer@ /must/ be bound to memory
 --
 -- == Valid Usage (Implicit)
 --
@@ -292,7 +291,7 @@ foreign import ccall
 --
 -- -   If @image@ was created with the
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @image@ /must/ be bound to memory.
+--     external memory handle type, then @image@ /must/ be bound to memory
 --
 -- == Valid Usage (Implicit)
 --

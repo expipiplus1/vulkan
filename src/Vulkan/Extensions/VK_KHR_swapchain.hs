@@ -99,8 +99,8 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.BaseType (Bool32)
 import Vulkan.CStruct.Extends (Chain)
-import Vulkan.Extensions.VK_EXT_swapchain_colorspace (ColorSpaceKHR)
-import Vulkan.Extensions.VK_EXT_display_surface_counter (CompositeAlphaFlagBitsKHR)
+import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR)
+import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagBitsKHR)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireNextImage2KHR))
@@ -136,7 +136,7 @@ import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_GGP_frame_token (PresentFrameTokenGGP)
-import Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR)
+import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (PresentRegionsKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PresentTimesInfoGOOGLE)
 import Vulkan.Core10.Handles (Queue)
@@ -153,7 +153,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFul
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
 import Vulkan.Extensions.Handles (SurfaceKHR)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagBitsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (SwapchainCounterCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisplayNativeHdrCreateInfoAMD)
 import Vulkan.Extensions.Handles (SwapchainKHR)
@@ -173,13 +173,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_SWA
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.VK_EXT_swapchain_colorspace (ColorSpaceKHR(..))
-import Vulkan.Extensions.VK_EXT_display_surface_counter (CompositeAlphaFlagBitsKHR(..))
-import Vulkan.Extensions.VK_EXT_display_surface_counter (CompositeAlphaFlagsKHR)
-import Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagBitsKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagsKHR)
+import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagBitsKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -705,7 +705,7 @@ foreign import ccall
 -- pixel of the presented 'Vulkan.Core10.Handles.Image' at coordinates
 -- (0,0) would appear at the upper left pixel of the platform surface
 -- (assuming
--- 'Vulkan.Extensions.VK_KHR_display.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
 -- and the display standing the right way up).
 --
 -- If 'queuePresentKHR' fails to enqueue the corresponding set of queue
@@ -1121,7 +1121,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
 --
 -- -   @preTransform@ is a
---     'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagBitsKHR' value
+--     'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
 --     describing the transform, relative to the presentation engine’s
 --     natural orientation, applied to the image content prior to
 --     presentation. If it does not match the @currentTransform@ value
@@ -1131,10 +1131,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     the presentation operation.
 --
 -- -   @compositeAlpha@ is a
---     'Vulkan.Extensions.VK_EXT_display_surface_counter.CompositeAlphaFlagBitsKHR'
---     value indicating the alpha compositing mode to use when this surface
---     is composited together with other surfaces on certain window
---     systems.
+--     'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR' value
+--     indicating the alpha compositing mode to use when this surface is
+--     composited together with other surfaces on certain window systems.
 --
 -- -   @presentMode@ is the presentation mode the swapchain will use. A
 --     swapchain’s present mode determines how incoming present requests
@@ -1219,9 +1218,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     for the surface if the returned @maxImageCount@ is not zero
 --
 -- -   If @presentMode@ is not
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
 --     nor
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR',
 --     then @minImageCount@ /must/ be greater than or equal to the value
 --     returned in the @minImageCount@ member of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
@@ -1230,9 +1229,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     for the surface
 --
 -- -   @minImageCount@ /must/ be @1@ if @presentMode@ is either
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
 --     or
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR'
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR'
 --
 -- -   @imageFormat@ and @imageColorSpace@ /must/ match the @format@ and
 --     @colorSpace@ members, respectively, of one of the
@@ -1259,11 +1258,10 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     for the surface
 --
 -- -   If @presentMode@ is
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_IMMEDIATE_KHR',
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_MAILBOX_KHR',
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_FIFO_KHR'
---     or
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_FIFO_RELAXED_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR',
 --     @imageUsage@ /must/ be a subset of the supported usage flags present
 --     in the @supportedUsageFlags@ member of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
@@ -1272,9 +1270,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     for @surface@
 --
 -- -   If @presentMode@ is
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
 --     or
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR',
+--     'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR',
 --     @imageUsage@ /must/ be a subset of the supported usage flags present
 --     in the @sharedPresentSupportedUsageFlags@ member of the
 --     'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR'
@@ -1315,8 +1313,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     for the surface
 --
 -- -   @presentMode@ /must/ be one of the
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
---     values returned by
+--     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR'
 --     for the surface
 --
@@ -1385,7 +1382,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     value
 --
 -- -   @imageColorSpace@ /must/ be a valid
---     'Vulkan.Extensions.VK_EXT_swapchain_colorspace.ColorSpaceKHR' value
+--     'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR' value
 --
 -- -   @imageUsage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
@@ -1396,15 +1393,13 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
 -- -   @preTransform@ /must/ be a valid
---     'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagBitsKHR' value
+--     'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
 --
 -- -   @compositeAlpha@ /must/ be a valid
---     'Vulkan.Extensions.VK_EXT_display_surface_counter.CompositeAlphaFlagBitsKHR'
---     value
+--     'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR' value
 --
 -- -   @presentMode@ /must/ be a valid
---     'Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
---     value
+--     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' value
 --
 -- -   If @oldSwapchain@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @oldSwapchain@ /must/ be a valid
@@ -1420,16 +1415,16 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 -- = See Also
 --
 -- 'Vulkan.Core10.BaseType.Bool32',
--- 'Vulkan.Extensions.VK_EXT_swapchain_colorspace.ColorSpaceKHR',
--- 'Vulkan.Extensions.VK_EXT_display_surface_counter.CompositeAlphaFlagBitsKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR',
 -- 'Vulkan.Core10.SharedTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
--- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR',
 -- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR',
--- 'Vulkan.Extensions.VK_KHR_display.SurfaceTransformFlagBitsKHR',
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR',
 -- 'SwapchainCreateFlagsKHR', 'Vulkan.Extensions.Handles.SwapchainKHR',
 -- 'Vulkan.Extensions.VK_KHR_display_swapchain.createSharedSwapchainsKHR',
 -- 'createSwapchainKHR'
@@ -1450,9 +1445,8 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
   , -- | @imageFormat@ is a 'Vulkan.Core10.Enums.Format.Format' value specifying
     -- the format the swapchain image(s) will be created with.
     imageFormat :: Format
-  , -- | @imageColorSpace@ is a
-    -- 'Vulkan.Extensions.VK_EXT_swapchain_colorspace.ColorSpaceKHR' value
-    -- specifying the way the swapchain interprets image data.
+  , -- | @imageColorSpace@ is a 'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR'
+    -- value specifying the way the swapchain interprets image data.
     imageColorSpace :: ColorSpaceKHR
   , -- | @imageExtent@ is the size (in pixels) of the swapchain image(s). The
     -- behavior is platform-dependent if the image extent does not match the

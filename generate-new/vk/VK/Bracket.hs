@@ -84,6 +84,7 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "DebugReportCallbackEXT"
     , cdBracket "DebugUtilsMessengerEXT"
     , cdBracket "DeferredOperationKHR"
+    , cdBracket "PrivateDataSlotEXT"
     , pure commandBuffersBracket
     , afBracket "Memory"
     , afBracket "DescriptorSets"

@@ -4,6 +4,7 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , AccelerationStructureKHR(..)
                                   , PerformanceConfigurationINTEL(..)
                                   , DeferredOperationKHR(..)
+                                  , PrivateDataSlotEXT(..)
                                   , DisplayKHR(..)
                                   , DisplayModeKHR(..)
                                   , SurfaceKHR(..)
@@ -164,6 +165,21 @@ newtype DeferredOperationKHR = DeferredOperationKHR Word64
   deriving anyclass (IsHandle)
 instance Show DeferredOperationKHR where
   showsPrec p (DeferredOperationKHR x) = showParen (p >= 11) (showString "DeferredOperationKHR 0x" . showHex x)
+
+
+-- | VkPrivateDataSlotEXT - Opaque handle to a private data slot object
+--
+-- = See Also
+--
+-- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT',
+-- 'Vulkan.Extensions.VK_EXT_private_data.destroyPrivateDataSlotEXT',
+-- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
+-- 'Vulkan.Extensions.VK_EXT_private_data.setPrivateDataEXT'
+newtype PrivateDataSlotEXT = PrivateDataSlotEXT Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show PrivateDataSlotEXT where
+  showsPrec p (PrivateDataSlotEXT x) = showParen (p >= 11) (showString "PrivateDataSlotEXT 0x" . showHex x)
 
 
 -- | VkDisplayKHR - Opaque handle to a display object
