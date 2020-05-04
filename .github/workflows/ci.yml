@@ -47,5 +47,14 @@ jobs:
         cabal update
         cabal build --only-dependencies --enable-tests --enable-benchmarks
 
-    - name: Build
-      run: cabal build --enable-tests --enable-benchmarks vulkan VulkanMemoryAllocator vulkan-utils vulkan-examples
+    - name: Build vulkan
+      run: cabal build --enable-tests --enable-benchmarks vulkan
+
+    - name: Build VulkanMemoryAllocator
+      run: cabal build --enable-tests --enable-benchmarks VulkanMemoryAllocator
+
+    - name: Build vulkan-utils
+      run: cabal build --enable-tests --enable-benchmarks vulkan-utils
+
+    - name: Build vulkan-examples
+      run: cabal build --enable-tests --enable-benchmarks vulkan-examples
