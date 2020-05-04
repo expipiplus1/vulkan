@@ -5,7 +5,7 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              , queueEndDebugUtilsLabelEXT
                                              , queueInsertDebugUtilsLabelEXT
                                              , cmdBeginDebugUtilsLabelEXT
-                                             , cmdWithDebugUtilsLabelEXT
+                                             , cmdUseDebugUtilsLabelEXT
                                              , cmdEndDebugUtilsLabelEXT
                                              , cmdInsertDebugUtilsLabelEXT
                                              , createDebugUtilsMessengerEXT
@@ -429,19 +429,14 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'cmdBeginDebugUtilsLabelEXT' and 'cmdEndDebugUtilsLabelEXT'
 --
--- To ensure that 'cmdEndDebugUtilsLabelEXT' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-cmdWithDebugUtilsLabelEXT :: forall io r . MonadIO io => CommandBuffer -> DebugUtilsLabelEXT -> (io () -> io () -> r) -> r
-cmdWithDebugUtilsLabelEXT commandBuffer pLabelInfo b =
-  b (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo)
-    (cmdEndDebugUtilsLabelEXT commandBuffer)
+-- Note that 'cmdEndDebugUtilsLabelEXT' is *not* called if an exception is
+-- thrown by the inner action.
+cmdUseDebugUtilsLabelEXT :: forall io r . MonadIO io => CommandBuffer -> DebugUtilsLabelEXT -> io r -> io r
+cmdUseDebugUtilsLabelEXT commandBuffer pLabelInfo a =
+  (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo) *> a <* (cmdEndDebugUtilsLabelEXT commandBuffer)
 
 
 foreign import ccall

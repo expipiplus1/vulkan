@@ -34,14 +34,14 @@ module Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                             , cmdWaitEvents
                                             , cmdPipelineBarrier
                                             , cmdBeginQuery
-                                            , cmdWithQuery
+                                            , cmdUseQuery
                                             , cmdEndQuery
                                             , cmdResetQueryPool
                                             , cmdWriteTimestamp
                                             , cmdCopyQueryPoolResults
                                             , cmdPushConstants
                                             , cmdBeginRenderPass
-                                            , cmdWithRenderPass
+                                            , cmdUseRenderPass
                                             , cmdNextSubpass
                                             , cmdEndRenderPass
                                             , cmdExecuteCommands
@@ -6435,19 +6435,14 @@ cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
   vkCmdBeginQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags)
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'cmdBeginQuery' and 'cmdEndQuery'
 --
--- To ensure that 'cmdEndQuery' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-cmdWithQuery :: forall io r . MonadIO io => CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> (io () -> io () -> r) -> r
-cmdWithQuery commandBuffer queryPool query flags b =
-  b (cmdBeginQuery commandBuffer queryPool query flags)
-    (cmdEndQuery commandBuffer queryPool query)
+-- Note that 'cmdEndQuery' is *not* called if an exception is thrown by the
+-- inner action.
+cmdUseQuery :: forall io r . MonadIO io => CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> io r -> io r
+cmdUseQuery commandBuffer queryPool query flags a =
+  (cmdBeginQuery commandBuffer queryPool query flags) *> a <* (cmdEndQuery commandBuffer queryPool query)
 
 
 foreign import ccall
@@ -7343,19 +7338,14 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $
   lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) pRenderPassBegin (contents)
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'cmdBeginRenderPass' and 'cmdEndRenderPass'
 --
--- To ensure that 'cmdEndRenderPass' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-cmdWithRenderPass :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> (io () -> io () -> r) -> r
-cmdWithRenderPass commandBuffer pRenderPassBegin contents b =
-  b (cmdBeginRenderPass commandBuffer pRenderPassBegin contents)
-    (cmdEndRenderPass commandBuffer)
+-- Note that 'cmdEndRenderPass' is *not* called if an exception is thrown
+-- by the inner action.
+cmdUseRenderPass :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io r -> io r
+cmdUseRenderPass commandBuffer pRenderPassBegin contents a =
+  (cmdBeginRenderPass commandBuffer pRenderPassBegin contents) *> a <* (cmdEndRenderPass commandBuffer)
 
 
 foreign import ccall

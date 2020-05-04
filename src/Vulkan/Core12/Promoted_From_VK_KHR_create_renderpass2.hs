@@ -1,7 +1,7 @@
 {-# language CPP #-}
 module Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( createRenderPass2
                                                               , cmdBeginRenderPass2
-                                                              , cmdWithRenderPass2
+                                                              , cmdUseRenderPass2
                                                               , cmdNextSubpass2
                                                               , cmdEndRenderPass2
                                                               , AttachmentDescription2(..)
@@ -389,19 +389,14 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
   lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) pRenderPassBegin pSubpassBeginInfo
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'cmdBeginRenderPass2' and 'cmdEndRenderPass2'
 --
--- To ensure that 'cmdEndRenderPass2' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-cmdWithRenderPass2 :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> (io () -> io () -> r) -> r
-cmdWithRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo b =
-  b (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo)
-    (cmdEndRenderPass2 commandBuffer pSubpassEndInfo)
+-- Note that 'cmdEndRenderPass2' is *not* called if an exception is thrown
+-- by the inner action.
+cmdUseRenderPass2 :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> io r -> io r
+cmdUseRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo a =
+  (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo) *> a <* (cmdEndRenderPass2 commandBuffer pSubpassEndInfo)
 
 
 foreign import ccall
