@@ -194,7 +194,7 @@ main = runResourceT $ do
 --   - Issue a barrier to make it safe to write to the CPU image
 --   - Perform an image copy
 --   - Issue a barrier to make it safe to read the CPU image on the host
--- - Submits and waits for the command buffer to finishe executing
+-- - Submits and waits for the command buffer to finish executing
 -- - Invalidates the CPU image allocation (if it isn't HOST_COHERENT)
 -- - Copies the data from the CPU image and returns it
 render :: V (JP.Image JP.PixelRGBA8)
