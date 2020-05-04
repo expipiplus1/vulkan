@@ -5,6 +5,8 @@ module Vulkan.Core10.Enums.BorderColor  (BorderColor( BORDER_COLOR_FLOAT_TRANSPA
                                                     , BORDER_COLOR_INT_OPAQUE_BLACK
                                                     , BORDER_COLOR_FLOAT_OPAQUE_WHITE
                                                     , BORDER_COLOR_INT_OPAQUE_WHITE
+                                                    , BORDER_COLOR_INT_CUSTOM_EXT
+                                                    , BORDER_COLOR_FLOAT_CUSTOM_EXT
                                                     , ..
                                                     )) where
 
@@ -53,12 +55,26 @@ pattern BORDER_COLOR_FLOAT_OPAQUE_WHITE = BorderColor 4
 -- | 'BORDER_COLOR_INT_OPAQUE_WHITE' specifies an opaque, integer format,
 -- white color.
 pattern BORDER_COLOR_INT_OPAQUE_WHITE = BorderColor 5
+-- | 'BORDER_COLOR_INT_CUSTOM_EXT' indicates that a
+-- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
+-- structure is present in the
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain which contains
+-- the color data in integer format.
+pattern BORDER_COLOR_INT_CUSTOM_EXT = BorderColor 1000287004
+-- | 'BORDER_COLOR_FLOAT_CUSTOM_EXT' indicates that a
+-- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
+-- structure is present in the
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain which contains
+-- the color data in floating-point format.
+pattern BORDER_COLOR_FLOAT_CUSTOM_EXT = BorderColor 1000287003
 {-# complete BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
              BORDER_COLOR_INT_TRANSPARENT_BLACK,
              BORDER_COLOR_FLOAT_OPAQUE_BLACK,
              BORDER_COLOR_INT_OPAQUE_BLACK,
              BORDER_COLOR_FLOAT_OPAQUE_WHITE,
-             BORDER_COLOR_INT_OPAQUE_WHITE :: BorderColor #-}
+             BORDER_COLOR_INT_OPAQUE_WHITE,
+             BORDER_COLOR_INT_CUSTOM_EXT,
+             BORDER_COLOR_FLOAT_CUSTOM_EXT :: BorderColor #-}
 
 instance Show BorderColor where
   showsPrec p = \case
@@ -68,6 +84,8 @@ instance Show BorderColor where
     BORDER_COLOR_INT_OPAQUE_BLACK -> showString "BORDER_COLOR_INT_OPAQUE_BLACK"
     BORDER_COLOR_FLOAT_OPAQUE_WHITE -> showString "BORDER_COLOR_FLOAT_OPAQUE_WHITE"
     BORDER_COLOR_INT_OPAQUE_WHITE -> showString "BORDER_COLOR_INT_OPAQUE_WHITE"
+    BORDER_COLOR_INT_CUSTOM_EXT -> showString "BORDER_COLOR_INT_CUSTOM_EXT"
+    BORDER_COLOR_FLOAT_CUSTOM_EXT -> showString "BORDER_COLOR_FLOAT_CUSTOM_EXT"
     BorderColor x -> showParen (p >= 11) (showString "BorderColor " . showsPrec 11 x)
 
 instance Read BorderColor where
@@ -76,7 +94,9 @@ instance Read BorderColor where
                             , ("BORDER_COLOR_FLOAT_OPAQUE_BLACK", pure BORDER_COLOR_FLOAT_OPAQUE_BLACK)
                             , ("BORDER_COLOR_INT_OPAQUE_BLACK", pure BORDER_COLOR_INT_OPAQUE_BLACK)
                             , ("BORDER_COLOR_FLOAT_OPAQUE_WHITE", pure BORDER_COLOR_FLOAT_OPAQUE_WHITE)
-                            , ("BORDER_COLOR_INT_OPAQUE_WHITE", pure BORDER_COLOR_INT_OPAQUE_WHITE)]
+                            , ("BORDER_COLOR_INT_OPAQUE_WHITE", pure BORDER_COLOR_INT_OPAQUE_WHITE)
+                            , ("BORDER_COLOR_INT_CUSTOM_EXT", pure BORDER_COLOR_INT_CUSTOM_EXT)
+                            , ("BORDER_COLOR_FLOAT_CUSTOM_EXT", pure BORDER_COLOR_FLOAT_CUSTOM_EXT)]
                      +++
                      prec 10 (do
                        expectP (Ident "BorderColor")

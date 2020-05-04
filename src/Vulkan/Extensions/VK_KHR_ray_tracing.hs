@@ -326,15 +326,22 @@ foreign import ccall
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @accelerationStructure@ /must/ be a valid
+-- -   If @accelerationStructure@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @accelerationStructure@
+--     /must/ be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @accelerationStructure@ /must/ have been created, allocated, or
---     retrieved from @device@
+-- -   If @accelerationStructure@ is a valid handle, it /must/ have been
+--     created, allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @accelerationStructure@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --
@@ -637,7 +644,9 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   All 'DeviceOrHostAddressConstKHR' referenced by this command /must/
---     contain valid device addresses
+--     contain valid device addresses for a buffer bound to device memory.
+--     If the buffer is non-sparse then it /must/ be bound completely and
+--     contiguously to a single VkDeviceMemory object
 --
 -- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
@@ -647,8 +656,7 @@ foreign import ccall
 --     structure /must/ not be included in the @pNext@ chain of the
 --     'CopyAccelerationStructureToMemoryInfoKHR' structure
 --
--- -   [[VUID-{refpage}-mode-03412]] @mode@ /must/ be
---     'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
+-- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -813,7 +821,9 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   All 'DeviceOrHostAddressKHR' referenced by this command /must/
---     contain valid device addresses
+--     contain valid device addresses for a buffer bound to device memory.
+--     If the buffer is non-sparse then it /must/ be bound completely and
+--     contiguously to a single VkDeviceMemory object
 --
 -- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
@@ -823,12 +833,11 @@ foreign import ccall
 --     structure /must/ not be included in the @pNext@ chain of the
 --     'CopyMemoryToAccelerationStructureInfoKHR' structure
 --
--- -   [[VUID-{refpage}-mode-03413]] @mode@ /must/ be
---     'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
+-- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
 --
--- -   [[VUID-{refpage}-pInfo-03414]] The data in @pInfo->src@ /must/ have
---     a format compatible with the destination physical device as returned
---     by 'getDeviceAccelerationStructureCompatibilityKHR'
+-- -   The data in @pInfo->src@ /must/ have a format compatible with the
+--     destination physical device as returned by
+--     'getDeviceAccelerationStructureCompatibilityKHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -994,13 +1003,13 @@ foreign import ccall
 -- -   The queries identified by @queryPool@ and @firstQuery@ /must/ be
 --     /unavailable/
 --
--- -   [[VUID-{refpage}-accelerationStructures-03431]] All acceleration
---     structures in @accelerationStructures@ /must/ have been built with
+-- -   All acceleration structures in @accelerationStructures@ /must/ have
+--     been built with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' if
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --
--- -   [[VUID-{refpage}-queryType-03432]] @queryType@ /must/ be
+-- -   @queryType@ /must/ be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
@@ -1128,13 +1137,13 @@ foreign import ccall
 -- -   The acceleration structures referenced by @pAccelerationStructures@
 --     /must/ be bound to host-visible memory
 --
--- -   [[VUID-{refpage}-accelerationStructures-03431]] All acceleration
---     structures in @accelerationStructures@ /must/ have been built with
+-- -   All acceleration structures in @accelerationStructures@ /must/ have
+--     been built with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' if
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --
--- -   [[VUID-{refpage}-queryType-03432]] @queryType@ /must/ be
+-- -   @queryType@ /must/ be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
@@ -1203,17 +1212,17 @@ foreign import ccall
 -- -   @commandBuffer@ is the command buffer into which the command will be
 --     recorded.
 --
--- -   @pRaygenShaderBindingTable@ is the strided buffer range that holds
+-- -   @pRaygenShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
 --     the shader binding table data for the ray generation shader stage.
 --
--- -   @pMissShaderBindingTable@ is the strided buffer range that holds the
---     shader binding table data for the miss shader stage.
+-- -   @pMissShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
+--     the shader binding table data for the miss shader stage.
 --
--- -   @pHitShaderBindingTable@ is the strided buffer range that holds the
---     shader binding table data for the hit shader stage.
+-- -   @pHitShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
+--     the shader binding table data for the hit shader stage.
 --
--- -   @pCallableShaderBindingTable@ is the strided buffer range that holds
---     the shader binding table data for the callable shader stage.
+-- -   @pCallableShaderBindingTable@ is a 'StridedBufferRegionKHR' that
+--     holds the shader binding table data for the callable shader stage.
 --
 -- -   @width@ is the width of the ray trace query dimensions.
 --
@@ -1364,48 +1373,6 @@ foreign import ccall
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
--- -   @raygenShaderBindingOffset@ /must/ be less than the size of
---     @raygenShaderBindingTableBuffer@
---
--- -   @raygenShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingOffset@ /must/ be less than the size of
---     @missShaderBindingTableBuffer@
---
--- -   @missShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @hitShaderBindingOffset@ /must/ be less than the size of
---     @hitShaderBindingTableBuffer@
---
--- -   @hitShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @callableShaderBindingOffset@ /must/ be less than the size of
---     @callableShaderBindingTableBuffer@
---
--- -   @callableShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @hitShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @callableShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @missShaderBindingStride@ /must/ be less than or equal to
---     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
--- -   @hitShaderBindingStride@ /must/ be less than or equal to
---     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
--- -   @callableShaderBindingStride@ /must/ be less than or equal to
---     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
 -- -   Any shader group handle referenced by this call /must/ have been
 --     queried from the currently bound ray tracing shader pipeline
 --
@@ -1414,6 +1381,136 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
 --     bound ray tracing pipeline
+--
+-- -   If @pRayGenShaderBindingTable->buffer@ is non-sparse then it /must/
+--     be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pRayGenShaderBindingTable@ /must/ be less
+--     than the size of the @pRayGenShaderBindingTable->buffer@
+--
+-- -   @pRayGenShaderBindingTable->offset@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pRayGenShaderBindingTable->offset@ +
+--     @pRayGenShaderBindingTable->size@ /must/ be less than or equal to
+--     the size of @pRayGenShaderBindingTable->buffer@
+--
+-- -   The @size@ member of @pRayGenShaderBindingTable@ /must/ be equal to
+--     its @stride@ member
+--
+-- -   If @pMissShaderBindingTable->buffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be less than
+--     the size of @pMissShaderBindingTable->buffer@
+--
+-- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pMissShaderBindingTable->offset@ + @pMissShaderBindingTable->size@
+--     /must/ be less than or equal to the size of
+--     @pMissShaderBindingTable->buffer@
+--
+-- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be less than
+--     or equal to
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   If @pHitShaderBindingTable->buffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be less than
+--     the size of @pHitShaderBindingTable->buffer@
+--
+-- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be a multiple
+--     of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pHitShaderBindingTable->offset@ + @pHitShaderBindingTable->size@
+--     /must/ be less than or equal to the size of
+--     @pHitShaderBindingTable->buffer@
+--
+-- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be a multiple
+--     of 'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be less than
+--     or equal to
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   If @pCallableShaderBindingTable->buffer@ is non-sparse then it
+--     /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be less
+--     than the size of @pCallableShaderBindingTable->buffer@
+--
+-- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pCallableShaderBindingTable->offset@ +
+--     @pCallableShaderBindingTable->size@ /must/ be less than or equal to
+--     the size of @pCallableShaderBindingTable->buffer@
+--
+-- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be less
+--     than or equal to
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
+--     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
+--     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
+--     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
+--     the shader group handle identified by @pMissShaderBindingTable@
+--     /must/ contain a valid miss shader
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
+--     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     command in order to execute an any hit shader /must/ not be set to
+--     zero
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
+--     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     command in order to execute a closest hit shader /must/ not be set
+--     to zero
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
+--     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     command in order to execute an intersection shader /must/ not be set
+--     to zero
 --
 -- -   If @commandBuffer@ is a protected command buffer, any resource
 --     written to by the 'Vulkan.Core10.Handles.Pipeline' object bound to
@@ -1433,51 +1530,6 @@ foreign import ccall
 --
 -- -   @depth@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
---
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     the @buffer@ member of @hitShaderBindingTable@ /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     the @buffer@ member of @hitShaderBindingTable@ /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     the @buffer@ member of @hitShaderBindingTable@ /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
---     the shader group handle identified by @missShaderBindingTable@
---     /must/ contain a valid miss shader
---
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     entries in @hitShaderBindingTable@ accessed as a result of this
---     command in order to execute an any hit shader /must/ not be set to
---     zero
---
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     entries in @hitShaderBindingTable@ accessed as a result of this
---     command in order to execute a closest hit shader /must/ not be set
---     to zero
---
--- -   If the currently bound ray tracing pipeline was created with @flags@
---     that included
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     entries in @hitShaderBindingTable@ accessed as a result of this
---     command in order to execute an intersection shader /must/ not be set
---     to zero
 --
 -- == Valid Usage (Implicit)
 --
@@ -1829,17 +1881,17 @@ foreign import ccall
 -- -   @commandBuffer@ is the command buffer into which the command will be
 --     recorded.
 --
--- -   @pRaygenShaderBindingTable@ is the strided buffer range that holds
+-- -   @pRaygenShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
 --     the shader binding table data for the ray generation shader stage.
 --
--- -   @pMissShaderBindingTable@ is the strided buffer range that holds the
---     shader binding table data for the miss shader stage.
+-- -   @pMissShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
+--     the shader binding table data for the miss shader stage.
 --
--- -   @pHitShaderBindingTable@ is the strided buffer range that holds the
---     shader binding table data for the hit shader stage.
+-- -   @pHitShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
+--     the shader binding table data for the hit shader stage.
 --
--- -   @pCallableShaderBindingTable@ is the strided buffer range that holds
---     the shader binding table data for the callable shader stage.
+-- -   @pCallableShaderBindingTable@ is a 'StridedBufferRegionKHR' that
+--     holds the shader binding table data for the callable shader stage.
 --
 -- -   @buffer@ is the buffer containing the trace ray parameters.
 --
@@ -1848,9 +1900,10 @@ foreign import ccall
 -- = Description
 --
 -- 'cmdTraceRaysIndirectKHR' behaves similarly to 'cmdTraceRaysKHR' except
--- that the ray trace query dimensions are read by the device from a buffer
+-- that the ray trace query dimensions are read by the device from @buffer@
 -- during execution. The parameters of trace ray are encoded in the
--- 'TraceRaysIndirectCommandKHR' structure.
+-- 'TraceRaysIndirectCommandKHR' structure located at @offset@ bytes in
+-- @buffer@.
 --
 -- == Valid Usage
 --
@@ -1990,48 +2043,6 @@ foreign import ccall
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
--- -   @raygenShaderBindingOffset@ /must/ be less than the size of
---     @raygenShaderBindingTableBuffer@
---
--- -   @raygenShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingOffset@ /must/ be less than the size of
---     @missShaderBindingTableBuffer@
---
--- -   @missShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @hitShaderBindingOffset@ /must/ be less than the size of
---     @hitShaderBindingTableBuffer@
---
--- -   @hitShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @callableShaderBindingOffset@ /must/ be less than the size of
---     @callableShaderBindingTableBuffer@
---
--- -   @callableShaderBindingOffset@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   @missShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @hitShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @callableShaderBindingStride@ /must/ be a multiple of
---     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
---
--- -   @missShaderBindingStride@ /must/ be less than or equal to
---     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
--- -   @hitShaderBindingStride@ /must/ be less than or equal to
---     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
--- -   @callableShaderBindingStride@ /must/ be less than or equal to
---     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
---
 -- -   Any shader group handle referenced by this call /must/ have been
 --     queried from the currently bound ray tracing shader pipeline
 --
@@ -2040,6 +2051,136 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
 --     bound ray tracing pipeline
+--
+-- -   If @pRayGenShaderBindingTable->buffer@ is non-sparse then it /must/
+--     be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pRayGenShaderBindingTable@ /must/ be less
+--     than the size of the @pRayGenShaderBindingTable->buffer@
+--
+-- -   @pRayGenShaderBindingTable->offset@ /must/ be a multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pRayGenShaderBindingTable->offset@ +
+--     @pRayGenShaderBindingTable->size@ /must/ be less than or equal to
+--     the size of @pRayGenShaderBindingTable->buffer@
+--
+-- -   The @size@ member of @pRayGenShaderBindingTable@ /must/ be equal to
+--     its @stride@ member
+--
+-- -   If @pMissShaderBindingTable->buffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be less than
+--     the size of @pMissShaderBindingTable->buffer@
+--
+-- -   The @offset@ member of @pMissShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pMissShaderBindingTable->offset@ + @pMissShaderBindingTable->size@
+--     /must/ be less than or equal to the size of
+--     @pMissShaderBindingTable->buffer@
+--
+-- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   The @stride@ member of @pMissShaderBindingTable@ /must/ be less than
+--     or equal to
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   If @pHitShaderBindingTable->buffer@ is non-sparse then it /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be less than
+--     the size of @pHitShaderBindingTable->buffer@
+--
+-- -   The @offset@ member of @pHitShaderBindingTable@ /must/ be a multiple
+--     of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pHitShaderBindingTable->offset@ + @pHitShaderBindingTable->size@
+--     /must/ be less than or equal to the size of
+--     @pHitShaderBindingTable->buffer@
+--
+-- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be a multiple
+--     of 'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   The @stride@ member of @pHitShaderBindingTable@ /must/ be less than
+--     or equal to
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   If @pCallableShaderBindingTable->buffer@ is non-sparse then it
+--     /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be less
+--     than the size of @pCallableShaderBindingTable->buffer@
+--
+-- -   The @offset@ member of @pCallableShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupBaseAlignment@
+--
+-- -   @pCallableShaderBindingTable->offset@ +
+--     @pCallableShaderBindingTable->size@ /must/ be less than or equal to
+--     the size of @pCallableShaderBindingTable->buffer@
+--
+-- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be a
+--     multiple of
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@
+--
+-- -   The @stride@ member of @pCallableShaderBindingTable@ /must/ be less
+--     than or equal to
+--     'PhysicalDeviceRayTracingPropertiesKHR'::@maxShaderGroupStride@
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
+--     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
+--     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
+--     the @buffer@ member of @pHitShaderBindingTable@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
+--     the shader group handle identified by @pMissShaderBindingTable@
+--     /must/ contain a valid miss shader
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
+--     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     command in order to execute an any hit shader /must/ not be set to
+--     zero
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
+--     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     command in order to execute a closest hit shader /must/ not be set
+--     to zero
+--
+-- -   If the currently bound ray tracing pipeline was created with @flags@
+--     that included
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
+--     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     command in order to execute an intersection shader /must/ not be set
+--     to zero
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
@@ -2224,6 +2365,15 @@ foreign import ccall
 -- 'buildAccelerationStructureKHR', 'cmdCopyAccelerationStructureKHR', and
 -- 'copyAccelerationStructureKHR'.
 --
+-- The input buffers passed to acceleration structure build commands will
+-- be referenced by the implementation for the duration of the command.
+-- After the command completes, the acceleration structure /may/ hold a
+-- reference to any acceleration structure specified by an active instance
+-- contained therein. Apart from this referencing, acceleration structures
+-- /must/ be fully self-contained. The application /may/ re-use or free any
+-- memory which was used by the command as an input or as scratch without
+-- affecting the results of ray traversal.
+--
 -- == Valid Usage
 --
 -- -   The
@@ -2347,20 +2497,17 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-pOffsetInfos-03402]] Each element of
---     @ppOffsetInfos@[i] /must/ be a valid pointer to an array of
---     @pInfos@[i].@geometryCount@
+-- -   Each element of @ppOffsetInfos@[i] /must/ be a valid pointer to an
+--     array of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
--- -   [[VUID-{refpage}-pInfos-03403]] Each
---     @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the same
---     acceleration structure as any @pInfos@[i].@dstAccelerationStructure@
---     that is provided to the same build command unless it is identical
---     for an update
+-- -   Each @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the
+--     same acceleration structure as any
+--     @pInfos@[i].@dstAccelerationStructure@ that is provided to the same
+--     build command unless it is identical for an update
 --
--- -   [[VUID-{refpage}-pInfos-03404]] For each @pInfos@[i],
---     @dstAccelerationStructure@ /must/ have been created with compatible
---     'AccelerationStructureCreateInfoKHR' where
+-- -   For each @pInfos@[i], @dstAccelerationStructure@ /must/ have been
+--     created with compatible 'AccelerationStructureCreateInfoKHR' where
 --     'AccelerationStructureCreateInfoKHR'::@type@ and
 --     'AccelerationStructureCreateInfoKHR'::@flags@ are identical to
 --     'AccelerationStructureBuildGeometryInfoKHR'::@type@ and
@@ -2374,29 +2521,27 @@ foreign import ccall
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
 --     both 0 or both non-zero, and all other parameters are the same
 --
--- -   [[VUID-{refpage}-pInfos-03405]] For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.BaseType.TRUE', then objects that were previously
---     active for that acceleration structure /must/ not be made inactive
---     as per
+-- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
+--     then objects that were previously active for that acceleration
+--     structure /must/ not be made inactive as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   [[VUID-{refpage}-pInfos-03406]] For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.BaseType.TRUE', then objects that were previously
---     inactive for that acceleration structure /must/ not be made active
---     as per
+-- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
+--     then objects that were previously inactive for that acceleration
+--     structure /must/ not be made active as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   [[VUID-{refpage}-None-03407]] Any acceleration structure instance in
---     any top level build in this command /must/ not reference any bottom
---     level acceleration structure built by this command
+-- -   Any acceleration structure instance in any top level build in this
+--     command /must/ not reference any bottom level acceleration structure
+--     built by this command
 --
--- -   [[VUID-{refpage}-pInfos-03408]] There /must/ not be any
+-- -   There /must/ not be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between the scratch memories that are provided in all the
 --     @pInfos@[i].@scratchData@ memories for the acceleration structure
 --     builds
 --
--- -   [[VUID-{refpage}-None-03409]] There /must/ not be any
+-- -   There /must/ not be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between memory bound to any top level, bottom level, or instance
 --     acceleration structure accessed by this command
@@ -2431,7 +2576,10 @@ foreign import ccall
 --     usage flag
 --
 -- -   All 'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR'
---     referenced by this command /must/ contain valid device addresses
+--     referenced by this command /must/ contain valid device addresses for
+--     a buffer bound to device memory. If the buffer is non-sparse then it
+--     /must/ be bound completely and contiguously to a single
+--     VkDeviceMemory object
 --
 -- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
@@ -2533,7 +2681,10 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   All 'DeviceOrHostAddressKHR' or 'DeviceOrHostAddressConstKHR'
---     referenced by this command /must/ contain valid device addresses
+--     referenced by this command /must/ contain valid device addresses for
+--     a buffer bound to device memory. If the buffer is non-sparse then it
+--     /must/ be bound completely and contiguously to a single
+--     VkDeviceMemory object
 --
 -- -   All 'Vulkan.Extensions.Handles.AccelerationStructureKHR' objects
 --     referenced by this command /must/ be bound to device memory
@@ -2658,20 +2809,17 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-pOffsetInfos-03402]] Each element of
---     @ppOffsetInfos@[i] /must/ be a valid pointer to an array of
---     @pInfos@[i].@geometryCount@
+-- -   Each element of @ppOffsetInfos@[i] /must/ be a valid pointer to an
+--     array of @pInfos@[i].@geometryCount@
 --     'AccelerationStructureBuildOffsetInfoKHR' structures
 --
--- -   [[VUID-{refpage}-pInfos-03403]] Each
---     @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the same
---     acceleration structure as any @pInfos@[i].@dstAccelerationStructure@
---     that is provided to the same build command unless it is identical
---     for an update
+-- -   Each @pInfos@[i].@srcAccelerationStructure@ /must/ not refer to the
+--     same acceleration structure as any
+--     @pInfos@[i].@dstAccelerationStructure@ that is provided to the same
+--     build command unless it is identical for an update
 --
--- -   [[VUID-{refpage}-pInfos-03404]] For each @pInfos@[i],
---     @dstAccelerationStructure@ /must/ have been created with compatible
---     'AccelerationStructureCreateInfoKHR' where
+-- -   For each @pInfos@[i], @dstAccelerationStructure@ /must/ have been
+--     created with compatible 'AccelerationStructureCreateInfoKHR' where
 --     'AccelerationStructureCreateInfoKHR'::@type@ and
 --     'AccelerationStructureCreateInfoKHR'::@flags@ are identical to
 --     'AccelerationStructureBuildGeometryInfoKHR'::@type@ and
@@ -2685,29 +2833,27 @@ foreign import ccall
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
 --     both 0 or both non-zero, and all other parameters are the same
 --
--- -   [[VUID-{refpage}-pInfos-03405]] For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.BaseType.TRUE', then objects that were previously
---     active for that acceleration structure /must/ not be made inactive
---     as per
+-- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
+--     then objects that were previously active for that acceleration
+--     structure /must/ not be made inactive as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   [[VUID-{refpage}-pInfos-03406]] For each @pInfos@[i], if @update@ is
---     'Vulkan.Core10.BaseType.TRUE', then objects that were previously
---     inactive for that acceleration structure /must/ not be made active
---     as per
+-- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
+--     then objects that were previously inactive for that acceleration
+--     structure /must/ not be made active as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   [[VUID-{refpage}-None-03407]] Any acceleration structure instance in
---     any top level build in this command /must/ not reference any bottom
---     level acceleration structure built by this command
+-- -   Any acceleration structure instance in any top level build in this
+--     command /must/ not reference any bottom level acceleration structure
+--     built by this command
 --
--- -   [[VUID-{refpage}-pInfos-03408]] There /must/ not be any
+-- -   There /must/ not be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between the scratch memories that are provided in all the
 --     @pInfos@[i].@scratchData@ memories for the acceleration structure
 --     builds
 --
--- -   [[VUID-{refpage}-None-03409]] There /must/ not be any
+-- -   There /must/ not be any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --     between memory bound to any top level, bottom level, or instance
 --     acceleration structure accessed by this command
@@ -5202,11 +5348,10 @@ instance Zero AccelerationStructureVersionKHR where
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-mode-03410]] @mode@ /must/ be
---     'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' or
+-- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' or
 --     'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
--- -   [[VUID-{refpage}-src-03411]] @src@ /must/ have been built with
+-- -   @src@ /must/ have been built with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' if @mode@ is
 --     'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR'
 --
@@ -5309,8 +5454,7 @@ instance es ~ '[] => Zero (CopyAccelerationStructureInfoKHR es) where
 --     serialization size of @src@, as reported by
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
--- -   [[VUID-{refpage}-mode-03412]] @mode@ /must/ be
---     'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
+-- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -5395,12 +5539,11 @@ instance es ~ '[] => Zero (CopyAccelerationStructureToMemoryInfoKHR es) where
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-mode-03413]] @mode@ /must/ be
---     'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
+-- -   @mode@ /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
 --
--- -   [[VUID-{refpage}-pInfo-03414]] The data in @pInfo->src@ /must/ have
---     a format compatible with the destination physical device as returned
---     by 'getDeviceAccelerationStructureCompatibilityKHR'
+-- -   The data in @pInfo->src@ /must/ have a format compatible with the
+--     destination physical device as returned by
+--     'getDeviceAccelerationStructureCompatibilityKHR'
 --
 -- == Valid Usage (Implicit)
 --

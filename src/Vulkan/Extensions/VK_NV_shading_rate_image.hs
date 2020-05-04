@@ -735,10 +735,12 @@ instance Zero CoarseSampleLocationNV where
 --
 -- = Description
 --
--- When using a custom sample ordering, element /i/ in @pSampleLocations@
--- specifies a specific pixel and per-pixel coverage sample number that
--- corresponds to the coverage sample numbered /i/ in the multi-pixel
--- fragment.
+-- When using a custom sample ordering, element /j/ in @pSampleLocations@
+-- specifies a specific pixel location and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- that corresponds to
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage index>
+-- /j/ in the multi-pixel fragment.
 --
 -- == Valid Usage
 --
@@ -1059,11 +1061,13 @@ pattern COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = CoarseSampleOrderTypeNV 0
 pattern COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV = CoarseSampleOrderTypeNV 1
 -- | 'COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV' specifies that coverage
 -- samples will be ordered sequentially, sorted first by pixel coordinate
--- (in row-major order) and then by coverage sample number.
+-- (in row-major order) and then by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>.
 pattern COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV = CoarseSampleOrderTypeNV 2
 -- | 'COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV' specifies that coverage
--- samples will be ordered sequentially, sorted first by coverage sample
--- number and then by pixel coordinate (in row-major order).
+-- samples will be ordered sequentially, sorted first by
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- and then by pixel coordinate (in row-major order).
 pattern COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = CoarseSampleOrderTypeNV 3
 {-# complete COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV,
              COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV,

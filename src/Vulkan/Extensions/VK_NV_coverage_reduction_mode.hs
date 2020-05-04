@@ -421,14 +421,15 @@ newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'COVERAGE_REDUCTION_MODE_MERGE_NV': In this mode, there is an
--- implementation-dependent association of each raster sample to a color
+-- implementation-dependent association of each coverage sample to a color
 -- sample. The reduced color sample mask is computed such that the bit for
 -- each color sample is 1 if any of the associated bits in the fragment’s
 -- coverage is on, and 0 otherwise.
 pattern COVERAGE_REDUCTION_MODE_MERGE_NV = CoverageReductionModeNV 0
 -- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV': In this mode, only the first M
--- raster samples are associated with the color samples such that raster
--- sample i maps to color sample i, where M is the number of color samples.
+-- coverage samples are associated with the color samples such that
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- i maps to color sample index i, where M is the number of color samples.
 pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
 {-# complete COVERAGE_REDUCTION_MODE_MERGE_NV,
              COVERAGE_REDUCTION_MODE_TRUNCATE_NV :: CoverageReductionModeNV #-}

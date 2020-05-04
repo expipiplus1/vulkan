@@ -1426,9 +1426,6 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT',
 --     @viewOffset@ /must/ be @0@
 --
--- -   If @viewOffset@ is not @0@, @srcSubpass@ /must/ not be equal to
---     @dstSubpass@
---
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain

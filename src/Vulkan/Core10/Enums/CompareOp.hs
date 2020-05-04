@@ -34,21 +34,21 @@ import Vulkan.Zero (Zero)
 newtype CompareOp = CompareOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COMPARE_OP_NEVER' specifies that the test never passes.
+-- | 'COMPARE_OP_NEVER' specifies that the test evaluates to false.
 pattern COMPARE_OP_NEVER = CompareOp 0
--- | 'COMPARE_OP_LESS' specifies that the test passes when R \< S.
+-- | 'COMPARE_OP_LESS' specifies that the test evaluates A \< B.
 pattern COMPARE_OP_LESS = CompareOp 1
--- | 'COMPARE_OP_EQUAL' specifies that the test passes when R = S.
+-- | 'COMPARE_OP_EQUAL' specifies that the test evaluates A = B.
 pattern COMPARE_OP_EQUAL = CompareOp 2
--- | 'COMPARE_OP_LESS_OR_EQUAL' specifies that the test passes when R ≤ S.
+-- | 'COMPARE_OP_LESS_OR_EQUAL' specifies that the test evaluates A ≤ B.
 pattern COMPARE_OP_LESS_OR_EQUAL = CompareOp 3
--- | 'COMPARE_OP_GREATER' specifies that the test passes when R > S.
+-- | 'COMPARE_OP_GREATER' specifies that the test evaluates A > B.
 pattern COMPARE_OP_GREATER = CompareOp 4
--- | 'COMPARE_OP_NOT_EQUAL' specifies that the test passes when R ≠ S.
+-- | 'COMPARE_OP_NOT_EQUAL' specifies that the test evaluates A ≠ B.
 pattern COMPARE_OP_NOT_EQUAL = CompareOp 5
--- | 'COMPARE_OP_GREATER_OR_EQUAL' specifies that the test passes when R ≥ S.
+-- | 'COMPARE_OP_GREATER_OR_EQUAL' specifies that the test evaluates A ≥ B.
 pattern COMPARE_OP_GREATER_OR_EQUAL = CompareOp 6
--- | 'COMPARE_OP_ALWAYS' specifies that the test always passes.
+-- | 'COMPARE_OP_ALWAYS' specifies that the test evaluates to true.
 pattern COMPARE_OP_ALWAYS = CompareOp 7
 {-# complete COMPARE_OP_NEVER,
              COMPARE_OP_LESS,

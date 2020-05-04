@@ -1097,6 +1097,11 @@ instance Zero PhysicalDeviceProperties where
 -- an @apiVersion@ of 0 is equivalent to providing an @apiVersion@ of
 -- @VK_MAKE_VERSION(1,0,0)@.
 --
+-- == Valid Usage
+--
+-- -   If @apiVersion@ is not @0@, then it /must/ be greater or equal to
+--     'Vulkan.Core10.API_VERSION_1_0'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

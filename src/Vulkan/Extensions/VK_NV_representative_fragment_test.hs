@@ -104,7 +104,7 @@ instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 -- fragment test is disabled.
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-early-mode early fragment tests>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>
 -- are not enabled in the active fragment shader, the representative
 -- fragment shader test has no effect, even if enabled.
 --

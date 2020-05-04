@@ -43,7 +43,7 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD))
-import Vulkan.Extensions.VK_EXT_swapchain_colorspace (ColorSpaceKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR(..))
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

@@ -207,6 +207,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
+import {-# SOURCE #-} Vulkan.Core10.Enums.ObjectType (ObjectType)
 import {-# SOURCE #-} Vulkan.Core10.FuncPointers (PFN_vkVoidFunction)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PastPresentationTimingGOOGLE)
 import {-# SOURCE #-} Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
@@ -248,7 +249,9 @@ import {-# SOURCE #-} Vulkan.Core10.PipelineLayout (PipelineLayoutCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (PresentInfoKHR)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (PrivateDataSlotCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.Handles (PrivateDataSlotEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import {-# SOURCE #-} Vulkan.Core10.Handles (QueryPool)
 import {-# SOURCE #-} Vulkan.Core10.Query (QueryPoolCreateInfo)
@@ -878,6 +881,10 @@ data DeviceCmds = DeviceCmds
   , pVkGetDeferredOperationMaxConcurrencyKHR :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> IO Word32)
   , pVkGetDeferredOperationResultKHR :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> IO Result)
   , pVkDeferredOperationJoinKHR :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> IO Result)
+  , pVkCreatePrivateDataSlotEXT :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlotEXT) -> IO Result)
+  , pVkDestroyPrivateDataSlotEXT :: FunPtr (Ptr Device_T -> PrivateDataSlotEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
+  , pVkSetPrivateDataEXT :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("data" ::: Word64) -> IO Result)
+  , pVkGetPrivateDataEXT :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("pData" ::: Ptr Word64) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -920,7 +927,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1222,6 +1229,10 @@ initDeviceCmds instanceCmds handle = do
   vkGetDeferredOperationMaxConcurrencyKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeferredOperationMaxConcurrencyKHR"#)
   vkGetDeferredOperationResultKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeferredOperationResultKHR"#)
   vkDeferredOperationJoinKHR <- getDeviceProcAddr' handle (Ptr "vkDeferredOperationJoinKHR"#)
+  vkCreatePrivateDataSlotEXT <- getDeviceProcAddr' handle (Ptr "vkCreatePrivateDataSlotEXT"#)
+  vkDestroyPrivateDataSlotEXT <- getDeviceProcAddr' handle (Ptr "vkDestroyPrivateDataSlotEXT"#)
+  vkSetPrivateDataEXT <- getDeviceProcAddr' handle (Ptr "vkSetPrivateDataEXT"#)
+  vkGetPrivateDataEXT <- getDeviceProcAddr' handle (Ptr "vkGetPrivateDataEXT"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1511,4 +1522,8 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> IO Word32) vkGetDeferredOperationMaxConcurrencyKHR)
     (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> IO Result) vkGetDeferredOperationResultKHR)
     (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> IO Result) vkDeferredOperationJoinKHR)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlotEXT) -> IO Result) vkCreatePrivateDataSlotEXT)
+    (castFunPtr @_ @(Ptr Device_T -> PrivateDataSlotEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyPrivateDataSlotEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("data" ::: Word64) -> IO Result) vkSetPrivateDataEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("pData" ::: Ptr Word64) -> IO ()) vkGetPrivateDataEXT)
 

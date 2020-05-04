@@ -1,7 +1,5 @@
 {-# language CPP #-}
-module Vulkan.Extensions.VK_KHR_shared_presentable_image  ( SharedPresentSurfaceCapabilitiesKHR
-                                                          , PresentModeKHR
-                                                          ) where
+module Vulkan.Extensions.VK_KHR_shared_presentable_image  (SharedPresentSurfaceCapabilitiesKHR) where
 
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
@@ -12,7 +10,4 @@ instance ToCStruct SharedPresentSurfaceCapabilitiesKHR
 instance Show SharedPresentSurfaceCapabilitiesKHR
 
 instance FromCStruct SharedPresentSurfaceCapabilitiesKHR
-
-
-data PresentModeKHR
 

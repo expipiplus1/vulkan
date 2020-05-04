@@ -29,6 +29,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_calibrated_timestamps
                           , module Vulkan.Extensions.VK_EXT_conditional_rendering
                           , module Vulkan.Extensions.VK_EXT_conservative_rasterization
+                          , module Vulkan.Extensions.VK_EXT_custom_border_color
                           , module Vulkan.Extensions.VK_EXT_debug_marker
                           , module Vulkan.Extensions.VK_EXT_debug_report
                           , module Vulkan.Extensions.VK_EXT_debug_utils
@@ -60,6 +61,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
+                          , module Vulkan.Extensions.VK_EXT_private_data
                           , module Vulkan.Extensions.VK_EXT_queue_family_foreign
                           , module Vulkan.Extensions.VK_EXT_robustness2
                           , module Vulkan.Extensions.VK_EXT_sample_locations
@@ -235,6 +237,7 @@ import Vulkan.Extensions.VK_EXT_buffer_device_address
 import Vulkan.Extensions.VK_EXT_calibrated_timestamps
 import Vulkan.Extensions.VK_EXT_conditional_rendering
 import Vulkan.Extensions.VK_EXT_conservative_rasterization
+import Vulkan.Extensions.VK_EXT_custom_border_color
 import Vulkan.Extensions.VK_EXT_debug_marker
 import Vulkan.Extensions.VK_EXT_debug_report
 import Vulkan.Extensions.VK_EXT_debug_utils
@@ -266,6 +269,7 @@ import Vulkan.Extensions.VK_EXT_pci_bus_info
 import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
+import Vulkan.Extensions.VK_EXT_private_data
 import Vulkan.Extensions.VK_EXT_queue_family_foreign
 import Vulkan.Extensions.VK_EXT_robustness2
 import Vulkan.Extensions.VK_EXT_sample_locations

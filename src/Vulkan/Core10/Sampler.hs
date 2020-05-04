@@ -57,6 +57,7 @@ import Vulkan.Core10.Handles (Sampler)
 import Vulkan.Core10.Handles (Sampler(..))
 import Vulkan.Core10.Enums.SamplerAddressMode (SamplerAddressMode)
 import Vulkan.Core10.Enums.SamplerCreateFlagBits (SamplerCreateFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (SamplerCustomBorderColorCreateInfoEXT)
 import Vulkan.Core10.Enums.SamplerMipmapMode (SamplerMipmapMode)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (SamplerReductionModeCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (SamplerYcbcrConversionInfo)
@@ -379,6 +380,21 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     then @unnormalizedCoordinates@ /must/ be
 --     'Vulkan.Core10.BaseType.FALSE'
 --
+-- -   If @borderColor@ is set to one of
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', then
+--     a
+--     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
+--     /must/ be present in the @pNext@ chain
+--
+-- -   The maximum number of samplers with custom border colors which /can/
+--     be simultaneously created on a device is implementation-dependent
+--     and specified by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxCustomBorderColorSamplers maxCustomBorderColorSamplers>
+--     member of the
+--     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT'
+--     structure
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -387,7 +403,8 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
+--     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --
@@ -531,6 +548,7 @@ instance Extensible SamplerCreateInfo where
   getNext SamplerCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SamplerCustomBorderColorCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerReductionModeCreateInfo = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f
     | otherwise = Nothing

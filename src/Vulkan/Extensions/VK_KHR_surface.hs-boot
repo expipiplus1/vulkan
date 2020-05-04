@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Vulkan.Extensions.VK_KHR_surface  ( SurfaceCapabilitiesKHR
                                          , SurfaceFormatKHR
+                                         , PresentModeKHR
                                          ) where
 
 import Data.Kind (Type)
@@ -20,4 +21,7 @@ instance ToCStruct SurfaceFormatKHR
 instance Show SurfaceFormatKHR
 
 instance FromCStruct SurfaceFormatKHR
+
+
+data PresentModeKHR
 

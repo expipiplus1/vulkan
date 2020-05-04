@@ -90,8 +90,8 @@ import Vulkan.Extensions.VK_KHR_display (DisplayPlaneAlphaFlagsKHR)
 import Vulkan.Extensions.VK_KHR_display (DisplayPlaneCapabilitiesKHR(..))
 import Vulkan.Extensions.VK_KHR_display (DisplayPlanePropertiesKHR(..))
 import Vulkan.Extensions.VK_KHR_display (DisplayPropertiesKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagBitsKHR(..))
-import Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR(..))
+import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

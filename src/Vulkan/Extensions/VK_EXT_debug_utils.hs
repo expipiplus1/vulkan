@@ -696,15 +696,16 @@ foreign import ccall
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @messenger@ /must/ be a valid
+-- -   If @messenger@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @messenger@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @messenger@ /must/ have been created, allocated, or retrieved from
---     @instance@
+-- -   If @messenger@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @instance@
 --
 -- == Host Synchronization
 --

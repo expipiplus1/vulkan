@@ -1958,6 +1958,19 @@ instance es ~ '[] => Zero (PipelineRasterizationStateCreateInfo es) where
 -- | VkPipelineMultisampleStateCreateInfo - Structure specifying parameters
 -- of a newly created pipeline multisample state
 --
+-- = Description
+--
+-- Each bit in the sample mask is associated with a unique
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- as defined for the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage mask>.
+-- Each bit b for mask word w in the sample mask corresponds to sample
+-- index i, where i = 32 × w + b. @pSampleMask@ has a length equal to ⌈
+-- @rasterizationSamples@ \/ 32 ⌉ words.
+--
+-- If @pSampleMask@ is @NULL@, it is treated as if the mask has all bits
+-- set to @1@.
+--
 -- == Valid Usage
 --
 -- -   If the
@@ -2026,10 +2039,9 @@ data PipelineMultisampleStateCreateInfo (es :: [Type]) = PipelineMultisampleStat
   , -- | @minSampleShading@ specifies a minimum fraction of sample shading if
     -- @sampleShadingEnable@ is set to 'Vulkan.Core10.BaseType.TRUE'.
     minSampleShading :: Float
-  , -- | @pSampleMask@ is a bitmask of static coverage information that is ANDed
-    -- with the coverage information generated during rasterization, as
-    -- described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-samplemask Sample Mask>.
+  , -- | @pSampleMask@ is an array of 'Vulkan.Core10.BaseType.SampleMask' values
+    -- used in the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-samplemask sample mask test>.
     sampleMask :: Vector SampleMask
   , -- | @alphaToCoverageEnable@ controls whether a temporary coverage value is
     -- generated based on the alpha component of the fragment’s first color
@@ -2712,11 +2724,11 @@ data PipelineDepthStencilStateCreateInfo = PipelineDepthStencilStateCreateInfo
     front :: StencilOpState
   , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "back"
     back :: StencilOpState
-  , -- | @minDepthBounds@ and @maxDepthBounds@ define the range of values used in
-    -- the
+  , -- | @minDepthBounds@ is the minimum depth bound used in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-dbt depth bounds test>.
     minDepthBounds :: Float
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "maxDepthBounds"
+  , -- | @maxDepthBounds@ is the maximum depth bound used in the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-dbt depth bounds test>.
     maxDepthBounds :: Float
   }
   deriving (Typeable)

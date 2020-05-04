@@ -95,8 +95,14 @@ foreign import ccall
 -- = Description
 --
 -- The discard rectangle taken from element i of @pDiscardRectangles@
--- replace the current state for the discard rectangle index
+-- replace the current state for the discard rectangle at index
 -- @firstDiscardRectangle@ + i, for i in [0, @discardRectangleCount@).
+--
+-- This command sets the state for a given draw when the graphics pipeline
+-- is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 --
 -- == Valid Usage
 --
@@ -228,6 +234,19 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 -- | VkPipelineDiscardRectangleStateCreateInfoEXT - Structure specifying
 -- discard rectangle
 --
+-- = Description
+--
+-- If the
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
+-- dynamic state is enabled for a pipeline, the @pDiscardRectangles@ member
+-- is ignored.
+--
+-- When this structure is included in the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
+-- parameters of the discard rectangle test. If this structure is not
+-- included in the @pNext@ chain, it is equivalent to specifying this
+-- structure with a @discardRectangleCount@ of @0@.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -242,9 +261,8 @@ data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateC
   , -- | @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
     discardRectangleMode :: DiscardRectangleModeEXT
   , -- | @pDiscardRectangles@ is a pointer to an array of
-    -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures, defining the
-    -- discard rectangles. If the discard rectangle state is dynamic, this
-    -- member is ignored.
+    -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining discard
+    -- rectangles.
     discardRectangles :: Either Word32 (Vector Rect2D)
   }
   deriving (Typeable)
@@ -328,11 +346,11 @@ instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
 newtype DiscardRectangleModeEXT = DiscardRectangleModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT' specifies that a fragment within
--- any discard rectangle satisfies the test.
+-- | 'DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT' specifies that the discard
+-- rectangle test is inclusive.
 pattern DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = DiscardRectangleModeEXT 0
--- | 'DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' specifies that a fragment not
--- within any of the discard rectangles satisfies the test.
+-- | 'DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' specifies that the discard
+-- rectangle test is exclusive.
 pattern DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = DiscardRectangleModeEXT 1
 {-# complete DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT,
              DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT :: DiscardRectangleModeEXT #-}

@@ -81,11 +81,11 @@ foreign import ccall
 -- replace the current state for the scissor index @firstExclusiveScissor@
 -- + i, for i in [0, @exclusiveScissorCount@).
 --
--- Each scissor rectangle is described by a
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structure, with the
--- @offset.x@ and @offset.y@ values determining the upper left corner of
--- the scissor rectangle, and the @extent.width@ and @extent.height@ values
--- determining the size in pixels.
+-- This command sets the state for a given draw when the graphics pipeline
+-- is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 --
 -- == Valid Usage
 --
@@ -240,8 +240,16 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 --
 -- = Description
 --
--- If this structure is not present, @exclusiveScissorCount@ is considered
--- to be @0@ and the exclusive scissor test is disabled.
+-- If the
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
+-- dynamic state is enabled for a pipeline, the @pExclusiveScissors@ member
+-- is ignored.
+--
+-- When this structure is included in the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it defines
+-- parameters of the exclusive scissor test. If this structure is not
+-- included in the @pNext@ chain, it is equivalent to specifying this
+-- structure with a @exclusiveScissorCount@ of @0@.
 --
 -- == Valid Usage
 --
@@ -279,8 +287,7 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 data PipelineViewportExclusiveScissorStateCreateInfoNV = PipelineViewportExclusiveScissorStateCreateInfoNV
   { -- | @pExclusiveScissors@ is a pointer to an array of
     -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining
-    -- exclusive scissor rectangles. If the exclusive scissor state is dynamic,
-    -- this member is ignored.
+    -- exclusive scissor rectangles.
     exclusiveScissors :: Either Word32 (Vector Rect2D) }
   deriving (Typeable)
 deriving instance Show PipelineViewportExclusiveScissorStateCreateInfoNV
