@@ -84,8 +84,14 @@ parseSpec bs = do
         let specEnums = appendEnumExtensions
               enumExtensions
               (extraEnums <> emptyBitmasks <> nonEmptyEnums)
+            -- The spec can contain duplicate aliases (duplicated in different
+            -- extensions), remove them here.
             specAliases =
-              typeAliases <> enumAliases <> commandAliases <> constantAliases
+              nubOrdV
+                $  typeAliases
+                <> enumAliases
+                <> commandAliases
+                <> constantAliases
         specFeatures   <- parseFeatures (contents n)
         specExtensions <-
           parseExtensions NotDisabled . contents =<< oneChild "extensions" n
@@ -1000,3 +1006,6 @@ tryTwice xs f =
 
 for :: (Traversable t, Applicative f) => t a -> (a -> f b) -> f (t b)
 for = flip traverse
+
+nubOrdV :: Ord a => Vector a -> Vector a
+nubOrdV = fromList . nubOrd . toList
