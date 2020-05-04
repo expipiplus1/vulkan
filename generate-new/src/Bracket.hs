@@ -36,9 +36,22 @@ data Bracket = Bracket
   , bDestroy             :: CName
   , bCreateArguments     :: [Argument]
   , bDestroyArguments    :: [Argument]
-  , bDestroyIndividually :: Bool
+  , bDestroyIndividually :: DestroyIndividually
+  , bBracketType         :: BracketType
   }
-  deriving (Show)
+  deriving Show
+
+data DestroyIndividually = DoDestroyIndividually | DoNotDestroyIndividually
+  deriving Show
+
+data BracketType
+  = BracketBookend
+  -- ^ This bracket takes an action to perform between a begin and end action
+  -- with no exception handling.
+  | BracketCPS
+  -- ^ This bracket takes a continuation which is given a matching pair of
+  -- construct and destroy actions
+  deriving Show
 
 data Argument
   = Provided Text (MarshalScheme Parameter)
@@ -65,14 +78,15 @@ isResource = \case
 -- marshaled commands.
 autoBracket
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => MarshaledCommand
+  => BracketType
+  -> MarshaledCommand
   -- ^ Begin
   -> MarshaledCommand
   -- ^ End
   -> CName
   -- ^ Bracketing function name
   -> Sem r Bracket
-autoBracket create destroy with = do
+autoBracket bBracketType create destroy with = do
   beginHasReturnType <- marshaledCommandShouldIncludeReturnValue create
   let bWrapperName = with
       bCreate      = mcName create
@@ -90,7 +104,7 @@ autoBracket create destroy with = do
         , not (isElided mpScheme)
         , isNegative mpScheme
         ]
-      bDestroyIndividually = False
+      bDestroyIndividually = DoNotDestroyIndividually
       destroyNegativeParams =
         [ mp
         | mp@MarshaledParam {..} <- toList (mcParams destroy)
@@ -168,7 +182,10 @@ renderBracket paramName b@Bracket {..} =
           )
           [ t | Provided _ t <- arguments ]
         let argHsVars =
-              [ pretty (paramName v) | Provided v _ <- arguments ] <> ["b"]
+              [ pretty (paramName v) | Provided v _ <- arguments ]
+                <> case bBracketType of
+                     BracketCPS     -> ["b"]
+                     BracketBookend -> ["a"]
         innerHsType <- do
           ts <- traverse
             (   note "Inner type has no representation in a negative position"
@@ -176,21 +193,27 @@ renderBracket paramName b@Bracket {..} =
             )
             bInnerTypes
           pure $ foldl' (:@) (TupleT (length ts)) ts
-        let
-          noDestructorResource = not (any isResource bDestroyArguments)
-          noResource           = null bInnerTypes && noDestructorResource
-          ioVar                = VarT (mkName "io")
-          rVar                 = VarT (mkName "r")
-          bracketTy            = if noResource
-            then ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar
-            else
-              ioVar
-              :@ innerHsType
-              ~> (innerHsType ~> ioVar :@ ConT ''())
-              ~> rVar
+        let noDestructorResource = not (any isResource bDestroyArguments)
+            noResource           = null bInnerTypes && noDestructorResource
+            ioVar                = VarT (mkName "io")
+            rVar                 = VarT (mkName "r")
+            userParamType        = case bBracketType of
+              BracketCPS -> if noResource
+                then ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar
+                else
+                  ioVar
+                  :@ innerHsType
+                  ~> (innerHsType ~> ioVar :@ ConT ''())
+                  ~> rVar
+              BracketBookend -> if noResource
+                then ioVar :@ rVar
+                else innerHsType ~> ioVar :@ rVar
+            returnType = case bBracketType of
+              BracketCPS     -> rVar
+              BracketBookend -> ioVar :@ rVar
 
-          wrapperType   = foldr (~>) rVar (argHsTypes <> [bracketTy])
-          bracketSuffix = bool "" "_" noResource
+            wrapperType = foldr (~>) returnType (argHsTypes <> [userParamType])
+            bracketSuffix = bool "" "_" noResource
         constrainedType <- addConstraints [ConT ''MonadIO :@ ioVar]
           <$> constrainStructVariables wrapperType
         wrapperTDoc <- renderType constrainedType
@@ -200,30 +223,58 @@ renderBracket paramName b@Bracket {..} =
         --
         createCall  <- renderCreate paramName b
         destroyCall <- renderDestroy paramName b
+        let
+          bracketBody =
+            pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
+              2
+              (case bBracketType of
+                BracketCPS -> "b"
+                  <+> indent 0 (vsep [parens createCall, parens destroyCall])
+                BracketBookend
+                  | noResource ->  parens createCall
+                  <+> "*> a <*"
+                  <+> parens destroyCall
+                  | otherwise -> doBlock
+                    [ "x <-" <+> createCall
+                    , "r <- a x"
+                    , parens destroyCall <+> "x"
+                    , "pure r"
+                    ]
+              )
+
         tellDoc $ vsep
           [ comment
-            (T.unlines
-              ([ "A convenience wrapper to make a compatible pair of calls to '"
-               <> unName create
-               <> "' and '"
-               <> unName destroy
-               <> "'"
-               , ""
-               , "To ensure that '"
-               <> unName destroy
-               <> "' is always called: pass 'Control.Exception.bracket"
-               <> bracketSuffix
-               <> "' (or the allocate function from your favourite resource management library) as the first argument."
-               , "To just extract the pair pass '(,)' as the first argument."
-               , ""
-               ]
-              <> [ "Note that there is no inner resource" | noResource ]
-              )
+            (T.unlines $ case bBracketType of
+              BracketCPS ->
+                [ "A convenience wrapper to make a compatible pair of calls to '"
+                  <> unName create
+                  <> "' and '"
+                  <> unName destroy
+                  <> "'"
+                  , ""
+                  , "To ensure that '"
+                  <> unName destroy
+                  <> "' is always called: pass 'Control.Exception.bracket"
+                  <> bracketSuffix
+                  <> "' (or the allocate function from your favourite resource management library) as the first argument."
+                  , "To just extract the pair pass '(,)' as the first argument."
+                  , ""
+                  ]
+                  <> [ "Note that there is no inner resource" | noResource ]
+              BracketBookend ->
+                [ "This function will call the supplied action between calls to '"
+                  <> unName create
+                  <> "' and '"
+                  <> unName destroy
+                  <> "'"
+                , ""
+                , "Note that '"
+                  <> unName destroy
+                  <> "' is *not* called if an exception is thrown by the inner action."
+                ]
             )
           , pretty wrapperName <+> "::" <+> wrapperTDoc
-          , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
-            2
-            ("b" <+> indent 0 (vsep [parens createCall, parens destroyCall]))
+          , bracketBody
           ]
 
 renderCreate
@@ -309,4 +360,6 @@ renderDestroy paramName Bracket {..} = do
         (if noResource then emptyDoc else "\\" <> resourcePattern <+> "-> ")
           <> withTraversals (pretty destroy <+> sep appVars) toTraverse
       traverseDestroy = "traverse" <+> parens callDestructor
-  pure $ bool callDestructor traverseDestroy bDestroyIndividually
+  pure $ case bDestroyIndividually of
+    DoDestroyIndividually    -> traverseDestroy
+    DoNotDestroyIndividually -> callDestructor

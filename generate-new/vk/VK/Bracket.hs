@@ -39,17 +39,20 @@ brackets marshaledCommands handles = context "brackets" $ do
               note ("Unable to find marshaled command " <> show n)
                 . (`Map.lookup` mcMap)
                 $ n
-      autoBracket' create destroy with = do
+      autoBracket' bracketType create destroy with = do
         create'  <- getMarshaledCommand create
         destroy' <- getMarshaledCommand destroy
-        autoBracket create' destroy' with
-      cdBracket h = autoBracket' (CName ("vkCreate" <> h))
+        autoBracket bracketType create' destroy' with
+      cdBracket h = autoBracket' BracketCPS
+                                 (CName ("vkCreate" <> h))
                                  (CName ("vkDestroy" <> h))
                                  (CName ("vkWith" <> h))
-      afBracket h = autoBracket' (CName ("vkAllocate" <> h))
+      afBracket h = autoBracket' BracketCPS
+                                 (CName ("vkAllocate" <> h))
                                  (CName ("vkFree" <> h))
                                  (CName ("vkWith" <> h))
-      cmdBeBracket h = autoBracket' (CName ("vkCmdBegin" <> h))
+      cmdBeBracket h = autoBracket' BracketBookend
+                                    (CName ("vkCmdBegin" <> h))
                                     (CName ("vkCmdEnd" <> h))
                                     (CName ("vkCmdUse" <> h))
 
@@ -88,14 +91,17 @@ brackets marshaledCommands handles = context "brackets" $ do
     , pure commandBuffersBracket
     , afBracket "Memory"
     , afBracket "DescriptorSets"
-    , autoBracket' "vkCreateGraphicsPipelines"
+    , autoBracket' BracketCPS
+                   "vkCreateGraphicsPipelines"
                    "vkDestroyPipeline"
                    "vkWithGraphicsPipelines"
-    , autoBracket' "vkCreateComputePipelines"
+    , autoBracket' BracketCPS
+                   "vkCreateComputePipelines"
                    "vkDestroyPipeline"
                    "vkWithComputePipelines"
-    , autoBracket' "vkMapMemory" "vkUnmapMemory" "vkWithMappedMemory"
-    , autoBracket' "vkBeginCommandBuffer"
+    , autoBracket' BracketCPS "vkMapMemory" "vkUnmapMemory" "vkWithMappedMemory"
+    , autoBracket' BracketBookend
+                   "vkBeginCommandBuffer"
                    "vkEndCommandBuffer"
                    "vkUseCommandBuffer"
     , cmdBeBracket "Query"
@@ -148,7 +154,8 @@ commandBuffersBracket = Bracket
                            , Member "pAllocateInfo" "commandPool"
                            , Resource IdentityResource 0
                            ]
-  , bDestroyIndividually = False
+  , bDestroyIndividually = DoNotDestroyIndividually
+  , bBracketType         = BracketCPS
   }
 
 dropVk :: Text -> Text

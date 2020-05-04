@@ -30,24 +30,24 @@ brackets marshaledCommands = context "brackets" $ do
               | m@MarshaledCommand {..} <- toList marshaledCommands
               ]
         in  note "Unable to find marshaled command" . (`Map.lookup` mcMap)
-      autoBracket' :: CName -> CName -> CName -> Sem r Bracket
-      autoBracket' create destroy with = do
+      autoBracket' :: BracketType -> CName -> CName -> CName -> Sem r Bracket
+      autoBracket' bracketType create destroy with = do
         create'  <- getMarshaledCommand create
         destroy' <- getMarshaledCommand destroy
-        autoBracket create' destroy' with
+        autoBracket bracketType create' destroy' with
   bs <- sequenceV
-    [ autoBracket' "vmaCreateAllocator" "vmaDestroyAllocator" "vmaWithAllocator"
-    , autoBracket' "vmaCreatePool"      "vmaDestroyPool"      "vmaWithPool"
-    , autoBracket' "vmaAllocateMemory"  "vmaFreeMemory"       "vmaWithMemory"
-    , autoBracket' "vmaAllocateMemoryForBuffer" "vmaFreeMemory" "vmaWithMemoryForBuffer"
-    , autoBracket' "vmaAllocateMemoryForImage" "vmaFreeMemory" "vmaWithMemoryForImage"
-    , autoBracket' "vmaAllocateMemoryPages" "vmaFreeMemoryPages" "vmaWithMemoryPages"
-    , autoBracket' "vmaCreateLostAllocation" "vmaFreeMemory" "vmaWithLostAllocation"
-    , autoBracket' "vmaMapMemory" "vmaUnmapMemory" "vmaWithMappedMemory"
-    , autoBracket' "vmaDefragmentationBegin" "vmaDefragmentationEnd" "vmaWithDefragmentation"
-    , autoBracket' "vmaBeginDefragmentationPass" "vmaEndDefragmentationPass" "vmaUseDefragmentationPass"
-    , autoBracket' "vmaCreateBuffer" "vmaDestroyBuffer" "vmaWithBuffer"
-    , autoBracket' "vmaCreateImage"  "vmaDestroyImage"  "vmaWithImage"
+    [ autoBracket' BracketCPS "vmaCreateAllocator" "vmaDestroyAllocator" "vmaWithAllocator"
+    , autoBracket' BracketCPS "vmaCreatePool"      "vmaDestroyPool"      "vmaWithPool"
+    , autoBracket' BracketCPS "vmaAllocateMemory"  "vmaFreeMemory"       "vmaWithMemory"
+    , autoBracket' BracketCPS "vmaAllocateMemoryForBuffer" "vmaFreeMemory" "vmaWithMemoryForBuffer"
+    , autoBracket' BracketCPS "vmaAllocateMemoryForImage" "vmaFreeMemory" "vmaWithMemoryForImage"
+    , autoBracket' BracketCPS "vmaAllocateMemoryPages" "vmaFreeMemoryPages" "vmaWithMemoryPages"
+    , autoBracket' BracketCPS "vmaCreateLostAllocation" "vmaFreeMemory" "vmaWithLostAllocation"
+    , autoBracket' BracketCPS "vmaMapMemory" "vmaUnmapMemory" "vmaWithMappedMemory"
+    , autoBracket' BracketCPS "vmaDefragmentationBegin" "vmaDefragmentationEnd" "vmaWithDefragmentation"
+    , autoBracket' BracketBookend "vmaBeginDefragmentationPass" "vmaEndDefragmentationPass" "vmaUseDefragmentationPass"
+    , autoBracket' BracketCPS "vmaCreateBuffer" "vmaDestroyBuffer" "vmaWithBuffer"
+    , autoBracket' BracketCPS "vmaCreateImage"  "vmaDestroyImage"  "vmaWithImage"
     ]
   fromList <$> traverseV (renderBracket paramName) bs
 
