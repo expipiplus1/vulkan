@@ -1,6 +1,6 @@
 {-# language CPP #-}
 module Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRenderingEXT
-                                                       , cmdWithConditionalRenderingEXT
+                                                       , cmdUseConditionalRenderingEXT
                                                        , cmdEndConditionalRenderingEXT
                                                        , ConditionalRenderingBeginInfoEXT(..)
                                                        , CommandBufferInheritanceConditionalRenderingInfoEXT(..)
@@ -132,19 +132,14 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO
   lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'cmdBeginConditionalRenderingEXT' and 'cmdEndConditionalRenderingEXT'
 --
--- To ensure that 'cmdEndConditionalRenderingEXT' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-cmdWithConditionalRenderingEXT :: forall io r . MonadIO io => CommandBuffer -> ConditionalRenderingBeginInfoEXT -> (io () -> io () -> r) -> r
-cmdWithConditionalRenderingEXT commandBuffer pConditionalRenderingBegin b =
-  b (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin)
-    (cmdEndConditionalRenderingEXT commandBuffer)
+-- Note that 'cmdEndConditionalRenderingEXT' is *not* called if an
+-- exception is thrown by the inner action.
+cmdUseConditionalRenderingEXT :: forall io r . MonadIO io => CommandBuffer -> ConditionalRenderingBeginInfoEXT -> io r -> io r
+cmdUseConditionalRenderingEXT commandBuffer pConditionalRenderingBegin a =
+  (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin) *> a <* (cmdEndConditionalRenderingEXT commandBuffer)
 
 
 foreign import ccall

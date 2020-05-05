@@ -348,19 +348,14 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
   r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) pBeginInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'beginCommandBuffer' and 'endCommandBuffer'
 --
--- To ensure that 'endCommandBuffer' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-useCommandBuffer :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> (io () -> io () -> r) -> r
-useCommandBuffer commandBuffer pBeginInfo b =
-  b (beginCommandBuffer commandBuffer pBeginInfo)
-    (endCommandBuffer commandBuffer)
+-- Note that 'endCommandBuffer' is *not* called if an exception is thrown
+-- by the inner action.
+useCommandBuffer :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io r -> io r
+useCommandBuffer commandBuffer pBeginInfo a =
+  (beginCommandBuffer commandBuffer pBeginInfo) *> a <* (endCommandBuffer commandBuffer)
 
 
 foreign import ccall

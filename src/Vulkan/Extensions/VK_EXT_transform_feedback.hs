@@ -1,10 +1,10 @@
 {-# language CPP #-}
 module Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformFeedbackBuffersEXT
                                                     , cmdBeginTransformFeedbackEXT
-                                                    , cmdWithTransformFeedbackEXT
+                                                    , cmdUseTransformFeedbackEXT
                                                     , cmdEndTransformFeedbackEXT
                                                     , cmdBeginQueryIndexedEXT
-                                                    , cmdWithQueryIndexedEXT
+                                                    , cmdUseQueryIndexedEXT
                                                     , cmdEndQueryIndexedEXT
                                                     , cmdDrawIndirectByteCountEXT
                                                     , PhysicalDeviceTransformFeedbackFeaturesEXT(..)
@@ -385,19 +385,14 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
   lift $ vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'cmdBeginTransformFeedbackEXT' and 'cmdEndTransformFeedbackEXT'
 --
--- To ensure that 'cmdEndTransformFeedbackEXT' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-cmdWithTransformFeedbackEXT :: forall io r . MonadIO io => CommandBuffer -> Word32 -> Vector Buffer -> Vector DeviceSize -> (io () -> io () -> r) -> r
-cmdWithTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets b =
-  b (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
-    (cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
+-- Note that 'cmdEndTransformFeedbackEXT' is *not* called if an exception
+-- is thrown by the inner action.
+cmdUseTransformFeedbackEXT :: forall io r . MonadIO io => CommandBuffer -> Word32 -> Vector Buffer -> Vector DeviceSize -> io r -> io r
+cmdUseTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets a =
+  (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets) *> a <* (cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
 
 
 foreign import ccall
@@ -725,19 +720,14 @@ cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
   pure $ ()
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT'
 --
--- To ensure that 'cmdEndQueryIndexedEXT' is always called: pass
--- 'Control.Exception.bracket_' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
--- Note that there is no inner resource
-cmdWithQueryIndexedEXT :: forall io r . MonadIO io => CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> (io () -> io () -> r) -> r
-cmdWithQueryIndexedEXT commandBuffer queryPool query flags index b =
-  b (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index)
-    (cmdEndQueryIndexedEXT commandBuffer queryPool query index)
+-- Note that 'cmdEndQueryIndexedEXT' is *not* called if an exception is
+-- thrown by the inner action.
+cmdUseQueryIndexedEXT :: forall io r . MonadIO io => CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> io r -> io r
+cmdUseQueryIndexedEXT commandBuffer queryPool query flags index a =
+  (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index) *> a <* (cmdEndQueryIndexedEXT commandBuffer queryPool query index)
 
 
 foreign import ccall

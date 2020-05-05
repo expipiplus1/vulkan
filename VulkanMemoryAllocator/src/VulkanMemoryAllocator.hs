@@ -50,7 +50,7 @@ module VulkanMemoryAllocator  ( createAllocator
                               , withDefragmentation
                               , defragmentationEnd
                               , beginDefragmentationPass
-                              , withDefragmentationPass
+                              , useDefragmentationPass
                               , endDefragmentationPass
                               , defragment
                               , bindBufferMemory
@@ -1626,18 +1626,18 @@ beginDefragmentationPass allocator context = liftIO . evalContT $ do
   pInfo <- lift $ peekCStruct @DefragmentationPassInfo pPInfo
   pure $ (pInfo)
 
--- | A convenience wrapper to make a compatible pair of calls to
+-- | This function will call the supplied action between calls to
 -- 'beginDefragmentationPass' and 'endDefragmentationPass'
 --
--- To ensure that 'endDefragmentationPass' is always called: pass
--- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the first argument.
--- To just extract the pair pass '(,)' as the first argument.
---
-withDefragmentationPass :: forall io r . MonadIO io => Allocator -> DefragmentationContext -> (io (DefragmentationPassInfo) -> ((DefragmentationPassInfo) -> io ()) -> r) -> r
-withDefragmentationPass allocator context b =
-  b (beginDefragmentationPass allocator context)
-    (\(_) -> endDefragmentationPass allocator context)
+-- Note that 'endDefragmentationPass' is *not* called if an exception is
+-- thrown by the inner action.
+useDefragmentationPass :: forall io r . MonadIO io => Allocator -> DefragmentationContext -> ((DefragmentationPassInfo) -> io r) -> io r
+useDefragmentationPass allocator context a =
+  do
+    x <- beginDefragmentationPass allocator context
+    r <- a x
+    (\(_) -> endDefragmentationPass allocator context) x
+    pure r
 
 
 foreign import ccall

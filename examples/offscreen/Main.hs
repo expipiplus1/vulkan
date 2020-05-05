@@ -136,7 +136,6 @@ autoapplyDecs
   ]
   [ 'VMA.invalidateAllocation
   , 'VMA.withImage
-  , 'Vk.withInstance
   , 'Vk.deviceWaitIdle
   , 'Vk.getDeviceQueue
   , 'Vk.getImageSubresourceLayout
@@ -147,6 +146,7 @@ autoapplyDecs
   , 'Vk.withFramebuffer
   , 'Vk.withGraphicsPipelines
   , 'Vk.withImageView
+  , 'Vk.withInstance
   , 'Vk.withPipelineLayout
   , 'Vk.withRenderPass
   , 'Vk.withShaderModule
@@ -171,12 +171,13 @@ main = runResourceT $ do
     allocate
 
   -- Run our application
-  runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator $ do
-    image <- render
-    let filename = "triangle.png"
-    sayErr $ "Writing " <> filename
-    liftIO $ BSL.writeFile filename (JP.encodePng image)
-    deviceWaitIdle
+  runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator
+    . (`finally` deviceWaitIdle)
+    $ do
+        image <- render
+        let filename = "triangle.png"
+        sayErr $ "Writing " <> filename
+        liftIO $ BSL.writeFile filename (JP.encodePng image)
 
 -- | This function renders a triangle and reads the image on the CPU
 --
@@ -193,7 +194,7 @@ main = runResourceT $ do
 --   - Issue a barrier to make it safe to write to the CPU image
 --   - Perform an image copy
 --   - Issue a barrier to make it safe to read the CPU image on the host
--- - Submits and waits for the command buffer to finishe executing
+-- - Submits and waits for the command buffer to finish executing
 -- - Invalidates the CPU image allocation (if it isn't HOST_COHERENT)
 -- - Copies the data from the CPU image and returns it
 render :: V (JP.Image JP.PixelRGBA8)
@@ -391,7 +392,6 @@ render = do
   -- - Copy the image to CPU mapped memory
   useCommandBuffer commandBuffer
                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
-                   bracket_
     $ do
         let renderPassBeginInfo = zero
               { renderPass  = renderPass
@@ -399,10 +399,9 @@ render = do
               , renderArea  = Rect2D zero (Extent2D width height)
               , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
               }
-        cmdWithRenderPass commandBuffer
-                          renderPassBeginInfo
-                          SUBPASS_CONTENTS_INLINE
-                          bracket_
+        cmdUseRenderPass commandBuffer
+                         renderPassBeginInfo
+                         SUBPASS_CONTENTS_INLINE
           $ do
               cmdBindPipeline commandBuffer
                               PIPELINE_BIND_POINT_GRAPHICS

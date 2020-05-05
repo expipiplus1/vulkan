@@ -139,7 +139,6 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
       useCommandBuffer
           buffer
           zero { flags = COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT }
-          bracket_
         $ do
             let renderPassBeginInfo = zero
                   { renderPass  = renderPass
@@ -149,12 +148,12 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
                                          }
                   , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 0))]
                   }
-            cmdBeginRenderPass buffer
-                               renderPassBeginInfo
-                               SUBPASS_CONTENTS_INLINE
-            cmdBindPipeline buffer PIPELINE_BIND_POINT_GRAPHICS graphicsPipeline
-            cmdDraw buffer 3 1 0 0
-            cmdEndRenderPass buffer
+            cmdUseRenderPass buffer renderPassBeginInfo SUBPASS_CONTENTS_INLINE
+              $ do
+                  cmdBindPipeline buffer
+                                  PIPELINE_BIND_POINT_GRAPHICS
+                                  graphicsPipeline
+                  cmdDraw buffer 3 1 0 0
     pure buffers
 
 createShaders
