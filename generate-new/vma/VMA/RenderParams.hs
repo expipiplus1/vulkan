@@ -112,6 +112,7 @@ renderParams handles = r
             ConName   "SUCCESS"          -> vk "Core10.Enums.Result"
             _                            -> Nothing
     , externalDocHTML             = Nothing
+    , objectTypePattern           = const Nothing
     }
 
 dropVma :: CName -> Text

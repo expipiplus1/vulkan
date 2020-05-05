@@ -6,7 +6,8 @@ import           Data.Char                      ( isLower )
 import qualified Data.HashSet                  as Set
 import qualified Data.List                     as List
 import qualified Data.Text                     as T
-import           Data.Text.Extra                ( (<+>)
+import           Data.Text.Extra               as T
+                                                ( (<+>)
                                                 , lowerCaseFirst
                                                 , upperCaseFirst
                                                 )
@@ -18,6 +19,7 @@ import           Relude                  hiding ( Handle
                                                 , Type
                                                 , uncons
                                                 )
+import           Text.Casing
 
 import           Foreign.C.Types
 import           Foreign.Ptr
@@ -167,6 +169,15 @@ renderParams handles = r
     , externalDocHTML             =
       Just
         "https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html"
+    , objectTypePattern           = pure
+                                    . mkPatternName r
+                                    . CName
+                                    . ("VK_OBJECT_TYPE_" <>)
+                                    . T.pack
+                                    . toScreamingSnake
+                                    . fromHumps
+                                    . T.unpack
+                                    . dropVk
     }
 
 wrappedIdiomaticType

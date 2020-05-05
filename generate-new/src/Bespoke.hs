@@ -724,19 +724,20 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
 nullHandle :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   RenderParams {..} <- input
-  let patName = mkPatternName "VK_NULL_HANDLE"
+  let patName    = mkPatternName "VK_NULL_HANDLE"
   tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
   tellNotReexportable
   tellExport (EPat patName)
   tellExport (EType (TyConName "IsHandle"))
   tellImportWithAll (TyConName "Zero")
+  tellImport ''Word64
   tellDocWithHaddock $ \getDoc -> [qqi|
     {getDoc (TopLevel "VK_NULL_HANDLE")}
     pattern {patName} :: IsHandle a => a
     pattern {patName} <- ((== zero) -> True)
       where {patName} = zero
 
-    -- | A class for things which can be created with '{patName}'
+    -- | A class for things which can be created with '{patName}'.
     class (Eq a, Zero a) => IsHandle a where
   |]
 
