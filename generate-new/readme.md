@@ -40,6 +40,9 @@ The docbook documentation will be in `docs/docbook`.
 
 # TODO
 
+- pay attention to `noautovalidity`, At the moment this is ignored, but it's a
+  hint that there's something slightly non-standard happening.
+
 - Neaten zero writing, we write some unnecessary zero bytes already set by
   calloc.
 
