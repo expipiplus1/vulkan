@@ -1,12 +1,13 @@
 # Change Log
 
 ## WIP
-  - Move package from `Graphics.Vulkan` to just `Vulkan`
+  - Move package from `Graphics.Vulkan` to just `Vulkan`, #60
   - Bump API version to 1.2.140
-  - Make the continuation the last argument to 'bracket' functions
-  - Begin/End bracket pairs are now called 'useXXX' rather than 'withXXX'
+  - Make the continuation the last argument to 'bracket' functions, discussion
+    on #49
+  - Begin/End bracket pairs are now called 'useXXX' rather than 'withXXX', #66
   - Begin/End bracket pairs where it's not necessary to 'End' on an exception
-    have a simplified type
+    have a simplified type, discussion on #49
   - Clarify optional vector lengths by preserving the length member, #71
 
 ## [3.2.0.0] - 2020-05-02
