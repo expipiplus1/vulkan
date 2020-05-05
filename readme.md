@@ -11,12 +11,12 @@ Practically speaking this means:
 
 - No fiddling with `vkGetInstanceProcAddr` or
   `vkGetDeviceProcAddr` to get function pointers, this is done automatically on
-  instance and device creation.
+  instance and device creation<sup>[1](#fun-ptr)</sup>.
 
 - No setting the `sType` member, this is done automatically.
 
 - No passing length/pointer pairs for arrays, `Vector` is used
-  instead<sup>[1](#opt-vec)</sup>.
+  instead<sup>[2](#opt-vec)</sup>.
 
 - No passing pointers for return values, this is done for you and multiple
   results are returned as elements of a tuple.
@@ -298,7 +298,12 @@ lifetime of any Vulkan command call.
 
 --------
 
-<a name="opt-vec">1</a>: The exception is where the spec allows the application
+<a name="fun-ptr">1</a>: Note that you'll still have to request any required
+  extensions for the function pointers belonging to that extension to be
+  populated. An exception will be thrown if you try to call a function pointer
+  which is null.
+
+<a name="opt-vec">2</a>: The exception is where the spec allows the application
   to pass `NULL` for the vector with a non-zero count. In these cases it was
   deemed clearer to preserve the "count" member and allow the Haskell
   application to pass a zero-length vector to indicate `NULL`.
