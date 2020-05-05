@@ -48,6 +48,7 @@ import           Render.SpecInfo
 import           Render.Stmts
 import           Render.Stmts.Alloc
 import           Render.Stmts.Poke
+import           Render.Stmts.Utils
 import           Render.Type
 import           Spec.Parse
 
@@ -597,15 +598,14 @@ getCCallDynamic
 getCCallDynamic c = do
   RenderParams {..} <- input
   let -- What to do in the case that this command isn't dispatched from a handle
-      noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
+      noHandlePtr = stmt Nothing (Just (unCName (cName c) <> "Ptr")) $ do
         -- TODO: Change this function pointer to a "global variable" with ioref and
         -- unsafePerformIO
-        let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'" -- TODO: Remove vulkan specific stuff here!
+        let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
         tellImport getInstanceProcAddr' -- TODO: Remove vulkan specific stuff here!
         tellImport 'nullPtr
         tellImport 'castFunPtr
         tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
-        let dynName = getDynName c
         fTyDoc <- renderTypeHighPrec =<< cToHsTypeWithHoles
           DoLower
           (C.Proto
@@ -616,9 +616,7 @@ getCCallDynamic c = do
           )
         pure
           .   IOAction
-          .   FunDoc
-          $   pretty dynName
-          <+> ". castFunPtr @_ @"
+          $   "castFunPtr @_ @"
           <>  fTyDoc
           <+> "<$>"
           <+> pretty getInstanceProcAddr'
@@ -626,41 +624,50 @@ getCCallDynamic c = do
           <+> parens ("Ptr" <+> dquotes (pretty (unCName (cName c))) <> "#")
 
       -- What do do if we need to extract the command pointer from a parameter
-      cmdsFun ptrRecTyName getCmdsFun paramName paramType = do
+      cmdsFunPtr ptrRecTyName getCmdsFun paramName paramType = do
         cmdsRef <- stmt Nothing (Just "cmds") $ do
           paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
           getCmds   <- getCmdsFun
           pure . Pure InlineOnce . CmdsDoc $ getCmds <+> parens
             (pretty paramName <+> "::" <+> paramTDoc)
         nameRef "cmds" cmdsRef
-        stmt Nothing (Just (unCName (cName c) <> "'")) $ do
-          let dynName    = getDynName c
-              memberName = mkFuncPointerMemberName (cName c)
+        stmt Nothing (Just (unCName (cName c) <> "Ptr")) $ do
+          let memberName = mkFuncPointerMemberName (cName c)
           tellImportWith ptrRecTyName memberName
           CmdsDoc cmds <- use cmdsRef
-          pure . Pure NeverInline . FunDoc $ pretty dynName <+> parens
-            (pretty memberName <+> cmds)
+          pure . Pure InlineOnce $ pretty memberName <+> cmds
 
-  commandHandle c >>= \case
-    Nothing                            -> noHandle
+  ptr <- commandHandle c >>= \case
+    Nothing                            -> noHandlePtr
     Just (Parameter {..}, Handle {..}) -> do
       let
         withImport member = do
           tellImportWithAll (mkTyName hName)
           pure $ pretty (member :: Text)
-        instanceHandle = cmdsFun (TyConName "InstanceCmds")
-                                 (withImport "instanceCmds")
-                                 paramName
-                                 pType
-        deviceHandle = cmdsFun (TyConName "DeviceCmds")
-                               (withImport "deviceCmds")
-                               paramName
-                               pType
+        instanceHandle = cmdsFunPtr (TyConName "InstanceCmds")
+                                    (withImport "instanceCmds")
+                                    paramName
+                                    pType
+        deviceHandle = cmdsFunPtr (TyConName "DeviceCmds")
+                                  (withImport "deviceCmds")
+                                  paramName
+                                  pType
         paramName = mkParamName pName
       case hLevel of
-        NoHandleLevel -> noHandle
+        NoHandleLevel -> noHandlePtr
         Device        -> deviceHandle
         Instance      -> instanceHandle
+
+  stmt Nothing (Just (unCName (cName c) <> "'")) $ do
+    after <=< unitStmt $ do
+      ptrDoc <- use ptr
+      tellImport 'nullFunPtr
+      let err  = "The function pointer for " <> unCName (cName c) <> " is null"
+          cond = parens $ ptrDoc <+> "/= nullFunPtr"
+      throwErrDoc err cond
+    let dynName = getDynName c
+    ptrDoc <- use ptr
+    pure . Pure NeverInline . FunDoc $ pretty dynName <+> ptrDoc
 
 -- | The handle of a command is the (dispatchable handle) first parameter.
 commandHandle :: HasSpecInfo r => Command -> Sem r (Maybe (Parameter, Handle))

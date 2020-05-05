@@ -11,12 +11,14 @@ module Vulkan.Extensions.VK_KHR_android_surface  ( createAndroidSurfaceKHR
                                                  ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -38,6 +40,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -157,7 +161,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 createAndroidSurfaceKHR :: forall io . MonadIO io => Instance -> AndroidSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
 createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateAndroidSurfaceKHR' = mkVkCreateAndroidSurfaceKHR (pVkCreateAndroidSurfaceKHR (instanceCmds (instance' :: Instance)))
+  let vkCreateAndroidSurfaceKHRPtr = pVkCreateAndroidSurfaceKHR (instanceCmds (instance' :: Instance))
+  lift $ unless (vkCreateAndroidSurfaceKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAndroidSurfaceKHR is null" Nothing Nothing
+  let vkCreateAndroidSurfaceKHR' = mkVkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHRPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

@@ -48,6 +48,7 @@ module Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerformanceApiI
                                                      ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -55,6 +56,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -81,6 +83,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -168,7 +172,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'InitializePerformanceApiInfoINTEL'
 initializePerformanceApiINTEL :: forall io . MonadIO io => Device -> ("initializeInfo" ::: InitializePerformanceApiInfoINTEL) -> io ()
 initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
-  let vkInitializePerformanceApiINTEL' = mkVkInitializePerformanceApiINTEL (pVkInitializePerformanceApiINTEL (deviceCmds (device :: Device)))
+  let vkInitializePerformanceApiINTELPtr = pVkInitializePerformanceApiINTEL (deviceCmds (device :: Device))
+  lift $ unless (vkInitializePerformanceApiINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInitializePerformanceApiINTEL is null" Nothing Nothing
+  let vkInitializePerformanceApiINTEL' = mkVkInitializePerformanceApiINTEL vkInitializePerformanceApiINTELPtr
   pInitializeInfo <- ContT $ withCStruct (initializeInfo)
   r <- lift $ vkInitializePerformanceApiINTEL' (deviceHandle (device)) pInitializeInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -195,7 +202,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 uninitializePerformanceApiINTEL :: forall io . MonadIO io => Device -> io ()
 uninitializePerformanceApiINTEL device = liftIO $ do
-  let vkUninitializePerformanceApiINTEL' = mkVkUninitializePerformanceApiINTEL (pVkUninitializePerformanceApiINTEL (deviceCmds (device :: Device)))
+  let vkUninitializePerformanceApiINTELPtr = pVkUninitializePerformanceApiINTEL (deviceCmds (device :: Device))
+  unless (vkUninitializePerformanceApiINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUninitializePerformanceApiINTEL is null" Nothing Nothing
+  let vkUninitializePerformanceApiINTEL' = mkVkUninitializePerformanceApiINTEL vkUninitializePerformanceApiINTELPtr
   vkUninitializePerformanceApiINTEL' (deviceHandle (device))
   pure $ ()
 
@@ -263,7 +273,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceMarkerInfoINTEL'
 cmdSetPerformanceMarkerINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceMarkerInfoINTEL -> io ()
 cmdSetPerformanceMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceMarkerINTEL' = mkVkCmdSetPerformanceMarkerINTEL (pVkCmdSetPerformanceMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetPerformanceMarkerINTELPtr = pVkCmdSetPerformanceMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetPerformanceMarkerINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceMarkerINTEL is null" Nothing Nothing
+  let vkCmdSetPerformanceMarkerINTEL' = mkVkCmdSetPerformanceMarkerINTEL vkCmdSetPerformanceMarkerINTELPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   r <- lift $ vkCmdSetPerformanceMarkerINTEL' (commandBufferHandle (commandBuffer)) pMarkerInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -328,7 +341,10 @@ foreign import ccall
 -- 'PerformanceStreamMarkerInfoINTEL'
 cmdSetPerformanceStreamMarkerINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceStreamMarkerInfoINTEL -> io ()
 cmdSetPerformanceStreamMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceStreamMarkerINTEL' = mkVkCmdSetPerformanceStreamMarkerINTEL (pVkCmdSetPerformanceStreamMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetPerformanceStreamMarkerINTELPtr = pVkCmdSetPerformanceStreamMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetPerformanceStreamMarkerINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceStreamMarkerINTEL is null" Nothing Nothing
+  let vkCmdSetPerformanceStreamMarkerINTEL' = mkVkCmdSetPerformanceStreamMarkerINTEL vkCmdSetPerformanceStreamMarkerINTELPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   r <- lift $ vkCmdSetPerformanceStreamMarkerINTEL' (commandBufferHandle (commandBuffer)) pMarkerInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -406,7 +422,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceOverrideInfoINTEL'
 cmdSetPerformanceOverrideINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceOverrideInfoINTEL -> io ()
 cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceOverrideINTEL' = mkVkCmdSetPerformanceOverrideINTEL (pVkCmdSetPerformanceOverrideINTEL (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetPerformanceOverrideINTELPtr = pVkCmdSetPerformanceOverrideINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetPerformanceOverrideINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceOverrideINTEL is null" Nothing Nothing
+  let vkCmdSetPerformanceOverrideINTEL' = mkVkCmdSetPerformanceOverrideINTEL vkCmdSetPerformanceOverrideINTELPtr
   pOverrideInfo <- ContT $ withCStruct (overrideInfo)
   r <- lift $ vkCmdSetPerformanceOverrideINTEL' (commandBufferHandle (commandBuffer)) pOverrideInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -454,7 +473,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
 acquirePerformanceConfigurationINTEL :: forall io . MonadIO io => Device -> PerformanceConfigurationAcquireInfoINTEL -> io (PerformanceConfigurationINTEL)
 acquirePerformanceConfigurationINTEL device acquireInfo = liftIO . evalContT $ do
-  let vkAcquirePerformanceConfigurationINTEL' = mkVkAcquirePerformanceConfigurationINTEL (pVkAcquirePerformanceConfigurationINTEL (deviceCmds (device :: Device)))
+  let vkAcquirePerformanceConfigurationINTELPtr = pVkAcquirePerformanceConfigurationINTEL (deviceCmds (device :: Device))
+  lift $ unless (vkAcquirePerformanceConfigurationINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquirePerformanceConfigurationINTEL is null" Nothing Nothing
+  let vkAcquirePerformanceConfigurationINTEL' = mkVkAcquirePerformanceConfigurationINTEL vkAcquirePerformanceConfigurationINTELPtr
   pAcquireInfo <- ContT $ withCStruct (acquireInfo)
   pPConfiguration <- ContT $ bracket (callocBytes @PerformanceConfigurationINTEL 8) free
   r <- lift $ vkAcquirePerformanceConfigurationINTEL' (deviceHandle (device)) pAcquireInfo (pPConfiguration)
@@ -498,7 +520,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
 releasePerformanceConfigurationINTEL :: forall io . MonadIO io => Device -> PerformanceConfigurationINTEL -> io ()
 releasePerformanceConfigurationINTEL device configuration = liftIO $ do
-  let vkReleasePerformanceConfigurationINTEL' = mkVkReleasePerformanceConfigurationINTEL (pVkReleasePerformanceConfigurationINTEL (deviceCmds (device :: Device)))
+  let vkReleasePerformanceConfigurationINTELPtr = pVkReleasePerformanceConfigurationINTEL (deviceCmds (device :: Device))
+  unless (vkReleasePerformanceConfigurationINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleasePerformanceConfigurationINTEL is null" Nothing Nothing
+  let vkReleasePerformanceConfigurationINTEL' = mkVkReleasePerformanceConfigurationINTEL vkReleasePerformanceConfigurationINTELPtr
   r <- vkReleasePerformanceConfigurationINTEL' (deviceHandle (device)) (configuration)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -556,7 +581,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Queue'
 queueSetPerformanceConfigurationINTEL :: forall io . MonadIO io => Queue -> PerformanceConfigurationINTEL -> io ()
 queueSetPerformanceConfigurationINTEL queue configuration = liftIO $ do
-  let vkQueueSetPerformanceConfigurationINTEL' = mkVkQueueSetPerformanceConfigurationINTEL (pVkQueueSetPerformanceConfigurationINTEL (deviceCmds (queue :: Queue)))
+  let vkQueueSetPerformanceConfigurationINTELPtr = pVkQueueSetPerformanceConfigurationINTEL (deviceCmds (queue :: Queue))
+  unless (vkQueueSetPerformanceConfigurationINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSetPerformanceConfigurationINTEL is null" Nothing Nothing
+  let vkQueueSetPerformanceConfigurationINTEL' = mkVkQueueSetPerformanceConfigurationINTEL vkQueueSetPerformanceConfigurationINTELPtr
   r <- vkQueueSetPerformanceConfigurationINTEL' (queueHandle (queue)) (configuration)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -598,7 +626,10 @@ foreign import ccall
 -- 'PerformanceValueINTEL'
 getPerformanceParameterINTEL :: forall io . MonadIO io => Device -> PerformanceParameterTypeINTEL -> io (PerformanceValueINTEL)
 getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
-  let vkGetPerformanceParameterINTEL' = mkVkGetPerformanceParameterINTEL (pVkGetPerformanceParameterINTEL (deviceCmds (device :: Device)))
+  let vkGetPerformanceParameterINTELPtr = pVkGetPerformanceParameterINTEL (deviceCmds (device :: Device))
+  lift $ unless (vkGetPerformanceParameterINTELPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPerformanceParameterINTEL is null" Nothing Nothing
+  let vkGetPerformanceParameterINTEL' = mkVkGetPerformanceParameterINTEL vkGetPerformanceParameterINTELPtr
   pPValue <- ContT (withZeroCStruct @PerformanceValueINTEL)
   r <- lift $ vkGetPerformanceParameterINTEL' (deviceHandle (device)) (parameter) (pPValue)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

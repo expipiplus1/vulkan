@@ -17,12 +17,14 @@ module Vulkan.Extensions.VK_EXT_private_data  ( createPrivateDataSlotEXT
                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -44,6 +46,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -139,7 +143,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
 createPrivateDataSlotEXT :: forall io . MonadIO io => Device -> PrivateDataSlotCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (PrivateDataSlotEXT)
 createPrivateDataSlotEXT device createInfo allocator = liftIO . evalContT $ do
-  let vkCreatePrivateDataSlotEXT' = mkVkCreatePrivateDataSlotEXT (pVkCreatePrivateDataSlotEXT (deviceCmds (device :: Device)))
+  let vkCreatePrivateDataSlotEXTPtr = pVkCreatePrivateDataSlotEXT (deviceCmds (device :: Device))
+  lift $ unless (vkCreatePrivateDataSlotEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreatePrivateDataSlotEXT is null" Nothing Nothing
+  let vkCreatePrivateDataSlotEXT' = mkVkCreatePrivateDataSlotEXT vkCreatePrivateDataSlotEXTPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -191,7 +198,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
 destroyPrivateDataSlotEXT :: forall io . MonadIO io => Device -> PrivateDataSlotEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyPrivateDataSlotEXT device privateDataSlot allocator = liftIO . evalContT $ do
-  let vkDestroyPrivateDataSlotEXT' = mkVkDestroyPrivateDataSlotEXT (pVkDestroyPrivateDataSlotEXT (deviceCmds (device :: Device)))
+  let vkDestroyPrivateDataSlotEXTPtr = pVkDestroyPrivateDataSlotEXT (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyPrivateDataSlotEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPrivateDataSlotEXT is null" Nothing Nothing
+  let vkDestroyPrivateDataSlotEXT' = mkVkDestroyPrivateDataSlotEXT vkDestroyPrivateDataSlotEXTPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -241,7 +251,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
 setPrivateDataEXT :: forall io . MonadIO io => Device -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("data" ::: Word64) -> io ()
 setPrivateDataEXT device objectType objectHandle privateDataSlot data' = liftIO $ do
-  let vkSetPrivateDataEXT' = mkVkSetPrivateDataEXT (pVkSetPrivateDataEXT (deviceCmds (device :: Device)))
+  let vkSetPrivateDataEXTPtr = pVkSetPrivateDataEXT (deviceCmds (device :: Device))
+  unless (vkSetPrivateDataEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetPrivateDataEXT is null" Nothing Nothing
+  let vkSetPrivateDataEXT' = mkVkSetPrivateDataEXT vkSetPrivateDataEXTPtr
   r <- vkSetPrivateDataEXT' (deviceHandle (device)) (objectType) (objectHandle) (privateDataSlot) (data')
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -292,7 +305,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
 getPrivateDataEXT :: forall io . MonadIO io => Device -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> io (("data" ::: Word64))
 getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . evalContT $ do
-  let vkGetPrivateDataEXT' = mkVkGetPrivateDataEXT (pVkGetPrivateDataEXT (deviceCmds (device :: Device)))
+  let vkGetPrivateDataEXTPtr = pVkGetPrivateDataEXT (deviceCmds (device :: Device))
+  lift $ unless (vkGetPrivateDataEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPrivateDataEXT is null" Nothing Nothing
+  let vkGetPrivateDataEXT' = mkVkGetPrivateDataEXT vkGetPrivateDataEXTPtr
   pPData <- ContT $ bracket (callocBytes @Word64 8) free
   lift $ vkGetPrivateDataEXT' (deviceHandle (device)) (objectType) (objectHandle) (privateDataSlot) (pPData)
   pData <- lift $ peek @Word64 pPData

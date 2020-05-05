@@ -9,10 +9,12 @@ module Vulkan.Extensions.VK_KHR_shared_presentable_image  ( getSwapchainStatusKH
                                                           , PresentModeKHR(..)
                                                           ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.IO.Class (MonadIO)
@@ -22,6 +24,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
@@ -102,7 +106,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 getSwapchainStatusKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result)
 getSwapchainStatusKHR device swapchain = liftIO $ do
-  let vkGetSwapchainStatusKHR' = mkVkGetSwapchainStatusKHR (pVkGetSwapchainStatusKHR (deviceCmds (device :: Device)))
+  let vkGetSwapchainStatusKHRPtr = pVkGetSwapchainStatusKHR (deviceCmds (device :: Device))
+  unless (vkGetSwapchainStatusKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainStatusKHR is null" Nothing Nothing
+  let vkGetSwapchainStatusKHR' = mkVkGetSwapchainStatusKHR vkGetSwapchainStatusKHRPtr
   r <- vkGetSwapchainStatusKHR' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)

@@ -52,6 +52,7 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -59,6 +60,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -91,6 +93,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Data.Int (Int64)
 import Foreign.Ptr (FunPtr)
@@ -222,7 +226,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
-  let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' = mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr = pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR is null" Nothing Nothing
+  let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' = mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCounterCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) (nullPtr) (nullPtr)
@@ -235,9 +242,9 @@ enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice que
   r' <- lift $ vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) ((pPCounters)) ((pPCounterDescriptions))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pCounterCount' <- lift $ peek @Word32 pPCounterCount
-  let x32 = pCounterCount'
-  pCounters' <- lift $ generateM (fromIntegral x32) (\i -> peekCStruct @PerformanceCounterKHR (((pPCounters) `advancePtrBytes` (48 * (i)) :: Ptr PerformanceCounterKHR)))
-  pCounterDescriptions' <- lift $ generateM (fromIntegral x32) (\i -> peekCStruct @PerformanceCounterDescriptionKHR (((pPCounterDescriptions) `advancePtrBytes` (792 * (i)) :: Ptr PerformanceCounterDescriptionKHR)))
+  let x33 = pCounterCount'
+  pCounters' <- lift $ generateM (fromIntegral x33) (\i -> peekCStruct @PerformanceCounterKHR (((pPCounters) `advancePtrBytes` (48 * (i)) :: Ptr PerformanceCounterKHR)))
+  pCounterDescriptions' <- lift $ generateM (fromIntegral x33) (\i -> peekCStruct @PerformanceCounterDescriptionKHR (((pPCounterDescriptions) `advancePtrBytes` (792 * (i)) :: Ptr PerformanceCounterDescriptionKHR)))
   pure $ ((r'), pCounters', pCounterDescriptions')
 
 
@@ -281,7 +288,10 @@ foreign import ccall
 -- 'QueryPoolPerformanceCreateInfoKHR'
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io . MonadIO io => PhysicalDevice -> ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR) -> io (("numPasses" ::: Word32))
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' = mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr = pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' = mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr
   pPerformanceQueryCreateInfo <- ContT $ withCStruct (performanceQueryCreateInfo)
   pPNumPasses <- ContT $ bracket (callocBytes @Word32 4) free
   lift $ vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' (physicalDeviceHandle (physicalDevice)) pPerformanceQueryCreateInfo (pPNumPasses)
@@ -326,7 +336,10 @@ foreign import ccall
 -- 'AcquireProfilingLockInfoKHR', 'Vulkan.Core10.Handles.Device'
 acquireProfilingLockKHR :: forall io . MonadIO io => Device -> AcquireProfilingLockInfoKHR -> io ()
 acquireProfilingLockKHR device info = liftIO . evalContT $ do
-  let vkAcquireProfilingLockKHR' = mkVkAcquireProfilingLockKHR (pVkAcquireProfilingLockKHR (deviceCmds (device :: Device)))
+  let vkAcquireProfilingLockKHRPtr = pVkAcquireProfilingLockKHR (deviceCmds (device :: Device))
+  lift $ unless (vkAcquireProfilingLockKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireProfilingLockKHR is null" Nothing Nothing
+  let vkAcquireProfilingLockKHR' = mkVkAcquireProfilingLockKHR vkAcquireProfilingLockKHRPtr
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkAcquireProfilingLockKHR' (deviceHandle (device)) pInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -359,7 +372,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 releaseProfilingLockKHR :: forall io . MonadIO io => Device -> io ()
 releaseProfilingLockKHR device = liftIO $ do
-  let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR (pVkReleaseProfilingLockKHR (deviceCmds (device :: Device)))
+  let vkReleaseProfilingLockKHRPtr = pVkReleaseProfilingLockKHR (deviceCmds (device :: Device))
+  unless (vkReleaseProfilingLockKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseProfilingLockKHR is null" Nothing Nothing
+  let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR vkReleaseProfilingLockKHRPtr
   vkReleaseProfilingLockKHR' (deviceHandle (device))
   pure $ ()
 

@@ -29,12 +29,14 @@ module Vulkan.Extensions.VK_EXT_display_control  ( displayPowerControlEXT
                                                  ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -55,6 +57,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -143,7 +147,10 @@ foreign import ccall
 -- 'DisplayPowerInfoEXT'
 displayPowerControlEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayPowerInfoEXT -> io ()
 displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
-  let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT (pVkDisplayPowerControlEXT (deviceCmds (device :: Device)))
+  let vkDisplayPowerControlEXTPtr = pVkDisplayPowerControlEXT (deviceCmds (device :: Device))
+  lift $ unless (vkDisplayPowerControlEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDisplayPowerControlEXT is null" Nothing Nothing
+  let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT vkDisplayPowerControlEXTPtr
   pDisplayPowerInfo <- ContT $ withCStruct (displayPowerInfo)
   _ <- lift $ vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo
   pure $ ()
@@ -199,7 +206,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Fence'
 registerDeviceEventEXT :: forall io . MonadIO io => Device -> DeviceEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
 registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
-  let vkRegisterDeviceEventEXT' = mkVkRegisterDeviceEventEXT (pVkRegisterDeviceEventEXT (deviceCmds (device :: Device)))
+  let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (deviceCmds (device :: Device))
+  lift $ unless (vkRegisterDeviceEventEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDeviceEventEXT is null" Nothing Nothing
+  let vkRegisterDeviceEventEXT' = mkVkRegisterDeviceEventEXT vkRegisterDeviceEventEXTPtr
   pDeviceEventInfo <- ContT $ withCStruct (deviceEventInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -268,7 +278,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'Vulkan.Core10.Handles.Fence'
 registerDisplayEventEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
 registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
-  let vkRegisterDisplayEventEXT' = mkVkRegisterDisplayEventEXT (pVkRegisterDisplayEventEXT (deviceCmds (device :: Device)))
+  let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (deviceCmds (device :: Device))
+  lift $ unless (vkRegisterDisplayEventEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDisplayEventEXT is null" Nothing Nothing
+  let vkRegisterDisplayEventEXT' = mkVkRegisterDisplayEventEXT vkRegisterDisplayEventEXTPtr
   pDisplayEventInfo <- ContT $ withCStruct (displayEventInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -346,7 +359,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getSwapchainCounterEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> io (("counterValue" ::: Word64))
 getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
-  let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT (pVkGetSwapchainCounterEXT (deviceCmds (device :: Device)))
+  let vkGetSwapchainCounterEXTPtr = pVkGetSwapchainCounterEXT (deviceCmds (device :: Device))
+  lift $ unless (vkGetSwapchainCounterEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainCounterEXT is null" Nothing Nothing
+  let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT vkGetSwapchainCounterEXTPtr
   pPCounterValue <- ContT $ bracket (callocBytes @Word64 8) free
   r <- lift $ vkGetSwapchainCounterEXT' (deviceHandle (device)) (swapchain) (counter) (pPCounterValue)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

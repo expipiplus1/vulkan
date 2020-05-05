@@ -13,6 +13,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -96,7 +97,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setHdrMetadataEXT :: forall io . MonadIO io => Device -> ("swapchains" ::: Vector SwapchainKHR) -> ("metadata" ::: Vector HdrMetadataEXT) -> io ()
 setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
-  let vkSetHdrMetadataEXT' = mkVkSetHdrMetadataEXT (pVkSetHdrMetadataEXT (deviceCmds (device :: Device)))
+  let vkSetHdrMetadataEXTPtr = pVkSetHdrMetadataEXT (deviceCmds (device :: Device))
+  lift $ unless (vkSetHdrMetadataEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetHdrMetadataEXT is null" Nothing Nothing
+  let vkSetHdrMetadataEXT' = mkVkSetHdrMetadataEXT vkSetHdrMetadataEXTPtr
   let pSwapchainsLength = Data.Vector.length $ (swapchains)
   let pMetadataLength = Data.Vector.length $ (metadata)
   lift $ unless (pMetadataLength == pSwapchainsLength) $

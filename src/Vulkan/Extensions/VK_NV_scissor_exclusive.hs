@@ -12,6 +12,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -164,7 +165,10 @@ foreign import ccall
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
 cmdSetExclusiveScissorNV :: forall io . MonadIO io => CommandBuffer -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissors" ::: Vector Rect2D) -> io ()
 cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
-  let vkCmdSetExclusiveScissorNV' = mkVkCmdSetExclusiveScissorNV (pVkCmdSetExclusiveScissorNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetExclusiveScissorNVPtr = pVkCmdSetExclusiveScissorNV (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetExclusiveScissorNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetExclusiveScissorNV is null" Nothing Nothing
+  let vkCmdSetExclusiveScissorNV' = mkVkCmdSetExclusiveScissorNV vkCmdSetExclusiveScissorNVPtr
   pPExclusiveScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (exclusiveScissors)
   lift $ vkCmdSetExclusiveScissorNV' (commandBufferHandle (commandBuffer)) (firstExclusiveScissor) ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32)) (pPExclusiveScissors)

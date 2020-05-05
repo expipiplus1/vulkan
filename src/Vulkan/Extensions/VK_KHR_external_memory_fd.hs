@@ -11,12 +11,14 @@ module Vulkan.Extensions.VK_KHR_external_memory_fd  ( getMemoryFdKHR
                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -31,6 +33,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -106,7 +110,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetFdInfoKHR'
 getMemoryFdKHR :: forall io . MonadIO io => Device -> MemoryGetFdInfoKHR -> io (("fd" ::: Int32))
 getMemoryFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetMemoryFdKHR' = mkVkGetMemoryFdKHR (pVkGetMemoryFdKHR (deviceCmds (device :: Device)))
+  let vkGetMemoryFdKHRPtr = pVkGetMemoryFdKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetMemoryFdKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryFdKHR is null" Nothing Nothing
+  let vkGetMemoryFdKHR' = mkVkGetMemoryFdKHR vkGetMemoryFdKHRPtr
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
   r <- lift $ vkGetMemoryFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd)
@@ -153,7 +160,10 @@ foreign import ccall
 -- 'MemoryFdPropertiesKHR'
 getMemoryFdPropertiesKHR :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: Int32) -> io (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
-  let vkGetMemoryFdPropertiesKHR' = mkVkGetMemoryFdPropertiesKHR (pVkGetMemoryFdPropertiesKHR (deviceCmds (device :: Device)))
+  let vkGetMemoryFdPropertiesKHRPtr = pVkGetMemoryFdPropertiesKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetMemoryFdPropertiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryFdPropertiesKHR is null" Nothing Nothing
+  let vkGetMemoryFdPropertiesKHR' = mkVkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHRPtr
   pPMemoryFdProperties <- ContT (withZeroCStruct @MemoryFdPropertiesKHR)
   r <- lift $ vkGetMemoryFdPropertiesKHR' (deviceHandle (device)) (handleType) (CInt (fd)) (pPMemoryFdProperties)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

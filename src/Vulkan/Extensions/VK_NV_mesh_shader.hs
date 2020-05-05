@@ -12,8 +12,11 @@ module Vulkan.Extensions.VK_NV_mesh_shader  ( cmdDrawMeshTasksNV
                                             ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.IO.Class (MonadIO)
@@ -23,6 +26,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -285,7 +290,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDrawMeshTasksNV :: forall io . MonadIO io => CommandBuffer -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> io ()
 cmdDrawMeshTasksNV commandBuffer taskCount firstTask = liftIO $ do
-  let vkCmdDrawMeshTasksNV' = mkVkCmdDrawMeshTasksNV (pVkCmdDrawMeshTasksNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawMeshTasksNVPtr = pVkCmdDrawMeshTasksNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawMeshTasksNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksNV is null" Nothing Nothing
+  let vkCmdDrawMeshTasksNV' = mkVkCmdDrawMeshTasksNV vkCmdDrawMeshTasksNVPtr
   vkCmdDrawMeshTasksNV' (commandBufferHandle (commandBuffer)) (taskCount) (firstTask)
   pure $ ()
 
@@ -568,7 +576,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDrawMeshTasksIndirectNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
 cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = liftIO $ do
-  let vkCmdDrawMeshTasksIndirectNV' = mkVkCmdDrawMeshTasksIndirectNV (pVkCmdDrawMeshTasksIndirectNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawMeshTasksIndirectNVPtr = pVkCmdDrawMeshTasksIndirectNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawMeshTasksIndirectNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectNV is null" Nothing Nothing
+  let vkCmdDrawMeshTasksIndirectNV' = mkVkCmdDrawMeshTasksIndirectNV vkCmdDrawMeshTasksIndirectNVPtr
   vkCmdDrawMeshTasksIndirectNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
   pure $ ()
 
@@ -871,7 +882,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDrawMeshTasksIndirectCountNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
 cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
-  let vkCmdDrawMeshTasksIndirectCountNV' = mkVkCmdDrawMeshTasksIndirectCountNV (pVkCmdDrawMeshTasksIndirectCountNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawMeshTasksIndirectCountNVPtr = pVkCmdDrawMeshTasksIndirectCountNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawMeshTasksIndirectCountNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectCountNV is null" Nothing Nothing
+  let vkCmdDrawMeshTasksIndirectCountNV' = mkVkCmdDrawMeshTasksIndirectCountNV vkCmdDrawMeshTasksIndirectCountNVPtr
   vkCmdDrawMeshTasksIndirectCountNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
   pure $ ()
 

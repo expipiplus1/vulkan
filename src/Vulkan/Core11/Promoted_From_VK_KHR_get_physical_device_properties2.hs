@@ -19,6 +19,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2  ( get
                                                                            ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -27,6 +28,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -39,6 +41,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -245,7 +249,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceFeatures2'
 getPhysicalDeviceFeatures2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceFeatures2 a)
 getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFeatures2' = mkVkGetPhysicalDeviceFeatures2 (pVkGetPhysicalDeviceFeatures2 (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceFeatures2Ptr = pVkGetPhysicalDeviceFeatures2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceFeatures2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures2 is null" Nothing Nothing
+  let vkGetPhysicalDeviceFeatures2' = mkVkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2Ptr
   pPFeatures <- ContT (withZeroCStruct @(PhysicalDeviceFeatures2 _))
   lift $ vkGetPhysicalDeviceFeatures2' (physicalDeviceHandle (physicalDevice)) (pPFeatures)
   pFeatures <- lift $ peekCStruct @(PhysicalDeviceFeatures2 _) pPFeatures
@@ -283,7 +290,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceProperties2'
 getPhysicalDeviceProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceProperties2 a)
 getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceProperties2' = mkVkGetPhysicalDeviceProperties2 (pVkGetPhysicalDeviceProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceProperties2Ptr = pVkGetPhysicalDeviceProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceProperties2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties2 is null" Nothing Nothing
+  let vkGetPhysicalDeviceProperties2' = mkVkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2Ptr
   pPProperties <- ContT (withZeroCStruct @(PhysicalDeviceProperties2 _))
   lift $ vkGetPhysicalDeviceProperties2' (physicalDeviceHandle (physicalDevice)) (pPProperties)
   pProperties <- lift $ peekCStruct @(PhysicalDeviceProperties2 _) pPProperties
@@ -325,7 +335,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceFormatProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> Format -> io (FormatProperties2 a)
 getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFormatProperties2' = mkVkGetPhysicalDeviceFormatProperties2 (pVkGetPhysicalDeviceFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceFormatProperties2Ptr = pVkGetPhysicalDeviceFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceFormatProperties2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties2 is null" Nothing Nothing
+  let vkGetPhysicalDeviceFormatProperties2' = mkVkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2Ptr
   pPFormatProperties <- ContT (withZeroCStruct @(FormatProperties2 _))
   lift $ vkGetPhysicalDeviceFormatProperties2' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties)
   pFormatProperties <- lift $ peekCStruct @(FormatProperties2 _) pPFormatProperties
@@ -401,7 +414,10 @@ foreign import ccall
 -- 'PhysicalDeviceImageFormatInfo2'
 getPhysicalDeviceImageFormatProperties2 :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => PhysicalDevice -> PhysicalDeviceImageFormatInfo2 a -> io (ImageFormatProperties2 b)
 getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceImageFormatProperties2' = mkVkGetPhysicalDeviceImageFormatProperties2 (pVkGetPhysicalDeviceImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceImageFormatProperties2Ptr = pVkGetPhysicalDeviceImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceImageFormatProperties2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties2 is null" Nothing Nothing
+  let vkGetPhysicalDeviceImageFormatProperties2' = mkVkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2Ptr
   pImageFormatInfo <- ContT $ withCStruct (imageFormatInfo)
   pPImageFormatProperties <- ContT (withZeroCStruct @(ImageFormatProperties2 _))
   r <- lift $ vkGetPhysicalDeviceImageFormatProperties2' (physicalDeviceHandle (physicalDevice)) pImageFormatInfo (pPImageFormatProperties)
@@ -457,7 +473,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties2'
 getPhysicalDeviceQueueFamilyProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (("queueFamilyProperties" ::: Vector (QueueFamilyProperties2 a)))
 getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceQueueFamilyProperties2' = mkVkGetPhysicalDeviceQueueFamilyProperties2 (pVkGetPhysicalDeviceQueueFamilyProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceQueueFamilyProperties2Ptr = pVkGetPhysicalDeviceQueueFamilyProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceQueueFamilyProperties2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyProperties2 is null" Nothing Nothing
+  let vkGetPhysicalDeviceQueueFamilyProperties2' = mkVkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2Ptr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   lift $ vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (nullPtr)
@@ -503,7 +522,10 @@ foreign import ccall
 -- 'PhysicalDeviceMemoryProperties2'
 getPhysicalDeviceMemoryProperties2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceMemoryProperties2 a)
 getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceMemoryProperties2' = mkVkGetPhysicalDeviceMemoryProperties2 (pVkGetPhysicalDeviceMemoryProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceMemoryProperties2Ptr = pVkGetPhysicalDeviceMemoryProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceMemoryProperties2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties2 is null" Nothing Nothing
+  let vkGetPhysicalDeviceMemoryProperties2' = mkVkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2Ptr
   pPMemoryProperties <- ContT (withZeroCStruct @(PhysicalDeviceMemoryProperties2 _))
   lift $ vkGetPhysicalDeviceMemoryProperties2' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties)
   pMemoryProperties <- lift $ peekCStruct @(PhysicalDeviceMemoryProperties2 _) pPMemoryProperties
@@ -563,7 +585,10 @@ foreign import ccall
 -- 'PhysicalDeviceSparseImageFormatInfo2', 'SparseImageFormatProperties2'
 getPhysicalDeviceSparseImageFormatProperties2 :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceSparseImageFormatInfo2 -> io (("properties" ::: Vector SparseImageFormatProperties2))
 getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSparseImageFormatProperties2' = mkVkGetPhysicalDeviceSparseImageFormatProperties2 (pVkGetPhysicalDeviceSparseImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSparseImageFormatProperties2Ptr = pVkGetPhysicalDeviceSparseImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSparseImageFormatProperties2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSparseImageFormatProperties2 is null" Nothing Nothing
+  let vkGetPhysicalDeviceSparseImageFormatProperties2' = mkVkGetPhysicalDeviceSparseImageFormatProperties2 vkGetPhysicalDeviceSparseImageFormatProperties2Ptr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pFormatInfo <- ContT $ withCStruct (formatInfo)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free

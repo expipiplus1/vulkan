@@ -8,8 +8,13 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance1  ( trimCommandPool
                                                         , FormatFeatureFlags
                                                         ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Control.Monad.IO.Class (MonadIO)
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Vulkan.Core10.Handles (CommandPool)
@@ -107,7 +112,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 trimCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolTrimFlags -> io ()
 trimCommandPool device commandPool flags = liftIO $ do
-  let vkTrimCommandPool' = mkVkTrimCommandPool (pVkTrimCommandPool (deviceCmds (device :: Device)))
+  let vkTrimCommandPoolPtr = pVkTrimCommandPool (deviceCmds (device :: Device))
+  unless (vkTrimCommandPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkTrimCommandPool is null" Nothing Nothing
+  let vkTrimCommandPool' = mkVkTrimCommandPool vkTrimCommandPoolPtr
   vkTrimCommandPool' (deviceHandle (device)) (commandPool) (flags)
   pure $ ()
 

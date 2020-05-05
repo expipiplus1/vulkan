@@ -12,6 +12,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -132,7 +133,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ViewportWScalingNV'
 cmdSetViewportWScalingNV :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewportWScalings" ::: Vector ViewportWScalingNV) -> io ()
 cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO . evalContT $ do
-  let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV (pVkCmdSetViewportWScalingNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetViewportWScalingNVPtr = pVkCmdSetViewportWScalingNV (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetViewportWScalingNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWScalingNV is null" Nothing Nothing
+  let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNVPtr
   pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e) . ($ ())) (viewportWScalings)
   lift $ vkCmdSetViewportWScalingNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewportWScalings)) :: Word32)) (pPViewportWScalings)

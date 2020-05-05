@@ -6,6 +6,7 @@ module Vulkan.Core10.LayerDiscovery  ( enumerateInstanceLayerProperties
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -13,6 +14,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (castFunPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -26,6 +28,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Ptr (Ptr(Ptr))
@@ -122,7 +126,10 @@ foreign import ccall
 -- 'LayerProperties'
 enumerateInstanceLayerProperties :: forall io . MonadIO io => io (Result, ("properties" ::: Vector LayerProperties))
 enumerateInstanceLayerProperties  = liftIO . evalContT $ do
-  vkEnumerateInstanceLayerProperties' <- lift $ mkVkEnumerateInstanceLayerProperties . castFunPtr @_ @(("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr LayerProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceLayerProperties"#)
+  vkEnumerateInstanceLayerPropertiesPtr <- lift $ castFunPtr @_ @(("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr LayerProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceLayerProperties"#)
+  lift $ unless (vkEnumerateInstanceLayerPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateInstanceLayerProperties is null" Nothing Nothing
+  let vkEnumerateInstanceLayerProperties' = mkVkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerPropertiesPtr
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkEnumerateInstanceLayerProperties' (pPPropertyCount) (nullPtr)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -204,7 +211,10 @@ foreign import ccall
 -- 'LayerProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
 enumerateDeviceLayerProperties :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector LayerProperties))
 enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
-  let vkEnumerateDeviceLayerProperties' = mkVkEnumerateDeviceLayerProperties (pVkEnumerateDeviceLayerProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkEnumerateDeviceLayerPropertiesPtr = pVkEnumerateDeviceLayerProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkEnumerateDeviceLayerPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateDeviceLayerProperties is null" Nothing Nothing
+  let vkEnumerateDeviceLayerProperties' = mkVkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkEnumerateDeviceLayerProperties' physicalDevice' (pPPropertyCount) (nullPtr)

@@ -15,10 +15,12 @@ module Vulkan.Extensions.VK_EXT_debug_marker  ( debugMarkerSetObjectNameEXT
                                               ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -37,6 +39,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word64)
@@ -116,7 +120,10 @@ foreign import ccall
 -- 'DebugMarkerObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
 debugMarkerSetObjectNameEXT :: forall io . MonadIO io => Device -> DebugMarkerObjectNameInfoEXT -> io ()
 debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
-  let vkDebugMarkerSetObjectNameEXT' = mkVkDebugMarkerSetObjectNameEXT (pVkDebugMarkerSetObjectNameEXT (deviceCmds (device :: Device)))
+  let vkDebugMarkerSetObjectNameEXTPtr = pVkDebugMarkerSetObjectNameEXT (deviceCmds (device :: Device))
+  lift $ unless (vkDebugMarkerSetObjectNameEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectNameEXT is null" Nothing Nothing
+  let vkDebugMarkerSetObjectNameEXT' = mkVkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXTPtr
   pNameInfo <- ContT $ withCStruct (nameInfo)
   r <- lift $ vkDebugMarkerSetObjectNameEXT' (deviceHandle (device)) pNameInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -166,7 +173,10 @@ foreign import ccall
 -- 'DebugMarkerObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
 debugMarkerSetObjectTagEXT :: forall io . MonadIO io => Device -> DebugMarkerObjectTagInfoEXT -> io ()
 debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
-  let vkDebugMarkerSetObjectTagEXT' = mkVkDebugMarkerSetObjectTagEXT (pVkDebugMarkerSetObjectTagEXT (deviceCmds (device :: Device)))
+  let vkDebugMarkerSetObjectTagEXTPtr = pVkDebugMarkerSetObjectTagEXT (deviceCmds (device :: Device))
+  lift $ unless (vkDebugMarkerSetObjectTagEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectTagEXT is null" Nothing Nothing
+  let vkDebugMarkerSetObjectTagEXT' = mkVkDebugMarkerSetObjectTagEXT vkDebugMarkerSetObjectTagEXTPtr
   pTagInfo <- ContT $ withCStruct (tagInfo)
   r <- lift $ vkDebugMarkerSetObjectTagEXT' (deviceHandle (device)) pTagInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -224,7 +234,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
 cmdDebugMarkerBeginEXT :: forall io . MonadIO io => CommandBuffer -> DebugMarkerMarkerInfoEXT -> io ()
 cmdDebugMarkerBeginEXT commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdDebugMarkerBeginEXT' = mkVkCmdDebugMarkerBeginEXT (pVkCmdDebugMarkerBeginEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDebugMarkerBeginEXTPtr = pVkCmdDebugMarkerBeginEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdDebugMarkerBeginEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerBeginEXT is null" Nothing Nothing
+  let vkCmdDebugMarkerBeginEXT' = mkVkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXTPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   lift $ vkCmdDebugMarkerBeginEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo
   pure $ ()
@@ -296,7 +309,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDebugMarkerEndEXT :: forall io . MonadIO io => CommandBuffer -> io ()
 cmdDebugMarkerEndEXT commandBuffer = liftIO $ do
-  let vkCmdDebugMarkerEndEXT' = mkVkCmdDebugMarkerEndEXT (pVkCmdDebugMarkerEndEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDebugMarkerEndEXTPtr = pVkCmdDebugMarkerEndEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDebugMarkerEndEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerEndEXT is null" Nothing Nothing
+  let vkCmdDebugMarkerEndEXT' = mkVkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXTPtr
   vkCmdDebugMarkerEndEXT' (commandBufferHandle (commandBuffer))
   pure $ ()
 
@@ -353,7 +369,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
 cmdDebugMarkerInsertEXT :: forall io . MonadIO io => CommandBuffer -> DebugMarkerMarkerInfoEXT -> io ()
 cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdDebugMarkerInsertEXT' = mkVkCmdDebugMarkerInsertEXT (pVkCmdDebugMarkerInsertEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDebugMarkerInsertEXTPtr = pVkCmdDebugMarkerInsertEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdDebugMarkerInsertEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerInsertEXT is null" Nothing Nothing
+  let vkCmdDebugMarkerInsertEXT' = mkVkCmdDebugMarkerInsertEXT vkCmdDebugMarkerInsertEXTPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   lift $ vkCmdDebugMarkerInsertEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo
   pure $ ()

@@ -15,8 +15,11 @@ module Vulkan.Extensions.VK_EXT_line_rasterization  ( cmdSetLineStippleEXT
                                                     , pattern EXT_LINE_RASTERIZATION_EXTENSION_NAME
                                                     ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -35,6 +38,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -119,7 +124,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLineStippleEXT :: forall io . MonadIO io => CommandBuffer -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> io ()
 cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
-  let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT (pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetLineStippleEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineStippleEXT is null" Nothing Nothing
+  let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT vkCmdSetLineStippleEXTPtr
   vkCmdSetLineStippleEXT' (commandBufferHandle (commandBuffer)) (lineStippleFactor) (lineStipplePattern)
   pure $ ()
 

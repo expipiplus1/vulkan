@@ -9,12 +9,14 @@ module Vulkan.Core10.Event  ( createEvent
                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -25,6 +27,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
@@ -113,7 +117,10 @@ foreign import ccall
 -- 'EventCreateInfo'
 createEvent :: forall io . MonadIO io => Device -> EventCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Event)
 createEvent device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateEvent' = mkVkCreateEvent (pVkCreateEvent (deviceCmds (device :: Device)))
+  let vkCreateEventPtr = pVkCreateEvent (deviceCmds (device :: Device))
+  lift $ unless (vkCreateEventPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateEvent is null" Nothing Nothing
+  let vkCreateEvent' = mkVkCreateEvent vkCreateEventPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -193,7 +200,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 destroyEvent :: forall io . MonadIO io => Device -> Event -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyEvent device event allocator = liftIO . evalContT $ do
-  let vkDestroyEvent' = mkVkDestroyEvent (pVkDestroyEvent (deviceCmds (device :: Device)))
+  let vkDestroyEventPtr = pVkDestroyEvent (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyEventPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyEvent is null" Nothing Nothing
+  let vkDestroyEvent' = mkVkDestroyEvent vkDestroyEventPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -266,7 +276,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 getEventStatus :: forall io . MonadIO io => Device -> Event -> io (Result)
 getEventStatus device event = liftIO $ do
-  let vkGetEventStatus' = mkVkGetEventStatus (pVkGetEventStatus (deviceCmds (device :: Device)))
+  let vkGetEventStatusPtr = pVkGetEventStatus (deviceCmds (device :: Device))
+  unless (vkGetEventStatusPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetEventStatus is null" Nothing Nothing
+  let vkGetEventStatus' = mkVkGetEventStatus vkGetEventStatusPtr
   r <- vkGetEventStatus' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
@@ -325,7 +338,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 setEvent :: forall io . MonadIO io => Device -> Event -> io ()
 setEvent device event = liftIO $ do
-  let vkSetEvent' = mkVkSetEvent (pVkSetEvent (deviceCmds (device :: Device)))
+  let vkSetEventPtr = pVkSetEvent (deviceCmds (device :: Device))
+  unless (vkSetEventPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetEvent is null" Nothing Nothing
+  let vkSetEvent' = mkVkSetEvent vkSetEventPtr
   r <- vkSetEvent' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -390,7 +406,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 resetEvent :: forall io . MonadIO io => Device -> Event -> io ()
 resetEvent device event = liftIO $ do
-  let vkResetEvent' = mkVkResetEvent (pVkResetEvent (deviceCmds (device :: Device)))
+  let vkResetEventPtr = pVkResetEvent (deviceCmds (device :: Device))
+  unless (vkResetEventPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetEvent is null" Nothing Nothing
+  let vkResetEvent' = mkVkResetEvent vkResetEventPtr
   r <- vkResetEvent' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
 

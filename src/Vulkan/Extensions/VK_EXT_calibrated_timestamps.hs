@@ -15,12 +15,14 @@ module Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( getPhysicalDeviceCalibr
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -44,6 +46,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -145,7 +149,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'TimeDomainEXT'
 getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("timeDomains" ::: Vector TimeDomainEXT))
 getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr = pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceCalibrateableTimeDomainsEXT is null" Nothing Nothing
+  let vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPTimeDomainCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' physicalDevice' (pPTimeDomainCount) (nullPtr)
@@ -222,7 +229,10 @@ foreign import ccall
 -- 'CalibratedTimestampInfoEXT', 'Vulkan.Core10.Handles.Device'
 getCalibratedTimestampsEXT :: forall io . MonadIO io => Device -> ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT) -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
 getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
-  let vkGetCalibratedTimestampsEXT' = mkVkGetCalibratedTimestampsEXT (pVkGetCalibratedTimestampsEXT (deviceCmds (device :: Device)))
+  let vkGetCalibratedTimestampsEXTPtr = pVkGetCalibratedTimestampsEXT (deviceCmds (device :: Device))
+  lift $ unless (vkGetCalibratedTimestampsEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetCalibratedTimestampsEXT is null" Nothing Nothing
+  let vkGetCalibratedTimestampsEXT' = mkVkGetCalibratedTimestampsEXT vkGetCalibratedTimestampsEXTPtr
   pPTimestampInfos <- ContT $ allocaBytesAligned @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e) . ($ ())) (timestampInfos)
   pPTimestamps <- ContT $ bracket (callocBytes @Word64 ((fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) * 8)) free

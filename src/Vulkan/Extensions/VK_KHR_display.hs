@@ -34,12 +34,14 @@ module Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
                                          ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -67,6 +69,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -189,7 +193,10 @@ foreign import ccall
 -- 'DisplayPropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPropertiesKHR))
 getPhysicalDeviceDisplayPropertiesKHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR (pVkGetPhysicalDeviceDisplayPropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceDisplayPropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceDisplayPropertiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayPropertiesKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr)
@@ -266,7 +273,10 @@ foreign import ccall
 -- 'DisplayPlanePropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
 getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR (pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayPlanePropertiesKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr)
@@ -357,7 +367,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneSupportedDisplaysKHR :: forall io . MonadIO io => PhysicalDevice -> ("planeIndex" ::: Word32) -> io (Result, ("displays" ::: Vector DisplayKHR))
 getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalContT $ do
-  let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR (pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetDisplayPlaneSupportedDisplaysKHRPtr = pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetDisplayPlaneSupportedDisplaysKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneSupportedDisplaysKHR is null" Nothing Nothing
+  let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPDisplayCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (nullPtr)
@@ -446,7 +459,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayModePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
 getDisplayModePropertiesKHR physicalDevice display = liftIO . evalContT $ do
-  let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR (pVkGetDisplayModePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetDisplayModePropertiesKHRPtr = pVkGetDisplayModePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetDisplayModePropertiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayModePropertiesKHR is null" Nothing Nothing
+  let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) (nullPtr)
@@ -533,7 +549,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 createDisplayModeKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> DisplayModeCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DisplayModeKHR)
 createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDisplayModeKHR' = mkVkCreateDisplayModeKHR (pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkCreateDisplayModeKHRPtr = pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkCreateDisplayModeKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDisplayModeKHR is null" Nothing Nothing
+  let vkCreateDisplayModeKHR' = mkVkCreateDisplayModeKHR vkCreateDisplayModeKHRPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -603,7 +622,10 @@ foreign import ccall
 -- 'DisplayPlaneCapabilitiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayModeKHR -> ("planeIndex" ::: Word32) -> io (DisplayPlaneCapabilitiesKHR)
 getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalContT $ do
-  let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR (pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetDisplayPlaneCapabilitiesKHRPtr = pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetDisplayPlaneCapabilitiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneCapabilitiesKHR is null" Nothing Nothing
+  let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHRPtr
   pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilitiesKHR)
   r <- lift $ vkGetDisplayPlaneCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (mode) (planeIndex) (pPCapabilities)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -672,7 +694,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 createDisplayPlaneSurfaceKHR :: forall io . MonadIO io => Instance -> DisplaySurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
 createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDisplayPlaneSurfaceKHR' = mkVkCreateDisplayPlaneSurfaceKHR (pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance)))
+  let vkCreateDisplayPlaneSurfaceKHRPtr = pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance))
+  lift $ unless (vkCreateDisplayPlaneSurfaceKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDisplayPlaneSurfaceKHR is null" Nothing Nothing
+  let vkCreateDisplayPlaneSurfaceKHR' = mkVkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHRPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

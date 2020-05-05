@@ -19,12 +19,14 @@ module Vulkan.Extensions.VK_KHR_display_swapchain  ( createSharedSwapchainsKHR
                                                    ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -37,6 +39,8 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -182,7 +186,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 createSharedSwapchainsKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> ("createInfos" ::: Vector (SwapchainCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
-  let vkCreateSharedSwapchainsKHR' = mkVkCreateSharedSwapchainsKHR (pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device)))
+  let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device))
+  lift $ unless (vkCreateSharedSwapchainsKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSharedSwapchainsKHR is null" Nothing Nothing
+  let vkCreateSharedSwapchainsKHR' = mkVkCreateSharedSwapchainsKHR vkCreateSharedSwapchainsKHRPtr
   pPCreateInfos <- ContT $ allocaBytesAligned @(SwapchainCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (104 * (i)) :: Ptr (SwapchainCreateInfoKHR _)) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of

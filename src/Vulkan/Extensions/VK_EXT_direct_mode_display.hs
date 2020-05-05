@@ -7,9 +7,14 @@ module Vulkan.Extensions.VK_EXT_direct_mode_display  ( releaseDisplayEXT
                                                      , DisplayKHR(..)
                                                      ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Vulkan.Extensions.Handles (DisplayKHR)
@@ -48,7 +53,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 releaseDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io ()
 releaseDisplayEXT physicalDevice display = liftIO $ do
-  let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT (pVkReleaseDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkReleaseDisplayEXTPtr = pVkReleaseDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  unless (vkReleaseDisplayEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseDisplayEXT is null" Nothing Nothing
+  let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT vkReleaseDisplayEXTPtr
   _ <- vkReleaseDisplayEXT' (physicalDeviceHandle (physicalDevice)) (display)
   pure $ ()
 

@@ -6,6 +6,7 @@ module Vulkan.Core10.ExtensionDiscovery  ( enumerateInstanceExtensionProperties
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -13,6 +14,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (castFunPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -28,6 +30,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Ptr (Ptr(Ptr))
@@ -138,7 +142,10 @@ foreign import ccall
 -- 'ExtensionProperties'
 enumerateInstanceExtensionProperties :: forall io . MonadIO io => ("layerName" ::: Maybe ByteString) -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateInstanceExtensionProperties layerName = liftIO . evalContT $ do
-  vkEnumerateInstanceExtensionProperties' <- lift $ mkVkEnumerateInstanceExtensionProperties . castFunPtr @_ @(("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr ExtensionProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceExtensionProperties"#)
+  vkEnumerateInstanceExtensionPropertiesPtr <- lift $ castFunPtr @_ @(("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr ExtensionProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceExtensionProperties"#)
+  lift $ unless (vkEnumerateInstanceExtensionPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateInstanceExtensionProperties is null" Nothing Nothing
+  let vkEnumerateInstanceExtensionProperties' = mkVkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionPropertiesPtr
   pLayerName <- case (layerName) of
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
@@ -226,7 +233,10 @@ foreign import ccall
 -- 'ExtensionProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
 enumerateDeviceExtensionProperties :: forall io . MonadIO io => PhysicalDevice -> ("layerName" ::: Maybe ByteString) -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT $ do
-  let vkEnumerateDeviceExtensionProperties' = mkVkEnumerateDeviceExtensionProperties (pVkEnumerateDeviceExtensionProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkEnumerateDeviceExtensionPropertiesPtr = pVkEnumerateDeviceExtensionProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkEnumerateDeviceExtensionPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateDeviceExtensionProperties is null" Nothing Nothing
+  let vkEnumerateDeviceExtensionProperties' = mkVkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pLayerName <- case (layerName) of
     Nothing -> pure nullPtr

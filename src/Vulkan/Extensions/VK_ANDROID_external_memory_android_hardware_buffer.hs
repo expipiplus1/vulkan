@@ -15,6 +15,7 @@ module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( g
                                                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -23,6 +24,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -35,6 +37,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -114,7 +118,10 @@ foreign import ccall
 -- 'AndroidHardwareBufferPropertiesANDROID', 'Vulkan.Core10.Handles.Device'
 getAndroidHardwareBufferPropertiesANDROID :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> Ptr AHardwareBuffer -> io (AndroidHardwareBufferPropertiesANDROID a)
 getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
-  let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID (pVkGetAndroidHardwareBufferPropertiesANDROID (deviceCmds (device :: Device)))
+  let vkGetAndroidHardwareBufferPropertiesANDROIDPtr = pVkGetAndroidHardwareBufferPropertiesANDROID (deviceCmds (device :: Device))
+  lift $ unless (vkGetAndroidHardwareBufferPropertiesANDROIDPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAndroidHardwareBufferPropertiesANDROID is null" Nothing Nothing
+  let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROIDPtr
   pPProperties <- ContT (withZeroCStruct @(AndroidHardwareBufferPropertiesANDROID _))
   r <- lift $ vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (pPProperties)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -176,7 +183,10 @@ foreign import ccall
 -- 'MemoryGetAndroidHardwareBufferInfoANDROID'
 getMemoryAndroidHardwareBufferANDROID :: forall io . MonadIO io => Device -> MemoryGetAndroidHardwareBufferInfoANDROID -> io (Ptr AHardwareBuffer)
 getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
-  let vkGetMemoryAndroidHardwareBufferANDROID' = mkVkGetMemoryAndroidHardwareBufferANDROID (pVkGetMemoryAndroidHardwareBufferANDROID (deviceCmds (device :: Device)))
+  let vkGetMemoryAndroidHardwareBufferANDROIDPtr = pVkGetMemoryAndroidHardwareBufferANDROID (deviceCmds (device :: Device))
+  lift $ unless (vkGetMemoryAndroidHardwareBufferANDROIDPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryAndroidHardwareBufferANDROID is null" Nothing Nothing
+  let vkGetMemoryAndroidHardwareBufferANDROID' = mkVkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROIDPtr
   pInfo <- ContT $ withCStruct (info)
   pPBuffer <- ContT $ bracket (callocBytes @(Ptr AHardwareBuffer) 8) free
   r <- lift $ vkGetMemoryAndroidHardwareBufferANDROID' (deviceHandle (device)) pInfo (pPBuffer)

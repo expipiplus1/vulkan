@@ -10,12 +10,14 @@ module Vulkan.Extensions.VK_KHR_external_semaphore_fd  ( getSemaphoreFdKHR
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -30,6 +32,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -115,7 +119,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetFdInfoKHR'
 getSemaphoreFdKHR :: forall io . MonadIO io => Device -> SemaphoreGetFdInfoKHR -> io (("fd" ::: Int32))
 getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetSemaphoreFdKHR' = mkVkGetSemaphoreFdKHR (pVkGetSemaphoreFdKHR (deviceCmds (device :: Device)))
+  let vkGetSemaphoreFdKHRPtr = pVkGetSemaphoreFdKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetSemaphoreFdKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreFdKHR is null" Nothing Nothing
+  let vkGetSemaphoreFdKHR' = mkVkGetSemaphoreFdKHR vkGetSemaphoreFdKHRPtr
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
   r <- lift $ vkGetSemaphoreFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd)
@@ -169,7 +176,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreFdInfoKHR'
 importSemaphoreFdKHR :: forall io . MonadIO io => Device -> ImportSemaphoreFdInfoKHR -> io ()
 importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
-  let vkImportSemaphoreFdKHR' = mkVkImportSemaphoreFdKHR (pVkImportSemaphoreFdKHR (deviceCmds (device :: Device)))
+  let vkImportSemaphoreFdKHRPtr = pVkImportSemaphoreFdKHR (deviceCmds (device :: Device))
+  lift $ unless (vkImportSemaphoreFdKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreFdKHR is null" Nothing Nothing
+  let vkImportSemaphoreFdKHR' = mkVkImportSemaphoreFdKHR vkImportSemaphoreFdKHRPtr
   pImportSemaphoreFdInfo <- ContT $ withCStruct (importSemaphoreFdInfo)
   r <- lift $ vkImportSemaphoreFdKHR' (deviceHandle (device)) pImportSemaphoreFdInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

@@ -26,12 +26,14 @@ module Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDeviceSurfac
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -53,6 +55,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -182,7 +186,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
 getPhysicalDeviceSurfacePresentModes2EXT :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT (pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSurfacePresentModes2EXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfacePresentModes2EXT is null" Nothing Nothing
+  let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT vkGetPhysicalDeviceSurfacePresentModes2EXTPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -250,7 +257,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
 getDeviceGroupSurfacePresentModes2EXT :: forall a io . (PokeChain a, MonadIO io) => Device -> PhysicalDeviceSurfaceInfo2KHR a -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
-  let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT (pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device)))
+  let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device))
+  lift $ unless (vkGetDeviceGroupSurfacePresentModes2EXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModes2EXT is null" Nothing Nothing
+  let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXTPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
   r <- lift $ vkGetDeviceGroupSurfacePresentModes2EXT' (deviceHandle (device)) pSurfaceInfo (pPModes)
@@ -336,7 +346,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 acquireFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
 acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
-  let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT (pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
+  let vkAcquireFullScreenExclusiveModeEXTPtr = pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
+  unless (vkAcquireFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireFullScreenExclusiveModeEXT is null" Nothing Nothing
+  let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXTPtr
   r <- vkAcquireFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -374,7 +387,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 releaseFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
 releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
-  let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT (pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
+  let vkReleaseFullScreenExclusiveModeEXTPtr = pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
+  unless (vkReleaseFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseFullScreenExclusiveModeEXT is null" Nothing Nothing
+  let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXTPtr
   r <- vkReleaseFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))
 

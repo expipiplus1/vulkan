@@ -18,6 +18,7 @@ import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -142,7 +143,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance', 'PhysicalDeviceGroupProperties'
 enumeratePhysicalDeviceGroups :: forall io . MonadIO io => Instance -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
 enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
-  let vkEnumeratePhysicalDeviceGroups' = mkVkEnumeratePhysicalDeviceGroups (pVkEnumeratePhysicalDeviceGroups (instanceCmds (instance' :: Instance)))
+  let vkEnumeratePhysicalDeviceGroupsPtr = pVkEnumeratePhysicalDeviceGroups (instanceCmds (instance' :: Instance))
+  lift $ unless (vkEnumeratePhysicalDeviceGroupsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDeviceGroups is null" Nothing Nothing
+  let vkEnumeratePhysicalDeviceGroups' = mkVkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroupsPtr
   let instance'' = instanceHandle (instance')
   pPPhysicalDeviceGroupCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkEnumeratePhysicalDeviceGroups' instance'' (pPPhysicalDeviceGroupCount) (nullPtr)

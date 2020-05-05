@@ -14,12 +14,14 @@ module Vulkan.Extensions.VK_NV_external_memory_win32  ( getMemoryWin32HandleNV
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -31,6 +33,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
@@ -104,7 +108,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV'
 getMemoryWin32HandleNV :: forall io . MonadIO io => Device -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> io (HANDLE)
 getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
-  let vkGetMemoryWin32HandleNV' = mkVkGetMemoryWin32HandleNV (pVkGetMemoryWin32HandleNV (deviceCmds (device :: Device)))
+  let vkGetMemoryWin32HandleNVPtr = pVkGetMemoryWin32HandleNV (deviceCmds (device :: Device))
+  lift $ unless (vkGetMemoryWin32HandleNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandleNV is null" Nothing Nothing
+  let vkGetMemoryWin32HandleNV' = mkVkGetMemoryWin32HandleNV vkGetMemoryWin32HandleNVPtr
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
   r <- lift $ vkGetMemoryWin32HandleNV' (deviceHandle (device)) (memory) (handleType) (pPHandle)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

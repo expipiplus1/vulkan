@@ -23,6 +23,7 @@ import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -128,7 +129,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetWin32HandleInfoKHR'
 getSemaphoreWin32HandleKHR :: forall io . MonadIO io => Device -> SemaphoreGetWin32HandleInfoKHR -> io (HANDLE)
 getSemaphoreWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
-  let vkGetSemaphoreWin32HandleKHR' = mkVkGetSemaphoreWin32HandleKHR (pVkGetSemaphoreWin32HandleKHR (deviceCmds (device :: Device)))
+  let vkGetSemaphoreWin32HandleKHRPtr = pVkGetSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreWin32HandleKHR is null" Nothing Nothing
+  let vkGetSemaphoreWin32HandleKHR' = mkVkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHRPtr
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
   r <- lift $ vkGetSemaphoreWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle)
@@ -183,7 +187,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreWin32HandleInfoKHR'
 importSemaphoreWin32HandleKHR :: forall io . MonadIO io => Device -> ImportSemaphoreWin32HandleInfoKHR -> io ()
 importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . evalContT $ do
-  let vkImportSemaphoreWin32HandleKHR' = mkVkImportSemaphoreWin32HandleKHR (pVkImportSemaphoreWin32HandleKHR (deviceCmds (device :: Device)))
+  let vkImportSemaphoreWin32HandleKHRPtr = pVkImportSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
+  lift $ unless (vkImportSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreWin32HandleKHR is null" Nothing Nothing
+  let vkImportSemaphoreWin32HandleKHR' = mkVkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHRPtr
   pImportSemaphoreWin32HandleInfo <- ContT $ withCStruct (importSemaphoreWin32HandleInfo)
   r <- lift $ vkImportSemaphoreWin32HandleKHR' (deviceHandle (device)) pImportSemaphoreWin32HandleInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

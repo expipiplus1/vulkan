@@ -15,8 +15,11 @@ module Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRend
                                                        , pattern EXT_CONDITIONAL_RENDERING_EXTENSION_NAME
                                                        ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -38,6 +41,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -127,7 +132,10 @@ foreign import ccall
 -- 'ConditionalRenderingBeginInfoEXT'
 cmdBeginConditionalRenderingEXT :: forall io . MonadIO io => CommandBuffer -> ConditionalRenderingBeginInfoEXT -> io ()
 cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO . evalContT $ do
-  let vkCmdBeginConditionalRenderingEXT' = mkVkCmdBeginConditionalRenderingEXT (pVkCmdBeginConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBeginConditionalRenderingEXTPtr = pVkCmdBeginConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBeginConditionalRenderingEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginConditionalRenderingEXT is null" Nothing Nothing
+  let vkCmdBeginConditionalRenderingEXT' = mkVkCmdBeginConditionalRenderingEXT vkCmdBeginConditionalRenderingEXTPtr
   pConditionalRenderingBegin <- ContT $ withCStruct (conditionalRenderingBegin)
   lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
   pure $ ()
@@ -209,7 +217,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndConditionalRenderingEXT :: forall io . MonadIO io => CommandBuffer -> io ()
 cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
-  let vkCmdEndConditionalRenderingEXT' = mkVkCmdEndConditionalRenderingEXT (pVkCmdEndConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdEndConditionalRenderingEXTPtr = pVkCmdEndConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdEndConditionalRenderingEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndConditionalRenderingEXT is null" Nothing Nothing
+  let vkCmdEndConditionalRenderingEXT' = mkVkCmdEndConditionalRenderingEXT vkCmdEndConditionalRenderingEXTPtr
   vkCmdEndConditionalRenderingEXT' (commandBufferHandle (commandBuffer))
   pure $ ()
 

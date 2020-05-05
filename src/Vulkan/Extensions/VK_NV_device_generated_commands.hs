@@ -56,6 +56,7 @@ import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -441,7 +442,10 @@ foreign import ccall
 -- 'GeneratedCommandsInfoNV'
 cmdExecuteGeneratedCommandsNV :: forall io . MonadIO io => CommandBuffer -> ("isPreprocessed" ::: Bool) -> GeneratedCommandsInfoNV -> io ()
 cmdExecuteGeneratedCommandsNV commandBuffer isPreprocessed generatedCommandsInfo = liftIO . evalContT $ do
-  let vkCmdExecuteGeneratedCommandsNV' = mkVkCmdExecuteGeneratedCommandsNV (pVkCmdExecuteGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdExecuteGeneratedCommandsNVPtr = pVkCmdExecuteGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdExecuteGeneratedCommandsNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteGeneratedCommandsNV is null" Nothing Nothing
+  let vkCmdExecuteGeneratedCommandsNV' = mkVkCmdExecuteGeneratedCommandsNV vkCmdExecuteGeneratedCommandsNVPtr
   pGeneratedCommandsInfo <- ContT $ withCStruct (generatedCommandsInfo)
   lift $ vkCmdExecuteGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) (boolToBool32 (isPreprocessed)) pGeneratedCommandsInfo
   pure $ ()
@@ -516,7 +520,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'GeneratedCommandsInfoNV'
 cmdPreprocessGeneratedCommandsNV :: forall io . MonadIO io => CommandBuffer -> GeneratedCommandsInfoNV -> io ()
 cmdPreprocessGeneratedCommandsNV commandBuffer generatedCommandsInfo = liftIO . evalContT $ do
-  let vkCmdPreprocessGeneratedCommandsNV' = mkVkCmdPreprocessGeneratedCommandsNV (pVkCmdPreprocessGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdPreprocessGeneratedCommandsNVPtr = pVkCmdPreprocessGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdPreprocessGeneratedCommandsNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPreprocessGeneratedCommandsNV is null" Nothing Nothing
+  let vkCmdPreprocessGeneratedCommandsNV' = mkVkCmdPreprocessGeneratedCommandsNV vkCmdPreprocessGeneratedCommandsNVPtr
   pGeneratedCommandsInfo <- ContT $ withCStruct (generatedCommandsInfo)
   lift $ vkCmdPreprocessGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) pGeneratedCommandsInfo
   pure $ ()
@@ -605,7 +612,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 cmdBindPipelineShaderGroupNV :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> Pipeline -> ("groupIndex" ::: Word32) -> io ()
 cmdBindPipelineShaderGroupNV commandBuffer pipelineBindPoint pipeline groupIndex = liftIO $ do
-  let vkCmdBindPipelineShaderGroupNV' = mkVkCmdBindPipelineShaderGroupNV (pVkCmdBindPipelineShaderGroupNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBindPipelineShaderGroupNVPtr = pVkCmdBindPipelineShaderGroupNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdBindPipelineShaderGroupNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipelineShaderGroupNV is null" Nothing Nothing
+  let vkCmdBindPipelineShaderGroupNV' = mkVkCmdBindPipelineShaderGroupNV vkCmdBindPipelineShaderGroupNVPtr
   vkCmdBindPipelineShaderGroupNV' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (pipeline) (groupIndex)
   pure $ ()
 
@@ -657,7 +667,10 @@ foreign import ccall
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
 getGeneratedCommandsMemoryRequirementsNV :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> GeneratedCommandsMemoryRequirementsInfoNV -> io (MemoryRequirements2 a)
 getGeneratedCommandsMemoryRequirementsNV device info = liftIO . evalContT $ do
-  let vkGetGeneratedCommandsMemoryRequirementsNV' = mkVkGetGeneratedCommandsMemoryRequirementsNV (pVkGetGeneratedCommandsMemoryRequirementsNV (deviceCmds (device :: Device)))
+  let vkGetGeneratedCommandsMemoryRequirementsNVPtr = pVkGetGeneratedCommandsMemoryRequirementsNV (deviceCmds (device :: Device))
+  lift $ unless (vkGetGeneratedCommandsMemoryRequirementsNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetGeneratedCommandsMemoryRequirementsNV is null" Nothing Nothing
+  let vkGetGeneratedCommandsMemoryRequirementsNV' = mkVkGetGeneratedCommandsMemoryRequirementsNV vkGetGeneratedCommandsMemoryRequirementsNVPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
   lift $ vkGetGeneratedCommandsMemoryRequirementsNV' (deviceHandle (device)) pInfo (pPMemoryRequirements)
@@ -731,7 +744,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'
 createIndirectCommandsLayoutNV :: forall io . MonadIO io => Device -> IndirectCommandsLayoutCreateInfoNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io (IndirectCommandsLayoutNV)
 createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateIndirectCommandsLayoutNV' = mkVkCreateIndirectCommandsLayoutNV (pVkCreateIndirectCommandsLayoutNV (deviceCmds (device :: Device)))
+  let vkCreateIndirectCommandsLayoutNVPtr = pVkCreateIndirectCommandsLayoutNV (deviceCmds (device :: Device))
+  lift $ unless (vkCreateIndirectCommandsLayoutNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateIndirectCommandsLayoutNV is null" Nothing Nothing
+  let vkCreateIndirectCommandsLayoutNV' = mkVkCreateIndirectCommandsLayoutNV vkCreateIndirectCommandsLayoutNVPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -820,7 +836,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'
 destroyIndirectCommandsLayoutNV :: forall io . MonadIO io => Device -> IndirectCommandsLayoutNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO . evalContT $ do
-  let vkDestroyIndirectCommandsLayoutNV' = mkVkDestroyIndirectCommandsLayoutNV (pVkDestroyIndirectCommandsLayoutNV (deviceCmds (device :: Device)))
+  let vkDestroyIndirectCommandsLayoutNVPtr = pVkDestroyIndirectCommandsLayoutNV (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyIndirectCommandsLayoutNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyIndirectCommandsLayoutNV is null" Nothing Nothing
+  let vkDestroyIndirectCommandsLayoutNV' = mkVkDestroyIndirectCommandsLayoutNV vkDestroyIndirectCommandsLayoutNVPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

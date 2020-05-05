@@ -24,6 +24,7 @@ module Vulkan.Extensions.VK_KHR_pipeline_executable_properties  ( getPipelineExe
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -31,6 +32,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -59,6 +61,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Data.Int (Int64)
 import Foreign.Ptr (FunPtr)
@@ -180,7 +184,10 @@ foreign import ccall
 -- 'PipelineInfoKHR'
 getPipelineExecutablePropertiesKHR :: forall io . MonadIO io => Device -> PipelineInfoKHR -> io (Result, ("properties" ::: Vector PipelineExecutablePropertiesKHR))
 getPipelineExecutablePropertiesKHR device pipelineInfo = liftIO . evalContT $ do
-  let vkGetPipelineExecutablePropertiesKHR' = mkVkGetPipelineExecutablePropertiesKHR (pVkGetPipelineExecutablePropertiesKHR (deviceCmds (device :: Device)))
+  let vkGetPipelineExecutablePropertiesKHRPtr = pVkGetPipelineExecutablePropertiesKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetPipelineExecutablePropertiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutablePropertiesKHR is null" Nothing Nothing
+  let vkGetPipelineExecutablePropertiesKHR' = mkVkGetPipelineExecutablePropertiesKHR vkGetPipelineExecutablePropertiesKHRPtr
   let device' = deviceHandle (device)
   pPipelineInfo <- ContT $ withCStruct (pipelineInfo)
   pPExecutableCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -279,7 +286,10 @@ foreign import ccall
 -- 'PipelineExecutableStatisticKHR'
 getPipelineExecutableStatisticsKHR :: forall io . MonadIO io => Device -> PipelineExecutableInfoKHR -> io (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
 getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ do
-  let vkGetPipelineExecutableStatisticsKHR' = mkVkGetPipelineExecutableStatisticsKHR (pVkGetPipelineExecutableStatisticsKHR (deviceCmds (device :: Device)))
+  let vkGetPipelineExecutableStatisticsKHRPtr = pVkGetPipelineExecutableStatisticsKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetPipelineExecutableStatisticsKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutableStatisticsKHR is null" Nothing Nothing
+  let vkGetPipelineExecutableStatisticsKHR' = mkVkGetPipelineExecutableStatisticsKHR vkGetPipelineExecutableStatisticsKHRPtr
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)
   pPStatisticCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -388,7 +398,10 @@ foreign import ccall
 -- 'PipelineExecutableInternalRepresentationKHR'
 getPipelineExecutableInternalRepresentationsKHR :: forall io . MonadIO io => Device -> PipelineExecutableInfoKHR -> io (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
 getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO . evalContT $ do
-  let vkGetPipelineExecutableInternalRepresentationsKHR' = mkVkGetPipelineExecutableInternalRepresentationsKHR (pVkGetPipelineExecutableInternalRepresentationsKHR (deviceCmds (device :: Device)))
+  let vkGetPipelineExecutableInternalRepresentationsKHRPtr = pVkGetPipelineExecutableInternalRepresentationsKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetPipelineExecutableInternalRepresentationsKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutableInternalRepresentationsKHR is null" Nothing Nothing
+  let vkGetPipelineExecutableInternalRepresentationsKHR' = mkVkGetPipelineExecutableInternalRepresentationsKHR vkGetPipelineExecutableInternalRepresentationsKHRPtr
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)
   pPInternalRepresentationCount <- ContT $ bracket (callocBytes @Word32 4) free

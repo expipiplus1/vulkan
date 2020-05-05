@@ -8,12 +8,14 @@ module Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2  ( bindBufferMemory2
                                                         , ImageCreateFlags
                                                         ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -24,6 +26,8 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -109,7 +113,10 @@ foreign import ccall
 -- 'BindBufferMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindBufferMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindBufferMemoryInfo a)) -> io ()
 bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
-  let vkBindBufferMemory2' = mkVkBindBufferMemory2 (pVkBindBufferMemory2 (deviceCmds (device :: Device)))
+  let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (deviceCmds (device :: Device))
+  lift $ unless (vkBindBufferMemory2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory2 is null" Nothing Nothing
+  let vkBindBufferMemory2' = mkVkBindBufferMemory2 vkBindBufferMemory2Ptr
   pPBindInfos <- ContT $ allocaBytesAligned @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _)) (e) . ($ ())) (bindInfos)
   r <- lift $ vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos)
@@ -175,7 +182,10 @@ foreign import ccall
 -- 'BindImageMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindImageMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindImageMemoryInfo a)) -> io ()
 bindImageMemory2 device bindInfos = liftIO . evalContT $ do
-  let vkBindImageMemory2' = mkVkBindImageMemory2 (pVkBindImageMemory2 (deviceCmds (device :: Device)))
+  let vkBindImageMemory2Ptr = pVkBindImageMemory2 (deviceCmds (device :: Device))
+  lift $ unless (vkBindImageMemory2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory2 is null" Nothing Nothing
+  let vkBindImageMemory2' = mkVkBindImageMemory2 vkBindImageMemory2Ptr
   pPBindInfos <- ContT $ allocaBytesAligned @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _)) (e) . ($ ())) (bindInfos)
   r <- lift $ vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos)

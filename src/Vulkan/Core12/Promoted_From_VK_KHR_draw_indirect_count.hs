@@ -3,8 +3,13 @@ module Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count  ( cmdDrawIndirect
                                                                , cmdDrawIndexedIndirectCount
                                                                ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Control.Monad.IO.Class (MonadIO)
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -335,7 +340,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDrawIndirectCount :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
 cmdDrawIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
-  let vkCmdDrawIndirectCount' = mkVkCmdDrawIndirectCount (pVkCmdDrawIndirectCount (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawIndirectCountPtr = pVkCmdDrawIndirectCount (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawIndirectCountPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirectCount is null" Nothing Nothing
+  let vkCmdDrawIndirectCount' = mkVkCmdDrawIndirectCount vkCmdDrawIndirectCountPtr
   vkCmdDrawIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
   pure $ ()
 
@@ -655,7 +663,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDrawIndexedIndirectCount :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
 cmdDrawIndexedIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
-  let vkCmdDrawIndexedIndirectCount' = mkVkCmdDrawIndexedIndirectCount (pVkCmdDrawIndexedIndirectCount (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawIndexedIndirectCountPtr = pVkCmdDrawIndexedIndirectCount (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawIndexedIndirectCountPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexedIndirectCount is null" Nothing Nothing
+  let vkCmdDrawIndexedIndirectCount' = mkVkCmdDrawIndexedIndirectCount vkCmdDrawIndexedIndirectCountPtr
   vkCmdDrawIndexedIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
   pure $ ()
 

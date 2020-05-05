@@ -7,6 +7,7 @@ module Vulkan.Core10.Query  ( createQueryPool
                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -15,6 +16,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -27,6 +29,8 @@ import Foreign.C.Types (CSize)
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -125,7 +129,10 @@ foreign import ccall
 -- 'QueryPoolCreateInfo'
 createQueryPool :: forall a io . (PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (QueryPool)
 createQueryPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateQueryPool' = mkVkCreateQueryPool (pVkCreateQueryPool (deviceCmds (device :: Device)))
+  let vkCreateQueryPoolPtr = pVkCreateQueryPool (deviceCmds (device :: Device))
+  lift $ unless (vkCreateQueryPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateQueryPool is null" Nothing Nothing
+  let vkCreateQueryPool' = mkVkCreateQueryPool vkCreateQueryPoolPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -206,7 +213,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'
 destroyQueryPool :: forall io . MonadIO io => Device -> QueryPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
-  let vkDestroyQueryPool' = mkVkDestroyQueryPool (pVkDestroyQueryPool (deviceCmds (device :: Device)))
+  let vkDestroyQueryPoolPtr = pVkDestroyQueryPool (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyQueryPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyQueryPool is null" Nothing Nothing
+  let vkDestroyQueryPool' = mkVkDestroyQueryPool vkDestroyQueryPoolPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -430,7 +440,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
 getQueryPoolResults :: forall io . MonadIO io => Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> io (Result)
 getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = liftIO $ do
-  let vkGetQueryPoolResults' = mkVkGetQueryPoolResults (pVkGetQueryPoolResults (deviceCmds (device :: Device)))
+  let vkGetQueryPoolResultsPtr = pVkGetQueryPoolResults (deviceCmds (device :: Device))
+  unless (vkGetQueryPoolResultsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueryPoolResults is null" Nothing Nothing
+  let vkGetQueryPoolResults' = mkVkGetQueryPoolResults vkGetQueryPoolResultsPtr
   r <- vkGetQueryPoolResults' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount) (CSize (dataSize)) (data') (stride) (flags)
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)

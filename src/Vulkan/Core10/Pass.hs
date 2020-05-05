@@ -25,6 +25,7 @@ import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -164,7 +165,10 @@ foreign import ccall
 -- 'FramebufferCreateInfo'
 createFramebuffer :: forall a io . (PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Framebuffer)
 createFramebuffer device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateFramebuffer' = mkVkCreateFramebuffer (pVkCreateFramebuffer (deviceCmds (device :: Device)))
+  let vkCreateFramebufferPtr = pVkCreateFramebuffer (deviceCmds (device :: Device))
+  lift $ unless (vkCreateFramebufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateFramebuffer is null" Nothing Nothing
+  let vkCreateFramebuffer' = mkVkCreateFramebuffer vkCreateFramebufferPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -246,7 +250,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Framebuffer'
 destroyFramebuffer :: forall io . MonadIO io => Device -> Framebuffer -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyFramebuffer device framebuffer allocator = liftIO . evalContT $ do
-  let vkDestroyFramebuffer' = mkVkDestroyFramebuffer (pVkDestroyFramebuffer (deviceCmds (device :: Device)))
+  let vkDestroyFramebufferPtr = pVkDestroyFramebuffer (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyFramebufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyFramebuffer is null" Nothing Nothing
+  let vkDestroyFramebuffer' = mkVkDestroyFramebuffer vkDestroyFramebufferPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -310,7 +317,10 @@ foreign import ccall
 -- 'RenderPassCreateInfo'
 createRenderPass :: forall a io . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
 createRenderPass device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateRenderPass' = mkVkCreateRenderPass (pVkCreateRenderPass (deviceCmds (device :: Device)))
+  let vkCreateRenderPassPtr = pVkCreateRenderPass (deviceCmds (device :: Device))
+  lift $ unless (vkCreateRenderPassPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRenderPass is null" Nothing Nothing
+  let vkCreateRenderPass' = mkVkCreateRenderPass vkCreateRenderPassPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -392,7 +402,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass'
 destroyRenderPass :: forall io . MonadIO io => Device -> RenderPass -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyRenderPass device renderPass allocator = liftIO . evalContT $ do
-  let vkDestroyRenderPass' = mkVkDestroyRenderPass (pVkDestroyRenderPass (deviceCmds (device :: Device)))
+  let vkDestroyRenderPassPtr = pVkDestroyRenderPass (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyRenderPassPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyRenderPass is null" Nothing Nothing
+  let vkDestroyRenderPass' = mkVkDestroyRenderPass vkDestroyRenderPassPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -468,7 +481,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.RenderPass'
 getRenderAreaGranularity :: forall io . MonadIO io => Device -> RenderPass -> io (("granularity" ::: Extent2D))
 getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
-  let vkGetRenderAreaGranularity' = mkVkGetRenderAreaGranularity (pVkGetRenderAreaGranularity (deviceCmds (device :: Device)))
+  let vkGetRenderAreaGranularityPtr = pVkGetRenderAreaGranularity (deviceCmds (device :: Device))
+  lift $ unless (vkGetRenderAreaGranularityPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRenderAreaGranularity is null" Nothing Nothing
+  let vkGetRenderAreaGranularity' = mkVkGetRenderAreaGranularity vkGetRenderAreaGranularityPtr
   pPGranularity <- ContT (withZeroCStruct @Extent2D)
   lift $ vkGetRenderAreaGranularity' (deviceHandle (device)) (renderPass) (pPGranularity)
   pGranularity <- lift $ peekCStruct @Extent2D pPGranularity

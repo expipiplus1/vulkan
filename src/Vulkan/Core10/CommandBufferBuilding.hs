@@ -64,6 +64,7 @@ import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -352,7 +353,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 cmdBindPipeline :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> Pipeline -> io ()
 cmdBindPipeline commandBuffer pipelineBindPoint pipeline = liftIO $ do
-  let vkCmdBindPipeline' = mkVkCmdBindPipeline (pVkCmdBindPipeline (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBindPipelinePtr = pVkCmdBindPipeline (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdBindPipelinePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipeline is null" Nothing Nothing
+  let vkCmdBindPipeline' = mkVkCmdBindPipeline vkCmdBindPipelinePtr
   vkCmdBindPipeline' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (pipeline)
   pure $ ()
 
@@ -443,7 +447,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Viewport'
 cmdSetViewport :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewports" ::: Vector Viewport) -> io ()
 cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
-  let vkCmdSetViewport' = mkVkCmdSetViewport (pVkCmdSetViewport (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetViewportPtr = pVkCmdSetViewport (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetViewportPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewport is null" Nothing Nothing
+  let vkCmdSetViewport' = mkVkCmdSetViewport vkCmdSetViewportPtr
   pPViewports <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (viewports)) * 24) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) (viewports)
   lift $ vkCmdSetViewport' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports)
@@ -550,7 +557,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Rect2D'
 cmdSetScissor :: forall io . MonadIO io => CommandBuffer -> ("firstScissor" ::: Word32) -> ("scissors" ::: Vector Rect2D) -> io ()
 cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
-  let vkCmdSetScissor' = mkVkCmdSetScissor (pVkCmdSetScissor (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetScissorPtr = pVkCmdSetScissor (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetScissorPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetScissor is null" Nothing Nothing
+  let vkCmdSetScissor' = mkVkCmdSetScissor vkCmdSetScissorPtr
   pPScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (scissors)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (scissors)
   lift $ vkCmdSetScissor' (commandBufferHandle (commandBuffer)) (firstScissor) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors)
@@ -613,7 +623,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLineWidth :: forall io . MonadIO io => CommandBuffer -> ("lineWidth" ::: Float) -> io ()
 cmdSetLineWidth commandBuffer lineWidth = liftIO $ do
-  let vkCmdSetLineWidth' = mkVkCmdSetLineWidth (pVkCmdSetLineWidth (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetLineWidthPtr = pVkCmdSetLineWidth (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetLineWidthPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineWidth is null" Nothing Nothing
+  let vkCmdSetLineWidth' = mkVkCmdSetLineWidth vkCmdSetLineWidthPtr
   vkCmdSetLineWidth' (commandBufferHandle (commandBuffer)) (CFloat (lineWidth))
   pure $ ()
 
@@ -753,7 +766,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBias :: forall io . MonadIO io => CommandBuffer -> ("depthBiasConstantFactor" ::: Float) -> ("depthBiasClamp" ::: Float) -> ("depthBiasSlopeFactor" ::: Float) -> io ()
 cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = liftIO $ do
-  let vkCmdSetDepthBias' = mkVkCmdSetDepthBias (pVkCmdSetDepthBias (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetDepthBiasPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBias is null" Nothing Nothing
+  let vkCmdSetDepthBias' = mkVkCmdSetDepthBias vkCmdSetDepthBiasPtr
   vkCmdSetDepthBias' (commandBufferHandle (commandBuffer)) (CFloat (depthBiasConstantFactor)) (CFloat (depthBiasClamp)) (CFloat (depthBiasSlopeFactor))
   pure $ ()
 
@@ -811,7 +827,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetBlendConstants :: forall io . MonadIO io => CommandBuffer -> ("blendConstants" ::: (Float, Float, Float, Float)) -> io ()
 cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
-  let vkCmdSetBlendConstants' = mkVkCmdSetBlendConstants (pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetBlendConstantsPtr = pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetBlendConstantsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetBlendConstants is null" Nothing Nothing
+  let vkCmdSetBlendConstants' = mkVkCmdSetBlendConstants vkCmdSetBlendConstantsPtr
   pBlendConstants <- ContT $ allocaBytesAligned @(FixedArray 4 CFloat) 16 4
   let pBlendConstants' = lowerArrayPtr pBlendConstants
   lift $ case (blendConstants) of
@@ -892,7 +911,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBounds :: forall io . MonadIO io => CommandBuffer -> ("minDepthBounds" ::: Float) -> ("maxDepthBounds" ::: Float) -> io ()
 cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = liftIO $ do
-  let vkCmdSetDepthBounds' = mkVkCmdSetDepthBounds (pVkCmdSetDepthBounds (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetDepthBoundsPtr = pVkCmdSetDepthBounds (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetDepthBoundsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBounds is null" Nothing Nothing
+  let vkCmdSetDepthBounds' = mkVkCmdSetDepthBounds vkCmdSetDepthBoundsPtr
   vkCmdSetDepthBounds' (commandBufferHandle (commandBuffer)) (CFloat (minDepthBounds)) (CFloat (maxDepthBounds))
   pure $ ()
 
@@ -966,7 +988,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilCompareMask :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("compareMask" ::: Word32) -> io ()
 cmdSetStencilCompareMask commandBuffer faceMask compareMask = liftIO $ do
-  let vkCmdSetStencilCompareMask' = mkVkCmdSetStencilCompareMask (pVkCmdSetStencilCompareMask (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetStencilCompareMaskPtr = pVkCmdSetStencilCompareMask (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetStencilCompareMaskPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilCompareMask is null" Nothing Nothing
+  let vkCmdSetStencilCompareMask' = mkVkCmdSetStencilCompareMask vkCmdSetStencilCompareMaskPtr
   vkCmdSetStencilCompareMask' (commandBufferHandle (commandBuffer)) (faceMask) (compareMask)
   pure $ ()
 
@@ -1040,7 +1065,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilWriteMask :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("writeMask" ::: Word32) -> io ()
 cmdSetStencilWriteMask commandBuffer faceMask writeMask = liftIO $ do
-  let vkCmdSetStencilWriteMask' = mkVkCmdSetStencilWriteMask (pVkCmdSetStencilWriteMask (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetStencilWriteMaskPtr = pVkCmdSetStencilWriteMask (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetStencilWriteMaskPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilWriteMask is null" Nothing Nothing
+  let vkCmdSetStencilWriteMask' = mkVkCmdSetStencilWriteMask vkCmdSetStencilWriteMaskPtr
   vkCmdSetStencilWriteMask' (commandBufferHandle (commandBuffer)) (faceMask) (writeMask)
   pure $ ()
 
@@ -1114,7 +1142,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilReference :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("reference" ::: Word32) -> io ()
 cmdSetStencilReference commandBuffer faceMask reference = liftIO $ do
-  let vkCmdSetStencilReference' = mkVkCmdSetStencilReference (pVkCmdSetStencilReference (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetStencilReferencePtr = pVkCmdSetStencilReference (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetStencilReferencePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilReference is null" Nothing Nothing
+  let vkCmdSetStencilReference' = mkVkCmdSetStencilReference vkCmdSetStencilReferencePtr
   vkCmdSetStencilReference' (commandBufferHandle (commandBuffer)) (faceMask) (reference)
   pure $ ()
 
@@ -1316,7 +1347,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PipelineLayout'
 cmdBindDescriptorSets :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("firstSet" ::: Word32) -> ("descriptorSets" ::: Vector DescriptorSet) -> ("dynamicOffsets" ::: Vector Word32) -> io ()
 cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = liftIO . evalContT $ do
-  let vkCmdBindDescriptorSets' = mkVkCmdBindDescriptorSets (pVkCmdBindDescriptorSets (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBindDescriptorSetsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindDescriptorSets is null" Nothing Nothing
+  let vkCmdBindDescriptorSets' = mkVkCmdBindDescriptorSets vkCmdBindDescriptorSetsPtr
   pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
   pPDynamicOffsets <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (dynamicOffsets)) * 4) 4
@@ -1414,7 +1448,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.IndexType.IndexType'
 cmdBindIndexBuffer :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> IndexType -> io ()
 cmdBindIndexBuffer commandBuffer buffer offset indexType = liftIO $ do
-  let vkCmdBindIndexBuffer' = mkVkCmdBindIndexBuffer (pVkCmdBindIndexBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBindIndexBufferPtr = pVkCmdBindIndexBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdBindIndexBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindIndexBuffer is null" Nothing Nothing
+  let vkCmdBindIndexBuffer' = mkVkCmdBindIndexBuffer vkCmdBindIndexBufferPtr
   vkCmdBindIndexBuffer' (commandBufferHandle (commandBuffer)) (buffer) (offset) (indexType)
   pure $ ()
 
@@ -1538,7 +1575,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdBindVertexBuffers :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> io ()
 cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalContT $ do
-  let vkCmdBindVertexBuffers' = mkVkCmdBindVertexBuffers (pVkCmdBindVertexBuffers (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBindVertexBuffersPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindVertexBuffers is null" Nothing Nothing
+  let vkCmdBindVertexBuffers' = mkVkCmdBindVertexBuffers vkCmdBindVertexBuffersPtr
   let pBuffersLength = Data.Vector.length $ (buffers)
   let pOffsetsLength = Data.Vector.length $ (offsets)
   lift $ unless (pOffsetsLength == pBuffersLength) $
@@ -1815,7 +1855,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDraw :: forall io . MonadIO io => CommandBuffer -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> io ()
 cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = liftIO $ do
-  let vkCmdDraw' = mkVkCmdDraw (pVkCmdDraw (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawPtr = pVkCmdDraw (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDraw is null" Nothing Nothing
+  let vkCmdDraw' = mkVkCmdDraw vkCmdDrawPtr
   vkCmdDraw' (commandBufferHandle (commandBuffer)) (vertexCount) (instanceCount) (firstVertex) (firstInstance)
   pure $ ()
 
@@ -2109,7 +2152,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDrawIndexed :: forall io . MonadIO io => CommandBuffer -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> io ()
 cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = liftIO $ do
-  let vkCmdDrawIndexed' = mkVkCmdDrawIndexed (pVkCmdDrawIndexed (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawIndexedPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexed is null" Nothing Nothing
+  let vkCmdDrawIndexed' = mkVkCmdDrawIndexed vkCmdDrawIndexedPtr
   vkCmdDrawIndexed' (commandBufferHandle (commandBuffer)) (indexCount) (instanceCount) (firstIndex) (vertexOffset) (firstInstance)
   pure $ ()
 
@@ -2412,7 +2458,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDrawIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
 cmdDrawIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
-  let vkCmdDrawIndirect' = mkVkCmdDrawIndirect (pVkCmdDrawIndirect (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawIndirectPtr = pVkCmdDrawIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawIndirectPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirect is null" Nothing Nothing
+  let vkCmdDrawIndirect' = mkVkCmdDrawIndirect vkCmdDrawIndirectPtr
   vkCmdDrawIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
   pure $ ()
 
@@ -2721,7 +2770,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDrawIndexedIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
 cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
-  let vkCmdDrawIndexedIndirect' = mkVkCmdDrawIndexedIndirect (pVkCmdDrawIndexedIndirect (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawIndexedIndirectPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexedIndirect is null" Nothing Nothing
+  let vkCmdDrawIndexedIndirect' = mkVkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirectPtr
   vkCmdDrawIndexedIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
   pure $ ()
 
@@ -2947,7 +2999,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDispatch :: forall io . MonadIO io => CommandBuffer -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> io ()
 cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
-  let vkCmdDispatch' = mkVkCmdDispatch (pVkCmdDispatch (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDispatchPtr = pVkCmdDispatch (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDispatchPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatch is null" Nothing Nothing
+  let vkCmdDispatch' = mkVkCmdDispatch vkCmdDispatchPtr
   vkCmdDispatch' (commandBufferHandle (commandBuffer)) (groupCountX) (groupCountY) (groupCountZ)
   pure $ ()
 
@@ -3173,7 +3228,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDispatchIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> io ()
 cmdDispatchIndirect commandBuffer buffer offset = liftIO $ do
-  let vkCmdDispatchIndirect' = mkVkCmdDispatchIndirect (pVkCmdDispatchIndirect (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDispatchIndirectPtr = pVkCmdDispatchIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDispatchIndirectPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchIndirect is null" Nothing Nothing
+  let vkCmdDispatchIndirect' = mkVkCmdDispatchIndirect vkCmdDispatchIndirectPtr
   vkCmdDispatchIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset)
   pure $ ()
 
@@ -3301,7 +3359,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdCopyBuffer :: forall io . MonadIO io => CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferCopy) -> io ()
 cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ do
-  let vkCmdCopyBuffer' = mkVkCmdCopyBuffer (pVkCmdCopyBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdCopyBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer is null" Nothing Nothing
+  let vkCmdCopyBuffer' = mkVkCmdCopyBuffer vkCmdCopyBufferPtr
   pPRegions <- ContT $ allocaBytesAligned @BufferCopy ((Data.Vector.length (regions)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (24 * (i)) :: Ptr BufferCopy) (e) . ($ ())) (regions)
   lift $ vkCmdCopyBuffer' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions)
@@ -3616,7 +3677,10 @@ foreign import ccall
 -- 'ImageCopy', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 cmdCopyImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageCopy) -> io ()
 cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdCopyImage' = mkVkCmdCopyImage (pVkCmdCopyImage (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdCopyImagePtr = pVkCmdCopyImage (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdCopyImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage is null" Nothing Nothing
+  let vkCmdCopyImage' = mkVkCmdCopyImage vkCmdCopyImagePtr
   pPRegions <- ContT $ allocaBytesAligned @ImageCopy ((Data.Vector.length (regions)) * 68) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageCopy) (e) . ($ ())) (regions)
   lift $ vkCmdCopyImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions)
@@ -3962,7 +4026,10 @@ foreign import ccall
 -- 'ImageBlit', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 cmdBlitImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageBlit) -> Filter -> io ()
 cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions filter' = liftIO . evalContT $ do
-  let vkCmdBlitImage' = mkVkCmdBlitImage (pVkCmdBlitImage (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBlitImagePtr = pVkCmdBlitImage (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBlitImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage is null" Nothing Nothing
+  let vkCmdBlitImage' = mkVkCmdBlitImage vkCmdBlitImagePtr
   pPRegions <- ContT $ allocaBytesAligned @ImageBlit ((Data.Vector.length (regions)) * 80) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (80 * (i)) :: Ptr ImageBlit) (e) . ($ ())) (regions)
   lift $ vkCmdBlitImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions) (filter')
@@ -4150,7 +4217,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 cmdCopyBufferToImage :: forall io . MonadIO io => CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector BufferImageCopy) -> io ()
 cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdCopyBufferToImage' = mkVkCmdCopyBufferToImage (pVkCmdCopyBufferToImage (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdCopyBufferToImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage is null" Nothing Nothing
+  let vkCmdCopyBufferToImage' = mkVkCmdCopyBufferToImage vkCmdCopyBufferToImagePtr
   pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e) . ($ ())) (regions)
   lift $ vkCmdCopyBufferToImage' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions)
@@ -4338,7 +4408,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 cmdCopyImageToBuffer :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferImageCopy) -> io ()
 cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = liftIO . evalContT $ do
-  let vkCmdCopyImageToBuffer' = mkVkCmdCopyImageToBuffer (pVkCmdCopyImageToBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdCopyImageToBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer is null" Nothing Nothing
+  let vkCmdCopyImageToBuffer' = mkVkCmdCopyImageToBuffer vkCmdCopyImageToBufferPtr
   pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e) . ($ ())) (regions)
   lift $ vkCmdCopyImageToBuffer' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions)
@@ -4478,7 +4551,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdUpdateBuffer :: forall io . MonadIO io => CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("dataSize" ::: DeviceSize) -> ("data" ::: Ptr ()) -> io ()
 cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = liftIO $ do
-  let vkCmdUpdateBuffer' = mkVkCmdUpdateBuffer (pVkCmdUpdateBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdUpdateBufferPtr = pVkCmdUpdateBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdUpdateBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdUpdateBuffer is null" Nothing Nothing
+  let vkCmdUpdateBuffer' = mkVkCmdUpdateBuffer vkCmdUpdateBufferPtr
   vkCmdUpdateBuffer' (commandBufferHandle (commandBuffer)) (dstBuffer) (dstOffset) (dataSize) (data')
   pure $ ()
 
@@ -4595,7 +4671,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdFillBuffer :: forall io . MonadIO io => CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> DeviceSize -> ("data" ::: Word32) -> io ()
 cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = liftIO $ do
-  let vkCmdFillBuffer' = mkVkCmdFillBuffer (pVkCmdFillBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdFillBufferPtr = pVkCmdFillBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdFillBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdFillBuffer is null" Nothing Nothing
+  let vkCmdFillBuffer' = mkVkCmdFillBuffer vkCmdFillBufferPtr
   vkCmdFillBuffer' (commandBufferHandle (commandBuffer)) (dstBuffer) (dstOffset) (size) (data')
   pure $ ()
 
@@ -4762,7 +4841,10 @@ foreign import ccall
 -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'
 cmdClearColorImage :: forall io . MonadIO io => CommandBuffer -> Image -> ImageLayout -> ClearColorValue -> ("ranges" ::: Vector ImageSubresourceRange) -> io ()
 cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalContT $ do
-  let vkCmdClearColorImage' = mkVkCmdClearColorImage (pVkCmdClearColorImage (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdClearColorImagePtr = pVkCmdClearColorImage (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdClearColorImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearColorImage is null" Nothing Nothing
+  let vkCmdClearColorImage' = mkVkCmdClearColorImage vkCmdClearColorImagePtr
   pColor <- ContT $ withCStruct (color)
   pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e) . ($ ())) (ranges)
@@ -4957,7 +5039,10 @@ foreign import ccall
 -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'
 cmdClearDepthStencilImage :: forall io . MonadIO io => CommandBuffer -> Image -> ImageLayout -> ClearDepthStencilValue -> ("ranges" ::: Vector ImageSubresourceRange) -> io ()
 cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = liftIO . evalContT $ do
-  let vkCmdClearDepthStencilImage' = mkVkCmdClearDepthStencilImage (pVkCmdClearDepthStencilImage (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdClearDepthStencilImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearDepthStencilImage is null" Nothing Nothing
+  let vkCmdClearDepthStencilImage' = mkVkCmdClearDepthStencilImage vkCmdClearDepthStencilImagePtr
   pDepthStencil <- ContT $ withCStruct (depthStencil)
   pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e) . ($ ())) (ranges)
@@ -5121,7 +5206,10 @@ foreign import ccall
 -- 'ClearAttachment', 'ClearRect', 'Vulkan.Core10.Handles.CommandBuffer'
 cmdClearAttachments :: forall io . MonadIO io => CommandBuffer -> ("attachments" ::: Vector ClearAttachment) -> ("rects" ::: Vector ClearRect) -> io ()
 cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
-  let vkCmdClearAttachments' = mkVkCmdClearAttachments (pVkCmdClearAttachments (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdClearAttachmentsPtr = pVkCmdClearAttachments (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdClearAttachmentsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearAttachments is null" Nothing Nothing
+  let vkCmdClearAttachments' = mkVkCmdClearAttachments vkCmdClearAttachmentsPtr
   pPAttachments <- ContT $ allocaBytesAligned @ClearAttachment ((Data.Vector.length (attachments)) * 24) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments `plusPtr` (24 * (i)) :: Ptr ClearAttachment) (e) . ($ ())) (attachments)
   pPRects <- ContT $ allocaBytesAligned @ClearRect ((Data.Vector.length (rects)) * 24) 4
@@ -5315,7 +5403,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve'
 cmdResolveImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageResolve) -> io ()
 cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdResolveImage' = mkVkCmdResolveImage (pVkCmdResolveImage (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdResolveImagePtr = pVkCmdResolveImage (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdResolveImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage is null" Nothing Nothing
+  let vkCmdResolveImage' = mkVkCmdResolveImage vkCmdResolveImagePtr
   pPRegions <- ContT $ allocaBytesAligned @ImageResolve ((Data.Vector.length (regions)) * 68) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageResolve) (e) . ($ ())) (regions)
   lift $ vkCmdResolveImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions)
@@ -5443,7 +5534,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdSetEvent :: forall io . MonadIO io => CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> io ()
 cmdSetEvent commandBuffer event stageMask = liftIO $ do
-  let vkCmdSetEvent' = mkVkCmdSetEvent (pVkCmdSetEvent (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetEventPtr = pVkCmdSetEvent (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetEventPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetEvent is null" Nothing Nothing
+  let vkCmdSetEvent' = mkVkCmdSetEvent vkCmdSetEventPtr
   vkCmdSetEvent' (commandBufferHandle (commandBuffer)) (event) (stageMask)
   pure $ ()
 
@@ -5574,7 +5668,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdResetEvent :: forall io . MonadIO io => CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> io ()
 cmdResetEvent commandBuffer event stageMask = liftIO $ do
-  let vkCmdResetEvent' = mkVkCmdResetEvent (pVkCmdResetEvent (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdResetEventPtr = pVkCmdResetEvent (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdResetEventPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetEvent is null" Nothing Nothing
+  let vkCmdResetEvent' = mkVkCmdResetEvent vkCmdResetEventPtr
   vkCmdResetEvent' (commandBufferHandle (commandBuffer)) (event) (stageMask)
   pure $ ()
 
@@ -5889,7 +5986,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdWaitEvents :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> ("events" ::: Vector Event) -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
 cmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
-  let vkCmdWaitEvents' = mkVkCmdWaitEvents (pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents is null" Nothing Nothing
+  let vkCmdWaitEvents' = mkVkCmdWaitEvents vkCmdWaitEventsPtr
   pPEvents <- ContT $ allocaBytesAligned @Event ((Data.Vector.length (events)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
   pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
@@ -6236,7 +6336,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdPipelineBarrier :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> DependencyFlags -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
 cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
-  let vkCmdPipelineBarrier' = mkVkCmdPipelineBarrier (pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdPipelineBarrierPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPipelineBarrier is null" Nothing Nothing
+  let vkCmdPipelineBarrier' = mkVkCmdPipelineBarrier vkCmdPipelineBarrierPtr
   pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e) . ($ ())) (memoryBarriers)
   pPBufferMemoryBarriers <- ContT $ allocaBytesAligned @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56) 8
@@ -6431,7 +6534,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.QueryPool'
 cmdBeginQuery :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> io ()
 cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
-  let vkCmdBeginQuery' = mkVkCmdBeginQuery (pVkCmdBeginQuery (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBeginQueryPtr = pVkCmdBeginQuery (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdBeginQueryPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQuery is null" Nothing Nothing
+  let vkCmdBeginQuery' = mkVkCmdBeginQuery vkCmdBeginQueryPtr
   vkCmdBeginQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags)
   pure $ ()
 
@@ -6549,7 +6655,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdEndQuery :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> io ()
 cmdEndQuery commandBuffer queryPool query = liftIO $ do
-  let vkCmdEndQuery' = mkVkCmdEndQuery (pVkCmdEndQuery (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdEndQueryPtr = pVkCmdEndQuery (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdEndQueryPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQuery is null" Nothing Nothing
+  let vkCmdEndQuery' = mkVkCmdEndQuery vkCmdEndQueryPtr
   vkCmdEndQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query)
   pure $ ()
 
@@ -6658,7 +6767,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdResetQueryPool :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> io ()
 cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = liftIO $ do
-  let vkCmdResetQueryPool' = mkVkCmdResetQueryPool (pVkCmdResetQueryPool (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdResetQueryPoolPtr = pVkCmdResetQueryPool (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdResetQueryPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetQueryPool is null" Nothing Nothing
+  let vkCmdResetQueryPool' = mkVkCmdResetQueryPool vkCmdResetQueryPoolPtr
   vkCmdResetQueryPool' (commandBufferHandle (commandBuffer)) (queryPool) (firstQuery) (queryCount)
   pure $ ()
 
@@ -6809,7 +6921,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.QueryPool'
 cmdWriteTimestamp :: forall io . MonadIO io => CommandBuffer -> PipelineStageFlagBits -> QueryPool -> ("query" ::: Word32) -> io ()
 cmdWriteTimestamp commandBuffer pipelineStage queryPool query = liftIO $ do
-  let vkCmdWriteTimestamp' = mkVkCmdWriteTimestamp (pVkCmdWriteTimestamp (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdWriteTimestampPtr = pVkCmdWriteTimestamp (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdWriteTimestampPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteTimestamp is null" Nothing Nothing
+  let vkCmdWriteTimestamp' = mkVkCmdWriteTimestamp vkCmdWriteTimestampPtr
   vkCmdWriteTimestamp' (commandBufferHandle (commandBuffer)) (pipelineStage) (queryPool) (query)
   pure $ ()
 
@@ -7021,7 +7136,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
 cmdCopyQueryPoolResults :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> io ()
 cmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags = liftIO $ do
-  let vkCmdCopyQueryPoolResults' = mkVkCmdCopyQueryPoolResults (pVkCmdCopyQueryPoolResults (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdCopyQueryPoolResultsPtr = pVkCmdCopyQueryPoolResults (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdCopyQueryPoolResultsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyQueryPoolResults is null" Nothing Nothing
+  let vkCmdCopyQueryPoolResults' = mkVkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResultsPtr
   vkCmdCopyQueryPoolResults' (commandBufferHandle (commandBuffer)) (queryPool) (firstQuery) (queryCount) (dstBuffer) (dstOffset) (stride) (flags)
   pure $ ()
 
@@ -7139,7 +7257,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
 cmdPushConstants :: forall io . MonadIO io => CommandBuffer -> PipelineLayout -> ShaderStageFlags -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("values" ::: Ptr ()) -> io ()
 cmdPushConstants commandBuffer layout stageFlags offset size values = liftIO $ do
-  let vkCmdPushConstants' = mkVkCmdPushConstants (pVkCmdPushConstants (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdPushConstantsPtr = pVkCmdPushConstants (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdPushConstantsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushConstants is null" Nothing Nothing
+  let vkCmdPushConstants' = mkVkCmdPushConstants vkCmdPushConstantsPtr
   vkCmdPushConstants' (commandBufferHandle (commandBuffer)) (layout) (stageFlags) (offset) (size) (values)
   pure $ ()
 
@@ -7333,7 +7454,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
 cmdBeginRenderPass :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io ()
 cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $ do
-  let vkCmdBeginRenderPass' = mkVkCmdBeginRenderPass (pVkCmdBeginRenderPass (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBeginRenderPassPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass is null" Nothing Nothing
+  let vkCmdBeginRenderPass' = mkVkCmdBeginRenderPass vkCmdBeginRenderPassPtr
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
   lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) pRenderPassBegin (contents)
   pure $ ()
@@ -7440,7 +7564,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
 cmdNextSubpass :: forall io . MonadIO io => CommandBuffer -> SubpassContents -> io ()
 cmdNextSubpass commandBuffer contents = liftIO $ do
-  let vkCmdNextSubpass' = mkVkCmdNextSubpass (pVkCmdNextSubpass (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdNextSubpassPtr = pVkCmdNextSubpass (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdNextSubpassPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdNextSubpass is null" Nothing Nothing
+  let vkCmdNextSubpass' = mkVkCmdNextSubpass vkCmdNextSubpassPtr
   vkCmdNextSubpass' (commandBufferHandle (commandBuffer)) (contents)
   pure $ ()
 
@@ -7510,7 +7637,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndRenderPass :: forall io . MonadIO io => CommandBuffer -> io ()
 cmdEndRenderPass commandBuffer = liftIO $ do
-  let vkCmdEndRenderPass' = mkVkCmdEndRenderPass (pVkCmdEndRenderPass (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdEndRenderPassPtr = pVkCmdEndRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdEndRenderPassPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass is null" Nothing Nothing
+  let vkCmdEndRenderPass' = mkVkCmdEndRenderPass vkCmdEndRenderPassPtr
   vkCmdEndRenderPass' (commandBufferHandle (commandBuffer))
   pure $ ()
 
@@ -7731,7 +7861,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdExecuteCommands :: forall io . MonadIO io => CommandBuffer -> ("commandBuffers" ::: Vector CommandBuffer) -> io ()
 cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
-  let vkCmdExecuteCommands' = mkVkCmdExecuteCommands (pVkCmdExecuteCommands (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdExecuteCommandsPtr = pVkCmdExecuteCommands (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdExecuteCommandsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteCommands is null" Nothing Nothing
+  let vkCmdExecuteCommands' = mkVkCmdExecuteCommands vkCmdExecuteCommandsPtr
   pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
   lift $ vkCmdExecuteCommands' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers)

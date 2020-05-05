@@ -17,8 +17,11 @@ module Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address  ( getBufferOpaq
                                                                  , MemoryAllocateFlags
                                                                  ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -29,6 +32,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word64)
@@ -113,7 +118,10 @@ foreign import ccall
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
 getBufferOpaqueCaptureAddress :: forall io . MonadIO io => Device -> BufferDeviceAddressInfo -> io (Word64)
 getBufferOpaqueCaptureAddress device info = liftIO . evalContT $ do
-  let vkGetBufferOpaqueCaptureAddress' = mkVkGetBufferOpaqueCaptureAddress (pVkGetBufferOpaqueCaptureAddress (deviceCmds (device :: Device)))
+  let vkGetBufferOpaqueCaptureAddressPtr = pVkGetBufferOpaqueCaptureAddress (deviceCmds (device :: Device))
+  lift $ unless (vkGetBufferOpaqueCaptureAddressPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferOpaqueCaptureAddress is null" Nothing Nothing
+  let vkGetBufferOpaqueCaptureAddress' = mkVkGetBufferOpaqueCaptureAddress vkGetBufferOpaqueCaptureAddressPtr
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetBufferOpaqueCaptureAddress' (deviceHandle (device)) pInfo
   pure $ (r)
@@ -182,7 +190,10 @@ foreign import ccall
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
 getBufferDeviceAddress :: forall io . MonadIO io => Device -> BufferDeviceAddressInfo -> io (DeviceAddress)
 getBufferDeviceAddress device info = liftIO . evalContT $ do
-  let vkGetBufferDeviceAddress' = mkVkGetBufferDeviceAddress (pVkGetBufferDeviceAddress (deviceCmds (device :: Device)))
+  let vkGetBufferDeviceAddressPtr = pVkGetBufferDeviceAddress (deviceCmds (device :: Device))
+  lift $ unless (vkGetBufferDeviceAddressPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferDeviceAddress is null" Nothing Nothing
+  let vkGetBufferDeviceAddress' = mkVkGetBufferDeviceAddress vkGetBufferDeviceAddressPtr
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetBufferDeviceAddress' (deviceHandle (device)) pInfo
   pure $ (r)
@@ -243,7 +254,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'DeviceMemoryOpaqueCaptureAddressInfo'
 getDeviceMemoryOpaqueCaptureAddress :: forall io . MonadIO io => Device -> DeviceMemoryOpaqueCaptureAddressInfo -> io (Word64)
 getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
-  let vkGetDeviceMemoryOpaqueCaptureAddress' = mkVkGetDeviceMemoryOpaqueCaptureAddress (pVkGetDeviceMemoryOpaqueCaptureAddress (deviceCmds (device :: Device)))
+  let vkGetDeviceMemoryOpaqueCaptureAddressPtr = pVkGetDeviceMemoryOpaqueCaptureAddress (deviceCmds (device :: Device))
+  lift $ unless (vkGetDeviceMemoryOpaqueCaptureAddressPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceMemoryOpaqueCaptureAddress is null" Nothing Nothing
+  let vkGetDeviceMemoryOpaqueCaptureAddress' = mkVkGetDeviceMemoryOpaqueCaptureAddress vkGetDeviceMemoryOpaqueCaptureAddressPtr
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetDeviceMemoryOpaqueCaptureAddress' (deviceHandle (device)) pInfo
   pure $ (r)

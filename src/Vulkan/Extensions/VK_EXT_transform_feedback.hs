@@ -21,6 +21,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -214,7 +215,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdBindTransformFeedbackBuffersEXT :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
 cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
-  let vkCmdBindTransformFeedbackBuffersEXT' = mkVkCmdBindTransformFeedbackBuffersEXT (pVkCmdBindTransformFeedbackBuffersEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBindTransformFeedbackBuffersEXTPtr = pVkCmdBindTransformFeedbackBuffersEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBindTransformFeedbackBuffersEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindTransformFeedbackBuffersEXT is null" Nothing Nothing
+  let vkCmdBindTransformFeedbackBuffersEXT' = mkVkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXTPtr
   let pBuffersLength = Data.Vector.length $ (buffers)
   let pOffsetsLength = Data.Vector.length $ (offsets)
   lift $ unless (pOffsetsLength == pBuffersLength) $
@@ -369,7 +373,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdBeginTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Vector DeviceSize) -> io ()
 cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
-  let vkCmdBeginTransformFeedbackEXT' = mkVkCmdBeginTransformFeedbackEXT (pVkCmdBeginTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBeginTransformFeedbackEXTPtr = pVkCmdBeginTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBeginTransformFeedbackEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginTransformFeedbackEXT is null" Nothing Nothing
+  let vkCmdBeginTransformFeedbackEXT' = mkVkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXTPtr
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
   let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
@@ -514,7 +521,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdEndTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Vector DeviceSize) -> io ()
 cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
-  let vkCmdEndTransformFeedbackEXT' = mkVkCmdEndTransformFeedbackEXT (pVkCmdEndTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdEndTransformFeedbackEXTPtr = pVkCmdEndTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdEndTransformFeedbackEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndTransformFeedbackEXT is null" Nothing Nothing
+  let vkCmdEndTransformFeedbackEXT' = mkVkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXTPtr
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
   let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
@@ -716,7 +726,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.QueryPool'
 cmdBeginQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> ("index" ::: Word32) -> io ()
 cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
-  let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT (pVkCmdBeginQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBeginQueryIndexedEXTPtr = pVkCmdBeginQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdBeginQueryIndexedEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQueryIndexedEXT is null" Nothing Nothing
+  let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXTPtr
   vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
   pure $ ()
 
@@ -825,7 +838,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdEndQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> io ()
 cmdEndQueryIndexedEXT commandBuffer queryPool query index = liftIO $ do
-  let vkCmdEndQueryIndexedEXT' = mkVkCmdEndQueryIndexedEXT (pVkCmdEndQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdEndQueryIndexedEXTPtr = pVkCmdEndQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdEndQueryIndexedEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQueryIndexedEXT is null" Nothing Nothing
+  let vkCmdEndQueryIndexedEXT' = mkVkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXTPtr
   vkCmdEndQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (index)
   pure $ ()
 
@@ -1127,7 +1143,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdDrawIndirectByteCountEXT :: forall io . MonadIO io => CommandBuffer -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> io ()
 cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = liftIO $ do
-  let vkCmdDrawIndirectByteCountEXT' = mkVkCmdDrawIndirectByteCountEXT (pVkCmdDrawIndirectByteCountEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDrawIndirectByteCountEXTPtr = pVkCmdDrawIndirectByteCountEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDrawIndirectByteCountEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirectByteCountEXT is null" Nothing Nothing
+  let vkCmdDrawIndirectByteCountEXT' = mkVkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXTPtr
   vkCmdDrawIndirectByteCountEXT' (commandBufferHandle (commandBuffer)) (instanceCount) (firstInstance) (counterBuffer) (counterBufferOffset) (counterOffset) (vertexStride)
   pure $ ()
 

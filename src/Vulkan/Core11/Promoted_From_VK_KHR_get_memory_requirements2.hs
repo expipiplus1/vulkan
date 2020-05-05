@@ -12,12 +12,15 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2  ( getBufferM
                                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -30,6 +33,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -98,7 +103,10 @@ foreign import ccall
 -- 'MemoryRequirements2'
 getBufferMemoryRequirements2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> BufferMemoryRequirementsInfo2 -> io (MemoryRequirements2 a)
 getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 (pVkGetBufferMemoryRequirements2 (deviceCmds (device :: Device)))
+  let vkGetBufferMemoryRequirements2Ptr = pVkGetBufferMemoryRequirements2 (deviceCmds (device :: Device))
+  lift $ unless (vkGetBufferMemoryRequirements2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferMemoryRequirements2 is null" Nothing Nothing
+  let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
   lift $ vkGetBufferMemoryRequirements2' (deviceHandle (device)) pInfo (pPMemoryRequirements)
@@ -135,7 +143,10 @@ foreign import ccall
 -- 'MemoryRequirements2'
 getImageMemoryRequirements2 :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> ImageMemoryRequirementsInfo2 a -> io (MemoryRequirements2 b)
 getImageMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 (pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device)))
+  let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device))
+  lift $ unless (vkGetImageMemoryRequirements2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageMemoryRequirements2 is null" Nothing Nothing
+  let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
   lift $ vkGetImageMemoryRequirements2' (deviceHandle (device)) pInfo (pPMemoryRequirements)
@@ -190,7 +201,10 @@ foreign import ccall
 -- 'SparseImageMemoryRequirements2'
 getImageSparseMemoryRequirements2 :: forall io . MonadIO io => Device -> ImageSparseMemoryRequirementsInfo2 -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
 getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetImageSparseMemoryRequirements2' = mkVkGetImageSparseMemoryRequirements2 (pVkGetImageSparseMemoryRequirements2 (deviceCmds (device :: Device)))
+  let vkGetImageSparseMemoryRequirements2Ptr = pVkGetImageSparseMemoryRequirements2 (deviceCmds (device :: Device))
+  lift $ unless (vkGetImageSparseMemoryRequirements2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSparseMemoryRequirements2 is null" Nothing Nothing
+  let vkGetImageSparseMemoryRequirements2' = mkVkGetImageSparseMemoryRequirements2 vkGetImageSparseMemoryRequirements2Ptr
   let device' = deviceHandle (device)
   pInfo <- ContT $ withCStruct (info)
   pPSparseMemoryRequirementCount <- ContT $ bracket (callocBytes @Word32 4) free

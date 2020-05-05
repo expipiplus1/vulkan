@@ -14,12 +14,14 @@ module Vulkan.Extensions.VK_KHR_xcb_surface  ( createXcbSurfaceKHR
                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -41,6 +43,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -141,7 +145,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'XcbSurfaceCreateInfoKHR'
 createXcbSurfaceKHR :: forall io . MonadIO io => Instance -> XcbSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
 createXcbSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateXcbSurfaceKHR' = mkVkCreateXcbSurfaceKHR (pVkCreateXcbSurfaceKHR (instanceCmds (instance' :: Instance)))
+  let vkCreateXcbSurfaceKHRPtr = pVkCreateXcbSurfaceKHR (instanceCmds (instance' :: Instance))
+  lift $ unless (vkCreateXcbSurfaceKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateXcbSurfaceKHR is null" Nothing Nothing
+  let vkCreateXcbSurfaceKHR' = mkVkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHRPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -185,7 +192,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceXcbPresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> Ptr Xcb_connection_t -> ("visual_id" ::: Xcb_visualid_t) -> io (Bool)
 getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id = liftIO $ do
-  let vkGetPhysicalDeviceXcbPresentationSupportKHR' = mkVkGetPhysicalDeviceXcbPresentationSupportKHR (pVkGetPhysicalDeviceXcbPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceXcbPresentationSupportKHRPtr = pVkGetPhysicalDeviceXcbPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  unless (vkGetPhysicalDeviceXcbPresentationSupportKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceXcbPresentationSupportKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceXcbPresentationSupportKHR' = mkVkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHRPtr
   r <- vkGetPhysicalDeviceXcbPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (connection) (visual_id)
   pure $ ((bool32ToBool r))
 
