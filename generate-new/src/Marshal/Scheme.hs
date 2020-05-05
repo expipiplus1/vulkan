@@ -268,8 +268,8 @@ lengthScheme ps p = do
     -- Make sure they exist
     (Empty, Empty)                   -> empty
     (Empty, rs) | all isReturnPtr rs -> empty
-    (os, Empty) | length os > 1 ->
-      throw "TODO: Handle multiple optional vectors without any required ones"
+    -- If we have a just optional vectors then preserve the length member
+    (_, Empty)             -> pure $ Normal (type' p)
     (os, rs) -> pure $ ElidedLength (type' p) os rs
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
@@ -342,15 +342,18 @@ arrayScheme wes wdh sibs p = case lengths p of
       _ -> dropPtrToStruct t >>= innerType wes wdh
 
     -- Is the length constrained by a non-optional sibling
-    let constrainedLength = not isOpt || (not . null)
+    let constrainedLengthBySibling = not isOpt || (not . null)
           [ ()
           | s                    <- toList sibs
           , NamedLength l' :<| _ <- pure $ lengths s
           , l == l'
           , not (isTopOptional s)
           ]
-        nullable = bool NotNullable Nullable isOpt
-    pure $ if constrainedLength
+        -- It is often clearer to preserve the length member for optional
+        -- arrays
+        constrainedLengthByClarity = True
+        nullable                   = bool NotNullable Nullable isOpt
+    pure $ if constrainedLengthByClarity || constrainedLengthBySibling
       then Vector nullable elemType
       else EitherWord32 elemType
 

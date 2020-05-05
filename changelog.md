@@ -7,6 +7,7 @@
   - Begin/End bracket pairs are now called 'useXXX' rather than 'withXXX'
   - Begin/End bracket pairs where it's not necessary to 'End' on an exception
     have a simplified type
+  - Clarify optional vector lengths by preserving the length member, #71
 
 ## [3.2.0.0] - 2020-05-02
   - Update API version 1.2.139

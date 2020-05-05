@@ -15,7 +15,8 @@ Practically speaking this means:
 
 - No setting the `sType` member, this is done automatically.
 
-- No passing length/pointer pairs for arrays, `Vector` is used instead.
+- No passing length/pointer pairs for arrays, `Vector` is used
+  instead<sup>[1](#opt-vec)</sup>.
 
 - No passing pointers for return values, this is done for you and multiple
   results are returned as elements of a tuple.
@@ -294,3 +295,10 @@ For an alternative take on Haskell bindings to Vulkan see the
 stores Vulkan structs in their C representation as `ByteArray#` whereas this
 library allocates structs on the stack and keeps them alive for just the
 lifetime of any Vulkan command call.
+
+--------
+
+<a name="opt-vec">1</a>: The exception is where the spec allows the application
+  to pass `NULL` for the vector with a non-zero count. In these cases it was
+  deemed clearer to preserve the "count" member and allow the Haskell
+  application to pass a zero-length vector to indicate `NULL`.
