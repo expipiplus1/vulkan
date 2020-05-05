@@ -9,6 +9,7 @@
   - Begin/End bracket pairs where it's not necessary to 'End' on an exception
     have a simplified type, discussion on #49
   - Clarify optional vector lengths by preserving the length member, #71
+  - Infer lengths of preserved length members when they are 0
 
 ## [3.2.0.0] - 2020-05-02
   - Update API version 1.2.139
