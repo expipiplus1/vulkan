@@ -57,6 +57,7 @@ import           Render.Stmts
 import           Render.Stmts.Poke.SiblingInfo
 import           Render.Stmts.Utils
 import           Render.Type
+import           Render.Utils
 
 type HasPoke a r
   = ( Marshalable a
@@ -316,6 +317,13 @@ lengthFromNames isElided lenName lenType os rs = do
   rsLengthRefs <- forV rs $ \r -> (r, False, ) <$> lenRefFromSibling @a r
   osLengthRefs <- forV os $ \o -> (o, True, ) <$> lenRefFromSibling @a o
   let
+    givenErr vecName opt givenName =
+            -- TODO: these should be the names we give to the variable, not the C names
+      unCName vecName
+        <> (if opt then " must be empty or have '" else " must have '")
+        <> unCName givenName
+        <> "' elements"
+
     -- If the length is not elided, construct an assertion that a vector has
     -- the same length as the given value
     assertSameAsGiven
@@ -324,13 +332,8 @@ lengthFromNames isElided lenName lenType os rs = do
       ValueDoc givenLen <- useViaName (unCName lenName)
       let fi = if opt then ("fromIntegral" <+>) else id
       l <- use ref
-      let err :: Text
-          -- TODO: these should be the names we give to the variable, not the C names
-          err =
-            unCName n
-              <> (if opt then " must be empty or have '" else " must have '")
-              <> unCName lenName
-              <> "' elements"
+      let -- TODO: these should be the names we give to the variable, not the C names
+          err  = givenErr n opt lenName
           cond = parens (fi l <+> "==" <+> givenLen)
       throwErrDoc err cond
 
@@ -346,12 +349,28 @@ lengthFromNames isElided lenName lenType os rs = do
       l2     <- use ref2
       l2'    <- fi <$> use ref2
       orNull <- if opt2 then pure $ " ||" <+> l2 <+> "== 0" else pure mempty
-      let err :: Text
-          -- TODO: these should be the names we give to the variable, not the C names
+      let -- TODO: these should be the names we give to the variable, not the C names
           err =
             unCName n2 <> " and " <> unCName n1 <> " must have the same length"
           cond = parens (l2' <+> "==" <+> l1 <> orNull)
       throwErrDoc err cond
+
+    -- If there is only one vector and the length is zero, infer the length
+    -- from the vector size
+    inferLength :: (CName, Bool, Ref s (Doc ())) -> Stmt s r (Ref s (Doc ()))
+    inferLength (n, opt, ref) = stmt Nothing (Just (unCName lenName)) $ do
+      ValueDoc givenLen <- useViaName (unCName lenName)
+      vecLen            <- use ref
+      let err  = givenErr n opt lenName
+          cond = parens ("fromIntegral" <+> vecLen <+> "==" <+> givenLen)
+      throwDoc <- throwErrDocStmtString err cond
+      pure . IOAction $ "if" <+> givenLen <+> "== 0" <> line <> indent
+        2
+        (vsep
+          [ "then pure $ fromIntegral" <+> vecLen
+          , "else" <+> doBlock [throwDoc, "pure" <+> givenLen]
+          ]
+        )
 
   let allVecs = toList (rsLengthRefs <> osLengthRefs)
   (assertions, getLenValue) <- if isElided
@@ -359,9 +378,12 @@ lengthFromNames isElided lenName lenType os rs = do
       let firstLengthRef@(_, _, len1) : otherLengthRefs = allVecs
       assertions <- traverse (assertSame firstLengthRef) otherLengthRefs
       pure (assertions, use @r len1)
-    else do
-      assertions <- traverse assertSameAsGiven allVecs
-      pure (assertions, unValueDoc <$> useViaName (unCName lenName))
+    else case allVecs of
+      -- If we just have one vector, infer the length from that
+      [v] -> pure ([], use =<< inferLength v)
+      _   -> do
+        assertions <- traverse assertSameAsGiven allVecs
+        pure (assertions, unValueDoc <$> useViaName (unCName lenName))
   stmt (Just (ConT ''Word32)) (Just (unCName lenName)) $ do
     traverse_ after assertions
     l1       <- getLenValue
