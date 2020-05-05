@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dc640a2cd87595710b19a0557e228d7f40796ef038e953521497a6b20e13ebd4
+-- hash: cd904b7f6191df6f4c640cc76f0da8b9b2f099ac58408c88bca20697bef7a452
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -21,6 +21,11 @@ extra-source-files:
 source-repository head
   type: git
   location: https://github.com/expipiplus1/vulkan
+
+flag renderdoc
+  description: Use the renderdoc API to mark the beginning and end of the 'offscreen' example so that it can be captured.
+  manual: True
+  default: False
 
 executable info
   main-is: Main.hs
@@ -60,6 +65,13 @@ executable offscreen
     , vector
     , vulkan
     , vulkan-utils
+  if flag(renderdoc)
+    cpp-options: -DRENDERDOC
+    extra-libraries:
+        dl
+    build-depends:
+        containers
+      , inline-c
   default-language: Haskell2010
 
 executable sdl-triangle
