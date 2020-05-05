@@ -64,7 +64,7 @@ import           Vulkan.Core10           hiding ( deviceWaitIdle
                                                 )
 import           Vulkan.Extensions.VK_EXT_debug_utils
                                          hiding ( setDebugUtilsObjectNameEXT )
-import           Vulkan.Utils.DebugCallback
+import           Vulkan.Utils.Debug
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 import qualified VulkanMemoryAllocator         as VMA
