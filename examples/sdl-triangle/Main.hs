@@ -264,8 +264,7 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
                                , primitiveRestartEnable = False
                                }
       , viewportState      = Just . SomeStruct $ zero
-        { viewportCount = 1
-        , viewports =
+        { viewports =
           [ Viewport
               { x        = 0
               , y        = 0
@@ -275,7 +274,6 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
               , maxDepth = 1
               }
           ]
-        , scissorCount = 1
         , scissors  =
           [Rect2D { offset = Offset2D 0 0, extent = swapchainExtent }]
         }
