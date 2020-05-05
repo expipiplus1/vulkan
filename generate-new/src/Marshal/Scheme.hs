@@ -38,6 +38,12 @@ data MarshalScheme a
   | Normal CType
     -- ^ Stays the same but uses more idiomatic Haskell types, for example
     -- Float instead of CFloat
+  | Length CType (Vector a) (Vector a)
+    -- ^ The length of a set of optional and required vectors, the same as
+    -- Normal but with some checks on the size. Additionally if the given
+    -- length is zero, it will instead be poked as the number of elements in
+    -- the associated vector.  This is used over 'ElidedLength' when having the
+    -- length explicit would be clearer.
   | ElidedLength CType (Vector a) (Vector a) -- optional and required lengths
     -- ^ This parameter only appears on the C side, it's value can be inferred
     -- from the lengths of some optional and required vectors
@@ -269,8 +275,8 @@ lengthScheme ps p = do
     (Empty, Empty)                   -> empty
     (Empty, rs) | all isReturnPtr rs -> empty
     -- If we have a just optional vectors then preserve the length member
-    (_, Empty)             -> pure $ Normal (type' p)
-    (os, rs) -> pure $ ElidedLength (type' p) os rs
+    (os, rs@Empty)                   -> pure $ Length (type' p) os rs
+    (os, rs      )                   -> pure $ ElidedLength (type' p) os rs
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
 voidPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
@@ -540,6 +546,7 @@ isElided = \case
   Unit              -> False
   Preserve _        -> False
   Normal   _        -> False
+  Length{}          -> False
   ElidedLength{}    -> True
   ElidedUnivalued _ -> True
   ElidedVoid        -> True
@@ -560,6 +567,7 @@ isNegative = \case
   Unit              -> True
   Preserve _        -> True
   Normal   _        -> True
+  Length{}          -> True
   ElidedLength{}    -> False
   ElidedUnivalued _ -> False
   ElidedVoid        -> False
