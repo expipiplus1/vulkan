@@ -373,17 +373,18 @@ render = do
                                , primitiveRestartEnable = False
                                }
       , viewportState      = Just . SomeStruct $ zero
-        { viewports = Right
-                        [ Viewport { x        = 0
-                                   , y        = 0
-                                   , width    = realToFrac (width :: Word32)
-                                   , height   = realToFrac (height :: Word32)
-                                   , minDepth = 0
-                                   , maxDepth = 1
+        { viewports     = [ Viewport { x        = 0
+                                     , y        = 0
+                                     , width    = realToFrac (width :: Word32)
+                                     , height   = realToFrac (height :: Word32)
+                                     , minDepth = 0
+                                     , maxDepth = 1
+                                     }
+                          ]
+        , scissors      = [ Rect2D { offset = Offset2D 0 0
+                                   , extent = Extent2D width height
                                    }
-                        ]
-        , scissors  = Right
-          [Rect2D { offset = Offset2D 0 0, extent = Extent2D width height }]
+                          ]
         }
       , rasterizationState = SomeStruct $ zero
                                { depthClampEnable        = False

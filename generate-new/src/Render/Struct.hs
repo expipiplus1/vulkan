@@ -494,7 +494,8 @@ zeroMemberVal MarshaledStructMember {..} = case msmScheme of
     pure $ Just "error \"This should never appear in the generated source\""
   _ | True V.:<| _ <- smIsOptional msmStructMember -> pure Nothing
   Custom CustomScheme { csZeroIsZero = True } -> pure Nothing
-  s -> zeroScheme s
+  Length{} -> pure Nothing
+  s        -> zeroScheme s
 
 ----------------------------------------------------------------
 -- Instance decls

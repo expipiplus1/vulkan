@@ -35,9 +35,10 @@ module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
                                                    , pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME
                                                    ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Utils (maybePeek)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -54,14 +55,16 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -473,11 +476,14 @@ data PipelineViewportShadingRateImageStateCreateInfoNV = PipelineViewportShading
   { -- | @shadingRateImageEnable@ specifies whether shading rate image and
     -- palettes are used during rasterization.
     shadingRateImageEnable :: Bool
+  , -- | @viewportCount@ specifies the number of per-viewport palettes used to
+    -- translate values stored in shading rate images.
+    viewportCount :: Word32
   , -- | @pShadingRatePalettes@ is a pointer to an array of
     -- 'ShadingRatePaletteNV' structures defining the palette for each
     -- viewport. If the shading rate palette state is dynamic, this member is
     -- ignored.
-    shadingRatePalettes :: Either Word32 (Vector ShadingRatePaletteNV)
+    shadingRatePalettes :: Vector ShadingRatePaletteNV
   }
   deriving (Typeable)
 deriving instance Show PipelineViewportShadingRateImageStateCreateInfoNV
@@ -488,13 +494,19 @@ instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shadingRateImageEnable))
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (shadingRatePalettes)) :: Word32))
-    pShadingRatePalettes'' <- case (shadingRatePalettes) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPShadingRatePalettes' <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (v)) * 16) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes' `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (v)
-        pure $ pPShadingRatePalettes'
+    viewportCount'' <- lift $ if (viewportCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (shadingRatePalettes))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (shadingRatePalettes)) == (viewportCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pShadingRatePalettes must be empty or have 'viewportCount' elements" Nothing Nothing
+        pure (viewportCount)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount'')
+    pShadingRatePalettes'' <- if Data.Vector.null (shadingRatePalettes)
+      then pure nullPtr
+      else do
+        pPShadingRatePalettes <- ContT $ allocaBytesAligned @ShadingRatePaletteNV (((Data.Vector.length (shadingRatePalettes))) * 16) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) ((shadingRatePalettes))
+        pure $ pPShadingRatePalettes
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV))) pShadingRatePalettes''
     lift $ f
   cStructSize = 32
@@ -510,15 +522,16 @@ instance FromCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
     shadingRateImageEnable <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     viewportCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pShadingRatePalettes <- peek @(Ptr ShadingRatePaletteNV) ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV)))
-    pShadingRatePalettes' <- maybePeek (\j -> generateM (fromIntegral viewportCount) (\i -> peekCStruct @ShadingRatePaletteNV (((j) `advancePtrBytes` (16 * (i)) :: Ptr ShadingRatePaletteNV)))) pShadingRatePalettes
-    let pShadingRatePalettes'' = maybe (Left viewportCount) Right pShadingRatePalettes'
+    let pShadingRatePalettesLength = if pShadingRatePalettes == nullPtr then 0 else (fromIntegral viewportCount)
+    pShadingRatePalettes' <- generateM pShadingRatePalettesLength (\i -> peekCStruct @ShadingRatePaletteNV ((pShadingRatePalettes `advancePtrBytes` (16 * (i)) :: Ptr ShadingRatePaletteNV)))
     pure $ PipelineViewportShadingRateImageStateCreateInfoNV
-             (bool32ToBool shadingRateImageEnable) pShadingRatePalettes''
+             (bool32ToBool shadingRateImageEnable) viewportCount pShadingRatePalettes'
 
 instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
   zero = PipelineViewportShadingRateImageStateCreateInfoNV
            zero
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkPhysicalDeviceShadingRateImageFeaturesNV - Structure describing

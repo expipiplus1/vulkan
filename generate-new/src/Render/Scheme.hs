@@ -27,6 +27,7 @@ schemeTypeNegative s = do
     Unit              -> pure $ Just (ConT ''())
     Preserve cType    -> Just <$> cToHsType DoPreserve cType
     Normal   cType    -> Just <$> cToHsType DoNotPreserve cType
+    Length cType _ _  -> Just <$> cToHsType DoNotPreserve cType
     ElidedLength{}    -> pure Nothing
     ElidedUnivalued _ -> pure Nothing
     ElidedVoid        -> pure Nothing

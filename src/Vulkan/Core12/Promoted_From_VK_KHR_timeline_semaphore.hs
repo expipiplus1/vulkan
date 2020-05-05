@@ -20,7 +20,6 @@ import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
@@ -30,8 +29,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -493,15 +492,21 @@ instance Zero SemaphoreTypeCreateInfo where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data TimelineSemaphoreSubmitInfo = TimelineSemaphoreSubmitInfo
-  { -- | @pWaitSemaphoreValues@ is an array of length @waitSemaphoreValueCount@
+  { -- | @waitSemaphoreValueCount@ is the number of semaphore wait values
+    -- specified in @pWaitSemaphoreValues@.
+    waitSemaphoreValueCount :: Word32
+  , -- | @pWaitSemaphoreValues@ is an array of length @waitSemaphoreValueCount@
     -- containing values for the corresponding semaphores in
     -- 'Vulkan.Core10.Queue.SubmitInfo'::@pWaitSemaphores@ to wait for.
-    waitSemaphoreValues :: Either Word32 (Vector Word64)
+    waitSemaphoreValues :: Vector Word64
+  , -- | @signalSemaphoreValueCount@ is the number of semaphore signal values
+    -- specified in @pSignalSemaphoreValues@.
+    signalSemaphoreValueCount :: Word32
   , -- | @pSignalSemaphoreValues@ is an array of length
     -- @signalSemaphoreValueCount@ containing values for the corresponding
     -- semaphores in 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ to
     -- set when signaled.
-    signalSemaphoreValues :: Either Word32 (Vector Word64)
+    signalSemaphoreValues :: Vector Word64
   }
   deriving (Typeable)
 deriving instance Show TimelineSemaphoreSubmitInfo
@@ -511,21 +516,33 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
   pokeCStruct p TimelineSemaphoreSubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (waitSemaphoreValues)) :: Word32))
-    pWaitSemaphoreValues'' <- case (waitSemaphoreValues) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPWaitSemaphoreValues' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (v)) * 8) 8
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (v)
-        pure $ pPWaitSemaphoreValues'
+    waitSemaphoreValueCount'' <- lift $ if (waitSemaphoreValueCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (waitSemaphoreValues))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (waitSemaphoreValues)) == (waitSemaphoreValueCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pWaitSemaphoreValues must be empty or have 'waitSemaphoreValueCount' elements" Nothing Nothing
+        pure (waitSemaphoreValueCount)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (waitSemaphoreValueCount'')
+    pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
+      then pure nullPtr
+      else do
+        pPWaitSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8) 8
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
+        pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (signalSemaphoreValues)) :: Word32))
-    pSignalSemaphoreValues'' <- case (signalSemaphoreValues) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPSignalSemaphoreValues' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (v)) * 8) 8
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (v)
-        pure $ pPSignalSemaphoreValues'
+    signalSemaphoreValueCount'' <- lift $ if (signalSemaphoreValueCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (signalSemaphoreValues))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (signalSemaphoreValues)) == (signalSemaphoreValueCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pSignalSemaphoreValues must be empty or have 'signalSemaphoreValueCount' elements" Nothing Nothing
+        pure (signalSemaphoreValueCount)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (signalSemaphoreValueCount'')
+    pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
+      then pure nullPtr
+      else do
+        pPSignalSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8) 8
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((signalSemaphoreValues))
+        pure $ pPSignalSemaphoreValues
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word64))) pSignalSemaphoreValues''
     lift $ f
   cStructSize = 48
@@ -539,19 +556,21 @@ instance FromCStruct TimelineSemaphoreSubmitInfo where
   peekCStruct p = do
     waitSemaphoreValueCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pWaitSemaphoreValues <- peek @(Ptr Word64) ((p `plusPtr` 24 :: Ptr (Ptr Word64)))
-    pWaitSemaphoreValues' <- maybePeek (\j -> generateM (fromIntegral waitSemaphoreValueCount) (\i -> peek @Word64 (((j) `advancePtrBytes` (8 * (i)) :: Ptr Word64)))) pWaitSemaphoreValues
-    let pWaitSemaphoreValues'' = maybe (Left waitSemaphoreValueCount) Right pWaitSemaphoreValues'
+    let pWaitSemaphoreValuesLength = if pWaitSemaphoreValues == nullPtr then 0 else (fromIntegral waitSemaphoreValueCount)
+    pWaitSemaphoreValues' <- generateM pWaitSemaphoreValuesLength (\i -> peek @Word64 ((pWaitSemaphoreValues `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
     signalSemaphoreValueCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pSignalSemaphoreValues <- peek @(Ptr Word64) ((p `plusPtr` 40 :: Ptr (Ptr Word64)))
-    pSignalSemaphoreValues' <- maybePeek (\j -> generateM (fromIntegral signalSemaphoreValueCount) (\i -> peek @Word64 (((j) `advancePtrBytes` (8 * (i)) :: Ptr Word64)))) pSignalSemaphoreValues
-    let pSignalSemaphoreValues'' = maybe (Left signalSemaphoreValueCount) Right pSignalSemaphoreValues'
+    let pSignalSemaphoreValuesLength = if pSignalSemaphoreValues == nullPtr then 0 else (fromIntegral signalSemaphoreValueCount)
+    pSignalSemaphoreValues' <- generateM pSignalSemaphoreValuesLength (\i -> peek @Word64 ((pSignalSemaphoreValues `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
     pure $ TimelineSemaphoreSubmitInfo
-             pWaitSemaphoreValues'' pSignalSemaphoreValues''
+             waitSemaphoreValueCount pWaitSemaphoreValues' signalSemaphoreValueCount pSignalSemaphoreValues'
 
 instance Zero TimelineSemaphoreSubmitInfo where
   zero = TimelineSemaphoreSubmitInfo
-           (Left 0)
-           (Left 0)
+           zero
+           mempty
+           zero
+           mempty
 
 
 -- | VkSemaphoreWaitInfo - Structure containing information about the

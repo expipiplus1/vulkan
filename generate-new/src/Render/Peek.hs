@@ -153,7 +153,8 @@ peekWrapped
   -> MarshalScheme a
   -> Sem (NonDet ': StmtE s r ': r) (Ref s ValueDoc)
 peekWrapped name lengths fromType addr = \case
-  Normal   toType   -> raise $ normalPeek name addr toType fromType
+  Normal toType     -> raise $ normalPeek name addr toType fromType
+  Length toType _ _ -> raise $ normalPeek name addr toType fromType
   Preserve _toType  -> raise $ storablePeek name addr fromType
   ElidedVoid        -> empty
   -- TODO: Should this take into account the type?
@@ -702,6 +703,9 @@ getLenRef lengths = do
                     $  "Trying to get length member from a non-struct type "
                     <> show siScheme
             in  case siScheme of
+                  Length (TypeName n) _ _ -> getStruct n >>= \case
+                    Nothing -> nonStruct
+                    Just _  -> pure n
                   Normal (TypeName n) -> getStruct n >>= \case
                     Nothing -> nonStruct
                     Just _  -> pure n

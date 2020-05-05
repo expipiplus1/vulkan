@@ -69,12 +69,16 @@ throwErrDoc
   => Text
   -> Doc ()
   -> Sem r (Value (Doc ()))
-throwErrDoc err cond = do
+throwErrDoc err cond = IOAction <$> throwErrDocStmtString err cond
+
+throwErrDocStmtString
+  :: (HasRenderElem r, HasRenderParams r) => Text -> Doc () -> Sem r (Doc ())
+throwErrDocStmtString err cond = do
   tellImport 'throwIO
   tellImportWithAll ''IOException
   tellImportWithAll ''IOErrorType
   tellImport 'unless
-  pure . IOAction $ "unless" <+> cond <+> "$" <> line <> indent
+  pure $ "unless" <+> cond <+> "$" <> line <> indent
     2
     (   "throwIO $ IOError Nothing InvalidArgument"
     <+> viaShow ("" :: Text) -- TODO: function name

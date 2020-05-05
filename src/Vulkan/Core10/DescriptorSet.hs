@@ -28,7 +28,6 @@ import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -39,8 +38,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -1807,6 +1806,14 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
     -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying which
     -- type of resource descriptors are used for this binding.
     descriptorType :: DescriptorType
+  , -- | @descriptorCount@ is the number of descriptors contained in the binding,
+    -- accessed in a shader as an array , except if @descriptorType@ is
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+    -- in which case @descriptorCount@ is the size in bytes of the inline
+    -- uniform block . If @descriptorCount@ is zero this binding entry is
+    -- reserved and the resource /must/ not be accessed from any stage via this
+    -- binding within any pipeline using the set layout.
+    descriptorCount :: Word32
   , -- | @stageFlags@ member is a bitmask of
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' specifying
     -- which pipeline shader stages /can/ access a resource for this binding.
@@ -1822,7 +1829,7 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
     -- a binding /can/ be used by both graphics stages and the compute stage.
     stageFlags :: ShaderStageFlags
   , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "pImmutableSamplers"
-    immutableSamplers :: Either Word32 (Vector Sampler)
+    immutableSamplers :: Vector Sampler
   }
   deriving (Typeable)
 deriving instance Show DescriptorSetLayoutBinding
@@ -1832,14 +1839,20 @@ instance ToCStruct DescriptorSetLayoutBinding where
   pokeCStruct p DescriptorSetLayoutBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     lift $ poke ((p `plusPtr` 4 :: Ptr DescriptorType)) (descriptorType)
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (immutableSamplers)) :: Word32))
+    descriptorCount'' <- lift $ if (descriptorCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (immutableSamplers))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (immutableSamplers)) == (descriptorCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pImmutableSamplers must be empty or have 'descriptorCount' elements" Nothing Nothing
+        pure (descriptorCount)
+    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (descriptorCount'')
     lift $ poke ((p `plusPtr` 12 :: Ptr ShaderStageFlags)) (stageFlags)
-    pImmutableSamplers'' <- case (immutableSamplers) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPImmutableSamplers' <- ContT $ allocaBytesAligned @Sampler ((Data.Vector.length (v)) * 8) 8
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPImmutableSamplers' `plusPtr` (8 * (i)) :: Ptr Sampler) (e)) (v)
-        pure $ pPImmutableSamplers'
+    pImmutableSamplers'' <- if Data.Vector.null (immutableSamplers)
+      then pure nullPtr
+      else do
+        pPImmutableSamplers <- ContT $ allocaBytesAligned @Sampler (((Data.Vector.length (immutableSamplers))) * 8) 8
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPImmutableSamplers `plusPtr` (8 * (i)) :: Ptr Sampler) (e)) ((immutableSamplers))
+        pure $ pPImmutableSamplers
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Sampler))) pImmutableSamplers''
     lift $ f
   cStructSize = 24
@@ -1854,20 +1867,21 @@ instance FromCStruct DescriptorSetLayoutBinding where
   peekCStruct p = do
     binding <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
     descriptorType <- peek @DescriptorType ((p `plusPtr` 4 :: Ptr DescriptorType))
-    stageFlags <- peek @ShaderStageFlags ((p `plusPtr` 12 :: Ptr ShaderStageFlags))
     descriptorCount <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    stageFlags <- peek @ShaderStageFlags ((p `plusPtr` 12 :: Ptr ShaderStageFlags))
     pImmutableSamplers <- peek @(Ptr Sampler) ((p `plusPtr` 16 :: Ptr (Ptr Sampler)))
-    pImmutableSamplers' <- maybePeek (\j -> generateM (fromIntegral descriptorCount) (\i -> peek @Sampler (((j) `advancePtrBytes` (8 * (i)) :: Ptr Sampler)))) pImmutableSamplers
-    let pImmutableSamplers'' = maybe (Left descriptorCount) Right pImmutableSamplers'
+    let pImmutableSamplersLength = if pImmutableSamplers == nullPtr then 0 else (fromIntegral descriptorCount)
+    pImmutableSamplers' <- generateM pImmutableSamplersLength (\i -> peek @Sampler ((pImmutableSamplers `advancePtrBytes` (8 * (i)) :: Ptr Sampler)))
     pure $ DescriptorSetLayoutBinding
-             binding descriptorType stageFlags pImmutableSamplers''
+             binding descriptorType descriptorCount stageFlags pImmutableSamplers'
 
 instance Zero DescriptorSetLayoutBinding where
   zero = DescriptorSetLayoutBinding
            zero
            zero
            zero
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkDescriptorSetLayoutCreateInfo - Structure specifying parameters of a

@@ -8,9 +8,10 @@ module Vulkan.Extensions.VK_NV_clip_space_w_scaling  ( cmdSetViewportWScalingNV
                                                      , pattern NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
                                                      ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Utils (maybePeek)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -18,8 +19,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -28,6 +29,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -196,11 +199,13 @@ data PipelineViewportWScalingStateCreateInfoNV = PipelineViewportWScalingStateCr
   { -- | @viewportWScalingEnable@ controls whether viewport __W__ scaling is
     -- enabled.
     viewportWScalingEnable :: Bool
+  , -- | @viewportCount@ /must/ be greater than @0@
+    viewportCount :: Word32
   , -- | @pViewportWScalings@ is a pointer to an array of 'ViewportWScalingNV'
     -- structures defining the __W__ scaling parameters for the corresponding
     -- viewports. If the viewport __W__ scaling state is dynamic, this member
     -- is ignored.
-    viewportWScalings :: Either Word32 (Vector ViewportWScalingNV)
+    viewportWScalings :: Vector ViewportWScalingNV
   }
   deriving (Typeable)
 deriving instance Show PipelineViewportWScalingStateCreateInfoNV
@@ -211,13 +216,19 @@ instance ToCStruct PipelineViewportWScalingStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (viewportWScalingEnable))
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (viewportWScalings)) :: Word32))
-    pViewportWScalings'' <- case (viewportWScalings) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPViewportWScalings' <- ContT $ allocaBytesAligned @ViewportWScalingNV ((Data.Vector.length (v)) * 8) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportWScalings' `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e) . ($ ())) (v)
-        pure $ pPViewportWScalings'
+    viewportCount'' <- lift $ if (viewportCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (viewportWScalings))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (viewportWScalings)) == (viewportCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pViewportWScalings must be empty or have 'viewportCount' elements" Nothing Nothing
+        pure (viewportCount)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount'')
+    pViewportWScalings'' <- if Data.Vector.null (viewportWScalings)
+      then pure nullPtr
+      else do
+        pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV (((Data.Vector.length (viewportWScalings))) * 8) 4
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e) . ($ ())) ((viewportWScalings))
+        pure $ pPViewportWScalings
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportWScalingNV))) pViewportWScalings''
     lift $ f
   cStructSize = 32
@@ -233,15 +244,16 @@ instance FromCStruct PipelineViewportWScalingStateCreateInfoNV where
     viewportWScalingEnable <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     viewportCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pViewportWScalings <- peek @(Ptr ViewportWScalingNV) ((p `plusPtr` 24 :: Ptr (Ptr ViewportWScalingNV)))
-    pViewportWScalings' <- maybePeek (\j -> generateM (fromIntegral viewportCount) (\i -> peekCStruct @ViewportWScalingNV (((j) `advancePtrBytes` (8 * (i)) :: Ptr ViewportWScalingNV)))) pViewportWScalings
-    let pViewportWScalings'' = maybe (Left viewportCount) Right pViewportWScalings'
+    let pViewportWScalingsLength = if pViewportWScalings == nullPtr then 0 else (fromIntegral viewportCount)
+    pViewportWScalings' <- generateM pViewportWScalingsLength (\i -> peekCStruct @ViewportWScalingNV ((pViewportWScalings `advancePtrBytes` (8 * (i)) :: Ptr ViewportWScalingNV)))
     pure $ PipelineViewportWScalingStateCreateInfoNV
-             (bool32ToBool viewportWScalingEnable) pViewportWScalings''
+             (bool32ToBool viewportWScalingEnable) viewportCount pViewportWScalings'
 
 instance Zero PipelineViewportWScalingStateCreateInfoNV where
   zero = PipelineViewportWScalingStateCreateInfoNV
            zero
-           (Left 0)
+           zero
+           mempty
 
 
 type NV_CLIP_SPACE_W_SCALING_SPEC_VERSION = 1

@@ -57,6 +57,7 @@ import           Render.Stmts
 import           Render.Stmts.Poke.SiblingInfo
 import           Render.Stmts.Utils
 import           Render.Type
+import           Render.Utils
 
 type HasPoke a r
   = ( Marshalable a
@@ -142,7 +143,8 @@ getPokeDirect'
   -> Stmt s r (Ref s ValueDoc)
 getPokeDirect' name toType fromType value = case fromType of
   Unit                            -> throw "Getting poke for a unit member"
-  Normal   from                   -> normal name toType from value
+  Normal from                     -> normal name toType from value
+  Length ty os rs                 -> nonElidedLength name ty os rs
   Preserve _                      -> pure value
   ElidedLength ty os rs           -> elidedLength name ty os rs
   ElidedUnivalued value           -> elidedUnivalued name toType value
@@ -277,7 +279,7 @@ wrappedStruct name toType fromName valueRef = case toType of
         <+> "(cont . castPtr)"
   _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
 
-elidedLength
+elidedLength, nonElidedLength
   :: forall r a s
    . HasPoke a r
   => CName
@@ -285,9 +287,12 @@ elidedLength
   -> Vector a
   -> Vector a
   -> Stmt s r (Ref s ValueDoc)
-elidedLength n t os rs = elidedLengthFromNames @_ @a n t (name <$> os) (name <$> rs)
+elidedLength n t os rs =
+  lengthFromNames @_ @a True n t (name <$> os) (name <$> rs)
+nonElidedLength n t os rs =
+  lengthFromNames @_ @a False n t (name <$> os) (name <$> rs)
 
-elidedLengthFromNames, elidedLengthPoke
+elidedLengthPoke
   :: forall r a s
    . HasPoke a r
   => CName
@@ -295,12 +300,44 @@ elidedLengthFromNames, elidedLengthPoke
   -> Vector CName
   -> Vector CName
   -> Stmt s r (Ref s ValueDoc)
-elidedLengthPoke = elidedLengthFromNames @r @a @s
-elidedLengthFromNames _ _ Empty Empty = throw "No vectors to get length from"
-elidedLengthFromNames _ lenType os rs = do
+elidedLengthPoke = lengthFromNames @r @a @s True
+
+lengthFromNames
+  :: forall r a s
+   . HasPoke a r
+  => Bool
+  -- ^ Is elided
+  -> CName
+  -> CType
+  -> Vector CName
+  -> Vector CName
+  -> Stmt s r (Ref s ValueDoc)
+lengthFromNames True _ _ Empty Empty = throw "No vectors to get length from"
+lengthFromNames isElided lenName lenType os rs = do
   rsLengthRefs <- forV rs $ \r -> (r, False, ) <$> lenRefFromSibling @a r
   osLengthRefs <- forV os $ \o -> (o, True, ) <$> lenRefFromSibling @a o
   let
+    givenErr vecName opt givenName =
+            -- TODO: these should be the names we give to the variable, not the C names
+      unCName vecName
+        <> (if opt then " must be empty or have '" else " must have '")
+        <> unCName givenName
+        <> "' elements"
+
+    -- If the length is not elided, construct an assertion that a vector has
+    -- the same length as the given value
+    assertSameAsGiven
+      :: (CName, Bool, Ref s (Doc ())) -> Stmt s r (Ref s (Doc ()))
+    assertSameAsGiven (n, opt, ref) = unitStmt $ do
+      ValueDoc givenLen <- useViaName (unCName lenName)
+      let fi = if opt then ("fromIntegral" <+>) else id
+      l <- use ref
+      let -- TODO: these should be the names we give to the variable, not the C names
+          err  = givenErr n opt lenName
+          cond = parens (fi l <+> "==" <+> givenLen)
+      throwErrDoc err cond
+
+    -- Construct an assertion that two vectors have the same length
     assertSame
       :: (CName, Bool, Ref s (Doc ()))
       -> (CName, Bool, Ref s (Doc ()))
@@ -312,24 +349,52 @@ elidedLengthFromNames _ lenType os rs = do
       l2     <- use ref2
       l2'    <- fi <$> use ref2
       orNull <- if opt2 then pure $ " ||" <+> l2 <+> "== 0" else pure mempty
-      let err :: Text
-          -- TODO: these should be the names we give to the variable, not the C names
+      let -- TODO: these should be the names we give to the variable, not the C names
           err =
             unCName n2 <> " and " <> unCName n1 <> " must have the same length"
           cond = parens (l2' <+> "==" <+> l1 <> orNull)
       throwErrDoc err cond
-  let firstLengthRef@(name1, _, len1) : otherLengthRefs =
-        toList (rsLengthRefs <> osLengthRefs)
-  assertions <- traverse (assertSame firstLengthRef) otherLengthRefs
-  stmt (Just (ConT ''Word32)) (Just (unCName name1 <> "Count")) $ do
+
+    -- If there is only one vector and the length is zero, infer the length
+    -- from the vector size
+    inferLength :: (CName, Bool, Ref s (Doc ())) -> Stmt s r (Ref s (Doc ()))
+    inferLength (n, opt, ref) = stmt Nothing (Just (unCName lenName)) $ do
+      ValueDoc givenLen <- useViaName (unCName lenName)
+      vecLen            <- use ref
+      let err  = givenErr n opt lenName
+          cond = parens ("fromIntegral" <+> vecLen <+> "==" <+> givenLen)
+      throwDoc <- throwErrDocStmtString err cond
+      pure . IOAction $ "if" <+> givenLen <+> "== 0" <> line <> indent
+        2
+        (vsep
+          [ "then pure $ fromIntegral" <+> vecLen
+          , "else" <+> doBlock [throwDoc, "pure" <+> givenLen]
+          ]
+        )
+
+  let allVecs = toList (rsLengthRefs <> osLengthRefs)
+  (assertions, getLenValue) <- if isElided
+    then do
+      let firstLengthRef@(_, _, len1) : otherLengthRefs = allVecs
+      assertions <- traverse (assertSame firstLengthRef) otherLengthRefs
+      pure (assertions, use @r len1)
+    else case allVecs of
+      -- If we just have one vector, infer the length from that
+      [v] -> pure ([], use =<< inferLength v)
+      _   -> do
+        assertions <- traverse assertSameAsGiven allVecs
+        pure (assertions, unValueDoc <$> useViaName (unCName lenName))
+  stmt (Just (ConT ''Word32)) (Just (unCName lenName)) $ do
     traverse_ after assertions
-    l1       <- use len1
+    l1       <- getLenValue
     lenHType <- cToHsType DoPreserve lenType
     Pure AlwaysInline . ValueDoc <$> case lenHType of
       ConT i | i == ''Int -> pure l1
-      _                  -> do
-        lenTyDoc <- renderType lenHType
-        pure $ parens ("fromIntegral" <+> l1 <+> "::" <+> lenTyDoc)
+      _                  -> if isElided
+        then do
+          lenTyDoc <- renderType lenHType
+          pure $ parens ("fromIntegral" <+> l1 <+> "::" <+> lenTyDoc)
+        else pure l1
 
 lenRefFromSibling
   :: forall a r s . HasPoke a r => CName -> Stmt s r (Ref s (Doc ()))
