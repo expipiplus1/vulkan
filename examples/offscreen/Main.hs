@@ -1,5 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
@@ -63,7 +64,6 @@ import           Vulkan.Core10           hiding ( deviceWaitIdle
                                                 , withShaderModule
                                                 )
 import           Vulkan.Extensions.VK_EXT_debug_utils
-                                         hiding ( setDebugUtilsObjectNameEXT )
 import           Vulkan.Utils.Debug
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
@@ -273,6 +273,8 @@ render = do
                                 }
   -- Allocate the image with VMA
   (_, (image, _, _)) <- withImage imageCreateInfo allocationCreateInfo
+  dev <- getDevice
+  nameObject dev image "GPU side image"
 
   -- Create an image to read on the CPU
   let cpuImageCreateInfo = zero { imageType     = IMAGE_TYPE_2D
@@ -292,6 +294,7 @@ render = do
   (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage
     cpuImageCreateInfo
     cpuAllocationCreateInfo
+  nameObject dev cpuImage "CPU side image"
 
   -- Create an image view
   let imageSubresourceRange = ImageSubresourceRange
