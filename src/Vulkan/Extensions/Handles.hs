@@ -42,8 +42,21 @@ import GHC.Show (showParen)
 import Numeric (showHex)
 import Foreign.Storable (Storable)
 import Data.Word (Word64)
+import Vulkan.Core10.APIConstants (HasObjectType(..))
 import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Zero (Zero)
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_MODE_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_VALIDATION_CACHE_EXT))
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (BufferView(..))
 import Vulkan.Core10.Handles (CommandBuffer(..))
@@ -81,6 +94,8 @@ import Vulkan.Core10.Handles (ShaderModule(..))
 newtype IndirectCommandsLayoutNV = IndirectCommandsLayoutNV Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType IndirectCommandsLayoutNV where
+  objectTypeAndHandle (IndirectCommandsLayoutNV h) = (OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV, h)
 instance Show IndirectCommandsLayoutNV where
   showsPrec p (IndirectCommandsLayoutNV x) = showParen (p >= 11) (showString "IndirectCommandsLayoutNV 0x" . showHex x)
 
@@ -97,6 +112,8 @@ instance Show IndirectCommandsLayoutNV where
 newtype ValidationCacheEXT = ValidationCacheEXT Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType ValidationCacheEXT where
+  objectTypeAndHandle (ValidationCacheEXT h) = (OBJECT_TYPE_VALIDATION_CACHE_EXT, h)
 instance Show ValidationCacheEXT where
   showsPrec p (ValidationCacheEXT x) = showParen (p >= 11) (showString "ValidationCacheEXT 0x" . showHex x)
 
@@ -126,6 +143,8 @@ instance Show ValidationCacheEXT where
 newtype AccelerationStructureKHR = AccelerationStructureKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType AccelerationStructureKHR where
+  objectTypeAndHandle (AccelerationStructureKHR h) = (OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR, h)
 instance Show AccelerationStructureKHR where
   showsPrec p (AccelerationStructureKHR x) = showParen (p >= 11) (showString "AccelerationStructureKHR 0x" . showHex x)
 
@@ -141,6 +160,8 @@ instance Show AccelerationStructureKHR where
 newtype PerformanceConfigurationINTEL = PerformanceConfigurationINTEL Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType PerformanceConfigurationINTEL where
+  objectTypeAndHandle (PerformanceConfigurationINTEL h) = (OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL, h)
 instance Show PerformanceConfigurationINTEL where
   showsPrec p (PerformanceConfigurationINTEL x) = showParen (p >= 11) (showString "PerformanceConfigurationINTEL 0x" . showHex x)
 
@@ -163,6 +184,8 @@ instance Show PerformanceConfigurationINTEL where
 newtype DeferredOperationKHR = DeferredOperationKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType DeferredOperationKHR where
+  objectTypeAndHandle (DeferredOperationKHR h) = (OBJECT_TYPE_DEFERRED_OPERATION_KHR, h)
 instance Show DeferredOperationKHR where
   showsPrec p (DeferredOperationKHR x) = showParen (p >= 11) (showString "DeferredOperationKHR 0x" . showHex x)
 
@@ -178,6 +201,8 @@ instance Show DeferredOperationKHR where
 newtype PrivateDataSlotEXT = PrivateDataSlotEXT Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType PrivateDataSlotEXT where
+  objectTypeAndHandle (PrivateDataSlotEXT h) = (OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT, h)
 instance Show PrivateDataSlotEXT where
   showsPrec p (PrivateDataSlotEXT x) = showParen (p >= 11) (showString "PrivateDataSlotEXT 0x" . showHex x)
 
@@ -200,6 +225,8 @@ instance Show PrivateDataSlotEXT where
 newtype DisplayKHR = DisplayKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType DisplayKHR where
+  objectTypeAndHandle (DisplayKHR h) = (OBJECT_TYPE_DISPLAY_KHR, h)
 instance Show DisplayKHR where
   showsPrec p (DisplayKHR x) = showParen (p >= 11) (showString "DisplayKHR 0x" . showHex x)
 
@@ -216,6 +243,8 @@ instance Show DisplayKHR where
 newtype DisplayModeKHR = DisplayModeKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType DisplayModeKHR where
+  objectTypeAndHandle (DisplayModeKHR h) = (OBJECT_TYPE_DISPLAY_MODE_KHR, h)
 instance Show DisplayModeKHR where
   showsPrec p (DisplayModeKHR x) = showParen (p >= 11) (showString "DisplayModeKHR 0x" . showHex x)
 
@@ -259,6 +288,8 @@ instance Show DisplayModeKHR where
 newtype SurfaceKHR = SurfaceKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType SurfaceKHR where
+  objectTypeAndHandle (SurfaceKHR h) = (OBJECT_TYPE_SURFACE_KHR, h)
 instance Show SurfaceKHR where
   showsPrec p (SurfaceKHR x) = showParen (p >= 11) (showString "SurfaceKHR 0x" . showHex x)
 
@@ -342,6 +373,8 @@ instance Show SurfaceKHR where
 newtype SwapchainKHR = SwapchainKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType SwapchainKHR where
+  objectTypeAndHandle (SwapchainKHR h) = (OBJECT_TYPE_SWAPCHAIN_KHR, h)
 instance Show SwapchainKHR where
   showsPrec p (SwapchainKHR x) = showParen (p >= 11) (showString "SwapchainKHR 0x" . showHex x)
 
@@ -356,6 +389,8 @@ instance Show SwapchainKHR where
 newtype DebugReportCallbackEXT = DebugReportCallbackEXT Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType DebugReportCallbackEXT where
+  objectTypeAndHandle (DebugReportCallbackEXT h) = (OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT, h)
 instance Show DebugReportCallbackEXT where
   showsPrec p (DebugReportCallbackEXT x) = showParen (p >= 11) (showString "DebugReportCallbackEXT 0x" . showHex x)
 
@@ -379,6 +414,8 @@ instance Show DebugReportCallbackEXT where
 newtype DebugUtilsMessengerEXT = DebugUtilsMessengerEXT Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType DebugUtilsMessengerEXT where
+  objectTypeAndHandle (DebugUtilsMessengerEXT h) = (OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT, h)
 instance Show DebugUtilsMessengerEXT where
   showsPrec p (DebugUtilsMessengerEXT x) = showParen (p >= 11) (showString "DebugUtilsMessengerEXT 0x" . showHex x)
 

@@ -46,12 +46,14 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern SHADER_UNUSED_KHR
                                    , pattern NULL_HANDLE
                                    , IsHandle
+                                   , HasObjectType(..)
                                    , Bool32(..)
                                    , PipelineCacheHeaderVersion(..)
                                    ) where
 
 import Data.Word (Word32)
 import Data.Word (Word64)
+import Vulkan.Core10.Enums.ObjectType (ObjectType)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.BaseType (Bool32(..))
 import Vulkan.Core10.Enums.PipelineCacheHeaderVersion (PipelineCacheHeaderVersion(..))
@@ -226,6 +228,10 @@ pattern NULL_HANDLE :: IsHandle a => a
 pattern NULL_HANDLE <- ((== zero) -> True)
   where NULL_HANDLE = zero
 
--- | A class for things which can be created with 'NULL_HANDLE'
+-- | A class for things which can be created with 'NULL_HANDLE'.
 class (Eq a, Zero a) => IsHandle a where
+
+
+class HasObjectType a where
+  objectTypeAndHandle :: a -> (ObjectType, Word64)
 
