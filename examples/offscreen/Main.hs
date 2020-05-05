@@ -1,6 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
 module Main
@@ -27,11 +28,19 @@ import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
 import           Data.Word
 import           Foreign.Ptr
-import           Say
-
 import           Foreign.Storable               ( peek
                                                 , sizeOf
                                                 )
+import           Say
+
+#if defined(RENDERDOC)
+import           Control.Monad                  ( when )
+import qualified Data.Map.Strict               as Map
+import qualified Language.C.Inline             as C
+import qualified Language.C.Inline.Context     as C
+import qualified Language.C.Types              as C
+#endif
+
 import           Vulkan.CStruct.Extends
 import qualified Vulkan.Core10                 as Vk
 import           Vulkan.Core10           hiding ( deviceWaitIdle
@@ -63,6 +72,21 @@ import           VulkanMemoryAllocator   hiding ( getPhysicalDeviceProperties
                                                 , invalidateAllocation
                                                 , withImage
                                                 )
+
+#if defined(RENDERDOC)
+data RENDERDOC_API_1_1_2
+C.context
+  (C.baseCtx <> mempty
+    { C.ctxTypesTable = Map.fromList
+      [(C.TypeName "RENDERDOC_API_1_1_2", [t|RENDERDOC_API_1_1_2|])]
+    }
+  )
+
+C.include "<renderdoc.h>"
+C.include "<dlfcn.h>"
+C.include "<assert.h>"
+C.include "<stddef.h>"
+#endif
 
 ----------------------------------------------------------------
 -- Define the monad in which most of the program will run
@@ -169,6 +193,31 @@ main = runResourceT $ do
          , vulkanApiVersion = myApiVersion
          }
     allocate
+
+#if defined(RENDERDOC)
+  -- We need to mark the beginning and end of the capture explicitly as this
+  -- application doesn't present frames with a swapchain which is the trigger
+  -- RenderDoc usually uses.
+  rdoc_api <- liftIO [C.block| RENDERDOC_API_1_1_2* {
+    RENDERDOC_API_1_1_2* rdoc_api = NULL;
+    void* mod = dlopen("librenderdoc.so", RTLD_NOW | RTLD_NOLOAD);
+
+    if (mod) {
+      pRENDERDOC_GetAPI RENDERDOC_GetAPI =
+          (pRENDERDOC_GetAPI)dlsym(mod, "RENDERDOC_GetAPI");
+      int ret =
+          RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_1_2, (void **)&rdoc_api);
+      assert(ret == 1);
+    };
+    return rdoc_api;
+  }|]
+  when (rdoc_api /= nullPtr) $
+    sayErr "Running under RenderDoc"
+
+  let rdBegin = liftIO [C.exp| void { if($(RENDERDOC_API_1_1_2* rdoc_api)) $(RENDERDOC_API_1_1_2* rdoc_api)->StartFrameCapture(NULL, NULL); } |]
+      rdEnd = liftIO [C.exp| void { if($(RENDERDOC_API_1_1_2* rdoc_api)) $(RENDERDOC_API_1_1_2* rdoc_api)->EndFrameCapture(NULL, NULL); } |]
+  _ <- allocate rdBegin (const rdEnd)
+#endif
 
   -- Run our application
   runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator

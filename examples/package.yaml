@@ -53,6 +53,21 @@ executables:
       - vector
       - vulkan
       - vulkan-utils
+    when:
+      - condition: flag(renderdoc)
+        cpp-options: -DRENDERDOC
+        dependencies:
+          - containers
+          - inline-c
+        extra-libraries: dl
+
+flags:
+  renderdoc:
+    description:
+      Use the renderdoc API to mark the beginning and end of the 'offscreen'
+      example so that it can be captured.
+    default: no
+    manual: yes
 
 default-extensions:
   - AllowAmbiguousTypes
