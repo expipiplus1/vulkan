@@ -47,8 +47,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -1679,16 +1679,22 @@ data PipelineViewportStateCreateInfo (es :: [Type]) = PipelineViewportStateCreat
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: PipelineViewportStateCreateFlags
+  , -- | @viewportCount@ is the number of viewports used by the pipeline.
+    viewportCount :: Word32
   , -- | @pViewports@ is a pointer to an array of
     -- 'Vulkan.Core10.CommandBufferBuilding.Viewport' structures, defining the
     -- viewport transforms. If the viewport state is dynamic, this member is
     -- ignored.
-    viewports :: Either Word32 (Vector Viewport)
+    viewports :: Vector Viewport
+  , -- | @scissorCount@ is the number of
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-scissor scissors>
+    -- and /must/ match the number of viewports.
+    scissorCount :: Word32
   , -- | @pScissors@ is a pointer to an array of
     -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining the
     -- rectangular bounds of the scissor for the corresponding viewport. If the
     -- scissor state is dynamic, this member is ignored.
-    scissors :: Either Word32 (Vector Rect2D)
+    scissors :: Vector Rect2D
   }
   deriving (Typeable)
 deriving instance Show (Chain es) => Show (PipelineViewportStateCreateInfo es)
@@ -1713,21 +1719,21 @@ instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es) where
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineViewportStateCreateFlags)) (flags)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (viewports)) :: Word32))
-    pViewports'' <- case (viewports) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPViewports' <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (v)) * 24) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports' `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) (v)
-        pure $ pPViewports'
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount)
+    pViewports'' <- if Data.Vector.null (viewports)
+      then pure nullPtr
+      else do
+        pPViewports <- ContT $ allocaBytesAligned @Viewport (((Data.Vector.length (viewports))) * 24) 4
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) ((viewports))
+        pure $ pPViewports
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Viewport))) pViewports''
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (scissors)) :: Word32))
-    pScissors'' <- case (scissors) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPScissors' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (v)) * 16) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (v)
-        pure $ pPScissors'
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (scissorCount)
+    pScissors'' <- if Data.Vector.null (scissors)
+      then pure nullPtr
+      else do
+        pPScissors <- ContT $ allocaBytesAligned @Rect2D (((Data.Vector.length (scissors))) * 16) 4
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) ((scissors))
+        pure $ pPScissors
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Rect2D))) pScissors''
     lift $ f
   cStructSize = 48
@@ -1736,6 +1742,8 @@ instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es) where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
     lift $ f
 
 instance PeekChain es => FromCStruct (PipelineViewportStateCreateInfo es) where
@@ -1745,21 +1753,23 @@ instance PeekChain es => FromCStruct (PipelineViewportStateCreateInfo es) where
     flags <- peek @PipelineViewportStateCreateFlags ((p `plusPtr` 16 :: Ptr PipelineViewportStateCreateFlags))
     viewportCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pViewports <- peek @(Ptr Viewport) ((p `plusPtr` 24 :: Ptr (Ptr Viewport)))
-    pViewports' <- maybePeek (\j -> generateM (fromIntegral viewportCount) (\i -> peekCStruct @Viewport (((j) `advancePtrBytes` (24 * (i)) :: Ptr Viewport)))) pViewports
-    let pViewports'' = maybe (Left viewportCount) Right pViewports'
+    let pViewportsLength = if pViewports == nullPtr then 0 else (fromIntegral viewportCount)
+    pViewports' <- generateM pViewportsLength (\i -> peekCStruct @Viewport ((pViewports `advancePtrBytes` (24 * (i)) :: Ptr Viewport)))
     scissorCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pScissors <- peek @(Ptr Rect2D) ((p `plusPtr` 40 :: Ptr (Ptr Rect2D)))
-    pScissors' <- maybePeek (\j -> generateM (fromIntegral scissorCount) (\i -> peekCStruct @Rect2D (((j) `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))) pScissors
-    let pScissors'' = maybe (Left scissorCount) Right pScissors'
+    let pScissorsLength = if pScissors == nullPtr then 0 else (fromIntegral scissorCount)
+    pScissors' <- generateM pScissorsLength (\i -> peekCStruct @Rect2D ((pScissors `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
     pure $ PipelineViewportStateCreateInfo
-             next flags pViewports'' pScissors''
+             next flags viewportCount pViewports' scissorCount pScissors'
 
 instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
   zero = PipelineViewportStateCreateInfo
            ()
            zero
-           (Left 0)
-           (Left 0)
+           zero
+           mempty
+           zero
+           mempty
 
 
 -- | VkPipelineRasterizationStateCreateInfo - Structure specifying parameters

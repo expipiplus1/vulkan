@@ -15,7 +15,6 @@ module Vulkan.Extensions.VK_EXT_discard_rectangles  ( cmdSetDiscardRectangleEXT
 
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -33,9 +32,9 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -260,10 +259,13 @@ data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateC
     flags :: PipelineDiscardRectangleStateCreateFlagsEXT
   , -- | @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
     discardRectangleMode :: DiscardRectangleModeEXT
+  , -- | @discardRectangleCount@ /must/ be less than or equal to
+    -- 'PhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@
+    discardRectangleCount :: Word32
   , -- | @pDiscardRectangles@ is a pointer to an array of
     -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining discard
     -- rectangles.
-    discardRectangles :: Either Word32 (Vector Rect2D)
+    discardRectangles :: Vector Rect2D
   }
   deriving (Typeable)
 deriving instance Show PipelineDiscardRectangleStateCreateInfoEXT
@@ -275,13 +277,13 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDiscardRectangleStateCreateFlagsEXT)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (discardRectangleMode)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (discardRectangles)) :: Word32))
-    pDiscardRectangles'' <- case (discardRectangles) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPDiscardRectangles' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (v)) * 16) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (v)
-        pure $ pPDiscardRectangles'
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (discardRectangleCount)
+    pDiscardRectangles'' <- if Data.Vector.null (discardRectangles)
+      then pure nullPtr
+      else do
+        pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D (((Data.Vector.length (discardRectangles))) * 16) 4
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) ((discardRectangles))
+        pure $ pPDiscardRectangles
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) pDiscardRectangles''
     lift $ f
   cStructSize = 40
@@ -298,16 +300,17 @@ instance FromCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     discardRectangleMode <- peek @DiscardRectangleModeEXT ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT))
     discardRectangleCount <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pDiscardRectangles <- peek @(Ptr Rect2D) ((p `plusPtr` 32 :: Ptr (Ptr Rect2D)))
-    pDiscardRectangles' <- maybePeek (\j -> generateM (fromIntegral discardRectangleCount) (\i -> peekCStruct @Rect2D (((j) `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))) pDiscardRectangles
-    let pDiscardRectangles'' = maybe (Left discardRectangleCount) Right pDiscardRectangles'
+    let pDiscardRectanglesLength = if pDiscardRectangles == nullPtr then 0 else (fromIntegral discardRectangleCount)
+    pDiscardRectangles' <- generateM pDiscardRectanglesLength (\i -> peekCStruct @Rect2D ((pDiscardRectangles `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
     pure $ PipelineDiscardRectangleStateCreateInfoEXT
-             flags discardRectangleMode pDiscardRectangles''
+             flags discardRectangleMode discardRectangleCount pDiscardRectangles'
 
 instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
   zero = PipelineDiscardRectangleStateCreateInfoEXT
            zero
            zero
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkPipelineDiscardRectangleStateCreateFlagsEXT - Reserved for future use

@@ -15,7 +15,6 @@ module Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing  ( PhysicalDeviceD
                                                                ) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -23,7 +22,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import Data.Either (Either)
+import qualified Data.Vector (null)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -787,10 +786,13 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorSetLayoutBindingFlagsCreateInfo = DescriptorSetLayoutBindingFlagsCreateInfo
-  { -- | @pBindingFlags@ is a pointer to an array of
+  { -- | @bindingCount@ is zero or the number of elements in @pBindingFlags@.
+    bindingCount :: Word32
+  , -- | @pBindingFlags@ is a pointer to an array of
     -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlags'
     -- bitfields, one for each descriptor set layout binding.
-    bindingFlags :: Either Word32 (Vector DescriptorBindingFlags) }
+    bindingFlags :: Vector DescriptorBindingFlags
+  }
   deriving (Typeable)
 deriving instance Show DescriptorSetLayoutBindingFlagsCreateInfo
 
@@ -799,13 +801,13 @@ instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
   pokeCStruct p DescriptorSetLayoutBindingFlagsCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (bindingFlags)) :: Word32))
-    pBindingFlags'' <- case (bindingFlags) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPBindingFlags' <- ContT $ allocaBytesAligned @DescriptorBindingFlags ((Data.Vector.length (v)) * 4) 4
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags' `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) (v)
-        pure $ pPBindingFlags'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (bindingCount)
+    pBindingFlags'' <- if Data.Vector.null (bindingFlags)
+      then pure nullPtr
+      else do
+        pPBindingFlags <- ContT $ allocaBytesAligned @DescriptorBindingFlags (((Data.Vector.length (bindingFlags))) * 4) 4
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) ((bindingFlags))
+        pure $ pPBindingFlags
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags))) pBindingFlags''
     lift $ f
   cStructSize = 32
@@ -819,14 +821,15 @@ instance FromCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
   peekCStruct p = do
     bindingCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pBindingFlags <- peek @(Ptr DescriptorBindingFlags) ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags)))
-    pBindingFlags' <- maybePeek (\j -> generateM (fromIntegral bindingCount) (\i -> peek @DescriptorBindingFlags (((j) `advancePtrBytes` (4 * (i)) :: Ptr DescriptorBindingFlags)))) pBindingFlags
-    let pBindingFlags'' = maybe (Left bindingCount) Right pBindingFlags'
+    let pBindingFlagsLength = if pBindingFlags == nullPtr then 0 else (fromIntegral bindingCount)
+    pBindingFlags' <- generateM pBindingFlagsLength (\i -> peek @DescriptorBindingFlags ((pBindingFlags `advancePtrBytes` (4 * (i)) :: Ptr DescriptorBindingFlags)))
     pure $ DescriptorSetLayoutBindingFlagsCreateInfo
-             pBindingFlags''
+             bindingCount pBindingFlags'
 
 instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
   zero = DescriptorSetLayoutBindingFlagsCreateInfo
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkDescriptorSetVariableDescriptorCountAllocateInfo - Structure

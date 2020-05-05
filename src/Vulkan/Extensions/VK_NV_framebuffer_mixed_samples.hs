@@ -14,7 +14,6 @@ module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModu
                                                           ) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -32,8 +31,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Data.Bits (Bits)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -141,9 +140,12 @@ data PipelineCoverageModulationStateCreateInfoNV = PipelineCoverageModulationSta
   , -- | @coverageModulationTableEnable@ controls whether the modulation factor
     -- is looked up from a table in @pCoverageModulationTable@.
     coverageModulationTableEnable :: Bool
+  , -- | @coverageModulationTableCount@ is the number of elements in
+    -- @pCoverageModulationTable@.
+    coverageModulationTableCount :: Word32
   , -- | @pCoverageModulationTable@ is a table of modulation factors containing a
     -- value for each number of covered samples.
-    coverageModulationTable :: Either Word32 (Vector Float)
+    coverageModulationTable :: Vector Float
   }
   deriving (Typeable)
 deriving instance Show PipelineCoverageModulationStateCreateInfoNV
@@ -156,13 +158,13 @@ instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCoverageModulationStateCreateFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr CoverageModulationModeNV)) (coverageModulationMode)
     lift $ poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (coverageModulationTableEnable))
-    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (coverageModulationTable)) :: Word32))
-    pCoverageModulationTable'' <- case (coverageModulationTable) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPCoverageModulationTable' <- ContT $ allocaBytesAligned @CFloat ((Data.Vector.length (v)) * 4) 4
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPCoverageModulationTable' `plusPtr` (4 * (i)) :: Ptr CFloat) (CFloat (e))) (v)
-        pure $ pPCoverageModulationTable'
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (coverageModulationTableCount)
+    pCoverageModulationTable'' <- if Data.Vector.null (coverageModulationTable)
+      then pure nullPtr
+      else do
+        pPCoverageModulationTable <- ContT $ allocaBytesAligned @CFloat (((Data.Vector.length (coverageModulationTable))) * 4) 4
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPCoverageModulationTable `plusPtr` (4 * (i)) :: Ptr CFloat) (CFloat (e))) ((coverageModulationTable))
+        pure $ pPCoverageModulationTable
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CFloat))) pCoverageModulationTable''
     lift $ f
   cStructSize = 40
@@ -181,19 +183,20 @@ instance FromCStruct PipelineCoverageModulationStateCreateInfoNV where
     coverageModulationTableEnable <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     coverageModulationTableCount <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     pCoverageModulationTable <- peek @(Ptr CFloat) ((p `plusPtr` 32 :: Ptr (Ptr CFloat)))
-    pCoverageModulationTable' <- maybePeek (\j -> generateM (fromIntegral coverageModulationTableCount) (\i -> do
-      pCoverageModulationTableElem <- peek @CFloat (((j) `advancePtrBytes` (4 * (i)) :: Ptr CFloat))
-      pure $ (\(CFloat a) -> a) pCoverageModulationTableElem)) pCoverageModulationTable
-    let pCoverageModulationTable'' = maybe (Left coverageModulationTableCount) Right pCoverageModulationTable'
+    let pCoverageModulationTableLength = if pCoverageModulationTable == nullPtr then 0 else (fromIntegral coverageModulationTableCount)
+    pCoverageModulationTable' <- generateM pCoverageModulationTableLength (\i -> do
+      pCoverageModulationTableElem <- peek @CFloat ((pCoverageModulationTable `advancePtrBytes` (4 * (i)) :: Ptr CFloat))
+      pure $ (\(CFloat a) -> a) pCoverageModulationTableElem)
     pure $ PipelineCoverageModulationStateCreateInfoNV
-             flags coverageModulationMode (bool32ToBool coverageModulationTableEnable) pCoverageModulationTable''
+             flags coverageModulationMode (bool32ToBool coverageModulationTableEnable) coverageModulationTableCount pCoverageModulationTable'
 
 instance Zero PipelineCoverageModulationStateCreateInfoNV where
   zero = PipelineCoverageModulationStateCreateInfoNV
            zero
            zero
            zero
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkPipelineCoverageModulationStateCreateFlagsNV - Reserved for future use

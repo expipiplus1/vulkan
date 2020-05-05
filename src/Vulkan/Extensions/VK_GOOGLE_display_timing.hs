@@ -17,7 +17,6 @@ import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
@@ -27,8 +26,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -396,13 +395,17 @@ instance Zero PastPresentationTimingGOOGLE where
 --
 -- 'PresentTimeGOOGLE', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
-  { -- | @pTimes@ is @NULL@ or a pointer to an array of 'PresentTimeGOOGLE'
+  { -- | @swapchainCount@ is the number of swapchains being presented to by this
+    -- command.
+    swapchainCount :: Word32
+  , -- | @pTimes@ is @NULL@ or a pointer to an array of 'PresentTimeGOOGLE'
     -- elements with @swapchainCount@ entries. If not @NULL@, each element of
     -- @pTimes@ contains the earliest time to present the image corresponding
     -- to the entry in the
     -- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@pImageIndices@
     -- array.
-    times :: Either Word32 (Vector PresentTimeGOOGLE) }
+    times :: Vector PresentTimeGOOGLE
+  }
   deriving (Typeable)
 deriving instance Show PresentTimesInfoGOOGLE
 
@@ -411,13 +414,13 @@ instance ToCStruct PresentTimesInfoGOOGLE where
   pokeCStruct p PresentTimesInfoGOOGLE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (times)) :: Word32))
-    pTimes'' <- case (times) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPTimes' <- ContT $ allocaBytesAligned @PresentTimeGOOGLE ((Data.Vector.length (v)) * 16) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimes' `plusPtr` (16 * (i)) :: Ptr PresentTimeGOOGLE) (e) . ($ ())) (v)
-        pure $ pPTimes'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount)
+    pTimes'' <- if Data.Vector.null (times)
+      then pure nullPtr
+      else do
+        pPTimes <- ContT $ allocaBytesAligned @PresentTimeGOOGLE (((Data.Vector.length (times))) * 16) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimes `plusPtr` (16 * (i)) :: Ptr PresentTimeGOOGLE) (e) . ($ ())) ((times))
+        pure $ pPTimes
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentTimeGOOGLE))) pTimes''
     lift $ f
   cStructSize = 32
@@ -425,20 +428,22 @@ instance ToCStruct PresentTimesInfoGOOGLE where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct PresentTimesInfoGOOGLE where
   peekCStruct p = do
     swapchainCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pTimes <- peek @(Ptr PresentTimeGOOGLE) ((p `plusPtr` 24 :: Ptr (Ptr PresentTimeGOOGLE)))
-    pTimes' <- maybePeek (\j -> generateM (fromIntegral swapchainCount) (\i -> peekCStruct @PresentTimeGOOGLE (((j) `advancePtrBytes` (16 * (i)) :: Ptr PresentTimeGOOGLE)))) pTimes
-    let pTimes'' = maybe (Left swapchainCount) Right pTimes'
+    let pTimesLength = if pTimes == nullPtr then 0 else (fromIntegral swapchainCount)
+    pTimes' <- generateM pTimesLength (\i -> peekCStruct @PresentTimeGOOGLE ((pTimes `advancePtrBytes` (16 * (i)) :: Ptr PresentTimeGOOGLE)))
     pure $ PresentTimesInfoGOOGLE
-             pTimes''
+             swapchainCount pTimes'
 
 instance Zero PresentTimesInfoGOOGLE where
   zero = PresentTimesInfoGOOGLE
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkPresentTimeGOOGLE - The earliest time image should be presented

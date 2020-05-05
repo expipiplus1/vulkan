@@ -10,7 +10,6 @@ module Vulkan.Extensions.VK_NV_scissor_exclusive  ( cmdSetExclusiveScissorNV
 
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -18,8 +17,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -285,10 +284,13 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineViewportExclusiveScissorStateCreateInfoNV = PipelineViewportExclusiveScissorStateCreateInfoNV
-  { -- | @pExclusiveScissors@ is a pointer to an array of
+  { -- | @exclusiveScissorCount@ is the number of exclusive scissor rectangles.
+    exclusiveScissorCount :: Word32
+  , -- | @pExclusiveScissors@ is a pointer to an array of
     -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining
     -- exclusive scissor rectangles.
-    exclusiveScissors :: Either Word32 (Vector Rect2D) }
+    exclusiveScissors :: Vector Rect2D
+  }
   deriving (Typeable)
 deriving instance Show PipelineViewportExclusiveScissorStateCreateInfoNV
 
@@ -297,13 +299,13 @@ instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
   pokeCStruct p PipelineViewportExclusiveScissorStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (exclusiveScissors)) :: Word32))
-    pExclusiveScissors'' <- case (exclusiveScissors) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPExclusiveScissors' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (v)) * 16) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (v)
-        pure $ pPExclusiveScissors'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (exclusiveScissorCount)
+    pExclusiveScissors'' <- if Data.Vector.null (exclusiveScissors)
+      then pure nullPtr
+      else do
+        pPExclusiveScissors <- ContT $ allocaBytesAligned @Rect2D (((Data.Vector.length (exclusiveScissors))) * 16) 4
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) ((exclusiveScissors))
+        pure $ pPExclusiveScissors
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) pExclusiveScissors''
     lift $ f
   cStructSize = 32
@@ -317,14 +319,15 @@ instance FromCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
   peekCStruct p = do
     exclusiveScissorCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pExclusiveScissors <- peek @(Ptr Rect2D) ((p `plusPtr` 24 :: Ptr (Ptr Rect2D)))
-    pExclusiveScissors' <- maybePeek (\j -> generateM (fromIntegral exclusiveScissorCount) (\i -> peekCStruct @Rect2D (((j) `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))) pExclusiveScissors
-    let pExclusiveScissors'' = maybe (Left exclusiveScissorCount) Right pExclusiveScissors'
+    let pExclusiveScissorsLength = if pExclusiveScissors == nullPtr then 0 else (fromIntegral exclusiveScissorCount)
+    pExclusiveScissors' <- generateM pExclusiveScissorsLength (\i -> peekCStruct @Rect2D ((pExclusiveScissors `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
     pure $ PipelineViewportExclusiveScissorStateCreateInfoNV
-             pExclusiveScissors''
+             exclusiveScissorCount pExclusiveScissors'
 
 instance Zero PipelineViewportExclusiveScissorStateCreateInfoNV where
   zero = PipelineViewportExclusiveScissorStateCreateInfoNV
-           (Left 0)
+           zero
+           mempty
 
 
 type NV_SCISSOR_EXCLUSIVE_SPEC_VERSION = 1

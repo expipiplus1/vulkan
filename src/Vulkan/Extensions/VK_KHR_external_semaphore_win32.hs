@@ -20,7 +20,6 @@ import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
-import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
@@ -30,8 +29,8 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -529,15 +528,21 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data D3D12FenceSubmitInfoKHR = D3D12FenceSubmitInfoKHR
-  { -- | @pWaitSemaphoreValues@ is a pointer to an array of
+  { -- | @waitSemaphoreValuesCount@ is the number of semaphore wait values
+    -- specified in @pWaitSemaphoreValues@.
+    waitSemaphoreValuesCount :: Word32
+  , -- | @pWaitSemaphoreValues@ is a pointer to an array of
     -- @waitSemaphoreValuesCount@ values for the corresponding semaphores in
     -- 'Vulkan.Core10.Queue.SubmitInfo'::@pWaitSemaphores@ to wait for.
-    waitSemaphoreValues :: Either Word32 (Vector Word64)
+    waitSemaphoreValues :: Vector Word64
+  , -- | @signalSemaphoreValuesCount@ is the number of semaphore signal values
+    -- specified in @pSignalSemaphoreValues@.
+    signalSemaphoreValuesCount :: Word32
   , -- | @pSignalSemaphoreValues@ is a pointer to an array of
     -- @signalSemaphoreValuesCount@ values for the corresponding semaphores in
     -- 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ to set when
     -- signaled.
-    signalSemaphoreValues :: Either Word32 (Vector Word64)
+    signalSemaphoreValues :: Vector Word64
   }
   deriving (Typeable)
 deriving instance Show D3D12FenceSubmitInfoKHR
@@ -547,21 +552,21 @@ instance ToCStruct D3D12FenceSubmitInfoKHR where
   pokeCStruct p D3D12FenceSubmitInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (waitSemaphoreValues)) :: Word32))
-    pWaitSemaphoreValues'' <- case (waitSemaphoreValues) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPWaitSemaphoreValues' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (v)) * 8) 8
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (v)
-        pure $ pPWaitSemaphoreValues'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (waitSemaphoreValuesCount)
+    pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
+      then pure nullPtr
+      else do
+        pPWaitSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8) 8
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
+        pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (signalSemaphoreValues)) :: Word32))
-    pSignalSemaphoreValues'' <- case (signalSemaphoreValues) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPSignalSemaphoreValues' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (v)) * 8) 8
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (v)
-        pure $ pPSignalSemaphoreValues'
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (signalSemaphoreValuesCount)
+    pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
+      then pure nullPtr
+      else do
+        pPSignalSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8) 8
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((signalSemaphoreValues))
+        pure $ pPSignalSemaphoreValues
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word64))) pSignalSemaphoreValues''
     lift $ f
   cStructSize = 48
@@ -575,19 +580,21 @@ instance FromCStruct D3D12FenceSubmitInfoKHR where
   peekCStruct p = do
     waitSemaphoreValuesCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pWaitSemaphoreValues <- peek @(Ptr Word64) ((p `plusPtr` 24 :: Ptr (Ptr Word64)))
-    pWaitSemaphoreValues' <- maybePeek (\j -> generateM (fromIntegral waitSemaphoreValuesCount) (\i -> peek @Word64 (((j) `advancePtrBytes` (8 * (i)) :: Ptr Word64)))) pWaitSemaphoreValues
-    let pWaitSemaphoreValues'' = maybe (Left waitSemaphoreValuesCount) Right pWaitSemaphoreValues'
+    let pWaitSemaphoreValuesLength = if pWaitSemaphoreValues == nullPtr then 0 else (fromIntegral waitSemaphoreValuesCount)
+    pWaitSemaphoreValues' <- generateM pWaitSemaphoreValuesLength (\i -> peek @Word64 ((pWaitSemaphoreValues `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
     signalSemaphoreValuesCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pSignalSemaphoreValues <- peek @(Ptr Word64) ((p `plusPtr` 40 :: Ptr (Ptr Word64)))
-    pSignalSemaphoreValues' <- maybePeek (\j -> generateM (fromIntegral signalSemaphoreValuesCount) (\i -> peek @Word64 (((j) `advancePtrBytes` (8 * (i)) :: Ptr Word64)))) pSignalSemaphoreValues
-    let pSignalSemaphoreValues'' = maybe (Left signalSemaphoreValuesCount) Right pSignalSemaphoreValues'
+    let pSignalSemaphoreValuesLength = if pSignalSemaphoreValues == nullPtr then 0 else (fromIntegral signalSemaphoreValuesCount)
+    pSignalSemaphoreValues' <- generateM pSignalSemaphoreValuesLength (\i -> peek @Word64 ((pSignalSemaphoreValues `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
     pure $ D3D12FenceSubmitInfoKHR
-             pWaitSemaphoreValues'' pSignalSemaphoreValues''
+             waitSemaphoreValuesCount pWaitSemaphoreValues' signalSemaphoreValuesCount pSignalSemaphoreValues'
 
 instance Zero D3D12FenceSubmitInfoKHR where
   zero = D3D12FenceSubmitInfoKHR
-           (Left 0)
-           (Left 0)
+           zero
+           mempty
+           zero
+           mempty
 
 
 -- | VkSemaphoreGetWin32HandleInfoKHR - Structure describing a Win32 handle

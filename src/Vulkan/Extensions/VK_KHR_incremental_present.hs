@@ -9,7 +9,6 @@ module Vulkan.Extensions.VK_KHR_incremental_present  ( PresentRegionsKHR(..)
                                                      ) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -17,7 +16,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import Data.Either (Either)
+import qualified Data.Vector (null)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -61,13 +60,17 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_R
 --
 -- 'PresentRegionKHR', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentRegionsKHR = PresentRegionsKHR
-  { -- | @pRegions@ is @NULL@ or a pointer to an array of 'PresentRegionKHR'
+  { -- | @swapchainCount@ is the number of swapchains being presented to by this
+    -- command.
+    swapchainCount :: Word32
+  , -- | @pRegions@ is @NULL@ or a pointer to an array of 'PresentRegionKHR'
     -- elements with @swapchainCount@ entries. If not @NULL@, each element of
     -- @pRegions@ contains the region that has changed since the last present
     -- to the swapchain in the corresponding entry in the
     -- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@pSwapchains@
     -- array.
-    regions :: Either Word32 (Vector PresentRegionKHR) }
+    regions :: Vector PresentRegionKHR
+  }
   deriving (Typeable)
 deriving instance Show PresentRegionsKHR
 
@@ -76,13 +79,13 @@ instance ToCStruct PresentRegionsKHR where
   pokeCStruct p PresentRegionsKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (regions)) :: Word32))
-    pRegions'' <- case (regions) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPRegions' <- ContT $ allocaBytesAligned @PresentRegionKHR ((Data.Vector.length (v)) * 16) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (16 * (i)) :: Ptr PresentRegionKHR) (e) . ($ ())) (v)
-        pure $ pPRegions'
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount)
+    pRegions'' <- if Data.Vector.null (regions)
+      then pure nullPtr
+      else do
+        pPRegions <- ContT $ allocaBytesAligned @PresentRegionKHR (((Data.Vector.length (regions))) * 16) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (16 * (i)) :: Ptr PresentRegionKHR) (e) . ($ ())) ((regions))
+        pure $ pPRegions
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentRegionKHR))) pRegions''
     lift $ f
   cStructSize = 32
@@ -90,20 +93,22 @@ instance ToCStruct PresentRegionsKHR where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct PresentRegionsKHR where
   peekCStruct p = do
     swapchainCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pRegions <- peek @(Ptr PresentRegionKHR) ((p `plusPtr` 24 :: Ptr (Ptr PresentRegionKHR)))
-    pRegions' <- maybePeek (\j -> generateM (fromIntegral swapchainCount) (\i -> peekCStruct @PresentRegionKHR (((j) `advancePtrBytes` (16 * (i)) :: Ptr PresentRegionKHR)))) pRegions
-    let pRegions'' = maybe (Left swapchainCount) Right pRegions'
+    let pRegionsLength = if pRegions == nullPtr then 0 else (fromIntegral swapchainCount)
+    pRegions' <- generateM pRegionsLength (\i -> peekCStruct @PresentRegionKHR ((pRegions `advancePtrBytes` (16 * (i)) :: Ptr PresentRegionKHR)))
     pure $ PresentRegionsKHR
-             pRegions''
+             swapchainCount pRegions'
 
 instance Zero PresentRegionsKHR where
   zero = PresentRegionsKHR
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkPresentRegionKHR - Structure containing rectangular region changed by
@@ -119,26 +124,30 @@ instance Zero PresentRegionsKHR where
 --
 -- 'PresentRegionsKHR', 'RectLayerKHR'
 data PresentRegionKHR = PresentRegionKHR
-  { -- | @pRectangles@ is either @NULL@ or a pointer to an array of
+  { -- | @rectangleCount@ is the number of rectangles in @pRectangles@, or zero
+    -- if the entire image has changed and should be presented.
+    rectangleCount :: Word32
+  , -- | @pRectangles@ is either @NULL@ or a pointer to an array of
     -- 'RectLayerKHR' structures. The 'RectLayerKHR' structure is the
     -- framebuffer coordinates, plus layer, of a portion of a presentable image
     -- that has changed and /must/ be presented. If non-@NULL@, each entry in
     -- @pRectangles@ is a rectangle of the given image that has changed since
     -- the last image was presented to the given swapchain.
-    rectangles :: Either Word32 (Vector RectLayerKHR) }
+    rectangles :: Vector RectLayerKHR
+  }
   deriving (Typeable)
 deriving instance Show PresentRegionKHR
 
 instance ToCStruct PresentRegionKHR where
   withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentRegionKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (rectangles)) :: Word32))
-    pRectangles'' <- case (rectangles) of
-      Left _ -> pure nullPtr
-      Right v -> do
-        pPRectangles' <- ContT $ allocaBytesAligned @RectLayerKHR ((Data.Vector.length (v)) * 20) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRectangles' `plusPtr` (20 * (i)) :: Ptr RectLayerKHR) (e) . ($ ())) (v)
-        pure $ pPRectangles'
+    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (rectangleCount)
+    pRectangles'' <- if Data.Vector.null (rectangles)
+      then pure nullPtr
+      else do
+        pPRectangles <- ContT $ allocaBytesAligned @RectLayerKHR (((Data.Vector.length (rectangles))) * 20) 4
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRectangles `plusPtr` (20 * (i)) :: Ptr RectLayerKHR) (e) . ($ ())) ((rectangles))
+        pure $ pPRectangles
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr RectLayerKHR))) pRectangles''
     lift $ f
   cStructSize = 16
@@ -149,14 +158,15 @@ instance FromCStruct PresentRegionKHR where
   peekCStruct p = do
     rectangleCount <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
     pRectangles <- peek @(Ptr RectLayerKHR) ((p `plusPtr` 8 :: Ptr (Ptr RectLayerKHR)))
-    pRectangles' <- maybePeek (\j -> generateM (fromIntegral rectangleCount) (\i -> peekCStruct @RectLayerKHR (((j) `advancePtrBytes` (20 * (i)) :: Ptr RectLayerKHR)))) pRectangles
-    let pRectangles'' = maybe (Left rectangleCount) Right pRectangles'
+    let pRectanglesLength = if pRectangles == nullPtr then 0 else (fromIntegral rectangleCount)
+    pRectangles' <- generateM pRectanglesLength (\i -> peekCStruct @RectLayerKHR ((pRectangles `advancePtrBytes` (20 * (i)) :: Ptr RectLayerKHR)))
     pure $ PresentRegionKHR
-             pRectangles''
+             rectangleCount pRectangles'
 
 instance Zero PresentRegionKHR where
   zero = PresentRegionKHR
-           (Left 0)
+           zero
+           mempty
 
 
 -- | VkRectLayerKHR - Structure containing a rectangle, including layer,
