@@ -9,6 +9,7 @@ module Vulkan.Core10.Fence  ( createFence
                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -17,6 +18,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -28,6 +30,8 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -127,7 +131,10 @@ foreign import ccall
 -- 'FenceCreateInfo'
 createFence :: forall a io . (PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
 createFence device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateFence' = mkVkCreateFence (pVkCreateFence (deviceCmds (device :: Device)))
+  let vkCreateFencePtr = pVkCreateFence (deviceCmds (device :: Device))
+  lift $ unless (vkCreateFencePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateFence is null" Nothing Nothing
+  let vkCreateFence' = mkVkCreateFence vkCreateFencePtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -208,7 +215,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
 destroyFence :: forall io . MonadIO io => Device -> Fence -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyFence device fence allocator = liftIO . evalContT $ do
-  let vkDestroyFence' = mkVkDestroyFence (pVkDestroyFence (deviceCmds (device :: Device)))
+  let vkDestroyFencePtr = pVkDestroyFence (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyFencePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyFence is null" Nothing Nothing
+  let vkDestroyFence' = mkVkDestroyFence vkDestroyFencePtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -288,7 +298,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
 resetFences :: forall io . MonadIO io => Device -> ("fences" ::: Vector Fence) -> io ()
 resetFences device fences = liftIO . evalContT $ do
-  let vkResetFences' = mkVkResetFences (pVkResetFences (deviceCmds (device :: Device)))
+  let vkResetFencesPtr = pVkResetFences (deviceCmds (device :: Device))
+  lift $ unless (vkResetFencesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetFences is null" Nothing Nothing
+  let vkResetFences' = mkVkResetFences vkResetFencesPtr
   pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
   r <- lift $ vkResetFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences)
@@ -361,7 +374,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
 getFenceStatus :: forall io . MonadIO io => Device -> Fence -> io (Result)
 getFenceStatus device fence = liftIO $ do
-  let vkGetFenceStatus' = mkVkGetFenceStatus (pVkGetFenceStatus (deviceCmds (device :: Device)))
+  let vkGetFenceStatusPtr = pVkGetFenceStatus (deviceCmds (device :: Device))
+  unless (vkGetFenceStatusPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceStatus is null" Nothing Nothing
+  let vkGetFenceStatus' = mkVkGetFenceStatus vkGetFenceStatusPtr
   r <- vkGetFenceStatus' (deviceHandle (device)) (fence)
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
@@ -463,7 +479,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Fence'
 waitForFences :: forall io . MonadIO io => Device -> ("fences" ::: Vector Fence) -> ("waitAll" ::: Bool) -> ("timeout" ::: Word64) -> io (Result)
 waitForFences device fences waitAll timeout = liftIO . evalContT $ do
-  let vkWaitForFences' = mkVkWaitForFences (pVkWaitForFences (deviceCmds (device :: Device)))
+  let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
+  lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForFences is null" Nothing Nothing
+  let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
   pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
   r <- lift $ vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout)

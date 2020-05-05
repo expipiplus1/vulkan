@@ -10,10 +10,13 @@ module Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( cmdSetCheckpoint
                                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -26,6 +29,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -102,7 +107,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCheckpointNV :: forall io . MonadIO io => CommandBuffer -> ("checkpointMarker" ::: Ptr ()) -> io ()
 cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
-  let vkCmdSetCheckpointNV' = mkVkCmdSetCheckpointNV (pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetCheckpointNVPtr = pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetCheckpointNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCheckpointNV is null" Nothing Nothing
+  let vkCmdSetCheckpointNV' = mkVkCmdSetCheckpointNV vkCmdSetCheckpointNVPtr
   vkCmdSetCheckpointNV' (commandBufferHandle (commandBuffer)) (checkpointMarker)
   pure $ ()
 
@@ -162,7 +170,10 @@ foreign import ccall
 -- 'CheckpointDataNV', 'Vulkan.Core10.Handles.Queue'
 getQueueCheckpointDataNV :: forall io . MonadIO io => Queue -> io (("checkpointData" ::: Vector CheckpointDataNV))
 getQueueCheckpointDataNV queue = liftIO . evalContT $ do
-  let vkGetQueueCheckpointDataNV' = mkVkGetQueueCheckpointDataNV (pVkGetQueueCheckpointDataNV (deviceCmds (queue :: Queue)))
+  let vkGetQueueCheckpointDataNVPtr = pVkGetQueueCheckpointDataNV (deviceCmds (queue :: Queue))
+  lift $ unless (vkGetQueueCheckpointDataNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueueCheckpointDataNV is null" Nothing Nothing
+  let vkGetQueueCheckpointDataNV' = mkVkGetQueueCheckpointDataNV vkGetQueueCheckpointDataNVPtr
   let queue' = queueHandle (queue)
   pPCheckpointDataCount <- ContT $ bracket (callocBytes @Word32 4) free
   lift $ vkGetQueueCheckpointDataNV' queue' (pPCheckpointDataCount) (nullPtr)

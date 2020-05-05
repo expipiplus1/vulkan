@@ -19,6 +19,7 @@ module Vulkan.Extensions.VK_KHR_get_surface_capabilities2  ( getPhysicalDeviceSu
                                                            ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -27,6 +28,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -38,6 +40,8 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -160,7 +164,10 @@ foreign import ccall
 -- 'SurfaceCapabilities2KHR'
 getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (SurfaceCapabilities2KHR b)
 getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceCapabilities2KHR' = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR (pVkGetPhysicalDeviceSurfaceCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr = pVkGetPhysicalDeviceSurfaceCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceCapabilities2KHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceSurfaceCapabilities2KHR' = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPSurfaceCapabilities <- ContT (withZeroCStruct @(SurfaceCapabilities2KHR _))
   r <- lift $ vkGetPhysicalDeviceSurfaceCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) pSurfaceInfo (pPSurfaceCapabilities)
@@ -261,7 +268,10 @@ foreign import ccall
 -- 'SurfaceFormat2KHR'
 getPhysicalDeviceSurfaceFormats2KHR :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormat2KHR))
 getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceFormats2KHR' = mkVkGetPhysicalDeviceSurfaceFormats2KHR (pVkGetPhysicalDeviceSurfaceFormats2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSurfaceFormats2KHRPtr = pVkGetPhysicalDeviceSurfaceFormats2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSurfaceFormats2KHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceFormats2KHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceSurfaceFormats2KHR' = mkVkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free

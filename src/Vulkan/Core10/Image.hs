@@ -9,6 +9,7 @@ module Vulkan.Core10.Image  ( createImage
                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -17,6 +18,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -31,6 +33,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -151,7 +155,10 @@ foreign import ccall
 -- 'ImageCreateInfo'
 createImage :: forall a io . (PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Image)
 createImage device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateImage' = mkVkCreateImage (pVkCreateImage (deviceCmds (device :: Device)))
+  let vkCreateImagePtr = pVkCreateImage (deviceCmds (device :: Device))
+  lift $ unless (vkCreateImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImage is null" Nothing Nothing
+  let vkCreateImage' = mkVkCreateImage vkCreateImagePtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -231,7 +238,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image'
 destroyImage :: forall io . MonadIO io => Device -> Image -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyImage device image allocator = liftIO . evalContT $ do
-  let vkDestroyImage' = mkVkDestroyImage (pVkDestroyImage (deviceCmds (device :: Device)))
+  let vkDestroyImagePtr = pVkDestroyImage (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyImagePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyImage is null" Nothing Nothing
+  let vkDestroyImage' = mkVkDestroyImage vkDestroyImagePtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -362,7 +372,10 @@ foreign import ccall
 -- 'ImageSubresource', 'SubresourceLayout'
 getImageSubresourceLayout :: forall io . MonadIO io => Device -> Image -> ImageSubresource -> io (SubresourceLayout)
 getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
-  let vkGetImageSubresourceLayout' = mkVkGetImageSubresourceLayout (pVkGetImageSubresourceLayout (deviceCmds (device :: Device)))
+  let vkGetImageSubresourceLayoutPtr = pVkGetImageSubresourceLayout (deviceCmds (device :: Device))
+  lift $ unless (vkGetImageSubresourceLayoutPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSubresourceLayout is null" Nothing Nothing
+  let vkGetImageSubresourceLayout' = mkVkGetImageSubresourceLayout vkGetImageSubresourceLayoutPtr
   pSubresource <- ContT $ withCStruct (subresource)
   pPLayout <- ContT (withZeroCStruct @SubresourceLayout)
   lift $ vkGetImageSubresourceLayout' (deviceHandle (device)) (image) pSubresource (pPLayout)

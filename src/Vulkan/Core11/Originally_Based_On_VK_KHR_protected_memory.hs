@@ -20,10 +20,13 @@ module Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory  ( getDeviceQue
                                                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -34,6 +37,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -101,7 +106,10 @@ foreign import ccall
 getDeviceQueue2 :: forall io . MonadIO io => Device -> DeviceQueueInfo2 -> io (Queue)
 getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
-  let vkGetDeviceQueue2' = mkVkGetDeviceQueue2 (pVkGetDeviceQueue2 cmds)
+  let vkGetDeviceQueue2Ptr = pVkGetDeviceQueue2 cmds
+  lift $ unless (vkGetDeviceQueue2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue2 is null" Nothing Nothing
+  let vkGetDeviceQueue2' = mkVkGetDeviceQueue2 vkGetDeviceQueue2Ptr
   pQueueInfo <- ContT $ withCStruct (queueInfo)
   pPQueue <- ContT $ bracket (callocBytes @(Ptr Queue_T) 8) free
   lift $ vkGetDeviceQueue2' (deviceHandle (device)) pQueueInfo (pPQueue)

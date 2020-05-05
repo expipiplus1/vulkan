@@ -5,10 +5,13 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance3  ( getDescriptorSetLayout
                                                         , StructureType(..)
                                                         ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -20,6 +23,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -111,7 +116,10 @@ foreign import ccall
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
 getDescriptorSetLayoutSupport :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
-  let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport (pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device)))
+  let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device))
+  lift $ unless (vkGetDescriptorSetLayoutSupportPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDescriptorSetLayoutSupport is null" Nothing Nothing
+  let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupportPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPSupport <- ContT (withZeroCStruct @(DescriptorSetLayoutSupport _))
   lift $ vkGetDescriptorSetLayoutSupport' (deviceHandle (device)) pCreateInfo (pPSupport)

@@ -60,12 +60,14 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -94,6 +96,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -185,7 +189,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance'
 createDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugReportCallbackEXT)
 createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDebugReportCallbackEXT' = mkVkCreateDebugReportCallbackEXT (pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance)))
+  let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
+  lift $ unless (vkCreateDebugReportCallbackEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugReportCallbackEXT is null" Nothing Nothing
+  let vkCreateDebugReportCallbackEXT' = mkVkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXTPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -268,7 +275,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance'
 destroyDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
-  let vkDestroyDebugReportCallbackEXT' = mkVkDestroyDebugReportCallbackEXT (pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance)))
+  let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
+  lift $ unless (vkDestroyDebugReportCallbackEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugReportCallbackEXT is null" Nothing Nothing
+  let vkDestroyDebugReportCallbackEXT' = mkVkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXTPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -348,7 +358,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance'
 debugReportMessageEXT :: forall io . MonadIO io => Instance -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: Word64) -> ("messageCode" ::: Int32) -> ("layerPrefix" ::: ByteString) -> ("message" ::: ByteString) -> io ()
 debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
-  let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT (pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance)))
+  let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance))
+  lift $ unless (vkDebugReportMessageEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugReportMessageEXT is null" Nothing Nothing
+  let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT vkDebugReportMessageEXTPtr
   pLayerPrefix <- ContT $ useAsCString (layerPrefix)
   pMessage <- ContT $ useAsCString (message)
   lift $ vkDebugReportMessageEXT' (instanceHandle (instance')) (flags) (objectType) (object) (CSize (location)) (messageCode) pLayerPrefix pMessage

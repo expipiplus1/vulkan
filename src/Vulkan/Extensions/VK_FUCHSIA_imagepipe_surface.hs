@@ -11,12 +11,14 @@ module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  ( createImagePipeSurfaceF
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -38,6 +40,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -127,7 +131,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 createImagePipeSurfaceFUCHSIA :: forall io . MonadIO io => Instance -> ImagePipeSurfaceCreateInfoFUCHSIA -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
 createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateImagePipeSurfaceFUCHSIA' = mkVkCreateImagePipeSurfaceFUCHSIA (pVkCreateImagePipeSurfaceFUCHSIA (instanceCmds (instance' :: Instance)))
+  let vkCreateImagePipeSurfaceFUCHSIAPtr = pVkCreateImagePipeSurfaceFUCHSIA (instanceCmds (instance' :: Instance))
+  lift $ unless (vkCreateImagePipeSurfaceFUCHSIAPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImagePipeSurfaceFUCHSIA is null" Nothing Nothing
+  let vkCreateImagePipeSurfaceFUCHSIA' = mkVkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIAPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

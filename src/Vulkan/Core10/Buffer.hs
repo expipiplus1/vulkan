@@ -6,6 +6,7 @@ module Vulkan.Core10.Buffer  ( createBuffer
                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -14,6 +15,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -26,6 +28,8 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -135,7 +139,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 createBuffer :: forall a io . (PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Buffer)
 createBuffer device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateBuffer' = mkVkCreateBuffer (pVkCreateBuffer (deviceCmds (device :: Device)))
+  let vkCreateBufferPtr = pVkCreateBuffer (deviceCmds (device :: Device))
+  lift $ unless (vkCreateBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBuffer is null" Nothing Nothing
+  let vkCreateBuffer' = mkVkCreateBuffer vkCreateBufferPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -216,7 +223,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device'
 destroyBuffer :: forall io . MonadIO io => Device -> Buffer -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyBuffer device buffer allocator = liftIO . evalContT $ do
-  let vkDestroyBuffer' = mkVkDestroyBuffer (pVkDestroyBuffer (deviceCmds (device :: Device)))
+  let vkDestroyBufferPtr = pVkDestroyBuffer (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBuffer is null" Nothing Nothing
+  let vkDestroyBuffer' = mkVkDestroyBuffer vkDestroyBufferPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

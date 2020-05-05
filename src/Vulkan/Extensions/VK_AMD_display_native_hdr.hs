@@ -10,8 +10,11 @@ module Vulkan.Extensions.VK_AMD_display_native_hdr  ( setLocalDimmingAMD
                                                     , ColorSpaceKHR(..)
                                                     ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.IO.Class (MonadIO)
@@ -21,6 +24,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
@@ -86,7 +91,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setLocalDimmingAMD :: forall io . MonadIO io => Device -> SwapchainKHR -> ("localDimmingEnable" ::: Bool) -> io ()
 setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
-  let vkSetLocalDimmingAMD' = mkVkSetLocalDimmingAMD (pVkSetLocalDimmingAMD (deviceCmds (device :: Device)))
+  let vkSetLocalDimmingAMDPtr = pVkSetLocalDimmingAMD (deviceCmds (device :: Device))
+  unless (vkSetLocalDimmingAMDPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetLocalDimmingAMD is null" Nothing Nothing
+  let vkSetLocalDimmingAMD' = mkVkSetLocalDimmingAMD vkSetLocalDimmingAMDPtr
   vkSetLocalDimmingAMD' (deviceHandle (device)) (swapChain) (boolToBool32 (localDimmingEnable))
   pure $ ()
 

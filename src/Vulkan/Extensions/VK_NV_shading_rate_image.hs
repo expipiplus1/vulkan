@@ -39,6 +39,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -199,7 +200,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.ImageView'
 cmdBindShadingRateImageNV :: forall io . MonadIO io => CommandBuffer -> ImageView -> ImageLayout -> io ()
 cmdBindShadingRateImageNV commandBuffer imageView imageLayout = liftIO $ do
-  let vkCmdBindShadingRateImageNV' = mkVkCmdBindShadingRateImageNV (pVkCmdBindShadingRateImageNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBindShadingRateImageNVPtr = pVkCmdBindShadingRateImageNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdBindShadingRateImageNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindShadingRateImageNV is null" Nothing Nothing
+  let vkCmdBindShadingRateImageNV' = mkVkCmdBindShadingRateImageNV vkCmdBindShadingRateImageNVPtr
   vkCmdBindShadingRateImageNV' (commandBufferHandle (commandBuffer)) (imageView) (imageLayout)
   pure $ ()
 
@@ -290,7 +294,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ShadingRatePaletteNV'
 cmdSetViewportShadingRatePaletteNV :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("shadingRatePalettes" ::: Vector ShadingRatePaletteNV) -> io ()
 cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalettes = liftIO . evalContT $ do
-  let vkCmdSetViewportShadingRatePaletteNV' = mkVkCmdSetViewportShadingRatePaletteNV (pVkCmdSetViewportShadingRatePaletteNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetViewportShadingRatePaletteNVPtr = pVkCmdSetViewportShadingRatePaletteNV (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetViewportShadingRatePaletteNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportShadingRatePaletteNV is null" Nothing Nothing
+  let vkCmdSetViewportShadingRatePaletteNV' = mkVkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNVPtr
   pPShadingRatePalettes <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
   lift $ vkCmdSetViewportShadingRatePaletteNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32)) (pPShadingRatePalettes)
@@ -380,7 +387,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoarseSampleOrderNV :: forall io . MonadIO io => CommandBuffer -> CoarseSampleOrderTypeNV -> ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV) -> io ()
 cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = liftIO . evalContT $ do
-  let vkCmdSetCoarseSampleOrderNV' = mkVkCmdSetCoarseSampleOrderNV (pVkCmdSetCoarseSampleOrderNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetCoarseSampleOrderNVPtr = pVkCmdSetCoarseSampleOrderNV (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetCoarseSampleOrderNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCoarseSampleOrderNV is null" Nothing Nothing
+  let vkCmdSetCoarseSampleOrderNV' = mkVkCmdSetCoarseSampleOrderNV vkCmdSetCoarseSampleOrderNVPtr
   pPCustomSampleOrders <- ContT $ allocaBytesAligned @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCustomSampleOrders `plusPtr` (24 * (i)) :: Ptr CoarseSampleOrderCustomNV) (e) . ($ ())) (customSampleOrders)
   lift $ vkCmdSetCoarseSampleOrderNV' (commandBufferHandle (commandBuffer)) (sampleOrderType) ((fromIntegral (Data.Vector.length $ (customSampleOrders)) :: Word32)) (pPCustomSampleOrders)

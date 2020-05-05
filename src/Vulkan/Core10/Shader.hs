@@ -18,6 +18,7 @@ import Foreign.Ptr (ptrToWordPtr)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import qualified Data.ByteString (length)
@@ -141,7 +142,10 @@ foreign import ccall
 -- 'ShaderModuleCreateInfo'
 createShaderModule :: forall a io . (PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ShaderModule)
 createShaderModule device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateShaderModule' = mkVkCreateShaderModule (pVkCreateShaderModule (deviceCmds (device :: Device)))
+  let vkCreateShaderModulePtr = pVkCreateShaderModule (deviceCmds (device :: Device))
+  lift $ unless (vkCreateShaderModulePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateShaderModule is null" Nothing Nothing
+  let vkCreateShaderModule' = mkVkCreateShaderModule vkCreateShaderModulePtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -225,7 +229,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule'
 destroyShaderModule :: forall io . MonadIO io => Device -> ShaderModule -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
-  let vkDestroyShaderModule' = mkVkDestroyShaderModule (pVkDestroyShaderModule (deviceCmds (device :: Device)))
+  let vkDestroyShaderModulePtr = pVkDestroyShaderModule (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyShaderModulePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyShaderModule is null" Nothing Nothing
+  let vkDestroyShaderModule' = mkVkDestroyShaderModule vkDestroyShaderModulePtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

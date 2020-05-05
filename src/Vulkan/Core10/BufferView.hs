@@ -6,12 +6,14 @@ module Vulkan.Core10.BufferView  ( createBufferView
                                  ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -22,6 +24,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
@@ -106,7 +110,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 createBufferView :: forall io . MonadIO io => Device -> BufferViewCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (BufferView)
 createBufferView device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateBufferView' = mkVkCreateBufferView (pVkCreateBufferView (deviceCmds (device :: Device)))
+  let vkCreateBufferViewPtr = pVkCreateBufferView (deviceCmds (device :: Device))
+  lift $ unless (vkCreateBufferViewPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBufferView is null" Nothing Nothing
+  let vkCreateBufferView' = mkVkCreateBufferView vkCreateBufferViewPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -188,7 +195,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.BufferView', 'Vulkan.Core10.Handles.Device'
 destroyBufferView :: forall io . MonadIO io => Device -> BufferView -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyBufferView device bufferView allocator = liftIO . evalContT $ do
-  let vkDestroyBufferView' = mkVkDestroyBufferView (pVkDestroyBufferView (deviceCmds (device :: Device)))
+  let vkDestroyBufferViewPtr = pVkDestroyBufferView (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyBufferViewPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBufferView is null" Nothing Nothing
+  let vkDestroyBufferView' = mkVkDestroyBufferView vkDestroyBufferViewPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

@@ -16,12 +16,14 @@ module Vulkan.Extensions.VK_KHR_external_memory_win32  ( getMemoryWin32HandleKHR
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -33,6 +35,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -113,7 +117,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetWin32HandleInfoKHR'
 getMemoryWin32HandleKHR :: forall io . MonadIO io => Device -> MemoryGetWin32HandleInfoKHR -> io (HANDLE)
 getMemoryWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
-  let vkGetMemoryWin32HandleKHR' = mkVkGetMemoryWin32HandleKHR (pVkGetMemoryWin32HandleKHR (deviceCmds (device :: Device)))
+  let vkGetMemoryWin32HandleKHRPtr = pVkGetMemoryWin32HandleKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetMemoryWin32HandleKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandleKHR is null" Nothing Nothing
+  let vkGetMemoryWin32HandleKHR' = mkVkGetMemoryWin32HandleKHR vkGetMemoryWin32HandleKHRPtr
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
   r <- lift $ vkGetMemoryWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle)
@@ -159,7 +166,10 @@ foreign import ccall
 -- 'MemoryWin32HandlePropertiesKHR'
 getMemoryWin32HandlePropertiesKHR :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> HANDLE -> io (MemoryWin32HandlePropertiesKHR)
 getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT $ do
-  let vkGetMemoryWin32HandlePropertiesKHR' = mkVkGetMemoryWin32HandlePropertiesKHR (pVkGetMemoryWin32HandlePropertiesKHR (deviceCmds (device :: Device)))
+  let vkGetMemoryWin32HandlePropertiesKHRPtr = pVkGetMemoryWin32HandlePropertiesKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetMemoryWin32HandlePropertiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandlePropertiesKHR is null" Nothing Nothing
+  let vkGetMemoryWin32HandlePropertiesKHR' = mkVkGetMemoryWin32HandlePropertiesKHR vkGetMemoryWin32HandlePropertiesKHRPtr
   pPMemoryWin32HandleProperties <- ContT (withZeroCStruct @MemoryWin32HandlePropertiesKHR)
   r <- lift $ vkGetMemoryWin32HandlePropertiesKHR' (deviceHandle (device)) (handleType) (handle) (pPMemoryWin32HandleProperties)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

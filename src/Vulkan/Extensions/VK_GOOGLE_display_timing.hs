@@ -20,6 +20,7 @@ import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -120,7 +121,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getRefreshCycleDurationGOOGLE :: forall io . MonadIO io => Device -> SwapchainKHR -> io (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
 getRefreshCycleDurationGOOGLE device swapchain = liftIO . evalContT $ do
-  let vkGetRefreshCycleDurationGOOGLE' = mkVkGetRefreshCycleDurationGOOGLE (pVkGetRefreshCycleDurationGOOGLE (deviceCmds (device :: Device)))
+  let vkGetRefreshCycleDurationGOOGLEPtr = pVkGetRefreshCycleDurationGOOGLE (deviceCmds (device :: Device))
+  lift $ unless (vkGetRefreshCycleDurationGOOGLEPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRefreshCycleDurationGOOGLE is null" Nothing Nothing
+  let vkGetRefreshCycleDurationGOOGLE' = mkVkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLEPtr
   pPDisplayTimingProperties <- ContT (withZeroCStruct @RefreshCycleDurationGOOGLE)
   r <- lift $ vkGetRefreshCycleDurationGOOGLE' (deviceHandle (device)) (swapchain) (pPDisplayTimingProperties)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -214,7 +218,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getPastPresentationTimingGOOGLE :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
 getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
-  let vkGetPastPresentationTimingGOOGLE' = mkVkGetPastPresentationTimingGOOGLE (pVkGetPastPresentationTimingGOOGLE (deviceCmds (device :: Device)))
+  let vkGetPastPresentationTimingGOOGLEPtr = pVkGetPastPresentationTimingGOOGLE (deviceCmds (device :: Device))
+  lift $ unless (vkGetPastPresentationTimingGOOGLEPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPastPresentationTimingGOOGLE is null" Nothing Nothing
+  let vkGetPastPresentationTimingGOOGLE' = mkVkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLEPtr
   let device' = deviceHandle (device)
   pPPresentationTimingCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetPastPresentationTimingGOOGLE' device' (swapchain) (pPPresentationTimingCount) (nullPtr)

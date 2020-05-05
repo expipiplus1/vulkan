@@ -11,16 +11,20 @@ module Vulkan.Extensions.VK_EXT_acquire_xlib_display  ( acquireXlibDisplayEXT
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Foreign.Storable (Storable(peek))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -93,7 +97,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 acquireXlibDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> DisplayKHR -> io ()
 acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
-  let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT (pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkAcquireXlibDisplayEXTPtr = pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  unless (vkAcquireXlibDisplayEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireXlibDisplayEXT is null" Nothing Nothing
+  let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT vkAcquireXlibDisplayEXTPtr
   r <- vkAcquireXlibDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (display)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -138,7 +145,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getRandROutputDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> RROutput -> io (DisplayKHR)
 getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
-  let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT (pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetRandROutputDisplayEXTPtr = pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetRandROutputDisplayEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRandROutputDisplayEXT is null" Nothing Nothing
+  let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT vkGetRandROutputDisplayEXTPtr
   pPDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
   _ <- lift $ vkGetRandROutputDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (rrOutput) (pPDisplay)
   pDisplay <- lift $ peek @DisplayKHR pPDisplay

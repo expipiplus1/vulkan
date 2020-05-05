@@ -15,6 +15,7 @@ module Vulkan.Extensions.VK_AMD_shader_info  ( getShaderInfoAMD
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -22,6 +23,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -47,6 +49,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -183,7 +187,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
 getShaderInfoAMD :: forall io . MonadIO io => Device -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> io (Result, ("info" ::: ByteString))
 getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
-  let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD (pVkGetShaderInfoAMD (deviceCmds (device :: Device)))
+  let vkGetShaderInfoAMDPtr = pVkGetShaderInfoAMD (deviceCmds (device :: Device))
+  lift $ unless (vkGetShaderInfoAMDPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetShaderInfoAMD is null" Nothing Nothing
+  let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD vkGetShaderInfoAMDPtr
   let device' = deviceHandle (device)
   pPInfoSize <- ContT $ bracket (callocBytes @CSize 8) free
   r <- lift $ vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (nullPtr)

@@ -16,6 +16,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -135,7 +136,10 @@ foreign import ccall
 getDeviceQueue :: forall io . MonadIO io => Device -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> io (Queue)
 getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
-  let vkGetDeviceQueue' = mkVkGetDeviceQueue (pVkGetDeviceQueue cmds)
+  let vkGetDeviceQueuePtr = pVkGetDeviceQueue cmds
+  lift $ unless (vkGetDeviceQueuePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue is null" Nothing Nothing
+  let vkGetDeviceQueue' = mkVkGetDeviceQueue vkGetDeviceQueuePtr
   pPQueue <- ContT $ bracket (callocBytes @(Ptr Queue_T) 8) free
   lift $ vkGetDeviceQueue' (deviceHandle (device)) (queueFamilyIndex) (queueIndex) (pPQueue)
   pQueue <- lift $ peek @(Ptr Queue_T) pPQueue
@@ -375,7 +379,10 @@ foreign import ccall
 -- 'SubmitInfo'
 queueSubmit :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> io ()
 queueSubmit queue submits fence = liftIO . evalContT $ do
-  let vkQueueSubmit' = mkVkQueueSubmit (pVkQueueSubmit (deviceCmds (queue :: Queue)))
+  let vkQueueSubmitPtr = pVkQueueSubmit (deviceCmds (queue :: Queue))
+  lift $ unless (vkQueueSubmitPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSubmit is null" Nothing Nothing
+  let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
   pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _)) (e) . ($ ())) (submits)
   r <- lift $ vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (pPSubmits) (fence)
@@ -437,7 +444,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Queue'
 queueWaitIdle :: forall io . MonadIO io => Queue -> io ()
 queueWaitIdle queue = liftIO $ do
-  let vkQueueWaitIdle' = mkVkQueueWaitIdle (pVkQueueWaitIdle (deviceCmds (queue :: Queue)))
+  let vkQueueWaitIdlePtr = pVkQueueWaitIdle (deviceCmds (queue :: Queue))
+  unless (vkQueueWaitIdlePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueWaitIdle is null" Nothing Nothing
+  let vkQueueWaitIdle' = mkVkQueueWaitIdle vkQueueWaitIdlePtr
   r <- vkQueueWaitIdle' (queueHandle (queue))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -488,7 +498,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 deviceWaitIdle :: forall io . MonadIO io => Device -> io ()
 deviceWaitIdle device = liftIO $ do
-  let vkDeviceWaitIdle' = mkVkDeviceWaitIdle (pVkDeviceWaitIdle (deviceCmds (device :: Device)))
+  let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (deviceCmds (device :: Device))
+  unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeviceWaitIdle is null" Nothing Nothing
+  let vkDeviceWaitIdle' = mkVkDeviceWaitIdle vkDeviceWaitIdlePtr
   r <- vkDeviceWaitIdle' (deviceHandle (device))
   when (r < SUCCESS) (throwIO (VulkanException r))
 

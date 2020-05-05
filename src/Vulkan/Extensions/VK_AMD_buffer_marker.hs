@@ -6,9 +6,14 @@ module Vulkan.Extensions.VK_AMD_buffer_marker  ( cmdWriteBufferMarkerAMD
                                                , pattern AMD_BUFFER_MARKER_EXTENSION_NAME
                                                ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -141,7 +146,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 cmdWriteBufferMarkerAMD :: forall io . MonadIO io => CommandBuffer -> PipelineStageFlagBits -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> io ()
 cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = liftIO $ do
-  let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD (pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdWriteBufferMarkerAMDPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteBufferMarkerAMD is null" Nothing Nothing
+  let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMDPtr
   vkCmdWriteBufferMarkerAMD' (commandBufferHandle (commandBuffer)) (pipelineStage) (dstBuffer) (dstOffset) (marker)
   pure $ ()
 

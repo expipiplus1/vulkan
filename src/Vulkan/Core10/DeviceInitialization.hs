@@ -38,6 +38,7 @@ import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (castFunPtr)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -237,7 +238,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance', 'InstanceCreateInfo'
 createInstance :: forall a io . (PokeChain a, MonadIO io) => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Instance)
 createInstance createInfo allocator = liftIO . evalContT $ do
-  vkCreateInstance' <- lift $ mkVkCreateInstance . castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
+  vkCreateInstancePtr <- lift $ castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
+  lift $ unless (vkCreateInstancePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateInstance is null" Nothing Nothing
+  let vkCreateInstance' = mkVkCreateInstance vkCreateInstancePtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -314,7 +318,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance'
 destroyInstance :: forall io . MonadIO io => Instance -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyInstance instance' allocator = liftIO . evalContT $ do
-  let vkDestroyInstance' = mkVkDestroyInstance (pVkDestroyInstance (instanceCmds (instance' :: Instance)))
+  let vkDestroyInstancePtr = pVkDestroyInstance (instanceCmds (instance' :: Instance))
+  lift $ unless (vkDestroyInstancePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyInstance is null" Nothing Nothing
+  let vkDestroyInstance' = mkVkDestroyInstance vkDestroyInstancePtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -391,7 +398,10 @@ foreign import ccall
 enumeratePhysicalDevices :: forall io . MonadIO io => Instance -> io (Result, ("physicalDevices" ::: Vector PhysicalDevice))
 enumeratePhysicalDevices instance' = liftIO . evalContT $ do
   let cmds = instanceCmds (instance' :: Instance)
-  let vkEnumeratePhysicalDevices' = mkVkEnumeratePhysicalDevices (pVkEnumeratePhysicalDevices cmds)
+  let vkEnumeratePhysicalDevicesPtr = pVkEnumeratePhysicalDevices cmds
+  lift $ unless (vkEnumeratePhysicalDevicesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDevices is null" Nothing Nothing
+  let vkEnumeratePhysicalDevices' = mkVkEnumeratePhysicalDevices vkEnumeratePhysicalDevicesPtr
   let instance'' = instanceHandle (instance')
   pPPhysicalDeviceCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkEnumeratePhysicalDevices' instance'' (pPPhysicalDeviceCount) (nullPtr)
@@ -470,7 +480,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 getDeviceProcAddr :: forall io . MonadIO io => Device -> ("name" ::: ByteString) -> io (PFN_vkVoidFunction)
 getDeviceProcAddr device name = liftIO . evalContT $ do
-  let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr (pVkGetDeviceProcAddr (deviceCmds (device :: Device)))
+  let vkGetDeviceProcAddrPtr = pVkGetDeviceProcAddr (deviceCmds (device :: Device))
+  lift $ unless (vkGetDeviceProcAddrPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceProcAddr is null" Nothing Nothing
+  let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr vkGetDeviceProcAddrPtr
   pName <- ContT $ useAsCString (name)
   r <- lift $ vkGetDeviceProcAddr' (deviceHandle (device)) pName
   pure $ (r)
@@ -565,7 +578,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance'
 getInstanceProcAddr :: forall io . MonadIO io => Instance -> ("name" ::: ByteString) -> io (PFN_vkVoidFunction)
 getInstanceProcAddr instance' name = liftIO . evalContT $ do
-  let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr (pVkGetInstanceProcAddr (instanceCmds (instance' :: Instance)))
+  let vkGetInstanceProcAddrPtr = pVkGetInstanceProcAddr (instanceCmds (instance' :: Instance))
+  lift $ unless (vkGetInstanceProcAddrPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetInstanceProcAddr is null" Nothing Nothing
+  let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr vkGetInstanceProcAddrPtr
   pName <- ContT $ useAsCString (name)
   r <- lift $ vkGetInstanceProcAddr' (instanceHandle (instance')) pName
   pure $ (r)
@@ -595,7 +611,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceProperties'
 getPhysicalDeviceProperties :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceProperties)
 getPhysicalDeviceProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties (pVkGetPhysicalDeviceProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDevicePropertiesPtr = pVkGetPhysicalDeviceProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDevicePropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties is null" Nothing Nothing
+  let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties vkGetPhysicalDevicePropertiesPtr
   pPProperties <- ContT (withZeroCStruct @PhysicalDeviceProperties)
   lift $ vkGetPhysicalDeviceProperties' (physicalDeviceHandle (physicalDevice)) (pPProperties)
   pProperties <- lift $ peekCStruct @PhysicalDeviceProperties pPProperties
@@ -655,7 +674,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties'
 getPhysicalDeviceQueueFamilyProperties :: forall io . MonadIO io => PhysicalDevice -> io (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
 getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties (pVkGetPhysicalDeviceQueueFamilyProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceQueueFamilyPropertiesPtr = pVkGetPhysicalDeviceQueueFamilyProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceQueueFamilyPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyProperties is null" Nothing Nothing
+  let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   lift $ vkGetPhysicalDeviceQueueFamilyProperties' physicalDevice' (pPQueueFamilyPropertyCount) (nullPtr)
@@ -693,7 +715,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceMemoryProperties'
 getPhysicalDeviceMemoryProperties :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceMemoryProperties)
 getPhysicalDeviceMemoryProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties (pVkGetPhysicalDeviceMemoryProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceMemoryPropertiesPtr = pVkGetPhysicalDeviceMemoryProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceMemoryPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties is null" Nothing Nothing
+  let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryPropertiesPtr
   pPMemoryProperties <- ContT (withZeroCStruct @PhysicalDeviceMemoryProperties)
   lift $ vkGetPhysicalDeviceMemoryProperties' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties)
   pMemoryProperties <- lift $ peekCStruct @PhysicalDeviceMemoryProperties pPMemoryProperties
@@ -728,7 +753,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceFeatures'
 getPhysicalDeviceFeatures :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceFeatures)
 getPhysicalDeviceFeatures physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures (pVkGetPhysicalDeviceFeatures (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceFeaturesPtr = pVkGetPhysicalDeviceFeatures (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceFeaturesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures is null" Nothing Nothing
+  let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeaturesPtr
   pPFeatures <- ContT (withZeroCStruct @PhysicalDeviceFeatures)
   lift $ vkGetPhysicalDeviceFeatures' (physicalDeviceHandle (physicalDevice)) (pPFeatures)
   pFeatures <- lift $ peekCStruct @PhysicalDeviceFeatures pPFeatures
@@ -763,7 +791,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> io (FormatProperties)
 getPhysicalDeviceFormatProperties physicalDevice format = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties (pVkGetPhysicalDeviceFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceFormatPropertiesPtr = pVkGetPhysicalDeviceFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceFormatPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties is null" Nothing Nothing
+  let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatPropertiesPtr
   pPFormatProperties <- ContT (withZeroCStruct @FormatProperties)
   lift $ vkGetPhysicalDeviceFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties)
   pFormatProperties <- lift $ peekCStruct @FormatProperties pPFormatProperties
@@ -858,7 +889,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceImageFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> io (ImageFormatProperties)
 getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties (pVkGetPhysicalDeviceImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceImageFormatPropertiesPtr = pVkGetPhysicalDeviceImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceImageFormatPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties is null" Nothing Nothing
+  let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatPropertiesPtr
   pPImageFormatProperties <- ContT (withZeroCStruct @ImageFormatProperties)
   r <- lift $ vkGetPhysicalDeviceImageFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (pPImageFormatProperties)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

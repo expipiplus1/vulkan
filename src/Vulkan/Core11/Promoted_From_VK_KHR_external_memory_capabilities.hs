@@ -16,8 +16,11 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities  ( getPhy
                                                                         ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -28,6 +31,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -101,7 +106,10 @@ foreign import ccall
 -- 'PhysicalDeviceExternalBufferInfo'
 getPhysicalDeviceExternalBufferProperties :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceExternalBufferInfo -> io (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalBufferProperties' = mkVkGetPhysicalDeviceExternalBufferProperties (pVkGetPhysicalDeviceExternalBufferProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceExternalBufferPropertiesPtr = pVkGetPhysicalDeviceExternalBufferProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceExternalBufferPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalBufferProperties is null" Nothing Nothing
+  let vkGetPhysicalDeviceExternalBufferProperties' = mkVkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferPropertiesPtr
   pExternalBufferInfo <- ContT $ withCStruct (externalBufferInfo)
   pPExternalBufferProperties <- ContT (withZeroCStruct @ExternalBufferProperties)
   lift $ vkGetPhysicalDeviceExternalBufferProperties' (physicalDeviceHandle (physicalDevice)) pExternalBufferInfo (pPExternalBufferProperties)

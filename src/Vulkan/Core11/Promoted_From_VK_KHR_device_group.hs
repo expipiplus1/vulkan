@@ -20,10 +20,13 @@ module Vulkan.Core11.Promoted_From_VK_KHR_device_group  ( getDeviceGroupPeerMemo
                                                         ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -37,6 +40,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -116,7 +121,10 @@ foreign import ccall
 -- 'Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
 getDeviceGroupPeerMemoryFeatures :: forall io . MonadIO io => Device -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
 getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = liftIO . evalContT $ do
-  let vkGetDeviceGroupPeerMemoryFeatures' = mkVkGetDeviceGroupPeerMemoryFeatures (pVkGetDeviceGroupPeerMemoryFeatures (deviceCmds (device :: Device)))
+  let vkGetDeviceGroupPeerMemoryFeaturesPtr = pVkGetDeviceGroupPeerMemoryFeatures (deviceCmds (device :: Device))
+  lift $ unless (vkGetDeviceGroupPeerMemoryFeaturesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPeerMemoryFeatures is null" Nothing Nothing
+  let vkGetDeviceGroupPeerMemoryFeatures' = mkVkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeaturesPtr
   pPPeerMemoryFeatures <- ContT $ bracket (callocBytes @PeerMemoryFeatureFlags 4) free
   lift $ vkGetDeviceGroupPeerMemoryFeatures' (deviceHandle (device)) (heapIndex) (localDeviceIndex) (remoteDeviceIndex) (pPPeerMemoryFeatures)
   pPeerMemoryFeatures <- lift $ peek @PeerMemoryFeatureFlags pPPeerMemoryFeatures
@@ -201,7 +209,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDeviceMask :: forall io . MonadIO io => CommandBuffer -> ("deviceMask" ::: Word32) -> io ()
 cmdSetDeviceMask commandBuffer deviceMask = liftIO $ do
-  let vkCmdSetDeviceMask' = mkVkCmdSetDeviceMask (pVkCmdSetDeviceMask (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetDeviceMaskPtr = pVkCmdSetDeviceMask (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdSetDeviceMaskPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDeviceMask is null" Nothing Nothing
+  let vkCmdSetDeviceMask' = mkVkCmdSetDeviceMask vkCmdSetDeviceMaskPtr
   vkCmdSetDeviceMask' (commandBufferHandle (commandBuffer)) (deviceMask)
   pure $ ()
 
@@ -446,7 +457,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDispatchBase :: forall io . MonadIO io => CommandBuffer -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> io ()
 cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = liftIO $ do
-  let vkCmdDispatchBase' = mkVkCmdDispatchBase (pVkCmdDispatchBase (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdDispatchBasePtr = pVkCmdDispatchBase (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdDispatchBasePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchBase is null" Nothing Nothing
+  let vkCmdDispatchBase' = mkVkCmdDispatchBase vkCmdDispatchBasePtr
   vkCmdDispatchBase' (commandBufferHandle (commandBuffer)) (baseGroupX) (baseGroupY) (baseGroupZ) (groupCountX) (groupCountY) (groupCountZ)
   pure $ ()
 

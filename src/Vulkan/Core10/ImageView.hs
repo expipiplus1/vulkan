@@ -7,6 +7,7 @@ module Vulkan.Core10.ImageView  ( createImageView
                                 ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -15,6 +16,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -26,6 +28,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
@@ -122,7 +126,10 @@ foreign import ccall
 -- 'ImageViewCreateInfo'
 createImageView :: forall a io . (PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ImageView)
 createImageView device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateImageView' = mkVkCreateImageView (pVkCreateImageView (deviceCmds (device :: Device)))
+  let vkCreateImageViewPtr = pVkCreateImageView (deviceCmds (device :: Device))
+  lift $ unless (vkCreateImageViewPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImageView is null" Nothing Nothing
+  let vkCreateImageView' = mkVkCreateImageView vkCreateImageViewPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -203,7 +210,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView'
 destroyImageView :: forall io . MonadIO io => Device -> ImageView -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyImageView device imageView allocator = liftIO . evalContT $ do
-  let vkDestroyImageView' = mkVkDestroyImageView (pVkDestroyImageView (deviceCmds (device :: Device)))
+  let vkDestroyImageViewPtr = pVkDestroyImageView (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyImageViewPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyImageView is null" Nothing Nothing
+  let vkDestroyImageView' = mkVkDestroyImageView vkDestroyImageViewPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

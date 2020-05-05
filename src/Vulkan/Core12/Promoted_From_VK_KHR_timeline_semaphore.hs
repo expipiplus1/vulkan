@@ -22,6 +22,7 @@ import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -127,7 +128,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
 getSemaphoreCounterValue :: forall io . MonadIO io => Device -> Semaphore -> io (("value" ::: Word64))
 getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
-  let vkGetSemaphoreCounterValue' = mkVkGetSemaphoreCounterValue (pVkGetSemaphoreCounterValue (deviceCmds (device :: Device)))
+  let vkGetSemaphoreCounterValuePtr = pVkGetSemaphoreCounterValue (deviceCmds (device :: Device))
+  lift $ unless (vkGetSemaphoreCounterValuePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreCounterValue is null" Nothing Nothing
+  let vkGetSemaphoreCounterValue' = mkVkGetSemaphoreCounterValue vkGetSemaphoreCounterValuePtr
   pPValue <- ContT $ bracket (callocBytes @Word64 8) free
   r <- lift $ vkGetSemaphoreCounterValue' (deviceHandle (device)) (semaphore) (pPValue)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -204,7 +208,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreWaitInfo'
 waitSemaphores :: forall io . MonadIO io => Device -> SemaphoreWaitInfo -> ("timeout" ::: Word64) -> io (Result)
 waitSemaphores device waitInfo timeout = liftIO . evalContT $ do
-  let vkWaitSemaphores' = mkVkWaitSemaphores (pVkWaitSemaphores (deviceCmds (device :: Device)))
+  let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
+  lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitSemaphores is null" Nothing Nothing
+  let vkWaitSemaphores' = mkVkWaitSemaphores vkWaitSemaphoresPtr
   pWaitInfo <- ContT $ withCStruct (waitInfo)
   r <- lift $ vkWaitSemaphores' (deviceHandle (device)) pWaitInfo (timeout)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -257,7 +264,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreSignalInfo'
 signalSemaphore :: forall io . MonadIO io => Device -> SemaphoreSignalInfo -> io ()
 signalSemaphore device signalInfo = liftIO . evalContT $ do
-  let vkSignalSemaphore' = mkVkSignalSemaphore (pVkSignalSemaphore (deviceCmds (device :: Device)))
+  let vkSignalSemaphorePtr = pVkSignalSemaphore (deviceCmds (device :: Device))
+  lift $ unless (vkSignalSemaphorePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSignalSemaphore is null" Nothing Nothing
+  let vkSignalSemaphore' = mkVkSignalSemaphore vkSignalSemaphorePtr
   pSignalInfo <- ContT $ withCStruct (signalInfo)
   r <- lift $ vkSignalSemaphore' (deviceHandle (device)) pSignalInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

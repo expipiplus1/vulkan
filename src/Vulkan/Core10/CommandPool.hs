@@ -7,12 +7,14 @@ module Vulkan.Core10.CommandPool  ( createCommandPool
                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -23,6 +25,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -113,7 +117,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 createCommandPool :: forall io . MonadIO io => Device -> CommandPoolCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (CommandPool)
 createCommandPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateCommandPool' = mkVkCreateCommandPool (pVkCreateCommandPool (deviceCmds (device :: Device)))
+  let vkCreateCommandPoolPtr = pVkCreateCommandPool (deviceCmds (device :: Device))
+  lift $ unless (vkCreateCommandPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateCommandPool is null" Nothing Nothing
+  let vkCreateCommandPool' = mkVkCreateCommandPool vkCreateCommandPoolPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -208,7 +215,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
 destroyCommandPool :: forall io . MonadIO io => Device -> CommandPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
-  let vkDestroyCommandPool' = mkVkDestroyCommandPool (pVkDestroyCommandPool (deviceCmds (device :: Device)))
+  let vkDestroyCommandPoolPtr = pVkDestroyCommandPool (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyCommandPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyCommandPool is null" Nothing Nothing
+  let vkDestroyCommandPool' = mkVkDestroyCommandPool vkDestroyCommandPoolPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -293,7 +303,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 resetCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolResetFlags -> io ()
 resetCommandPool device commandPool flags = liftIO $ do
-  let vkResetCommandPool' = mkVkResetCommandPool (pVkResetCommandPool (deviceCmds (device :: Device)))
+  let vkResetCommandPoolPtr = pVkResetCommandPool (deviceCmds (device :: Device))
+  unless (vkResetCommandPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandPool is null" Nothing Nothing
+  let vkResetCommandPool' = mkVkResetCommandPool vkResetCommandPoolPtr
   r <- vkResetCommandPool' (deviceHandle (device)) (commandPool) (flags)
   when (r < SUCCESS) (throwIO (VulkanException r))
 

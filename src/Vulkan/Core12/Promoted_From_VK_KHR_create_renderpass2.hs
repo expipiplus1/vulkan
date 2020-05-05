@@ -25,6 +25,7 @@ import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -176,7 +177,10 @@ foreign import ccall
 -- 'RenderPassCreateInfo2'
 createRenderPass2 :: forall a io . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo2 a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
 createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateRenderPass2' = mkVkCreateRenderPass2 (pVkCreateRenderPass2 (deviceCmds (device :: Device)))
+  let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (deviceCmds (device :: Device))
+  lift $ unless (vkCreateRenderPass2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRenderPass2 is null" Nothing Nothing
+  let vkCreateRenderPass2' = mkVkCreateRenderPass2 vkCreateRenderPass2Ptr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -383,7 +387,10 @@ foreign import ccall
 -- 'SubpassBeginInfo'
 cmdBeginRenderPass2 :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> io ()
 cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . evalContT $ do
-  let vkCmdBeginRenderPass2' = mkVkCmdBeginRenderPass2 (pVkCmdBeginRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBeginRenderPass2Ptr = pVkCmdBeginRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBeginRenderPass2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass2 is null" Nothing Nothing
+  let vkCmdBeginRenderPass2' = mkVkCmdBeginRenderPass2 vkCmdBeginRenderPass2Ptr
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
   lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) pRenderPassBegin pSubpassBeginInfo
@@ -480,7 +487,10 @@ foreign import ccall
 -- 'SubpassEndInfo'
 cmdNextSubpass2 :: forall io . MonadIO io => CommandBuffer -> SubpassBeginInfo -> SubpassEndInfo -> io ()
 cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalContT $ do
-  let vkCmdNextSubpass2' = mkVkCmdNextSubpass2 (pVkCmdNextSubpass2 (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdNextSubpass2Ptr = pVkCmdNextSubpass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdNextSubpass2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdNextSubpass2 is null" Nothing Nothing
+  let vkCmdNextSubpass2' = mkVkCmdNextSubpass2 vkCmdNextSubpass2Ptr
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
   lift $ vkCmdNextSubpass2' (commandBufferHandle (commandBuffer)) pSubpassBeginInfo pSubpassEndInfo
@@ -559,7 +569,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SubpassEndInfo'
 cmdEndRenderPass2 :: forall io . MonadIO io => CommandBuffer -> SubpassEndInfo -> io ()
 cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
-  let vkCmdEndRenderPass2' = mkVkCmdEndRenderPass2 (pVkCmdEndRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdEndRenderPass2Ptr = pVkCmdEndRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdEndRenderPass2Ptr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass2 is null" Nothing Nothing
+  let vkCmdEndRenderPass2' = mkVkCmdEndRenderPass2 vkCmdEndRenderPass2Ptr
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
   lift $ vkCmdEndRenderPass2' (commandBufferHandle (commandBuffer)) pSubpassEndInfo
   pure $ ()

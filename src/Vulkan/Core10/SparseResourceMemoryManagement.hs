@@ -13,6 +13,7 @@ module Vulkan.Core10.SparseResourceMemoryManagement  ( getImageSparseMemoryRequi
                                                      ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -21,6 +22,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -35,6 +37,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -175,7 +179,10 @@ foreign import ccall
 -- 'SparseImageMemoryRequirements'
 getImageSparseMemoryRequirements :: forall io . MonadIO io => Device -> Image -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
 getImageSparseMemoryRequirements device image = liftIO . evalContT $ do
-  let vkGetImageSparseMemoryRequirements' = mkVkGetImageSparseMemoryRequirements (pVkGetImageSparseMemoryRequirements (deviceCmds (device :: Device)))
+  let vkGetImageSparseMemoryRequirementsPtr = pVkGetImageSparseMemoryRequirements (deviceCmds (device :: Device))
+  lift $ unless (vkGetImageSparseMemoryRequirementsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSparseMemoryRequirements is null" Nothing Nothing
+  let vkGetImageSparseMemoryRequirements' = mkVkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirementsPtr
   let device' = deviceHandle (device)
   pPSparseMemoryRequirementCount <- ContT $ bracket (callocBytes @Word32 4) free
   lift $ vkGetImageSparseMemoryRequirements' device' (image) (pPSparseMemoryRequirementCount) (nullPtr)
@@ -295,7 +302,10 @@ foreign import ccall
 -- 'SparseImageFormatProperties'
 getPhysicalDeviceSparseImageFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ("samples" ::: SampleCountFlagBits) -> ImageUsageFlags -> ImageTiling -> io (("properties" ::: Vector SparseImageFormatProperties))
 getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSparseImageFormatProperties' = mkVkGetPhysicalDeviceSparseImageFormatProperties (pVkGetPhysicalDeviceSparseImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSparseImageFormatPropertiesPtr = pVkGetPhysicalDeviceSparseImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSparseImageFormatPropertiesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSparseImageFormatProperties is null" Nothing Nothing
+  let vkGetPhysicalDeviceSparseImageFormatProperties' = mkVkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   lift $ vkGetPhysicalDeviceSparseImageFormatProperties' physicalDevice' (format) (type') (samples) (usage) (tiling) (pPPropertyCount) (nullPtr)
@@ -448,7 +458,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Queue'
 queueBindSparse :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> io ()
 queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
-  let vkQueueBindSparse' = mkVkQueueBindSparse (pVkQueueBindSparse (deviceCmds (queue :: Queue)))
+  let vkQueueBindSparsePtr = pVkQueueBindSparse (deviceCmds (queue :: Queue))
+  lift $ unless (vkQueueBindSparsePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBindSparse is null" Nothing Nothing
+  let vkQueueBindSparse' = mkVkQueueBindSparse vkQueueBindSparsePtr
   pPBindInfo <- ContT $ allocaBytesAligned @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _)) (e) . ($ ())) (bindInfo)
   r <- lift $ vkQueueBindSparse' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (bindInfo)) :: Word32)) (pPBindInfo) (fence)

@@ -12,6 +12,7 @@ module Vulkan.Core10.CommandBuffer  ( allocateCommandBuffers
                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -21,6 +22,7 @@ import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -35,6 +37,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -168,7 +172,10 @@ foreign import ccall
 allocateCommandBuffers :: forall io . MonadIO io => Device -> CommandBufferAllocateInfo -> io (("commandBuffers" ::: Vector CommandBuffer))
 allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
-  let vkAllocateCommandBuffers' = mkVkAllocateCommandBuffers (pVkAllocateCommandBuffers cmds)
+  let vkAllocateCommandBuffersPtr = pVkAllocateCommandBuffers cmds
+  lift $ unless (vkAllocateCommandBuffersPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAllocateCommandBuffers is null" Nothing Nothing
+  let vkAllocateCommandBuffers' = mkVkAllocateCommandBuffers vkAllocateCommandBuffersPtr
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPCommandBuffers <- ContT $ bracket (callocBytes @(Ptr CommandBuffer_T) ((fromIntegral $ commandBufferCount ((allocateInfo) :: CommandBufferAllocateInfo)) * 8)) free
   r <- lift $ vkAllocateCommandBuffers' (deviceHandle (device)) pAllocateInfo (pPCommandBuffers)
@@ -257,7 +264,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
 freeCommandBuffers :: forall io . MonadIO io => Device -> CommandPool -> ("commandBuffers" ::: Vector CommandBuffer) -> io ()
 freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
-  let vkFreeCommandBuffers' = mkVkFreeCommandBuffers (pVkFreeCommandBuffers (deviceCmds (device :: Device)))
+  let vkFreeCommandBuffersPtr = pVkFreeCommandBuffers (deviceCmds (device :: Device))
+  lift $ unless (vkFreeCommandBuffersPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeCommandBuffers is null" Nothing Nothing
+  let vkFreeCommandBuffers' = mkVkFreeCommandBuffers vkFreeCommandBuffersPtr
   pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
   lift $ vkFreeCommandBuffers' (deviceHandle (device)) (commandPool) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers)
@@ -343,7 +353,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferBeginInfo'
 beginCommandBuffer :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io ()
 beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
-  let vkBeginCommandBuffer' = mkVkBeginCommandBuffer (pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkBeginCommandBufferPtr = pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkBeginCommandBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBeginCommandBuffer is null" Nothing Nothing
+  let vkBeginCommandBuffer' = mkVkBeginCommandBuffer vkBeginCommandBufferPtr
   pBeginInfo <- ContT $ withCStruct (beginInfo)
   r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) pBeginInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -440,7 +453,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 endCommandBuffer :: forall io . MonadIO io => CommandBuffer -> io ()
 endCommandBuffer commandBuffer = liftIO $ do
-  let vkEndCommandBuffer' = mkVkEndCommandBuffer (pVkEndCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkEndCommandBufferPtr = pVkEndCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkEndCommandBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEndCommandBuffer is null" Nothing Nothing
+  let vkEndCommandBuffer' = mkVkEndCommandBuffer vkEndCommandBufferPtr
   r <- vkEndCommandBuffer' (commandBufferHandle (commandBuffer))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -513,7 +529,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlags'
 resetCommandBuffer :: forall io . MonadIO io => CommandBuffer -> CommandBufferResetFlags -> io ()
 resetCommandBuffer commandBuffer flags = liftIO $ do
-  let vkResetCommandBuffer' = mkVkResetCommandBuffer (pVkResetCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkResetCommandBufferPtr = pVkResetCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkResetCommandBufferPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandBuffer is null" Nothing Nothing
+  let vkResetCommandBuffer' = mkVkResetCommandBuffer vkResetCommandBufferPtr
   r <- vkResetCommandBuffer' (commandBufferHandle (commandBuffer)) (flags)
   when (r < SUCCESS) (throwIO (VulkanException r))
 

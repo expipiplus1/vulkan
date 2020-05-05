@@ -17,6 +17,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -168,7 +169,10 @@ foreign import ccall
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
 cmdSetDiscardRectangleEXT :: forall io . MonadIO io => CommandBuffer -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangles" ::: Vector Rect2D) -> io ()
 cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
-  let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT (pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetDiscardRectangleEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleEXT is null" Nothing Nothing
+  let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXTPtr
   pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (discardRectangles)
   lift $ vkCmdSetDiscardRectangleEXT' (commandBufferHandle (commandBuffer)) (firstDiscardRectangle) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32)) (pPDiscardRectangles)

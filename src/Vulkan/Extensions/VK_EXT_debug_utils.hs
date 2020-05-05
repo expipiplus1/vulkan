@@ -43,6 +43,7 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -50,6 +51,7 @@ import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -81,6 +83,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -194,7 +198,10 @@ foreign import ccall
 -- 'DebugUtilsObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
 setDebugUtilsObjectNameEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectNameInfoEXT -> io ()
 setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
-  let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT (pVkSetDebugUtilsObjectNameEXT (deviceCmds (device :: Device)))
+  let vkSetDebugUtilsObjectNameEXTPtr = pVkSetDebugUtilsObjectNameEXT (deviceCmds (device :: Device))
+  lift $ unless (vkSetDebugUtilsObjectNameEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectNameEXT is null" Nothing Nothing
+  let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXTPtr
   pNameInfo <- ContT $ withCStruct (nameInfo)
   r <- lift $ vkSetDebugUtilsObjectNameEXT' (deviceHandle (device)) pNameInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -245,7 +252,10 @@ foreign import ccall
 -- 'DebugUtilsObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
 setDebugUtilsObjectTagEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectTagInfoEXT -> io ()
 setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
-  let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT (pVkSetDebugUtilsObjectTagEXT (deviceCmds (device :: Device)))
+  let vkSetDebugUtilsObjectTagEXTPtr = pVkSetDebugUtilsObjectTagEXT (deviceCmds (device :: Device))
+  lift $ unless (vkSetDebugUtilsObjectTagEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectTagEXT is null" Nothing Nothing
+  let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXTPtr
   pTagInfo <- ContT $ withCStruct (tagInfo)
   r <- lift $ vkSetDebugUtilsObjectTagEXT' (deviceHandle (device)) pTagInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -282,7 +292,10 @@ foreign import ccall
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
 queueBeginDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
 queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
-  let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT (pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
+  let vkQueueBeginDebugUtilsLabelEXTPtr = pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  lift $ unless (vkQueueBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBeginDebugUtilsLabelEXT is null" Nothing Nothing
+  let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkQueueBeginDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
   pure $ ()
@@ -330,7 +343,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Queue'
 queueEndDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> io ()
 queueEndDebugUtilsLabelEXT queue = liftIO $ do
-  let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT (pVkQueueEndDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
+  let vkQueueEndDebugUtilsLabelEXTPtr = pVkQueueEndDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  unless (vkQueueEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueEndDebugUtilsLabelEXT is null" Nothing Nothing
+  let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT vkQueueEndDebugUtilsLabelEXTPtr
   vkQueueEndDebugUtilsLabelEXT' (queueHandle (queue))
   pure $ ()
 
@@ -366,7 +382,10 @@ foreign import ccall
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
 queueInsertDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
 queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
-  let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT (pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
+  let vkQueueInsertDebugUtilsLabelEXTPtr = pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  lift $ unless (vkQueueInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueInsertDebugUtilsLabelEXT is null" Nothing Nothing
+  let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT vkQueueInsertDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkQueueInsertDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
   pure $ ()
@@ -424,7 +443,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
 cmdBeginDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
 cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
-  let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT (pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBeginDebugUtilsLabelEXTPtr = pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginDebugUtilsLabelEXT is null" Nothing Nothing
+  let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
@@ -505,7 +527,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> io ()
 cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
-  let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT (pVkCmdEndDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdEndDebugUtilsLabelEXTPtr = pVkCmdEndDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndDebugUtilsLabelEXT is null" Nothing Nothing
+  let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXTPtr
   vkCmdEndDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer))
   pure $ ()
 
@@ -562,7 +587,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
 cmdInsertDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
 cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
-  let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT (pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdInsertDebugUtilsLabelEXTPtr = pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdInsertDebugUtilsLabelEXT is null" Nothing Nothing
+  let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkCmdInsertDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
@@ -629,7 +657,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance'
 createDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugUtilsMessengerEXT)
 createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDebugUtilsMessengerEXT' = mkVkCreateDebugUtilsMessengerEXT (pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance)))
+  let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
+  lift $ unless (vkCreateDebugUtilsMessengerEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugUtilsMessengerEXT is null" Nothing Nothing
+  let vkCreateDebugUtilsMessengerEXT' = mkVkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXTPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -717,7 +748,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance'
 destroyDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
-  let vkDestroyDebugUtilsMessengerEXT' = mkVkDestroyDebugUtilsMessengerEXT (pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance)))
+  let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
+  lift $ unless (vkDestroyDebugUtilsMessengerEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugUtilsMessengerEXT is null" Nothing Nothing
+  let vkDestroyDebugUtilsMessengerEXT' = mkVkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXTPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -780,7 +814,10 @@ foreign import ccall
 -- 'DebugUtilsMessengerCallbackDataEXT', 'Vulkan.Core10.Handles.Instance'
 submitDebugUtilsMessageEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> DebugUtilsMessengerCallbackDataEXT -> io ()
 submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
-  let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT (pVkSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance)))
+  let vkSubmitDebugUtilsMessageEXTPtr = pVkSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance))
+  lift $ unless (vkSubmitDebugUtilsMessageEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSubmitDebugUtilsMessageEXT is null" Nothing Nothing
+  let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXTPtr
   pCallbackData <- ContT $ withCStruct (callbackData)
   lift $ vkSubmitDebugUtilsMessageEXT' (instanceHandle (instance')) (messageSeverity) (messageTypes) pCallbackData
   pure $ ()

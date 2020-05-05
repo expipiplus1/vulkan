@@ -31,6 +31,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -171,7 +172,10 @@ foreign import ccall
 -- 'DescriptorSetLayoutCreateInfo', 'Vulkan.Core10.Handles.Device'
 createDescriptorSetLayout :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorSetLayout)
 createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorSetLayout' = mkVkCreateDescriptorSetLayout (pVkCreateDescriptorSetLayout (deviceCmds (device :: Device)))
+  let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (deviceCmds (device :: Device))
+  lift $ unless (vkCreateDescriptorSetLayoutPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorSetLayout is null" Nothing Nothing
+  let vkCreateDescriptorSetLayout' = mkVkCreateDescriptorSetLayout vkCreateDescriptorSetLayoutPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -253,7 +257,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 destroyDescriptorSetLayout :: forall io . MonadIO io => Device -> DescriptorSetLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorSetLayout' = mkVkDestroyDescriptorSetLayout (pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device)))
+  let vkDestroyDescriptorSetLayoutPtr = pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyDescriptorSetLayoutPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorSetLayout is null" Nothing Nothing
+  let vkDestroyDescriptorSetLayout' = mkVkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayoutPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -328,7 +335,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 createDescriptorPool :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorPool)
 createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorPool' = mkVkCreateDescriptorPool (pVkCreateDescriptorPool (deviceCmds (device :: Device)))
+  let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (deviceCmds (device :: Device))
+  lift $ unless (vkCreateDescriptorPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorPool is null" Nothing Nothing
+  let vkCreateDescriptorPool' = mkVkCreateDescriptorPool vkCreateDescriptorPoolPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -417,7 +427,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'Vulkan.Core10.Handles.Device'
 destroyDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorPool' = mkVkDestroyDescriptorPool (pVkDestroyDescriptorPool (deviceCmds (device :: Device)))
+  let vkDestroyDescriptorPoolPtr = pVkDestroyDescriptorPool (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyDescriptorPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorPool is null" Nothing Nothing
+  let vkDestroyDescriptorPool' = mkVkDestroyDescriptorPool vkDestroyDescriptorPoolPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -485,7 +498,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 resetDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> DescriptorPoolResetFlags -> io ()
 resetDescriptorPool device descriptorPool flags = liftIO $ do
-  let vkResetDescriptorPool' = mkVkResetDescriptorPool (pVkResetDescriptorPool (deviceCmds (device :: Device)))
+  let vkResetDescriptorPoolPtr = pVkResetDescriptorPool (deviceCmds (device :: Device))
+  unless (vkResetDescriptorPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetDescriptorPool is null" Nothing Nothing
+  let vkResetDescriptorPool' = mkVkResetDescriptorPool vkResetDescriptorPoolPtr
   _ <- vkResetDescriptorPool' (deviceHandle (device)) (descriptorPool) (flags)
   pure $ ()
 
@@ -610,7 +626,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 allocateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> io (("descriptorSets" ::: Vector DescriptorSet))
 allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
-  let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets (pVkAllocateDescriptorSets (deviceCmds (device :: Device)))
+  let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (deviceCmds (device :: Device))
+  lift $ unless (vkAllocateDescriptorSetsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAllocateDescriptorSets is null" Nothing Nothing
+  let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets vkAllocateDescriptorSetsPtr
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPDescriptorSets <- ContT $ bracket (callocBytes @DescriptorSet ((fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) * 8)) free
   r <- lift $ vkAllocateDescriptorSets' (deviceHandle (device)) pAllocateInfo (pPDescriptorSets)
@@ -710,7 +729,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'Vulkan.Core10.Handles.Device'
 freeDescriptorSets :: forall io . MonadIO io => Device -> DescriptorPool -> ("descriptorSets" ::: Vector DescriptorSet) -> io ()
 freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
-  let vkFreeDescriptorSets' = mkVkFreeDescriptorSets (pVkFreeDescriptorSets (deviceCmds (device :: Device)))
+  let vkFreeDescriptorSetsPtr = pVkFreeDescriptorSets (deviceCmds (device :: Device))
+  lift $ unless (vkFreeDescriptorSetsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeDescriptorSets is null" Nothing Nothing
+  let vkFreeDescriptorSets' = mkVkFreeDescriptorSets vkFreeDescriptorSetsPtr
   pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
   _ <- lift $ vkFreeDescriptorSets' (deviceHandle (device)) (descriptorPool) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets)
@@ -805,7 +827,10 @@ foreign import ccall
 -- 'WriteDescriptorSet'
 updateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
-  let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets (pVkUpdateDescriptorSets (deviceCmds (device :: Device)))
+  let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (deviceCmds (device :: Device))
+  lift $ unless (vkUpdateDescriptorSetsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSets is null" Nothing Nothing
+  let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets vkUpdateDescriptorSetsPtr
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)
   pPDescriptorCopies <- ContT $ allocaBytesAligned @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56) 8

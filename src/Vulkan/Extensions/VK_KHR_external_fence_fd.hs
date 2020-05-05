@@ -10,12 +10,14 @@ module Vulkan.Extensions.VK_KHR_external_fence_fd  ( getFenceFdKHR
                                                    ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -30,6 +32,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -120,7 +124,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'FenceGetFdInfoKHR'
 getFenceFdKHR :: forall io . MonadIO io => Device -> FenceGetFdInfoKHR -> io (("fd" ::: Int32))
 getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetFenceFdKHR' = mkVkGetFenceFdKHR (pVkGetFenceFdKHR (deviceCmds (device :: Device)))
+  let vkGetFenceFdKHRPtr = pVkGetFenceFdKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetFenceFdKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceFdKHR is null" Nothing Nothing
+  let vkGetFenceFdKHR' = mkVkGetFenceFdKHR vkGetFenceFdKHRPtr
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
   r <- lift $ vkGetFenceFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd)
@@ -173,7 +180,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'ImportFenceFdInfoKHR'
 importFenceFdKHR :: forall io . MonadIO io => Device -> ImportFenceFdInfoKHR -> io ()
 importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
-  let vkImportFenceFdKHR' = mkVkImportFenceFdKHR (pVkImportFenceFdKHR (deviceCmds (device :: Device)))
+  let vkImportFenceFdKHRPtr = pVkImportFenceFdKHR (deviceCmds (device :: Device))
+  lift $ unless (vkImportFenceFdKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceFdKHR is null" Nothing Nothing
+  let vkImportFenceFdKHR' = mkVkImportFenceFdKHR vkImportFenceFdKHRPtr
   pImportFenceFdInfo <- ContT $ withCStruct (importFenceFdInfo)
   r <- lift $ vkImportFenceFdKHR' (deviceHandle (device)) pImportFenceFdInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

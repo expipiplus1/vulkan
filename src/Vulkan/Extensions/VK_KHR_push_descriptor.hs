@@ -8,8 +8,11 @@ module Vulkan.Extensions.VK_KHR_push_descriptor  ( cmdPushDescriptorSetKHR
                                                  , pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
                                                  ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -23,6 +26,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -199,7 +204,10 @@ foreign import ccall
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
 cmdPushDescriptorSetKHR :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("set" ::: Word32) -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> io ()
 cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
-  let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR (pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdPushDescriptorSetKHRPtr = pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdPushDescriptorSetKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetKHR is null" Nothing Nothing
+  let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHRPtr
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)
   lift $ vkCmdPushDescriptorSetKHR' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (set) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (pPDescriptorWrites)
@@ -344,7 +352,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PipelineLayout'
 cmdPushDescriptorSetWithTemplateKHR :: forall io . MonadIO io => CommandBuffer -> DescriptorUpdateTemplate -> PipelineLayout -> ("set" ::: Word32) -> ("data" ::: Ptr ()) -> io ()
 cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = liftIO $ do
-  let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR (pVkCmdPushDescriptorSetWithTemplateKHR (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdPushDescriptorSetWithTemplateKHRPtr = pVkCmdPushDescriptorSetWithTemplateKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdPushDescriptorSetWithTemplateKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetWithTemplateKHR is null" Nothing Nothing
+  let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHRPtr
   vkCmdPushDescriptorSetWithTemplateKHR' (commandBufferHandle (commandBuffer)) (descriptorUpdateTemplate) (layout) (set) (data')
   pure $ ()
 

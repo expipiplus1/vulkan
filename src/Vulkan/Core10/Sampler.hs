@@ -6,6 +6,7 @@ module Vulkan.Core10.Sampler  ( createSampler
                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -14,6 +15,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -25,6 +27,8 @@ import Foreign.C.Types (CFloat)
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
@@ -126,7 +130,10 @@ foreign import ccall
 -- 'SamplerCreateInfo'
 createSampler :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Sampler)
 createSampler device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSampler' = mkVkCreateSampler (pVkCreateSampler (deviceCmds (device :: Device)))
+  let vkCreateSamplerPtr = pVkCreateSampler (deviceCmds (device :: Device))
+  lift $ unless (vkCreateSamplerPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSampler is null" Nothing Nothing
+  let vkCreateSampler' = mkVkCreateSampler vkCreateSamplerPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -206,7 +213,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Sampler'
 destroySampler :: forall io . MonadIO io => Device -> Sampler -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroySampler device sampler allocator = liftIO . evalContT $ do
-  let vkDestroySampler' = mkVkDestroySampler (pVkDestroySampler (deviceCmds (device :: Device)))
+  let vkDestroySamplerPtr = pVkDestroySampler (deviceCmds (device :: Device))
+  lift $ unless (vkDestroySamplerPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySampler is null" Nothing Nothing
+  let vkDestroySampler' = mkVkDestroySampler vkDestroySamplerPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

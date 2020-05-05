@@ -4,8 +4,11 @@ module Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset  ( resetQueryPool
                                                             , StructureType(..)
                                                             ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.IO.Class (MonadIO)
@@ -14,6 +17,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -101,7 +106,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'
 resetQueryPool :: forall io . MonadIO io => Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> io ()
 resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
-  let vkResetQueryPool' = mkVkResetQueryPool (pVkResetQueryPool (deviceCmds (device :: Device)))
+  let vkResetQueryPoolPtr = pVkResetQueryPool (deviceCmds (device :: Device))
+  unless (vkResetQueryPoolPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetQueryPool is null" Nothing Nothing
+  let vkResetQueryPool' = mkVkResetQueryPool vkResetQueryPoolPtr
   vkResetQueryPool' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount)
   pure $ ()
 

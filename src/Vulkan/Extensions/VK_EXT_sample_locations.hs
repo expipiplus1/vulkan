@@ -16,8 +16,11 @@ module Vulkan.Extensions.VK_EXT_sample_locations  ( cmdSetSampleLocationsEXT
                                                   ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -34,6 +37,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -139,7 +144,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SampleLocationsInfoEXT'
 cmdSetSampleLocationsEXT :: forall io . MonadIO io => CommandBuffer -> SampleLocationsInfoEXT -> io ()
 cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT $ do
-  let vkCmdSetSampleLocationsEXT' = mkVkCmdSetSampleLocationsEXT (pVkCmdSetSampleLocationsEXT (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdSetSampleLocationsEXTPtr = pVkCmdSetSampleLocationsEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdSetSampleLocationsEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetSampleLocationsEXT is null" Nothing Nothing
+  let vkCmdSetSampleLocationsEXT' = mkVkCmdSetSampleLocationsEXT vkCmdSetSampleLocationsEXTPtr
   pSampleLocationsInfo <- ContT $ withCStruct (sampleLocationsInfo)
   lift $ vkCmdSetSampleLocationsEXT' (commandBufferHandle (commandBuffer)) pSampleLocationsInfo
   pure $ ()
@@ -175,7 +183,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
 getPhysicalDeviceMultisamplePropertiesEXT :: forall io . MonadIO io => PhysicalDevice -> ("samples" ::: SampleCountFlagBits) -> io (MultisamplePropertiesEXT)
 getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceMultisamplePropertiesEXT' = mkVkGetPhysicalDeviceMultisamplePropertiesEXT (pVkGetPhysicalDeviceMultisamplePropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceMultisamplePropertiesEXTPtr = pVkGetPhysicalDeviceMultisamplePropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceMultisamplePropertiesEXTPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMultisamplePropertiesEXT is null" Nothing Nothing
+  let vkGetPhysicalDeviceMultisamplePropertiesEXT' = mkVkGetPhysicalDeviceMultisamplePropertiesEXT vkGetPhysicalDeviceMultisamplePropertiesEXTPtr
   pPMultisampleProperties <- ContT (withZeroCStruct @MultisamplePropertiesEXT)
   lift $ vkGetPhysicalDeviceMultisamplePropertiesEXT' (physicalDeviceHandle (physicalDevice)) (samples) (pPMultisampleProperties)
   pMultisampleProperties <- lift $ peekCStruct @MultisamplePropertiesEXT pPMultisampleProperties

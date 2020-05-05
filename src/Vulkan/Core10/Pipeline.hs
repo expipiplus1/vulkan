@@ -37,6 +37,7 @@ import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import qualified Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -293,7 +294,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
 createGraphicsPipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateGraphicsPipelines' = mkVkCreateGraphicsPipelines (pVkCreateGraphicsPipelines (deviceCmds (device :: Device)))
+  let vkCreateGraphicsPipelinesPtr = pVkCreateGraphicsPipelines (deviceCmds (device :: Device))
+  lift $ unless (vkCreateGraphicsPipelinesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateGraphicsPipelines is null" Nothing Nothing
+  let vkCreateGraphicsPipelines' = mkVkCreateGraphicsPipelines vkCreateGraphicsPipelinesPtr
   pPCreateInfos <- ContT $ allocaBytesAligned @(GraphicsPipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 144) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (144 * (i)) :: Ptr (GraphicsPipelineCreateInfo _)) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
@@ -418,7 +422,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
 createComputePipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateComputePipelines' = mkVkCreateComputePipelines (pVkCreateComputePipelines (deviceCmds (device :: Device)))
+  let vkCreateComputePipelinesPtr = pVkCreateComputePipelines (deviceCmds (device :: Device))
+  lift $ unless (vkCreateComputePipelinesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateComputePipelines is null" Nothing Nothing
+  let vkCreateComputePipelines' = mkVkCreateComputePipelines vkCreateComputePipelinesPtr
   pPCreateInfos <- ContT $ allocaBytesAligned @(ComputePipelineCreateInfo _) ((Data.Vector.length (createInfos)) * 96) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (96 * (i)) :: Ptr (ComputePipelineCreateInfo _)) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
@@ -499,7 +506,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
 destroyPipeline :: forall io . MonadIO io => Device -> Pipeline -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyPipeline device pipeline allocator = liftIO . evalContT $ do
-  let vkDestroyPipeline' = mkVkDestroyPipeline (pVkDestroyPipeline (deviceCmds (device :: Device)))
+  let vkDestroyPipelinePtr = pVkDestroyPipeline (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyPipelinePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPipeline is null" Nothing Nothing
+  let vkDestroyPipeline' = mkVkDestroyPipeline vkDestroyPipelinePtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

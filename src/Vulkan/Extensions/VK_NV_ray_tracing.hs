@@ -112,6 +112,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -120,6 +121,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -138,6 +140,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -357,7 +361,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
 compileDeferredNV :: forall io . MonadIO io => Device -> Pipeline -> ("shader" ::: Word32) -> io ()
 compileDeferredNV device pipeline shader = liftIO $ do
-  let vkCompileDeferredNV' = mkVkCompileDeferredNV (pVkCompileDeferredNV (deviceCmds (device :: Device)))
+  let vkCompileDeferredNVPtr = pVkCompileDeferredNV (deviceCmds (device :: Device))
+  unless (vkCompileDeferredNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCompileDeferredNV is null" Nothing Nothing
+  let vkCompileDeferredNV' = mkVkCompileDeferredNV vkCompileDeferredNVPtr
   r <- vkCompileDeferredNV' (deviceHandle (device)) (pipeline) (shader)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -431,7 +438,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 createAccelerationStructureNV :: forall io . MonadIO io => Device -> AccelerationStructureCreateInfoNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io (AccelerationStructureNV)
 createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateAccelerationStructureNV' = mkVkCreateAccelerationStructureNV (pVkCreateAccelerationStructureNV (deviceCmds (device :: Device)))
+  let vkCreateAccelerationStructureNVPtr = pVkCreateAccelerationStructureNV (deviceCmds (device :: Device))
+  lift $ unless (vkCreateAccelerationStructureNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAccelerationStructureNV is null" Nothing Nothing
+  let vkCreateAccelerationStructureNV' = mkVkCreateAccelerationStructureNV vkCreateAccelerationStructureNVPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -473,7 +483,10 @@ foreign import ccall
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
 getAccelerationStructureMemoryRequirementsNV :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> AccelerationStructureMemoryRequirementsInfoNV -> io (MemoryRequirements2KHR a)
 getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ do
-  let vkGetAccelerationStructureMemoryRequirementsNV' = mkVkGetAccelerationStructureMemoryRequirementsNV (pVkGetAccelerationStructureMemoryRequirementsNV (deviceCmds (device :: Device)))
+  let vkGetAccelerationStructureMemoryRequirementsNVPtr = pVkGetAccelerationStructureMemoryRequirementsNV (deviceCmds (device :: Device))
+  lift $ unless (vkGetAccelerationStructureMemoryRequirementsNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureMemoryRequirementsNV is null" Nothing Nothing
+  let vkGetAccelerationStructureMemoryRequirementsNV' = mkVkGetAccelerationStructureMemoryRequirementsNV vkGetAccelerationStructureMemoryRequirementsNVPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2KHR _))
   lift $ vkGetAccelerationStructureMemoryRequirementsNV' (deviceHandle (device)) pInfo (pPMemoryRequirements)
@@ -566,7 +579,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
 cmdCopyAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> ("dst" ::: AccelerationStructureKHR) -> ("src" ::: AccelerationStructureKHR) -> CopyAccelerationStructureModeKHR -> io ()
 cmdCopyAccelerationStructureNV commandBuffer dst src mode = liftIO $ do
-  let vkCmdCopyAccelerationStructureNV' = mkVkCmdCopyAccelerationStructureNV (pVkCmdCopyAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdCopyAccelerationStructureNVPtr = pVkCmdCopyAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdCopyAccelerationStructureNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureNV is null" Nothing Nothing
+  let vkCmdCopyAccelerationStructureNV' = mkVkCmdCopyAccelerationStructureNV vkCmdCopyAccelerationStructureNVPtr
   vkCmdCopyAccelerationStructureNV' (commandBufferHandle (commandBuffer)) (dst) (src) (mode)
   pure $ ()
 
@@ -733,7 +749,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdBuildAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> AccelerationStructureInfoNV -> ("instanceData" ::: Buffer) -> ("instanceOffset" ::: DeviceSize) -> ("update" ::: Bool) -> ("dst" ::: AccelerationStructureKHR) -> ("src" ::: AccelerationStructureKHR) -> ("scratch" ::: Buffer) -> ("scratchOffset" ::: DeviceSize) -> io ()
 cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = liftIO . evalContT $ do
-  let vkCmdBuildAccelerationStructureNV' = mkVkCmdBuildAccelerationStructureNV (pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdBuildAccelerationStructureNVPtr = pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdBuildAccelerationStructureNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructureNV is null" Nothing Nothing
+  let vkCmdBuildAccelerationStructureNV' = mkVkCmdBuildAccelerationStructureNV vkCmdBuildAccelerationStructureNVPtr
   pInfo <- ContT $ withCStruct (info)
   lift $ vkCmdBuildAccelerationStructureNV' (commandBufferHandle (commandBuffer)) pInfo (instanceData) (instanceOffset) (boolToBool32 (update)) (dst) (src) (scratch) (scratchOffset)
   pure $ ()
@@ -1084,7 +1103,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 cmdTraceRaysNV :: forall io . MonadIO io => CommandBuffer -> ("raygenShaderBindingTableBuffer" ::: Buffer) -> ("raygenShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingTableBuffer" ::: Buffer) -> ("missShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingStride" ::: DeviceSize) -> ("hitShaderBindingTableBuffer" ::: Buffer) -> ("hitShaderBindingOffset" ::: DeviceSize) -> ("hitShaderBindingStride" ::: DeviceSize) -> ("callableShaderBindingTableBuffer" ::: Buffer) -> ("callableShaderBindingOffset" ::: DeviceSize) -> ("callableShaderBindingStride" ::: DeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> io ()
 cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth = liftIO $ do
-  let vkCmdTraceRaysNV' = mkVkCmdTraceRaysNV (pVkCmdTraceRaysNV (deviceCmds (commandBuffer :: CommandBuffer)))
+  let vkCmdTraceRaysNVPtr = pVkCmdTraceRaysNV (deviceCmds (commandBuffer :: CommandBuffer))
+  unless (vkCmdTraceRaysNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysNV is null" Nothing Nothing
+  let vkCmdTraceRaysNV' = mkVkCmdTraceRaysNV vkCmdTraceRaysNVPtr
   vkCmdTraceRaysNV' (commandBufferHandle (commandBuffer)) (raygenShaderBindingTableBuffer) (raygenShaderBindingOffset) (missShaderBindingTableBuffer) (missShaderBindingOffset) (missShaderBindingStride) (hitShaderBindingTableBuffer) (hitShaderBindingOffset) (hitShaderBindingStride) (callableShaderBindingTableBuffer) (callableShaderBindingOffset) (callableShaderBindingStride) (width) (height) (depth)
   pure $ ()
 
@@ -1129,7 +1151,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 getAccelerationStructureHandleNV :: forall io . MonadIO io => Device -> AccelerationStructureKHR -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> io ()
 getAccelerationStructureHandleNV device accelerationStructure dataSize data' = liftIO $ do
-  let vkGetAccelerationStructureHandleNV' = mkVkGetAccelerationStructureHandleNV (pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device)))
+  let vkGetAccelerationStructureHandleNVPtr = pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device))
+  unless (vkGetAccelerationStructureHandleNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureHandleNV is null" Nothing Nothing
+  let vkGetAccelerationStructureHandleNV' = mkVkGetAccelerationStructureHandleNV vkGetAccelerationStructureHandleNVPtr
   r <- vkGetAccelerationStructureHandleNV' (deviceHandle (device)) (accelerationStructure) (CSize (dataSize)) (data')
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -1234,7 +1259,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PipelineCache', 'RayTracingPipelineCreateInfoNV'
 createRayTracingPipelinesNV :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoNV a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateRayTracingPipelinesNV' = mkVkCreateRayTracingPipelinesNV (pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device)))
+  let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device))
+  lift $ unless (vkCreateRayTracingPipelinesNVPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesNV is null" Nothing Nothing
+  let vkCreateRayTracingPipelinesNV' = mkVkCreateRayTracingPipelinesNV vkCreateRayTracingPipelinesNVPtr
   pPCreateInfos <- ContT $ allocaBytesAligned @(RayTracingPipelineCreateInfoNV _) ((Data.Vector.length (createInfos)) * 80) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (80 * (i)) :: Ptr (RayTracingPipelineCreateInfoNV _)) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of

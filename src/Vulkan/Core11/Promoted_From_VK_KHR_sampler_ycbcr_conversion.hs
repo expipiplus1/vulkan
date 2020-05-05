@@ -24,6 +24,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion  ( createSamp
                                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -32,6 +33,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -43,6 +45,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -178,7 +182,10 @@ foreign import ccall
 -- 'SamplerYcbcrConversionCreateInfo'
 createSamplerYcbcrConversion :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SamplerYcbcrConversion)
 createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSamplerYcbcrConversion' = mkVkCreateSamplerYcbcrConversion (pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device)))
+  let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device))
+  lift $ unless (vkCreateSamplerYcbcrConversionPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSamplerYcbcrConversion is null" Nothing Nothing
+  let vkCreateSamplerYcbcrConversion' = mkVkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversionPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -248,7 +255,10 @@ foreign import ccall
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion'
 destroySamplerYcbcrConversion :: forall io . MonadIO io => Device -> SamplerYcbcrConversion -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
-  let vkDestroySamplerYcbcrConversion' = mkVkDestroySamplerYcbcrConversion (pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device)))
+  let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device))
+  lift $ unless (vkDestroySamplerYcbcrConversionPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySamplerYcbcrConversion is null" Nothing Nothing
+  let vkDestroySamplerYcbcrConversion' = mkVkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversionPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)

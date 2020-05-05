@@ -55,6 +55,7 @@ import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -283,7 +284,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 createSwapchainKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSwapchainKHR' = mkVkCreateSwapchainKHR (pVkCreateSwapchainKHR (deviceCmds (device :: Device)))
+  let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (deviceCmds (device :: Device))
+  lift $ unless (vkCreateSwapchainKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSwapchainKHR is null" Nothing Nothing
+  let vkCreateSwapchainKHR' = mkVkCreateSwapchainKHR vkCreateSwapchainKHRPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -393,7 +397,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 destroySwapchainKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
-  let vkDestroySwapchainKHR' = mkVkDestroySwapchainKHR (pVkDestroySwapchainKHR (deviceCmds (device :: Device)))
+  let vkDestroySwapchainKHRPtr = pVkDestroySwapchainKHR (deviceCmds (device :: Device))
+  lift $ unless (vkDestroySwapchainKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySwapchainKHR is null" Nothing Nothing
+  let vkDestroySwapchainKHR' = mkVkDestroySwapchainKHR vkDestroySwapchainKHRPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -478,7 +485,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getSwapchainImagesKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result, ("swapchainImages" ::: Vector Image))
 getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
-  let vkGetSwapchainImagesKHR' = mkVkGetSwapchainImagesKHR (pVkGetSwapchainImagesKHR (deviceCmds (device :: Device)))
+  let vkGetSwapchainImagesKHRPtr = pVkGetSwapchainImagesKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetSwapchainImagesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainImagesKHR is null" Nothing Nothing
+  let vkGetSwapchainImagesKHR' = mkVkGetSwapchainImagesKHR vkGetSwapchainImagesKHRPtr
   let device' = deviceHandle (device)
   pPSwapchainImageCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetSwapchainImagesKHR' device' (swapchain) (pPSwapchainImageCount) (nullPtr)
@@ -619,7 +629,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 acquireNextImageKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> ("timeout" ::: Word64) -> Semaphore -> Fence -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
-  let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR (pVkAcquireNextImageKHR (deviceCmds (device :: Device)))
+  let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (deviceCmds (device :: Device))
+  lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImageKHR is null" Nothing Nothing
+  let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR vkAcquireNextImageKHRPtr
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkAcquireNextImageKHR' (deviceHandle (device)) (swapchain) (timeout) (semaphore) (fence) (pPImageIndex)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -789,7 +802,10 @@ foreign import ccall
 -- 'PresentInfoKHR', 'Vulkan.Core10.Handles.Queue'
 queuePresentKHR :: forall a io . (PokeChain a, MonadIO io) => Queue -> PresentInfoKHR a -> io (Result)
 queuePresentKHR queue presentInfo = liftIO . evalContT $ do
-  let vkQueuePresentKHR' = mkVkQueuePresentKHR (pVkQueuePresentKHR (deviceCmds (queue :: Queue)))
+  let vkQueuePresentKHRPtr = pVkQueuePresentKHR (deviceCmds (queue :: Queue))
+  lift $ unless (vkQueuePresentKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueuePresentKHR is null" Nothing Nothing
+  let vkQueuePresentKHR' = mkVkQueuePresentKHR vkQueuePresentKHRPtr
   pPresentInfo <- ContT $ withCStruct (presentInfo)
   r <- lift $ vkQueuePresentKHR' (queueHandle (queue)) pPresentInfo
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -831,7 +847,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'DeviceGroupPresentCapabilitiesKHR'
 getDeviceGroupPresentCapabilitiesKHR :: forall io . MonadIO io => Device -> io (DeviceGroupPresentCapabilitiesKHR)
 getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
-  let vkGetDeviceGroupPresentCapabilitiesKHR' = mkVkGetDeviceGroupPresentCapabilitiesKHR (pVkGetDeviceGroupPresentCapabilitiesKHR (deviceCmds (device :: Device)))
+  let vkGetDeviceGroupPresentCapabilitiesKHRPtr = pVkGetDeviceGroupPresentCapabilitiesKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetDeviceGroupPresentCapabilitiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPresentCapabilitiesKHR is null" Nothing Nothing
+  let vkGetDeviceGroupPresentCapabilitiesKHR' = mkVkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHRPtr
   pPDeviceGroupPresentCapabilities <- ContT (withZeroCStruct @DeviceGroupPresentCapabilitiesKHR)
   r <- lift $ vkGetDeviceGroupPresentCapabilitiesKHR' (deviceHandle (device)) (pPDeviceGroupPresentCapabilities)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -903,7 +922,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getDeviceGroupSurfacePresentModesKHR :: forall io . MonadIO io => Device -> SurfaceKHR -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModesKHR device surface = liftIO . evalContT $ do
-  let vkGetDeviceGroupSurfacePresentModesKHR' = mkVkGetDeviceGroupSurfacePresentModesKHR (pVkGetDeviceGroupSurfacePresentModesKHR (deviceCmds (device :: Device)))
+  let vkGetDeviceGroupSurfacePresentModesKHRPtr = pVkGetDeviceGroupSurfacePresentModesKHR (deviceCmds (device :: Device))
+  lift $ unless (vkGetDeviceGroupSurfacePresentModesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModesKHR is null" Nothing Nothing
+  let vkGetDeviceGroupSurfacePresentModesKHR' = mkVkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHRPtr
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
   r <- lift $ vkGetDeviceGroupSurfacePresentModesKHR' (deviceHandle (device)) (surface) (pPModes)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -982,7 +1004,10 @@ foreign import ccall
 -- 'AcquireNextImageInfoKHR', 'Vulkan.Core10.Handles.Device'
 acquireNextImage2KHR :: forall io . MonadIO io => Device -> ("acquireInfo" ::: AcquireNextImageInfoKHR) -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
-  let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR (pVkAcquireNextImage2KHR (deviceCmds (device :: Device)))
+  let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
+  lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImage2KHR is null" Nothing Nothing
+  let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR vkAcquireNextImage2KHRPtr
   pAcquireInfo <- ContT $ withCStruct (acquireInfo)
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkAcquireNextImage2KHR' (deviceHandle (device)) pAcquireInfo (pPImageIndex)
@@ -1075,7 +1100,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDevicePresentRectanglesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("rects" ::: Vector Rect2D))
 getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDevicePresentRectanglesKHR' = mkVkGetPhysicalDevicePresentRectanglesKHR (pVkGetPhysicalDevicePresentRectanglesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDevicePresentRectanglesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDevicePresentRectanglesKHR is null" Nothing Nothing
+  let vkGetPhysicalDevicePresentRectanglesKHR' = mkVkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPRectCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetPhysicalDevicePresentRectanglesKHR' physicalDevice' (surface) (pPRectCount) (nullPtr)

@@ -59,12 +59,14 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                          ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -88,6 +90,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -194,7 +198,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance', 'Vulkan.Extensions.Handles.SurfaceKHR'
 destroySurfaceKHR :: forall io . MonadIO io => Instance -> SurfaceKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
-  let vkDestroySurfaceKHR' = mkVkDestroySurfaceKHR (pVkDestroySurfaceKHR (instanceCmds (instance' :: Instance)))
+  let vkDestroySurfaceKHRPtr = pVkDestroySurfaceKHR (instanceCmds (instance' :: Instance))
+  lift $ unless (vkDestroySurfaceKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySurfaceKHR is null" Nothing Nothing
+  let vkDestroySurfaceKHR' = mkVkDestroySurfaceKHR vkDestroySurfaceKHRPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -266,7 +273,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> SurfaceKHR -> io (("supported" ::: Bool))
 getPhysicalDeviceSurfaceSupportKHR physicalDevice queueFamilyIndex surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceSupportKHR' = mkVkGetPhysicalDeviceSurfaceSupportKHR (pVkGetPhysicalDeviceSurfaceSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSurfaceSupportKHRPtr = pVkGetPhysicalDeviceSurfaceSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSurfaceSupportKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceSupportKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceSurfaceSupportKHR' = mkVkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHRPtr
   pPSupported <- ContT $ bracket (callocBytes @Bool32 4) free
   r <- lift $ vkGetPhysicalDeviceSurfaceSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (surface) (pPSupported)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -329,7 +339,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (SurfaceCapabilitiesKHR)
 getPhysicalDeviceSurfaceCapabilitiesKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceCapabilitiesKHR' = mkVkGetPhysicalDeviceSurfaceCapabilitiesKHR (pVkGetPhysicalDeviceSurfaceCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr = pVkGetPhysicalDeviceSurfaceCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceCapabilitiesKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceSurfaceCapabilitiesKHR' = mkVkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr
   pPSurfaceCapabilities <- ContT (withZeroCStruct @SurfaceCapabilitiesKHR)
   r <- lift $ vkGetPhysicalDeviceSurfaceCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (surface) (pPSurfaceCapabilities)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -438,7 +451,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceFormatsKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
 getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceFormatsKHR' = mkVkGetPhysicalDeviceSurfaceFormatsKHR (pVkGetPhysicalDeviceSurfaceFormatsKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSurfaceFormatsKHRPtr = pVkGetPhysicalDeviceSurfaceFormatsKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSurfaceFormatsKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceFormatsKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceSurfaceFormatsKHR' = mkVkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetPhysicalDeviceSurfaceFormatsKHR' physicalDevice' (surface) (pPSurfaceFormatCount) (nullPtr)
@@ -533,7 +549,10 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfacePresentModesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfacePresentModesKHR' = mkVkGetPhysicalDeviceSurfacePresentModesKHR (pVkGetPhysicalDeviceSurfacePresentModesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let vkGetPhysicalDeviceSurfacePresentModesKHRPtr = pVkGetPhysicalDeviceSurfacePresentModesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  lift $ unless (vkGetPhysicalDeviceSurfacePresentModesKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfacePresentModesKHR is null" Nothing Nothing
+  let vkGetPhysicalDeviceSurfacePresentModesKHR' = mkVkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkGetPhysicalDeviceSurfacePresentModesKHR' physicalDevice' (surface) (pPPresentModeCount) (nullPtr)

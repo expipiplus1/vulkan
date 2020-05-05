@@ -6,10 +6,12 @@ module Vulkan.Core10.MemoryManagement  ( getBufferMemoryRequirements
                                        , MemoryRequirements(..)
                                        ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
@@ -19,6 +21,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -92,7 +96,10 @@ foreign import ccall
 -- 'MemoryRequirements'
 getBufferMemoryRequirements :: forall io . MonadIO io => Device -> Buffer -> io (MemoryRequirements)
 getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
-  let vkGetBufferMemoryRequirements' = mkVkGetBufferMemoryRequirements (pVkGetBufferMemoryRequirements (deviceCmds (device :: Device)))
+  let vkGetBufferMemoryRequirementsPtr = pVkGetBufferMemoryRequirements (deviceCmds (device :: Device))
+  lift $ unless (vkGetBufferMemoryRequirementsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferMemoryRequirements is null" Nothing Nothing
+  let vkGetBufferMemoryRequirements' = mkVkGetBufferMemoryRequirements vkGetBufferMemoryRequirementsPtr
   pPMemoryRequirements <- ContT (withZeroCStruct @MemoryRequirements)
   lift $ vkGetBufferMemoryRequirements' (deviceHandle (device)) (buffer) (pPMemoryRequirements)
   pMemoryRequirements <- lift $ peekCStruct @MemoryRequirements pPMemoryRequirements
@@ -258,7 +265,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize'
 bindBufferMemory :: forall io . MonadIO io => Device -> Buffer -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> io ()
 bindBufferMemory device buffer memory memoryOffset = liftIO $ do
-  let vkBindBufferMemory' = mkVkBindBufferMemory (pVkBindBufferMemory (deviceCmds (device :: Device)))
+  let vkBindBufferMemoryPtr = pVkBindBufferMemory (deviceCmds (device :: Device))
+  unless (vkBindBufferMemoryPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory is null" Nothing Nothing
+  let vkBindBufferMemory' = mkVkBindBufferMemory vkBindBufferMemoryPtr
   r <- vkBindBufferMemory' (deviceHandle (device)) (buffer) (memory) (memoryOffset)
   when (r < SUCCESS) (throwIO (VulkanException r))
 
@@ -311,7 +321,10 @@ foreign import ccall
 -- 'MemoryRequirements'
 getImageMemoryRequirements :: forall io . MonadIO io => Device -> Image -> io (MemoryRequirements)
 getImageMemoryRequirements device image = liftIO . evalContT $ do
-  let vkGetImageMemoryRequirements' = mkVkGetImageMemoryRequirements (pVkGetImageMemoryRequirements (deviceCmds (device :: Device)))
+  let vkGetImageMemoryRequirementsPtr = pVkGetImageMemoryRequirements (deviceCmds (device :: Device))
+  lift $ unless (vkGetImageMemoryRequirementsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageMemoryRequirements is null" Nothing Nothing
+  let vkGetImageMemoryRequirements' = mkVkGetImageMemoryRequirements vkGetImageMemoryRequirementsPtr
   pPMemoryRequirements <- ContT (withZeroCStruct @MemoryRequirements)
   lift $ vkGetImageMemoryRequirements' (deviceHandle (device)) (image) (pPMemoryRequirements)
   pMemoryRequirements <- lift $ peekCStruct @MemoryRequirements pPMemoryRequirements
@@ -494,7 +507,10 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.DeviceSize', 'Vulkan.Core10.Handles.Image'
 bindImageMemory :: forall io . MonadIO io => Device -> Image -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> io ()
 bindImageMemory device image memory memoryOffset = liftIO $ do
-  let vkBindImageMemory' = mkVkBindImageMemory (pVkBindImageMemory (deviceCmds (device :: Device)))
+  let vkBindImageMemoryPtr = pVkBindImageMemory (deviceCmds (device :: Device))
+  unless (vkBindImageMemoryPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory is null" Nothing Nothing
+  let vkBindImageMemory' = mkVkBindImageMemory vkBindImageMemoryPtr
   r <- vkBindImageMemory' (deviceHandle (device)) (image) (memory) (memoryOffset)
   when (r < SUCCESS) (throwIO (VulkanException r))
 

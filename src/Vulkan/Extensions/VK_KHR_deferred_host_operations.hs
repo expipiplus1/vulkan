@@ -14,12 +14,14 @@ module Vulkan.Extensions.VK_KHR_deferred_host_operations  ( createDeferredOperat
                                                           ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -31,6 +33,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -108,7 +112,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 createDeferredOperationKHR :: forall io . MonadIO io => Device -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DeferredOperationKHR)
 createDeferredOperationKHR device allocator = liftIO . evalContT $ do
-  let vkCreateDeferredOperationKHR' = mkVkCreateDeferredOperationKHR (pVkCreateDeferredOperationKHR (deviceCmds (device :: Device)))
+  let vkCreateDeferredOperationKHRPtr = pVkCreateDeferredOperationKHR (deviceCmds (device :: Device))
+  lift $ unless (vkCreateDeferredOperationKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDeferredOperationKHR is null" Nothing Nothing
+  let vkCreateDeferredOperationKHR' = mkVkCreateDeferredOperationKHR vkCreateDeferredOperationKHRPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -188,7 +195,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 destroyDeferredOperationKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
 destroyDeferredOperationKHR device operation allocator = liftIO . evalContT $ do
-  let vkDestroyDeferredOperationKHR' = mkVkDestroyDeferredOperationKHR (pVkDestroyDeferredOperationKHR (deviceCmds (device :: Device)))
+  let vkDestroyDeferredOperationKHRPtr = pVkDestroyDeferredOperationKHR (deviceCmds (device :: Device))
+  lift $ unless (vkDestroyDeferredOperationKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDeferredOperationKHR is null" Nothing Nothing
+  let vkDestroyDeferredOperationKHR' = mkVkDestroyDeferredOperationKHR vkDestroyDeferredOperationKHRPtr
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -242,7 +252,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 getDeferredOperationMaxConcurrencyKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> io (Word32)
 getDeferredOperationMaxConcurrencyKHR device operation = liftIO $ do
-  let vkGetDeferredOperationMaxConcurrencyKHR' = mkVkGetDeferredOperationMaxConcurrencyKHR (pVkGetDeferredOperationMaxConcurrencyKHR (deviceCmds (device :: Device)))
+  let vkGetDeferredOperationMaxConcurrencyKHRPtr = pVkGetDeferredOperationMaxConcurrencyKHR (deviceCmds (device :: Device))
+  unless (vkGetDeferredOperationMaxConcurrencyKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationMaxConcurrencyKHR is null" Nothing Nothing
+  let vkGetDeferredOperationMaxConcurrencyKHR' = mkVkGetDeferredOperationMaxConcurrencyKHR vkGetDeferredOperationMaxConcurrencyKHRPtr
   r <- vkGetDeferredOperationMaxConcurrencyKHR' (deviceHandle (device)) (operation)
   pure $ (r)
 
@@ -285,7 +298,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 getDeferredOperationResultKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> io (Result)
 getDeferredOperationResultKHR device operation = liftIO $ do
-  let vkGetDeferredOperationResultKHR' = mkVkGetDeferredOperationResultKHR (pVkGetDeferredOperationResultKHR (deviceCmds (device :: Device)))
+  let vkGetDeferredOperationResultKHRPtr = pVkGetDeferredOperationResultKHR (deviceCmds (device :: Device))
+  unless (vkGetDeferredOperationResultKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationResultKHR is null" Nothing Nothing
+  let vkGetDeferredOperationResultKHR' = mkVkGetDeferredOperationResultKHR vkGetDeferredOperationResultKHRPtr
   r <- vkGetDeferredOperationResultKHR' (deviceHandle (device)) (operation)
   pure $ (r)
 
@@ -381,7 +397,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device'
 deferredOperationJoinKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> io (Result)
 deferredOperationJoinKHR device operation = liftIO $ do
-  let vkDeferredOperationJoinKHR' = mkVkDeferredOperationJoinKHR (pVkDeferredOperationJoinKHR (deviceCmds (device :: Device)))
+  let vkDeferredOperationJoinKHRPtr = pVkDeferredOperationJoinKHR (deviceCmds (device :: Device))
+  unless (vkDeferredOperationJoinKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeferredOperationJoinKHR is null" Nothing Nothing
+  let vkDeferredOperationJoinKHR' = mkVkDeferredOperationJoinKHR vkDeferredOperationJoinKHRPtr
   r <- vkDeferredOperationJoinKHR' (deviceHandle (device)) (operation)
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
