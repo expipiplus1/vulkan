@@ -8,8 +8,10 @@ module Vulkan.Extensions.VK_NV_scissor_exclusive  ( cmdSetExclusiveScissorNV
                                                   , pattern NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
                                                   ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -25,6 +27,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -299,7 +303,13 @@ instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
   pokeCStruct p PipelineViewportExclusiveScissorStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (exclusiveScissorCount)
+    exclusiveScissorCount'' <- lift $ if (exclusiveScissorCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (exclusiveScissors))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (exclusiveScissors)) == (exclusiveScissorCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pExclusiveScissors must be empty or have 'exclusiveScissorCount' elements" Nothing Nothing
+        pure (exclusiveScissorCount)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (exclusiveScissorCount'')
     pExclusiveScissors'' <- if Data.Vector.null (exclusiveScissors)
       then pure nullPtr
       else do

@@ -35,8 +35,10 @@ module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
                                                    , pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME
                                                    ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -61,6 +63,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -490,7 +494,13 @@ instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shadingRateImageEnable))
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount)
+    viewportCount'' <- lift $ if (viewportCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (shadingRatePalettes))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (shadingRatePalettes)) == (viewportCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pShadingRatePalettes must be empty or have 'viewportCount' elements" Nothing Nothing
+        pure (viewportCount)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount'')
     pShadingRatePalettes'' <- if Data.Vector.null (shadingRatePalettes)
       then pure nullPtr
       else do

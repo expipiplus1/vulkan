@@ -1719,7 +1719,13 @@ instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es) where
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineViewportStateCreateFlags)) (flags)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount)
+    viewportCount'' <- lift $ if (viewportCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (viewports))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (viewports)) == (viewportCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pViewports must be empty or have 'viewportCount' elements" Nothing Nothing
+        pure (viewportCount)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount'')
     pViewports'' <- if Data.Vector.null (viewports)
       then pure nullPtr
       else do
@@ -1727,7 +1733,13 @@ instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es) where
         Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) ((viewports))
         pure $ pPViewports
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Viewport))) pViewports''
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (scissorCount)
+    scissorCount'' <- lift $ if (scissorCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (scissors))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (scissors)) == (scissorCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pScissors must be empty or have 'scissorCount' elements" Nothing Nothing
+        pure (scissorCount)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (scissorCount'')
     pScissors'' <- if Data.Vector.null (scissors)
       then pure nullPtr
       else do
@@ -1742,8 +1754,6 @@ instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es) where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
     lift $ f
 
 instance PeekChain es => FromCStruct (PipelineViewportStateCreateInfo es) where

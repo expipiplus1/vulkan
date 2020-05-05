@@ -16,6 +16,7 @@ module Vulkan.Extensions.VK_KHR_external_semaphore_win32  ( getSemaphoreWin32Han
                                                           ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -37,6 +38,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -552,7 +555,13 @@ instance ToCStruct D3D12FenceSubmitInfoKHR where
   pokeCStruct p D3D12FenceSubmitInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (waitSemaphoreValuesCount)
+    waitSemaphoreValuesCount'' <- lift $ if (waitSemaphoreValuesCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (waitSemaphoreValues))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (waitSemaphoreValues)) == (waitSemaphoreValuesCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pWaitSemaphoreValues must be empty or have 'waitSemaphoreValuesCount' elements" Nothing Nothing
+        pure (waitSemaphoreValuesCount)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (waitSemaphoreValuesCount'')
     pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
       then pure nullPtr
       else do
@@ -560,7 +569,13 @@ instance ToCStruct D3D12FenceSubmitInfoKHR where
         lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
         pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (signalSemaphoreValuesCount)
+    signalSemaphoreValuesCount'' <- lift $ if (signalSemaphoreValuesCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (signalSemaphoreValues))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (signalSemaphoreValues)) == (signalSemaphoreValuesCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pSignalSemaphoreValues must be empty or have 'signalSemaphoreValuesCount' elements" Nothing Nothing
+        pure (signalSemaphoreValuesCount)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (signalSemaphoreValuesCount'')
     pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
       then pure nullPtr
       else do

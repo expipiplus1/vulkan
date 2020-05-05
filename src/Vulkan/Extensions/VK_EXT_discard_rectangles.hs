@@ -13,8 +13,10 @@ module Vulkan.Extensions.VK_EXT_discard_rectangles  ( cmdSetDiscardRectangleEXT
                                                     , pattern EXT_DISCARD_RECTANGLES_EXTENSION_NAME
                                                     ) where
 
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -41,6 +43,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -277,7 +281,13 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDiscardRectangleStateCreateFlagsEXT)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (discardRectangleMode)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (discardRectangleCount)
+    discardRectangleCount'' <- lift $ if (discardRectangleCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (discardRectangles))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (discardRectangles)) == (discardRectangleCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pDiscardRectangles must be empty or have 'discardRectangleCount' elements" Nothing Nothing
+        pure (discardRectangleCount)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (discardRectangleCount'')
     pDiscardRectangles'' <- if Data.Vector.null (discardRectangles)
       then pure nullPtr
       else do

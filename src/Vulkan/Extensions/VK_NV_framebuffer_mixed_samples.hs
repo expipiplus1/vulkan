@@ -13,7 +13,9 @@ module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModu
                                                           , pattern NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
                                                           ) where
 
+import Control.Monad (unless)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
@@ -40,6 +42,8 @@ import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -158,7 +162,13 @@ instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCoverageModulationStateCreateFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr CoverageModulationModeNV)) (coverageModulationMode)
     lift $ poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (coverageModulationTableEnable))
-    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (coverageModulationTableCount)
+    coverageModulationTableCount'' <- lift $ if (coverageModulationTableCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (coverageModulationTable))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (coverageModulationTable)) == (coverageModulationTableCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pCoverageModulationTable must be empty or have 'coverageModulationTableCount' elements" Nothing Nothing
+        pure (coverageModulationTableCount)
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (coverageModulationTableCount'')
     pCoverageModulationTable'' <- if Data.Vector.null (coverageModulationTable)
       then pure nullPtr
       else do

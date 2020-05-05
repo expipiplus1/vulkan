@@ -516,7 +516,13 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
   pokeCStruct p TimelineSemaphoreSubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (waitSemaphoreValueCount)
+    waitSemaphoreValueCount'' <- lift $ if (waitSemaphoreValueCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (waitSemaphoreValues))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (waitSemaphoreValues)) == (waitSemaphoreValueCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pWaitSemaphoreValues must be empty or have 'waitSemaphoreValueCount' elements" Nothing Nothing
+        pure (waitSemaphoreValueCount)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (waitSemaphoreValueCount'')
     pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
       then pure nullPtr
       else do
@@ -524,7 +530,13 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
         lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
         pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (signalSemaphoreValueCount)
+    signalSemaphoreValueCount'' <- lift $ if (signalSemaphoreValueCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (signalSemaphoreValues))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (signalSemaphoreValues)) == (signalSemaphoreValueCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pSignalSemaphoreValues must be empty or have 'signalSemaphoreValueCount' elements" Nothing Nothing
+        pure (signalSemaphoreValueCount)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (signalSemaphoreValueCount'')
     pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
       then pure nullPtr
       else do

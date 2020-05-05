@@ -8,7 +8,9 @@ module Vulkan.Extensions.VK_KHR_incremental_present  ( PresentRegionsKHR(..)
                                                      , pattern KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
                                                      ) where
 
+import Control.Monad (unless)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -21,6 +23,8 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -79,7 +83,13 @@ instance ToCStruct PresentRegionsKHR where
   pokeCStruct p PresentRegionsKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount)
+    swapchainCount'' <- lift $ if (swapchainCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (regions))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (regions)) == (swapchainCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pRegions must be empty or have 'swapchainCount' elements" Nothing Nothing
+        pure (swapchainCount)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount'')
     pRegions'' <- if Data.Vector.null (regions)
       then pure nullPtr
       else do
@@ -93,7 +103,6 @@ instance ToCStruct PresentRegionsKHR where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct PresentRegionsKHR where
@@ -141,7 +150,13 @@ deriving instance Show PresentRegionKHR
 instance ToCStruct PresentRegionKHR where
   withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentRegionKHR{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (rectangleCount)
+    rectangleCount'' <- lift $ if (rectangleCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (rectangles))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (rectangles)) == (rectangleCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pRectangles must be empty or have 'rectangleCount' elements" Nothing Nothing
+        pure (rectangleCount)
+    lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (rectangleCount'')
     pRectangles'' <- if Data.Vector.null (rectangles)
       then pure nullPtr
       else do

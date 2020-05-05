@@ -1839,7 +1839,13 @@ instance ToCStruct DescriptorSetLayoutBinding where
   pokeCStruct p DescriptorSetLayoutBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     lift $ poke ((p `plusPtr` 4 :: Ptr DescriptorType)) (descriptorType)
-    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (descriptorCount)
+    descriptorCount'' <- lift $ if (descriptorCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (immutableSamplers))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (immutableSamplers)) == (descriptorCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pImmutableSamplers must be empty or have 'descriptorCount' elements" Nothing Nothing
+        pure (descriptorCount)
+    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (descriptorCount'')
     lift $ poke ((p `plusPtr` 12 :: Ptr ShaderStageFlags)) (stageFlags)
     pImmutableSamplers'' <- if Data.Vector.null (immutableSamplers)
       then pure nullPtr

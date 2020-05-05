@@ -13,6 +13,7 @@ module Vulkan.Extensions.VK_GOOGLE_display_timing  ( getRefreshCycleDurationGOOG
                                                    ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -34,6 +35,8 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -414,7 +417,13 @@ instance ToCStruct PresentTimesInfoGOOGLE where
   pokeCStruct p PresentTimesInfoGOOGLE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount)
+    swapchainCount'' <- lift $ if (swapchainCount) == 0
+      then pure $ fromIntegral (Data.Vector.length $ (times))
+      else do
+        unless (fromIntegral (Data.Vector.length $ (times)) == (swapchainCount)) $
+          throwIO $ IOError Nothing InvalidArgument "" "pTimes must be empty or have 'swapchainCount' elements" Nothing Nothing
+        pure (swapchainCount)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount'')
     pTimes'' <- if Data.Vector.null (times)
       then pure nullPtr
       else do
@@ -428,7 +437,6 @@ instance ToCStruct PresentTimesInfoGOOGLE where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct PresentTimesInfoGOOGLE where
