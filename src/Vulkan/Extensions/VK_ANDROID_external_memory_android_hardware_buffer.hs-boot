@@ -9,6 +9,7 @@ module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( A
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -24,10 +25,10 @@ instance FromCStruct AndroidHardwareBufferFormatPropertiesANDROID
 type role AndroidHardwareBufferPropertiesANDROID nominal
 data AndroidHardwareBufferPropertiesANDROID (es :: [Type])
 
-instance PokeChain es => ToCStruct (AndroidHardwareBufferPropertiesANDROID es)
+instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PokeChain es) => ToCStruct (AndroidHardwareBufferPropertiesANDROID es)
 instance Show (Chain es) => Show (AndroidHardwareBufferPropertiesANDROID es)
 
-instance PeekChain es => FromCStruct (AndroidHardwareBufferPropertiesANDROID es)
+instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PeekChain es) => FromCStruct (AndroidHardwareBufferPropertiesANDROID es)
 
 
 data AndroidHardwareBufferUsageANDROID

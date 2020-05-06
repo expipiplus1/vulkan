@@ -47,6 +47,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateSampler))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySampler))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Filter (Filter)
 import Vulkan.CStruct (FromCStruct)
@@ -128,7 +129,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Sampler',
 -- 'SamplerCreateInfo'
-createSampler :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Sampler)
+createSampler :: forall a io . (Extendss SamplerCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Sampler)
 createSampler device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSamplerPtr = pVkCreateSampler (deviceCmds (device :: Device))
   lift $ unless (vkCreateSamplerPtr /= nullFunPtr) $
@@ -152,7 +153,7 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withSampler :: forall a io r . (PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> (io (Sampler) -> ((Sampler) -> io ()) -> r) -> r
+withSampler :: forall a io r . (Extendss SamplerCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> (io (Sampler) -> ((Sampler) -> io ()) -> r) -> r
 withSampler device pCreateInfo pAllocator b =
   b (createSampler device pCreateInfo pAllocator)
     (\(o0) -> destroySampler device o0 pAllocator)
@@ -563,7 +564,7 @@ instance Extensible SamplerCreateInfo where
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (SamplerCreateInfo es) where
+instance (Extendss SamplerCreateInfo es, PokeChain es) => ToCStruct (SamplerCreateInfo es) where
   withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_CREATE_INFO)
@@ -609,7 +610,7 @@ instance PokeChain es => ToCStruct (SamplerCreateInfo es) where
     lift $ poke ((p `plusPtr` 76 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance PeekChain es => FromCStruct (SamplerCreateInfo es) where
+instance (Extendss SamplerCreateInfo es, PeekChain es) => FromCStruct (SamplerCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

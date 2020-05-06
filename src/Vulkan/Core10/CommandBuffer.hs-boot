@@ -6,6 +6,7 @@ module Vulkan.Core10.CommandBuffer  ( CommandBufferAllocateInfo
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -21,17 +22,17 @@ instance FromCStruct CommandBufferAllocateInfo
 type role CommandBufferBeginInfo nominal
 data CommandBufferBeginInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (CommandBufferBeginInfo es)
+instance (Extendss CommandBufferBeginInfo es, PokeChain es) => ToCStruct (CommandBufferBeginInfo es)
 instance Show (Chain es) => Show (CommandBufferBeginInfo es)
 
-instance PeekChain es => FromCStruct (CommandBufferBeginInfo es)
+instance (Extendss CommandBufferBeginInfo es, PeekChain es) => FromCStruct (CommandBufferBeginInfo es)
 
 
 type role CommandBufferInheritanceInfo nominal
 data CommandBufferInheritanceInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (CommandBufferInheritanceInfo es)
+instance (Extendss CommandBufferInheritanceInfo es, PokeChain es) => ToCStruct (CommandBufferInheritanceInfo es)
 instance Show (Chain es) => Show (CommandBufferInheritanceInfo es)
 
-instance PeekChain es => FromCStruct (CommandBufferInheritanceInfo es)
+instance (Extendss CommandBufferInheritanceInfo es, PeekChain es) => FromCStruct (CommandBufferInheritanceInfo es)
 

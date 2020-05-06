@@ -48,6 +48,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetQueryPoolResults))
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -127,7 +128,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool',
 -- 'QueryPoolCreateInfo'
-createQueryPool :: forall a io . (PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (QueryPool)
+createQueryPool :: forall a io . (Extendss QueryPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (QueryPool)
 createQueryPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateQueryPoolPtr = pVkCreateQueryPool (deviceCmds (device :: Device))
   lift $ unless (vkCreateQueryPoolPtr /= nullFunPtr) $
@@ -151,7 +152,7 @@ createQueryPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withQueryPool :: forall a io r . (PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (QueryPool) -> ((QueryPool) -> io ()) -> r) -> r
+withQueryPool :: forall a io r . (Extendss QueryPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (QueryPool) -> ((QueryPool) -> io ()) -> r) -> r
 withQueryPool device pCreateInfo pAllocator b =
   b (createQueryPool device pCreateInfo pAllocator)
     (\(o0) -> destroyQueryPool device o0 pAllocator)
@@ -533,7 +534,7 @@ instance Extensible QueryPoolCreateInfo where
     | Just Refl <- eqT @e @QueryPoolPerformanceCreateInfoKHR = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (QueryPoolCreateInfo es) where
+instance (Extendss QueryPoolCreateInfo es, PokeChain es) => ToCStruct (QueryPoolCreateInfo es) where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO)
@@ -554,7 +555,7 @@ instance PokeChain es => ToCStruct (QueryPoolCreateInfo es) where
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (QueryPoolCreateInfo es) where
+instance (Extendss QueryPoolCreateInfo es, PeekChain es) => FromCStruct (QueryPoolCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

@@ -34,6 +34,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -649,7 +650,7 @@ instance Extensible ImageMemoryBarrier where
     | Just Refl <- eqT @e @SampleLocationsInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (ImageMemoryBarrier es) where
+instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemoryBarrier es) where
   withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryBarrier{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER)
@@ -680,7 +681,7 @@ instance PokeChain es => ToCStruct (ImageMemoryBarrier es) where
     ContT $ pokeCStruct ((p `plusPtr` 48 :: Ptr ImageSubresourceRange)) (zero) . ($ ())
     lift $ f
 
-instance PeekChain es => FromCStruct (ImageMemoryBarrier es) where
+instance (Extendss ImageMemoryBarrier es, PeekChain es) => FromCStruct (ImageMemoryBarrier es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

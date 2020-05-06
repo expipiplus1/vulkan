@@ -11,6 +11,7 @@ module Vulkan.Core10.SparseResourceMemoryManagement  ( BindSparseInfo
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -18,10 +19,10 @@ import Vulkan.CStruct (ToCStruct)
 type role BindSparseInfo nominal
 data BindSparseInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (BindSparseInfo es)
+instance (Extendss BindSparseInfo es, PokeChain es) => ToCStruct (BindSparseInfo es)
 instance Show (Chain es) => Show (BindSparseInfo es)
 
-instance PeekChain es => FromCStruct (BindSparseInfo es)
+instance (Extendss BindSparseInfo es, PeekChain es) => FromCStruct (BindSparseInfo es)
 
 
 data SparseBufferMemoryBindInfo

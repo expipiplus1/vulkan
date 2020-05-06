@@ -92,8 +92,10 @@ makeReturnType includeInOutCountTypes mc@MarshaledCommand {..}
     pure $ VarT ioVar :@ foldl' (:@) (TupleT (length ts)) ts
 
 structVariables
-  :: (HasErr r, HasRenderedNames r) => Type -> Sem r ([Name], [Name])
-  -- ^ negative, positive
+  :: (HasErr r, HasRenderedNames r)
+  => Type
+  -> Sem r ([(Name, Name)], [(Name, Name)])
+  -- ^ negative (struct, chain var), positive (struct, chain var)
 structVariables = \case
   ArrowT :@ l :@ r -> do
     (nl, pl) <- structVariables l
@@ -102,7 +104,7 @@ structVariables = \case
   InfixT _ i t | i == typeName (TyConName ":::") -> structVariables t
   ConT n :@ VarT v ->
     getRenderedStruct (TyConName (T.pack (nameBase n))) <&> \case
-      Just s | not (V.null (sExtendedBy s)) -> ([], [v])
+      Just s | not (V.null (sExtendedBy s)) -> ([], [(n, v)])
       _ -> ([], [])
   ConT n :@ _ | n == ''Ptr -> pure ([], [])
   f :@ x                  -> liftA2 (<>) (structVariables f) (structVariables x)
@@ -772,7 +774,7 @@ addMonadIO = addConstraints
 ioVar :: Name
 ioVar = mkName "io"
 
--- | Any extensible structs have 'PokeChain' or 'PeekChain' constraints added
+-- | Any extensible structs have 'PokeChain' or 'PekChain' constraints added
 -- depending on their position polarity.
 constrainStructVariables
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
@@ -780,11 +782,16 @@ constrainStructVariables
   -> Sem r Type
 constrainStructVariables t = do
   (ns, ps) <- structVariables t
+  let both = nubOrd (ns <> ps)
   unless (null ns) $ tellImport (TyConName "PokeChain")
   unless (null ps) $ tellImport (TyConName "PeekChain")
+  unless (null both) $ tellImport (TyConName "Extendss")
   pure $ addConstraints
-    (  ((ConT (typeName (TyConName "PokeChain")) :@) . VarT <$> (ns <> ps))
-    <> ((ConT (typeName (TyConName "PeekChain")) :@) . VarT <$> ps)
+    (  ((\(s, v) -> ConT (typeName (TyConName "Extendss")) :@ ConT s :@ VarT v)
+       <$> both
+       )
+    <> ((ConT (typeName (TyConName "PokeChain")) :@) . VarT . snd <$> both)
+    <> ((ConT (typeName (TyConName "PeekChain")) :@) . VarT . snd <$> ps)
     )
     t
 

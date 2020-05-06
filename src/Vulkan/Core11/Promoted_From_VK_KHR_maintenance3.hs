@@ -42,6 +42,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetDescriptorSetLayoutSupport))
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -114,7 +115,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
-getDescriptorSetLayoutSupport :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> io (DescriptorSetLayoutSupport b)
+getDescriptorSetLayoutSupport :: forall a b io . (Extendss DescriptorSetLayoutCreateInfo a, Extendss DescriptorSetLayoutSupport b, PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device))
   lift $ unless (vkGetDescriptorSetLayoutSupportPtr /= nullFunPtr) $
@@ -244,7 +245,7 @@ instance Extensible DescriptorSetLayoutSupport where
     | Just Refl <- eqT @e @DescriptorSetVariableDescriptorCountLayoutSupport = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (DescriptorSetLayoutSupport es) where
+instance (Extendss DescriptorSetLayoutSupport es, PokeChain es) => ToCStruct (DescriptorSetLayoutSupport es) where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutSupport{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT)
@@ -261,7 +262,7 @@ instance PokeChain es => ToCStruct (DescriptorSetLayoutSupport es) where
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance PeekChain es => FromCStruct (DescriptorSetLayoutSupport es) where
+instance (Extendss DescriptorSetLayoutSupport es, PeekChain es) => FromCStruct (DescriptorSetLayoutSupport es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

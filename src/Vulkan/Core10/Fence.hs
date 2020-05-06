@@ -56,6 +56,7 @@ import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_fence (ExportFenceCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_fence_win32 (ExportFenceWin32HandleInfoKHR)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
@@ -129,7 +130,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence',
 -- 'FenceCreateInfo'
-createFence :: forall a io . (PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+createFence :: forall a io . (Extendss FenceCreateInfo a, PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
 createFence device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFencePtr = pVkCreateFence (deviceCmds (device :: Device))
   lift $ unless (vkCreateFencePtr /= nullFunPtr) $
@@ -153,7 +154,7 @@ createFence device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withFence :: forall a io r . (PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> (io (Fence) -> ((Fence) -> io ()) -> r) -> r
+withFence :: forall a io r . (Extendss FenceCreateInfo a, PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> (io (Fence) -> ((Fence) -> io ()) -> r) -> r
 withFence device pCreateInfo pAllocator b =
   b (createFence device pCreateInfo pAllocator)
     (\(o0) -> destroyFence device o0 pAllocator)
@@ -536,7 +537,7 @@ instance Extensible FenceCreateInfo where
     | Just Refl <- eqT @e @ExportFenceCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (FenceCreateInfo es) where
+instance (Extendss FenceCreateInfo es, PokeChain es) => ToCStruct (FenceCreateInfo es) where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FenceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_CREATE_INFO)
@@ -552,7 +553,7 @@ instance PokeChain es => ToCStruct (FenceCreateInfo es) where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance PeekChain es => FromCStruct (FenceCreateInfo es) where
+instance (Extendss FenceCreateInfo es, PeekChain es) => FromCStruct (FenceCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

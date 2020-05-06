@@ -40,6 +40,7 @@ module Vulkan.Extensions.VK_KHR_ray_tracing  ( AabbPositionsKHR
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -55,7 +56,7 @@ instance FromCStruct AabbPositionsKHR
 type role AccelerationStructureBuildGeometryInfoKHR nominal
 data AccelerationStructureBuildGeometryInfoKHR (es :: [Type])
 
-instance PokeChain es => ToCStruct (AccelerationStructureBuildGeometryInfoKHR es)
+instance (Extendss AccelerationStructureBuildGeometryInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureBuildGeometryInfoKHR es)
 instance Show (Chain es) => Show (AccelerationStructureBuildGeometryInfoKHR es)
 
 
@@ -150,23 +151,23 @@ instance FromCStruct BindAccelerationStructureMemoryInfoKHR
 type role CopyAccelerationStructureInfoKHR nominal
 data CopyAccelerationStructureInfoKHR (es :: [Type])
 
-instance PokeChain es => ToCStruct (CopyAccelerationStructureInfoKHR es)
+instance (Extendss CopyAccelerationStructureInfoKHR es, PokeChain es) => ToCStruct (CopyAccelerationStructureInfoKHR es)
 instance Show (Chain es) => Show (CopyAccelerationStructureInfoKHR es)
 
-instance PeekChain es => FromCStruct (CopyAccelerationStructureInfoKHR es)
+instance (Extendss CopyAccelerationStructureInfoKHR es, PeekChain es) => FromCStruct (CopyAccelerationStructureInfoKHR es)
 
 
 type role CopyAccelerationStructureToMemoryInfoKHR nominal
 data CopyAccelerationStructureToMemoryInfoKHR (es :: [Type])
 
-instance PokeChain es => ToCStruct (CopyAccelerationStructureToMemoryInfoKHR es)
+instance (Extendss CopyAccelerationStructureToMemoryInfoKHR es, PokeChain es) => ToCStruct (CopyAccelerationStructureToMemoryInfoKHR es)
 instance Show (Chain es) => Show (CopyAccelerationStructureToMemoryInfoKHR es)
 
 
 type role CopyMemoryToAccelerationStructureInfoKHR nominal
 data CopyMemoryToAccelerationStructureInfoKHR (es :: [Type])
 
-instance PokeChain es => ToCStruct (CopyMemoryToAccelerationStructureInfoKHR es)
+instance (Extendss CopyMemoryToAccelerationStructureInfoKHR es, PokeChain es) => ToCStruct (CopyMemoryToAccelerationStructureInfoKHR es)
 instance Show (Chain es) => Show (CopyMemoryToAccelerationStructureInfoKHR es)
 
 
@@ -189,10 +190,10 @@ instance FromCStruct PhysicalDeviceRayTracingPropertiesKHR
 type role RayTracingPipelineCreateInfoKHR nominal
 data RayTracingPipelineCreateInfoKHR (es :: [Type])
 
-instance PokeChain es => ToCStruct (RayTracingPipelineCreateInfoKHR es)
+instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoKHR es)
 instance Show (Chain es) => Show (RayTracingPipelineCreateInfoKHR es)
 
-instance PeekChain es => FromCStruct (RayTracingPipelineCreateInfoKHR es)
+instance (Extendss RayTracingPipelineCreateInfoKHR es, PeekChain es) => FromCStruct (RayTracingPipelineCreateInfoKHR es)
 
 
 data RayTracingPipelineInterfaceCreateInfoKHR

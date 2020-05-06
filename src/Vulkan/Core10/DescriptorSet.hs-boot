@@ -12,6 +12,7 @@ module Vulkan.Core10.DescriptorSet  ( CopyDescriptorSet
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -43,10 +44,10 @@ instance FromCStruct DescriptorImageInfo
 type role DescriptorPoolCreateInfo nominal
 data DescriptorPoolCreateInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (DescriptorPoolCreateInfo es)
+instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (DescriptorPoolCreateInfo es)
 instance Show (Chain es) => Show (DescriptorPoolCreateInfo es)
 
-instance PeekChain es => FromCStruct (DescriptorPoolCreateInfo es)
+instance (Extendss DescriptorPoolCreateInfo es, PeekChain es) => FromCStruct (DescriptorPoolCreateInfo es)
 
 
 data DescriptorPoolSize
@@ -60,10 +61,10 @@ instance FromCStruct DescriptorPoolSize
 type role DescriptorSetAllocateInfo nominal
 data DescriptorSetAllocateInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (DescriptorSetAllocateInfo es)
+instance (Extendss DescriptorSetAllocateInfo es, PokeChain es) => ToCStruct (DescriptorSetAllocateInfo es)
 instance Show (Chain es) => Show (DescriptorSetAllocateInfo es)
 
-instance PeekChain es => FromCStruct (DescriptorSetAllocateInfo es)
+instance (Extendss DescriptorSetAllocateInfo es, PeekChain es) => FromCStruct (DescriptorSetAllocateInfo es)
 
 
 data DescriptorSetLayoutBinding
@@ -77,17 +78,17 @@ instance FromCStruct DescriptorSetLayoutBinding
 type role DescriptorSetLayoutCreateInfo nominal
 data DescriptorSetLayoutCreateInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (DescriptorSetLayoutCreateInfo es)
+instance (Extendss DescriptorSetLayoutCreateInfo es, PokeChain es) => ToCStruct (DescriptorSetLayoutCreateInfo es)
 instance Show (Chain es) => Show (DescriptorSetLayoutCreateInfo es)
 
-instance PeekChain es => FromCStruct (DescriptorSetLayoutCreateInfo es)
+instance (Extendss DescriptorSetLayoutCreateInfo es, PeekChain es) => FromCStruct (DescriptorSetLayoutCreateInfo es)
 
 
 type role WriteDescriptorSet nominal
 data WriteDescriptorSet (es :: [Type])
 
-instance PokeChain es => ToCStruct (WriteDescriptorSet es)
+instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescriptorSet es)
 instance Show (Chain es) => Show (WriteDescriptorSet es)
 
-instance PeekChain es => FromCStruct (WriteDescriptorSet es)
+instance (Extendss WriteDescriptorSet es, PeekChain es) => FromCStruct (WriteDescriptorSet es)
 

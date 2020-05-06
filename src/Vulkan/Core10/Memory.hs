@@ -66,6 +66,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExportMemoryAlloc
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ExportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ExportMemoryWin32HandleInfoNV)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -227,7 +228,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'MemoryAllocateInfo'
-allocateMemory :: forall a io . (PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DeviceMemory)
+allocateMemory :: forall a io . (Extendss MemoryAllocateInfo a, PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DeviceMemory)
 allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   let vkAllocateMemoryPtr = pVkAllocateMemory (deviceCmds (device :: Device))
   lift $ unless (vkAllocateMemoryPtr /= nullFunPtr) $
@@ -251,7 +252,7 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withMemory :: forall a io r . (PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (io (DeviceMemory) -> ((DeviceMemory) -> io ()) -> r) -> r
+withMemory :: forall a io r . (Extendss MemoryAllocateInfo a, PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (io (DeviceMemory) -> ((DeviceMemory) -> io ()) -> r) -> r
 withMemory device pAllocateInfo pAllocator b =
   b (allocateMemory device pAllocateInfo pAllocator)
     (\(o0) -> freeMemory device o0 pAllocator)
@@ -1101,7 +1102,7 @@ instance Extensible MemoryAllocateInfo where
     | Just Refl <- eqT @e @DedicatedAllocationMemoryAllocateInfoNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (MemoryAllocateInfo es) where
+instance (Extendss MemoryAllocateInfo es, PokeChain es) => ToCStruct (MemoryAllocateInfo es) where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
@@ -1120,7 +1121,7 @@ instance PokeChain es => ToCStruct (MemoryAllocateInfo es) where
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (MemoryAllocateInfo es) where
+instance (Extendss MemoryAllocateInfo es, PeekChain es) => FromCStruct (MemoryAllocateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

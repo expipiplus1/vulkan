@@ -42,6 +42,7 @@ import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore (ExportSemaphoreCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (ExportSemaphoreWin32HandleInfoKHR)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -116,7 +117,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore',
 -- 'SemaphoreCreateInfo'
-createSemaphore :: forall a io . (PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Semaphore)
+createSemaphore :: forall a io . (Extendss SemaphoreCreateInfo a, PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Semaphore)
 createSemaphore device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSemaphorePtr = pVkCreateSemaphore (deviceCmds (device :: Device))
   lift $ unless (vkCreateSemaphorePtr /= nullFunPtr) $
@@ -140,7 +141,7 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withSemaphore :: forall a io r . (PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> (io (Semaphore) -> ((Semaphore) -> io ()) -> r) -> r
+withSemaphore :: forall a io r . (Extendss SemaphoreCreateInfo a, PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> (io (Semaphore) -> ((Semaphore) -> io ()) -> r) -> r
 withSemaphore device pCreateInfo pAllocator b =
   b (createSemaphore device pCreateInfo pAllocator)
     (\(o0) -> destroySemaphore device o0 pAllocator)
@@ -258,7 +259,7 @@ instance Extensible SemaphoreCreateInfo where
     | Just Refl <- eqT @e @ExportSemaphoreCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (SemaphoreCreateInfo es) where
+instance (Extendss SemaphoreCreateInfo es, PokeChain es) => ToCStruct (SemaphoreCreateInfo es) where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO)
@@ -274,7 +275,7 @@ instance PokeChain es => ToCStruct (SemaphoreCreateInfo es) where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance PeekChain es => FromCStruct (SemaphoreCreateInfo es) where
+instance (Extendss SemaphoreCreateInfo es, PeekChain es) => FromCStruct (SemaphoreCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

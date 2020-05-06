@@ -51,6 +51,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateShaderModule))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyShaderModule))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -140,7 +141,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule',
 -- 'ShaderModuleCreateInfo'
-createShaderModule :: forall a io . (PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ShaderModule)
+createShaderModule :: forall a io . (Extendss ShaderModuleCreateInfo a, PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ShaderModule)
 createShaderModule device createInfo allocator = liftIO . evalContT $ do
   let vkCreateShaderModulePtr = pVkCreateShaderModule (deviceCmds (device :: Device))
   lift $ unless (vkCreateShaderModulePtr /= nullFunPtr) $
@@ -164,7 +165,7 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withShaderModule :: forall a io r . (PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> (io (ShaderModule) -> ((ShaderModule) -> io ()) -> r) -> r
+withShaderModule :: forall a io r . (Extendss ShaderModuleCreateInfo a, PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> (io (ShaderModule) -> ((ShaderModule) -> io ()) -> r) -> r
 withShaderModule device pCreateInfo pAllocator b =
   b (createShaderModule device pCreateInfo pAllocator)
     (\(o0) -> destroyShaderModule device o0 pAllocator)
@@ -322,7 +323,7 @@ instance Extensible ShaderModuleCreateInfo where
     | Just Refl <- eqT @e @ShaderModuleValidationCacheCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (ShaderModuleCreateInfo es) where
+instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (ShaderModuleCreateInfo es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderModuleCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO)
@@ -352,7 +353,7 @@ instance PokeChain es => ToCStruct (ShaderModuleCreateInfo es) where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance PeekChain es => FromCStruct (ShaderModuleCreateInfo es) where
+instance (Extendss ShaderModuleCreateInfo es, PeekChain es) => FromCStruct (ShaderModuleCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

@@ -12,6 +12,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2  ( For
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -19,55 +20,55 @@ import Vulkan.CStruct (ToCStruct)
 type role FormatProperties2 nominal
 data FormatProperties2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (FormatProperties2 es)
+instance (Extendss FormatProperties2 es, PokeChain es) => ToCStruct (FormatProperties2 es)
 instance Show (Chain es) => Show (FormatProperties2 es)
 
-instance PeekChain es => FromCStruct (FormatProperties2 es)
+instance (Extendss FormatProperties2 es, PeekChain es) => FromCStruct (FormatProperties2 es)
 
 
 type role ImageFormatProperties2 nominal
 data ImageFormatProperties2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (ImageFormatProperties2 es)
+instance (Extendss ImageFormatProperties2 es, PokeChain es) => ToCStruct (ImageFormatProperties2 es)
 instance Show (Chain es) => Show (ImageFormatProperties2 es)
 
-instance PeekChain es => FromCStruct (ImageFormatProperties2 es)
+instance (Extendss ImageFormatProperties2 es, PeekChain es) => FromCStruct (ImageFormatProperties2 es)
 
 
 type role PhysicalDeviceFeatures2 nominal
 data PhysicalDeviceFeatures2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (PhysicalDeviceFeatures2 es)
+instance (Extendss PhysicalDeviceFeatures2 es, PokeChain es) => ToCStruct (PhysicalDeviceFeatures2 es)
 instance Show (Chain es) => Show (PhysicalDeviceFeatures2 es)
 
-instance PeekChain es => FromCStruct (PhysicalDeviceFeatures2 es)
+instance (Extendss PhysicalDeviceFeatures2 es, PeekChain es) => FromCStruct (PhysicalDeviceFeatures2 es)
 
 
 type role PhysicalDeviceImageFormatInfo2 nominal
 data PhysicalDeviceImageFormatInfo2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (PhysicalDeviceImageFormatInfo2 es)
+instance (Extendss PhysicalDeviceImageFormatInfo2 es, PokeChain es) => ToCStruct (PhysicalDeviceImageFormatInfo2 es)
 instance Show (Chain es) => Show (PhysicalDeviceImageFormatInfo2 es)
 
-instance PeekChain es => FromCStruct (PhysicalDeviceImageFormatInfo2 es)
+instance (Extendss PhysicalDeviceImageFormatInfo2 es, PeekChain es) => FromCStruct (PhysicalDeviceImageFormatInfo2 es)
 
 
 type role PhysicalDeviceMemoryProperties2 nominal
 data PhysicalDeviceMemoryProperties2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (PhysicalDeviceMemoryProperties2 es)
+instance (Extendss PhysicalDeviceMemoryProperties2 es, PokeChain es) => ToCStruct (PhysicalDeviceMemoryProperties2 es)
 instance Show (Chain es) => Show (PhysicalDeviceMemoryProperties2 es)
 
-instance PeekChain es => FromCStruct (PhysicalDeviceMemoryProperties2 es)
+instance (Extendss PhysicalDeviceMemoryProperties2 es, PeekChain es) => FromCStruct (PhysicalDeviceMemoryProperties2 es)
 
 
 type role PhysicalDeviceProperties2 nominal
 data PhysicalDeviceProperties2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (PhysicalDeviceProperties2 es)
+instance (Extendss PhysicalDeviceProperties2 es, PokeChain es) => ToCStruct (PhysicalDeviceProperties2 es)
 instance Show (Chain es) => Show (PhysicalDeviceProperties2 es)
 
-instance PeekChain es => FromCStruct (PhysicalDeviceProperties2 es)
+instance (Extendss PhysicalDeviceProperties2 es, PeekChain es) => FromCStruct (PhysicalDeviceProperties2 es)
 
 
 data PhysicalDeviceSparseImageFormatInfo2
@@ -81,10 +82,10 @@ instance FromCStruct PhysicalDeviceSparseImageFormatInfo2
 type role QueueFamilyProperties2 nominal
 data QueueFamilyProperties2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (QueueFamilyProperties2 es)
+instance (Extendss QueueFamilyProperties2 es, PokeChain es) => ToCStruct (QueueFamilyProperties2 es)
 instance Show (Chain es) => Show (QueueFamilyProperties2 es)
 
-instance PeekChain es => FromCStruct (QueueFamilyProperties2 es)
+instance (Extendss QueueFamilyProperties2 es, PeekChain es) => FromCStruct (QueueFamilyProperties2 es)
 
 
 data SparseImageFormatProperties2

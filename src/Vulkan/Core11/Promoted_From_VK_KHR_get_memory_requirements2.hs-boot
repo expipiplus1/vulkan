@@ -9,6 +9,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2  ( BufferMemo
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -24,10 +25,10 @@ instance FromCStruct BufferMemoryRequirementsInfo2
 type role ImageMemoryRequirementsInfo2 nominal
 data ImageMemoryRequirementsInfo2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (ImageMemoryRequirementsInfo2 es)
+instance (Extendss ImageMemoryRequirementsInfo2 es, PokeChain es) => ToCStruct (ImageMemoryRequirementsInfo2 es)
 instance Show (Chain es) => Show (ImageMemoryRequirementsInfo2 es)
 
-instance PeekChain es => FromCStruct (ImageMemoryRequirementsInfo2 es)
+instance (Extendss ImageMemoryRequirementsInfo2 es, PeekChain es) => FromCStruct (ImageMemoryRequirementsInfo2 es)
 
 
 data ImageSparseMemoryRequirementsInfo2
@@ -41,10 +42,10 @@ instance FromCStruct ImageSparseMemoryRequirementsInfo2
 type role MemoryRequirements2 nominal
 data MemoryRequirements2 (es :: [Type])
 
-instance PokeChain es => ToCStruct (MemoryRequirements2 es)
+instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryRequirements2 es)
 instance Show (Chain es) => Show (MemoryRequirements2 es)
 
-instance PeekChain es => FromCStruct (MemoryRequirements2 es)
+instance (Extendss MemoryRequirements2 es, PeekChain es) => FromCStruct (MemoryRequirements2 es)
 
 
 data SparseImageMemoryRequirements2

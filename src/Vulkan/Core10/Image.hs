@@ -54,6 +54,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetImageSubresourceLayout))
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.SharedTypes (Extent3D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
@@ -153,7 +154,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageCreateInfo'
-createImage :: forall a io . (PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Image)
+createImage :: forall a io . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Image)
 createImage device createInfo allocator = liftIO . evalContT $ do
   let vkCreateImagePtr = pVkCreateImage (deviceCmds (device :: Device))
   lift $ unless (vkCreateImagePtr /= nullFunPtr) $
@@ -177,7 +178,7 @@ createImage device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withImage :: forall a io r . (PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> Maybe AllocationCallbacks -> (io (Image) -> ((Image) -> io ()) -> r) -> r
+withImage :: forall a io r . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> Maybe AllocationCallbacks -> (io (Image) -> ((Image) -> io ()) -> r) -> r
 withImage device pCreateInfo pAllocator b =
   b (createImage device pCreateInfo pAllocator)
     (\(o0) -> destroyImage device o0 pAllocator)
@@ -1398,7 +1399,7 @@ instance Extensible ImageCreateInfo where
     | Just Refl <- eqT @e @DedicatedAllocationImageCreateInfoNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (ImageCreateInfo es) where
+instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateInfo es) where
   withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_CREATE_INFO)
@@ -1441,7 +1442,7 @@ instance PokeChain es => ToCStruct (ImageCreateInfo es) where
     lift $ poke ((p `plusPtr` 80 :: Ptr ImageLayout)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (ImageCreateInfo es) where
+instance (Extendss ImageCreateInfo es, PeekChain es) => FromCStruct (ImageCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

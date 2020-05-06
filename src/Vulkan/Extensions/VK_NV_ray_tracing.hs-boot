@@ -15,6 +15,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( AccelerationStructureCreateInfoNV
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (AccelerationStructureKHR)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -86,10 +87,10 @@ instance FromCStruct PhysicalDeviceRayTracingPropertiesNV
 type role RayTracingPipelineCreateInfoNV nominal
 data RayTracingPipelineCreateInfoNV (es :: [Type])
 
-instance PokeChain es => ToCStruct (RayTracingPipelineCreateInfoNV es)
+instance (Extendss RayTracingPipelineCreateInfoNV es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoNV es)
 instance Show (Chain es) => Show (RayTracingPipelineCreateInfoNV es)
 
-instance PeekChain es => FromCStruct (RayTracingPipelineCreateInfoNV es)
+instance (Extendss RayTracingPipelineCreateInfoNV es, PeekChain es) => FromCStruct (RayTracingPipelineCreateInfoNV es)
 
 
 data RayTracingShaderGroupCreateInfoNV

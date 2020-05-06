@@ -44,6 +44,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateImageView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyImageView))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
@@ -124,7 +125,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',
 -- 'ImageViewCreateInfo'
-createImageView :: forall a io . (PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ImageView)
+createImageView :: forall a io . (Extendss ImageViewCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ImageView)
 createImageView device createInfo allocator = liftIO . evalContT $ do
   let vkCreateImageViewPtr = pVkCreateImageView (deviceCmds (device :: Device))
   lift $ unless (vkCreateImageViewPtr /= nullFunPtr) $
@@ -148,7 +149,7 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withImageView :: forall a io r . (PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> (io (ImageView) -> ((ImageView) -> io ()) -> r) -> r
+withImageView :: forall a io r . (Extendss ImageViewCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> (io (ImageView) -> ((ImageView) -> io ()) -> r) -> r
 withImageView device pCreateInfo pAllocator b =
   b (createImageView device pCreateInfo pAllocator)
     (\(o0) -> destroyImageView device o0 pAllocator)
@@ -904,7 +905,7 @@ instance Extensible ImageViewCreateInfo where
     | Just Refl <- eqT @e @ImageViewUsageCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (ImageViewCreateInfo es) where
+instance (Extendss ImageViewCreateInfo es, PokeChain es) => ToCStruct (ImageViewCreateInfo es) where
   withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO)
@@ -930,7 +931,7 @@ instance PokeChain es => ToCStruct (ImageViewCreateInfo es) where
     ContT $ pokeCStruct ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (zero) . ($ ())
     lift $ f
 
-instance PeekChain es => FromCStruct (ImageViewCreateInfo es) where
+instance (Extendss ImageViewCreateInfo es, PeekChain es) => FromCStruct (ImageViewCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

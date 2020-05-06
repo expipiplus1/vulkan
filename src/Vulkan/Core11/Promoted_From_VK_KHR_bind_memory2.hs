@@ -49,6 +49,7 @@ import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -111,7 +112,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindBufferMemoryInfo', 'Vulkan.Core10.Handles.Device'
-bindBufferMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindBufferMemoryInfo a)) -> io ()
+bindBufferMemory2 :: forall a io . (Extendss BindBufferMemoryInfo a, PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindBufferMemoryInfo a)) -> io ()
 bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (deviceCmds (device :: Device))
   lift $ unless (vkBindBufferMemory2Ptr /= nullFunPtr) $
@@ -180,7 +181,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindImageMemoryInfo', 'Vulkan.Core10.Handles.Device'
-bindImageMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindImageMemoryInfo a)) -> io ()
+bindImageMemory2 :: forall a io . (Extendss BindImageMemoryInfo a, PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindImageMemoryInfo a)) -> io ()
 bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2Ptr = pVkBindImageMemory2 (deviceCmds (device :: Device))
   lift $ unless (vkBindImageMemory2Ptr /= nullFunPtr) $
@@ -337,7 +338,7 @@ instance Extensible BindBufferMemoryInfo where
     | Just Refl <- eqT @e @BindBufferMemoryDeviceGroupInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (BindBufferMemoryInfo es) where
+instance (Extendss BindBufferMemoryInfo es, PokeChain es) => ToCStruct (BindBufferMemoryInfo es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindBufferMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO)
@@ -358,7 +359,7 @@ instance PokeChain es => ToCStruct (BindBufferMemoryInfo es) where
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (BindBufferMemoryInfo es) where
+instance (Extendss BindBufferMemoryInfo es, PeekChain es) => FromCStruct (BindBufferMemoryInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -637,7 +638,7 @@ instance Extensible BindImageMemoryInfo where
     | Just Refl <- eqT @e @BindImageMemoryDeviceGroupInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (BindImageMemoryInfo es) where
+instance (Extendss BindImageMemoryInfo es, PokeChain es) => ToCStruct (BindImageMemoryInfo es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImageMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO)
@@ -658,7 +659,7 @@ instance PokeChain es => ToCStruct (BindImageMemoryInfo es) where
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (BindImageMemoryInfo es) where
+instance (Extendss BindImageMemoryInfo es, PeekChain es) => FromCStruct (BindImageMemoryInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

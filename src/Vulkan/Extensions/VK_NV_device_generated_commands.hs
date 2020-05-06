@@ -119,6 +119,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyIndirectCommandsLayoutNV))
 import Vulkan.Dynamic (DeviceCmds(pVkGetGeneratedCommandsMemoryRequirementsNV))
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.Core10.BaseType (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -665,7 +666,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
-getGeneratedCommandsMemoryRequirementsNV :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> GeneratedCommandsMemoryRequirementsInfoNV -> io (MemoryRequirements2 a)
+getGeneratedCommandsMemoryRequirementsNV :: forall a io . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io) => Device -> GeneratedCommandsMemoryRequirementsInfoNV -> io (MemoryRequirements2 a)
 getGeneratedCommandsMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetGeneratedCommandsMemoryRequirementsNVPtr = pVkGetGeneratedCommandsMemoryRequirementsNV (deviceCmds (device :: Device))
   lift $ unless (vkGetGeneratedCommandsMemoryRequirementsNVPtr /= nullFunPtr) $

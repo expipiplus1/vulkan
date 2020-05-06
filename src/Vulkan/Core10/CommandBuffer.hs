@@ -76,6 +76,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkResetCommandBuffer))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupCommandBufferBeginInfo)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Handles (Framebuffer)
 import Vulkan.CStruct (FromCStruct)
@@ -351,7 +352,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferBeginInfo'
-beginCommandBuffer :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io ()
+beginCommandBuffer :: forall a io . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io ()
 beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
   let vkBeginCommandBufferPtr = pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkBeginCommandBufferPtr /= nullFunPtr) $
@@ -366,7 +367,7 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
 --
 -- Note that 'endCommandBuffer' is *not* called if an exception is thrown
 -- by the inner action.
-useCommandBuffer :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io r -> io r
+useCommandBuffer :: forall a io r . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io r -> io r
 useCommandBuffer commandBuffer pBeginInfo a =
   (beginCommandBuffer commandBuffer pBeginInfo) *> a <* (endCommandBuffer commandBuffer)
 
@@ -729,7 +730,7 @@ instance Extensible CommandBufferInheritanceInfo where
     | Just Refl <- eqT @e @CommandBufferInheritanceConditionalRenderingInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (CommandBufferInheritanceInfo es) where
+instance (Extendss CommandBufferInheritanceInfo es, PokeChain es) => ToCStruct (CommandBufferInheritanceInfo es) where
   withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferInheritanceInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO)
@@ -752,7 +753,7 @@ instance PokeChain es => ToCStruct (CommandBufferInheritanceInfo es) where
     lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance PeekChain es => FromCStruct (CommandBufferInheritanceInfo es) where
+instance (Extendss CommandBufferInheritanceInfo es, PeekChain es) => FromCStruct (CommandBufferInheritanceInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -842,7 +843,7 @@ instance Extensible CommandBufferBeginInfo where
     | Just Refl <- eqT @e @DeviceGroupCommandBufferBeginInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (CommandBufferBeginInfo es) where
+instance (Extendss CommandBufferBeginInfo es, PokeChain es) => ToCStruct (CommandBufferBeginInfo es) where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO)
@@ -862,7 +863,7 @@ instance PokeChain es => ToCStruct (CommandBufferBeginInfo es) where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance PeekChain es => FromCStruct (CommandBufferBeginInfo es) where
+instance (Extendss CommandBufferBeginInfo es, PeekChain es) => FromCStruct (CommandBufferBeginInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

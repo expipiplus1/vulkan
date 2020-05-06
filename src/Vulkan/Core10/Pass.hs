@@ -67,6 +67,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyRenderPass))
 import Vulkan.Dynamic (DeviceCmds(pVkGetRenderAreaGranularity))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.SharedTypes (Extent2D)
 import Vulkan.Core10.Enums.Format (Format)
@@ -163,7 +164,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Framebuffer',
 -- 'FramebufferCreateInfo'
-createFramebuffer :: forall a io . (PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Framebuffer)
+createFramebuffer :: forall a io . (Extendss FramebufferCreateInfo a, PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Framebuffer)
 createFramebuffer device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFramebufferPtr = pVkCreateFramebuffer (deviceCmds (device :: Device))
   lift $ unless (vkCreateFramebufferPtr /= nullFunPtr) $
@@ -187,7 +188,7 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withFramebuffer :: forall a io r . (PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> (io (Framebuffer) -> ((Framebuffer) -> io ()) -> r) -> r
+withFramebuffer :: forall a io r . (Extendss FramebufferCreateInfo a, PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> (io (Framebuffer) -> ((Framebuffer) -> io ()) -> r) -> r
 withFramebuffer device pCreateInfo pAllocator b =
   b (createFramebuffer device pCreateInfo pAllocator)
     (\(o0) -> destroyFramebuffer device o0 pAllocator)
@@ -315,7 +316,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass',
 -- 'RenderPassCreateInfo'
-createRenderPass :: forall a io . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
+createRenderPass :: forall a io . (Extendss RenderPassCreateInfo a, PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
 createRenderPass device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPassPtr = pVkCreateRenderPass (deviceCmds (device :: Device))
   lift $ unless (vkCreateRenderPassPtr /= nullFunPtr) $
@@ -339,7 +340,7 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withRenderPass :: forall a io r . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> (io (RenderPass) -> ((RenderPass) -> io ()) -> r) -> r
+withRenderPass :: forall a io r . (Extendss RenderPassCreateInfo a, PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> (io (RenderPass) -> ((RenderPass) -> io ()) -> r) -> r
 withRenderPass device pCreateInfo pAllocator b =
   b (createRenderPass device pCreateInfo pAllocator)
     (\(o0) -> destroyRenderPass device o0 pAllocator)
@@ -1797,7 +1798,7 @@ instance Extensible RenderPassCreateInfo where
     | Just Refl <- eqT @e @RenderPassMultiviewCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (RenderPassCreateInfo es) where
+instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPassCreateInfo es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO)
@@ -1834,7 +1835,7 @@ instance PokeChain es => ToCStruct (RenderPassCreateInfo es) where
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SubpassDependency))) (pPDependencies')
     lift $ f
 
-instance PeekChain es => FromCStruct (RenderPassCreateInfo es) where
+instance (Extendss RenderPassCreateInfo es, PeekChain es) => FromCStruct (RenderPassCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -2237,7 +2238,7 @@ instance Extensible FramebufferCreateInfo where
     | Just Refl <- eqT @e @FramebufferAttachmentsCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (FramebufferCreateInfo es) where
+instance (Extendss FramebufferCreateInfo es, PokeChain es) => ToCStruct (FramebufferCreateInfo es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FramebufferCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO)
@@ -2268,7 +2269,7 @@ instance PokeChain es => ToCStruct (FramebufferCreateInfo es) where
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (FramebufferCreateInfo es) where
+instance (Extendss FramebufferCreateInfo es, PeekChain es) => FromCStruct (FramebufferCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

@@ -9,6 +9,7 @@ module Vulkan.Core10.Pass  ( AttachmentDescription
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -32,19 +33,19 @@ instance FromCStruct AttachmentReference
 type role FramebufferCreateInfo nominal
 data FramebufferCreateInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (FramebufferCreateInfo es)
+instance (Extendss FramebufferCreateInfo es, PokeChain es) => ToCStruct (FramebufferCreateInfo es)
 instance Show (Chain es) => Show (FramebufferCreateInfo es)
 
-instance PeekChain es => FromCStruct (FramebufferCreateInfo es)
+instance (Extendss FramebufferCreateInfo es, PeekChain es) => FromCStruct (FramebufferCreateInfo es)
 
 
 type role RenderPassCreateInfo nominal
 data RenderPassCreateInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (RenderPassCreateInfo es)
+instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPassCreateInfo es)
 instance Show (Chain es) => Show (RenderPassCreateInfo es)
 
-instance PeekChain es => FromCStruct (RenderPassCreateInfo es)
+instance (Extendss RenderPassCreateInfo es, PeekChain es) => FromCStruct (RenderPassCreateInfo es)
 
 
 data SubpassDependency

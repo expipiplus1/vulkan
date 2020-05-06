@@ -115,6 +115,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkQueuePresentKHR))
 import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_display_swapchain (DisplayPresentInfoKHR)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.SharedTypes (Extent2D)
 import Vulkan.Core10.Handles (Fence)
@@ -282,7 +283,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-createSwapchainKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SwapchainKHR)
+createSwapchainKHR :: forall a io . (Extendss SwapchainCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (deviceCmds (device :: Device))
   lift $ unless (vkCreateSwapchainKHRPtr /= nullFunPtr) $
@@ -306,7 +307,7 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withSwapchainKHR :: forall a io r . (PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> (io (SwapchainKHR) -> ((SwapchainKHR) -> io ()) -> r) -> r
+withSwapchainKHR :: forall a io r . (Extendss SwapchainCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> (io (SwapchainKHR) -> ((SwapchainKHR) -> io ()) -> r) -> r
 withSwapchainKHR device pCreateInfo pAllocator b =
   b (createSwapchainKHR device pCreateInfo pAllocator)
     (\(o0) -> destroySwapchainKHR device o0 pAllocator)
@@ -800,7 +801,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'PresentInfoKHR', 'Vulkan.Core10.Handles.Queue'
-queuePresentKHR :: forall a io . (PokeChain a, MonadIO io) => Queue -> PresentInfoKHR a -> io (Result)
+queuePresentKHR :: forall a io . (Extendss PresentInfoKHR a, PokeChain a, MonadIO io) => Queue -> PresentInfoKHR a -> io (Result)
 queuePresentKHR queue presentInfo = liftIO . evalContT $ do
   let vkQueuePresentKHRPtr = pVkQueuePresentKHR (deviceCmds (queue :: Queue))
   lift $ unless (vkQueuePresentKHRPtr /= nullFunPtr) $
@@ -1517,7 +1518,7 @@ instance Extensible SwapchainCreateInfoKHR where
     | Just Refl <- eqT @e @SwapchainCounterCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (SwapchainCreateInfoKHR es) where
+instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (SwapchainCreateInfoKHR es) where
   withCStruct x f = allocaBytesAligned 104 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
@@ -1565,7 +1566,7 @@ instance PokeChain es => ToCStruct (SwapchainCreateInfoKHR es) where
     lift $ poke ((p `plusPtr` 92 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance PeekChain es => FromCStruct (SwapchainCreateInfoKHR es) where
+instance (Extendss SwapchainCreateInfoKHR es, PeekChain es) => FromCStruct (SwapchainCreateInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1733,7 +1734,7 @@ instance Extensible PresentInfoKHR where
     | Just Refl <- eqT @e @DisplayPresentInfoKHR = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PresentInfoKHR es) where
+instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_INFO_KHR)
@@ -1773,7 +1774,7 @@ instance PokeChain es => ToCStruct (PresentInfoKHR es) where
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPImageIndices')
     lift $ f
 
-instance PeekChain es => FromCStruct (PresentInfoKHR es) where
+instance (Extendss PresentInfoKHR es, PeekChain es) => FromCStruct (PresentInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

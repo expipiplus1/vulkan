@@ -57,6 +57,7 @@ import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSharedSwapchainsKHR))
 import Vulkan.Core10.Handles (Device_T)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -184,7 +185,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-createSharedSwapchainsKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> ("createInfos" ::: Vector (SwapchainCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("swapchains" ::: Vector SwapchainKHR))
+createSharedSwapchainsKHR :: forall a io . (Extendss SwapchainCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> ("createInfos" ::: Vector (SwapchainCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
   let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device))
   lift $ unless (vkCreateSharedSwapchainsKHRPtr /= nullFunPtr) $

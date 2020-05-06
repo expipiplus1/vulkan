@@ -76,6 +76,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkCmdNextSubpass2))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateRenderPass2))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
@@ -175,7 +176,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass',
 -- 'RenderPassCreateInfo2'
-createRenderPass2 :: forall a io . (PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo2 a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
+createRenderPass2 :: forall a io . (Extendss RenderPassCreateInfo2 a, PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo2 a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
 createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (deviceCmds (device :: Device))
   lift $ unless (vkCreateRenderPass2Ptr /= nullFunPtr) $
@@ -385,7 +386,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'SubpassBeginInfo'
-cmdBeginRenderPass2 :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> io ()
+cmdBeginRenderPass2 :: forall a io . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> io ()
 cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . evalContT $ do
   let vkCmdBeginRenderPass2Ptr = pVkCmdBeginRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBeginRenderPass2Ptr /= nullFunPtr) $
@@ -401,7 +402,7 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
 --
 -- Note that 'cmdEndRenderPass2' is *not* called if an exception is thrown
 -- by the inner action.
-cmdUseRenderPass2 :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> io r -> io r
+cmdUseRenderPass2 :: forall a io r . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> io r -> io r
 cmdUseRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo a =
   (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo) *> a <* (cmdEndRenderPass2 commandBuffer pSubpassEndInfo)
 
@@ -802,7 +803,7 @@ instance Extensible AttachmentDescription2 where
     | Just Refl <- eqT @e @AttachmentDescriptionStencilLayout = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (AttachmentDescription2 es) where
+instance (Extendss AttachmentDescription2 es, PokeChain es) => ToCStruct (AttachmentDescription2 es) where
   withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentDescription2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2)
@@ -834,7 +835,7 @@ instance PokeChain es => ToCStruct (AttachmentDescription2 es) where
     lift $ poke ((p `plusPtr` 48 :: Ptr ImageLayout)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (AttachmentDescription2 es) where
+instance (Extendss AttachmentDescription2 es, PeekChain es) => FromCStruct (AttachmentDescription2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1011,7 +1012,7 @@ instance Extensible AttachmentReference2 where
     | Just Refl <- eqT @e @AttachmentReferenceStencilLayout = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (AttachmentReference2 es) where
+instance (Extendss AttachmentReference2 es, PokeChain es) => ToCStruct (AttachmentReference2 es) where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentReference2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2)
@@ -1032,7 +1033,7 @@ instance PokeChain es => ToCStruct (AttachmentReference2 es) where
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageAspectFlags)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (AttachmentReference2 es) where
+instance (Extendss AttachmentReference2 es, PeekChain es) => FromCStruct (AttachmentReference2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1254,7 +1255,7 @@ instance Extensible SubpassDescription2 where
     | Just Refl <- eqT @e @SubpassDescriptionDepthStencilResolve = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (SubpassDescription2 es) where
+instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDescription2 es) where
   withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassDescription2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2)
@@ -1310,7 +1311,7 @@ instance PokeChain es => ToCStruct (SubpassDescription2 es) where
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Word32))) (pPPreserveAttachments')
     lift $ f
 
-instance PeekChain es => FromCStruct (SubpassDescription2 es) where
+instance (Extendss SubpassDescription2 es, PeekChain es) => FromCStruct (SubpassDescription2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1767,7 +1768,7 @@ instance Extensible RenderPassCreateInfo2 where
     | Just Refl <- eqT @e @RenderPassFragmentDensityMapCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (RenderPassCreateInfo2 es) where
+instance (Extendss RenderPassCreateInfo2 es, PokeChain es) => ToCStruct (RenderPassCreateInfo2 es) where
   withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassCreateInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2)
@@ -1811,7 +1812,7 @@ instance PokeChain es => ToCStruct (RenderPassCreateInfo2 es) where
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr Word32))) (pPCorrelatedViewMasks')
     lift $ f
 
-instance PeekChain es => FromCStruct (RenderPassCreateInfo2 es) where
+instance (Extendss RenderPassCreateInfo2 es, PeekChain es) => FromCStruct (RenderPassCreateInfo2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

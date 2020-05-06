@@ -43,35 +43,14 @@ import qualified Language.C.Types              as C
 #endif
 
 import           Vulkan.CStruct.Extends
-import qualified Vulkan.Core10                 as Vk
-import           Vulkan.Core10           hiding ( deviceWaitIdle
-                                                , getDeviceQueue
-                                                , getImageSubresourceLayout
-                                                , getPhysicalDeviceFormatProperties
-                                                , waitForFences
-                                                , withBuffer
-                                                , withCommandBuffers
-                                                , withCommandPool
-                                                , withFence
-                                                , withFramebuffer
-                                                , withGraphicsPipelines
-                                                , withImage
-                                                , withImageView
-                                                , withInstance
-                                                , withPipelineLayout
-                                                , withRenderPass
-                                                , withSemaphore
-                                                , withShaderModule
-                                                )
+import           Vulkan.Core10                 as Vk
+                                         hiding ( withImage )
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Utils.Debug
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
-import qualified VulkanMemoryAllocator         as VMA
-import           VulkanMemoryAllocator   hiding ( getPhysicalDeviceProperties
-                                                , invalidateAllocation
-                                                , withImage
-                                                )
+import           VulkanMemoryAllocator         as VMA
+                                         hiding ( getPhysicalDeviceProperties )
 
 #if defined(RENDERDOC)
 data RENDERDOC_API_1_1_2
@@ -149,8 +128,10 @@ noAllocationCallbacks = Nothing
 -- Wrap a bunch of Vulkan commands so that they automatically pull global
 -- handles from 'V'
 --
+-- Wrapped functions are suffixed with "'"
+--
 autoapplyDecs
-  id
+  (<> "'")
   [ 'allocate
   , 'getDevice
   , 'getPhysicalDevice
@@ -158,22 +139,22 @@ autoapplyDecs
   , 'getAllocator
   , 'noAllocationCallbacks
   ]
-  [ 'VMA.invalidateAllocation
-  , 'VMA.withImage
-  , 'Vk.deviceWaitIdle
-  , 'Vk.getDeviceQueue
-  , 'Vk.getImageSubresourceLayout
-  , 'Vk.waitForFences
-  , 'Vk.withCommandBuffers
-  , 'Vk.withCommandPool
-  , 'Vk.withFence
-  , 'Vk.withFramebuffer
-  , 'Vk.withGraphicsPipelines
-  , 'Vk.withImageView
-  , 'Vk.withInstance
-  , 'Vk.withPipelineLayout
-  , 'Vk.withRenderPass
-  , 'Vk.withShaderModule
+  [ 'invalidateAllocation
+  , 'withImage
+  , 'deviceWaitIdle
+  , 'getDeviceQueue
+  , 'getImageSubresourceLayout
+  , 'waitForFences
+  , 'withCommandBuffers
+  , 'withCommandPool
+  , 'withFence
+  , 'withFramebuffer
+  , 'withGraphicsPipelines
+  , 'withImageView
+  , 'withInstance
+  , 'withPipelineLayout
+  , 'withRenderPass
+  , 'withShaderModule
   ]
 
 ----------------------------------------------------------------
@@ -221,7 +202,7 @@ main = runResourceT $ do
 
   -- Run our application
   runV inst phys (pdiGraphicsQueueFamilyIndex pdi) dev allocator
-    . (`finally` deviceWaitIdle)
+    . (`finally` deviceWaitIdle')
     $ do
         image <- render
         let filename = "triangle.png"
@@ -272,8 +253,8 @@ render = do
                                 , usage = MEMORY_USAGE_GPU_ONLY
                                 }
   -- Allocate the image with VMA
-  (_, (image, _, _)) <- withImage imageCreateInfo allocationCreateInfo
-  dev <- getDevice
+  (_, (image, _, _)) <- withImage' imageCreateInfo allocationCreateInfo
+  dev                <- getDevice
   nameObject dev image "GPU side image"
 
   -- Create an image to read on the CPU
@@ -291,7 +272,7 @@ render = do
       cpuAllocationCreateInfo = zero { flags = ALLOCATION_CREATE_MAPPED_BIT
                                      , usage = MEMORY_USAGE_GPU_TO_CPU
                                      }
-  (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage
+  (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage'
     cpuImageCreateInfo
     cpuAllocationCreateInfo
   nameObject dev cpuImage "CPU side image"
@@ -314,7 +295,7 @@ render = do
                                               COMPONENT_SWIZZLE_IDENTITY
         , subresourceRange = imageSubresourceRange
         }
-  (_, imageView) <- withImageView imageViewCreateInfo
+  (_, imageView) <- withImageView' imageViewCreateInfo
 
   -- Create a renderpass with a single subpass
   let
@@ -348,10 +329,11 @@ render = do
       , dstAccessMask = ACCESS_COLOR_ATTACHMENT_READ_BIT
                           .|. ACCESS_COLOR_ATTACHMENT_WRITE_BIT
       }
-  (_, renderPass) <- withRenderPass zero { attachments = [attachmentDescription]
-                                         , subpasses = [subpass]
-                                         , dependencies = [subpassDependency]
-                                         }
+  (_, renderPass) <- withRenderPass' zero
+    { attachments  = [attachmentDescription]
+    , subpasses    = [subpass]
+    , dependencies = [subpassDependency]
+    }
 
   -- Create a framebuffer
   let framebufferCreateInfo :: FramebufferCreateInfo '[]
@@ -361,11 +343,11 @@ render = do
                                    , height      = height
                                    , layers      = 1
                                    }
-  (_, framebuffer)    <- withFramebuffer framebufferCreateInfo
+  (_, framebuffer)    <- withFramebuffer' framebufferCreateInfo
 
   -- Create the most vanilla rendering pipeline
   shaderStages        <- createShaders
-  (_, pipelineLayout) <- withPipelineLayout zero
+  (_, pipelineLayout) <- withPipelineLayout' zero
   let
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo = zero
@@ -424,20 +406,20 @@ render = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  (_, (_, [graphicsPipeline])) <- withGraphicsPipelines zero
-                                                        [pipelineCreateInfo]
+  (_, (_, [graphicsPipeline])) <- withGraphicsPipelines' zero
+                                                         [pipelineCreateInfo]
 
   -- Create a command buffer
   graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
   let commandPoolCreateInfo :: CommandPoolCreateInfo
       commandPoolCreateInfo =
         zero { queueFamilyIndex = graphicsQueueFamilyIndex }
-  (_, commandPool) <- withCommandPool commandPoolCreateInfo
+  (_, commandPool) <- withCommandPool' commandPoolCreateInfo
   let commandBufferAllocateInfo = zero { commandPool = commandPool
                                        , level = COMMAND_BUFFER_LEVEL_PRIMARY
                                        , commandBufferCount = 1
                                        }
-  (_, [commandBuffer]) <- withCommandBuffers commandBufferAllocateInfo
+  (_, [commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
 
   -- Fill command buffer
   --
@@ -540,7 +522,7 @@ render = do
           ]
 
   -- Create a fence so we can know when render is finished
-  (_, fence) <- withFence zero
+  (_, fence) <- withFence' zero
 
   -- Submit the command buffer and wait for it to execute
   let submitInfo = zero { waitSemaphores   = []
@@ -548,19 +530,19 @@ render = do
                         , commandBuffers   = [commandBufferHandle commandBuffer]
                         , signalSemaphores = []
                         }
-  graphicsQueue <- getDeviceQueue graphicsQueueFamilyIndex 0
+  graphicsQueue <- getDeviceQueue' graphicsQueueFamilyIndex 0
   queueSubmit graphicsQueue [submitInfo] fence
   let fenceTimeout = 1e9 -- 1 second
-  waitForFences [fence] True fenceTimeout >>= \case
+  waitForFences' [fence] True fenceTimeout >>= \case
     TIMEOUT -> throwString "Timed out waiting for image render and copy"
     _       -> pure ()
 
   -- If the cpu image allocation is not HOST_COHERENT this will ensure the
   -- changes are present on the CPU.
-  invalidateAllocation cpuImageAllocation 0 WHOLE_SIZE
+  invalidateAllocation' cpuImageAllocation 0 WHOLE_SIZE
 
   -- Find the image layout and read it into a JuicyPixels Image
-  cpuImageLayout <- getImageSubresourceLayout
+  cpuImageLayout <- getImageSubresourceLayout'
     cpuImage
     ImageSubresource { aspectMask = IMAGE_ASPECT_COLOR_BIT
                      , mipLevel   = 0
@@ -616,8 +598,8 @@ createShaders = do
           fragColor = colors[gl_VertexIndex];
         }
       |]
-  (_, fragModule) <- withShaderModule zero { code = fragCode }
-  (_, vertModule) <- withShaderModule zero { code = vertCode }
+  (_, fragModule) <- withShaderModule' zero { code = fragCode }
+  (_, vertModule) <- withShaderModule' zero { code = vertCode }
   let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
                                        , module' = vertModule
                                        , name    = "main"
@@ -672,7 +654,7 @@ createInstance = do
             }
           ::& debugMessengerCreateInfo
           :&  ()
-  (_, inst) <- withInstance instanceCreateInfo
+  (_, inst) <- withInstance' instanceCreateInfo
   pure inst
 
 createDevice

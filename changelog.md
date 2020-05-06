@@ -12,6 +12,7 @@
   - Infer lengths of preserved length members when they are 0
   - Throw an exception when trying to call a null function pointer, #42
   - Implement HasObjectType class to automate getting VkObjectType, #54
+  - Add constraints to check that structs are correctly extended
 
 ## [3.2.0.0] - 2020-05-02
   - Update API version 1.2.139

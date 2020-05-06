@@ -66,6 +66,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateSamplerYcbcrConversion))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySamplerYcbcrConversion))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
 import Vulkan.Core10.Enums.Filter (Filter)
@@ -180,7 +181,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'SamplerYcbcrConversionCreateInfo'
-createSamplerYcbcrConversion :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SamplerYcbcrConversion)
+createSamplerYcbcrConversion :: forall a io . (Extendss SamplerYcbcrConversionCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SamplerYcbcrConversion)
 createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device))
   lift $ unless (vkCreateSamplerYcbcrConversionPtr /= nullFunPtr) $
@@ -204,7 +205,7 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withSamplerYcbcrConversion :: forall a io r . (PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> (io (SamplerYcbcrConversion) -> ((SamplerYcbcrConversion) -> io ()) -> r) -> r
+withSamplerYcbcrConversion :: forall a io r . (Extendss SamplerYcbcrConversionCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> (io (SamplerYcbcrConversion) -> ((SamplerYcbcrConversion) -> io ()) -> r) -> r
 withSamplerYcbcrConversion device pCreateInfo pAllocator b =
   b (createSamplerYcbcrConversion device pCreateInfo pAllocator)
     (\(o0) -> destroySamplerYcbcrConversion device o0 pAllocator)
@@ -523,7 +524,7 @@ instance Extensible SamplerYcbcrConversionCreateInfo where
     | Just Refl <- eqT @e @ExternalFormatANDROID = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (SamplerYcbcrConversionCreateInfo es) where
+instance (Extendss SamplerYcbcrConversionCreateInfo es, PokeChain es) => ToCStruct (SamplerYcbcrConversionCreateInfo es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO)
@@ -554,7 +555,7 @@ instance PokeChain es => ToCStruct (SamplerYcbcrConversionCreateInfo es) where
     lift $ poke ((p `plusPtr` 56 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance PeekChain es => FromCStruct (SamplerYcbcrConversionCreateInfo es) where
+instance (Extendss SamplerYcbcrConversionCreateInfo es, PeekChain es) => FromCStruct (SamplerYcbcrConversionCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
