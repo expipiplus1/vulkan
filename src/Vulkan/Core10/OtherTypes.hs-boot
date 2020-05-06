@@ -9,6 +9,7 @@ module Vulkan.Core10.OtherTypes  ( BufferMemoryBarrier
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -48,10 +49,10 @@ instance FromCStruct DrawIndirectCommand
 type role ImageMemoryBarrier nominal
 data ImageMemoryBarrier (es :: [Type])
 
-instance PokeChain es => ToCStruct (ImageMemoryBarrier es)
+instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemoryBarrier es)
 instance Show (Chain es) => Show (ImageMemoryBarrier es)
 
-instance PeekChain es => FromCStruct (ImageMemoryBarrier es)
+instance (Extendss ImageMemoryBarrier es, PeekChain es) => FromCStruct (ImageMemoryBarrier es)
 
 
 data MemoryBarrier

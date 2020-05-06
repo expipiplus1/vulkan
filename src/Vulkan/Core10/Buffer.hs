@@ -54,6 +54,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyBuffer))
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExternalMemoryBufferCreateInfo)
 import Vulkan.CStruct (FromCStruct)
@@ -137,7 +138,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createBuffer :: forall a io . (PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Buffer)
+createBuffer :: forall a io . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Buffer)
 createBuffer device createInfo allocator = liftIO . evalContT $ do
   let vkCreateBufferPtr = pVkCreateBuffer (deviceCmds (device :: Device))
   lift $ unless (vkCreateBufferPtr /= nullFunPtr) $
@@ -161,7 +162,7 @@ createBuffer device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withBuffer :: forall a io r . (PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> (io (Buffer) -> ((Buffer) -> io ()) -> r) -> r
+withBuffer :: forall a io r . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> (io (Buffer) -> ((Buffer) -> io ()) -> r) -> r
 withBuffer device pCreateInfo pAllocator b =
   b (createBuffer device pCreateInfo pAllocator)
     (\(o0) -> destroyBuffer device o0 pAllocator)
@@ -406,7 +407,7 @@ instance Extensible BufferCreateInfo where
     | Just Refl <- eqT @e @DedicatedAllocationBufferCreateInfoNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (BufferCreateInfo es) where
+instance (Extendss BufferCreateInfo es, PokeChain es) => ToCStruct (BufferCreateInfo es) where
   withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_CREATE_INFO)
@@ -435,7 +436,7 @@ instance PokeChain es => ToCStruct (BufferCreateInfo es) where
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ f
 
-instance PeekChain es => FromCStruct (BufferCreateInfo es) where
+instance (Extendss BufferCreateInfo es, PeekChain es) => FromCStruct (BufferCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

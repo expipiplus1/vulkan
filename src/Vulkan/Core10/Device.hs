@@ -64,6 +64,7 @@ import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_global_priority (DeviceQueueGlobalPriorityCreateInfoEXT)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -253,7 +254,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DeviceCreateInfo',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-createDevice :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Device)
+createDevice :: forall a io . (Extendss DeviceCreateInfo a, PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Device)
 createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
   let cmds = instanceCmds (physicalDevice :: PhysicalDevice)
   let vkCreateDevicePtr = pVkCreateDevice cmds
@@ -279,7 +280,7 @@ createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDevice :: forall a io r . (PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> (io (Device) -> ((Device) -> io ()) -> r) -> r
+withDevice :: forall a io r . (Extendss DeviceCreateInfo a, PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> (io (Device) -> ((Device) -> io ()) -> r) -> r
 withDevice physicalDevice pCreateInfo pAllocator b =
   b (createDevice physicalDevice pCreateInfo pAllocator)
     (\(o0) -> destroyDevice o0 pAllocator)
@@ -442,7 +443,7 @@ instance Extensible DeviceQueueCreateInfo where
     | Just Refl <- eqT @e @DeviceQueueGlobalPriorityCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (DeviceQueueCreateInfo es) where
+instance (Extendss DeviceQueueCreateInfo es, PokeChain es) => ToCStruct (DeviceQueueCreateInfo es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceQueueCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO)
@@ -467,7 +468,7 @@ instance PokeChain es => ToCStruct (DeviceQueueCreateInfo es) where
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CFloat))) (pPQueuePriorities')
     lift $ f
 
-instance PeekChain es => FromCStruct (DeviceQueueCreateInfo es) where
+instance (Extendss DeviceQueueCreateInfo es, PeekChain es) => FromCStruct (DeviceQueueCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -784,7 +785,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (DeviceCreateInfo es) where
+instance (Extendss DeviceCreateInfo es, PokeChain es) => ToCStruct (DeviceCreateInfo es) where
   withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_CREATE_INFO)
@@ -833,7 +834,7 @@ instance PokeChain es => ToCStruct (DeviceCreateInfo es) where
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledExtensionNames')
     lift $ f
 
-instance PeekChain es => FromCStruct (DeviceCreateInfo es) where
+instance (Extendss DeviceCreateInfo es, PeekChain es) => FromCStruct (DeviceCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

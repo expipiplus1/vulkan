@@ -50,6 +50,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkQueueWaitIdle))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupSubmitInfo)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
@@ -377,7 +378,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Fence', 'Vulkan.Core10.Handles.Queue',
 -- 'SubmitInfo'
-queueSubmit :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> io ()
+queueSubmit :: forall a io . (Extendss SubmitInfo a, PokeChain a, MonadIO io) => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> io ()
 queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmitPtr = pVkQueueSubmit (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueSubmitPtr /= nullFunPtr) $
@@ -697,7 +698,7 @@ instance Extensible SubmitInfo where
     | Just Refl <- eqT @e @Win32KeyedMutexAcquireReleaseInfoNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (SubmitInfo es) where
+instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) where
   withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBMIT_INFO)
@@ -743,7 +744,7 @@ instance PokeChain es => ToCStruct (SubmitInfo es) where
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr Semaphore))) (pPSignalSemaphores')
     lift $ f
 
-instance PeekChain es => FromCStruct (SubmitInfo es) where
+instance (Extendss SubmitInfo es, PeekChain es) => FromCStruct (SubmitInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

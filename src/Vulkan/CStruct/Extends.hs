@@ -1024,14 +1024,14 @@ forgetExtensions = castPtr
 
 withSomeCStruct
   :: forall a b
-   . (forall es . PokeChain es => ToCStruct (a es))
+   . (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
   => SomeStruct a
   -> (forall es . (Extendss a es, PokeChain es) => Ptr (a es) -> IO b)
   -> IO b
 withSomeCStruct (SomeStruct s) f = withCStruct s f
 
 pokeSomeCStruct
-  :: (forall es . PokeChain es => ToCStruct (a es))
+  :: (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
   => Ptr (SomeStruct a)
   -> SomeStruct a
   -> IO b

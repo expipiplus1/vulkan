@@ -193,6 +193,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetAccelerationStructureMemoryRequirementsN
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
@@ -481,7 +482,7 @@ foreign import ccall
 -- 'AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
-getAccelerationStructureMemoryRequirementsNV :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> AccelerationStructureMemoryRequirementsInfoNV -> io (MemoryRequirements2KHR a)
+getAccelerationStructureMemoryRequirementsNV :: forall a io . (Extendss MemoryRequirements2KHR a, PokeChain a, PeekChain a, MonadIO io) => Device -> AccelerationStructureMemoryRequirementsInfoNV -> io (MemoryRequirements2KHR a)
 getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetAccelerationStructureMemoryRequirementsNVPtr = pVkGetAccelerationStructureMemoryRequirementsNV (deviceCmds (device :: Device))
   lift $ unless (vkGetAccelerationStructureMemoryRequirementsNVPtr /= nullFunPtr) $
@@ -1257,7 +1258,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Handles.PipelineCache', 'RayTracingPipelineCreateInfoNV'
-createRayTracingPipelinesNV :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoNV a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createRayTracingPipelinesNV :: forall a io . (Extendss RayTracingPipelineCreateInfoNV a, PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoNV a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device))
   lift $ unless (vkCreateRayTracingPipelinesNVPtr /= nullFunPtr) $
@@ -1766,7 +1767,7 @@ instance Extensible RayTracingPipelineCreateInfoNV where
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (RayTracingPipelineCreateInfoNV es) where
+instance (Extendss RayTracingPipelineCreateInfoNV es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoNV es) where
   withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingPipelineCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV)
@@ -1803,7 +1804,7 @@ instance PokeChain es => ToCStruct (RayTracingPipelineCreateInfoNV es) where
     lift $ poke ((p `plusPtr` 72 :: Ptr Int32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (RayTracingPipelineCreateInfoNV es) where
+instance (Extendss RayTracingPipelineCreateInfoNV es, PeekChain es) => FromCStruct (RayTracingPipelineCreateInfoNV es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

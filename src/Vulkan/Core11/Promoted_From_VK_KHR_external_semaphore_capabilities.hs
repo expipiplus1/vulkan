@@ -35,6 +35,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits (ExternalSemaphoreFeatureFlags)
 import Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits (ExternalSemaphoreHandleTypeFlagBits)
@@ -91,7 +92,7 @@ foreign import ccall
 --
 -- 'ExternalSemaphoreProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalSemaphoreInfo'
-getPhysicalDeviceExternalSemaphoreProperties :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceExternalSemaphoreInfo a -> io (ExternalSemaphoreProperties)
+getPhysicalDeviceExternalSemaphoreProperties :: forall a io . (Extendss PhysicalDeviceExternalSemaphoreInfo a, PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceExternalSemaphoreInfo a -> io (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceExternalSemaphorePropertiesPtr /= nullFunPtr) $
@@ -149,7 +150,7 @@ instance Extensible PhysicalDeviceExternalSemaphoreInfo where
     | Just Refl <- eqT @e @SemaphoreTypeCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
+instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PokeChain es) => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalSemaphoreInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO)
@@ -166,7 +167,7 @@ instance PokeChain es => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es) wher
     lift $ poke ((p `plusPtr` 16 :: Ptr ExternalSemaphoreHandleTypeFlagBits)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
+instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PeekChain es) => FromCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

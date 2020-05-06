@@ -5,6 +5,7 @@ module Vulkan.Core10.Memory  ( MappedMemoryRange
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -20,8 +21,8 @@ instance FromCStruct MappedMemoryRange
 type role MemoryAllocateInfo nominal
 data MemoryAllocateInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (MemoryAllocateInfo es)
+instance (Extendss MemoryAllocateInfo es, PokeChain es) => ToCStruct (MemoryAllocateInfo es)
 instance Show (Chain es) => Show (MemoryAllocateInfo es)
 
-instance PeekChain es => FromCStruct (MemoryAllocateInfo es)
+instance (Extendss MemoryAllocateInfo es, PeekChain es) => FromCStruct (MemoryAllocateInfo es)
 

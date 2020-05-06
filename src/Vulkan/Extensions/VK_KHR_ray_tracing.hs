@@ -229,6 +229,7 @@ import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.BaseType (Flags)
 import Vulkan.Core10.Enums.Format (Format)
@@ -390,7 +391,7 @@ foreign import ccall
 -- 'AccelerationStructureMemoryRequirementsInfoKHR',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
-getAccelerationStructureMemoryRequirementsKHR :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> AccelerationStructureMemoryRequirementsInfoKHR -> io (MemoryRequirements2 a)
+getAccelerationStructureMemoryRequirementsKHR :: forall a io . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io) => Device -> AccelerationStructureMemoryRequirementsInfoKHR -> io (MemoryRequirements2 a)
 getAccelerationStructureMemoryRequirementsKHR device info = liftIO . evalContT $ do
   let vkGetAccelerationStructureMemoryRequirementsKHRPtr = pVkGetAccelerationStructureMemoryRequirementsKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetAccelerationStructureMemoryRequirementsKHRPtr /= nullFunPtr) $
@@ -514,7 +515,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyAccelerationStructureInfoKHR'
-cmdCopyAccelerationStructureKHR :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> CopyAccelerationStructureInfoKHR a -> io ()
+cmdCopyAccelerationStructureKHR :: forall a io . (Extendss CopyAccelerationStructureInfoKHR a, PokeChain a, MonadIO io) => CommandBuffer -> CopyAccelerationStructureInfoKHR a -> io ()
 cmdCopyAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
   let vkCmdCopyAccelerationStructureKHRPtr = pVkCmdCopyAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdCopyAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -590,7 +591,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'CopyAccelerationStructureInfoKHR', 'Vulkan.Core10.Handles.Device'
-copyAccelerationStructureKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> CopyAccelerationStructureInfoKHR a -> io (Result)
+copyAccelerationStructureKHR :: forall a io . (Extendss CopyAccelerationStructureInfoKHR a, PokeChain a, MonadIO io) => Device -> CopyAccelerationStructureInfoKHR a -> io (Result)
 copyAccelerationStructureKHR device info = liftIO . evalContT $ do
   let vkCopyAccelerationStructureKHRPtr = pVkCopyAccelerationStructureKHR (deviceCmds (device :: Device))
   lift $ unless (vkCopyAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -710,7 +711,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyAccelerationStructureToMemoryInfoKHR'
-cmdCopyAccelerationStructureToMemoryKHR :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> CopyAccelerationStructureToMemoryInfoKHR a -> io ()
+cmdCopyAccelerationStructureToMemoryKHR :: forall a io . (Extendss CopyAccelerationStructureToMemoryInfoKHR a, PokeChain a, MonadIO io) => CommandBuffer -> CopyAccelerationStructureToMemoryInfoKHR a -> io ()
 cmdCopyAccelerationStructureToMemoryKHR commandBuffer info = liftIO . evalContT $ do
   let vkCmdCopyAccelerationStructureToMemoryKHRPtr = pVkCmdCopyAccelerationStructureToMemoryKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
@@ -798,7 +799,7 @@ foreign import ccall
 --
 -- 'CopyAccelerationStructureToMemoryInfoKHR',
 -- 'Vulkan.Core10.Handles.Device'
-copyAccelerationStructureToMemoryKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> CopyAccelerationStructureToMemoryInfoKHR a -> io (Result)
+copyAccelerationStructureToMemoryKHR :: forall a io . (Extendss CopyAccelerationStructureToMemoryInfoKHR a, PokeChain a, MonadIO io) => Device -> CopyAccelerationStructureToMemoryInfoKHR a -> io (Result)
 copyAccelerationStructureToMemoryKHR device info = liftIO . evalContT $ do
   let vkCopyAccelerationStructureToMemoryKHRPtr = pVkCopyAccelerationStructureToMemoryKHR (deviceCmds (device :: Device))
   lift $ unless (vkCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
@@ -897,7 +898,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyMemoryToAccelerationStructureInfoKHR'
-cmdCopyMemoryToAccelerationStructureKHR :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> CopyMemoryToAccelerationStructureInfoKHR a -> io ()
+cmdCopyMemoryToAccelerationStructureKHR :: forall a io . (Extendss CopyMemoryToAccelerationStructureInfoKHR a, PokeChain a, MonadIO io) => CommandBuffer -> CopyMemoryToAccelerationStructureInfoKHR a -> io ()
 cmdCopyMemoryToAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
   let vkCmdCopyMemoryToAccelerationStructureKHRPtr = pVkCmdCopyMemoryToAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -981,7 +982,7 @@ foreign import ccall
 --
 -- 'CopyMemoryToAccelerationStructureInfoKHR',
 -- 'Vulkan.Core10.Handles.Device'
-copyMemoryToAccelerationStructureKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> CopyMemoryToAccelerationStructureInfoKHR a -> io (Result)
+copyMemoryToAccelerationStructureKHR :: forall a io . (Extendss CopyMemoryToAccelerationStructureInfoKHR a, PokeChain a, MonadIO io) => Device -> CopyMemoryToAccelerationStructureInfoKHR a -> io (Result)
 copyMemoryToAccelerationStructureKHR device info = liftIO . evalContT $ do
   let vkCopyMemoryToAccelerationStructureKHRPtr = pVkCopyMemoryToAccelerationStructureKHR (deviceCmds (device :: Device))
   lift $ unless (vkCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -1895,7 +1896,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Handles.PipelineCache', 'RayTracingPipelineCreateInfoKHR'
-createRayTracingPipelinesKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createRayTracingPipelinesKHR :: forall a io . (Extendss RayTracingPipelineCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesKHR device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (deviceCmds (device :: Device))
   lift $ unless (vkCreateRayTracingPipelinesKHRPtr /= nullFunPtr) $
@@ -2686,7 +2687,7 @@ foreign import ccall
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildOffsetInfoKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdBuildAccelerationStructureKHR :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> ("infos" ::: Vector (AccelerationStructureBuildGeometryInfoKHR a)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io ()
+cmdBuildAccelerationStructureKHR :: forall a io . (Extendss AccelerationStructureBuildGeometryInfoKHR a, PokeChain a, MonadIO io) => CommandBuffer -> ("infos" ::: Vector (AccelerationStructureBuildGeometryInfoKHR a)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io ()
 cmdBuildAccelerationStructureKHR commandBuffer infos offsetInfos = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureKHRPtr = pVkCmdBuildAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBuildAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -2800,7 +2801,7 @@ foreign import ccall
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdBuildAccelerationStructureIndirectKHR :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> AccelerationStructureBuildGeometryInfoKHR a -> ("indirectBuffer" ::: Buffer) -> ("indirectOffset" ::: DeviceSize) -> ("indirectStride" ::: Word32) -> io ()
+cmdBuildAccelerationStructureIndirectKHR :: forall a io . (Extendss AccelerationStructureBuildGeometryInfoKHR a, PokeChain a, MonadIO io) => CommandBuffer -> AccelerationStructureBuildGeometryInfoKHR a -> ("indirectBuffer" ::: Buffer) -> ("indirectOffset" ::: DeviceSize) -> ("indirectStride" ::: Word32) -> io ()
 cmdBuildAccelerationStructureIndirectKHR commandBuffer info indirectBuffer indirectOffset indirectStride = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureIndirectKHRPtr = pVkCmdBuildAccelerationStructureIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBuildAccelerationStructureIndirectKHRPtr /= nullFunPtr) $
@@ -2962,7 +2963,7 @@ foreign import ccall
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildOffsetInfoKHR',
 -- 'Vulkan.Core10.Handles.Device'
-buildAccelerationStructureKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> ("infos" ::: Vector (AccelerationStructureBuildGeometryInfoKHR a)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io (Result)
+buildAccelerationStructureKHR :: forall a io . (Extendss AccelerationStructureBuildGeometryInfoKHR a, PokeChain a, MonadIO io) => Device -> ("infos" ::: Vector (AccelerationStructureBuildGeometryInfoKHR a)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io (Result)
 buildAccelerationStructureKHR device infos offsetInfos = liftIO . evalContT $ do
   let vkBuildAccelerationStructureKHRPtr = pVkBuildAccelerationStructureKHR (deviceCmds (device :: Device))
   lift $ unless (vkBuildAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -3447,7 +3448,7 @@ instance Extensible RayTracingPipelineCreateInfoKHR where
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (RayTracingPipelineCreateInfoKHR es) where
+instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoKHR es) where
   withCStruct x f = allocaBytesAligned 120 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingPipelineCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR)
@@ -3490,7 +3491,7 @@ instance PokeChain es => ToCStruct (RayTracingPipelineCreateInfoKHR es) where
     lift $ poke ((p `plusPtr` 112 :: Ptr Int32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (RayTracingPipelineCreateInfoKHR es) where
+instance (Extendss RayTracingPipelineCreateInfoKHR es, PeekChain es) => FromCStruct (RayTracingPipelineCreateInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -4577,7 +4578,7 @@ instance Extensible AccelerationStructureBuildGeometryInfoKHR where
     | Just Refl <- eqT @e @DeferredOperationInfoKHR = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (AccelerationStructureBuildGeometryInfoKHR es) where
+instance (Extendss AccelerationStructureBuildGeometryInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureBuildGeometryInfoKHR es) where
   withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureBuildGeometryInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR)
@@ -5473,7 +5474,7 @@ instance Extensible CopyAccelerationStructureInfoKHR where
     | Just Refl <- eqT @e @DeferredOperationInfoKHR = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (CopyAccelerationStructureInfoKHR es) where
+instance (Extendss CopyAccelerationStructureInfoKHR es, PokeChain es) => ToCStruct (CopyAccelerationStructureInfoKHR es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyAccelerationStructureInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR)
@@ -5494,7 +5495,7 @@ instance PokeChain es => ToCStruct (CopyAccelerationStructureInfoKHR es) where
     lift $ poke ((p `plusPtr` 32 :: Ptr CopyAccelerationStructureModeKHR)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (CopyAccelerationStructureInfoKHR es) where
+instance (Extendss CopyAccelerationStructureInfoKHR es, PeekChain es) => FromCStruct (CopyAccelerationStructureInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -5572,7 +5573,7 @@ instance Extensible CopyAccelerationStructureToMemoryInfoKHR where
     | Just Refl <- eqT @e @DeferredOperationInfoKHR = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (CopyAccelerationStructureToMemoryInfoKHR es) where
+instance (Extendss CopyAccelerationStructureToMemoryInfoKHR es, PokeChain es) => ToCStruct (CopyAccelerationStructureToMemoryInfoKHR es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyAccelerationStructureToMemoryInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR)
@@ -5661,7 +5662,7 @@ instance Extensible CopyMemoryToAccelerationStructureInfoKHR where
     | Just Refl <- eqT @e @DeferredOperationInfoKHR = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (CopyMemoryToAccelerationStructureInfoKHR es) where
+instance (Extendss CopyMemoryToAccelerationStructureInfoKHR es, PokeChain es) => ToCStruct (CopyMemoryToAccelerationStructureInfoKHR es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyMemoryToAccelerationStructureInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR)

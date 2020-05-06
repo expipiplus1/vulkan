@@ -155,6 +155,7 @@ import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Event)
 import Vulkan.Core10.Handles (Event(..))
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.SharedTypes (Extent2D)
 import Vulkan.Core10.SharedTypes (Extent3D)
@@ -5984,7 +5985,7 @@ foreign import ccall
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdWaitEvents :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> ("events" ::: Vector Event) -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
+cmdWaitEvents :: forall a io . (Extendss ImageMemoryBarrier a, PokeChain a, MonadIO io) => CommandBuffer -> ("events" ::: Vector Event) -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
 cmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
@@ -6334,7 +6335,7 @@ foreign import ccall
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdPipelineBarrier :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> DependencyFlags -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
+cmdPipelineBarrier :: forall a io . (Extendss ImageMemoryBarrier a, PokeChain a, MonadIO io) => CommandBuffer -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> DependencyFlags -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (ImageMemoryBarrier a)) -> io ()
 cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdPipelineBarrierPtr /= nullFunPtr) $
@@ -7452,7 +7453,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'RenderPassBeginInfo',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
-cmdBeginRenderPass :: forall a io . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io ()
+cmdBeginRenderPass :: forall a io . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io ()
 cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $ do
   let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBeginRenderPassPtr /= nullFunPtr) $
@@ -7467,7 +7468,7 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $
 --
 -- Note that 'cmdEndRenderPass' is *not* called if an exception is thrown
 -- by the inner action.
-cmdUseRenderPass :: forall a io r . (PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io r -> io r
+cmdUseRenderPass :: forall a io r . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io r -> io r
 cmdUseRenderPass commandBuffer pRenderPassBegin contents a =
   (cmdBeginRenderPass commandBuffer pRenderPassBegin contents) *> a <* (cmdEndRenderPass commandBuffer)
 
@@ -9310,7 +9311,7 @@ instance Extensible RenderPassBeginInfo where
     | Just Refl <- eqT @e @DeviceGroupRenderPassBeginInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (RenderPassBeginInfo es) where
+instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPassBeginInfo es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)

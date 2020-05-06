@@ -13,6 +13,7 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( AcquireNextImageInfoKHR
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -68,19 +69,19 @@ instance FromCStruct ImageSwapchainCreateInfoKHR
 type role PresentInfoKHR nominal
 data PresentInfoKHR (es :: [Type])
 
-instance PokeChain es => ToCStruct (PresentInfoKHR es)
+instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR es)
 instance Show (Chain es) => Show (PresentInfoKHR es)
 
-instance PeekChain es => FromCStruct (PresentInfoKHR es)
+instance (Extendss PresentInfoKHR es, PeekChain es) => FromCStruct (PresentInfoKHR es)
 
 
 type role SwapchainCreateInfoKHR nominal
 data SwapchainCreateInfoKHR (es :: [Type])
 
-instance PokeChain es => ToCStruct (SwapchainCreateInfoKHR es)
+instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (SwapchainCreateInfoKHR es)
 instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 
-instance PeekChain es => FromCStruct (SwapchainCreateInfoKHR es)
+instance (Extendss SwapchainCreateInfoKHR es, PeekChain es) => FromCStruct (SwapchainCreateInfoKHR es)
 
 
 data DeviceGroupPresentModeFlagBitsKHR

@@ -97,6 +97,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipeline))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.DynamicState (DynamicState)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
@@ -292,7 +293,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
-createGraphicsPipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createGraphicsPipelines :: forall a io . (Extendss GraphicsPipelineCreateInfo a, PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (GraphicsPipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateGraphicsPipelinesPtr = pVkCreateGraphicsPipelines (deviceCmds (device :: Device))
   lift $ unless (vkCreateGraphicsPipelinesPtr /= nullFunPtr) $
@@ -317,7 +318,7 @@ createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . ev
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withGraphicsPipelines :: forall a io r . (PokeChain a, MonadIO io) => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
+withGraphicsPipelines :: forall a io r . (Extendss GraphicsPipelineCreateInfo a, PokeChain a, MonadIO io) => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
 withGraphicsPipelines device pipelineCache pCreateInfos pAllocator b =
   b (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
     (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
@@ -420,7 +421,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'ComputePipelineCreateInfo', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
-createComputePipelines :: forall a io . (PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createComputePipelines :: forall a io . (Extendss ComputePipelineCreateInfo a, PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (ComputePipelineCreateInfo a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateComputePipelinesPtr = pVkCreateComputePipelines (deviceCmds (device :: Device))
   lift $ unless (vkCreateComputePipelinesPtr /= nullFunPtr) $
@@ -445,7 +446,7 @@ createComputePipelines device pipelineCache createInfos allocator = liftIO . eva
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withComputePipelines :: forall a io r . (PokeChain a, MonadIO io) => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
+withComputePipelines :: forall a io r . (Extendss ComputePipelineCreateInfo a, PokeChain a, MonadIO io) => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
 withComputePipelines device pipelineCache pCreateInfos pAllocator b =
   b (createComputePipelines device pipelineCache pCreateInfos pAllocator)
     (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
@@ -917,7 +918,7 @@ instance Extensible PipelineShaderStageCreateInfo where
     | Just Refl <- eqT @e @PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PipelineShaderStageCreateInfo es) where
+instance (Extendss PipelineShaderStageCreateInfo es, PokeChain es) => ToCStruct (PipelineShaderStageCreateInfo es) where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineShaderStageCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO)
@@ -945,7 +946,7 @@ instance PokeChain es => ToCStruct (PipelineShaderStageCreateInfo es) where
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CChar))) pName''
     lift $ f
 
-instance PeekChain es => FromCStruct (PipelineShaderStageCreateInfo es) where
+instance (Extendss PipelineShaderStageCreateInfo es, PeekChain es) => FromCStruct (PipelineShaderStageCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1116,7 +1117,7 @@ instance Extensible ComputePipelineCreateInfo where
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (ComputePipelineCreateInfo es) where
+instance (Extendss ComputePipelineCreateInfo es, PokeChain es) => ToCStruct (ComputePipelineCreateInfo es) where
   withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ComputePipelineCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO)
@@ -1139,7 +1140,7 @@ instance PokeChain es => ToCStruct (ComputePipelineCreateInfo es) where
     lift $ poke ((p `plusPtr` 88 :: Ptr Int32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (ComputePipelineCreateInfo es) where
+instance (Extendss ComputePipelineCreateInfo es, PeekChain es) => FromCStruct (ComputePipelineCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1361,7 +1362,7 @@ instance Extensible PipelineVertexInputStateCreateInfo where
     | Just Refl <- eqT @e @PipelineVertexInputDivisorStateCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PipelineVertexInputStateCreateInfo es) where
+instance (Extendss PipelineVertexInputStateCreateInfo es, PokeChain es) => ToCStruct (PipelineVertexInputStateCreateInfo es) where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineVertexInputStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO)
@@ -1391,7 +1392,7 @@ instance PokeChain es => ToCStruct (PipelineVertexInputStateCreateInfo es) where
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr VertexInputAttributeDescription))) (pPVertexAttributeDescriptions')
     lift $ f
 
-instance PeekChain es => FromCStruct (PipelineVertexInputStateCreateInfo es) where
+instance (Extendss PipelineVertexInputStateCreateInfo es, PeekChain es) => FromCStruct (PipelineVertexInputStateCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1580,7 +1581,7 @@ instance Extensible PipelineTessellationStateCreateInfo where
     | Just Refl <- eqT @e @PipelineTessellationDomainOriginStateCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PipelineTessellationStateCreateInfo es) where
+instance (Extendss PipelineTessellationStateCreateInfo es, PokeChain es) => ToCStruct (PipelineTessellationStateCreateInfo es) where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineTessellationStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO)
@@ -1598,7 +1599,7 @@ instance PokeChain es => ToCStruct (PipelineTessellationStateCreateInfo es) wher
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (PipelineTessellationStateCreateInfo es) where
+instance (Extendss PipelineTessellationStateCreateInfo es, PeekChain es) => FromCStruct (PipelineTessellationStateCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1722,7 +1723,7 @@ instance Extensible PipelineViewportStateCreateInfo where
     | Just Refl <- eqT @e @PipelineViewportWScalingStateCreateInfoNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es) where
+instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruct (PipelineViewportStateCreateInfo es) where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO)
@@ -1766,7 +1767,7 @@ instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es) where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance PeekChain es => FromCStruct (PipelineViewportStateCreateInfo es) where
+instance (Extendss PipelineViewportStateCreateInfo es, PeekChain es) => FromCStruct (PipelineViewportStateCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1916,7 +1917,7 @@ instance Extensible PipelineRasterizationStateCreateInfo where
     | Just Refl <- eqT @e @PipelineRasterizationStateRasterizationOrderAMD = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PipelineRasterizationStateCreateInfo es) where
+instance (Extendss PipelineRasterizationStateCreateInfo es, PokeChain es) => ToCStruct (PipelineRasterizationStateCreateInfo es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO)
@@ -1951,7 +1952,7 @@ instance PokeChain es => ToCStruct (PipelineRasterizationStateCreateInfo es) whe
     lift $ poke ((p `plusPtr` 56 :: Ptr CFloat)) (CFloat (zero))
     lift $ f
 
-instance PeekChain es => FromCStruct (PipelineRasterizationStateCreateInfo es) where
+instance (Extendss PipelineRasterizationStateCreateInfo es, PeekChain es) => FromCStruct (PipelineRasterizationStateCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -2099,7 +2100,7 @@ instance Extensible PipelineMultisampleStateCreateInfo where
     | Just Refl <- eqT @e @PipelineCoverageToColorStateCreateInfoNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PipelineMultisampleStateCreateInfo es) where
+instance (Extendss PipelineMultisampleStateCreateInfo es, PokeChain es) => ToCStruct (PipelineMultisampleStateCreateInfo es) where
   withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineMultisampleStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO)
@@ -2137,7 +2138,7 @@ instance PokeChain es => ToCStruct (PipelineMultisampleStateCreateInfo es) where
     lift $ poke ((p `plusPtr` 44 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance PeekChain es => FromCStruct (PipelineMultisampleStateCreateInfo es) where
+instance (Extendss PipelineMultisampleStateCreateInfo es, PeekChain es) => FromCStruct (PipelineMultisampleStateCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -2463,7 +2464,7 @@ instance Extensible PipelineColorBlendStateCreateInfo where
     | Just Refl <- eqT @e @PipelineColorBlendAdvancedStateCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (PipelineColorBlendStateCreateInfo es) where
+instance (Extendss PipelineColorBlendStateCreateInfo es, PokeChain es) => ToCStruct (PipelineColorBlendStateCreateInfo es) where
   withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineColorBlendStateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO)
@@ -2504,7 +2505,7 @@ instance PokeChain es => ToCStruct (PipelineColorBlendStateCreateInfo es) where
         poke (pBlendConstants' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
     lift $ f
 
-instance PeekChain es => FromCStruct (PipelineColorBlendStateCreateInfo es) where
+instance (Extendss PipelineColorBlendStateCreateInfo es, PeekChain es) => FromCStruct (PipelineColorBlendStateCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -3402,7 +3403,7 @@ instance Extensible GraphicsPipelineCreateInfo where
     | Just Refl <- eqT @e @GraphicsPipelineShaderGroupsCreateInfoNV = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (GraphicsPipelineCreateInfo es) where
+instance (Extendss GraphicsPipelineCreateInfo es, PokeChain es) => ToCStruct (GraphicsPipelineCreateInfo es) where
   withCStruct x f = allocaBytesAligned 144 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsPipelineCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO)
@@ -3470,7 +3471,7 @@ instance PokeChain es => ToCStruct (GraphicsPipelineCreateInfo es) where
     lift $ poke ((p `plusPtr` 136 :: Ptr Int32)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (GraphicsPipelineCreateInfo es) where
+instance (Extendss GraphicsPipelineCreateInfo es, PeekChain es) => FromCStruct (GraphicsPipelineCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

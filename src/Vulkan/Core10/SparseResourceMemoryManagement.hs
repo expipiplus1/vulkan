@@ -58,6 +58,7 @@ import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.SharedTypes (Extent3D)
 import Vulkan.Core10.Handles (Fence)
@@ -456,7 +457,7 @@ foreign import ccall
 --
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Handles.Queue'
-queueBindSparse :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> io ()
+queueBindSparse :: forall a io . (Extendss BindSparseInfo a, PokeChain a, MonadIO io) => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> io ()
 queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
   let vkQueueBindSparsePtr = pVkQueueBindSparse (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueBindSparsePtr /= nullFunPtr) $
@@ -1210,7 +1211,7 @@ instance Extensible BindSparseInfo where
     | Just Refl <- eqT @e @DeviceGroupBindSparseInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (BindSparseInfo es) where
+instance (Extendss BindSparseInfo es, PokeChain es) => ToCStruct (BindSparseInfo es) where
   withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindSparseInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_SPARSE_INFO)
@@ -1260,7 +1261,7 @@ instance PokeChain es => ToCStruct (BindSparseInfo es) where
     lift $ poke ((p `plusPtr` 88 :: Ptr (Ptr Semaphore))) (pPSignalSemaphores')
     lift $ f
 
-instance PeekChain es => FromCStruct (BindSparseInfo es) where
+instance (Extendss BindSparseInfo es, PeekChain es) => FromCStruct (BindSparseInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

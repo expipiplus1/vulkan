@@ -88,6 +88,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkUpdateDescriptorSets))
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -170,7 +171,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'DescriptorSetLayoutCreateInfo', 'Vulkan.Core10.Handles.Device'
-createDescriptorSetLayout :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorSetLayout)
+createDescriptorSetLayout :: forall a io . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorSetLayout)
 createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (deviceCmds (device :: Device))
   lift $ unless (vkCreateDescriptorSetLayoutPtr /= nullFunPtr) $
@@ -194,7 +195,7 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorSetLayout :: forall a io r . (PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorSetLayout) -> ((DescriptorSetLayout) -> io ()) -> r) -> r
+withDescriptorSetLayout :: forall a io r . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorSetLayout) -> ((DescriptorSetLayout) -> io ()) -> r) -> r
 withDescriptorSetLayout device pCreateInfo pAllocator b =
   b (createDescriptorSetLayout device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorSetLayout device o0 pAllocator)
@@ -333,7 +334,7 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'DescriptorPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createDescriptorPool :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorPool)
+createDescriptorPool :: forall a io . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorPool)
 createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (deviceCmds (device :: Device))
   lift $ unless (vkCreateDescriptorPoolPtr /= nullFunPtr) $
@@ -357,7 +358,7 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorPool :: forall a io r . (PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorPool) -> ((DescriptorPool) -> io ()) -> r) -> r
+withDescriptorPool :: forall a io r . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (io (DescriptorPool) -> ((DescriptorPool) -> io ()) -> r) -> r
 withDescriptorPool device pCreateInfo pAllocator b =
   b (createDescriptorPool device pCreateInfo pAllocator)
     (\(o0) -> destroyDescriptorPool device o0 pAllocator)
@@ -624,7 +625,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'DescriptorSetAllocateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-allocateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> io (("descriptorSets" ::: Vector DescriptorSet))
+allocateDescriptorSets :: forall a io . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> io (("descriptorSets" ::: Vector DescriptorSet))
 allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (deviceCmds (device :: Device))
   lift $ unless (vkAllocateDescriptorSetsPtr /= nullFunPtr) $
@@ -645,7 +646,7 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorSets :: forall a io r . (PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> r
+withDescriptorSets :: forall a io r . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> r
 withDescriptorSets device pAllocateInfo descriptorPool b =
   b (allocateDescriptorSets device pAllocateInfo)
     (\(o0) -> freeDescriptorSets device descriptorPool o0)
@@ -825,7 +826,7 @@ foreign import ccall
 --
 -- 'CopyDescriptorSet', 'Vulkan.Core10.Handles.Device',
 -- 'WriteDescriptorSet'
-updateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
+updateDescriptorSets :: forall a io . (Extendss WriteDescriptorSet a, PokeChain a, MonadIO io) => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
   let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (deviceCmds (device :: Device))
   lift $ unless (vkUpdateDescriptorSetsPtr /= nullFunPtr) $
@@ -1462,7 +1463,7 @@ instance Extensible WriteDescriptorSet where
     | Just Refl <- eqT @e @WriteDescriptorSetInlineUniformBlockEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (WriteDescriptorSet es) where
+instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescriptorSet es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSet{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
@@ -1511,7 +1512,7 @@ instance PokeChain es => ToCStruct (WriteDescriptorSet es) where
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr BufferView))) (pPTexelBufferView')
     lift $ f
 
-instance PeekChain es => FromCStruct (WriteDescriptorSet es) where
+instance (Extendss WriteDescriptorSet es, PeekChain es) => FromCStruct (WriteDescriptorSet es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1999,7 +2000,7 @@ instance Extensible DescriptorSetLayoutCreateInfo where
     | Just Refl <- eqT @e @DescriptorSetLayoutBindingFlagsCreateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (DescriptorSetLayoutCreateInfo es) where
+instance (Extendss DescriptorSetLayoutCreateInfo es, PokeChain es) => ToCStruct (DescriptorSetLayoutCreateInfo es) where
   withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO)
@@ -2022,7 +2023,7 @@ instance PokeChain es => ToCStruct (DescriptorSetLayoutCreateInfo es) where
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayoutBinding))) (pPBindings')
     lift $ f
 
-instance PeekChain es => FromCStruct (DescriptorSetLayoutCreateInfo es) where
+instance (Extendss DescriptorSetLayoutCreateInfo es, PeekChain es) => FromCStruct (DescriptorSetLayoutCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -2211,7 +2212,7 @@ instance Extensible DescriptorPoolCreateInfo where
     | Just Refl <- eqT @e @DescriptorPoolInlineUniformBlockCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (DescriptorPoolCreateInfo es) where
+instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (DescriptorPoolCreateInfo es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorPoolCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO)
@@ -2236,7 +2237,7 @@ instance PokeChain es => ToCStruct (DescriptorPoolCreateInfo es) where
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
 
-instance PeekChain es => FromCStruct (DescriptorPoolCreateInfo es) where
+instance (Extendss DescriptorPoolCreateInfo es, PeekChain es) => FromCStruct (DescriptorPoolCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -2323,7 +2324,7 @@ instance Extensible DescriptorSetAllocateInfo where
     | Just Refl <- eqT @e @DescriptorSetVariableDescriptorCountAllocateInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (DescriptorSetAllocateInfo es) where
+instance (Extendss DescriptorSetAllocateInfo es, PokeChain es) => ToCStruct (DescriptorSetAllocateInfo es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO)
@@ -2347,7 +2348,7 @@ instance PokeChain es => ToCStruct (DescriptorSetAllocateInfo es) where
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ f
 
-instance PeekChain es => FromCStruct (DescriptorSetAllocateInfo es) where
+instance (Extendss DescriptorSetAllocateInfo es, PeekChain es) => FromCStruct (DescriptorSetAllocateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

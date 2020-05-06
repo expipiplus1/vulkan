@@ -5,6 +5,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance3  ( DescriptorSetLayoutSup
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
@@ -12,10 +13,10 @@ import Vulkan.CStruct (ToCStruct)
 type role DescriptorSetLayoutSupport nominal
 data DescriptorSetLayoutSupport (es :: [Type])
 
-instance PokeChain es => ToCStruct (DescriptorSetLayoutSupport es)
+instance (Extendss DescriptorSetLayoutSupport es, PokeChain es) => ToCStruct (DescriptorSetLayoutSupport es)
 instance Show (Chain es) => Show (DescriptorSetLayoutSupport es)
 
-instance PeekChain es => FromCStruct (DescriptorSetLayoutSupport es)
+instance (Extendss DescriptorSetLayoutSupport es, PeekChain es) => FromCStruct (DescriptorSetLayoutSupport es)
 
 
 data PhysicalDeviceMaintenance3Properties

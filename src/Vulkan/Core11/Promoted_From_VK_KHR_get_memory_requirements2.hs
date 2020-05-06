@@ -52,6 +52,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetImageMemoryRequirements2))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSparseMemoryRequirements2))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -101,7 +102,7 @@ foreign import ccall
 --
 -- 'BufferMemoryRequirementsInfo2', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements2'
-getBufferMemoryRequirements2 :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> BufferMemoryRequirementsInfo2 -> io (MemoryRequirements2 a)
+getBufferMemoryRequirements2 :: forall a io . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io) => Device -> BufferMemoryRequirementsInfo2 -> io (MemoryRequirements2 a)
 getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirements2Ptr = pVkGetBufferMemoryRequirements2 (deviceCmds (device :: Device))
   lift $ unless (vkGetBufferMemoryRequirements2Ptr /= nullFunPtr) $
@@ -141,7 +142,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
-getImageMemoryRequirements2 :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> ImageMemoryRequirementsInfo2 a -> io (MemoryRequirements2 b)
+getImageMemoryRequirements2 :: forall a b io . (Extendss ImageMemoryRequirementsInfo2 a, Extendss MemoryRequirements2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> ImageMemoryRequirementsInfo2 a -> io (MemoryRequirements2 b)
 getImageMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device))
   lift $ unless (vkGetImageMemoryRequirements2Ptr /= nullFunPtr) $
@@ -355,7 +356,7 @@ instance Extensible ImageMemoryRequirementsInfo2 where
     | Just Refl <- eqT @e @ImagePlaneMemoryRequirementsInfo = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (ImageMemoryRequirementsInfo2 es) where
+instance (Extendss ImageMemoryRequirementsInfo2 es, PokeChain es) => ToCStruct (ImageMemoryRequirementsInfo2 es) where
   withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryRequirementsInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2)
@@ -372,7 +373,7 @@ instance PokeChain es => ToCStruct (ImageMemoryRequirementsInfo2 es) where
     lift $ poke ((p `plusPtr` 16 :: Ptr Image)) (zero)
     lift $ f
 
-instance PeekChain es => FromCStruct (ImageMemoryRequirementsInfo2 es) where
+instance (Extendss ImageMemoryRequirementsInfo2 es, PeekChain es) => FromCStruct (ImageMemoryRequirementsInfo2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -477,7 +478,7 @@ instance Extensible MemoryRequirements2 where
     | Just Refl <- eqT @e @MemoryDedicatedRequirements = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (MemoryRequirements2 es) where
+instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryRequirements2 es) where
   withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryRequirements2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2)
@@ -494,7 +495,7 @@ instance PokeChain es => ToCStruct (MemoryRequirements2 es) where
     ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr MemoryRequirements)) (zero) . ($ ())
     lift $ f
 
-instance PeekChain es => FromCStruct (MemoryRequirements2 es) where
+instance (Extendss MemoryRequirements2 es, PeekChain es) => FromCStruct (MemoryRequirements2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

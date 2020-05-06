@@ -95,6 +95,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceProcAddr))
 import Vulkan.Core10.BaseType (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.SharedTypes (Extent3D)
 import Vulkan.Core10.Enums.Format (Format)
@@ -236,7 +237,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'InstanceCreateInfo'
-createInstance :: forall a io . (PokeChain a, MonadIO io) => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Instance)
+createInstance :: forall a io . (Extendss InstanceCreateInfo a, PokeChain a, MonadIO io) => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Instance)
 createInstance createInfo allocator = liftIO . evalContT $ do
   vkCreateInstancePtr <- lift $ castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
   lift $ unless (vkCreateInstancePtr /= nullFunPtr) $
@@ -261,7 +262,7 @@ createInstance createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withInstance :: forall a io r . (PokeChain a, MonadIO io) => InstanceCreateInfo a -> Maybe AllocationCallbacks -> (io (Instance) -> ((Instance) -> io ()) -> r) -> r
+withInstance :: forall a io r . (Extendss InstanceCreateInfo a, PokeChain a, MonadIO io) => InstanceCreateInfo a -> Maybe AllocationCallbacks -> (io (Instance) -> ((Instance) -> io ()) -> r) -> r
 withInstance pCreateInfo pAllocator b =
   b (createInstance pCreateInfo pAllocator)
     (\(o0) -> destroyInstance o0 pAllocator)
@@ -1302,7 +1303,7 @@ instance Extensible InstanceCreateInfo where
     | Just Refl <- eqT @e @DebugReportCallbackCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance PokeChain es => ToCStruct (InstanceCreateInfo es) where
+instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es) where
   withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
@@ -1344,7 +1345,7 @@ instance PokeChain es => ToCStruct (InstanceCreateInfo es) where
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledExtensionNames')
     lift $ f
 
-instance PeekChain es => FromCStruct (InstanceCreateInfo es) where
+instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (InstanceCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

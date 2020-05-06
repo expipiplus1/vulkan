@@ -218,6 +218,7 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.APIConstants (IsHandle)
@@ -545,7 +546,7 @@ foreign import ccall
 -- -   'findMemoryTypeIndex'
 --
 -- -   @vkDestroyBuffer@
-findMemoryTypeIndexForBufferInfo :: forall a io . (PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndexForBufferInfo :: forall a io . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -578,7 +579,7 @@ foreign import ccall
 -- -   'findMemoryTypeIndex'
 --
 -- -   @vkDestroyImage@
-findMemoryTypeIndexForImageInfo :: forall a io . (PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndexForImageInfo :: forall a io . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -1914,7 +1915,7 @@ foreign import ccall
 -- VMA_ALLOCATION_CREATE_NEVER_ALLOCATE_BIT is not used), it creates
 -- dedicated allocation for this buffer, just like when using
 -- VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT.
-createBuffer :: forall a io . (PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (Buffer, Allocation, AllocationInfo)
+createBuffer :: forall a io . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (Buffer, Allocation, AllocationInfo)
 createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -1936,7 +1937,7 @@ createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalCont
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withBuffer :: forall a io r . (PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> (io (Buffer, Allocation, AllocationInfo) -> ((Buffer, Allocation, AllocationInfo) -> io ()) -> r) -> r
+withBuffer :: forall a io r . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> (io (Buffer, Allocation, AllocationInfo) -> ((Buffer, Allocation, AllocationInfo) -> io ()) -> r) -> r
 withBuffer allocator pBufferCreateInfo pAllocationCreateInfo b =
   b (createBuffer allocator pBufferCreateInfo pAllocationCreateInfo)
     (\(o0, o1, _) -> destroyBuffer allocator o0 o1)
@@ -1972,7 +1973,7 @@ foreign import ccall
   :: Allocator -> Ptr (ImageCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Image -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
 -- | Function similar to 'createBuffer'.
-createImage :: forall a io . (PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (Image, Allocation, AllocationInfo)
+createImage :: forall a io . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (Image, Allocation, AllocationInfo)
 createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -1994,7 +1995,7 @@ createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT 
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withImage :: forall a io r . (PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> (io (Image, Allocation, AllocationInfo) -> ((Image, Allocation, AllocationInfo) -> io ()) -> r) -> r
+withImage :: forall a io r . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> (io (Image, Allocation, AllocationInfo) -> ((Image, Allocation, AllocationInfo) -> io ()) -> r) -> r
 withImage allocator pImageCreateInfo pAllocationCreateInfo b =
   b (createImage allocator pImageCreateInfo pAllocationCreateInfo)
     (\(o0, o1, _) -> destroyImage allocator o0 o1)

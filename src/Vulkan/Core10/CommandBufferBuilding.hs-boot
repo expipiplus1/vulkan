@@ -13,6 +13,7 @@ module Vulkan.Core10.CommandBufferBuilding  ( BufferCopy
 
 import Data.Kind (Type)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct (ToCStruct)
@@ -81,7 +82,7 @@ instance FromCStruct Rect2D
 type role RenderPassBeginInfo nominal
 data RenderPassBeginInfo (es :: [Type])
 
-instance PokeChain es => ToCStruct (RenderPassBeginInfo es)
+instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPassBeginInfo es)
 instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 
