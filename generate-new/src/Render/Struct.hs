@@ -515,7 +515,14 @@ fromCStructInstanceStub tellSourceImport s = do
   head <- if hasChildren s
     then do
       tellSourceImport (TyConName "PeekChain")
-      pure $ " PeekChain" <+> pretty structChainVar <+> "=>"
+      tellSourceImport (TyConName "Extendss")
+      pure
+        $   " "
+        <>  tupled
+              [ "Extendss" <+> pretty n <+> pretty structChainVar
+              , "PeekChain" <+> pretty structChainVar
+              ]
+        <+> "=>"
     else pure ""
   tellImport (TyConName "FromCStruct")
   pure $ "instance" <> head <+> "FromCStruct" <+> tDoc
@@ -534,7 +541,14 @@ toCStructInstanceStub tellSourceImport s = do
   head <- if hasChildren s
     then do
       tellSourceImport (TyConName "PokeChain")
-      pure $ " PokeChain" <+> pretty structChainVar <+> "=>"
+      tellSourceImport (TyConName "Extendss")
+      pure
+        $   " "
+        <>  tupled
+              [ "Extendss" <+> pretty n <+> pretty structChainVar
+              , "PokeChain" <+> pretty structChainVar
+              ]
+        <+> "=>"
     else pure ""
   tellImport (TyConName "ToCStruct")
   pure $ "instance" <> head <+> "ToCStruct" <+> tDoc

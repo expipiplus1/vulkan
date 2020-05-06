@@ -160,13 +160,19 @@ classes Spec {..} = do
             _ -> throw "Multiple values for sType"
         _ -> throw $ "Unable to find sType member in " <> show sName
   tellBoot $ do
+    tellExport (EType (TyConName "Extendss"))
     tellExport (EType (TyConName "PeekChain"))
     tellExport (EType (TyConName "PokeChain"))
     tellExport (EType (TyConName "Chain"))
     tellImport ''Relude.Type
+    tellImport ''Constraint
     tellDoc [qqi|
       class PeekChain (xs :: [Type])
       class PokeChain (xs :: [Type])
+      type family Extends (p :: [Type] -> Type) (x :: Type) :: Constraint
+      type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
+        Extendss p '[]      = ()
+        Extendss p (x : xs) = (Extends p x, Extendss p xs)
       type family Chain (xs :: [a]) = (r :: a) | r -> xs where
         Chain '[]    = ()
         Chain (x:xs) = (x, Chain xs)
@@ -189,14 +195,14 @@ classes Spec {..} = do
 
     withSomeCStruct
       :: forall a b
-       . (forall es . PokeChain es => ToCStruct (a es))
+       . (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
       => SomeStruct a
       -> (forall es . (Extendss a es, PokeChain es) => Ptr (a es) -> IO b)
       -> IO b
     withSomeCStruct (SomeStruct s) f = withCStruct s f
 
     pokeSomeCStruct
-      :: (forall es . PokeChain es => ToCStruct (a es))
+      :: (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
       => Ptr (SomeStruct a)
       -> SomeStruct a
       -> IO b
