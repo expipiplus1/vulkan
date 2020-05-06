@@ -132,13 +132,13 @@ noAllocationCallbacks = Nothing
 --
 autoapplyDecs
   (<> "'")
-  [ 'allocate
-  , 'getDevice
+  [ 'getDevice
   , 'getPhysicalDevice
   , 'getInstance
   , 'getAllocator
   , 'noAllocationCallbacks
   ]
+  ['allocate]
   [ 'invalidateAllocation
   , 'withImage
   , 'deviceWaitIdle
@@ -155,6 +155,7 @@ autoapplyDecs
   , 'withPipelineLayout
   , 'withRenderPass
   , 'withShaderModule
+  , 'nameObject
   ]
 
 ----------------------------------------------------------------
@@ -254,8 +255,7 @@ render = do
                                 }
   -- Allocate the image with VMA
   (_, (image, _, _)) <- withImage' imageCreateInfo allocationCreateInfo
-  dev                <- getDevice
-  nameObject dev image "GPU side image"
+  nameObject' image "GPU side image"
 
   -- Create an image to read on the CPU
   let cpuImageCreateInfo = zero { imageType     = IMAGE_TYPE_2D
@@ -275,7 +275,7 @@ render = do
   (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage'
     cpuImageCreateInfo
     cpuAllocationCreateInfo
-  nameObject dev cpuImage "CPU side image"
+  nameObject' cpuImage "CPU side image"
 
   -- Create an image view
   let imageSubresourceRange = ImageSubresourceRange
