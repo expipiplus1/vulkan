@@ -41,7 +41,7 @@ executables:
     dependencies:
       - JuicyPixels
       - VulkanMemoryAllocator
-      - autoapply
+      - autoapply >= 0.4
       - base < 4.14
       - bytestring
       - extra

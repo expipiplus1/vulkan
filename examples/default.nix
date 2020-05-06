@@ -16,11 +16,17 @@ let
     pkgs.haskell.packages.${compiler'}.override {
       overrides = self: super:
         {
+          th-desugar = self.callCabal2nix "" (pkgs.fetchFromGitHub {
+            owner = "goldfirere";
+            repo = "th-desugar";
+            rev = "f075206882ce4e554c37537e624b4be7409d74a3";
+            sha256 = "0747xggx2q8yphag2wv06dj0pgi9zvadi069c2d6lckg26chhnlk";
+          }) { };
           autoapply = doHaddock (self.callCabal2nix "" (pkgs.fetchFromGitHub {
             owner = "expipiplus1";
             repo = "autoapply";
-            rev = "ca6509a6c406417fe4aa614a81090755c899f02b";
-            sha256 = "0w3ypr087s2s4fxwn2f6hb31hjrzamvrq76dp293syp8zsyvwna1";
+            rev = "4ff481b28c9f2b081496593bba491633873ca155";
+            sha256 = "0hfcx9mnan0f5h5x8qvpzybbvn6brmia7s2wfgk8j61arghfwg8k";
           }) { });
           vulkan = let
             srcFilter = path: type:
