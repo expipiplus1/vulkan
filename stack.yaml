@@ -9,4 +9,4 @@ extra-deps:
 - autoapply-0.2.0.0
 nix:
   enable: false
-  packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2]
+  packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2 zlib]
