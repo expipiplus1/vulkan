@@ -262,12 +262,14 @@ data RenderParams = RenderParams
     -- (other parameter or member). Sometimes also this isn't a trivial case of
     -- getting that member of the struct, so use this field for writing those
     -- complex overrides.
-  , isExternalName :: HName -> Maybe ModName
+  , isExternalName    :: HName -> Maybe ModName
     -- ^ If you want to refer to something in another package without using
     -- template haskell ''quotes, put the module in here
-  , externalDocHTML :: Maybe Text
+  , externalDocHTML   :: Maybe Text
     -- ^ If we can't find a place in the generated source to link to, link to
     -- this documentation instead.
+  , objectTypePattern :: CName -> Maybe HName
+    -- ^ An object type enumeration for a handle name, if any
   }
 
 data UnionDiscriminator = UnionDiscriminator

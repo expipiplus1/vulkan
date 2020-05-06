@@ -20,8 +20,11 @@ import GHC.Show (showParen)
 import Numeric (showHex)
 import Foreign.Storable (Storable)
 import Data.Word (Word64)
+import Vulkan.Core10.APIConstants (HasObjectType(..))
 import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Zero (Zero)
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION))
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandPool(..))
@@ -50,6 +53,8 @@ import Vulkan.Core10.Handles (Sampler(..))
 newtype DescriptorUpdateTemplate = DescriptorUpdateTemplate Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType DescriptorUpdateTemplate where
+  objectTypeAndHandle (DescriptorUpdateTemplate h) = (OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE, h)
 instance Show DescriptorUpdateTemplate where
   showsPrec p (DescriptorUpdateTemplate x) = showParen (p >= 11) (showString "DescriptorUpdateTemplate 0x" . showHex x)
 
@@ -67,6 +72,8 @@ instance Show DescriptorUpdateTemplate where
 newtype SamplerYcbcrConversion = SamplerYcbcrConversion Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
+instance HasObjectType SamplerYcbcrConversion where
+  objectTypeAndHandle (SamplerYcbcrConversion h) = (OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION, h)
 instance Show SamplerYcbcrConversion where
   showsPrec p (SamplerYcbcrConversion x) = showParen (p >= 11) (showString "SamplerYcbcrConversion 0x" . showHex x)
 

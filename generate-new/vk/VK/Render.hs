@@ -118,6 +118,7 @@ renderSpec spec@Spec {..} getDoc ss us cs = do
                              <> cStructDocs
                              <> V.singleton marshalUtils
                              <> V.singleton zeroClass
+                             <> V.singleton hasObjectTypeClass
                              <> V.singleton (vkExceptionRenderElement getDoc vkResult)
                              <> specVersions spec
                              <> V.singleton (structExtends spec)

@@ -76,10 +76,10 @@ executables:
 dependencies:
   - algebraic-graphs
   - ascii-progress
-  - safe
   - async-pool
   - base
   - bytestring
+  - casing
   - containers
   - data-default
   - deepseq
@@ -100,6 +100,7 @@ dependencies:
   - prettyprinter
   - regex-applicative
   - relude
+  - safe
   - say
   - tagsoup
   - template-haskell

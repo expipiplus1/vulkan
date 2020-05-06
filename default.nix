@@ -1,5 +1,5 @@
 { nixpkgsSrc ? builtins.fetchTarball
-  "https://github.com/NixOS/nixpkgs/archive/dbacfa172f9a6399f180bcd0aef7998fdec0d55a.tar.gz"
+  "https://github.com/NixOS/nixpkgs/archive/ab3adfe1c769c22b6629e59ea0ef88ec8ee4563f.tar.gz"
 , pkgs ? import nixpkgsSrc { }, compiler ? "ghc882"
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
 

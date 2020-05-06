@@ -19,8 +19,7 @@ import           Haskell                       as H
 import           Render.Element
 import           Spec.Parse
 
-renderHandle
-  :: (HasErr r, HasRenderParams r) => Handle -> Sem r RenderElement
+renderHandle :: (HasErr r, HasRenderParams r) => Handle -> Sem r RenderElement
 renderHandle Handle {..} = context (unCName hName) $ do
   RenderParams {..} <- input
   genRe ("handle " <> unCName hName) $ do
@@ -36,23 +35,39 @@ renderHandle Handle {..} = context (unCName hName) $ do
         tellImport ''Storable
         tellImport 'showHex
         tellImport 'showParen
-        tellDocWithHaddock $ \getDoc -> vsep
-          [ getDoc (TopLevel hName)
-          , "newtype" <+> pretty n <+> "=" <+> pretty c <+> tDoc
-          , indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
-          , indent 2 "deriving anyclass (IsHandle)"
-          , "instance Show" <+> pretty n <+> "where" <> line <> indent
-            2
-            (   "showsPrec p"
-            <+> parens (pretty c <+> "x")
-            <+> "= showParen (p >= 11)"
-            <+> parens
-                  (   "showString"
-                  <+> viaShow (unName c <> " 0x")
-                  <+> ". showHex x"
+        hasObjectType <- forV (objectTypePattern hName) $ \objectType -> do
+          tellImport objectType
+          tellImportWithAll (TyConName "HasObjectType")
+          pure
+            $   "instance HasObjectType"
+            <+> pretty n
+            <+> "where"
+            <>  line
+            <>  indent
+                  2
+                  ("objectTypeAndHandle (" <> pretty c <+> "h) =" <+> tupled
+                    [pretty objectType, "h"]
                   )
-            )
-          ]
+        tellDocWithHaddock $ \getDoc ->
+          vsep
+            $  [ getDoc (TopLevel hName)
+               , "newtype" <+> pretty n <+> "=" <+> pretty c <+> tDoc
+               , indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
+               , indent 2 "deriving anyclass (IsHandle)"
+               ]
+            <> toList hasObjectType
+            <> [ "instance Show" <+> pretty n <+> "where" <> line <> indent
+                   2
+                   (   "showsPrec p"
+                   <+> parens (pretty c <+> "x")
+                   <+> "= showParen (p >= 11)"
+                   <+> parens
+                         (   "showString"
+                         <+> viaShow (unName c <> " 0x")
+                         <+> ". showHex x"
+                         )
+                   )
+               ]
       Dispatchable -> do
         let p = mkEmptyDataName hName
             c = mkConName hName hName
@@ -72,25 +87,48 @@ renderHandle Handle {..} = context (unCName hName) $ do
         tellInternal (EType p)
         tellImportWithAll (TyConName "Zero")
         tellImport (TyConName "IsHandle")
-        tellDocWithHaddock $ \getDoc -> vsep
-          [ "-- | An opaque type for representing pointers to"
-          <+> pretty (unCName hName)
-          <+> "handles"
-          , "data" <+> pretty p
-          , getDoc (TopLevel hName)
-          , "data" <+> pretty n <+> "=" <+> pretty c
-          , indent
-            2
-            (vsep
-              [ "{" <+> pretty h <+> "::" <+> tDoc
-              , "," <+> cmdsMemberName <+> "::" <+> cmdsTDoc
-              , "}"
-              ]
-            )
+        hasObjectType <- forV (objectTypePattern hName) $ \objectType -> do
+          tellImport objectType
+          tellImport 'WordPtr
+          tellImport 'ptrToWordPtr
+          tellImportWithAll (TyConName "HasObjectType")
+          pure
+            $   "instance HasObjectType"
+            <+> pretty n
+            <+> "where"
+            <>  line
+            <>  indent
+                  2
+                  (   "objectTypeAndHandle"
+                  <+> parens
+                        (   pretty c
+                        <+> parens "ptrToWordPtr -> WordPtr h"
+                        <+> "_"
+                        )
+                  <+> "="
+                  <+> tupled [pretty objectType, "fromIntegral h"]
+                  )
+        tellDocWithHaddock $ \getDoc ->
+          vsep
+            $  [ "-- | An opaque type for representing pointers to"
+               <+> pretty (unCName hName)
+               <+> "handles"
+               , "data" <+> pretty p
+               , getDoc (TopLevel hName)
+               , "data" <+> pretty n <+> "=" <+> pretty c
+               , indent
+                 2
+                 (vsep
+                   [ "{" <+> pretty h <+> "::" <+> tDoc
+                   , "," <+> cmdsMemberName <+> "::" <+> cmdsTDoc
+                   , "}"
+                   ]
+                 )
           -- TODO: Just compare on ptr
-          , indent 2 "deriving stock (Eq, Show)"
-          , indent 2 "deriving anyclass (IsHandle)"
-          , "instance Zero" <+> pretty n <+> "where" <> line <> indent
-            2
-            ("zero =" <+> pretty c <+> "zero zero")
-          ]
+               , indent 2 "deriving stock (Eq, Show)"
+               , indent 2 "deriving anyclass (IsHandle)"
+               , "instance Zero" <+> pretty n <+> "where" <> line <> indent
+                 2
+                 ("zero =" <+> pretty c <+> "zero zero")
+               ]
+            <> toList hasObjectType

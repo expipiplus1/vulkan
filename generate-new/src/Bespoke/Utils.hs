@@ -2,12 +2,14 @@
 module Bespoke.Utils
   ( marshalUtils
   , zeroClass
-  )
-where
+  , hasObjectTypeClass
+  ) where
 
+import           Data.Text.Prettyprint.Doc
 import           Foreign.C.Types
 import           Foreign.Ptr
 import           Polysemy
+import           Polysemy.Input
 import           Relude
 import           Text.InterpolatedString.Perl6.Unindented
 
@@ -24,6 +26,20 @@ import           Error
 import           Haskell.Name
 import           Render.Element
 import           VkModulePrefix
+
+hasObjectTypeClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
+hasObjectTypeClass = genRe "HasObjectType class" $ do
+  RenderParams {..} <- input
+  tellExport (EClass (TyConName "HasObjectType"))
+  tellExplicitModule (vulkanModule ["Core10", "APIConstants"])
+  tellImport ''Word64
+  tellNotReexportable
+  let objectType = mkTyName "VkObjectType"
+  tellImport objectType
+
+  tellDoc $ "class HasObjectType a where" <> line <> indent
+    2
+    ("objectTypeAndHandle :: a ->" <+> tupled [pretty objectType, "Word64"])
 
 zeroClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 zeroClass = genRe "zero class" $ do

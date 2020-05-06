@@ -1,5 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
@@ -63,8 +64,7 @@ import           Vulkan.Core10           hiding ( deviceWaitIdle
                                                 , withShaderModule
                                                 )
 import           Vulkan.Extensions.VK_EXT_debug_utils
-                                         hiding ( setDebugUtilsObjectNameEXT )
-import           Vulkan.Utils.DebugCallback
+import           Vulkan.Utils.Debug
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 import qualified VulkanMemoryAllocator         as VMA
@@ -273,6 +273,8 @@ render = do
                                 }
   -- Allocate the image with VMA
   (_, (image, _, _)) <- withImage imageCreateInfo allocationCreateInfo
+  dev <- getDevice
+  nameObject dev image "GPU side image"
 
   -- Create an image to read on the CPU
   let cpuImageCreateInfo = zero { imageType     = IMAGE_TYPE_2D
@@ -292,6 +294,7 @@ render = do
   (_, (cpuImage, cpuImageAllocation, cpuImageAllocationInfo)) <- withImage
     cpuImageCreateInfo
     cpuAllocationCreateInfo
+  nameObject dev cpuImage "CPU side image"
 
   -- Create an image view
   let imageSubresourceRange = ImageSubresourceRange
@@ -373,19 +376,20 @@ render = do
                                , primitiveRestartEnable = False
                                }
       , viewportState      = Just . SomeStruct $ zero
-        { viewports     = [ Viewport { x        = 0
-                                     , y        = 0
-                                     , width    = realToFrac (width :: Word32)
-                                     , height   = realToFrac (height :: Word32)
-                                     , minDepth = 0
-                                     , maxDepth = 1
-                                     }
-                          ]
-        , scissors      = [ Rect2D { offset = Offset2D 0 0
-                                   , extent = Extent2D width height
-                                   }
-                          ]
-        }
+                               { viewports =
+                                 [ Viewport { x = 0
+                                            , y = 0
+                                            , width = realToFrac (width :: Word32)
+                                            , height = realToFrac (height :: Word32)
+                                            , minDepth = 0
+                                            , maxDepth = 1
+                                            }
+                                 ]
+                               , scissors = [ Rect2D { offset = Offset2D 0 0
+                                                     , extent = Extent2D width height
+                                                     }
+                                            ]
+                               }
       , rasterizationState = SomeStruct $ zero
                                { depthClampEnable        = False
                                , rasterizerDiscardEnable = False
