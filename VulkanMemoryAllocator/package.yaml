@@ -18,7 +18,7 @@ library:
   cxx-sources:
     src/lib.cpp
   dependencies:
-    - base < 4.14
+    - base < 4.15
     - vulkan == 3.2.*
     - bytestring
     - transformers

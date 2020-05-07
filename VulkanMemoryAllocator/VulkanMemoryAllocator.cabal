@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 51acfbfc19b8670dd48f31069e4b804dfaa006d578be282cb03586d0ba80d421
+-- hash: e2af13c8a8bad6ac977d17ea9e871b0936e6c3722c9d6ae9896fdb4660bc03b4
 
 name:           VulkanMemoryAllocator
 version:        0.2.0.0
@@ -54,7 +54,7 @@ library
   extra-libraries:
       stdc++
   build-depends:
-      base <4.14
+      base <4.15
     , bytestring
     , transformers
     , vector

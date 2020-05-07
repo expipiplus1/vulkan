@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 60e0a6b8a5b70762e08ef9dae9b823dcc56b46a9820f695d3c933dca8a9affde
+-- hash: 4932fa53ef89839352ab8a611016196cf2d6f06cae0690fd721ef21efe0c73f9
 
 name:           vulkan-utils
 version:        0.1.1.0
@@ -35,7 +35,7 @@ library
   c-sources:
       cbits/DebugCallback.c
   build-depends:
-      base <4.14
+      base <4.15
     , bytestring
     , extra
     , file-embed

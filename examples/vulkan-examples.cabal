@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 257539042e753acdb2983d75ae06338886b78a6fbf13b8f993c3125f95a21e78
+-- hash: d90f57578125186862943db038bf587abca797b46cc453bcdf0388bd49301cb7
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -39,7 +39,7 @@ executable compute
       JuicyPixels
     , VulkanMemoryAllocator
     , autoapply >=0.4
-    , base <4.14
+    , base <4.15
     , bytestring
     , extra
     , resourcet
@@ -61,7 +61,7 @@ executable info
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall
   build-depends:
-      base <4.14
+      base <4.15
     , bytestring
     , pretty-simple
     , vulkan
@@ -79,7 +79,7 @@ executable offscreen
       JuicyPixels
     , VulkanMemoryAllocator
     , autoapply >=0.4
-    , base <4.14
+    , base <4.15
     , bytestring
     , extra
     , resourcet
@@ -108,7 +108,7 @@ executable sdl-triangle
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall
   build-depends:
-      base <4.14
+      base <4.15
     , bytestring
     , extra
     , managed

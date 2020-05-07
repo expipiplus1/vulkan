@@ -60,6 +60,18 @@ let
           algebraic-graphs = dontCheck super.algebraic-graphs;
           first-class-families = doJailbreak super.first-class-families;
           inline-c = self.inline-c_0_9_0_0;
+          dependent-sum = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
+            owner = "obsidiansystems";
+            repo = "dependent-sum";
+            rev = "73ab6cb23331f463c384290b4a1be542e68b323d";
+            sha256 = "18h0k0n05spsk5jvgmphv3sj4wdwb3qdxklfkn5wq8kni0bqabzk";
+          }) + "/dependent-sum") { };
+          dependent-map = self.callCabal2nix "" (pkgs.fetchFromGitHub {
+            owner = "obsidiansystems";
+            repo = "dependent-map";
+            rev = "26677886eced970d661a5a7356ba4fe221c0324c";
+            sha256 = "1865yqnxzlrkmbag4xn47csgagmk968z4n633sk2c75d48icyzf9";
+          }) { };
           polysemy-plugin = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
             owner = "polysemy-research";
             repo = "polysemy";
