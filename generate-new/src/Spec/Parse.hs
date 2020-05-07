@@ -699,7 +699,7 @@ parseStruct n = do
   context (unCName sName) $ do
     sMembers <-
       fmap fromList
-      . traverseV parseStructMember
+      . traverseV (parseStructMember sName)
       $ [ m | Element m <- contents n, name m == "member" ]
     let sSize       = ()
         sAlignment  = ()
@@ -708,14 +708,16 @@ parseStruct n = do
     pure Struct { .. }
  where
 
-  parseStructMember :: Node -> P (StructMember' WithoutSize)
-  parseStructMember m = do
+  parseStructMember :: CName -> Node -> P (StructMember' WithoutSize)
+  parseStructMember sName m = do
     smName <- nameElem "struct member" m
     let typeString = allNonCommentText m
     smType       <- parseCType typeString
-    smIsOptional <- boolListAttr "optional" m
-    smLengths    <- lenListAttr "len" m
-    smValues     <- listAttr decode "values" m
+    smIsOptional <- case bespokeOptionality sName smName of
+      Just o  -> pure o
+      Nothing -> boolListAttr "optional" m
+    smLengths <- lenListAttr "len" m
+    smValues  <- listAttr decode "values" m
     let smOffset = ()
     pure StructMember { .. }
 
