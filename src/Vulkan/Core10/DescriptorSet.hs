@@ -646,10 +646,10 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
 -- favourite resource management library) as the first argument.
 -- To just extract the pair pass '(,)' as the first argument.
 --
-withDescriptorSets :: forall a io r . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> r
-withDescriptorSets device pAllocateInfo descriptorPool b =
+withDescriptorSets :: forall a io r . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> (io (Vector DescriptorSet) -> ((Vector DescriptorSet) -> io ()) -> r) -> r
+withDescriptorSets device pAllocateInfo b =
   b (allocateDescriptorSets device pAllocateInfo)
-    (\(o0) -> freeDescriptorSets device descriptorPool o0)
+    (\(o0) -> freeDescriptorSets device (descriptorPool (pAllocateInfo :: DescriptorSetAllocateInfo a)) o0)
 
 
 foreign import ccall
