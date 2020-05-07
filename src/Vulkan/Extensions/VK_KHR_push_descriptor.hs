@@ -34,6 +34,8 @@ import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
+import Vulkan.CStruct.Extends (forgetExtensions)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
@@ -42,14 +44,13 @@ import Vulkan.Core11.Handles (DescriptorUpdateTemplate)
 import Vulkan.Core11.Handles (DescriptorUpdateTemplate(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdPushDescriptorSetKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdPushDescriptorSetWithTemplateKHR))
-import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint)
 import Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint(..))
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.Core10.Handles (PipelineLayout(..))
-import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -203,14 +204,14 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
-cmdPushDescriptorSetKHR :: forall a io . (Extendss WriteDescriptorSet a, PokeChain a, MonadIO io) => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("set" ::: Word32) -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> io ()
+cmdPushDescriptorSetKHR :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("set" ::: Word32) -> ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet)) -> io ()
 cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
   let vkCmdPushDescriptorSetKHRPtr = pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdPushDescriptorSetKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetKHR is null" Nothing Nothing
   let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHRPtr
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
   lift $ vkCmdPushDescriptorSetKHR' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (set) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (pPDescriptorWrites)
   pure $ ()
 
