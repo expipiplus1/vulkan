@@ -104,7 +104,7 @@ drawFrame dev swapchain graphicsQueue presentQueue imageAvailableSemaphore rende
                            , swapchains     = [swapchain]
                            , imageIndices   = [imageIndex]
                            }
-    queueSubmit graphicsQueue [submitInfo] zero
+    queueSubmit graphicsQueue [SomeStruct submitInfo] zero
     _ <- queuePresentKHR presentQueue presentInfo
     pure ()
 
@@ -313,7 +313,7 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
       }
   V.head
     .   snd
-    <$> withGraphicsPipelines dev zero [pipelineCreateInfo] Nothing allocate
+    <$> withGraphicsPipelines dev zero [SomeStruct pipelineCreateInfo] Nothing allocate
 
 createFramebuffers
   :: Device
