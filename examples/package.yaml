@@ -61,6 +61,25 @@ executables:
           - inline-c
         extra-libraries: dl
 
+  compute:
+    main: Main.hs
+    source-dirs: compute
+    dependencies:
+      - JuicyPixels
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base < 4.14
+      - bytestring
+      - extra
+      - resourcet
+      - safe-exceptions
+      - say
+      - text
+      - transformers
+      - vector
+      - vulkan
+      - vulkan-utils
+
 flags:
   renderdoc:
     description:

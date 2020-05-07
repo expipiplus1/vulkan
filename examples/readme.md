@@ -25,6 +25,25 @@ The [`autoapply` package](https://hackage.haskell.org/package/autoapply) is
 used to write the boilerplate of passing some global handles to vulkan
 functions.
 
+### `compute`
+
+This example renders an image of [the Julia
+set](https://en.wikipedia.org/wiki/Julia_set) at `f(z) = z^2 -0.8 + 0.156i`.
+
+This rendering is performed by a compute shader writing to a buffer.
+
+This program includes examples of:
+
+- Buffer allocation with VulkanMemoryAllocator.
+- Descriptor set creation and binding
+- Compute shader dipatch
+- Convenient shader creation using the `Vulkan.Utils.ShaderQQ.comp` QuasiQuoter
+
+Like the `offscreen` example,
+[`resourcet`](https://hackage.haskell.org/package/resourcet) and
+[`autoapply`](https://hackage.haskell.org/package/autoapply) are used to make
+resource and global management less painful.
+
 ### `sdl-triangle`
 
 This opens a window using SDL and renders a triangle.
