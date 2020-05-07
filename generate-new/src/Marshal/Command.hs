@@ -74,13 +74,13 @@ parameterScheme Command {..} param = do
         -- Pointers to return values in
       , returnPointerScheme
         -- Optional and non optional arrays
-      , arrayScheme DoNotWrapExtensibleStructs
+      , arrayScheme WrapExtensibleStructs
                     WrapDispatchableHandles
                     cParameters
-      , fixedArrayScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
+      , fixedArrayScheme WrapExtensibleStructs WrapDispatchableHandles
         -- Optional things:
-      , optionalDefaultScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
-      , optionalScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
+      , optionalDefaultScheme WrapExtensibleStructs WrapDispatchableHandles
+      , optionalScheme WrapExtensibleStructs WrapDispatchableHandles
         -- Everything left over is treated as a boring scalar parameter
       , scalarScheme
       ]
