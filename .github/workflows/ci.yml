@@ -12,6 +12,7 @@ jobs:
         ghc: ['8.10.1', '8.8.2', '8.6.5']
         cabal: ['3.0']
         os: [ubuntu-latest]
+      fail-fast: false
 
     steps:
     - uses: actions/checkout@v2
