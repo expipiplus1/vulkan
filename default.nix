@@ -107,6 +107,7 @@ let
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   makeDrv = name: src:
+    with pkgs.haskell.lib;
     let
       drv =
         haskellPackages.callCabal2nixWithOptions "" src "--flag=build-examples"
@@ -123,15 +124,15 @@ let
             vulkan-utils = null;
             VulkanMemoryAllocator = null;
           });
-    in with pkgs.haskell.lib;
-    if name == "vulkan-examples" then
-      addBuildTool drv pkgs.glslang
-    else if name == "VulkanMemoryAllocator" then
-      addExtraLibrary drv pkgs.vulkan-headers
-    else if name == "vulkan-utils" then
-      addExtraLibrary drv pkgs.vulkan-headers
-    else
-      drv;
+      drv' = if name == "vulkan-examples" then
+        addBuildTool drv pkgs.glslang
+      else if name == "VulkanMemoryAllocator" then
+        addExtraLibrary drv pkgs.vulkan-headers
+      else if name == "vulkan-utils" then
+        addExtraLibrary drv pkgs.vulkan-headers
+      else
+        drv;
+    in disableLibraryProfiling drv';
 
   addHoogleDatabase = drv:
     if hoogle then
