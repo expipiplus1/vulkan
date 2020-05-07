@@ -11,8 +11,12 @@ let
     "ghc" + pkgs.lib.concatStrings
     (pkgs.lib.splitVersion pkgs.haskellPackages.ghc.version);
 
-  targets = {
-    vulkan = ./.;
+  targets = let
+    srcFilter = path: type:
+      (baseNameOf path == "package.yaml") || pkgs.lib.hasInfix "/src" path;
+    filter = builtins.filterSource srcFilter;
+  in {
+    vulkan = filter ./.;
     vulkan-utils = ./utils;
     vulkan-examples = ./examples;
     VulkanMemoryAllocator = ./VulkanMemoryAllocator;
