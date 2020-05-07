@@ -28,6 +28,7 @@ import           Relude                  hiding ( Handle
                                                 , State
                                                 , evalState
                                                 , get
+                                                , mapMaybeM
                                                 , modify'
                                                 , put
                                                 , runState
