@@ -102,8 +102,7 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetHdrMetadataEXT is null" Nothing Nothing
   let vkSetHdrMetadataEXT' = mkVkSetHdrMetadataEXT vkSetHdrMetadataEXTPtr
   let pSwapchainsLength = Data.Vector.length $ (swapchains)
-  let pMetadataLength = Data.Vector.length $ (metadata)
-  lift $ unless (pMetadataLength == pSwapchainsLength) $
+  lift $ unless ((Data.Vector.length $ (metadata)) == pSwapchainsLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pMetadata and pSwapchains must have the same length" Nothing Nothing
   pPSwapchains <- ContT $ allocaBytesAligned @SwapchainKHR ((Data.Vector.length (swapchains)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)

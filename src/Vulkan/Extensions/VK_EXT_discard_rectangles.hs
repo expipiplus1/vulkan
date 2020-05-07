@@ -285,10 +285,11 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDiscardRectangleStateCreateFlagsEXT)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (discardRectangleMode)
+    let pDiscardRectanglesLength = Data.Vector.length $ (discardRectangles)
     discardRectangleCount'' <- lift $ if (discardRectangleCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (discardRectangles))
+      then pure $ fromIntegral pDiscardRectanglesLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (discardRectangles)) == (discardRectangleCount)) $
+        unless (fromIntegral pDiscardRectanglesLength == (discardRectangleCount) || pDiscardRectanglesLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pDiscardRectangles must be empty or have 'discardRectangleCount' elements" Nothing Nothing
         pure (discardRectangleCount)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (discardRectangleCount'')

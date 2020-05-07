@@ -1745,8 +1745,7 @@ instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (waitSemaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPWaitSemaphores')
     let pSwapchainsLength = Data.Vector.length $ (swapchains)
-    let pImageIndicesLength = Data.Vector.length $ (imageIndices)
-    lift $ unless (pImageIndicesLength == pSwapchainsLength) $
+    lift $ unless ((Data.Vector.length $ (imageIndices)) == pSwapchainsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pImageIndices and pSwapchains must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral pSwapchainsLength :: Word32))
     pPSwapchains' <- ContT $ allocaBytesAligned @SwapchainKHR ((Data.Vector.length (swapchains)) * 8) 8

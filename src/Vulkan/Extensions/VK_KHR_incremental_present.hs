@@ -83,10 +83,11 @@ instance ToCStruct PresentRegionsKHR where
   pokeCStruct p PresentRegionsKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    let pRegionsLength = Data.Vector.length $ (regions)
     swapchainCount'' <- lift $ if (swapchainCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (regions))
+      then pure $ fromIntegral pRegionsLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (regions)) == (swapchainCount)) $
+        unless (fromIntegral pRegionsLength == (swapchainCount) || pRegionsLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pRegions must be empty or have 'swapchainCount' elements" Nothing Nothing
         pure (swapchainCount)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount'')
@@ -150,10 +151,11 @@ deriving instance Show PresentRegionKHR
 instance ToCStruct PresentRegionKHR where
   withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentRegionKHR{..} f = evalContT $ do
+    let pRectanglesLength = Data.Vector.length $ (rectangles)
     rectangleCount'' <- lift $ if (rectangleCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (rectangles))
+      then pure $ fromIntegral pRectanglesLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (rectangles)) == (rectangleCount)) $
+        unless (fromIntegral pRectanglesLength == (rectangleCount) || pRectanglesLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pRectangles must be empty or have 'rectangleCount' elements" Nothing Nothing
         pure (rectangleCount)
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (rectangleCount'')

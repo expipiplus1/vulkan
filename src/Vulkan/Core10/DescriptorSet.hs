@@ -1473,11 +1473,9 @@ instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescr
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (dstBinding)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (dstArrayElement)
     let pImageInfoLength = Data.Vector.length $ (imageInfo)
-    let pBufferInfoLength = Data.Vector.length $ (bufferInfo)
-    lift $ unless (pBufferInfoLength == pImageInfoLength) $
+    lift $ unless ((Data.Vector.length $ (bufferInfo)) == pImageInfoLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pBufferInfo and pImageInfo must have the same length" Nothing Nothing
-    let pTexelBufferViewLength = Data.Vector.length $ (texelBufferView)
-    lift $ unless (pTexelBufferViewLength == pImageInfoLength) $
+    lift $ unless ((Data.Vector.length $ (texelBufferView)) == pImageInfoLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pTexelBufferView and pImageInfo must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral pImageInfoLength :: Word32))
     lift $ poke ((p `plusPtr` 36 :: Ptr DescriptorType)) (descriptorType)
@@ -1865,10 +1863,11 @@ instance ToCStruct DescriptorSetLayoutBinding where
   pokeCStruct p DescriptorSetLayoutBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     lift $ poke ((p `plusPtr` 4 :: Ptr DescriptorType)) (descriptorType)
+    let pImmutableSamplersLength = Data.Vector.length $ (immutableSamplers)
     descriptorCount'' <- lift $ if (descriptorCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (immutableSamplers))
+      then pure $ fromIntegral pImmutableSamplersLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (immutableSamplers)) == (descriptorCount)) $
+        unless (fromIntegral pImmutableSamplersLength == (descriptorCount) || pImmutableSamplersLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pImmutableSamplers must be empty or have 'descriptorCount' elements" Nothing Nothing
         pure (descriptorCount)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (descriptorCount'')

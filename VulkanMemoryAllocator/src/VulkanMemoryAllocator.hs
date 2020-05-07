@@ -875,8 +875,7 @@ allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalCon
   pPCreateInfo <- ContT $ allocaBytesAligned @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 40) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCreateInfo `plusPtr` (40 * (i)) :: Ptr AllocationCreateInfo) (e)) (createInfo)
   let pVkMemoryRequirementsLength = Data.Vector.length $ (vkMemoryRequirements)
-  let pCreateInfoLength = Data.Vector.length $ (createInfo)
-  lift $ unless (pCreateInfoLength == pVkMemoryRequirementsLength) $
+  lift $ unless ((Data.Vector.length $ (createInfo)) == pVkMemoryRequirementsLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pCreateInfo and pVkMemoryRequirements must have the same length" Nothing Nothing
   pPAllocations <- ContT $ bracket (callocBytes @Allocation ((fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) * 8)) free
   pPAllocationInfo <- ContT $ bracket (callocBytes @AllocationInfo ((fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) * 48)) free

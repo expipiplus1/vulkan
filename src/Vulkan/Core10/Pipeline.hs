@@ -1730,10 +1730,11 @@ instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruc
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineViewportStateCreateFlags)) (flags)
+    let pViewportsLength = Data.Vector.length $ (viewports)
     viewportCount'' <- lift $ if (viewportCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (viewports))
+      then pure $ fromIntegral pViewportsLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (viewports)) == (viewportCount)) $
+        unless (fromIntegral pViewportsLength == (viewportCount) || pViewportsLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pViewports must be empty or have 'viewportCount' elements" Nothing Nothing
         pure (viewportCount)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount'')
@@ -1744,10 +1745,11 @@ instance (Extendss PipelineViewportStateCreateInfo es, PokeChain es) => ToCStruc
         Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e) . ($ ())) ((viewports))
         pure $ pPViewports
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Viewport))) pViewports''
+    let pScissorsLength = Data.Vector.length $ (scissors)
     scissorCount'' <- lift $ if (scissorCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (scissors))
+      then pure $ fromIntegral pScissorsLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (scissors)) == (scissorCount)) $
+        unless (fromIntegral pScissorsLength == (scissorCount) || pScissorsLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pScissors must be empty or have 'scissorCount' elements" Nothing Nothing
         pure (scissorCount)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (scissorCount'')

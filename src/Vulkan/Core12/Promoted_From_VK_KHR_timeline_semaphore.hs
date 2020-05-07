@@ -526,10 +526,11 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
   pokeCStruct p TimelineSemaphoreSubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    let pWaitSemaphoreValuesLength = Data.Vector.length $ (waitSemaphoreValues)
     waitSemaphoreValueCount'' <- lift $ if (waitSemaphoreValueCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (waitSemaphoreValues))
+      then pure $ fromIntegral pWaitSemaphoreValuesLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (waitSemaphoreValues)) == (waitSemaphoreValueCount)) $
+        unless (fromIntegral pWaitSemaphoreValuesLength == (waitSemaphoreValueCount) || pWaitSemaphoreValuesLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pWaitSemaphoreValues must be empty or have 'waitSemaphoreValueCount' elements" Nothing Nothing
         pure (waitSemaphoreValueCount)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (waitSemaphoreValueCount'')
@@ -540,10 +541,11 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
         lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
         pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
+    let pSignalSemaphoreValuesLength = Data.Vector.length $ (signalSemaphoreValues)
     signalSemaphoreValueCount'' <- lift $ if (signalSemaphoreValueCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (signalSemaphoreValues))
+      then pure $ fromIntegral pSignalSemaphoreValuesLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (signalSemaphoreValues)) == (signalSemaphoreValueCount)) $
+        unless (fromIntegral pSignalSemaphoreValuesLength == (signalSemaphoreValueCount) || pSignalSemaphoreValuesLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pSignalSemaphoreValues must be empty or have 'signalSemaphoreValueCount' elements" Nothing Nothing
         pure (signalSemaphoreValueCount)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (signalSemaphoreValueCount'')
@@ -640,8 +642,7 @@ instance ToCStruct SemaphoreWaitInfo where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr SemaphoreWaitFlags)) (flags)
     let pSemaphoresLength = Data.Vector.length $ (semaphores)
-    let pValuesLength = Data.Vector.length $ (values)
-    lift $ unless (pValuesLength == pSemaphoresLength) $
+    lift $ unless ((Data.Vector.length $ (values)) == pSemaphoresLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pValues and pSemaphores must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral pSemaphoresLength :: Word32))
     pPSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (semaphores)) * 8) 8
