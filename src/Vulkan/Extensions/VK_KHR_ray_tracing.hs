@@ -1896,14 +1896,14 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Handles.PipelineCache', 'RayTracingPipelineCreateInfoKHR'
-createRayTracingPipelinesKHR :: forall a io . (Extendss RayTracingPipelineCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> PipelineCache -> ("createInfos" ::: Vector (RayTracingPipelineCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createRayTracingPipelinesKHR :: forall io . MonadIO io => Device -> PipelineCache -> ("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoKHR)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesKHR device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (deviceCmds (device :: Device))
   lift $ unless (vkCreateRayTracingPipelinesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesKHR is null" Nothing Nothing
   let vkCreateRayTracingPipelinesKHR' = mkVkCreateRayTracingPipelinesKHR vkCreateRayTracingPipelinesKHRPtr
   pPCreateInfos <- ContT $ allocaBytesAligned @(RayTracingPipelineCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 120) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (120 * (i)) :: Ptr (RayTracingPipelineCreateInfoKHR _)) (e) . ($ ())) (createInfos)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (120 * (i)) :: Ptr (RayTracingPipelineCreateInfoKHR _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
@@ -2687,7 +2687,7 @@ foreign import ccall
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildOffsetInfoKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdBuildAccelerationStructureKHR :: forall a io . (Extendss AccelerationStructureBuildGeometryInfoKHR a, PokeChain a, MonadIO io) => CommandBuffer -> ("infos" ::: Vector (AccelerationStructureBuildGeometryInfoKHR a)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io ()
+cmdBuildAccelerationStructureKHR :: forall io . MonadIO io => CommandBuffer -> ("infos" ::: Vector (SomeStruct AccelerationStructureBuildGeometryInfoKHR)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io ()
 cmdBuildAccelerationStructureKHR commandBuffer infos offsetInfos = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureKHRPtr = pVkCmdBuildAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBuildAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -2697,7 +2697,7 @@ cmdBuildAccelerationStructureKHR commandBuffer infos offsetInfos = liftIO . eval
   lift $ unless ((Data.Vector.length $ (offsetInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppOffsetInfos and pInfos must have the same length" Nothing Nothing
   pPInfos <- ContT $ allocaBytesAligned @(AccelerationStructureBuildGeometryInfoKHR _) ((Data.Vector.length (infos)) * 72) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (72 * (i)) :: Ptr (AccelerationStructureBuildGeometryInfoKHR _)) (e) . ($ ())) (infos)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPInfos `plusPtr` (72 * (i)) :: Ptr (AccelerationStructureBuildGeometryInfoKHR _))) (e) . ($ ())) (infos)
   pPpOffsetInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildOffsetInfoKHR) ((Data.Vector.length (offsetInfos)) * 8) 8
   Data.Vector.imapM_ (\i e -> do
     ppOffsetInfos <- ContT $ withCStruct (e)
@@ -2962,7 +2962,7 @@ foreign import ccall
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildOffsetInfoKHR',
 -- 'Vulkan.Core10.Handles.Device'
-buildAccelerationStructureKHR :: forall a io . (Extendss AccelerationStructureBuildGeometryInfoKHR a, PokeChain a, MonadIO io) => Device -> ("infos" ::: Vector (AccelerationStructureBuildGeometryInfoKHR a)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io (Result)
+buildAccelerationStructureKHR :: forall io . MonadIO io => Device -> ("infos" ::: Vector (SomeStruct AccelerationStructureBuildGeometryInfoKHR)) -> ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR) -> io (Result)
 buildAccelerationStructureKHR device infos offsetInfos = liftIO . evalContT $ do
   let vkBuildAccelerationStructureKHRPtr = pVkBuildAccelerationStructureKHR (deviceCmds (device :: Device))
   lift $ unless (vkBuildAccelerationStructureKHRPtr /= nullFunPtr) $
@@ -2972,7 +2972,7 @@ buildAccelerationStructureKHR device infos offsetInfos = liftIO . evalContT $ do
   lift $ unless ((Data.Vector.length $ (offsetInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppOffsetInfos and pInfos must have the same length" Nothing Nothing
   pPInfos <- ContT $ allocaBytesAligned @(AccelerationStructureBuildGeometryInfoKHR _) ((Data.Vector.length (infos)) * 72) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (72 * (i)) :: Ptr (AccelerationStructureBuildGeometryInfoKHR _)) (e) . ($ ())) (infos)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPInfos `plusPtr` (72 * (i)) :: Ptr (AccelerationStructureBuildGeometryInfoKHR _))) (e) . ($ ())) (infos)
   pPpOffsetInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildOffsetInfoKHR) ((Data.Vector.length (offsetInfos)) * 8) 8
   Data.Vector.imapM_ (\i e -> do
     ppOffsetInfos <- ContT $ withCStruct (e)

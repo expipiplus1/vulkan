@@ -406,8 +406,9 @@ render = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  (_, (_, [graphicsPipeline])) <- withGraphicsPipelines' zero
-                                                         [pipelineCreateInfo]
+  (_, (_, [graphicsPipeline])) <- withGraphicsPipelines'
+    zero
+    [SomeStruct pipelineCreateInfo]
 
   -- Create a command buffer
   graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
@@ -452,13 +453,13 @@ render = do
           zero
           []
           []
-          [ zero { srcAccessMask    = ACCESS_COLOR_ATTACHMENT_WRITE_BIT
-                 , dstAccessMask    = ACCESS_TRANSFER_READ_BIT
-                 , oldLayout        = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-                 , newLayout        = IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-                 , image            = image
-                 , subresourceRange = imageSubresourceRange
-                 }
+          [ SomeStruct zero { srcAccessMask = ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+                            , dstAccessMask = ACCESS_TRANSFER_READ_BIT
+                            , oldLayout = IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+                            , newLayout = IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+                            , image = image
+                            , subresourceRange = imageSubresourceRange
+                            }
           ]
 
         -- Transition cpu image to transfer dest
@@ -469,13 +470,13 @@ render = do
           zero
           []
           []
-          [ zero { srcAccessMask    = zero
-                 , dstAccessMask    = ACCESS_TRANSFER_WRITE_BIT
-                 , oldLayout        = IMAGE_LAYOUT_UNDEFINED
-                 , newLayout        = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-                 , image            = cpuImage
-                 , subresourceRange = imageSubresourceRange
-                 }
+          [ SomeStruct zero { srcAccessMask    = zero
+                            , dstAccessMask    = ACCESS_TRANSFER_WRITE_BIT
+                            , oldLayout        = IMAGE_LAYOUT_UNDEFINED
+                            , newLayout = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+                            , image            = cpuImage
+                            , subresourceRange = imageSubresourceRange
+                            }
           ]
 
         -- Copy the image
@@ -512,13 +513,13 @@ render = do
           zero
           []
           []
-          [ zero { srcAccessMask    = ACCESS_TRANSFER_WRITE_BIT
-                 , dstAccessMask    = ACCESS_HOST_READ_BIT
-                 , oldLayout        = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-                 , newLayout        = IMAGE_LAYOUT_GENERAL
-                 , image            = cpuImage
-                 , subresourceRange = imageSubresourceRange
-                 }
+          [ SomeStruct zero { srcAccessMask    = ACCESS_TRANSFER_WRITE_BIT
+                            , dstAccessMask    = ACCESS_HOST_READ_BIT
+                            , oldLayout = IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
+                            , newLayout        = IMAGE_LAYOUT_GENERAL
+                            , image            = cpuImage
+                            , subresourceRange = imageSubresourceRange
+                            }
           ]
 
   -- Create a fence so we can know when render is finished
@@ -531,7 +532,7 @@ render = do
                         , signalSemaphores = []
                         }
   graphicsQueue <- getDeviceQueue' graphicsQueueFamilyIndex 0
-  queueSubmit graphicsQueue [submitInfo] fence
+  queueSubmit graphicsQueue [SomeStruct submitInfo] fence
   let fenceTimeout = 1e9 -- 1 second
   waitForFences' [fence] True fenceTimeout >>= \case
     TIMEOUT -> throwString "Timed out waiting for image render and copy"

@@ -219,12 +219,12 @@ render = do
 
   -- Assign the buffer in this descriptor set
   updateDescriptorSets'
-    [ zero { dstSet          = descriptorSet
-           , dstBinding      = 0
-           , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
-           , descriptorCount = 1
-           , bufferInfo      = [DescriptorBufferInfo buffer 0 WHOLE_SIZE]
-           }
+    [ SomeStruct zero { dstSet          = descriptorSet
+                      , dstBinding      = 0
+                      , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
+                      , descriptorCount = 1
+                      , bufferInfo = [DescriptorBufferInfo buffer 0 WHOLE_SIZE]
+                      }
     ]
     []
 
@@ -238,10 +238,12 @@ render = do
                                 , stage              = shader
                                 , basePipelineHandle = zero
                                 }
-  (_, (_, [computePipeline])) <- withComputePipelines' zero [pipelineCreateInfo]
+  (_, (_, [computePipeline])) <- withComputePipelines'
+    zero
+    [SomeStruct pipelineCreateInfo]
 
   -- Create a command buffer
-  computeQueueFamilyIndex     <- getComputeQueueFamilyIndex
+  computeQueueFamilyIndex <- getComputeQueueFamilyIndex
   let commandPoolCreateInfo :: CommandPoolCreateInfo
       commandPoolCreateInfo =
         zero { queueFamilyIndex = computeQueueFamilyIndex }
@@ -280,7 +282,7 @@ render = do
   let submitInfo =
         zero { commandBuffers = [commandBufferHandle commandBuffer] }
   computeQueue <- getDeviceQueue' computeQueueFamilyIndex 0
-  queueSubmit computeQueue [submitInfo] fence
+  queueSubmit computeQueue [SomeStruct submitInfo] fence
   let fenceTimeout = 1e9 -- 1 second
   waitForFences' [fence] True fenceTimeout >>= \case
     TIMEOUT -> throwString "Timed out waiting for compute"

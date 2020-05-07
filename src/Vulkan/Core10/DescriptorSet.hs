@@ -56,6 +56,8 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
@@ -102,6 +104,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Sampler)
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -826,14 +829,14 @@ foreign import ccall
 --
 -- 'CopyDescriptorSet', 'Vulkan.Core10.Handles.Device',
 -- 'WriteDescriptorSet'
-updateDescriptorSets :: forall a io . (Extendss WriteDescriptorSet a, PokeChain a, MonadIO io) => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
+updateDescriptorSets :: forall io . MonadIO io => Device -> ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
   let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (deviceCmds (device :: Device))
   lift $ unless (vkUpdateDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSets is null" Nothing Nothing
   let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets vkUpdateDescriptorSetsPtr
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
   pPDescriptorCopies <- ContT $ allocaBytesAligned @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorCopies `plusPtr` (56 * (i)) :: Ptr CopyDescriptorSet) (e) . ($ ())) (descriptorCopies)
   lift $ vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (pPDescriptorWrites) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies)

@@ -37,6 +37,8 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer_T)
@@ -70,6 +72,7 @@ import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo)
 import Vulkan.CStruct (ToCStruct)
@@ -378,14 +381,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Fence', 'Vulkan.Core10.Handles.Queue',
 -- 'SubmitInfo'
-queueSubmit :: forall a io . (Extendss SubmitInfo a, PokeChain a, MonadIO io) => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> io ()
+queueSubmit :: forall io . MonadIO io => Queue -> ("submits" ::: Vector (SomeStruct SubmitInfo)) -> Fence -> io ()
 queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmitPtr = pVkQueueSubmit (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueSubmitPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSubmit is null" Nothing Nothing
   let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
   pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _)) (e) . ($ ())) (submits)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _))) (e) . ($ ())) (submits)
   r <- lift $ vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (pPSubmits) (fence)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 

@@ -13,7 +13,9 @@
   - Throw an exception when trying to call a null function pointer, #42
   - Implement HasObjectType class to automate getting VkObjectType, #54
   - Add constraints to check that structs are correctly extended
-  - Simplify type of `withDescriptorSets`, it no longer requires the user specifying the `DescriptorPool` twice, #81
+  - Simplify type of `withDescriptorSets`, it no longer requires the user
+    specifying the `DescriptorPool` twice, #81
+  - Wrap with SomeStruct extensible structs in Vector arguments to commands, #82
 
 ## [3.2.0.0] - 2020-05-02
   - Update API version 1.2.139

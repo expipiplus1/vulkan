@@ -46,6 +46,8 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
@@ -94,6 +96,7 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits(..))
 import Vulkan.Core10.Handles (Semaphore)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.SparseImageFormatFlagBits (SparseImageFormatFlags)
 import Vulkan.Core10.Enums.SparseMemoryBindFlagBits (SparseMemoryBindFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -457,14 +460,14 @@ foreign import ccall
 --
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Handles.Queue'
-queueBindSparse :: forall a io . (Extendss BindSparseInfo a, PokeChain a, MonadIO io) => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> io ()
+queueBindSparse :: forall io . MonadIO io => Queue -> ("bindInfo" ::: Vector (SomeStruct BindSparseInfo)) -> Fence -> io ()
 queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
   let vkQueueBindSparsePtr = pVkQueueBindSparse (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueBindSparsePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBindSparse is null" Nothing Nothing
   let vkQueueBindSparse' = mkVkQueueBindSparse vkQueueBindSparsePtr
   pPBindInfo <- ContT $ allocaBytesAligned @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _)) (e) . ($ ())) (bindInfo)
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _))) (e) . ($ ())) (bindInfo)
   r <- lift $ vkQueueBindSparse' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (bindInfo)) :: Word32)) (pPBindInfo) (fence)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
