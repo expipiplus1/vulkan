@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.3] - 2020-05-07
   - Move package from `Vulkan.VulkanMemoryAllocator` to just `VulkanMemoryAllocator`, #60
   - Make the continuation the last argument to 'bracket' functions, discussion
     on #49
