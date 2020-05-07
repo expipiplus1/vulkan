@@ -43,6 +43,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
 
+    - name: Remove examples for 8.6.5
+      run: |
+        sed -i '/examples/d' cabal.project
+      if: matrix.ghc == 'ghc-8.6.5'
+
     - name: Install dependencies
       run: |
         cabal update
