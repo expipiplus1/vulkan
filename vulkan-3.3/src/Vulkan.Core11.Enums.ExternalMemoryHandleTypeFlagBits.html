@@ -1,0 +1,661 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier">ExternalMemoryHandleTypeFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT</span></a></span><span>
+</span><span id="line-6"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT</span></a></span><span>
+</span><span id="line-7"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT</span></a></span><span>
+</span><span id="line-8"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT</span></a></span><span>
+</span><span id="line-9"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT</span></a></span><span>
+</span><span id="line-10"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT</span></a></span><span>
+</span><span id="line-11"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID</span></a></span><span>
+</span><span id="line-12"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"><span class="hs-identifier">EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT</span></a></span><span>
+</span><span id="line-13"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-14"></span><span>                                                                                               </span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlags"><span class="hs-identifier">ExternalMemoryHandleTypeFlags</span></a></span><span>
+</span><span id="line-16"></span><span>                                                             </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- | VkExternalMemoryHandleTypeFlagBits - Bit specifying external memory</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- handle types</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- Some external memory handle types can only be shared within the same</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- underlying physical device and\/or the same driver version, as defined</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- in the following table:</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- | Handle type                                                       | 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties'::@driverUUID@ | 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties'::@deviceUUID@ |</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'                       | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'                    | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT'                | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT'                   | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT'               | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT'                      | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT'                  | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT'             | No restriction                                                                                             | No restriction                                                                                             |</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'  | No restriction                                                                                             | No restriction                                                                                             |</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT'                     | No restriction                                                                                             | No restriction                                                                                             |</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID' | No restriction                                                                                             | No restriction                                                                                             |</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- External memory handle types compatibility</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- The above table does not restrict the drivers and devices with which</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT' and</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT' /may/</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- be shared, as these handle types inherently mean memory that does not</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- come from the same device, as they import memory from the host or a</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- foreign device, respectively.</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- Even though the above table does not restrict the drivers and devices</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- with which 'EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT' /may/ be</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- shared, query mechanisms exist in the Vulkan API that prevent the import</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- of incompatible dma-bufs (such as</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR')</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- and that prevent incompatible usage of dma-bufs (such as</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalBufferInfo'</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- and</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo').</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- 'ExternalMemoryHandleTypeFlags',</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR',</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryGetFdInfoKHR',</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryGetWin32HandleInfoKHR',</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalBufferInfo',</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo',</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR',</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_external_memory_host.getMemoryHostPointerPropertiesEXT',</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR'</span><span>
+</span><span id="line-104"></span><span class="hs-keyword">newtype</span><span> </span><span id="ExternalMemoryHandleTypeFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-var">ExternalMemoryHandleTypeFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ExternalMemoryHandleTypeFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-var">ExternalMemoryHandleTypeFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-105"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680039585"><span id="local-6989586621680039587"><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+(ExternalMemoryHandleTypeFlagBits
+ -&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool)
+-&gt; Eq ExternalMemoryHandleTypeFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+$c/= :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+== :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+$c== :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680039569"><span id="local-6989586621680039571"><span id="local-6989586621680039573"><span id="local-6989586621680039575"><span id="local-6989586621680039577"><span id="local-6989586621680039579"><span id="local-6989586621680039581"><span class="annot"><span class="annottext">Eq ExternalMemoryHandleTypeFlagBits
+Eq ExternalMemoryHandleTypeFlagBits =&gt;
+(ExternalMemoryHandleTypeFlagBits
+ -&gt; ExternalMemoryHandleTypeFlagBits -&gt; Ordering)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; Ord ExternalMemoryHandleTypeFlagBits
+ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Ordering
+ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+$cmin :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+max :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+$cmax :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+&gt;= :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+$c&gt;= :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+&gt; :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+$c&gt; :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+&lt;= :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+$c&lt;= :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+&lt; :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+$c&lt; :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Bool
+compare :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Ordering
+$ccompare :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; Ordering
+$cp1Ord :: Eq ExternalMemoryHandleTypeFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680039552"><span id="local-6989586621680039554"><span id="local-6989586621680039556"><span id="local-6989586621680039558"><span id="local-6989586621680039560"><span id="local-6989586621680039562"><span id="local-6989586621680039564"><span id="local-6989586621680039566"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits
+Ptr b -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; IO ExternalMemoryHandleTypeFlagBits
+Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits
+Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+ExternalMemoryHandleTypeFlagBits -&gt; Int
+(ExternalMemoryHandleTypeFlagBits -&gt; Int)
+-&gt; (ExternalMemoryHandleTypeFlagBits -&gt; Int)
+-&gt; (Ptr ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits)
+-&gt; (Ptr ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ())
+-&gt; (Ptr ExternalMemoryHandleTypeFlagBits
+    -&gt; IO ExternalMemoryHandleTypeFlagBits)
+-&gt; (Ptr ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ())
+-&gt; Storable ExternalMemoryHandleTypeFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits
+forall b. Ptr b -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+$cpoke :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+peek :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; IO ExternalMemoryHandleTypeFlagBits
+$cpeek :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; IO ExternalMemoryHandleTypeFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits
+pokeElemOff :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; IO ()
+peekElemOff :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits
+$cpeekElemOff :: Ptr ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; IO ExternalMemoryHandleTypeFlagBits
+alignment :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+$calignment :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+sizeOf :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+$csizeOf :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680039549"><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+ExternalMemoryHandleTypeFlagBits
+-&gt; Zero ExternalMemoryHandleTypeFlagBits
+forall a. a -&gt; Zero a
+zero :: ExternalMemoryHandleTypeFlagBits
+$czero :: ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680039503"><span id="local-6989586621680039505"><span id="local-6989586621680039507"><span id="local-6989586621680039509"><span id="local-6989586621680039511"><span id="local-6989586621680039513"><span id="local-6989586621680039515"><span id="local-6989586621680039517"><span id="local-6989586621680039519"><span id="local-6989586621680039521"><span id="local-6989586621680039523"><span id="local-6989586621680039525"><span id="local-6989586621680039527"><span id="local-6989586621680039529"><span id="local-6989586621680039531"><span id="local-6989586621680039533"><span id="local-6989586621680039535"><span id="local-6989586621680039537"><span id="local-6989586621680039539"><span id="local-6989586621680039541"><span id="local-6989586621680039543"><span id="local-6989586621680039545"><span class="annot"><span class="annottext">Eq ExternalMemoryHandleTypeFlagBits
+ExternalMemoryHandleTypeFlagBits
+Eq ExternalMemoryHandleTypeFlagBits =&gt;
+(ExternalMemoryHandleTypeFlagBits
+ -&gt; ExternalMemoryHandleTypeFlagBits
+ -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; (Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits -&gt; Int -&gt; Bool)
+-&gt; (ExternalMemoryHandleTypeFlagBits -&gt; Maybe Int)
+-&gt; (ExternalMemoryHandleTypeFlagBits -&gt; Int)
+-&gt; (ExternalMemoryHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits)
+-&gt; (ExternalMemoryHandleTypeFlagBits -&gt; Int)
+-&gt; Bits ExternalMemoryHandleTypeFlagBits
+Int -&gt; ExternalMemoryHandleTypeFlagBits
+ExternalMemoryHandleTypeFlagBits -&gt; Bool
+ExternalMemoryHandleTypeFlagBits -&gt; Int
+ExternalMemoryHandleTypeFlagBits -&gt; Maybe Int
+ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+ExternalMemoryHandleTypeFlagBits -&gt; Int -&gt; Bool
+ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+$cpopCount :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+rotateR :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$crotateR :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+rotateL :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$crotateL :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+unsafeShiftR :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$cunsafeShiftR :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+shiftR :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$cshiftR :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+unsafeShiftL :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$cunsafeShiftL :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+shiftL :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$cshiftL :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+isSigned :: ExternalMemoryHandleTypeFlagBits -&gt; Bool
+$cisSigned :: ExternalMemoryHandleTypeFlagBits -&gt; Bool
+bitSize :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+$cbitSize :: ExternalMemoryHandleTypeFlagBits -&gt; Int
+bitSizeMaybe :: ExternalMemoryHandleTypeFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: ExternalMemoryHandleTypeFlagBits -&gt; Maybe Int
+testBit :: ExternalMemoryHandleTypeFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: ExternalMemoryHandleTypeFlagBits -&gt; Int -&gt; Bool
+complementBit :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$ccomplementBit :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+clearBit :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$cclearBit :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+setBit :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$csetBit :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+bit :: Int -&gt; ExternalMemoryHandleTypeFlagBits
+$cbit :: Int -&gt; ExternalMemoryHandleTypeFlagBits
+zeroBits :: ExternalMemoryHandleTypeFlagBits
+$czeroBits :: ExternalMemoryHandleTypeFlagBits
+rotate :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$crotate :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+shift :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+$cshift :: ExternalMemoryHandleTypeFlagBits
+-&gt; Int -&gt; ExternalMemoryHandleTypeFlagBits
+complement :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+$ccomplement :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+xor :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+$cxor :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+.|. :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+$c.|. :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+.&amp;. :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+$c.&amp;. :: ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+-&gt; ExternalMemoryHandleTypeFlagBits
+$cp1Bits :: Eq ExternalMemoryHandleTypeFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT' specifies a POSIX file</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- descriptor handle that has only limited valid usage outside of Vulkan</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- and other compatible APIs. It /must/ be compatible with the POSIX system</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- calls @dup@, @dup2@, @close@, and the non-standard system call @dup3@.</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- Additionally, it /must/ be transportable over a socket using an</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- @SCM_RIGHTS@ control message. It owns a reference to the underlying</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- memory resource represented by its Vulkan memory object.</span><span>
+</span><span id="line-114"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT handle</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- that has only limited valid usage outside of Vulkan and other compatible</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- APIs. It /must/ be compatible with the functions @DuplicateHandle@,</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- @SetHandleInformation@. It owns a reference to the underlying memory</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- resource represented by its Vulkan memory object.</span><span>
+</span><span id="line-121"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a global</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- share handle that has only limited valid usage outside of Vulkan and</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- other compatible APIs. It is not compatible with any native APIs. It</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- does not own a reference to the underlying memory resource represented</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- its Vulkan memory object, and will therefore become invalid when all</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- Vulkan memory objects associated with it are destroyed.</span><span>
+</span><span id="line-128"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000004</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT' specifies an NT handle</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- returned by @IDXGIResource1@::@CreateSharedHandle@ referring to a</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- Direct3D 10 or 11 texture resource. It owns a reference to the memory</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- used by the Direct3D resource.</span><span>
+</span><span id="line-133"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000008</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT' specifies a global</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- share handle returned by @IDXGIResource@::@GetSharedHandle@ referring to</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- a Direct3D 10 or 11 texture resource. It does not own a reference to the</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- underlying Direct3D resource, and will therefore become invalid when all</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- Vulkan memory objects and Direct3D resources associated with it are</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- destroyed.</span><span>
+</span><span id="line-140"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000010</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT' specifies an NT handle</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- 12 heap resource. It owns a reference to the resources used by the</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- Direct3D heap.</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000020</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT' specifies an NT handle</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- 12 committed resource. It owns a reference to the memory used by the</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- Direct3D resource.</span><span>
+</span><span id="line-150"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000040</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'</span><span>
+</span><span id="line-152"></span><span class="hs-comment">-- specifies a host pointer to /host mapped foreign memory/. It does not</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- own a reference to the underlying memory resource, and will therefore</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- become invalid if the foreign memory is unmapped or otherwise becomes no</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- longer available.</span><span>
+</span><span id="line-156"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000100</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT' specifies a host</span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- pointer returned by a host memory allocation command. It does not own a</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- reference to the underlying memory resource, and will therefore become</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- invalid if the host memory is freed.</span><span>
+</span><span id="line-161"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000080</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- specifies an 'Vulkan.Extensions.WSITypes.AHardwareBuffer' object defined</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- by the Android NDK. See</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers&gt;</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- for more details of this handle type.</span><span>
+</span><span id="line-167"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000400</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT' is a file descriptor for a</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- Linux dma_buf. It owns a reference to the underlying memory resource</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- represented by its Vulkan memory object.</span><span>
+</span><span id="line-171"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"><span id="%24mEXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"><span id="EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"><span class="annot"><span class="annottext">$bEXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT :: ExternalMemoryHandleTypeFlagBits
+$mEXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT :: forall r.
+ExternalMemoryHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#%24bEXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000200</span><span>
+</span><span id="line-172"></span><span>
+</span><span id="line-173"></span><span class="hs-keyword">type</span><span> </span><span id="ExternalMemoryHandleTypeFlags"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlags"><span class="hs-identifier hs-var">ExternalMemoryHandleTypeFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span>
+</span><span id="line-174"></span><span>
+</span><span id="line-175"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680039475"><span id="local-6989586621680039477"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-176"></span><span>  </span><span id="local-6989586621680039473"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ExternalMemoryHandleTypeFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680039471"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680039471"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-177"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT&quot;</span></span><span>
+</span><span id="line-178"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT&quot;</span></span><span>
+</span><span id="line-179"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT&quot;</span></span><span>
+</span><span id="line-180"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT&quot;</span></span><span>
+</span><span id="line-181"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT&quot;</span></span><span>
+</span><span id="line-182"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT&quot;</span></span><span>
+</span><span id="line-183"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT&quot;</span></span><span>
+</span><span id="line-184"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT&quot;</span></span><span>
+</span><span id="line-185"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT&quot;</span></span><span>
+</span><span id="line-186"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID&quot;</span></span><span>
+</span><span id="line-187"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"><span class="hs-identifier hs-type">EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT&quot;</span></span><span>
+</span><span id="line-188"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span id="local-6989586621680039470"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680039470"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680039471"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalMemoryHandleTypeFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680039470"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-189"></span><span>
+</span><span id="line-190"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680039462"><span id="local-6989586621680039465"><span id="local-6989586621680039467"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalMemoryHandleTypeFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-191"></span><span>  </span><span id="local-6989586621680039460"><span class="annot"><span class="annottext">readPrec :: ReadPrec ExternalMemoryHandleTypeFlagBits
+</span><a href="#local-6989586621680039460"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec ExternalMemoryHandleTypeFlagBits)]
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-192"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-193"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-194"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-195"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-196"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-197"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-198"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-199"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-200"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-201"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"><span class="hs-identifier hs-var">EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-202"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-203"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-204"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalMemoryHandleTypeFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span>                       </span><span id="local-6989586621680039459"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680039459"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-206"></span><span>                       </span><span class="annot"><span class="annottext">ExternalMemoryHandleTypeFlagBits
+-&gt; ReadPrec ExternalMemoryHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; ExternalMemoryHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.html#ExternalMemoryHandleTypeFlagBits"><span class="hs-identifier hs-var">ExternalMemoryHandleTypeFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680039459"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-207"></span><span>
+</span><span id="line-208"></span></pre></body></html>

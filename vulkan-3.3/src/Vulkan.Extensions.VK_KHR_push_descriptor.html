@@ -1,0 +1,944 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_KHR_push_descriptor</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#cmdPushDescriptorSetKHR"><span class="hs-identifier">cmdPushDescriptorSetKHR</span></a></span><span>
+</span><span id="line-3"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#cmdPushDescriptorSetWithTemplateKHR"><span class="hs-identifier">cmdPushDescriptorSetWithTemplateKHR</span></a></span><span>
+</span><span id="line-4"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span class="hs-identifier">KHR_PUSH_DESCRIPTOR_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span class="hs-identifier">KHR_PUSH_DESCRIPTOR_SPEC_VERSION</span></a></span><span>
+</span><span id="line-7"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span class="hs-identifier">KHR_PUSH_DESCRIPTOR_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span class="hs-identifier">KHR_PUSH_DESCRIPTOR_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-9"></span><span>                                                 </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">imapM_</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">length</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Vector</span></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#forgetExtensions"><span class="hs-identifier">forgetExtensions</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#pokeSomeCStruct"><span class="hs-identifier">pokeSomeCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier">CommandBuffer</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier">CommandBuffer</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier">CommandBuffer_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core11.Handles.html"><span class="hs-identifier">Vulkan.Core11.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Handles.html#DescriptorUpdateTemplate"><span class="hs-identifier">DescriptorUpdateTemplate</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core11.Handles.html"><span class="hs-identifier">Vulkan.Core11.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Handles.html#DescriptorUpdateTemplate"><span class="hs-identifier">DescriptorUpdateTemplate</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkCmdPushDescriptorSetKHR%3ADeviceCmds"><span class="hs-identifier">pVkCmdPushDescriptorSetKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkCmdPushDescriptorSetWithTemplateKHR%3ADeviceCmds"><span class="hs-identifier">pVkCmdPushDescriptorSetWithTemplateKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineBindPoint.html"><span class="hs-identifier">Vulkan.Core10.Enums.PipelineBindPoint</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineBindPoint.html#PipelineBindPoint"><span class="hs-identifier">PipelineBindPoint</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineBindPoint.html"><span class="hs-identifier">Vulkan.Core10.Enums.PipelineBindPoint</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineBindPoint.html#PipelineBindPoint"><span class="hs-identifier">PipelineBindPoint</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier">PipelineLayout</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier">PipelineLayout</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#SomeStruct"><span class="hs-identifier">SomeStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html"><span class="hs-identifier">Vulkan.Core10.DescriptorSet</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#WriteDescriptorSet"><span class="hs-identifier">WriteDescriptorSet</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span id="local-6989586621680115682"><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkCmdPushDescriptorSetKHR"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#mkVkCmdPushDescriptorSetKHR"><span class="hs-identifier hs-var">mkVkCmdPushDescriptorSetKHR</span></a></span></span><span>
+</span><span id="line-65"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier hs-type">CommandBuffer_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineBindPoint.html#PipelineBindPoint"><span class="hs-identifier hs-type">PipelineBindPoint</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier hs-type">PipelineLayout</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#WriteDescriptorSet"><span class="hs-identifier hs-type">WriteDescriptorSet</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680115682"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier hs-type">CommandBuffer_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineBindPoint.html#PipelineBindPoint"><span class="hs-identifier hs-type">PipelineBindPoint</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier hs-type">PipelineLayout</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#WriteDescriptorSet"><span class="hs-identifier hs-type">WriteDescriptorSet</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680115682"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-66"></span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- | vkCmdPushDescriptorSetKHR - Pushes descriptor updates into a command</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- buffer</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- = Parameters</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- -   @commandBuffer@ is the command buffer that the descriptors will be</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--     recorded in.</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- -   @pipelineBindPoint@ is a</span><span>
+</span><span id="line-76"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--     whether the descriptors will be used by graphics pipelines or</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--     compute pipelines. There is a separate set of push descriptor</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--     bindings for each of graphics and compute, so binding one does not</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--     disturb the other.</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- -   @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--     program the bindings.</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- -   @set@ is the set number of the descriptor set in the pipeline layout</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--     that will be updated.</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- -   @descriptorWriteCount@ is the number of elements in the</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--     @pDescriptorWrites@ array.</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- -   @pDescriptorWrites@ is a pointer to an array of</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--     describing the descriptors to be updated.</span><span>
+</span><span id="line-94"></span><span class="hs-comment">--</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- /Push descriptors/ are a small bank of descriptors whose storage is</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- internally managed by the command buffer rather than being written into</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- a descriptor set and later bound to a command buffer. Push descriptors</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- allow for incremental updates of descriptors without managing the</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- lifetime of descriptor sets.</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- When a command buffer begins recording, all push descriptors are</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- undefined. Push descriptors /can/ be updated incrementally and cause</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- shaders to use the updated descriptors for subsequent rendering commands</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- (either compute or graphics, according to the @pipelineBindPoint@) until</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- the descriptor is overwritten, or else until the set is disturbed as</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- described in</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility&gt;.</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- When the set is disturbed or push descriptors with a different</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- descriptor set layout are set, all push descriptors are undefined.</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- Push descriptors that are</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-staticuse statically used&gt;</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- by a pipeline /must/ not be undefined at the time that a draw or</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- dispatch command is recorded to execute using that pipeline. This</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- includes immutable sampler descriptors, which /must/ be pushed before</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- they are accessed by a pipeline (the immutable samplers are pushed,</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- rather than the samplers in @pDescriptorWrites@). Push descriptors that</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- are not statically used /can/ remain undefined.</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- Push descriptors do not use dynamic offsets. Instead, the corresponding</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- non-dynamic descriptor types /can/ be used and the @offset@ member of</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' /can/ be changed each</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- time the descriptor is written.</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- Each element of @pDescriptorWrites@ is interpreted as in</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', except the @dstSet@</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- member is ignored.</span><span>
+</span><span id="line-130"></span><span class="hs-comment">--</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- To push an immutable sampler, use a</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' with @dstBinding@ and</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- @dstArrayElement@ selecting the immutable sampler&#8217;s binding. If the</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- descriptor type is</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER', the</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- @pImageInfo@ parameter is ignored and the immutable sampler is taken</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- from the push descriptor set layout in the pipeline layout. If the</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- descriptor type is</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- the @sampler@ member of the @pImageInfo@ parameter is ignored and the</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- immutable sampler is taken from the push descriptor set layout in the</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- pipeline layout.</span><span>
+</span><span id="line-143"></span><span class="hs-comment">--</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- -   @pipelineBindPoint@ /must/ be supported by the @commandBuffer@&#8217;s</span><span>
+</span><span id="line-147"></span><span class="hs-comment">--     parent 'Vulkan.Core10.Handles.CommandPool'&#8217;s queue family</span><span>
+</span><span id="line-148"></span><span class="hs-comment">--</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- -   @set@ /must/ be less than</span><span>
+</span><span id="line-150"></span><span class="hs-comment">--     'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@</span><span>
+</span><span id="line-151"></span><span class="hs-comment">--     provided when @layout@ was created</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- -   @set@ /must/ be the unique set number in the pipeline layout that</span><span>
+</span><span id="line-154"></span><span class="hs-comment">--     uses a descriptor set layout that was created with</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'</span><span>
+</span><span id="line-156"></span><span class="hs-comment">--</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- -   @commandBuffer@ /must/ be a valid</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.CommandBuffer' handle</span><span>
+</span><span id="line-161"></span><span class="hs-comment">--</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- -   @pipelineBindPoint@ /must/ be a valid</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value</span><span>
+</span><span id="line-164"></span><span class="hs-comment">--</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- -   @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'</span><span>
+</span><span id="line-166"></span><span class="hs-comment">--     handle</span><span>
+</span><span id="line-167"></span><span class="hs-comment">--</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- -   @pDescriptorWrites@ /must/ be a valid pointer to an array of</span><span>
+</span><span id="line-169"></span><span class="hs-comment">--     @descriptorWriteCount@ valid</span><span>
+</span><span id="line-170"></span><span class="hs-comment">--     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures</span><span>
+</span><span id="line-171"></span><span class="hs-comment">--</span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- -   @commandBuffer@ /must/ be in the</span><span>
+</span><span id="line-173"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state&gt;</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was</span><span>
+</span><span id="line-176"></span><span class="hs-comment">--     allocated from /must/ support graphics, or compute operations</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- -   @descriptorWriteCount@ /must/ be greater than @0@</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- -   Both of @commandBuffer@, and @layout@ /must/ have been created,</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'</span><span>
+</span><span id="line-182"></span><span class="hs-comment">--</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-184"></span><span class="hs-comment">--</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- -   Host access to @commandBuffer@ /must/ be externally synchronized</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that</span><span>
+</span><span id="line-188"></span><span class="hs-comment">--     @commandBuffer@ was allocated from /must/ be externally synchronized</span><span>
+</span><span id="line-189"></span><span class="hs-comment">--</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- == Command Properties</span><span>
+</span><span id="line-191"></span><span class="hs-comment">--</span><span>
+</span><span id="line-192"></span><span class="hs-comment">-- \'</span><span>
+</span><span id="line-193"></span><span class="hs-comment">--</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-195"></span><span class="hs-comment">-- | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type&gt; |</span><span>
+</span><span id="line-196"></span><span class="hs-comment">-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |</span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-200"></span><span class="hs-comment">--</span><span>
+</span><span id="line-201"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-202"></span><span class="hs-comment">--</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.CommandBuffer',</span><span>
+</span><span id="line-204"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.PipelineLayout',</span><span>
+</span><span id="line-206"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'</span><span>
+</span><span id="line-207"></span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#cmdPushDescriptorSetKHR"><span class="hs-identifier hs-type">cmdPushDescriptorSetKHR</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680115596"><span class="annot"><a href="#local-6989586621680115596"><span class="hs-identifier hs-type">io</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680115596"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineBindPoint.html#PipelineBindPoint"><span class="hs-identifier hs-type">PipelineBindPoint</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier hs-type">PipelineLayout</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;set&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;descriptorWrites&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#SomeStruct"><span class="hs-identifier hs-type">SomeStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#WriteDescriptorSet"><span class="hs-identifier hs-type">WriteDescriptorSet</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680115596"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span id="cmdPushDescriptorSetKHR"><span class="annot"><span class="annottext">cmdPushDescriptorSetKHR :: CommandBuffer
+-&gt; PipelineBindPoint
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet))
+-&gt; io ()
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#cmdPushDescriptorSetKHR"><span class="hs-identifier hs-var hs-var">cmdPushDescriptorSetKHR</span></a></span></span><span> </span><span id="local-6989586621680115595"><span class="annot"><span class="annottext">commandBuffer :: CommandBuffer
+</span><a href="#local-6989586621680115595"><span class="hs-identifier hs-var">commandBuffer</span></a></span></span><span> </span><span id="local-6989586621680115594"><span class="annot"><span class="annottext">pipelineBindPoint :: PipelineBindPoint
+</span><a href="#local-6989586621680115594"><span class="hs-identifier hs-var">pipelineBindPoint</span></a></span></span><span> </span><span id="local-6989586621680115593"><span class="annot"><span class="annottext">layout :: PipelineLayout
+</span><a href="#local-6989586621680115593"><span class="hs-identifier hs-var">layout</span></a></span></span><span> </span><span id="local-6989586621680115592"><span class="annot"><span class="annottext">set :: &quot;set&quot; ::: Word32
+</span><a href="#local-6989586621680115592"><span class="hs-identifier hs-var">set</span></a></span></span><span> </span><span id="local-6989586621680115591"><span class="annot"><span class="annottext">descriptorWrites :: &quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet)
+</span><a href="#local-6989586621680115591"><span class="hs-identifier hs-var">descriptorWrites</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ())
+-&gt; (ContT () IO () -&gt; IO ()) -&gt; ContT () IO () -&gt; io ()
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT () IO () -&gt; IO ()
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT () IO () -&gt; io ()) -&gt; ContT () IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-209"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680115589"><span class="annot"><span class="annottext">vkCmdPushDescriptorSetKHRPtr :: FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; PipelineBindPoint
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+   -&gt; IO ())
+</span><a href="#local-6989586621680115589"><span class="hs-identifier hs-var hs-var">vkCmdPushDescriptorSetKHRPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; forall (a :: [*]).
+   FunPtr
+     (Ptr CommandBuffer_T
+      -&gt; PipelineBindPoint
+      -&gt; PipelineLayout
+      -&gt; (&quot;set&quot; ::: Word32)
+      -&gt; (&quot;set&quot; ::: Word32)
+      -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet a))
+      -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkCmdPushDescriptorSetKHR%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkCmdPushDescriptorSetKHR</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ACommandBuffer"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer
+</span><a href="#local-6989586621680115595"><span class="hs-identifier hs-var">commandBuffer</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-210"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT () IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT () IO ()) -&gt; IO () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; PipelineBindPoint
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+   -&gt; IO ())
+</span><a href="#local-6989586621680115589"><span class="hs-identifier hs-var">vkCmdPushDescriptorSetKHRPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; PipelineBindPoint
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+   -&gt; IO ())
+-&gt; FunPtr
+     (Ptr CommandBuffer_T
+      -&gt; PipelineBindPoint
+      -&gt; PipelineLayout
+      -&gt; (&quot;set&quot; ::: Word32)
+      -&gt; (&quot;set&quot; ::: Word32)
+      -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+      -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; PipelineBindPoint
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+   -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-211"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkCmdPushDescriptorSetKHR is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-212"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680115584"><span class="annot"><span class="annottext">vkCmdPushDescriptorSetKHR' :: Ptr CommandBuffer_T
+-&gt; PipelineBindPoint
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+-&gt; IO ()
+</span><a href="#local-6989586621680115584"><span class="hs-identifier hs-var hs-var">vkCmdPushDescriptorSetKHR'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; PipelineBindPoint
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+   -&gt; IO ())
+-&gt; Ptr CommandBuffer_T
+-&gt; PipelineBindPoint
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+-&gt; IO ()
+forall (a :: [*]).
+FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; PipelineBindPoint
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; Ptr (WriteDescriptorSet a)
+   -&gt; IO ())
+-&gt; Ptr CommandBuffer_T
+-&gt; PipelineBindPoint
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; Ptr (WriteDescriptorSet a)
+-&gt; IO ()
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#mkVkCmdPushDescriptorSetKHR"><span class="hs-identifier hs-var">mkVkCmdPushDescriptorSetKHR</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; PipelineBindPoint
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+   -&gt; IO ())
+</span><a href="#local-6989586621680115589"><span class="hs-identifier hs-var">vkCmdPushDescriptorSetKHRPtr</span></a></span><span>
+</span><span id="line-213"></span><span>  </span><span id="local-6989586621680115583"><span class="annot"><span class="annottext">&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any)
+</span><a href="#local-6989586621680115583"><span class="hs-identifier hs-var">pPDescriptorWrites</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any)) -&gt; IO ())
+ -&gt; IO ())
+-&gt; ContT
+     () IO (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any)) -&gt; IO ())
+  -&gt; IO ())
+ -&gt; ContT
+      () IO (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any)))
+-&gt; (((&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+     -&gt; IO ())
+    -&gt; IO ())
+-&gt; ContT
+     () IO (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; ((&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+    -&gt; IO ())
+-&gt; IO ()
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#WriteDescriptorSet"><span class="hs-identifier hs-type">WriteDescriptorSet</span></a></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet))
+-&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet)
+</span><a href="#local-6989586621680115591"><span class="hs-identifier hs-var">descriptorWrites</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="hs-number">64</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-214"></span><span>  </span><span class="annot"><span class="annottext">(Int -&gt; SomeStruct WriteDescriptorSet -&gt; ContT () IO ())
+-&gt; (&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet))
+-&gt; ContT () IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680115580"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680115580"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680115579"><span class="annot"><span class="annottext">e :: SomeStruct WriteDescriptorSet
+</span><a href="#local-6989586621680115579"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">((() -&gt; IO ()) -&gt; IO ()) -&gt; ContT () IO ()
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((() -&gt; IO ()) -&gt; IO ()) -&gt; ContT () IO ())
+-&gt; ((() -&gt; IO ()) -&gt; IO ()) -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (SomeStruct WriteDescriptorSet)
+-&gt; SomeStruct WriteDescriptorSet -&gt; IO () -&gt; IO ()
+forall (a :: [*] -&gt; *) b.
+(forall (es :: [*]).
+ (Extendss a es, PokeChain es) =&gt;
+ ToCStruct (a es)) =&gt;
+Ptr (SomeStruct a) -&gt; SomeStruct a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.Extends.html#pokeSomeCStruct"><span class="hs-identifier hs-var">pokeSomeCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+-&gt; Ptr (SomeStruct WriteDescriptorSet)
+forall (a :: [*] -&gt; *) (es :: [*]).
+Ptr (a es) -&gt; Ptr (SomeStruct a)
+</span><a href="Vulkan.CStruct.Extends.html#forgetExtensions"><span class="hs-identifier hs-var">forgetExtensions</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any)
+</span><a href="#local-6989586621680115583"><span class="hs-identifier hs-var">pPDescriptorWrites</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+-&gt; Int -&gt; Ptr (WriteDescriptorSet _)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">64</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680115580"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#WriteDescriptorSet"><span class="hs-identifier hs-type">WriteDescriptorSet</span></a></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SomeStruct WriteDescriptorSet
+</span><a href="#local-6989586621680115579"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ())
+-&gt; ((() -&gt; IO ()) -&gt; IO ()) -&gt; (() -&gt; IO ()) -&gt; IO ()
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(() -&gt; IO ()) -&gt; () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet)
+</span><a href="#local-6989586621680115591"><span class="hs-identifier hs-var">descriptorWrites</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-215"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT () IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT () IO ()) -&gt; IO () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBuffer_T
+-&gt; PipelineBindPoint
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any))
+-&gt; IO ()
+</span><a href="#local-6989586621680115584"><span class="hs-identifier hs-var">vkCmdPushDescriptorSetKHR'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer -&gt; Ptr CommandBuffer_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AcommandBufferHandle%3ACommandBuffer"><span class="hs-identifier hs-var hs-var">commandBufferHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer
+</span><a href="#local-6989586621680115595"><span class="hs-identifier hs-var">commandBuffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PipelineBindPoint
+</span><a href="#local-6989586621680115594"><span class="hs-identifier hs-var">pipelineBindPoint</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PipelineLayout
+</span><a href="#local-6989586621680115593"><span class="hs-identifier hs-var">layout</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;set&quot; ::: Word32
+</span><a href="#local-6989586621680115592"><span class="hs-identifier hs-var">set</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; &quot;set&quot; ::: Word32
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet))
+-&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">((&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet))
+ -&gt; Int)
+-&gt; (&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet))
+-&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;descriptorWrites&quot; ::: Vector (SomeStruct WriteDescriptorSet)
+</span><a href="#local-6989586621680115591"><span class="hs-identifier hs-var">descriptorWrites</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pDescriptorWrites&quot; ::: Ptr (WriteDescriptorSet Any)
+</span><a href="#local-6989586621680115583"><span class="hs-identifier hs-var">pPDescriptorWrites</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-216"></span><span>  </span><span class="annot"><span class="annottext">() -&gt; ContT () IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(() -&gt; ContT () IO ()) -&gt; () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-217"></span><span>
+</span><span id="line-218"></span><span>
+</span><span id="line-219"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkCmdPushDescriptorSetWithTemplateKHR"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#mkVkCmdPushDescriptorSetWithTemplateKHR"><span class="hs-identifier hs-var">mkVkCmdPushDescriptorSetWithTemplateKHR</span></a></span></span><span>
+</span><span id="line-224"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier hs-type">CommandBuffer_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core11.Handles.html#DescriptorUpdateTemplate"><span class="hs-identifier hs-type">DescriptorUpdateTemplate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier hs-type">PipelineLayout</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer_T"><span class="hs-identifier hs-type">CommandBuffer_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core11.Handles.html#DescriptorUpdateTemplate"><span class="hs-identifier hs-type">DescriptorUpdateTemplate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier hs-type">PipelineLayout</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-225"></span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- | vkCmdPushDescriptorSetWithTemplateKHR - Pushes descriptor updates into a</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- command buffer using a descriptor update template</span><span>
+</span><span id="line-228"></span><span class="hs-comment">--</span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- = Parameters</span><span>
+</span><span id="line-230"></span><span class="hs-comment">--</span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- -   @commandBuffer@ is the command buffer that the descriptors will be</span><span>
+</span><span id="line-232"></span><span class="hs-comment">--     recorded in.</span><span>
+</span><span id="line-233"></span><span class="hs-comment">--</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- -   @descriptorUpdateTemplate@ is a descriptor update template defining</span><span>
+</span><span id="line-235"></span><span class="hs-comment">--     how to interpret the descriptor information in @pData@.</span><span>
+</span><span id="line-236"></span><span class="hs-comment">--</span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- -   @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to</span><span>
+</span><span id="line-238"></span><span class="hs-comment">--     program the bindings. It /must/ be compatible with the layout used</span><span>
+</span><span id="line-239"></span><span class="hs-comment">--     to create the @descriptorUpdateTemplate@ handle.</span><span>
+</span><span id="line-240"></span><span class="hs-comment">--</span><span>
+</span><span id="line-241"></span><span class="hs-comment">-- -   @set@ is the set number of the descriptor set in the pipeline layout</span><span>
+</span><span id="line-242"></span><span class="hs-comment">--     that will be updated. This /must/ be the same number used to create</span><span>
+</span><span id="line-243"></span><span class="hs-comment">--     the @descriptorUpdateTemplate@ handle.</span><span>
+</span><span id="line-244"></span><span class="hs-comment">--</span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- -   @pData@ is a pointer to memory containing descriptors for the</span><span>
+</span><span id="line-246"></span><span class="hs-comment">--     templated update.</span><span>
+</span><span id="line-247"></span><span class="hs-comment">--</span><span>
+</span><span id="line-248"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-249"></span><span class="hs-comment">--</span><span>
+</span><span id="line-250"></span><span class="hs-comment">-- -   The @pipelineBindPoint@ specified during the creation of the</span><span>
+</span><span id="line-251"></span><span class="hs-comment">--     descriptor update template /must/ be supported by the</span><span>
+</span><span id="line-252"></span><span class="hs-comment">--     @commandBuffer@&#8217;s parent 'Vulkan.Core10.Handles.CommandPool'&#8217;s queue</span><span>
+</span><span id="line-253"></span><span class="hs-comment">--     family</span><span>
+</span><span id="line-254"></span><span class="hs-comment">--</span><span>
+</span><span id="line-255"></span><span class="hs-comment">-- -   @pData@ /must/ be a valid pointer to a memory containing one or more</span><span>
+</span><span id="line-256"></span><span class="hs-comment">--     valid instances of</span><span>
+</span><span id="line-257"></span><span class="hs-comment">--     'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',</span><span>
+</span><span id="line-258"></span><span class="hs-comment">--     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or</span><span>
+</span><span id="line-259"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.BufferView' in a layout defined by</span><span>
+</span><span id="line-260"></span><span class="hs-comment">--     @descriptorUpdateTemplate@ when it was created with</span><span>
+</span><span id="line-261"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR'</span><span>
+</span><span id="line-262"></span><span class="hs-comment">--</span><span>
+</span><span id="line-263"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-264"></span><span class="hs-comment">--</span><span>
+</span><span id="line-265"></span><span class="hs-comment">-- -   @commandBuffer@ /must/ be a valid</span><span>
+</span><span id="line-266"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.CommandBuffer' handle</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--</span><span>
+</span><span id="line-268"></span><span class="hs-comment">-- -   @descriptorUpdateTemplate@ /must/ be a valid</span><span>
+</span><span id="line-269"></span><span class="hs-comment">--     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle</span><span>
+</span><span id="line-270"></span><span class="hs-comment">--</span><span>
+</span><span id="line-271"></span><span class="hs-comment">-- -   @layout@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineLayout'</span><span>
+</span><span id="line-272"></span><span class="hs-comment">--     handle</span><span>
+</span><span id="line-273"></span><span class="hs-comment">--</span><span>
+</span><span id="line-274"></span><span class="hs-comment">-- -   @commandBuffer@ /must/ be in the</span><span>
+</span><span id="line-275"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state&gt;</span><span>
+</span><span id="line-276"></span><span class="hs-comment">--</span><span>
+</span><span id="line-277"></span><span class="hs-comment">-- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was</span><span>
+</span><span id="line-278"></span><span class="hs-comment">--     allocated from /must/ support graphics, or compute operations</span><span>
+</span><span id="line-279"></span><span class="hs-comment">--</span><span>
+</span><span id="line-280"></span><span class="hs-comment">-- -   Each of @commandBuffer@, @descriptorUpdateTemplate@, and @layout@</span><span>
+</span><span id="line-281"></span><span class="hs-comment">--     /must/ have been created, allocated, or retrieved from the same</span><span>
+</span><span id="line-282"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.Device'</span><span>
+</span><span id="line-283"></span><span class="hs-comment">--</span><span>
+</span><span id="line-284"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-285"></span><span class="hs-comment">--</span><span>
+</span><span id="line-286"></span><span class="hs-comment">-- -   Host access to @commandBuffer@ /must/ be externally synchronized</span><span>
+</span><span id="line-287"></span><span class="hs-comment">--</span><span>
+</span><span id="line-288"></span><span class="hs-comment">-- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that</span><span>
+</span><span id="line-289"></span><span class="hs-comment">--     @commandBuffer@ was allocated from /must/ be externally synchronized</span><span>
+</span><span id="line-290"></span><span class="hs-comment">--</span><span>
+</span><span id="line-291"></span><span class="hs-comment">-- == Command Properties</span><span>
+</span><span id="line-292"></span><span class="hs-comment">--</span><span>
+</span><span id="line-293"></span><span class="hs-comment">-- \'</span><span>
+</span><span id="line-294"></span><span class="hs-comment">--</span><span>
+</span><span id="line-295"></span><span class="hs-comment">-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-296"></span><span class="hs-comment">-- | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types&gt; | &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type&gt; |</span><span>
+</span><span id="line-297"></span><span class="hs-comment">-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+</span><span>
+</span><span id="line-298"></span><span class="hs-comment">-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |</span><span>
+</span><span id="line-299"></span><span class="hs-comment">-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |</span><span>
+</span><span id="line-300"></span><span class="hs-comment">-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-301"></span><span class="hs-comment">--</span><span>
+</span><span id="line-302"></span><span class="hs-comment">-- __API example.__</span><span>
+</span><span id="line-303"></span><span class="hs-comment">--</span><span>
+</span><span id="line-304"></span><span class="hs-comment">-- &gt; struct AppDataStructure</span><span>
+</span><span id="line-305"></span><span class="hs-comment">-- &gt; {</span><span>
+</span><span id="line-306"></span><span class="hs-comment">-- &gt;     VkDescriptorImageInfo  imageInfo;          // a single image info</span><span>
+</span><span id="line-307"></span><span class="hs-comment">-- &gt;     // ... some more application related data</span><span>
+</span><span id="line-308"></span><span class="hs-comment">-- &gt; };</span><span>
+</span><span id="line-309"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- &gt; const VkDescriptorUpdateTemplateEntry descriptorUpdateTemplateEntries[] =</span><span>
+</span><span id="line-311"></span><span class="hs-comment">-- &gt; {</span><span>
+</span><span id="line-312"></span><span class="hs-comment">-- &gt;     // binding to a single image descriptor</span><span>
+</span><span id="line-313"></span><span class="hs-comment">-- &gt;     {</span><span>
+</span><span id="line-314"></span><span class="hs-comment">-- &gt;         0,                                           // binding</span><span>
+</span><span id="line-315"></span><span class="hs-comment">-- &gt;         0,                                           // dstArrayElement</span><span>
+</span><span id="line-316"></span><span class="hs-comment">-- &gt;         1,                                           // descriptorCount</span><span>
+</span><span id="line-317"></span><span class="hs-comment">-- &gt;         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType</span><span>
+</span><span id="line-318"></span><span class="hs-comment">-- &gt;         offsetof(AppDataStructure, imageInfo),       // offset</span><span>
+</span><span id="line-319"></span><span class="hs-comment">-- &gt;         0                                            // stride is not required if descriptorCount is 1</span><span>
+</span><span id="line-320"></span><span class="hs-comment">-- &gt;     }</span><span>
+</span><span id="line-321"></span><span class="hs-comment">-- &gt; };</span><span>
+</span><span id="line-322"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-323"></span><span class="hs-comment">-- &gt; // create a descriptor update template for descriptor set updates</span><span>
+</span><span id="line-324"></span><span class="hs-comment">-- &gt; const VkDescriptorUpdateTemplateCreateInfo createInfo =</span><span>
+</span><span id="line-325"></span><span class="hs-comment">-- &gt; {</span><span>
+</span><span id="line-326"></span><span class="hs-comment">-- &gt;     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType</span><span>
+</span><span id="line-327"></span><span class="hs-comment">-- &gt;     NULL,                                                      // pNext</span><span>
+</span><span id="line-328"></span><span class="hs-comment">-- &gt;     0,                                                         // flags</span><span>
+</span><span id="line-329"></span><span class="hs-comment">-- &gt;     1,                                                         // descriptorUpdateEntryCount</span><span>
+</span><span id="line-330"></span><span class="hs-comment">-- &gt;     descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries</span><span>
+</span><span id="line-331"></span><span class="hs-comment">-- &gt;     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,   // templateType</span><span>
+</span><span id="line-332"></span><span class="hs-comment">-- &gt;     0,                                                         // descriptorSetLayout, ignored by given templateType</span><span>
+</span><span id="line-333"></span><span class="hs-comment">-- &gt;     VK_PIPELINE_BIND_POINT_GRAPHICS,                           // pipelineBindPoint</span><span>
+</span><span id="line-334"></span><span class="hs-comment">-- &gt;     myPipelineLayout,                                          // pipelineLayout</span><span>
+</span><span id="line-335"></span><span class="hs-comment">-- &gt;     0,                                                         // set</span><span>
+</span><span id="line-336"></span><span class="hs-comment">-- &gt; };</span><span>
+</span><span id="line-337"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-338"></span><span class="hs-comment">-- &gt; VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;</span><span>
+</span><span id="line-339"></span><span class="hs-comment">-- &gt; myResult = vkCreateDescriptorUpdateTemplate(</span><span>
+</span><span id="line-340"></span><span class="hs-comment">-- &gt;     myDevice,</span><span>
+</span><span id="line-341"></span><span class="hs-comment">-- &gt;     &amp;createInfo,</span><span>
+</span><span id="line-342"></span><span class="hs-comment">-- &gt;     NULL,</span><span>
+</span><span id="line-343"></span><span class="hs-comment">-- &gt;     &amp;myDescriptorUpdateTemplate);</span><span>
+</span><span id="line-344"></span><span class="hs-comment">-- &gt; }</span><span>
+</span><span id="line-345"></span><span class="hs-comment">-- &gt;</span><span>
+</span><span id="line-346"></span><span class="hs-comment">-- &gt; AppDataStructure appData;</span><span>
+</span><span id="line-347"></span><span class="hs-comment">-- &gt; // fill appData here or cache it in your engine</span><span>
+</span><span id="line-348"></span><span class="hs-comment">-- &gt; vkCmdPushDescriptorSetWithTemplateKHR(myCmdBuffer, myDescriptorUpdateTemplate, myPipelineLayout, 0,&amp;appData);</span><span>
+</span><span id="line-349"></span><span class="hs-comment">--</span><span>
+</span><span id="line-350"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-351"></span><span class="hs-comment">--</span><span>
+</span><span id="line-352"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.CommandBuffer',</span><span>
+</span><span id="line-353"></span><span class="hs-comment">-- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',</span><span>
+</span><span id="line-354"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.PipelineLayout'</span><span>
+</span><span id="line-355"></span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#cmdPushDescriptorSetWithTemplateKHR"><span class="hs-identifier hs-type">cmdPushDescriptorSetWithTemplateKHR</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680115576"><span class="annot"><a href="#local-6989586621680115576"><span class="hs-identifier hs-type">io</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680115576"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core11.Handles.html#DescriptorUpdateTemplate"><span class="hs-identifier hs-type">DescriptorUpdateTemplate</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#PipelineLayout"><span class="hs-identifier hs-type">PipelineLayout</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;set&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;data&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680115576"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-356"></span><span id="cmdPushDescriptorSetWithTemplateKHR"><span class="annot"><span class="annottext">cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer
+-&gt; DescriptorUpdateTemplate
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;data&quot; ::: Ptr ())
+-&gt; io ()
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#cmdPushDescriptorSetWithTemplateKHR"><span class="hs-identifier hs-var hs-var">cmdPushDescriptorSetWithTemplateKHR</span></a></span></span><span> </span><span id="local-6989586621680115575"><span class="annot"><span class="annottext">commandBuffer :: CommandBuffer
+</span><a href="#local-6989586621680115575"><span class="hs-identifier hs-var">commandBuffer</span></a></span></span><span> </span><span id="local-6989586621680115574"><span class="annot"><span class="annottext">descriptorUpdateTemplate :: DescriptorUpdateTemplate
+</span><a href="#local-6989586621680115574"><span class="hs-identifier hs-var">descriptorUpdateTemplate</span></a></span></span><span> </span><span id="local-6989586621680115573"><span class="annot"><span class="annottext">layout :: PipelineLayout
+</span><a href="#local-6989586621680115573"><span class="hs-identifier hs-var">layout</span></a></span></span><span> </span><span id="local-6989586621680115572"><span class="annot"><span class="annottext">set :: &quot;set&quot; ::: Word32
+</span><a href="#local-6989586621680115572"><span class="hs-identifier hs-var">set</span></a></span></span><span> </span><span id="local-6989586621680115571"><span class="annot"><span class="annottext">data' :: &quot;data&quot; ::: Ptr ()
+</span><a href="#local-6989586621680115571"><span class="hs-identifier hs-var">data'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-357"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680115570"><span class="annot"><span class="annottext">vkCmdPushDescriptorSetWithTemplateKHRPtr :: FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; DescriptorUpdateTemplate
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;data&quot; ::: Ptr ())
+   -&gt; IO ())
+</span><a href="#local-6989586621680115570"><span class="hs-identifier hs-var hs-var">vkCmdPushDescriptorSetWithTemplateKHRPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr CommandBuffer_T
+      -&gt; DescriptorUpdateTemplate
+      -&gt; PipelineLayout
+      -&gt; (&quot;set&quot; ::: Word32)
+      -&gt; (&quot;data&quot; ::: Ptr ())
+      -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkCmdPushDescriptorSetWithTemplateKHR%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkCmdPushDescriptorSetWithTemplateKHR</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ACommandBuffer"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer
+</span><a href="#local-6989586621680115575"><span class="hs-identifier hs-var">commandBuffer</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-358"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; DescriptorUpdateTemplate
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;data&quot; ::: Ptr ())
+   -&gt; IO ())
+</span><a href="#local-6989586621680115570"><span class="hs-identifier hs-var">vkCmdPushDescriptorSetWithTemplateKHRPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; DescriptorUpdateTemplate
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;data&quot; ::: Ptr ())
+   -&gt; IO ())
+-&gt; FunPtr
+     (Ptr CommandBuffer_T
+      -&gt; DescriptorUpdateTemplate
+      -&gt; PipelineLayout
+      -&gt; (&quot;set&quot; ::: Word32)
+      -&gt; (&quot;data&quot; ::: Ptr ())
+      -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; DescriptorUpdateTemplate
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;data&quot; ::: Ptr ())
+   -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-359"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkCmdPushDescriptorSetWithTemplateKHR is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-360"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680115569"><span class="annot"><span class="annottext">vkCmdPushDescriptorSetWithTemplateKHR' :: Ptr CommandBuffer_T
+-&gt; DescriptorUpdateTemplate
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;data&quot; ::: Ptr ())
+-&gt; IO ()
+</span><a href="#local-6989586621680115569"><span class="hs-identifier hs-var hs-var">vkCmdPushDescriptorSetWithTemplateKHR'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; DescriptorUpdateTemplate
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;data&quot; ::: Ptr ())
+   -&gt; IO ())
+-&gt; Ptr CommandBuffer_T
+-&gt; DescriptorUpdateTemplate
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;data&quot; ::: Ptr ())
+-&gt; IO ()
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#mkVkCmdPushDescriptorSetWithTemplateKHR"><span class="hs-identifier hs-var">mkVkCmdPushDescriptorSetWithTemplateKHR</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr CommandBuffer_T
+   -&gt; DescriptorUpdateTemplate
+   -&gt; PipelineLayout
+   -&gt; (&quot;set&quot; ::: Word32)
+   -&gt; (&quot;data&quot; ::: Ptr ())
+   -&gt; IO ())
+</span><a href="#local-6989586621680115570"><span class="hs-identifier hs-var">vkCmdPushDescriptorSetWithTemplateKHRPtr</span></a></span><span>
+</span><span id="line-361"></span><span>  </span><span class="annot"><span class="annottext">Ptr CommandBuffer_T
+-&gt; DescriptorUpdateTemplate
+-&gt; PipelineLayout
+-&gt; (&quot;set&quot; ::: Word32)
+-&gt; (&quot;data&quot; ::: Ptr ())
+-&gt; IO ()
+</span><a href="#local-6989586621680115569"><span class="hs-identifier hs-var">vkCmdPushDescriptorSetWithTemplateKHR'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer -&gt; Ptr CommandBuffer_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AcommandBufferHandle%3ACommandBuffer"><span class="hs-identifier hs-var hs-var">commandBufferHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CommandBuffer
+</span><a href="#local-6989586621680115575"><span class="hs-identifier hs-var">commandBuffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DescriptorUpdateTemplate
+</span><a href="#local-6989586621680115574"><span class="hs-identifier hs-var">descriptorUpdateTemplate</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PipelineLayout
+</span><a href="#local-6989586621680115573"><span class="hs-identifier hs-var">layout</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;set&quot; ::: Word32
+</span><a href="#local-6989586621680115572"><span class="hs-identifier hs-var">set</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;data&quot; ::: Ptr ()
+</span><a href="#local-6989586621680115571"><span class="hs-identifier hs-var">data'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-362"></span><span>  </span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(() -&gt; IO ()) -&gt; () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-363"></span><span>
+</span><span id="line-364"></span><span>
+</span><span id="line-365"></span><span class="hs-comment">-- | VkPhysicalDevicePushDescriptorPropertiesKHR - Structure describing push</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- descriptor limits that can be supported by an implementation</span><span>
+</span><span id="line-367"></span><span class="hs-comment">--</span><span>
+</span><span id="line-368"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-369"></span><span class="hs-comment">--</span><span>
+</span><span id="line-370"></span><span class="hs-comment">-- The members of the 'PhysicalDevicePushDescriptorPropertiesKHR' structure</span><span>
+</span><span id="line-371"></span><span class="hs-comment">-- describe the following implementation-dependent limits:</span><span>
+</span><span id="line-372"></span><span class="hs-comment">--</span><span>
+</span><span id="line-373"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-374"></span><span class="hs-comment">--</span><span>
+</span><span id="line-375"></span><span class="hs-comment">-- If the 'PhysicalDevicePushDescriptorPropertiesKHR' structure is included</span><span>
+</span><span id="line-376"></span><span class="hs-comment">-- in the @pNext@ chain of</span><span>
+</span><span id="line-377"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',</span><span>
+</span><span id="line-378"></span><span class="hs-comment">-- it is filled with the implementation-dependent limits.</span><span>
+</span><span id="line-379"></span><span class="hs-comment">--</span><span>
+</span><span id="line-380"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-381"></span><span class="hs-comment">--</span><span>
+</span><span id="line-382"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-383"></span><span class="hs-comment">--</span><span>
+</span><span id="line-384"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-385"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDevicePushDescriptorPropertiesKHR"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-var">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDevicePushDescriptorPropertiesKHR"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-var">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span></span><span>
+</span><span id="line-386"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @maxPushDescriptors@ is the maximum number of descriptors that /can/ be</span><span>
+</span><span id="line-387"></span><span>    </span><span class="hs-comment">-- used in a descriptor set created with</span><span>
+</span><span id="line-388"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'</span><span>
+</span><span id="line-389"></span><span>    </span><span class="hs-comment">-- set.</span><span>
+</span><span id="line-390"></span><span>    </span><span id="%24sel%3AmaxPushDescriptors%3APhysicalDevicePushDescriptorPropertiesKHR"><span class="annot"><span class="annottext">PhysicalDevicePushDescriptorPropertiesKHR -&gt; &quot;set&quot; ::: Word32
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#%24sel%3AmaxPushDescriptors%3APhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-var hs-var">maxPushDescriptors</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-391"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-392"></span><span id="local-6989586621680115561"><span id="local-6989586621680115563"><span id="local-6989586621680115565"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-type">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span></span></span></span><span>
+</span><span id="line-393"></span><span>
+</span><span id="line-394"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680115556"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-type">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-395"></span><span>  </span><span id="local-6989586621680115551"><span class="annot"><span class="annottext">withCStruct :: PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; (Ptr PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680115549"><span class="annot"><span class="annottext">x :: PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115549"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680115548"><span class="annot"><span class="annottext">f :: Ptr PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b
+</span><a href="#local-6989586621680115548"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680115547"><span class="annot"><span class="annottext">p :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115547"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115547"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115549"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b
+</span><a href="#local-6989586621680115548"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115547"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-396"></span><span>  </span><span id="local-6989586621680115545"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680115545"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680115544"><span class="annot"><span class="annottext">p :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115544"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680115543"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-type">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680115542"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680115542"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-397"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115544"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-398"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;data&quot; ::: Ptr ()) -&gt; (&quot;data&quot; ::: Ptr ()) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115544"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; Int -&gt; Ptr (&quot;data&quot; ::: Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;data&quot; ::: Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-399"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;set&quot; ::: Word32) -&gt; (&quot;set&quot; ::: Word32) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115544"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; Int -&gt; Ptr (&quot;set&quot; ::: Word32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;set&quot; ::: Word32
+</span><a href="#local-6989586621680115543"><span class="hs-identifier hs-var">maxPushDescriptors</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-400"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680115542"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-401"></span><span>  </span><span id="local-6989586621680115541"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-402"></span><span>  </span><span id="local-6989586621680115539"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-403"></span><span>  </span><span id="local-6989586621680115537"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680115535"><span class="annot"><span class="annottext">p :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115535"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680115534"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680115534"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-404"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115535"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-405"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;data&quot; ::: Ptr ()) -&gt; (&quot;data&quot; ::: Ptr ()) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115535"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; Int -&gt; Ptr (&quot;data&quot; ::: Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;data&quot; ::: Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-406"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;set&quot; ::: Word32) -&gt; (&quot;set&quot; ::: Word32) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115535"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; Int -&gt; Ptr (&quot;set&quot; ::: Word32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;set&quot; ::: Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-407"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680115534"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-408"></span><span>
+</span><span id="line-409"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-type">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-410"></span><span>  </span><span id="local-6989586621680115530"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; IO PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680115528"><span class="annot"><span class="annottext">p :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115528"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-411"></span><span>    </span><span id="local-6989586621680115527"><span class="annot"><span class="annottext">&quot;set&quot; ::: Word32
+</span><a href="#local-6989586621680115527"><span class="hs-identifier hs-var">maxPushDescriptors</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;set&quot; ::: Word32) -&gt; IO (&quot;set&quot; ::: Word32)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115528"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; Int -&gt; Ptr (&quot;set&quot; ::: Word32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-412"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; IO PhysicalDevicePushDescriptorPropertiesKHR
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDevicePushDescriptorPropertiesKHR
+ -&gt; IO PhysicalDevicePushDescriptorPropertiesKHR)
+-&gt; PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; IO PhysicalDevicePushDescriptorPropertiesKHR
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;set&quot; ::: Word32) -&gt; PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-var">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span><span>
+</span><span id="line-413"></span><span>             </span><span class="annot"><span class="annottext">&quot;set&quot; ::: Word32
+</span><a href="#local-6989586621680115527"><span class="hs-identifier hs-var">maxPushDescriptors</span></a></span><span>
+</span><span id="line-414"></span><span>
+</span><span id="line-415"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680115517"><span id="local-6989586621680115519"><span id="local-6989586621680115521"><span id="local-6989586621680115523"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-type">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-416"></span><span>  </span><span id="local-6989586621680115513"><span class="annot"><span class="annottext">sizeOf :: PhysicalDevicePushDescriptorPropertiesKHR -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDevicePushDescriptorPropertiesKHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-417"></span><span>  </span><span id="local-6989586621680115511"><span class="annot"><span class="annottext">alignment :: PhysicalDevicePushDescriptorPropertiesKHR -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDevicePushDescriptorPropertiesKHR
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-418"></span><span>  </span><span id="local-6989586621680115509"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; IO PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115509"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; IO PhysicalDevicePushDescriptorPropertiesKHR
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-419"></span><span>  </span><span id="local-6989586621680115508"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO ()
+</span><a href="#local-6989586621680115508"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680115507"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115507"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680115506"><span class="annot"><span class="annottext">poked :: PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115506"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+-&gt; PhysicalDevicePushDescriptorPropertiesKHR -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115507"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115506"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-420"></span><span>
+</span><span id="line-421"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-type">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-422"></span><span>  </span><span id="local-6989586621680115503"><span class="annot"><span class="annottext">zero :: PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="#local-6989586621680115503"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;set&quot; ::: Word32) -&gt; PhysicalDevicePushDescriptorPropertiesKHR
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#PhysicalDevicePushDescriptorPropertiesKHR"><span class="hs-identifier hs-var">PhysicalDevicePushDescriptorPropertiesKHR</span></a></span><span>
+</span><span id="line-423"></span><span>           </span><span class="annot"><span class="annottext">&quot;set&quot; ::: Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-424"></span><span>
+</span><span id="line-425"></span><span>
+</span><span id="line-426"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span class="hs-identifier hs-var">KHR_PUSH_DESCRIPTOR_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-427"></span><span>
+</span><span id="line-428"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION&quot;</span><span>
+</span><span id="line-429"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span class="hs-identifier hs-type">KHR_PUSH_DESCRIPTOR_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680115628"><span class="annot"><a href="#local-6989586621680115628"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680115628"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680115628"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-430"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span id="%24mKHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span id="KHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span class="annot"><span class="annottext">$bKHR_PUSH_DESCRIPTOR_SPEC_VERSION :: a
+$mKHR_PUSH_DESCRIPTOR_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#%24bKHR_PUSH_DESCRIPTOR_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">KHR_PUSH_DESCRIPTOR_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">2</span></span><span>
+</span><span id="line-431"></span><span>
+</span><span id="line-432"></span><span>
+</span><span id="line-433"></span><span class="hs-keyword">type</span><span> </span><span id="KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span class="hs-identifier hs-var">KHR_PUSH_DESCRIPTOR_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_KHR_push_descriptor&quot;</span></span><span>
+</span><span id="line-434"></span><span>
+</span><span id="line-435"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-436"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span class="hs-identifier hs-type">KHR_PUSH_DESCRIPTOR_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680115624"><span class="annot"><a href="#local-6989586621680115624"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680115624"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680115624"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680115624"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-437"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bKHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span id="%24mKHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span id="KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span class="annot"><span class="annottext">$bKHR_PUSH_DESCRIPTOR_EXTENSION_NAME :: a
+$mKHR_PUSH_DESCRIPTOR_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_KHR_push_descriptor.html#%24bKHR_PUSH_DESCRIPTOR_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">KHR_PUSH_DESCRIPTOR_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_KHR_push_descriptor&quot;</span></span><span>
+</span><span id="line-438"></span><span>
+</span><span id="line-439"></span></pre></body></html>

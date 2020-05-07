@@ -1,0 +1,535 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"><span class="hs-identifier">EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT</span></a></span><span>
+</span><span id="line-6"></span><span>                                                                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"><span class="hs-identifier">EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT</span></a></span><span>
+</span><span id="line-7"></span><span>                                                                                                     </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-8"></span><span>                                                                                                     </span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span>                                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlags"><span class="hs-identifier">ExternalSemaphoreHandleTypeFlags</span></a></span><span>
+</span><span id="line-10"></span><span>                                                                </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- | VkExternalSemaphoreHandleTypeFlagBits - Bitmask of valid external</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- semaphore handle types</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- Handles of type 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT' generated</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- by the implementation may represent either Linux Sync Files or Android</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- Fences at the implementation&#8217;s discretion. Applications /should/ only</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- use operations defined for both types of file descriptors, unless they</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- know via means external to Vulkan the type of the file descriptor, or</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- are prepared to deal with the system-defined operation failures</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- resulting from using the wrong type.</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- Some external semaphore handle types can only be shared within the same</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- underlying physical device and\/or the same driver version, as defined</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- in the following table:</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- +-------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- | Handle type                                           | 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties'::@driverUUID@ | 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties'::@deviceUUID@ |</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- +-------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT'        | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- +-------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'     | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- +-------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- +-------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT'      | Must match                                                                                                 | Must match                                                                                                 |</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- +-------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT'          | No restriction                                                                                             | No restriction                                                                                             |</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- +-------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- External semaphore handle types compatibility</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'ExternalSemaphoreHandleTypeFlags',</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.ImportSemaphoreFdInfoKHR',</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ImportSemaphoreWin32HandleInfoKHR',</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.PhysicalDeviceExternalSemaphoreInfo',</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.SemaphoreGetFdInfoKHR',</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.SemaphoreGetWin32HandleInfoKHR'</span><span>
+</span><span id="line-70"></span><span class="hs-keyword">newtype</span><span> </span><span id="ExternalSemaphoreHandleTypeFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-var">ExternalSemaphoreHandleTypeFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ExternalSemaphoreHandleTypeFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-var">ExternalSemaphoreHandleTypeFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-71"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680038661"><span id="local-6989586621680038663"><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+(ExternalSemaphoreHandleTypeFlagBits
+ -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool)
+-&gt; Eq ExternalSemaphoreHandleTypeFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+$c/= :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+== :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+$c== :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680038645"><span id="local-6989586621680038647"><span id="local-6989586621680038649"><span id="local-6989586621680038651"><span id="local-6989586621680038653"><span id="local-6989586621680038655"><span id="local-6989586621680038657"><span class="annot"><span class="annottext">Eq ExternalSemaphoreHandleTypeFlagBits
+Eq ExternalSemaphoreHandleTypeFlagBits =&gt;
+(ExternalSemaphoreHandleTypeFlagBits
+ -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Ordering)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; Ord ExternalSemaphoreHandleTypeFlagBits
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Ordering
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+$cmin :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+max :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+$cmax :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+&gt;= :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+$c&gt;= :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+&gt; :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+$c&gt; :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+&lt;= :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+$c&lt;= :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+&lt; :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+$c&lt; :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+compare :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Ordering
+$ccompare :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; Ordering
+$cp1Ord :: Eq ExternalSemaphoreHandleTypeFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680038628"><span id="local-6989586621680038630"><span id="local-6989586621680038632"><span id="local-6989586621680038634"><span id="local-6989586621680038636"><span id="local-6989586621680038638"><span id="local-6989586621680038640"><span id="local-6989586621680038642"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits
+Ptr b -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; IO ExternalSemaphoreHandleTypeFlagBits
+Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits
+Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+(ExternalSemaphoreHandleTypeFlagBits -&gt; Int)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits -&gt; Int)
+-&gt; (Ptr ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (Ptr ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ())
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ())
+-&gt; (Ptr ExternalSemaphoreHandleTypeFlagBits
+    -&gt; IO ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (Ptr ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ())
+-&gt; Storable ExternalSemaphoreHandleTypeFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits
+forall b.
+Ptr b -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+$cpoke :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+peek :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; IO ExternalSemaphoreHandleTypeFlagBits
+$cpeek :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; IO ExternalSemaphoreHandleTypeFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b.
+Ptr b -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits
+pokeElemOff :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; IO ()
+peekElemOff :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits
+$cpeekElemOff :: Ptr ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; IO ExternalSemaphoreHandleTypeFlagBits
+alignment :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+$calignment :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+sizeOf :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+$csizeOf :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680038625"><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; Zero ExternalSemaphoreHandleTypeFlagBits
+forall a. a -&gt; Zero a
+zero :: ExternalSemaphoreHandleTypeFlagBits
+$czero :: ExternalSemaphoreHandleTypeFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680038579"><span id="local-6989586621680038581"><span id="local-6989586621680038583"><span id="local-6989586621680038585"><span id="local-6989586621680038587"><span id="local-6989586621680038589"><span id="local-6989586621680038591"><span id="local-6989586621680038593"><span id="local-6989586621680038595"><span id="local-6989586621680038597"><span id="local-6989586621680038599"><span id="local-6989586621680038601"><span id="local-6989586621680038603"><span id="local-6989586621680038605"><span id="local-6989586621680038607"><span id="local-6989586621680038609"><span id="local-6989586621680038611"><span id="local-6989586621680038613"><span id="local-6989586621680038615"><span id="local-6989586621680038617"><span id="local-6989586621680038619"><span id="local-6989586621680038621"><span class="annot"><span class="annottext">Eq ExternalSemaphoreHandleTypeFlagBits
+ExternalSemaphoreHandleTypeFlagBits
+Eq ExternalSemaphoreHandleTypeFlagBits =&gt;
+(ExternalSemaphoreHandleTypeFlagBits
+ -&gt; ExternalSemaphoreHandleTypeFlagBits
+ -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; (Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits -&gt; Int -&gt; Bool)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits -&gt; Maybe Int)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits -&gt; Int)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits)
+-&gt; (ExternalSemaphoreHandleTypeFlagBits -&gt; Int)
+-&gt; Bits ExternalSemaphoreHandleTypeFlagBits
+Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+ExternalSemaphoreHandleTypeFlagBits -&gt; Maybe Int
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+ExternalSemaphoreHandleTypeFlagBits -&gt; Int -&gt; Bool
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+$cpopCount :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+rotateR :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$crotateR :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+rotateL :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$crotateL :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+unsafeShiftR :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$cunsafeShiftR :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+shiftR :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$cshiftR :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+unsafeShiftL :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$cunsafeShiftL :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+shiftL :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$cshiftL :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+isSigned :: ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+$cisSigned :: ExternalSemaphoreHandleTypeFlagBits -&gt; Bool
+bitSize :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+$cbitSize :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int
+bitSizeMaybe :: ExternalSemaphoreHandleTypeFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: ExternalSemaphoreHandleTypeFlagBits -&gt; Maybe Int
+testBit :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: ExternalSemaphoreHandleTypeFlagBits -&gt; Int -&gt; Bool
+complementBit :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$ccomplementBit :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+clearBit :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$cclearBit :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+setBit :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$csetBit :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+bit :: Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$cbit :: Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+zeroBits :: ExternalSemaphoreHandleTypeFlagBits
+$czeroBits :: ExternalSemaphoreHandleTypeFlagBits
+rotate :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$crotate :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+shift :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+$cshift :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; Int -&gt; ExternalSemaphoreHandleTypeFlagBits
+complement :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+$ccomplement :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+xor :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+$cxor :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+.|. :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+$c.|. :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+.&amp;. :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+$c.&amp;. :: ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+-&gt; ExternalSemaphoreHandleTypeFlagBits
+$cp1Bits :: Eq ExternalSemaphoreHandleTypeFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT' specifies a POSIX file</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- descriptor handle that has only limited valid usage outside of Vulkan</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- and other compatible APIs. It /must/ be compatible with the POSIX system</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- calls @dup@, @dup2@, @close@, and the non-standard system call @dup3@.</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- Additionally, it /must/ be transportable over a socket using an</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- @SCM_RIGHTS@ control message. It owns a reference to the underlying</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- synchronization primitive represented by its Vulkan semaphore object.</span><span>
+</span><span id="line-80"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"><span id="%24mEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"><span id="EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT :: ExternalSemaphoreHandleTypeFlagBits
+$mEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT :: forall r.
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT handle</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- that has only limited valid usage outside of Vulkan and other compatible</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- APIs. It /must/ be compatible with the functions @DuplicateHandle@,</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- @SetHandleInformation@. It owns a reference to the underlying</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- synchronization primitive represented by its Vulkan semaphore object.</span><span>
+</span><span id="line-87"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span id="%24mEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span id="EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT :: ExternalSemaphoreHandleTypeFlagBits
+$mEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT :: forall r.
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a global</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- share handle that has only limited valid usage outside of Vulkan and</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- other compatible APIs. It is not compatible with any native APIs. It</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- does not own a reference to the underlying synchronization primitive</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- represented its Vulkan semaphore object, and will therefore become</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- invalid when all Vulkan semaphore objects associated with it are</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- destroyed.</span><span>
+</span><span id="line-95"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span id="%24mEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span id="EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT :: ExternalSemaphoreHandleTypeFlagBits
+$mEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT :: forall r.
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000004</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT' specifies an NT handle</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- 12 fence. It owns a reference to the underlying synchronization</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- primitive associated with the Direct3D fence.</span><span>
+</span><span id="line-100"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"><span id="%24mEXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"><span id="EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT :: ExternalSemaphoreHandleTypeFlagBits
+$mEXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT :: forall r.
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000008</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT' specifies a POSIX file</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- descriptor handle to a Linux Sync File or Android Fence object. It can</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- be used with any native API accepting a valid sync file or fence as</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- input. It owns a reference to the underlying synchronization primitive</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- associated with the file descriptor. Implementations which support</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- importing this handle type /must/ accept any type of sync or fence FD</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- supported by the native system they are running on.</span><span>
+</span><span id="line-108"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"><span id="%24mEXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"><span id="EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT :: ExternalSemaphoreHandleTypeFlagBits
+$mEXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT :: forall r.
+ExternalSemaphoreHandleTypeFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#%24bEXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000010</span><span>
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span class="hs-keyword">type</span><span> </span><span id="ExternalSemaphoreHandleTypeFlags"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlags"><span class="hs-identifier hs-var">ExternalSemaphoreHandleTypeFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span>
+</span><span id="line-111"></span><span>
+</span><span id="line-112"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680038563"><span id="local-6989586621680038565"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-113"></span><span>  </span><span id="local-6989586621680038561"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ExternalSemaphoreHandleTypeFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680038559"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680038559"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-114"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier hs-type">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT&quot;</span></span><span>
+</span><span id="line-115"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier hs-type">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT&quot;</span></span><span>
+</span><span id="line-116"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier hs-type">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT&quot;</span></span><span>
+</span><span id="line-117"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"><span class="hs-identifier hs-type">EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT&quot;</span></span><span>
+</span><span id="line-118"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"><span class="hs-identifier hs-type">EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT&quot;</span></span><span>
+</span><span id="line-119"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span> </span><span id="local-6989586621680038558"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680038558"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680038559"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalSemaphoreHandleTypeFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680038558"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span>
+</span><span id="line-121"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680038550"><span id="local-6989586621680038553"><span id="local-6989586621680038555"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreHandleTypeFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-122"></span><span>  </span><span id="local-6989586621680038548"><span class="annot"><span class="annottext">readPrec :: ReadPrec ExternalSemaphoreHandleTypeFlagBits
+</span><a href="#local-6989586621680038548"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec ExternalSemaphoreHandleTypeFlagBits)]
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"><span class="hs-identifier hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-123"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT"><span class="hs-identifier hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"><span class="hs-identifier hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-125"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT"><span class="hs-identifier hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-126"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT"><span class="hs-identifier hs-var">EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-127"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-128"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-129"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalSemaphoreHandleTypeFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span>                       </span><span id="local-6989586621680038547"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680038547"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-131"></span><span>                       </span><span class="annot"><span class="annottext">ExternalSemaphoreHandleTypeFlagBits
+-&gt; ReadPrec ExternalSemaphoreHandleTypeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; ExternalSemaphoreHandleTypeFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.html#ExternalSemaphoreHandleTypeFlagBits"><span class="hs-identifier hs-var">ExternalSemaphoreHandleTypeFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680038547"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>
+</span><span id="line-133"></span></pre></body></html>
