@@ -7,6 +7,7 @@ packages:
 extra-deps:
 - sdl2-2.5.2.0
 - autoapply-0.4
+- th-desugar-1.11
 nix:
   enable: false
   packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2 zlib]
