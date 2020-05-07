@@ -88,9 +88,9 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "DebugUtilsMessengerEXT"
     , cdBracket "DeferredOperationKHR"
     , cdBracket "PrivateDataSlotEXT"
-    , pure commandBuffersBracket
+    , pure withCommmandBuffers
     , afBracket "Memory"
-    , afBracket "DescriptorSets"
+    , pure withDescriptorSets
     , autoBracket' BracketCPS
                    "vkCreateGraphicsPipelines"
                    "vkDestroyPipeline"
@@ -140,8 +140,8 @@ brackets marshaledCommands handles = context "brackets" $ do
 
   fromList <$> traverseV (renderBracket paramName) bs
 
-commandBuffersBracket :: Bracket
-commandBuffersBracket = Bracket
+withCommmandBuffers :: Bracket
+withCommmandBuffers = Bracket
   { bInnerTypes = [Vector NotNullable (Normal (TypeName "VkCommandBuffer"))]
   , bWrapperName         = "vkWithCommandBuffers"
   , bCreate              = "vkAllocateCommandBuffers"
@@ -152,6 +152,24 @@ commandBuffersBracket = Bracket
     ]
   , bDestroyArguments    = [ Provided "device" (Normal (TypeName "VkDevice"))
                            , Member "pAllocateInfo" "commandPool"
+                           , Resource IdentityResource 0
+                           ]
+  , bDestroyIndividually = DoNotDestroyIndividually
+  , bBracketType         = BracketCPS
+  }
+
+withDescriptorSets :: Bracket
+withDescriptorSets = Bracket
+  { bInnerTypes = [Vector NotNullable (Normal (TypeName "VkDescriptorSet"))]
+  , bWrapperName         = "vkWithDescriptorSets"
+  , bCreate              = "vkAllocateDescriptorSets"
+  , bDestroy             = "vkFreeDescriptorSets"
+  , bCreateArguments     =
+    [ Provided "device"        (Normal (TypeName "VkDevice"))
+    , Provided "pAllocateInfo" (Normal (TypeName "VkDescriptorSetAllocateInfo"))
+    ]
+  , bDestroyArguments    = [ Provided "device" (Normal (TypeName "VkDevice"))
+                           , Member "pAllocateInfo" "descriptorPool"
                            , Resource IdentityResource 0
                            ]
   , bDestroyIndividually = DoNotDestroyIndividually
