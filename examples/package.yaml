@@ -68,7 +68,7 @@ executables:
       - JuicyPixels
       - VulkanMemoryAllocator
       - autoapply >= 0.4
-      - base < 4.14
+      - base < 4.15
       - bytestring
       - extra
       - resourcet

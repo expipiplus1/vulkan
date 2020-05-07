@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4033f3b8947003b8f7820f3e38c319f74676f6e294c96fe3d66fbf7f410e2c61
+-- hash: d90f57578125186862943db038bf587abca797b46cc453bcdf0388bd49301cb7
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -39,7 +39,7 @@ executable compute
       JuicyPixels
     , VulkanMemoryAllocator
     , autoapply >=0.4
-    , base <4.14
+    , base <4.15
     , bytestring
     , extra
     , resourcet
