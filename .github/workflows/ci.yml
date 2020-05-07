@@ -46,7 +46,12 @@ jobs:
     - name: Remove examples for 8.6.5
       run: |
         sed -i '/examples/d' cabal.project
-      if: matrix.ghc == 'ghc-8.6.5'
+      if: matrix.ghc == '8.6.5'
+
+    - name: Remove generator for all but 8.8.2
+      run: |
+        sed -i '/generate-new/d' cabal.project
+      if: matrix.ghc != '8.8.2'
 
     - name: Install dependencies
       run: |
@@ -64,4 +69,8 @@ jobs:
 
     - name: Build vulkan-examples
       run: cabal build --enable-tests --enable-benchmarks vulkan-examples
-      if: matrix.ghc != 'ghc-8.6.5'
+      if: matrix.ghc != '8.6.5'
+
+    - name: Build generate-new
+      run: cabal build --enable-tests --enable-benchmarks generate-new
+      if: matrix.ghc == '8.8.2'
