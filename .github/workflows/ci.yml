@@ -70,7 +70,3 @@ jobs:
     - name: Build vulkan-examples
       run: cabal build --enable-tests --enable-benchmarks vulkan-examples
       if: matrix.ghc != '8.6.5'
-
-    - name: Build generate-new
-      run: cabal build --enable-tests --enable-benchmarks generate-new
-      if: matrix.ghc == '8.8.2'
