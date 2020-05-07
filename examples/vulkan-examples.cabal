@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1ce342651cb251f13c15d34bef7cc94a67664df81f10859666053f7bbbe69e38
+-- hash: 257539042e753acdb2983d75ae06338886b78a6fbf13b8f993c3125f95a21e78
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -26,6 +26,31 @@ flag renderdoc
   description: Use the renderdoc API to mark the beginning and end of the 'offscreen' example so that it can be captured.
   manual: True
   default: False
+
+executable compute
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan_examples
+  hs-source-dirs:
+      compute
+  default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , autoapply >=0.4
+    , base <4.14
+    , bytestring
+    , extra
+    , resourcet
+    , safe-exceptions
+    , say
+    , text
+    , transformers
+    , vector
+    , vulkan
+    , vulkan-utils
+  default-language: Haskell2010
 
 executable info
   main-is: Main.hs

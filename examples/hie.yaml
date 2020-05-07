@@ -8,3 +8,6 @@ cradle:
 
     - path: "./offscreen/"
       component: "exe:offscreen"
+
+    - path: "./compute/"
+      component: "exe:compute"
