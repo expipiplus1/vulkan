@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [3.3] - 2020-05-07
   - Move package from `Graphics.Vulkan` to just `Vulkan`, #60
   - Bump API version to 1.2.140
   - Make the continuation the last argument to 'bracket' functions, discussion
@@ -16,6 +18,8 @@
   - Simplify type of `withDescriptorSets`, it no longer requires the user
     specifying the `DescriptorPool` twice, #81
   - Wrap with SomeStruct extensible structs in Vector arguments to commands, #82
+
+  Thanks to @dpwiz for helping with this release!
 
 ## [3.2.0.0] - 2020-05-02
   - Update API version 1.2.139
