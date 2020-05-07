@@ -1,6 +1,13 @@
 # Change Log
 
 ## WIP
+  - Move package from `Vulkan.VulkanMemoryAllocator` to just `VulkanMemoryAllocator`, #60
+  - Make the continuation the last argument to 'bracket' functions, discussion
+    on #49
+  - Begin/End bracket pairs are now called 'useXXX' rather than 'withXXX', #66
+  - Begin/End bracket pairs where it's not necessary to 'End' on an exception
+    have a simplified type, discussion on #49
+  - Add constraints to check that structs are correctly extended
 
 ## [0.2.0.0] - 2020-05-02
   - Bump VMA version to 2020-04-24
