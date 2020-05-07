@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c730f87dceb5cb1336d482a643166339c542b7557cab6e19d31114c1dc23b1e9
+-- hash: 465d92e5dd4ce2fe233c8560beba2865a23d9da4c7226f5b3c75abb2ba4ca4af
 
 name:           generate-new
 version:        0.0.0
@@ -88,6 +88,7 @@ library
     , async-pool
     , base
     , bytestring
+    , casing
     , containers
     , data-default
     , deepseq
@@ -143,6 +144,7 @@ executable vk
     , async-pool
     , base
     , bytestring
+    , casing
     , containers
     , data-default
     , deepseq
@@ -200,6 +202,7 @@ executable vma
     , async-pool
     , base
     , bytestring
+    , casing
     , containers
     , data-default
     , deepseq

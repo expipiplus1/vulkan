@@ -32,14 +32,13 @@ module Render.Stmts
   ) where
 
 import qualified Data.Dependent.Map            as DMap
-import           Data.Dependent.Map             ( DMap
-                                                , Some(..)
-                                                )
+import           Data.Dependent.Map             ( DMap )
 import qualified Data.GADT.Compare             as DMap
 import qualified Data.GADT.Show                as DMap
 import qualified Data.List.Extra               as List
 import qualified Data.Map                      as Map
 import qualified Data.Set                      as Set
+import           Data.Some                      ( Some(..) )
 import           Data.Text.Extra                ( lowerCaseFirst
                                                 , snoc
                                                 )
