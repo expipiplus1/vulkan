@@ -8,17 +8,18 @@ module Vulkan.Utils.ShaderQQ
   , compileShader
   ) where
 
+import           Control.Monad.IO.Class
 import           Data.ByteString                ( ByteString )
 import qualified Data.ByteString               as BS
+import           Data.Char
 import           Data.FileEmbed
+import           Data.List.Extra
 import           Language.Haskell.TH
-import           Language.Haskell.TH.Syntax
 import           Language.Haskell.TH.Quote
+import           Language.Haskell.TH.Syntax
 import           System.IO
 import           System.IO.Temp
 import           System.Process.Typed
-import           Data.List.Extra
-import           Data.Char
 
 comp = shaderQQ "comp"
 frag = shaderQQ "frag"
@@ -31,7 +32,7 @@ shaderQQ :: String -> QuasiQuoter
 shaderQQ stage = QuasiQuoter
   { quoteExp  = \code -> do
                   loc <- location
-                  bs  <- runIO $ compileShader (Just loc) stage code
+                  bs  <- compileShader (Just loc) stage code
                   bsToExp bs
   , quotePat  = bad "pattern"
   , quoteType = bad "type"
@@ -43,29 +44,31 @@ shaderQQ stage = QuasiQuoter
 
 -- | Compile a glsl shader to spir-v using glslangValidator
 compileShader
-  :: Maybe Loc
+  :: MonadIO m
+  => Maybe Loc
   -- ^ Source location
   -> String
   -- ^ stage
   -> String
   -- ^ glsl code
-  -> IO ByteString
+  -> m ByteString
   -- ^ Spir-V bytecode
-compileShader loc stage code = withSystemTempDirectory "th-shader" $ \dir -> do
-  let codeWithLineDirective = maybe code (insertLineDirective code) loc
-  let shader = dir <> "/shader." <> stage
-      spirv  = dir <> "/shader.spv"
-  writeFile shader codeWithLineDirective
-  let -- TODO: writing to stdout here breaks HIE
-      p =
-        setStderr inherit
-          . setStdout (useHandleOpen stderr)
-          . setStdin closed
-          $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
-  runProcess_ p
-  -- 'runIO' suggests flushing as GHC may not
-  hFlush stderr
-  BS.readFile spirv
+compileShader loc stage code =
+  liftIO $ withSystemTempDirectory "th-shader" $ \dir -> do
+    let codeWithLineDirective = maybe code (insertLineDirective code) loc
+    let shader = dir <> "/shader." <> stage
+        spirv  = dir <> "/shader.spv"
+    writeFile shader codeWithLineDirective
+    let -- TODO: writing to stdout here breaks HIE
+        p =
+          setStderr inherit
+            . setStdout (useHandleOpen stderr)
+            . setStdin closed
+            $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
+    runProcess_ p
+    -- 'runIO' suggests flushing as GHC may not
+    hFlush stderr
+    BS.readFile spirv
 
 -- If possible, insert a #line directive after the #version directive (as well
 -- as the extension which allows filenames in line directives.
