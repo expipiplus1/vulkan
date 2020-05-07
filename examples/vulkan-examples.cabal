@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 257539042e753acdb2983d75ae06338886b78a6fbf13b8f993c3125f95a21e78
+-- hash: eee5a589627aafb14784f37907c21b69b239587093d8cda6db3bf2dcbea38baa
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -61,7 +61,7 @@ executable info
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall
   build-depends:
-      base <4.14
+      base <4.15
     , bytestring
     , pretty-simple
     , vulkan

@@ -13,7 +13,7 @@ executables:
     main: Main.hs
     source-dirs: info
     dependencies:
-      - base < 4.14
+      - base < 4.15
       - vulkan
       - pretty-simple
       - bytestring
