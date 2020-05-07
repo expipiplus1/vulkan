@@ -5,6 +5,7 @@ module Bespoke
   , assignBespokeModules
   , bespokeElements
   , bespokeSizes
+  , bespokeOptionality
   , bespokeSchemes
   , BespokeScheme(..)
   , structChainVar
@@ -653,6 +654,17 @@ bespokeSizes =
        , ("VkDeviceAddress", (8, 8))
        ]
 
+bespokeOptionality :: CName -> CName -> Maybe (Vector Bool)
+bespokeOptionality = \case
+  -- These are optional depending on the value of `descriptorType`, treat them
+  -- as unconditionally optional and rely on the programmer (and validation
+  -- layers) to keep it safe
+  "VkWriteDescriptorSet" -> \case
+    "pImageInfo"       -> Just (fromList [True])
+    "pBufferInfo"      -> Just (fromList [True])
+    "pTexelBufferView" -> Just (fromList [True])
+    _                  -> Nothing
+  _ -> const Nothing
 
 bespokeElements :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
 bespokeElements =

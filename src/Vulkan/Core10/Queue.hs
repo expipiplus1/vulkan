@@ -705,8 +705,7 @@ instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) whe
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     let pWaitSemaphoresLength = Data.Vector.length $ (waitSemaphores)
-    let pWaitDstStageMaskLength = Data.Vector.length $ (waitDstStageMask)
-    lift $ unless (pWaitDstStageMaskLength == pWaitSemaphoresLength) $
+    lift $ unless ((Data.Vector.length $ (waitDstStageMask)) == pWaitSemaphoresLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pWaitDstStageMask and pWaitSemaphores must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral pWaitSemaphoresLength :: Word32))
     pPWaitSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (waitSemaphores)) * 8) 8

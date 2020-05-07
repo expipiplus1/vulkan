@@ -1430,6 +1430,18 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- then @dstArrayElement@ specifies the starting byte offset within the
     -- binding.
     dstArrayElement :: Word32
+  , -- | @descriptorCount@ is the number of descriptors to update (the number of
+    -- elements in @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ , or a
+    -- value matching the @dataSize@ member of a
+    -- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
+    -- structure in the @pNext@ chain , or a value matching the
+    -- @accelerationStructureCount@ of a
+    -- 'Vulkan.Extensions.VK_KHR_ray_tracing.WriteDescriptorSetAccelerationStructureKHR'
+    -- structure in the @pNext@ chain ). If the descriptor binding identified
+    -- by @dstSet@ and @dstBinding@ has a descriptor type of
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+    -- then @descriptorCount@ specifies the number of bytes to update.
+    descriptorCount :: Word32
   , -- | @descriptorType@ is a
     -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying the type
     -- of each descriptor in @pImageInfo@, @pBufferInfo@, or
@@ -1473,23 +1485,37 @@ instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescr
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (dstBinding)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (dstArrayElement)
     let pImageInfoLength = Data.Vector.length $ (imageInfo)
+    lift $ unless (fromIntegral pImageInfoLength == (descriptorCount) || pImageInfoLength == 0) $
+      throwIO $ IOError Nothing InvalidArgument "" "pImageInfo must be empty or have 'descriptorCount' elements" Nothing Nothing
     let pBufferInfoLength = Data.Vector.length $ (bufferInfo)
-    lift $ unless (pBufferInfoLength == pImageInfoLength) $
-      throwIO $ IOError Nothing InvalidArgument "" "pBufferInfo and pImageInfo must have the same length" Nothing Nothing
+    lift $ unless (fromIntegral pBufferInfoLength == (descriptorCount) || pBufferInfoLength == 0) $
+      throwIO $ IOError Nothing InvalidArgument "" "pBufferInfo must be empty or have 'descriptorCount' elements" Nothing Nothing
     let pTexelBufferViewLength = Data.Vector.length $ (texelBufferView)
-    lift $ unless (pTexelBufferViewLength == pImageInfoLength) $
-      throwIO $ IOError Nothing InvalidArgument "" "pTexelBufferView and pImageInfo must have the same length" Nothing Nothing
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral pImageInfoLength :: Word32))
+    lift $ unless (fromIntegral pTexelBufferViewLength == (descriptorCount) || pTexelBufferViewLength == 0) $
+      throwIO $ IOError Nothing InvalidArgument "" "pTexelBufferView must be empty or have 'descriptorCount' elements" Nothing Nothing
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((descriptorCount))
     lift $ poke ((p `plusPtr` 36 :: Ptr DescriptorType)) (descriptorType)
-    pPImageInfo' <- ContT $ allocaBytesAligned @DescriptorImageInfo ((Data.Vector.length (imageInfo)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageInfo' `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e) . ($ ())) (imageInfo)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo))) (pPImageInfo')
-    pPBufferInfo' <- ContT $ allocaBytesAligned @DescriptorBufferInfo ((Data.Vector.length (bufferInfo)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferInfo' `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e) . ($ ())) (bufferInfo)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo))) (pPBufferInfo')
-    pPTexelBufferView' <- ContT $ allocaBytesAligned @BufferView ((Data.Vector.length (texelBufferView)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPTexelBufferView' `plusPtr` (8 * (i)) :: Ptr BufferView) (e)) (texelBufferView)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr BufferView))) (pPTexelBufferView')
+    pImageInfo'' <- if Data.Vector.null (imageInfo)
+      then pure nullPtr
+      else do
+        pPImageInfo <- ContT $ allocaBytesAligned @DescriptorImageInfo (((Data.Vector.length (imageInfo))) * 24) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageInfo `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e) . ($ ())) ((imageInfo))
+        pure $ pPImageInfo
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo))) pImageInfo''
+    pBufferInfo'' <- if Data.Vector.null (bufferInfo)
+      then pure nullPtr
+      else do
+        pPBufferInfo <- ContT $ allocaBytesAligned @DescriptorBufferInfo (((Data.Vector.length (bufferInfo))) * 24) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferInfo `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e) . ($ ())) ((bufferInfo))
+        pure $ pPBufferInfo
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo))) pBufferInfo''
+    pTexelBufferView'' <- if Data.Vector.null (texelBufferView)
+      then pure nullPtr
+      else do
+        pPTexelBufferView <- ContT $ allocaBytesAligned @BufferView (((Data.Vector.length (texelBufferView))) * 8) 8
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPTexelBufferView `plusPtr` (8 * (i)) :: Ptr BufferView) (e)) ((texelBufferView))
+        pure $ pPTexelBufferView
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr BufferView))) pTexelBufferView''
     lift $ f
   cStructSize = 64
   cStructAlignment = 8
@@ -1501,15 +1527,6 @@ instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescr
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 36 :: Ptr DescriptorType)) (zero)
-    pPImageInfo' <- ContT $ allocaBytesAligned @DescriptorImageInfo ((Data.Vector.length (mempty)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageInfo' `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo))) (pPImageInfo')
-    pPBufferInfo' <- ContT $ allocaBytesAligned @DescriptorBufferInfo ((Data.Vector.length (mempty)) * 24) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferInfo' `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo))) (pPBufferInfo')
-    pPTexelBufferView' <- ContT $ allocaBytesAligned @BufferView ((Data.Vector.length (mempty)) * 8) 8
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPTexelBufferView' `plusPtr` (8 * (i)) :: Ptr BufferView) (e)) (mempty)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr BufferView))) (pPTexelBufferView')
     lift $ f
 
 instance (Extendss WriteDescriptorSet es, PeekChain es) => FromCStruct (WriteDescriptorSet es) where
@@ -1519,20 +1536,24 @@ instance (Extendss WriteDescriptorSet es, PeekChain es) => FromCStruct (WriteDes
     dstSet <- peek @DescriptorSet ((p `plusPtr` 16 :: Ptr DescriptorSet))
     dstBinding <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     dstArrayElement <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
-    descriptorType <- peek @DescriptorType ((p `plusPtr` 36 :: Ptr DescriptorType))
     descriptorCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    descriptorType <- peek @DescriptorType ((p `plusPtr` 36 :: Ptr DescriptorType))
     pImageInfo <- peek @(Ptr DescriptorImageInfo) ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo)))
-    pImageInfo' <- generateM (fromIntegral descriptorCount) (\i -> peekCStruct @DescriptorImageInfo ((pImageInfo `advancePtrBytes` (24 * (i)) :: Ptr DescriptorImageInfo)))
+    let pImageInfoLength = if pImageInfo == nullPtr then 0 else (fromIntegral descriptorCount)
+    pImageInfo' <- generateM pImageInfoLength (\i -> peekCStruct @DescriptorImageInfo ((pImageInfo `advancePtrBytes` (24 * (i)) :: Ptr DescriptorImageInfo)))
     pBufferInfo <- peek @(Ptr DescriptorBufferInfo) ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo)))
-    pBufferInfo' <- generateM (fromIntegral descriptorCount) (\i -> peekCStruct @DescriptorBufferInfo ((pBufferInfo `advancePtrBytes` (24 * (i)) :: Ptr DescriptorBufferInfo)))
+    let pBufferInfoLength = if pBufferInfo == nullPtr then 0 else (fromIntegral descriptorCount)
+    pBufferInfo' <- generateM pBufferInfoLength (\i -> peekCStruct @DescriptorBufferInfo ((pBufferInfo `advancePtrBytes` (24 * (i)) :: Ptr DescriptorBufferInfo)))
     pTexelBufferView <- peek @(Ptr BufferView) ((p `plusPtr` 56 :: Ptr (Ptr BufferView)))
-    pTexelBufferView' <- generateM (fromIntegral descriptorCount) (\i -> peek @BufferView ((pTexelBufferView `advancePtrBytes` (8 * (i)) :: Ptr BufferView)))
+    let pTexelBufferViewLength = if pTexelBufferView == nullPtr then 0 else (fromIntegral descriptorCount)
+    pTexelBufferView' <- generateM pTexelBufferViewLength (\i -> peek @BufferView ((pTexelBufferView `advancePtrBytes` (8 * (i)) :: Ptr BufferView)))
     pure $ WriteDescriptorSet
-             next dstSet dstBinding dstArrayElement descriptorType pImageInfo' pBufferInfo' pTexelBufferView'
+             next dstSet dstBinding dstArrayElement descriptorCount descriptorType pImageInfo' pBufferInfo' pTexelBufferView'
 
 instance es ~ '[] => Zero (WriteDescriptorSet es) where
   zero = WriteDescriptorSet
            ()
+           zero
            zero
            zero
            zero
@@ -1865,10 +1886,11 @@ instance ToCStruct DescriptorSetLayoutBinding where
   pokeCStruct p DescriptorSetLayoutBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     lift $ poke ((p `plusPtr` 4 :: Ptr DescriptorType)) (descriptorType)
+    let pImmutableSamplersLength = Data.Vector.length $ (immutableSamplers)
     descriptorCount'' <- lift $ if (descriptorCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (immutableSamplers))
+      then pure $ fromIntegral pImmutableSamplersLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (immutableSamplers)) == (descriptorCount)) $
+        unless (fromIntegral pImmutableSamplersLength == (descriptorCount) || pImmutableSamplersLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pImmutableSamplers must be empty or have 'descriptorCount' elements" Nothing Nothing
         pure (descriptorCount)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (descriptorCount'')

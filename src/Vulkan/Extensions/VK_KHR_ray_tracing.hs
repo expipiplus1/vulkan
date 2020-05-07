@@ -2694,8 +2694,7 @@ cmdBuildAccelerationStructureKHR commandBuffer infos offsetInfos = liftIO . eval
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdBuildAccelerationStructureKHR' = mkVkCmdBuildAccelerationStructureKHR vkCmdBuildAccelerationStructureKHRPtr
   let pInfosLength = Data.Vector.length $ (infos)
-  let ppOffsetInfosLength = Data.Vector.length $ (offsetInfos)
-  lift $ unless (ppOffsetInfosLength == pInfosLength) $
+  lift $ unless ((Data.Vector.length $ (offsetInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppOffsetInfos and pInfos must have the same length" Nothing Nothing
   pPInfos <- ContT $ allocaBytesAligned @(AccelerationStructureBuildGeometryInfoKHR _) ((Data.Vector.length (infos)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (72 * (i)) :: Ptr (AccelerationStructureBuildGeometryInfoKHR _)) (e) . ($ ())) (infos)
@@ -2970,8 +2969,7 @@ buildAccelerationStructureKHR device infos offsetInfos = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBuildAccelerationStructureKHR is null" Nothing Nothing
   let vkBuildAccelerationStructureKHR' = mkVkBuildAccelerationStructureKHR vkBuildAccelerationStructureKHRPtr
   let pInfosLength = Data.Vector.length $ (infos)
-  let ppOffsetInfosLength = Data.Vector.length $ (offsetInfos)
-  lift $ unless (ppOffsetInfosLength == pInfosLength) $
+  lift $ unless ((Data.Vector.length $ (offsetInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppOffsetInfos and pInfos must have the same length" Nothing Nothing
   pPInfos <- ContT $ allocaBytesAligned @(AccelerationStructureBuildGeometryInfoKHR _) ((Data.Vector.length (infos)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (72 * (i)) :: Ptr (AccelerationStructureBuildGeometryInfoKHR _)) (e) . ($ ())) (infos)

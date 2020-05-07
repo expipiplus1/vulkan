@@ -220,8 +220,7 @@ cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets si
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindTransformFeedbackBuffersEXT is null" Nothing Nothing
   let vkCmdBindTransformFeedbackBuffersEXT' = mkVkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXTPtr
   let pBuffersLength = Data.Vector.length $ (buffers)
-  let pOffsetsLength = Data.Vector.length $ (offsets)
-  lift $ unless (pOffsetsLength == pBuffersLength) $
+  lift $ unless ((Data.Vector.length $ (offsets)) == pBuffersLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pOffsets and pBuffers must have the same length" Nothing Nothing
   let pSizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral pSizesLength == pBuffersLength || pSizesLength == 0) $

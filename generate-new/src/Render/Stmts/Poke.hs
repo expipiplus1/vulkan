@@ -331,10 +331,16 @@ lengthFromNames isElided lenName lenType os rs = do
     assertSameAsGiven (n, opt, ref) = unitStmt $ do
       ValueDoc givenLen <- useViaName (unCName lenName)
       let fi = if opt then ("fromIntegral" <+>) else id
-      l <- use ref
+      l      <- use ref
+      orNull <- if opt
+        then do
+          -- Use again here to stop InlineOnce firing
+          l' <- use ref
+          pure $ " ||" <+> l' <+> "== 0"
+        else pure mempty
       let -- TODO: these should be the names we give to the variable, not the C names
           err  = givenErr n opt lenName
-          cond = parens (fi l <+> "==" <+> givenLen)
+          cond = parens (fi l <+> "==" <+> givenLen <> orNull)
       throwErrDoc err cond
 
     -- Construct an assertion that two vectors have the same length
@@ -346,13 +352,17 @@ lengthFromNames isElided lenName lenType os rs = do
       when opt1 $ throw "FIXME: handle comparing sizes of all optional vectors"
       let fi = if opt2 then ("fromIntegral" <+>) else id
       l1     <- use ref1
-      l2     <- use ref2
-      l2'    <- fi <$> use ref2
-      orNull <- if opt2 then pure $ " ||" <+> l2 <+> "== 0" else pure mempty
+      l2     <- fi <$> use ref2
+      orNull <- if opt2
+        then do
+          -- Use again here to stop InlineOnce firing
+          l2' <- use ref2
+          pure $ " ||" <+> l2' <+> "== 0"
+        else pure mempty
       let -- TODO: these should be the names we give to the variable, not the C names
           err =
             unCName n2 <> " and " <> unCName n1 <> " must have the same length"
-          cond = parens (l2' <+> "==" <+> l1 <> orNull)
+          cond = parens (l2 <+> "==" <+> l1 <> orNull)
       throwErrDoc err cond
 
     -- If there is only one vector and the length is zero, infer the length
@@ -361,8 +371,15 @@ lengthFromNames isElided lenName lenType os rs = do
     inferLength (n, opt, ref) = stmt Nothing (Just (unCName lenName)) $ do
       ValueDoc givenLen <- useViaName (unCName lenName)
       vecLen            <- use ref
-      let err  = givenErr n opt lenName
-          cond = parens ("fromIntegral" <+> vecLen <+> "==" <+> givenLen)
+      orNull            <- if opt
+        then do
+          -- Use again here to stop InlineOnce firing
+          vecLen2 <- use ref
+          pure $ " ||" <+> vecLen2 <+> "== 0"
+        else pure mempty
+      let err = givenErr n opt lenName
+          cond =
+            parens ("fromIntegral" <+> vecLen <+> "==" <+> givenLen <> orNull)
       throwDoc <- throwErrDocStmtString err cond
       pure . IOAction $ "if" <+> givenLen <+> "== 0" <> line <> indent
         2

@@ -162,10 +162,11 @@ instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCoverageModulationStateCreateFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr CoverageModulationModeNV)) (coverageModulationMode)
     lift $ poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (coverageModulationTableEnable))
+    let pCoverageModulationTableLength = Data.Vector.length $ (coverageModulationTable)
     coverageModulationTableCount'' <- lift $ if (coverageModulationTableCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (coverageModulationTable))
+      then pure $ fromIntegral pCoverageModulationTableLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (coverageModulationTable)) == (coverageModulationTableCount)) $
+        unless (fromIntegral pCoverageModulationTableLength == (coverageModulationTableCount) || pCoverageModulationTableLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pCoverageModulationTable must be empty or have 'coverageModulationTableCount' elements" Nothing Nothing
         pure (coverageModulationTableCount)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (coverageModulationTableCount'')

@@ -1581,8 +1581,7 @@ cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalC
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindVertexBuffers is null" Nothing Nothing
   let vkCmdBindVertexBuffers' = mkVkCmdBindVertexBuffers vkCmdBindVertexBuffersPtr
   let pBuffersLength = Data.Vector.length $ (buffers)
-  let pOffsetsLength = Data.Vector.length $ (offsets)
-  lift $ unless (pOffsetsLength == pBuffersLength) $
+  lift $ unless ((Data.Vector.length $ (offsets)) == pBuffersLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pOffsets and pBuffers must have the same length" Nothing Nothing
   pPBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (buffers)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)

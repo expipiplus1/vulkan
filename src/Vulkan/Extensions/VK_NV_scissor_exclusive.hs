@@ -307,10 +307,11 @@ instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
   pokeCStruct p PipelineViewportExclusiveScissorStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    let pExclusiveScissorsLength = Data.Vector.length $ (exclusiveScissors)
     exclusiveScissorCount'' <- lift $ if (exclusiveScissorCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (exclusiveScissors))
+      then pure $ fromIntegral pExclusiveScissorsLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (exclusiveScissors)) == (exclusiveScissorCount)) $
+        unless (fromIntegral pExclusiveScissorsLength == (exclusiveScissorCount) || pExclusiveScissorsLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pExclusiveScissors must be empty or have 'exclusiveScissorCount' elements" Nothing Nothing
         pure (exclusiveScissorCount)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (exclusiveScissorCount'')

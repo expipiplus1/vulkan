@@ -220,10 +220,11 @@ instance ToCStruct PipelineViewportWScalingStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (viewportWScalingEnable))
+    let pViewportWScalingsLength = Data.Vector.length $ (viewportWScalings)
     viewportCount'' <- lift $ if (viewportCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (viewportWScalings))
+      then pure $ fromIntegral pViewportWScalingsLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (viewportWScalings)) == (viewportCount)) $
+        unless (fromIntegral pViewportWScalingsLength == (viewportCount) || pViewportWScalingsLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pViewportWScalings must be empty or have 'viewportCount' elements" Nothing Nothing
         pure (viewportCount)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount'')

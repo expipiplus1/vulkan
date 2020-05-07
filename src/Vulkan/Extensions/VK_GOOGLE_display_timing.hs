@@ -424,10 +424,11 @@ instance ToCStruct PresentTimesInfoGOOGLE where
   pokeCStruct p PresentTimesInfoGOOGLE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    let pTimesLength = Data.Vector.length $ (times)
     swapchainCount'' <- lift $ if (swapchainCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (times))
+      then pure $ fromIntegral pTimesLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (times)) == (swapchainCount)) $
+        unless (fromIntegral pTimesLength == (swapchainCount) || pTimesLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pTimes must be empty or have 'swapchainCount' elements" Nothing Nothing
         pure (swapchainCount)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (swapchainCount'')

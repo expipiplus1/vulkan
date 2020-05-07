@@ -805,10 +805,11 @@ instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
   pokeCStruct p DescriptorSetLayoutBindingFlagsCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    let pBindingFlagsLength = Data.Vector.length $ (bindingFlags)
     bindingCount'' <- lift $ if (bindingCount) == 0
-      then pure $ fromIntegral (Data.Vector.length $ (bindingFlags))
+      then pure $ fromIntegral pBindingFlagsLength
       else do
-        unless (fromIntegral (Data.Vector.length $ (bindingFlags)) == (bindingCount)) $
+        unless (fromIntegral pBindingFlagsLength == (bindingCount) || pBindingFlagsLength == 0) $
           throwIO $ IOError Nothing InvalidArgument "" "pBindingFlags must be empty or have 'bindingCount' elements" Nothing Nothing
         pure (bindingCount)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (bindingCount'')

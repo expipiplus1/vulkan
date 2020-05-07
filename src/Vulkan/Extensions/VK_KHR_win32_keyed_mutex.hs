@@ -110,11 +110,9 @@ instance ToCStruct Win32KeyedMutexAcquireReleaseInfoKHR where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     let pAcquireSyncsLength = Data.Vector.length $ (acquireSyncs)
-    let pAcquireKeysLength = Data.Vector.length $ (acquireKeys)
-    lift $ unless (pAcquireKeysLength == pAcquireSyncsLength) $
+    lift $ unless ((Data.Vector.length $ (acquireKeys)) == pAcquireSyncsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pAcquireKeys and pAcquireSyncs must have the same length" Nothing Nothing
-    let pAcquireTimeoutsLength = Data.Vector.length $ (acquireTimeouts)
-    lift $ unless (pAcquireTimeoutsLength == pAcquireSyncsLength) $
+    lift $ unless ((Data.Vector.length $ (acquireTimeouts)) == pAcquireSyncsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pAcquireTimeouts and pAcquireSyncs must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral pAcquireSyncsLength :: Word32))
     pPAcquireSyncs' <- ContT $ allocaBytesAligned @DeviceMemory ((Data.Vector.length (acquireSyncs)) * 8) 8
@@ -127,8 +125,7 @@ instance ToCStruct Win32KeyedMutexAcquireReleaseInfoKHR where
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAcquireTimeouts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (acquireTimeouts)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word32))) (pPAcquireTimeouts')
     let pReleaseSyncsLength = Data.Vector.length $ (releaseSyncs)
-    let pReleaseKeysLength = Data.Vector.length $ (releaseKeys)
-    lift $ unless (pReleaseKeysLength == pReleaseSyncsLength) $
+    lift $ unless ((Data.Vector.length $ (releaseKeys)) == pReleaseSyncsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pReleaseKeys and pReleaseSyncs must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral pReleaseSyncsLength :: Word32))
     pPReleaseSyncs' <- ContT $ allocaBytesAligned @DeviceMemory ((Data.Vector.length (releaseSyncs)) * 8) 8

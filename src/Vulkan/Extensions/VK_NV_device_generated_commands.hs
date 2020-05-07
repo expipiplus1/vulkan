@@ -1690,8 +1690,7 @@ instance ToCStruct IndirectCommandsLayoutTokenNV where
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (pushconstantSize)
     lift $ poke ((p `plusPtr` 60 :: Ptr IndirectStateFlagsNV)) (indirectStateFlags)
     let pIndexTypesLength = Data.Vector.length $ (indexTypes)
-    let pIndexTypeValuesLength = Data.Vector.length $ (indexTypeValues)
-    lift $ unless (pIndexTypeValuesLength == pIndexTypesLength) $
+    lift $ unless ((Data.Vector.length $ (indexTypeValues)) == pIndexTypesLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pIndexTypeValues and pIndexTypes must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral pIndexTypesLength :: Word32))
     pPIndexTypes' <- ContT $ allocaBytesAligned @IndexType ((Data.Vector.length (indexTypes)) * 4) 4
