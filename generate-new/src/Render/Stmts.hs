@@ -191,7 +191,7 @@ renderStmts' lift parentRef badNames a = do
   -- penultimate statement has type () then don't render the redundant pure.
   -- TODO: Take off any number of `pure ()`s
   let neatenedStmts = case asStmts of
-        (_, Pure _ x1Doc) : x2@(This r2, _) : xs
+        (_, Pure _ x1Doc) : x2@(Some r2, _) : xs
           | "()" == (show x1Doc :: String)
           , Just Value' {..} <- DMap.lookup r2 asRefMap
           , Just t <- rType
@@ -200,9 +200,9 @@ renderStmts' lift parentRef badNames a = do
         xs -> xs
 
   -- Always render "_" binders
-  let binder (This ref) end = case DMap.lookup ref asRefMap of
+  let binder (Some ref) end = case DMap.lookup ref asRefMap of
         Just Value' { rNameHint = Just "_" } | not end -> Just "_"
-        _ -> bool (List.lookup (This ref) asUsedRefs) Nothing end
+        _ -> bool (List.lookup (Some ref) asUsedRefs) Nothing end
   con . doBlock <$> sequence
     [ r (binder ref end) v
     | ((ref, v), end) <- reverse (zip neatenedStmts (True : repeat False))
@@ -239,7 +239,7 @@ returning r = do
   gets @(ActionsState s r) asStmts >>= \case
     -- This is already the most recent rendered stmt, leave things as they
     -- are
-    (l, _) : _ | l == This r -> pure ()
+    (l, _) : _ | l == Some r -> pure ()
 
     -- This is not the most recent statement, render a "Pure" action with
     -- just this result in
@@ -315,8 +315,8 @@ nameRef name ref = do
   names <- gets @(ActionsState s r) asRefNames
   case Map.lookup name names of
     Nothing -> modify' @(ActionsState s r)
-      (\st -> st { asRefNames = Map.insert name (This ref) (asRefNames st) })
-    Just (This x) | Just Refl <- x `DMap.geq` ref -> pure ()
+      (\st -> st { asRefNames = Map.insert name (Some ref) (asRefNames st) })
+    Just (Some x) | Just Refl <- x `DMap.geq` ref -> pure ()
                   | otherwise -> throw $ "Duplicate Refs named " <> name
 
 -- | Get a 'Ref' which was named earlier with 'nameRef'
@@ -341,7 +341,7 @@ useViaNameMaybe name = do
       -- If we don't find anything here, check the parent
       parentRef <- gets @(ActionsState s r) asParentUseViaName
       raise $ parentRef name
-    Just (This (x@Ref{} :: Ref s x)) -> case eqT @x @a of
+    Just (Some (x@Ref{} :: Ref s x)) -> case eqT @x @a of
       Just Refl -> Just <$> use x
       Nothing -> throw $ "Trying to use ref " <> name <> " with incorrect type"
 
@@ -386,10 +386,10 @@ use' forceRender ref = do
   let varNameD = coerce @(Doc ()) (pretty var)
   used <- gets @(ActionsState s r) asTimesUsed
   modify' @(ActionsState s r)
-    (\st -> st { asUsedRefs = (This ref, var) : asUsedRefs st })
+    (\st -> st { asUsedRefs = (Some ref, var) : asUsedRefs st })
   pure $ case v of
     Pure NeverInline _ -> varNameD
-    Pure InlineOnce  d -> case used (This ref) of
+    Pure InlineOnce  d -> case used (Some ref) of
       Zero -> error "Impossible, using a ref with zero usages"
       One  -> coerce (parens @()) d
       Many -> varNameD
@@ -401,7 +401,7 @@ varName :: forall s r a . Ref s a -> Maybe Text -> Stmt s r Text
 varName ref hint = do
   -- Check if this reference already has a name
   usedRefs <- gets @(ActionsState s r) asUsedRefs
-  case Prelude.lookup (This ref) usedRefs of
+  case Prelude.lookup (Some ref) usedRefs of
     Just v -> pure v
 
     Nothing | Just "_" <- hint -> pure "_"
@@ -442,12 +442,12 @@ renderRef forceRender ref = do
       let s'       = s { rAction = Left v }
           doRender = forceRender || case v of
             Pure AlwaysInline _ -> False
-            Pure InlineOnce _ | One <- used (This ref) -> False
+            Pure InlineOnce _ | One <- used (Some ref) -> False
             _                   -> True
       modify' @(ActionsState s r)
         (\st -> st
           { asStmts  = if doRender
-                         then (This ref, coerce v) : asStmts st
+                         then (Some ref, coerce v) : asStmts st
                          else asStmts st
           , asRefMap = DMap.insert ref s' (asRefMap st)
           }

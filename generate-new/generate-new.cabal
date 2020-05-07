@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 465d92e5dd4ce2fe233c8560beba2865a23d9da4c7226f5b3c75abb2ba4ca4af
+-- hash: 9c3df7b851ab981c84f70d3edc4107682b384d7f9e726c416b375eb3c6e799da
 
 name:           generate-new
 version:        0.0.0
@@ -93,7 +93,7 @@ library
     , data-default
     , deepseq
     , dependent-map
-    , dependent-sum
+    , dependent-sum >=0.7
     , directory
     , extra
     , filepath
@@ -111,6 +111,7 @@ library
     , relude
     , safe
     , say
+    , some
     , tagsoup
     , template-haskell
     , text
@@ -149,7 +150,7 @@ executable vk
     , data-default
     , deepseq
     , dependent-map
-    , dependent-sum
+    , dependent-sum >=0.7
     , directory
     , extra
     , filepath
@@ -168,6 +169,7 @@ executable vk
     , relude
     , safe
     , say
+    , some
     , tagsoup
     , template-haskell
     , text
@@ -207,7 +209,7 @@ executable vma
     , data-default
     , deepseq
     , dependent-map
-    , dependent-sum
+    , dependent-sum >=0.7
     , directory
     , extra
     , filepath
@@ -227,6 +229,7 @@ executable vma
     , relude
     , safe
     , say
+    , some
     , tagsoup
     , template-haskell
     , text

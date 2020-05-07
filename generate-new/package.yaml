@@ -84,7 +84,7 @@ dependencies:
   - data-default
   - deepseq
   - dependent-map
-  - dependent-sum
+  - dependent-sum >= 0.7
   - directory
   - extra
   - filepath
@@ -102,6 +102,7 @@ dependencies:
   - relude
   - safe
   - say
+  - some
   - tagsoup
   - template-haskell
   - text
