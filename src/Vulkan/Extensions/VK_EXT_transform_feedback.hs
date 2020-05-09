@@ -1165,7 +1165,7 @@ data PhysicalDeviceTransformFeedbackFeaturesEXT = PhysicalDeviceTransformFeedbac
     -- @GeometryStreams@ SPIR-V capability.
     geometryStreams :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceTransformFeedbackFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT where
@@ -1275,7 +1275,7 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     -- be called.
     transformFeedbackDraw :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceTransformFeedbackPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackPropertiesEXT where
@@ -1375,7 +1375,7 @@ data PipelineRasterizationStateStreamCreateInfoEXT = PipelineRasterizationStateS
     -- is 'Vulkan.Core10.BaseType.FALSE'
     rasterizationStream :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineRasterizationStateStreamCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationStateStreamCreateInfoEXT where

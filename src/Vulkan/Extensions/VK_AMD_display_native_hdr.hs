@@ -116,7 +116,7 @@ data DisplayNativeHdrSurfaceCapabilitiesAMD = DisplayNativeHdrSurfaceCapabilitie
     -- be overriden by 'setLocalDimmingAMD' during the lifetime of the
     -- swapchain.
     localDimmingSupport :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DisplayNativeHdrSurfaceCapabilitiesAMD
 
 instance ToCStruct DisplayNativeHdrSurfaceCapabilitiesAMD where
@@ -182,7 +182,7 @@ data SwapchainDisplayNativeHdrCreateInfoAMD = SwapchainDisplayNativeHdrCreateInf
   { -- | @localDimmingEnable@ specifies whether local dimming is enabled for the
     -- swapchain.
     localDimmingEnable :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SwapchainDisplayNativeHdrCreateInfoAMD
 
 instance ToCStruct SwapchainDisplayNativeHdrCreateInfoAMD where

@@ -582,7 +582,7 @@ data PhysicalDeviceShadingRateImageFeaturesNV = PhysicalDeviceShadingRateImageFe
     -- larger than one pixel.
     shadingRateCoarseSampleOrder :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShadingRateImageFeaturesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImageFeaturesNV where
@@ -722,7 +722,7 @@ data CoarseSampleLocationNV = CoarseSampleLocationNV
     -- pixel belonging to the fragment
     sample :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show CoarseSampleLocationNV
 
 instance ToCStruct CoarseSampleLocationNV where

@@ -138,7 +138,7 @@ data SharedPresentSurfaceCapabilitiesKHR = SharedPresentSurfaceCapabilitiesKHR
     -- /must/ be included in the set but implementations /may/ support
     -- additional usages.
     sharedPresentSupportedUsageFlags :: ImageUsageFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SharedPresentSurfaceCapabilitiesKHR
 
 instance ToCStruct SharedPresentSurfaceCapabilitiesKHR where

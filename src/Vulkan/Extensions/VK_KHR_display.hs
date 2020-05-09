@@ -777,7 +777,7 @@ data DisplayPlanePropertiesKHR = DisplayPlanePropertiesKHR
     -- 'getPhysicalDeviceDisplayPlanePropertiesKHR' in @pPropertyCount@.
     currentStackIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DisplayPlanePropertiesKHR
 
 instance ToCStruct DisplayPlanePropertiesKHR where

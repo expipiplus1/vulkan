@@ -70,7 +70,7 @@ data PhysicalDeviceSeparateDepthStencilLayoutsFeatures = PhysicalDeviceSeparateD
     -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
     -- can be used.
     separateDepthStencilLayouts :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSeparateDepthStencilLayoutsFeatures
 
 instance ToCStruct PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
@@ -134,7 +134,7 @@ data AttachmentReferenceStencilLayout = AttachmentReferenceStencilLayout
     -- @stencilLayout@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilLayout :: ImageLayout }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AttachmentReferenceStencilLayout
 
 instance ToCStruct AttachmentReferenceStencilLayout where
@@ -218,7 +218,7 @@ data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilFinalLayout :: ImageLayout
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AttachmentDescriptionStencilLayout
 
 instance ToCStruct AttachmentDescriptionStencilLayout where

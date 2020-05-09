@@ -97,7 +97,7 @@ data PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = PhysicalDeviceTextureC
     -- /can/ be used to check for supported properties of individual formats as
     -- normal.
     textureCompressionASTC_HDR :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT where

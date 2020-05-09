@@ -84,7 +84,7 @@ data PhysicalDeviceSamplerFilterMinmaxProperties = PhysicalDeviceSamplerFilterMi
     -- the image when doing min\/max filtering.
     filterMinmaxImageComponentMapping :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSamplerFilterMinmaxProperties
 
 instance ToCStruct PhysicalDeviceSamplerFilterMinmaxProperties where
@@ -150,7 +150,7 @@ data SamplerReductionModeCreateInfo = SamplerReductionModeCreateInfo
     -- @reductionMode@ /must/ be a valid
     -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
     reductionMode :: SamplerReductionMode }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SamplerReductionModeCreateInfo
 
 instance ToCStruct SamplerReductionModeCreateInfo where

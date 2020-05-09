@@ -163,7 +163,7 @@ data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
     -- @imagePipeHandle@ /must/ be a valid @zx_handle_t@
     imagePipeHandle :: Zx_handle_t
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImagePipeSurfaceCreateInfoFUCHSIA
 
 instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA where

@@ -96,7 +96,7 @@ data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesA
     -- granularity of VGPR allocation for a wave.
     vgprAllocationGranularity :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderCorePropertiesAMD
 
 instance ToCStruct PhysicalDeviceShaderCorePropertiesAMD where

@@ -78,7 +78,7 @@ data PhysicalDeviceDiagnosticsConfigFeaturesNV = PhysicalDeviceDiagnosticsConfig
   { -- | @diagnosticsConfig@ indicates whether the implementation supports the
     -- ability to configure diagnostic tools.
     diagnosticsConfig :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDiagnosticsConfigFeaturesNV
 
 instance ToCStruct PhysicalDeviceDiagnosticsConfigFeaturesNV where
@@ -129,7 +129,7 @@ data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
     -- @flags@ /must/ be a valid combination of
     -- 'DeviceDiagnosticsConfigFlagBitsNV' values
     flags :: DeviceDiagnosticsConfigFlagsNV }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceDiagnosticsConfigCreateInfoNV
 
 instance ToCStruct DeviceDiagnosticsConfigCreateInfoNV where

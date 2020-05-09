@@ -200,7 +200,7 @@ data PhysicalDeviceDiscardRectanglePropertiesEXT = PhysicalDeviceDiscardRectangl
   { -- | @maxDiscardRectangles@ is the maximum number of active discard
     -- rectangles that /can/ be specified.
     maxDiscardRectangles :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDiscardRectanglePropertiesEXT
 
 instance ToCStruct PhysicalDeviceDiscardRectanglePropertiesEXT where

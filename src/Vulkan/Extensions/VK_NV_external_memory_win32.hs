@@ -164,7 +164,7 @@ data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
     -- @handleType@
     handle :: HANDLE
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportMemoryWin32HandleInfoNV
 
 instance ToCStruct ImportMemoryWin32HandleInfoNV where
@@ -239,7 +239,7 @@ data ExportMemoryWin32HandleInfoNV = ExportMemoryWin32HandleInfoNV
     -- rights of the handle.
     dwAccess :: DWORD
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportMemoryWin32HandleInfoNV
 
 instance ToCStruct ExportMemoryWin32HandleInfoNV where

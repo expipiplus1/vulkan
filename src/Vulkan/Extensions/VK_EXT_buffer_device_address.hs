@@ -122,7 +122,7 @@ data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAd
     -- than one physical device.
     bufferDeviceAddressMultiDevice :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceBufferDeviceAddressFeaturesEXT
 
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT where
@@ -192,7 +192,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 data BufferDeviceAddressCreateInfoEXT = BufferDeviceAddressCreateInfoEXT
   { -- | @deviceAddress@ is the device address requested for the buffer.
     deviceAddress :: DeviceAddress }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BufferDeviceAddressCreateInfoEXT
 
 instance ToCStruct BufferDeviceAddressCreateInfoEXT where

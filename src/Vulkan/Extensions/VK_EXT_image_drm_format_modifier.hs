@@ -141,7 +141,7 @@ data DrmFormatModifierPropertiesListEXT = DrmFormatModifierPropertiesListEXT
     -- 'DrmFormatModifierPropertiesEXT' structures.
     drmFormatModifierProperties :: Ptr DrmFormatModifierPropertiesEXT
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DrmFormatModifierPropertiesListEXT
 
 instance ToCStruct DrmFormatModifierPropertiesListEXT where
@@ -278,7 +278,7 @@ data DrmFormatModifierPropertiesEXT = DrmFormatModifierPropertiesEXT
     -- @drmFormatModifier@.
     drmFormatModifierTilingFeatures :: FormatFeatureFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DrmFormatModifierPropertiesEXT
 
 instance ToCStruct DrmFormatModifierPropertiesEXT where
@@ -616,7 +616,7 @@ data ImageDrmFormatModifierPropertiesEXT = ImageDrmFormatModifierPropertiesEXT
   { -- | @drmFormatModifier@ returns the image’s
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
     drmFormatModifier :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageDrmFormatModifierPropertiesEXT
 
 instance ToCStruct ImageDrmFormatModifierPropertiesEXT where

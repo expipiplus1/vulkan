@@ -7900,7 +7900,7 @@ data Viewport = Viewport
   , -- No documentation found for Nested "VkViewport" "maxDepth"
     maxDepth :: Float
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show Viewport
 
 instance ToCStruct Viewport where
@@ -8077,7 +8077,7 @@ data BufferCopy = BufferCopy
   , -- | @size@ is the number of bytes to copy.
     size :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BufferCopy
 
 instance ToCStruct BufferCopy where

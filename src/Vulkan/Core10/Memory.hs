@@ -1192,7 +1192,7 @@ data MappedMemoryRange = MappedMemoryRange
     -- @offset@ to the end of the current mapping of the allocation.
     size :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MappedMemoryRange
 
 instance ToCStruct MappedMemoryRange where

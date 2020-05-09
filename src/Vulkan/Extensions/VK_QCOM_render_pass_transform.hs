@@ -65,7 +65,7 @@ data RenderPassTransformBeginInfoQCOM = RenderPassTransformBeginInfoQCOM
     -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
     -- describing the transform to be applied to rasterization.
     transform :: SurfaceTransformFlagBitsKHR }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show RenderPassTransformBeginInfoQCOM
 
 instance ToCStruct RenderPassTransformBeginInfoQCOM where

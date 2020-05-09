@@ -62,7 +62,7 @@ data ConformanceVersion = ConformanceVersion
   , -- | @patch@ is the patch version number of the conformance test suite.
     patch :: Word8
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ConformanceVersion
 
 instance ToCStruct ConformanceVersion where

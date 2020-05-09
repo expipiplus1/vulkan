@@ -59,7 +59,7 @@ data PhysicalDeviceRepresentativeFragmentTestFeaturesNV = PhysicalDeviceRepresen
     -- supports the representative fragment test. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
     representativeFragmentTest :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceRepresentativeFragmentTestFeaturesNV
 
 instance ToCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
@@ -118,7 +118,7 @@ data PipelineRepresentativeFragmentTestStateCreateInfoNV = PipelineRepresentativ
   { -- | @representativeFragmentTestEnable@ controls whether the representative
     -- fragment test is enabled.
     representativeFragmentTestEnable :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineRepresentativeFragmentTestStateCreateInfoNV
 
 instance ToCStruct PipelineRepresentativeFragmentTestStateCreateInfoNV where

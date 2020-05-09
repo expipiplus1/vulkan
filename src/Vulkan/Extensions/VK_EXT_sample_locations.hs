@@ -219,7 +219,7 @@ data SampleLocationEXT = SampleLocationEXT
   , -- | @y@ is the vertical coordinate of the sample’s location.
     y :: Float
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SampleLocationEXT
 
 instance ToCStruct SampleLocationEXT where

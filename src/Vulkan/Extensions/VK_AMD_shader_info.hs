@@ -211,7 +211,7 @@ data ShaderResourceUsageAMD = ShaderResourceUsageAMD
     -- shader.
     scratchMemUsageInBytes :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ShaderResourceUsageAMD
 
 instance ToCStruct ShaderResourceUsageAMD where

@@ -56,7 +56,7 @@ data PhysicalDeviceIndexTypeUint8FeaturesEXT = PhysicalDeviceIndexTypeUint8Featu
     -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT8_EXT' can be used with
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
     indexTypeUint8 :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceIndexTypeUint8FeaturesEXT
 
 instance ToCStruct PhysicalDeviceIndexTypeUint8FeaturesEXT where

@@ -94,7 +94,7 @@ data PhysicalDeviceSubgroupProperties = PhysicalDeviceSubgroupProperties
     -- stages.
     quadOperationsInAllStages :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSubgroupProperties
 
 instance ToCStruct PhysicalDeviceSubgroupProperties where

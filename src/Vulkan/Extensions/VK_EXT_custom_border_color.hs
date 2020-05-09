@@ -126,7 +126,7 @@ data PhysicalDeviceCustomBorderColorPropertiesEXT = PhysicalDeviceCustomBorderCo
   { -- | @maxCustomBorderColorSamplers@ indicates the maximum number of samplers
     -- with custom border colors which /can/ simultaneously exist on a device.
     maxCustomBorderColorSamplers :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceCustomBorderColorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorPropertiesEXT where
@@ -194,7 +194,7 @@ data PhysicalDeviceCustomBorderColorFeaturesEXT = PhysicalDeviceCustomBorderColo
     -- 'SamplerCustomBorderColorCreateInfoEXT' structure.
     customBorderColorWithoutFormat :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceCustomBorderColorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorFeaturesEXT where

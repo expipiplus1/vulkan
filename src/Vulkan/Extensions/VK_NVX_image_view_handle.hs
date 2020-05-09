@@ -208,7 +208,7 @@ data ImageViewHandleInfoNVX = ImageViewHandleInfoNVX
     -- the handle.
     sampler :: Sampler
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageViewHandleInfoNVX
 
 instance ToCStruct ImageViewHandleInfoNVX where
@@ -267,7 +267,7 @@ data ImageViewAddressPropertiesNVX = ImageViewAddressPropertiesNVX
   , -- | @size@ is the size in bytes of the image view device memory.
     size :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageViewAddressPropertiesNVX
 
 instance ToCStruct ImageViewAddressPropertiesNVX where

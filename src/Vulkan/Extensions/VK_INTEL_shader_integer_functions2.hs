@@ -56,7 +56,7 @@ data PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL = PhysicalDeviceShaderIn
   { -- | @shaderIntegerFunctions2@ indicates that the implementation supports the
     -- @ShaderIntegerFunctions2INTEL@ SPIR-V capability.
     shaderIntegerFunctions2 :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
 
 instance ToCStruct PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL where

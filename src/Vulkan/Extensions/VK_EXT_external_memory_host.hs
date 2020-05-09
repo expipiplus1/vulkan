@@ -258,7 +258,7 @@ data MemoryHostPointerPropertiesEXT = MemoryHostPointerPropertiesEXT
   { -- | @memoryTypeBits@ is a bitmask containing one bit set for every memory
     -- type which the specified host pointer /can/ be imported as.
     memoryTypeBits :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryHostPointerPropertiesEXT
 
 instance ToCStruct MemoryHostPointerPropertiesEXT where
@@ -320,7 +320,7 @@ data PhysicalDeviceExternalMemoryHostPropertiesEXT = PhysicalDeviceExternalMemor
     -- in bytes, for the base address and size of host pointers that /can/ be
     -- imported to a Vulkan memory object.
     minImportedHostPointerAlignment :: DeviceSize }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceExternalMemoryHostPropertiesEXT
 
 instance ToCStruct PhysicalDeviceExternalMemoryHostPropertiesEXT where

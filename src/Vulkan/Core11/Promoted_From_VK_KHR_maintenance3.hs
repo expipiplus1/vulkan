@@ -163,7 +163,7 @@ data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
     -- heap.
     maxMemoryAllocationSize :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceMaintenance3Properties
 
 instance ToCStruct PhysicalDeviceMaintenance3Properties where

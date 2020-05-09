@@ -57,7 +57,7 @@ data PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = PhysicalDeviceSha
   { -- | @shaderDemoteToHelperInvocation@ indicates whether the implementation
     -- supports the SPIR-V @DemoteToHelperInvocationEXT@ capability.
     shaderDemoteToHelperInvocation :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT where

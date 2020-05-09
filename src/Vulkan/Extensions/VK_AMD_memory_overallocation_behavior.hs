@@ -57,7 +57,7 @@ data DeviceMemoryOverallocationCreateInfoAMD = DeviceMemoryOverallocationCreateI
     -- @overallocationBehavior@ /must/ be a valid
     -- 'MemoryOverallocationBehaviorAMD' value
     overallocationBehavior :: MemoryOverallocationBehaviorAMD }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceMemoryOverallocationCreateInfoAMD
 
 instance ToCStruct DeviceMemoryOverallocationCreateInfoAMD where

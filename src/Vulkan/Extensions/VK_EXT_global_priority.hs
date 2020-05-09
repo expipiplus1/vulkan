@@ -64,7 +64,7 @@ data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInf
     --
     -- @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
     globalPriority :: QueueGlobalPriorityEXT }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceQueueGlobalPriorityCreateInfoEXT
 
 instance ToCStruct DeviceQueueGlobalPriorityCreateInfoEXT where

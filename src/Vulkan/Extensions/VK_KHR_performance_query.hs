@@ -402,7 +402,7 @@ data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryF
     -- secondary command buffers executed within it.
     performanceCounterMultipleQueryPools :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePerformanceQueryFeaturesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryFeaturesKHR where
@@ -465,7 +465,7 @@ data PhysicalDevicePerformanceQueryPropertiesKHR = PhysicalDevicePerformanceQuer
     -- performance query pools are allowed to be used with
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'.
     allowCommandBufferQueryCopies :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePerformanceQueryPropertiesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryPropertiesKHR where
@@ -749,7 +749,7 @@ data AcquireProfilingLockInfoKHR = AcquireProfilingLockInfoKHR
     -- profiling lock is not available.
     timeout :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AcquireProfilingLockInfoKHR
 
 instance ToCStruct AcquireProfilingLockInfoKHR where
@@ -808,7 +808,7 @@ data PerformanceQuerySubmitInfoKHR = PerformanceQuerySubmitInfoKHR
     -- passes for a performance query is obtained by calling
     -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
     counterPassIndex :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PerformanceQuerySubmitInfoKHR
 
 instance ToCStruct PerformanceQuerySubmitInfoKHR where

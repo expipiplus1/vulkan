@@ -531,7 +531,7 @@ data DisplayPlaneInfo2KHR = DisplayPlaneInfo2KHR
   , -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "planeIndex"
     planeIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DisplayPlaneInfo2KHR
 
 instance ToCStruct DisplayPlaneInfo2KHR where

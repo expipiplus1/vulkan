@@ -530,7 +530,7 @@ data SpecializationMapEntry = SpecializationMapEntry
     -- supplied data buffer.
     size :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SpecializationMapEntry
 
 instance ToCStruct SpecializationMapEntry where
@@ -1175,7 +1175,7 @@ data VertexInputBindingDescription = VertexInputBindingDescription
     -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate' value
     inputRate :: VertexInputRate
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show VertexInputBindingDescription
 
 instance ToCStruct VertexInputBindingDescription where
@@ -1254,7 +1254,7 @@ data VertexInputAttributeDescription = VertexInputAttributeDescription
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributeOffset@
     offset :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show VertexInputAttributeDescription
 
 instance ToCStruct VertexInputAttributeDescription where
@@ -1502,7 +1502,7 @@ data PipelineInputAssemblyStateCreateInfo = PipelineInputAssemblyStateCreateInfo
     -- not allowed for “list” topologies.
     primitiveRestartEnable :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineInputAssemblyStateCreateInfo
 
 instance ToCStruct PipelineInputAssemblyStateCreateInfo where
@@ -2336,7 +2336,7 @@ data PipelineColorBlendAttachmentState = PipelineColorBlendAttachmentState
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-color-write-mask Color Write Mask>.
     colorWriteMask :: ColorComponentFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineColorBlendAttachmentState
 
 instance ToCStruct PipelineColorBlendAttachmentState where
@@ -2666,7 +2666,7 @@ data StencilOpState = StencilOpState
     -- stencil comparison.
     reference :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show StencilOpState
 
 instance ToCStruct StencilOpState where

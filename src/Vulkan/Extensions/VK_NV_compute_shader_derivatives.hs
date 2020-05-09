@@ -64,7 +64,7 @@ data PhysicalDeviceComputeShaderDerivativesFeaturesNV = PhysicalDeviceComputeSha
     -- supports the @ComputeDerivativeGroupLinearNV@ SPIR-V capability.
     computeDerivativeGroupLinear :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceComputeShaderDerivativesFeaturesNV
 
 instance ToCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV where

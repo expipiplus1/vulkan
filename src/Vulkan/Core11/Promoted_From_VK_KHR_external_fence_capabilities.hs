@@ -128,7 +128,7 @@ data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
     -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
     -- value
     handleType :: ExternalFenceHandleTypeFlagBits }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceExternalFenceInfo
 
 instance ToCStruct PhysicalDeviceExternalFenceInfo where
@@ -196,7 +196,7 @@ data ExternalFenceProperties = ExternalFenceProperties
     -- indicating the features of @handleType@.
     externalFenceFeatures :: ExternalFenceFeatureFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExternalFenceProperties
 
 instance ToCStruct ExternalFenceProperties where

@@ -168,7 +168,7 @@ data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
     -- 'Vulkan.Extensions.WSITypes.GgpStreamDescriptor'
     streamDescriptor :: GgpStreamDescriptor
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show StreamDescriptorSurfaceCreateInfoGGP
 
 instance ToCStruct StreamDescriptorSurfaceCreateInfoGGP where

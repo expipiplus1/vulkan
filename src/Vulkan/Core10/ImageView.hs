@@ -259,7 +259,7 @@ data ComponentMapping = ComponentMapping
     -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     a :: ComponentSwizzle
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ComponentMapping
 
 instance ToCStruct ComponentMapping where

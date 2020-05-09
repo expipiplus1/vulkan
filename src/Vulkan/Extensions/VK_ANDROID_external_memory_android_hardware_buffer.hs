@@ -240,7 +240,7 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 data ImportAndroidHardwareBufferInfoANDROID = ImportAndroidHardwareBufferInfoANDROID
   { -- | @buffer@ is the Android hardware buffer to import.
     buffer :: Ptr AHardwareBuffer }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportAndroidHardwareBufferInfoANDROID
 
 instance ToCStruct ImportAndroidHardwareBufferInfoANDROID where
@@ -311,7 +311,7 @@ data AndroidHardwareBufferUsageANDROID = AndroidHardwareBufferUsageANDROID
   { -- | @androidHardwareBufferUsage@ returns the Android hardware buffer usage
     -- flags.
     androidHardwareBufferUsage :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AndroidHardwareBufferUsageANDROID
 
 instance ToCStruct AndroidHardwareBufferUsageANDROID where
@@ -457,7 +457,7 @@ data MemoryGetAndroidHardwareBufferInfoANDROID = MemoryGetAndroidHardwareBufferI
   { -- | @memory@ is the memory object from which the Android hardware buffer
     -- will be exported.
     memory :: DeviceMemory }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryGetAndroidHardwareBufferInfoANDROID
 
 instance ToCStruct MemoryGetAndroidHardwareBufferInfoANDROID where
@@ -698,7 +698,7 @@ data ExternalFormatANDROID = ExternalFormatANDROID
     -- 'AndroidHardwareBufferFormatPropertiesANDROID' by an earlier call to
     -- 'getAndroidHardwareBufferPropertiesANDROID'
     externalFormat :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExternalFormatANDROID
 
 instance ToCStruct ExternalFormatANDROID where

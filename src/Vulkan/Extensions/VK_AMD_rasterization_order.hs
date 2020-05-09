@@ -62,7 +62,7 @@ data PipelineRasterizationStateRasterizationOrderAMD = PipelineRasterizationStat
     --
     -- @rasterizationOrder@ /must/ be a valid 'RasterizationOrderAMD' value
     rasterizationOrder :: RasterizationOrderAMD }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineRasterizationStateRasterizationOrderAMD
 
 instance ToCStruct PipelineRasterizationStateRasterizationOrderAMD where

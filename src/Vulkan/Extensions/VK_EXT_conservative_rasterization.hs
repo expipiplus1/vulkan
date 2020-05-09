@@ -146,7 +146,7 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     -- enabled.
     conservativeRasterizationPostDepthCoverage :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceConservativeRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT where
@@ -245,7 +245,7 @@ data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterization
     -- inclusive
     extraPrimitiveOverestimationSize :: Float
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineRasterizationConservativeStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationConservativeStateCreateInfoEXT where

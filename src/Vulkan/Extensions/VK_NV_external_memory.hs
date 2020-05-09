@@ -49,7 +49,7 @@ data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExternalMemoryImageCreateInfoNV
 
 instance ToCStruct ExternalMemoryImageCreateInfoNV where
@@ -104,7 +104,7 @@ data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportMemoryAllocateInfoNV
 
 instance ToCStruct ExportMemoryAllocateInfoNV where

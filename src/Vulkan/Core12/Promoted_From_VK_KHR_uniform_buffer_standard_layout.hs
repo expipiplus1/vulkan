@@ -54,7 +54,7 @@ data PhysicalDeviceUniformBufferStandardLayoutFeatures = PhysicalDeviceUniformBu
     -- buffers. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
     uniformBufferStandardLayout :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceUniformBufferStandardLayoutFeatures
 
 instance ToCStruct PhysicalDeviceUniformBufferStandardLayoutFeatures where

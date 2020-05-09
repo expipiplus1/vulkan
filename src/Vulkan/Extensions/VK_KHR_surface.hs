@@ -688,7 +688,7 @@ data SurfaceFormatKHR = SurfaceFormatKHR
     -- the surface.
     colorSpace :: ColorSpaceKHR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SurfaceFormatKHR
 
 instance ToCStruct SurfaceFormatKHR where

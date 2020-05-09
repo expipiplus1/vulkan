@@ -600,7 +600,7 @@ data BaseOutStructure = BaseOutStructure
     -- chain.
     next :: Ptr BaseOutStructure
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BaseOutStructure
 
 instance ToCStruct BaseOutStructure where
@@ -652,7 +652,7 @@ data BaseInStructure = BaseInStructure
     -- chain.
     next :: Ptr BaseInStructure
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BaseInStructure
 
 instance ToCStruct BaseInStructure where

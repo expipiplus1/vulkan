@@ -88,7 +88,7 @@ data PhysicalDeviceSubgroupSizeControlFeaturesEXT = PhysicalDeviceSubgroupSizeCo
     -- flag.
     computeFullSubgroups :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSubgroupSizeControlFeaturesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlFeaturesEXT where
@@ -178,7 +178,7 @@ data PhysicalDeviceSubgroupSizeControlPropertiesEXT = PhysicalDeviceSubgroupSize
     -- having a required subgroup size specified.
     requiredSubgroupSizeStages :: ShaderStageFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSubgroupSizeControlPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlPropertiesEXT where
@@ -253,7 +253,7 @@ data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageR
     -- @requiredSubgroupSize@ /must/ be less than or equal to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
     requiredSubgroupSize :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
 
 instance ToCStruct PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT where

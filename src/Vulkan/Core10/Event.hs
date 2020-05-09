@@ -431,7 +431,7 @@ data EventCreateInfo = EventCreateInfo
     --
     -- @flags@ /must/ be @0@
     flags :: EventCreateFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show EventCreateInfo
 
 instance ToCStruct EventCreateInfo where

@@ -578,7 +578,7 @@ data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreat
     -- @validationCache@ /must/ be a valid
     -- 'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
     validationCache :: ValidationCacheEXT }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ShaderModuleValidationCacheCreateInfoEXT
 
 instance ToCStruct ShaderModuleValidationCacheCreateInfoEXT where

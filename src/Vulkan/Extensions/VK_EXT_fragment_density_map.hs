@@ -86,7 +86,7 @@ data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensity
     -- bound.
     fragmentDensityMapNonSubsampledImages :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceFragmentDensityMapFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT where

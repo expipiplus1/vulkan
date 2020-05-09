@@ -410,7 +410,7 @@ data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR = PhysicalDevicePipel
     -- reporting properties and statistics about the executables associated
     -- with a compiled pipeline.
     pipelineExecutableInfo :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
 
 instance ToCStruct PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
@@ -459,7 +459,7 @@ data PipelineInfoKHR = PipelineInfoKHR
     --
     -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineInfoKHR
 
 instance ToCStruct PipelineInfoKHR where
@@ -609,7 +609,7 @@ data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
     -- parameter of 'getPipelineExecutablePropertiesKHR'
     executableIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineExecutableInfoKHR
 
 instance ToCStruct PipelineExecutableInfoKHR where

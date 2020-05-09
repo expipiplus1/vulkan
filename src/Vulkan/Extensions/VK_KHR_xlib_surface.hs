@@ -233,7 +233,7 @@ data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
     -- @window@ /must/ be a valid Xlib 'Vulkan.Extensions.WSITypes.Window'
     window :: Window
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show XlibSurfaceCreateInfoKHR
 
 instance ToCStruct XlibSurfaceCreateInfoKHR where

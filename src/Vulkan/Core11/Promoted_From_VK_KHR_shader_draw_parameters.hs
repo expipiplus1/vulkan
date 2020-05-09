@@ -51,7 +51,7 @@ data PhysicalDeviceShaderDrawParametersFeatures = PhysicalDeviceShaderDrawParame
   { -- | @shaderDrawParameters@ specifies whether shader draw parameters are
     -- supported.
     shaderDrawParameters :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderDrawParametersFeatures
 
 instance ToCStruct PhysicalDeviceShaderDrawParametersFeatures where

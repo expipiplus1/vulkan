@@ -43,7 +43,7 @@ data TextureLODGatherFormatPropertiesAMD = TextureLODGatherFormatPropertiesAMD
     -- @VK_AMD_texture_gather_bias_lod@ extension. This field is set by the
     -- implementation. User-specified value is ignored.
     supportsTextureGatherLODBiasAMD :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show TextureLODGatherFormatPropertiesAMD
 
 instance ToCStruct TextureLODGatherFormatPropertiesAMD where

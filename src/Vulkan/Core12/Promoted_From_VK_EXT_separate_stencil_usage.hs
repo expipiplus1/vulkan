@@ -81,7 +81,7 @@ data ImageStencilUsageCreateInfo = ImageStencilUsageCreateInfo
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' describing
     -- the intended usage of the stencil aspect of the image.
     stencilUsage :: ImageUsageFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageStencilUsageCreateInfo
 
 instance ToCStruct ImageStencilUsageCreateInfo where

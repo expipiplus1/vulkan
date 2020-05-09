@@ -60,7 +60,7 @@ data PhysicalDeviceMemoryPriorityFeaturesEXT = PhysicalDeviceMemoryPriorityFeatu
     -- priorities specified at memory allocation time via
     -- 'MemoryPriorityAllocateInfoEXT'.
     memoryPriority :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceMemoryPriorityFeaturesEXT
 
 instance ToCStruct PhysicalDeviceMemoryPriorityFeaturesEXT where
@@ -118,7 +118,7 @@ data MemoryPriorityAllocateInfoEXT = MemoryPriorityAllocateInfoEXT
     --
     -- @priority@ /must/ be between @0@ and @1@, inclusive
     priority :: Float }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryPriorityAllocateInfoEXT
 
 instance ToCStruct MemoryPriorityAllocateInfoEXT where

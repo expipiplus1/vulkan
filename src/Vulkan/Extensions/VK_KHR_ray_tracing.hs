@@ -3786,7 +3786,7 @@ data AccelerationStructureMemoryRequirementsInfoKHR = AccelerationStructureMemor
     -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
     accelerationStructure :: AccelerationStructureKHR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AccelerationStructureMemoryRequirementsInfoKHR
 
 instance ToCStruct AccelerationStructureMemoryRequirementsInfoKHR where
@@ -3924,7 +3924,7 @@ data PhysicalDeviceRayTracingFeaturesKHR = PhysicalDeviceRayTracingFeaturesKHR
   , -- No documentation found for Nested "VkPhysicalDeviceRayTracingFeaturesKHR" "rayTracingPrimitiveCulling"
     rayTracingPrimitiveCulling :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceRayTracingFeaturesKHR
 
 instance ToCStruct PhysicalDeviceRayTracingFeaturesKHR where
@@ -4038,7 +4038,7 @@ data PhysicalDeviceRayTracingPropertiesKHR = PhysicalDeviceRayTracingPropertiesK
     -- information required to do capture and replay for shader group handles.
     shaderGroupHandleCaptureReplaySize :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceRayTracingPropertiesKHR
 
 instance ToCStruct PhysicalDeviceRayTracingPropertiesKHR where
@@ -4135,7 +4135,7 @@ data StridedBufferRegionKHR = StridedBufferRegionKHR
   , -- | @size@ is the size in bytes of the region starting at @offset@.
     size :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show StridedBufferRegionKHR
 
 instance ToCStruct StridedBufferRegionKHR where
@@ -4207,7 +4207,7 @@ data TraceRaysIndirectCommandKHR = TraceRaysIndirectCommandKHR
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
     depth :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show TraceRaysIndirectCommandKHR
 
 instance ToCStruct TraceRaysIndirectCommandKHR where
@@ -4773,7 +4773,7 @@ data AccelerationStructureBuildOffsetInfoKHR = AccelerationStructureBuildOffsetI
     -- transform matrix is defined.
     transformOffset :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AccelerationStructureBuildOffsetInfoKHR
 
 instance ToCStruct AccelerationStructureBuildOffsetInfoKHR where
@@ -4890,7 +4890,7 @@ data AccelerationStructureCreateGeometryTypeInfoKHR = AccelerationStructureCreat
     -- 'GEOMETRY_TYPE_TRIANGLES_KHR'.
     allowsTransforms :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AccelerationStructureCreateGeometryTypeInfoKHR
 
 instance ToCStruct AccelerationStructureCreateGeometryTypeInfoKHR where
@@ -5131,7 +5131,7 @@ data AabbPositionsKHR = AabbPositionsKHR
   , -- | @maxZ@ is the z position of the other opposing corner of a bounding box.
     maxZ :: Float
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AabbPositionsKHR
 
 instance ToCStruct AabbPositionsKHR where
@@ -5191,7 +5191,7 @@ instance Zero AabbPositionsKHR where
 data TransformMatrixKHR = TransformMatrixKHR
   { -- | @matrix@ is a 3x4 row-major affine transformation matrix.
     matrix :: ((Float, Float, Float, Float), (Float, Float, Float, Float), (Float, Float, Float, Float)) }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show TransformMatrixKHR
 
 instance ToCStruct TransformMatrixKHR where
@@ -5411,7 +5411,7 @@ data AccelerationStructureDeviceAddressInfoKHR = AccelerationStructureDeviceAddr
     -- @accelerationStructure@ /must/ be a valid
     -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
     accelerationStructure :: AccelerationStructureKHR }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AccelerationStructureDeviceAddressInfoKHR
 
 instance ToCStruct AccelerationStructureDeviceAddressInfoKHR where
@@ -5808,7 +5808,7 @@ data RayTracingPipelineInterfaceCreateInfoKHR = RayTracingPipelineInterfaceCreat
     -- shader in the pipeline.
     maxCallableSize :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show RayTracingPipelineInterfaceCreateInfoKHR
 
 instance ToCStruct RayTracingPipelineInterfaceCreateInfoKHR where

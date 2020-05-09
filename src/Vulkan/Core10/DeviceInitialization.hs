@@ -1837,7 +1837,7 @@ data MemoryType = MemoryType
     -- 'PhysicalDeviceMemoryProperties' structure.
     heapIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryType
 
 instance ToCStruct MemoryType where
@@ -1886,7 +1886,7 @@ data MemoryHeap = MemoryHeap
     -- attribute flags for the heap.
     flags :: MemoryHeapFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryHeap
 
 instance ToCStruct MemoryHeap where
@@ -1957,7 +1957,7 @@ data FormatProperties = FormatProperties
     -- specifying features supported by buffers.
     bufferFeatures :: FormatFeatureFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show FormatProperties
 
 instance ToCStruct FormatProperties where
@@ -3015,7 +3015,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- executed while a query is active.
     inheritedQueries :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceFeatures
 
 instance ToCStruct PhysicalDeviceFeatures where
@@ -3323,7 +3323,7 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- populated with 0; writes to non-resident regions will be discarded.
     residencyNonResidentStrict :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSparseProperties
 
 instance ToCStruct PhysicalDeviceSparseProperties where
@@ -4157,7 +4157,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
     nonCoherentAtomSize :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceLimits
 
 instance ToCStruct PhysicalDeviceLimits where

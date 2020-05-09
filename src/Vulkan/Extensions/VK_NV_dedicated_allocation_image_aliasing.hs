@@ -57,7 +57,7 @@ data PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = PhysicalDeviceDe
   { -- | @dedicatedAllocationImageAliasing@ indicates that the implementation
     -- supports aliasing of compatible image objects on a dedicated allocation.
     dedicatedAllocationImageAliasing :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
 
 instance ToCStruct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where

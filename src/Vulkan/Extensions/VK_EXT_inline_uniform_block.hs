@@ -72,7 +72,7 @@ data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBl
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'.
     descriptorBindingInlineUniformBlockUpdateAfterBind :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceInlineUniformBlockFeaturesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT where
@@ -162,7 +162,7 @@ data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniform
     -- bit set.
     maxDescriptorSetUpdateAfterBindInlineUniformBlocks :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceInlineUniformBlockPropertiesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT where
@@ -287,7 +287,7 @@ data DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniform
   { -- | @maxInlineUniformBlockBindings@ is the number of inline uniform block
     -- bindings to allocate.
     maxInlineUniformBlockBindings :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DescriptorPoolInlineUniformBlockCreateInfoEXT
 
 instance ToCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT where

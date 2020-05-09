@@ -54,7 +54,7 @@ data PhysicalDeviceShaderFloat16Int8Features = PhysicalDeviceShaderFloat16Int8Fe
     -- not enabled.
     shaderInt8 :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderFloat16Int8Features
 
 instance ToCStruct PhysicalDeviceShaderFloat16Int8Features where

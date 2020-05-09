@@ -56,7 +56,7 @@ data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
     -- @StoragePushConstant8@ capability.
     storagePushConstant8 :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevice8BitStorageFeatures
 
 instance ToCStruct PhysicalDevice8BitStorageFeatures where

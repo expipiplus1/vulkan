@@ -249,7 +249,7 @@ data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexing
     -- enabled, descriptors /must/ not be declared in runtime arrays.
     runtimeDescriptorArray :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDescriptorIndexingFeatures
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingFeatures where
@@ -535,7 +535,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- bit set.
     maxDescriptorSetUpdateAfterBindInputAttachments :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDescriptorIndexingProperties
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingProperties where
@@ -961,7 +961,7 @@ data DescriptorSetVariableDescriptorCountLayoutSupport = DescriptorSetVariableDe
     -- then @maxVariableDescriptorCount@ indicates the maximum byte size
     -- supported for the binding, if that binding is variable-sized.
     maxVariableDescriptorCount :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DescriptorSetVariableDescriptorCountLayoutSupport
 
 instance ToCStruct DescriptorSetVariableDescriptorCountLayoutSupport where

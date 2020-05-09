@@ -264,7 +264,7 @@ data ImportMemoryWin32HandleInfoKHR = ImportMemoryWin32HandleInfoKHR
     -- resource to import, or @NULL@.
     name :: LPCWSTR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportMemoryWin32HandleInfoKHR
 
 instance ToCStruct ImportMemoryWin32HandleInfoKHR where
@@ -383,7 +383,7 @@ data ExportMemoryWin32HandleInfoKHR = ExportMemoryWin32HandleInfoKHR
     -- memory.
     name :: LPCWSTR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportMemoryWin32HandleInfoKHR
 
 instance ToCStruct ExportMemoryWin32HandleInfoKHR where
@@ -438,7 +438,7 @@ data MemoryWin32HandlePropertiesKHR = MemoryWin32HandlePropertiesKHR
   { -- | @memoryTypeBits@ is a bitmask containing one bit set for every memory
     -- type which the specified windows handle /can/ be imported as.
     memoryTypeBits :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryWin32HandlePropertiesKHR
 
 instance ToCStruct MemoryWin32HandlePropertiesKHR where
@@ -523,7 +523,7 @@ data MemoryGetWin32HandleInfoKHR = MemoryGetWin32HandleInfoKHR
   , -- | @handleType@ is the type of handle requested.
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryGetWin32HandleInfoKHR
 
 instance ToCStruct MemoryGetWin32HandleInfoKHR where

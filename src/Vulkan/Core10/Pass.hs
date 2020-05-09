@@ -783,7 +783,7 @@ data AttachmentDescription = AttachmentDescription
     -- transitioned to when a render pass instance ends.
     finalLayout :: ImageLayout
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AttachmentDescription
 
 instance ToCStruct AttachmentDescription where
@@ -880,7 +880,7 @@ data AttachmentReference = AttachmentReference
     -- specifying the layout the attachment uses during the subpass.
     layout :: ImageLayout
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AttachmentReference
 
 instance ToCStruct AttachmentReference where
@@ -1530,7 +1530,7 @@ data SubpassDependency = SubpassDependency
     -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits'.
     dependencyFlags :: DependencyFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SubpassDependency
 
 instance ToCStruct SubpassDependency where

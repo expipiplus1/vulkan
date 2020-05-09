@@ -280,7 +280,7 @@ data ConditionalRenderingBeginInfoEXT = ConditionalRenderingBeginInfoEXT
     -- behavior of conditional rendering.
     flags :: ConditionalRenderingFlagsEXT
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ConditionalRenderingBeginInfoEXT
 
 instance ToCStruct ConditionalRenderingBeginInfoEXT where
@@ -355,7 +355,7 @@ data CommandBufferInheritanceConditionalRenderingInfoEXT = CommandBufferInherita
     -- then the primary command buffer /must/ not have conditional rendering
     -- active.
     conditionalRenderingEnable :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show CommandBufferInheritanceConditionalRenderingInfoEXT
 
 instance ToCStruct CommandBufferInheritanceConditionalRenderingInfoEXT where
@@ -419,7 +419,7 @@ data PhysicalDeviceConditionalRenderingFeaturesEXT = PhysicalDeviceConditionalRe
     -- primary command buffer.
     inheritedConditionalRendering :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceConditionalRenderingFeaturesEXT
 
 instance ToCStruct PhysicalDeviceConditionalRenderingFeaturesEXT where

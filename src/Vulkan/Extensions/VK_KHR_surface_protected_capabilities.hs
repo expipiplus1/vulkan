@@ -45,7 +45,7 @@ data SurfaceProtectedCapabilitiesKHR = SurfaceProtectedCapabilitiesKHR
     -- 'Vulkan.Extensions.VK_KHR_swapchain.SWAPCHAIN_CREATE_PROTECTED_BIT_KHR'
     -- flag set /must/ be supported for @surface@.
     supportsProtected :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SurfaceProtectedCapabilitiesKHR
 
 instance ToCStruct SurfaceProtectedCapabilitiesKHR where

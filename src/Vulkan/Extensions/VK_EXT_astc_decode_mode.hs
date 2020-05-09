@@ -97,7 +97,7 @@ data ImageViewASTCDecodeModeEXT = ImageViewASTCDecodeModeEXT
   { -- | @decodeMode@ is the intermediate format used to decode ASTC compressed
     -- formats.
     decodeMode :: Format }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageViewASTCDecodeModeEXT
 
 instance ToCStruct ImageViewASTCDecodeModeEXT where
@@ -161,7 +161,7 @@ data PhysicalDeviceASTCDecodeFeaturesEXT = PhysicalDeviceASTCDecodeFeaturesEXT
     -- 'Vulkan.Core10.Enums.Format.FORMAT_E5B9G9R9_UFLOAT_PACK32' internal
     -- precision.
     decodeModeSharedExponent :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceASTCDecodeFeaturesEXT
 
 instance ToCStruct PhysicalDeviceASTCDecodeFeaturesEXT where

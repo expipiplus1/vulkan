@@ -63,7 +63,7 @@ data PhysicalDeviceFragmentShaderInterlockFeaturesEXT = PhysicalDeviceFragmentSh
     -- supports the @FragmentShaderShadingRateInterlockEXT@ SPIR-V capability.
     fragmentShaderShadingRateInterlock :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceFragmentShaderInterlockFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentShaderInterlockFeaturesEXT where

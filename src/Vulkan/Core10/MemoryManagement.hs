@@ -528,7 +528,7 @@ data MemoryRequirements = MemoryRequirements
     -- structure for the physical device is supported for the resource.
     memoryTypeBits :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryRequirements
 
 instance ToCStruct MemoryRequirements where

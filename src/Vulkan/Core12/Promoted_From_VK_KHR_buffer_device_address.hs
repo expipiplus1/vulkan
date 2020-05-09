@@ -310,7 +310,7 @@ data PhysicalDeviceBufferDeviceAddressFeatures = PhysicalDeviceBufferDeviceAddre
     -- queried on a logical device created with more than one physical device.
     bufferDeviceAddressMultiDevice :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceBufferDeviceAddressFeatures
 
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeatures where
@@ -387,7 +387,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 data BufferDeviceAddressInfo = BufferDeviceAddressInfo
   { -- | @buffer@ specifies the buffer whose address is being queried.
     buffer :: Buffer }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BufferDeviceAddressInfo
 
 instance ToCStruct BufferDeviceAddressInfo where
@@ -470,7 +470,7 @@ data BufferOpaqueCaptureAddressCreateInfo = BufferOpaqueCaptureAddressCreateInfo
   { -- | @opaqueCaptureAddress@ is the opaque capture address requested for the
     -- buffer.
     opaqueCaptureAddress :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BufferOpaqueCaptureAddressCreateInfo
 
 instance ToCStruct BufferOpaqueCaptureAddressCreateInfo where
@@ -541,7 +541,7 @@ data MemoryOpaqueCaptureAddressAllocateInfo = MemoryOpaqueCaptureAddressAllocate
   { -- | @opaqueCaptureAddress@ is the opaque capture address requested for the
     -- memory allocation.
     opaqueCaptureAddress :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryOpaqueCaptureAddressAllocateInfo
 
 instance ToCStruct MemoryOpaqueCaptureAddressAllocateInfo where
@@ -595,7 +595,7 @@ data DeviceMemoryOpaqueCaptureAddressInfo = DeviceMemoryOpaqueCaptureAddressInfo
     --
     -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceMemoryOpaqueCaptureAddressInfo
 
 instance ToCStruct DeviceMemoryOpaqueCaptureAddressInfo where

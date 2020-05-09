@@ -69,7 +69,7 @@ data PipelineCreationFeedbackEXT = PipelineCreationFeedbackEXT
     -- in nanoseconds.
     duration :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineCreationFeedbackEXT
 
 instance ToCStruct PipelineCreationFeedbackEXT where
@@ -191,7 +191,7 @@ data PipelineCreationFeedbackCreateInfoEXT = PipelineCreationFeedbackCreateInfoE
     -- structures.
     pipelineStageCreationFeedbacks :: Ptr PipelineCreationFeedbackEXT
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineCreationFeedbackCreateInfoEXT
 
 instance ToCStruct PipelineCreationFeedbackCreateInfoEXT where

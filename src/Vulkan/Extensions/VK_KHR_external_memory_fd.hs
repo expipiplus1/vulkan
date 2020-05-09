@@ -242,7 +242,7 @@ data ImportMemoryFdInfoKHR = ImportMemoryFdInfoKHR
   , -- | @fd@ is the external handle to import.
     fd :: Int32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportMemoryFdInfoKHR
 
 instance ToCStruct ImportMemoryFdInfoKHR where
@@ -292,7 +292,7 @@ data MemoryFdPropertiesKHR = MemoryFdPropertiesKHR
   { -- | @memoryTypeBits@ is a bitmask containing one bit set for every memory
     -- type which the specified file descriptor /can/ be imported as.
     memoryTypeBits :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryFdPropertiesKHR
 
 instance ToCStruct MemoryFdPropertiesKHR where
@@ -372,7 +372,7 @@ data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
     -- value
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryGetFdInfoKHR
 
 instance ToCStruct MemoryGetFdInfoKHR where

@@ -143,7 +143,7 @@ data PhysicalDeviceFloatControlsProperties = PhysicalDeviceFloatControlsProperti
     -- floating-point types.
     shaderRoundingModeRTZFloat64 :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceFloatControlsProperties
 
 instance ToCStruct PhysicalDeviceFloatControlsProperties where

@@ -58,7 +58,7 @@ data PhysicalDeviceYcbcrImageArraysFeaturesEXT = PhysicalDeviceYcbcrImageArraysF
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Y′CBCR conversion>
     -- and has multiple array layers.
     ycbcrImageArrays :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceYcbcrImageArraysFeaturesEXT
 
 instance ToCStruct PhysicalDeviceYcbcrImageArraysFeaturesEXT where
