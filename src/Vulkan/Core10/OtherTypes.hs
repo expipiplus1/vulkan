@@ -82,10 +82,18 @@ import Vulkan.Core10.Enums.VendorId (VendorId(..))
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'
 data MemoryBarrier = MemoryBarrier
-  { -- | @srcAccessMask@ /must/ be a valid combination of
+  { -- | @srcAccessMask@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
+    --
+    -- @srcAccessMask@ /must/ be a valid combination of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' values
     srcAccessMask :: AccessFlags
-  , -- | @dstAccessMask@ /must/ be a valid combination of
+  , -- | @dstAccessMask@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+    --
+    -- @dstAccessMask@ /must/ be a valid combination of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' values
     dstAccessMask :: AccessFlags
   }
@@ -888,13 +896,19 @@ instance Zero DrawIndexedIndirectCommand where
 --
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'
 data DispatchIndirectCommand = DispatchIndirectCommand
-  { -- | @x@ /must/ be less than or equal to
+  { -- | @x@ is the number of local workgroups to dispatch in the X dimension.
+    --
+    -- @x@ /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
     x :: Word32
-  , -- | @y@ /must/ be less than or equal to
+  , -- | @y@ is the number of local workgroups to dispatch in the Y dimension.
+    --
+    -- @y@ /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
     y :: Word32
-  , -- | @z@ /must/ be less than or equal to
+  , -- | @z@ is the number of local workgroups to dispatch in the Z dimension.
+    --
+    -- @z@ /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
     z :: Word32
   }

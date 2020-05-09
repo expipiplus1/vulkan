@@ -84,27 +84,28 @@ foreign import ccall
 -- | vkGetPhysicalDeviceExternalBufferProperties - Query external handle
 -- types supported by buffers
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     buffer capabilities.
---
--- -   @pExternalBufferInfo@ is a pointer to a
---     'PhysicalDeviceExternalBufferInfo' structure describing the
---     parameters that would be consumed by
---     'Vulkan.Core10.Buffer.createBuffer'.
---
--- -   @pExternalBufferProperties@ is a pointer to a
---     'ExternalBufferProperties' structure in which capabilities are
---     returned.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'ExternalBufferProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalBufferInfo'
-getPhysicalDeviceExternalBufferProperties :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceExternalBufferInfo -> io (ExternalBufferProperties)
+getPhysicalDeviceExternalBufferProperties :: forall io
+                                           . (MonadIO io)
+                                          => -- | @physicalDevice@ is the physical device from which to query the buffer
+                                             -- capabilities.
+                                             --
+                                             -- @physicalDevice@ /must/ be a valid
+                                             -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                             PhysicalDevice
+                                          -> -- | @pExternalBufferInfo@ is a pointer to a
+                                             -- 'PhysicalDeviceExternalBufferInfo' structure describing the parameters
+                                             -- that would be consumed by 'Vulkan.Core10.Buffer.createBuffer'.
+                                             --
+                                             -- @pExternalBufferInfo@ /must/ be a valid pointer to a valid
+                                             -- 'PhysicalDeviceExternalBufferInfo' structure
+                                             PhysicalDeviceExternalBufferInfo
+                                          -> io (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalBufferPropertiesPtr = pVkGetPhysicalDeviceExternalBufferProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceExternalBufferPropertiesPtr /= nullFunPtr) $
@@ -318,12 +319,30 @@ instance Zero ExternalImageFormatProperties where
 -- 'getPhysicalDeviceExternalBufferProperties',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferPropertiesKHR'
 data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
-  { -- | @flags@ /must/ be a valid combination of
+  { -- | @flags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
+    -- describing additional parameters of the buffer, corresponding to
+    -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@.
+    --
+    -- @flags@ /must/ be a valid combination of
     -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits' values
     flags :: BufferCreateFlags
-  , -- | @usage@ /must/ not be @0@
+  , -- | @usage@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' describing
+    -- the intended usage of the buffer, corresponding to
+    -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@.
+    --
+    -- @usage@ /must/ be a valid combination of
+    -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
+    --
+    -- @usage@ /must/ not be @0@
     usage :: BufferUsageFlags
-  , -- | @handleType@ /must/ be a valid
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the memory handle type that will be used with the
+    -- memory associated with the buffer.
+    --
+    -- @handleType@ /must/ be a valid
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- value
     handleType :: ExternalMemoryHandleTypeFlagBits

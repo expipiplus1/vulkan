@@ -147,14 +147,6 @@ foreign import ccall
 -- | vkInitializePerformanceApiINTEL - Initialize a device for performance
 -- queries
 --
--- = Parameters
---
--- -   @device@ is the logical device used for the queries.
---
--- -   @pInitializeInfo@ is a pointer to a
---     'InitializePerformanceApiInfoINTEL' structure specifying
---     initialization parameters.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -170,7 +162,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'InitializePerformanceApiInfoINTEL'
-initializePerformanceApiINTEL :: forall io . MonadIO io => Device -> ("initializeInfo" ::: InitializePerformanceApiInfoINTEL) -> io ()
+initializePerformanceApiINTEL :: forall io
+                               . (MonadIO io)
+                              => -- | @device@ is the logical device used for the queries.
+                                 --
+                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 Device
+                              -> -- | @pInitializeInfo@ is a pointer to a 'InitializePerformanceApiInfoINTEL'
+                                 -- structure specifying initialization parameters.
+                                 --
+                                 -- @pInitializeInfo@ /must/ be a valid pointer to a valid
+                                 -- 'InitializePerformanceApiInfoINTEL' structure
+                                 ("initializeInfo" ::: InitializePerformanceApiInfoINTEL)
+                              -> io ()
 initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
   let vkInitializePerformanceApiINTELPtr = pVkInitializePerformanceApiINTEL (deviceCmds (device :: Device))
   lift $ unless (vkInitializePerformanceApiINTELPtr /= nullFunPtr) $
@@ -191,16 +195,18 @@ foreign import ccall
 -- | vkUninitializePerformanceApiINTEL - Uninitialize a device for
 -- performance queries
 --
--- = Parameters
---
--- -   @device@ is the logical device used for the queries.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device'
-uninitializePerformanceApiINTEL :: forall io . MonadIO io => Device -> io ()
+uninitializePerformanceApiINTEL :: forall io
+                                 . (MonadIO io)
+                                => -- | @device@ is the logical device used for the queries.
+                                   --
+                                   -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                   Device
+                                -> io ()
 uninitializePerformanceApiINTEL device = liftIO $ do
   let vkUninitializePerformanceApiINTELPtr = pVkUninitializePerformanceApiINTEL (deviceCmds (device :: Device))
   unless (vkUninitializePerformanceApiINTELPtr /= nullFunPtr) $
@@ -271,7 +277,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceMarkerInfoINTEL'
-cmdSetPerformanceMarkerINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceMarkerInfoINTEL -> io ()
+cmdSetPerformanceMarkerINTEL :: forall io
+                              . (MonadIO io)
+                             => -- No documentation found for Nested "vkCmdSetPerformanceMarkerINTEL" "commandBuffer"
+                                CommandBuffer
+                             -> -- No documentation found for Nested "vkCmdSetPerformanceMarkerINTEL" "pMarkerInfo"
+                                PerformanceMarkerInfoINTEL
+                             -> io ()
 cmdSetPerformanceMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceMarkerINTELPtr = pVkCmdSetPerformanceMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetPerformanceMarkerINTELPtr /= nullFunPtr) $
@@ -339,7 +351,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'PerformanceStreamMarkerInfoINTEL'
-cmdSetPerformanceStreamMarkerINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceStreamMarkerInfoINTEL -> io ()
+cmdSetPerformanceStreamMarkerINTEL :: forall io
+                                    . (MonadIO io)
+                                   => -- No documentation found for Nested "vkCmdSetPerformanceStreamMarkerINTEL" "commandBuffer"
+                                      CommandBuffer
+                                   -> -- No documentation found for Nested "vkCmdSetPerformanceStreamMarkerINTEL" "pMarkerInfo"
+                                      PerformanceStreamMarkerInfoINTEL
+                                   -> io ()
 cmdSetPerformanceStreamMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceStreamMarkerINTELPtr = pVkCmdSetPerformanceStreamMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetPerformanceStreamMarkerINTELPtr /= nullFunPtr) $
@@ -358,14 +376,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr PerformanceOverrideInfoINTEL -> IO Result) -> Ptr CommandBuffer_T -> Ptr PerformanceOverrideInfoINTEL -> IO Result
 
 -- | vkCmdSetPerformanceOverrideINTEL - Performance override settings
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer where the override takes
---     place.
---
--- -   @pOverrideInfo@ is a pointer to a 'PerformanceOverrideInfoINTEL'
---     structure selecting the parameter to override.
 --
 -- == Valid Usage
 --
@@ -420,7 +430,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceOverrideInfoINTEL'
-cmdSetPerformanceOverrideINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceOverrideInfoINTEL -> io ()
+cmdSetPerformanceOverrideINTEL :: forall io
+                                . (MonadIO io)
+                               => -- | @commandBuffer@ is the command buffer where the override takes place.
+                                  CommandBuffer
+                               -> -- | @pOverrideInfo@ is a pointer to a 'PerformanceOverrideInfoINTEL'
+                                  -- structure selecting the parameter to override.
+                                  PerformanceOverrideInfoINTEL
+                               -> io ()
 cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceOverrideINTELPtr = pVkCmdSetPerformanceOverrideINTEL (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetPerformanceOverrideINTELPtr /= nullFunPtr) $
@@ -441,19 +458,6 @@ foreign import ccall
 -- | vkAcquirePerformanceConfigurationINTEL - Acquire the performance query
 -- capability
 --
--- = Parameters
---
--- -   @device@ is the logical device that the performance query commands
---     will be submitted to.
---
--- -   @pAcquireInfo@ is a pointer to a
---     'PerformanceConfigurationAcquireInfoINTEL' structure, specifying the
---     performance configuration to acquire.
---
--- -   @pConfiguration@ is a pointer to a
---     'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle in
---     which the resulting configuration object is returned.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -471,7 +475,21 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'PerformanceConfigurationAcquireInfoINTEL',
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
-acquirePerformanceConfigurationINTEL :: forall io . MonadIO io => Device -> PerformanceConfigurationAcquireInfoINTEL -> io (PerformanceConfigurationINTEL)
+acquirePerformanceConfigurationINTEL :: forall io
+                                      . (MonadIO io)
+                                     => -- | @device@ is the logical device that the performance query commands will
+                                        -- be submitted to.
+                                        --
+                                        -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                        Device
+                                     -> -- | @pAcquireInfo@ is a pointer to a
+                                        -- 'PerformanceConfigurationAcquireInfoINTEL' structure, specifying the
+                                        -- performance configuration to acquire.
+                                        --
+                                        -- @pAcquireInfo@ /must/ be a valid pointer to a valid
+                                        -- 'PerformanceConfigurationAcquireInfoINTEL' structure
+                                        PerformanceConfigurationAcquireInfoINTEL
+                                     -> io (PerformanceConfigurationINTEL)
 acquirePerformanceConfigurationINTEL device acquireInfo = liftIO . evalContT $ do
   let vkAcquirePerformanceConfigurationINTELPtr = pVkAcquirePerformanceConfigurationINTEL (deviceCmds (device :: Device))
   lift $ unless (vkAcquirePerformanceConfigurationINTELPtr /= nullFunPtr) $
@@ -495,13 +513,6 @@ foreign import ccall
 -- | vkReleasePerformanceConfigurationINTEL - Release a configuration to
 -- capture performance data
 --
--- = Parameters
---
--- -   @device@ is the device associated to the configuration object to
---     release.
---
--- -   @configuration@ is the configuration object to release.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -518,7 +529,26 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
-releasePerformanceConfigurationINTEL :: forall io . MonadIO io => Device -> PerformanceConfigurationINTEL -> io ()
+releasePerformanceConfigurationINTEL :: forall io
+                                      . (MonadIO io)
+                                     => -- | @device@ is the device associated to the configuration object to
+                                        -- release.
+                                        --
+                                        -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                        Device
+                                     -> -- | @configuration@ is the configuration object to release.
+                                        --
+                                        -- @configuration@ /must/ not be released before all command buffers
+                                        -- submitted while the configuration was set are in
+                                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+                                        --
+                                        -- @configuration@ /must/ be a valid
+                                        -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle
+                                        --
+                                        -- @configuration@ /must/ have been created, allocated, or retrieved from
+                                        -- @device@
+                                        PerformanceConfigurationINTEL
+                                     -> io ()
 releasePerformanceConfigurationINTEL device configuration = liftIO $ do
   let vkReleasePerformanceConfigurationINTELPtr = pVkReleasePerformanceConfigurationINTEL (deviceCmds (device :: Device))
   unless (vkReleasePerformanceConfigurationINTELPtr /= nullFunPtr) $
@@ -536,12 +566,6 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> PerformanceConfigurationINTEL -> IO Result) -> Ptr Queue_T -> PerformanceConfigurationINTEL -> IO Result
 
 -- | vkQueueSetPerformanceConfigurationINTEL - Set a performance query
---
--- = Parameters
---
--- -   @queue@ is the queue on which the configuration will be used.
---
--- -   @configuration@ is the configuration to use.
 --
 -- == Valid Usage (Implicit)
 --
@@ -579,7 +603,13 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL',
 -- 'Vulkan.Core10.Handles.Queue'
-queueSetPerformanceConfigurationINTEL :: forall io . MonadIO io => Queue -> PerformanceConfigurationINTEL -> io ()
+queueSetPerformanceConfigurationINTEL :: forall io
+                                       . (MonadIO io)
+                                      => -- | @queue@ is the queue on which the configuration will be used.
+                                         Queue
+                                      -> -- | @configuration@ is the configuration to use.
+                                         PerformanceConfigurationINTEL
+                                      -> io ()
 queueSetPerformanceConfigurationINTEL queue configuration = liftIO $ do
   let vkQueueSetPerformanceConfigurationINTELPtr = pVkQueueSetPerformanceConfigurationINTEL (deviceCmds (queue :: Queue))
   unless (vkQueueSetPerformanceConfigurationINTELPtr /= nullFunPtr) $
@@ -599,15 +629,6 @@ foreign import ccall
 -- | vkGetPerformanceParameterINTEL - Query performance capabilities of the
 -- device
 --
--- = Parameters
---
--- -   @device@ is the logical device to query.
---
--- -   @parameter@ is the parameter to query.
---
--- -   @pValue@ is a pointer to a 'PerformanceValueINTEL' structure in
---     which the type and value of the parameter are returned.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -624,7 +645,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'PerformanceParameterTypeINTEL',
 -- 'PerformanceValueINTEL'
-getPerformanceParameterINTEL :: forall io . MonadIO io => Device -> PerformanceParameterTypeINTEL -> io (PerformanceValueINTEL)
+getPerformanceParameterINTEL :: forall io
+                              . (MonadIO io)
+                             => -- | @device@ is the logical device to query.
+                                --
+                                -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                Device
+                             -> -- | @parameter@ is the parameter to query.
+                                --
+                                -- @parameter@ /must/ be a valid 'PerformanceParameterTypeINTEL' value
+                                PerformanceParameterTypeINTEL
+                             -> io (PerformanceValueINTEL)
 getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
   let vkGetPerformanceParameterINTELPtr = pVkGetPerformanceParameterINTEL (deviceCmds (device :: Device))
   lift $ unless (vkGetPerformanceParameterINTELPtr /= nullFunPtr) $
@@ -651,9 +682,15 @@ pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_
 -- 'PerformanceValueDataINTEL', 'PerformanceValueTypeINTEL',
 -- 'getPerformanceParameterINTEL'
 data PerformanceValueINTEL = PerformanceValueINTEL
-  { -- | @type@ /must/ be a valid 'PerformanceValueTypeINTEL' value
+  { -- | @type@ is a 'PerformanceValueTypeINTEL' value specifying the type of the
+    -- returned data.
+    --
+    -- @type@ /must/ be a valid 'PerformanceValueTypeINTEL' value
     type' :: PerformanceValueTypeINTEL
-  , -- | @data@ /must/ be a valid 'PerformanceValueDataINTEL' union
+  , -- | @data@ is a 'PerformanceValueDataINTEL' union specifying the value of
+    -- the returned data.
+    --
+    -- @data@ /must/ be a valid 'PerformanceValueDataINTEL' union
     data' :: PerformanceValueDataINTEL
   }
   deriving (Typeable)
@@ -751,7 +788,10 @@ instance Zero InitializePerformanceApiInfoINTEL where
 -- 'QueryPoolSamplingModeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateInfoINTEL
-  { -- | @performanceCountersSampling@ /must/ be a valid
+  { -- | @performanceCountersSampling@ describe how performance queries should be
+    -- captured.
+    --
+    -- @performanceCountersSampling@ /must/ be a valid
     -- 'QueryPoolSamplingModeINTEL' value
     performanceCountersSampling :: QueryPoolSamplingModeINTEL }
   deriving (Typeable)
@@ -905,7 +945,9 @@ instance Zero PerformanceStreamMarkerInfoINTEL where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceOverrideINTEL'
 data PerformanceOverrideInfoINTEL = PerformanceOverrideInfoINTEL
-  { -- | @type@ /must/ be a valid 'PerformanceOverrideTypeINTEL' value
+  { -- | @type@ is the particular 'PerformanceOverrideTypeINTEL' to set.
+    --
+    -- @type@ /must/ be a valid 'PerformanceOverrideTypeINTEL' value
     type' :: PerformanceOverrideTypeINTEL
   , -- | @enable@ defines whether the override is enabled.
     enable :: Bool
@@ -966,7 +1008,10 @@ instance Zero PerformanceOverrideInfoINTEL where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'acquirePerformanceConfigurationINTEL'
 data PerformanceConfigurationAcquireInfoINTEL = PerformanceConfigurationAcquireInfoINTEL
-  { -- | @type@ /must/ be a valid 'PerformanceConfigurationTypeINTEL' value
+  { -- | @type@ is one of the 'PerformanceConfigurationTypeINTEL' type of
+    -- performance configuration that will be acquired.
+    --
+    -- @type@ /must/ be a valid 'PerformanceConfigurationTypeINTEL' value
     type' :: PerformanceConfigurationTypeINTEL }
   deriving (Typeable)
 deriving instance Show PerformanceConfigurationAcquireInfoINTEL

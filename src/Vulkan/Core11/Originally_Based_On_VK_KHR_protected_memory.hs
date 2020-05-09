@@ -87,23 +87,25 @@ foreign import ccall
 
 -- | vkGetDeviceQueue2 - Get a queue handle from a device
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the queue.
---
--- -   @pQueueInfo@ is a pointer to a 'DeviceQueueInfo2' structure,
---     describing the parameters used to create the device queue.
---
--- -   @pQueue@ is a pointer to a 'Vulkan.Core10.Handles.Queue' object that
---     will be filled with the handle for the requested queue.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'DeviceQueueInfo2',
 -- 'Vulkan.Core10.Handles.Queue'
-getDeviceQueue2 :: forall io . MonadIO io => Device -> DeviceQueueInfo2 -> io (Queue)
+getDeviceQueue2 :: forall io
+                 . (MonadIO io)
+                => -- | @device@ is the logical device that owns the queue.
+                   --
+                   -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                   Device
+                -> -- | @pQueueInfo@ is a pointer to a 'DeviceQueueInfo2' structure, describing
+                   -- the parameters used to create the device queue.
+                   --
+                   -- @pQueueInfo@ /must/ be a valid pointer to a valid 'DeviceQueueInfo2'
+                   -- structure
+                   DeviceQueueInfo2
+                -> io (Queue)
 getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
   let vkGetDeviceQueue2Ptr = pVkGetDeviceQueue2 cmds
@@ -320,15 +322,25 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getDeviceQueue2'
 data DeviceQueueInfo2 = DeviceQueueInfo2
-  { -- | @flags@ /must/ be a valid combination of
+  { -- | @flags@ is a
+    -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
+    -- value indicating the flags used to create the device queue.
+    --
+    -- @flags@ /must/ be a valid combination of
     -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlagBits'
     -- values
     flags :: DeviceQueueCreateFlags
-  , -- | @queueFamilyIndex@ /must/ be one of the queue family indices specified
+  , -- | @queueFamilyIndex@ is the index of the queue family to which the queue
+    -- belongs.
+    --
+    -- @queueFamilyIndex@ /must/ be one of the queue family indices specified
     -- when @device@ was created, via the
     -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
     queueFamilyIndex :: Word32
-  , -- | @queueIndex@ /must/ be less than the number of queues created for the
+  , -- | @queueIndex@ is the index within this queue family of the queue to
+    -- retrieve.
+    --
+    -- @queueIndex@ /must/ be less than the number of queues created for the
     -- specified queue family index and
     -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
     -- member @flags@ equal to this @flags@ value when @device@ was created,

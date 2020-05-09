@@ -81,21 +81,6 @@ foreign import ccall
 
 -- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @firstDiscardRectangle@ is the index of the first discard rectangle
---     whose state is updated by the command.
---
--- -   @discardRectangleCount@ is the number of discard rectangles whose
---     state are updated by the command.
---
--- -   @pDiscardRectangles@ is a pointer to an array of
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures specifying
---     discard rectangles.
---
 -- = Description
 --
 -- The discard rectangle taken from element i of @pDiscardRectangles@
@@ -167,7 +152,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
-cmdSetDiscardRectangleEXT :: forall io . MonadIO io => CommandBuffer -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangles" ::: Vector Rect2D) -> io ()
+cmdSetDiscardRectangleEXT :: forall io
+                           . (MonadIO io)
+                          => -- | @commandBuffer@ is the command buffer into which the command will be
+                             -- recorded.
+                             CommandBuffer
+                          -> -- | @firstDiscardRectangle@ is the index of the first discard rectangle
+                             -- whose state is updated by the command.
+                             ("firstDiscardRectangle" ::: Word32)
+                          -> -- | @pDiscardRectangles@ is a pointer to an array of
+                             -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures specifying
+                             -- discard rectangles.
+                             ("discardRectangles" ::: Vector Rect2D)
+                          -> io ()
 cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
   let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetDiscardRectangleEXTPtr /= nullFunPtr) $
@@ -263,11 +260,18 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: PipelineDiscardRectangleStateCreateFlagsEXT
-  , -- | @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
+  , -- | @discardRectangleMode@ is a 'DiscardRectangleModeEXT' value determining
+    -- whether the discard rectangle test is inclusive or exclusive.
+    --
+    -- @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
     discardRectangleMode :: DiscardRectangleModeEXT
-  , -- | @discardRectangleCount@ /must/ be less than or equal to
+  , -- | @discardRectangleCount@ is the number of discard rectangles to use.
+    --
+    -- @discardRectangleCount@ /must/ be less than or equal to
     -- 'PhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@
     discardRectangleCount :: Word32
   , -- | @pDiscardRectangles@ is a pointer to an array of

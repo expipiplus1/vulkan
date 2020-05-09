@@ -64,20 +64,6 @@ foreign import ccall
 -- | vkCmdSetViewportWScalingNV - Set the viewport W scaling on a command
 -- buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @firstViewport@ is the index of the first viewport whose parameters
---     are updated by the command.
---
--- -   @viewportCount@ is the number of viewports whose parameters are
---     updated by the command.
---
--- -   @pViewportWScalings@ is a pointer to an array of
---     'ViewportWScalingNV' structures specifying viewport parameters.
---
 -- = Description
 --
 -- The viewport parameters taken from element i of @pViewportWScalings@
@@ -131,7 +117,18 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ViewportWScalingNV'
-cmdSetViewportWScalingNV :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewportWScalings" ::: Vector ViewportWScalingNV) -> io ()
+cmdSetViewportWScalingNV :: forall io
+                          . (MonadIO io)
+                         => -- | @commandBuffer@ is the command buffer into which the command will be
+                            -- recorded.
+                            CommandBuffer
+                         -> -- | @firstViewport@ is the index of the first viewport whose parameters are
+                            -- updated by the command.
+                            ("firstViewport" ::: Word32)
+                         -> -- | @pViewportWScalings@ is a pointer to an array of 'ViewportWScalingNV'
+                            -- structures specifying viewport parameters.
+                            ("viewportWScalings" ::: Vector ViewportWScalingNV)
+                         -> io ()
 cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO . evalContT $ do
   let vkCmdSetViewportWScalingNVPtr = pVkCmdSetViewportWScalingNV (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetViewportWScalingNVPtr /= nullFunPtr) $
@@ -203,7 +200,11 @@ data PipelineViewportWScalingStateCreateInfoNV = PipelineViewportWScalingStateCr
   { -- | @viewportWScalingEnable@ controls whether viewport __W__ scaling is
     -- enabled.
     viewportWScalingEnable :: Bool
-  , -- | @viewportCount@ /must/ be greater than @0@
+  , -- | @viewportCount@ is the number of viewports used by __W__ scaling, and
+    -- /must/ match the number of viewports in the pipeline if viewport __W__
+    -- scaling is enabled.
+    --
+    -- @viewportCount@ /must/ be greater than @0@
     viewportCount :: Word32
   , -- | @pViewportWScalings@ is a pointer to an array of 'ViewportWScalingNV'
     -- structures defining the __W__ scaling parameters for the corresponding

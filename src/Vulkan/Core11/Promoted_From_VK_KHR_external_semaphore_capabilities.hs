@@ -72,27 +72,29 @@ foreign import ccall
 -- | vkGetPhysicalDeviceExternalSemaphoreProperties - Function for querying
 -- external semaphore handle capabilities.
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     semaphore capabilities.
---
--- -   @pExternalSemaphoreInfo@ is a pointer to a
---     'PhysicalDeviceExternalSemaphoreInfo' structure describing the
---     parameters that would be consumed by
---     'Vulkan.Core10.QueueSemaphore.createSemaphore'.
---
--- -   @pExternalSemaphoreProperties@ is a pointer to a
---     'ExternalSemaphoreProperties' structure in which capabilities are
---     returned.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'ExternalSemaphoreProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalSemaphoreInfo'
-getPhysicalDeviceExternalSemaphoreProperties :: forall a io . (Extendss PhysicalDeviceExternalSemaphoreInfo a, PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceExternalSemaphoreInfo a -> io (ExternalSemaphoreProperties)
+getPhysicalDeviceExternalSemaphoreProperties :: forall a io
+                                              . (Extendss PhysicalDeviceExternalSemaphoreInfo a, PokeChain a, MonadIO io)
+                                             => -- | @physicalDevice@ is the physical device from which to query the
+                                                -- semaphore capabilities.
+                                                --
+                                                -- @physicalDevice@ /must/ be a valid
+                                                -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                                PhysicalDevice
+                                             -> -- | @pExternalSemaphoreInfo@ is a pointer to a
+                                                -- 'PhysicalDeviceExternalSemaphoreInfo' structure describing the
+                                                -- parameters that would be consumed by
+                                                -- 'Vulkan.Core10.QueueSemaphore.createSemaphore'.
+                                                --
+                                                -- @pExternalSemaphoreInfo@ /must/ be a valid pointer to a valid
+                                                -- 'PhysicalDeviceExternalSemaphoreInfo' structure
+                                                PhysicalDeviceExternalSemaphoreInfo a
+                                             -> io (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceExternalSemaphorePropertiesPtr /= nullFunPtr) $

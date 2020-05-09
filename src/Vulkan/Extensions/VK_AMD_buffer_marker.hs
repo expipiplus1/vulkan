@@ -37,23 +37,6 @@ foreign import ccall
 -- | vkCmdWriteBufferMarkerAMD - Execute a pipelined write of a marker value
 -- into a buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @pipelineStage@ is one of the
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
---     values, specifying the pipeline stage whose completion triggers the
---     marker write.
---
--- -   @dstBuffer@ is the buffer where the marker will be written to.
---
--- -   @dstOffset@ is the byte offset into the buffer where the marker will
---     be written to.
---
--- -   @marker@ is the 32-bit value of the marker.
---
 -- = Description
 --
 -- The command will write the 32-bit marker value into the buffer only
@@ -144,7 +127,24 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
-cmdWriteBufferMarkerAMD :: forall io . MonadIO io => CommandBuffer -> PipelineStageFlagBits -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> io ()
+cmdWriteBufferMarkerAMD :: forall io
+                         . (MonadIO io)
+                        => -- | @commandBuffer@ is the command buffer into which the command will be
+                           -- recorded.
+                           CommandBuffer
+                        -> -- | @pipelineStage@ is one of the
+                           -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                           -- values, specifying the pipeline stage whose completion triggers the
+                           -- marker write.
+                           PipelineStageFlagBits
+                        -> -- | @dstBuffer@ is the buffer where the marker will be written to.
+                           ("dstBuffer" ::: Buffer)
+                        -> -- | @dstOffset@ is the byte offset into the buffer where the marker will be
+                           -- written to.
+                           ("dstOffset" ::: DeviceSize)
+                        -> -- | @marker@ is the 32-bit value of the marker.
+                           ("marker" ::: Word32)
+                        -> io ()
 cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = liftIO $ do
   let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdWriteBufferMarkerAMDPtr /= nullFunPtr) $

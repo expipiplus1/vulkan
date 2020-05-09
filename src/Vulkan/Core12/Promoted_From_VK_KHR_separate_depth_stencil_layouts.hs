@@ -115,7 +115,23 @@ instance Zero PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AttachmentReferenceStencilLayout = AttachmentReferenceStencilLayout
-  { -- | @stencilLayout@ /must/ be a valid
+  { -- | @stencilLayout@ is a 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+    -- specifying the layout the stencil aspect of the attachment uses during
+    -- the subpass.
+    --
+    -- @stencilLayout@ /must/ not be
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+    -- or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR'
+    --
+    -- @stencilLayout@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilLayout :: ImageLayout }
   deriving (Typeable)
@@ -163,10 +179,42 @@ instance Zero AttachmentReferenceStencilLayout where
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
-  { -- | @stencilInitialLayout@ /must/ be a valid
+  { -- | @stencilInitialLayout@ is the layout the stencil aspect of the
+    -- attachment image subresource will be in when a render pass instance
+    -- begins.
+    --
+    -- @stencilInitialLayout@ /must/ not be
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+    -- or
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+    --
+    -- @stencilInitialLayout@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilInitialLayout :: ImageLayout
-  , -- | @stencilFinalLayout@ /must/ be a valid
+  , -- | @stencilFinalLayout@ is the layout the stencil aspect of the attachment
+    -- image subresource will be transitioned to when a render pass instance
+    -- ends.
+    --
+    -- @stencilFinalLayout@ /must/ not be
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+    -- or
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+    --
+    -- @stencilFinalLayout@ /must/ not be
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
+    -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
+    --
+    -- @stencilFinalLayout@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilFinalLayout :: ImageLayout
   }

@@ -82,20 +82,6 @@ foreign import ccall
 
 -- | vkCreateSampler - Create a new sampler object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the sampler.
---
--- -   @pCreateInfo@ is a pointer to a 'SamplerCreateInfo' structure
---     specifying the state of the sampler object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pSampler@ is a pointer to a 'Vulkan.Core10.Handles.Sampler' handle
---     in which the resulting sampler object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -129,7 +115,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Sampler',
 -- 'SamplerCreateInfo'
-createSampler :: forall a io . (Extendss SamplerCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Sampler)
+createSampler :: forall a io
+               . (Extendss SamplerCreateInfo a, PokeChain a, MonadIO io)
+              => -- | @device@ is the logical device that creates the sampler.
+                 Device
+              -> -- | @pCreateInfo@ is a pointer to a 'SamplerCreateInfo' structure specifying
+                 -- the state of the sampler object.
+                 SamplerCreateInfo a
+              -> -- | @pAllocator@ controls host memory allocation as described in the
+                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                 -- chapter.
+                 ("allocator" ::: Maybe AllocationCallbacks)
+              -> io (Sampler)
 createSampler device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSamplerPtr = pVkCreateSampler (deviceCmds (device :: Device))
   lift $ unless (vkCreateSamplerPtr /= nullFunPtr) $
@@ -168,16 +165,6 @@ foreign import ccall
 
 -- | vkDestroySampler - Destroy a sampler object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the sampler.
---
--- -   @sampler@ is the sampler to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @sampler@ /must/ have completed
@@ -212,7 +199,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Sampler'
-destroySampler :: forall io . MonadIO io => Device -> Sampler -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySampler :: forall io
+                . (MonadIO io)
+               => -- | @device@ is the logical device that destroys the sampler.
+                  Device
+               -> -- | @sampler@ is the sampler to destroy.
+                  Sampler
+               -> -- | @pAllocator@ controls host memory allocation as described in the
+                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                  -- chapter.
+                  ("allocator" ::: Maybe AllocationCallbacks)
+               -> io ()
 destroySampler device sampler allocator = liftIO . evalContT $ do
   let vkDestroySamplerPtr = pVkDestroySampler (deviceCmds (device :: Device))
   lift $ unless (vkDestroySamplerPtr /= nullFunPtr) $

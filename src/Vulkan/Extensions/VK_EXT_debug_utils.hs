@@ -154,13 +154,6 @@ foreign import ccall
 
 -- | vkSetDebugUtilsObjectNameEXT - Give a user-friendly name to an object
 --
--- = Parameters
---
--- -   @device@ is the device that created the object.
---
--- -   @pNameInfo@ is a pointer to a 'DebugUtilsObjectNameInfoEXT'
---     structure specifying parameters of the name to set on the object.
---
 -- == Valid Usage
 --
 -- -   @pNameInfo->objectType@ /must/ not be
@@ -196,7 +189,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
-setDebugUtilsObjectNameEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectNameInfoEXT -> io ()
+setDebugUtilsObjectNameEXT :: forall io
+                            . (MonadIO io)
+                           => -- | @device@ is the device that created the object.
+                              Device
+                           -> -- | @pNameInfo@ is a pointer to a 'DebugUtilsObjectNameInfoEXT' structure
+                              -- specifying parameters of the name to set on the object.
+                              DebugUtilsObjectNameInfoEXT
+                           -> io ()
 setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
   let vkSetDebugUtilsObjectNameEXTPtr = pVkSetDebugUtilsObjectNameEXT (deviceCmds (device :: Device))
   lift $ unless (vkSetDebugUtilsObjectNameEXTPtr /= nullFunPtr) $
@@ -215,13 +215,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr DebugUtilsObjectTagInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DebugUtilsObjectTagInfoEXT -> IO Result
 
 -- | vkSetDebugUtilsObjectTagEXT - Attach arbitrary data to an object
---
--- = Parameters
---
--- -   @device@ is the device that created the object.
---
--- -   @pTagInfo@ is a pointer to a 'DebugUtilsObjectTagInfoEXT' structure
---     specifying parameters of the tag to attach to the object.
 --
 -- == Valid Usage (Implicit)
 --
@@ -250,7 +243,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
-setDebugUtilsObjectTagEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectTagInfoEXT -> io ()
+setDebugUtilsObjectTagEXT :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the device that created the object.
+                             Device
+                          -> -- | @pTagInfo@ is a pointer to a 'DebugUtilsObjectTagInfoEXT' structure
+                             -- specifying parameters of the tag to attach to the object.
+                             DebugUtilsObjectTagInfoEXT
+                          -> io ()
 setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
   let vkSetDebugUtilsObjectTagEXTPtr = pVkSetDebugUtilsObjectTagEXT (deviceCmds (device :: Device))
   lift $ unless (vkSetDebugUtilsObjectTagEXTPtr /= nullFunPtr) $
@@ -270,13 +270,6 @@ foreign import ccall
 
 -- | vkQueueBeginDebugUtilsLabelEXT - Open a queue debug label region
 --
--- = Parameters
---
--- -   @queue@ is the queue in which to start a debug label region.
---
--- -   @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure
---     specifying parameters of the label region to open.
---
 -- == Command Properties
 --
 -- \'
@@ -290,7 +283,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
-queueBeginDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+queueBeginDebugUtilsLabelEXT :: forall io
+                              . (MonadIO io)
+                             => -- | @queue@ is the queue in which to start a debug label region.
+                                --
+                                -- @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+                                Queue
+                             -> -- | @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
+                                -- parameters of the label region to open.
+                                --
+                                -- @pLabelInfo@ /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT'
+                                -- structure
+                                ("labelInfo" ::: DebugUtilsLabelEXT)
+                             -> io ()
 queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueBeginDebugUtilsLabelEXTPtr = pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
@@ -309,10 +314,6 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> IO ()) -> Ptr Queue_T -> IO ()
 
 -- | vkQueueEndDebugUtilsLabelEXT - Close a queue debug label region
---
--- = Parameters
---
--- -   @queue@ is the queue in which a debug label region should be closed.
 --
 -- = Description
 --
@@ -341,7 +342,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Queue'
-queueEndDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> io ()
+queueEndDebugUtilsLabelEXT :: forall io
+                            . (MonadIO io)
+                           => -- | @queue@ is the queue in which a debug label region should be closed.
+                              Queue
+                           -> io ()
 queueEndDebugUtilsLabelEXT queue = liftIO $ do
   let vkQueueEndDebugUtilsLabelEXTPtr = pVkQueueEndDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
   unless (vkQueueEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
@@ -360,13 +365,6 @@ foreign import ccall
 
 -- | vkQueueInsertDebugUtilsLabelEXT - Insert a label into a queue
 --
--- = Parameters
---
--- -   @queue@ is the queue into which a debug label will be inserted.
---
--- -   @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure
---     specifying parameters of the label to insert.
---
 -- == Command Properties
 --
 -- \'
@@ -380,7 +378,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
-queueInsertDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+queueInsertDebugUtilsLabelEXT :: forall io
+                               . (MonadIO io)
+                              => -- | @queue@ is the queue into which a debug label will be inserted.
+                                 --
+                                 -- @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+                                 Queue
+                              -> -- | @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
+                                 -- parameters of the label to insert.
+                                 --
+                                 -- @pLabelInfo@ /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT'
+                                 -- structure
+                                 ("labelInfo" ::: DebugUtilsLabelEXT)
+                              -> io ()
 queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueInsertDebugUtilsLabelEXTPtr = pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
@@ -399,14 +409,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr DebugUtilsLabelEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr DebugUtilsLabelEXT -> IO ()
 
 -- | vkCmdBeginDebugUtilsLabelEXT - Open a command buffer debug label region
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure
---     specifying parameters of the label region to open.
 --
 -- == Valid Usage (Implicit)
 --
@@ -441,7 +443,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
-cmdBeginDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+cmdBeginDebugUtilsLabelEXT :: forall io
+                            . (MonadIO io)
+                           => -- | @commandBuffer@ is the command buffer into which the command is
+                              -- recorded.
+                              CommandBuffer
+                           -> -- | @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
+                              -- parameters of the label region to open.
+                              ("labelInfo" ::: DebugUtilsLabelEXT)
+                           -> io ()
 cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdBeginDebugUtilsLabelEXTPtr = pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
@@ -469,11 +479,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> IO ()) -> Ptr CommandBuffer_T -> IO ()
 
 -- | vkCmdEndDebugUtilsLabelEXT - Close a command buffer label region
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
 --
 -- = Description
 --
@@ -525,7 +530,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdEndDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdEndDebugUtilsLabelEXT :: forall io
+                          . (MonadIO io)
+                         => -- | @commandBuffer@ is the command buffer into which the command is
+                            -- recorded.
+                            CommandBuffer
+                         -> io ()
 cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
   let vkCmdEndDebugUtilsLabelEXTPtr = pVkCmdEndDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
@@ -543,14 +553,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr DebugUtilsLabelEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr DebugUtilsLabelEXT -> IO ()
 
 -- | vkCmdInsertDebugUtilsLabelEXT - Insert a label into a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @pInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
---     parameters of the label to insert.
 --
 -- == Valid Usage (Implicit)
 --
@@ -585,7 +587,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
-cmdInsertDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+cmdInsertDebugUtilsLabelEXT :: forall io
+                             . (MonadIO io)
+                            => -- | @commandBuffer@ is the command buffer into which the command is
+                               -- recorded.
+                               CommandBuffer
+                            -> -- No documentation found for Nested "vkCmdInsertDebugUtilsLabelEXT" "pLabelInfo"
+                               ("labelInfo" ::: DebugUtilsLabelEXT)
+                            -> io ()
 cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdInsertDebugUtilsLabelEXTPtr = pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
@@ -604,22 +613,6 @@ foreign import ccall
   :: FunPtr (Ptr Instance_T -> Ptr DebugUtilsMessengerCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr DebugUtilsMessengerEXT -> IO Result) -> Ptr Instance_T -> Ptr DebugUtilsMessengerCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr DebugUtilsMessengerEXT -> IO Result
 
 -- | vkCreateDebugUtilsMessengerEXT - Create a debug messenger object
---
--- = Parameters
---
--- -   @instance@ is the instance the messenger will be used with.
---
--- -   @pCreateInfo@ is a pointer to a 'DebugUtilsMessengerCreateInfoEXT'
---     structure containing the callback pointer, as well as defining
---     conditions under which this messenger will trigger the callback.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pMessenger@ is a pointer to a
---     'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' handle in which
---     the created object is returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -655,7 +648,19 @@ foreign import ccall
 -- 'DebugUtilsMessengerCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Vulkan.Core10.Handles.Instance'
-createDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugUtilsMessengerEXT)
+createDebugUtilsMessengerEXT :: forall io
+                              . (MonadIO io)
+                             => -- | @instance@ is the instance the messenger will be used with.
+                                Instance
+                             -> -- | @pCreateInfo@ is a pointer to a 'DebugUtilsMessengerCreateInfoEXT'
+                                -- structure containing the callback pointer, as well as defining
+                                -- conditions under which this messenger will trigger the callback.
+                                DebugUtilsMessengerCreateInfoEXT
+                             -> -- | @pAllocator@ controls host memory allocation as described in the
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                -- chapter.
+                                ("allocator" ::: Maybe AllocationCallbacks)
+                             -> io (DebugUtilsMessengerEXT)
 createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateDebugUtilsMessengerEXTPtr /= nullFunPtr) $
@@ -694,21 +699,6 @@ foreign import ccall
 
 -- | vkDestroyDebugUtilsMessengerEXT - Destroy a debug messenger object
 --
--- = Parameters
---
--- -   @instance@ is the instance where the callback was created.
---
--- -   @messenger@ is the
---     'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' object to
---     destroy. @messenger@ is an externally synchronized object and /must/
---     not be used on more than one thread at a time. This means that
---     'destroyDebugUtilsMessengerEXT' /must/ not be called when a callback
---     is active.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -746,7 +736,21 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Vulkan.Core10.Handles.Instance'
-destroyDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDebugUtilsMessengerEXT :: forall io
+                               . (MonadIO io)
+                              => -- | @instance@ is the instance where the callback was created.
+                                 Instance
+                              -> -- | @messenger@ is the 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT'
+                                 -- object to destroy. @messenger@ is an externally synchronized object and
+                                 -- /must/ not be used on more than one thread at a time. This means that
+                                 -- 'destroyDebugUtilsMessengerEXT' /must/ not be called when a callback is
+                                 -- active.
+                                 DebugUtilsMessengerEXT
+                              -> -- | @pAllocator@ controls host memory allocation as described in the
+                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- chapter.
+                                 ("allocator" ::: Maybe AllocationCallbacks)
+                              -> io ()
 destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
   let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkDestroyDebugUtilsMessengerEXTPtr /= nullFunPtr) $
@@ -767,19 +771,6 @@ foreign import ccall
   :: FunPtr (Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> DebugUtilsMessageTypeFlagsEXT -> Ptr DebugUtilsMessengerCallbackDataEXT -> IO ()) -> Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> DebugUtilsMessageTypeFlagsEXT -> Ptr DebugUtilsMessengerCallbackDataEXT -> IO ()
 
 -- | vkSubmitDebugUtilsMessageEXT - Inject a message into a debug stream
---
--- = Parameters
---
--- -   @instance@ is the debug stream’s 'Vulkan.Core10.Handles.Instance'.
---
--- -   @messageSeverity@ is the 'DebugUtilsMessageSeverityFlagBitsEXT'
---     severity of this event\/message.
---
--- -   @messageTypes@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
---     specifying which type of event(s) to identify with this message.
---
--- -   @pCallbackData@ contains all the callback related data in the
---     'DebugUtilsMessengerCallbackDataEXT' structure.
 --
 -- = Description
 --
@@ -812,7 +803,20 @@ foreign import ccall
 --
 -- 'DebugUtilsMessageSeverityFlagBitsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCallbackDataEXT', 'Vulkan.Core10.Handles.Instance'
-submitDebugUtilsMessageEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> DebugUtilsMessengerCallbackDataEXT -> io ()
+submitDebugUtilsMessageEXT :: forall io
+                            . (MonadIO io)
+                           => -- | @instance@ is the debug stream’s 'Vulkan.Core10.Handles.Instance'.
+                              Instance
+                           -> -- | @messageSeverity@ is the 'DebugUtilsMessageSeverityFlagBitsEXT' severity
+                              -- of this event\/message.
+                              DebugUtilsMessageSeverityFlagBitsEXT
+                           -> -- | @messageTypes@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
+                              -- specifying which type of event(s) to identify with this message.
+                              ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT)
+                           -> -- | @pCallbackData@ contains all the callback related data in the
+                              -- 'DebugUtilsMessengerCallbackDataEXT' structure.
+                              DebugUtilsMessengerCallbackDataEXT
+                           -> io ()
 submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
   let vkSubmitDebugUtilsMessageEXTPtr = pVkSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkSubmitDebugUtilsMessageEXTPtr /= nullFunPtr) $
@@ -932,19 +936,32 @@ instance Zero DebugUtilsObjectNameInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setDebugUtilsObjectTagEXT'
 data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
-  { -- | @objectType@ /must/ be a valid
+  { -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' specifying
+    -- the type of the object to be named.
+    --
+    -- @objectType@ /must/ not be
+    -- 'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN'
+    --
+    -- @objectType@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
     objectType :: ObjectType
-  , -- | @objectHandle@ /must/ be a valid Vulkan handle of the type associated
+  , -- | @objectHandle@ is the object to be tagged.
+    --
+    -- @objectHandle@ /must/ be a valid Vulkan handle of the type associated
     -- with @objectType@ as defined in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types VkObjectType and Vulkan Handle Relationship>
     -- table
     objectHandle :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
     tagName :: Word64
-  , -- | @tagSize@ /must/ be greater than @0@
+  , -- | @tagSize@ is the number of bytes of data to attach to the object.
+    --
+    -- @tagSize@ /must/ be greater than @0@
     tagSize :: Word64
-  , -- | @pTag@ /must/ be a valid pointer to an array of @tagSize@ bytes
+  , -- | @pTag@ is a pointer to an array of @tagSize@ bytes containing the data
+    -- to be associated with the object.
+    --
+    -- @pTag@ /must/ be a valid pointer to an array of @tagSize@ bytes
     tag :: Ptr ()
   }
   deriving (Typeable)
@@ -1009,7 +1026,10 @@ instance Zero DebugUtilsObjectTagInfoEXT where
 -- 'cmdBeginDebugUtilsLabelEXT', 'cmdInsertDebugUtilsLabelEXT',
 -- 'queueBeginDebugUtilsLabelEXT', 'queueInsertDebugUtilsLabelEXT'
 data DebugUtilsLabelEXT = DebugUtilsLabelEXT
-  { -- | @pLabelName@ /must/ be a null-terminated UTF-8 string
+  { -- | @pLabelName@ is a pointer to a null-terminated UTF-8 string containing
+    -- the name of the label.
+    --
+    -- @pLabelName@ /must/ be a null-terminated UTF-8 string
     labelName :: ByteString
   , -- | @color@ is an optional RGBA color value that can be associated with the
     -- label. A particular implementation /may/ choose to ignore this color
@@ -1111,13 +1131,33 @@ instance Zero DebugUtilsLabelEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDebugUtilsMessengerEXT'
 data DebugUtilsMessengerCreateInfoEXT = DebugUtilsMessengerCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is @0@ and is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: DebugUtilsMessengerCreateFlagsEXT
-  , -- | @messageSeverity@ /must/ not be @0@
+  , -- | @messageSeverity@ is a bitmask of 'DebugUtilsMessageSeverityFlagBitsEXT'
+    -- specifying which severity of event(s) will cause this callback to be
+    -- called.
+    --
+    -- @messageSeverity@ /must/ be a valid combination of
+    -- 'DebugUtilsMessageSeverityFlagBitsEXT' values
+    --
+    -- @messageSeverity@ /must/ not be @0@
     messageSeverity :: DebugUtilsMessageSeverityFlagsEXT
-  , -- | @messageType@ /must/ not be @0@
+  , -- | @messageType@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
+    -- specifying which type of event(s) will cause this callback to be called.
+    --
+    -- @messageType@ /must/ be a valid combination of
+    -- 'DebugUtilsMessageTypeFlagBitsEXT' values
+    --
+    -- @messageType@ /must/ not be @0@
     messageType :: DebugUtilsMessageTypeFlagsEXT
-  , -- | @pfnUserCallback@ /must/ be a valid
+  , -- | @pfnUserCallback@ is the application callback function to call.
+    --
+    -- @pfnUserCallback@ /must/ be a valid
+    -- 'PFN_vkDebugUtilsMessengerCallbackEXT'
+    --
+    -- @pfnUserCallback@ /must/ be a valid
     -- 'PFN_vkDebugUtilsMessengerCallbackEXT' value
     pfnUserCallback :: PFN_vkDebugUtilsMessengerCallbackEXT
   , -- | @pUserData@ is user data to be passed to the callback.
@@ -1488,20 +1528,6 @@ instance Read DebugUtilsMessageTypeFlagBitsEXT where
 type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO Bool32
 -- | PFN_vkDebugUtilsMessengerCallbackEXT - Application-defined debug
 -- messenger callback function
---
--- = Parameters
---
--- -   @messageSeverity@ specifies the
---     'DebugUtilsMessageSeverityFlagBitsEXT' that triggered this callback.
---
--- -   @messageTypes@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
---     specifying which type of event(s) triggered this callback.
---
--- -   @pCallbackData@ contains all the callback related data in the
---     'DebugUtilsMessengerCallbackDataEXT' structure.
---
--- -   @pUserData@ is the user data provided when the
---     'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' was created.
 --
 -- = Description
 --

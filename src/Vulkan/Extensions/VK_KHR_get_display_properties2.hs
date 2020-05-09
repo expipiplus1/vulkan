@@ -106,16 +106,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceDisplayProperties2KHR - Query information about the
 -- available displays
 --
--- = Parameters
---
--- -   @physicalDevice@ is a physical device.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display devices available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'DisplayProperties2KHR' structures.
---
 -- = Description
 --
 -- 'getPhysicalDeviceDisplayProperties2KHR' behaves similarly to
@@ -180,16 +170,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceDisplayPlaneProperties2KHR - Query information about
 -- the available display planes.
---
--- = Parameters
---
--- -   @physicalDevice@ is a physical device.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display planes available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'DisplayPlaneProperties2KHR' structures.
 --
 -- = Description
 --
@@ -256,18 +236,6 @@ foreign import ccall
 
 -- | vkGetDisplayModeProperties2KHR - Query information about the available
 -- display modes.
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device associated with @display@.
---
--- -   @display@ is the display to query.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display modes available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'DisplayModeProperties2KHR' structures.
 --
 -- = Description
 --
@@ -341,17 +309,6 @@ foreign import ccall
 -- | vkGetDisplayPlaneCapabilities2KHR - Query capabilities of a mode and
 -- plane combination
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device associated with
---     @pDisplayPlaneInfo@.
---
--- -   @pDisplayPlaneInfo@ is a pointer to a 'DisplayPlaneInfo2KHR'
---     structure describing the plane and mode.
---
--- -   @pCapabilities@ is a pointer to a 'DisplayPlaneCapabilities2KHR'
---     structure in which the capabilities are returned.
---
 -- = Description
 --
 -- 'getDisplayPlaneCapabilities2KHR' behaves similarly to
@@ -375,7 +332,21 @@ foreign import ccall
 --
 -- 'DisplayPlaneCapabilities2KHR', 'DisplayPlaneInfo2KHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneCapabilities2KHR :: forall io . MonadIO io => PhysicalDevice -> DisplayPlaneInfo2KHR -> io (DisplayPlaneCapabilities2KHR)
+getDisplayPlaneCapabilities2KHR :: forall io
+                                 . (MonadIO io)
+                                => -- | @physicalDevice@ is the physical device associated with
+                                   -- @pDisplayPlaneInfo@.
+                                   --
+                                   -- @physicalDevice@ /must/ be a valid
+                                   -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                   PhysicalDevice
+                                -> -- | @pDisplayPlaneInfo@ is a pointer to a 'DisplayPlaneInfo2KHR' structure
+                                   -- describing the plane and mode.
+                                   --
+                                   -- @pDisplayPlaneInfo@ /must/ be a valid pointer to a valid
+                                   -- 'DisplayPlaneInfo2KHR' structure
+                                   DisplayPlaneInfo2KHR
+                                -> io (DisplayPlaneCapabilities2KHR)
 getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalContT $ do
   let vkGetDisplayPlaneCapabilities2KHRPtr = pVkGetDisplayPlaneCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetDisplayPlaneCapabilities2KHRPtr /= nullFunPtr) $

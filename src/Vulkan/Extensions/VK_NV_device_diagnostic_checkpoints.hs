@@ -66,13 +66,6 @@ foreign import ccall
 
 -- | vkCmdSetCheckpointNV - insert diagnostic checkpoint in command stream
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer that will receive the marker
---
--- -   @pCheckpointMarker@ is an opaque application-provided value that
---     will be associated with the checkpoint.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -105,7 +98,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetCheckpointNV :: forall io . MonadIO io => CommandBuffer -> ("checkpointMarker" ::: Ptr ()) -> io ()
+cmdSetCheckpointNV :: forall io
+                    . (MonadIO io)
+                   => -- | @commandBuffer@ is the command buffer that will receive the marker
+                      CommandBuffer
+                   -> -- | @pCheckpointMarker@ is an opaque application-provided value that will be
+                      -- associated with the checkpoint.
+                      ("checkpointMarker" ::: Ptr ())
+                   -> io ()
 cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
   let vkCmdSetCheckpointNVPtr = pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetCheckpointNVPtr /= nullFunPtr) $
@@ -123,18 +123,6 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()) -> Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()
 
 -- | vkGetQueueCheckpointDataNV - retrieve diagnostic checkpoint data
---
--- = Parameters
---
--- -   @queue@ is the 'Vulkan.Core10.Handles.Queue' object the caller would
---     like to retrieve checkpoint data for
---
--- -   @pCheckpointDataCount@ is a pointer to an integer related to the
---     number of checkpoint markers available or queried, as described
---     below.
---
--- -   @pCheckpointData@ is either @NULL@ or a pointer to an array of
---     'CheckpointDataNV' structures.
 --
 -- = Description
 --

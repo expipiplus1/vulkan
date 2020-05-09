@@ -81,18 +81,6 @@ foreign import ccall
 
 -- | vkGetMemoryWin32HandleKHR - Get a Windows HANDLE for a memory object
 --
--- = Parameters
---
--- -   @device@ is the logical device that created the device memory being
---     exported.
---
--- -   @pGetWin32HandleInfo@ is a pointer to a
---     'MemoryGetWin32HandleInfoKHR' structure containing parameters of the
---     export operation.
---
--- -   @pHandle@ will return the Windows handle representing the underlying
---     resources of the device memory object.
---
 -- = Description
 --
 -- For handle types defined as NT handles, the handles returned by
@@ -115,7 +103,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetWin32HandleInfoKHR'
-getMemoryWin32HandleKHR :: forall io . MonadIO io => Device -> MemoryGetWin32HandleInfoKHR -> io (HANDLE)
+getMemoryWin32HandleKHR :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is the logical device that created the device memory being
+                           -- exported.
+                           --
+                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                           Device
+                        -> -- | @pGetWin32HandleInfo@ is a pointer to a 'MemoryGetWin32HandleInfoKHR'
+                           -- structure containing parameters of the export operation.
+                           --
+                           -- @pGetWin32HandleInfo@ /must/ be a valid pointer to a valid
+                           -- 'MemoryGetWin32HandleInfoKHR' structure
+                           MemoryGetWin32HandleInfoKHR
+                        -> io (HANDLE)
 getMemoryWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetMemoryWin32HandleKHRPtr = pVkGetMemoryWin32HandleKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetMemoryWin32HandleKHRPtr /= nullFunPtr) $
@@ -139,16 +140,6 @@ foreign import ccall
 -- | vkGetMemoryWin32HandlePropertiesKHR - Get Properties of External Memory
 -- Win32 Handles
 --
--- = Parameters
---
--- -   @device@ is the logical device that will be importing @handle@.
---
--- -   @handleType@ is the type of the handle @handle@.
---
--- -   @handle@ is the handle which will be imported.
---
--- -   @pMemoryWin32HandleProperties@ will return properties of @handle@.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -164,7 +155,26 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryWin32HandlePropertiesKHR'
-getMemoryWin32HandlePropertiesKHR :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> HANDLE -> io (MemoryWin32HandlePropertiesKHR)
+getMemoryWin32HandlePropertiesKHR :: forall io
+                                   . (MonadIO io)
+                                  => -- | @device@ is the logical device that will be importing @handle@.
+                                     --
+                                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                     Device
+                                  -> -- | @handleType@ is the type of the handle @handle@.
+                                     --
+                                     -- @handleType@ /must/ not be one of the handle types defined as opaque
+                                     --
+                                     -- @handleType@ /must/ be a valid
+                                     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+                                     -- value
+                                     ExternalMemoryHandleTypeFlagBits
+                                  -> -- | @handle@ is the handle which will be imported.
+                                     --
+                                     -- @handle@ /must/ be an external memory handle created outside of the
+                                     -- Vulkan API
+                                     HANDLE
+                                  -> io (MemoryWin32HandlePropertiesKHR)
 getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT $ do
   let vkGetMemoryWin32HandlePropertiesKHRPtr = pVkGetMemoryWin32HandlePropertiesKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetMemoryWin32HandlePropertiesKHRPtr /= nullFunPtr) $

@@ -94,16 +94,6 @@ foreign import ccall
 -- | vkGetAndroidHardwareBufferPropertiesANDROID - Get Properties of External
 -- Memory Android Hardware Buffers
 --
--- = Parameters
---
--- -   @device@ is the logical device that will be importing @buffer@.
---
--- -   @buffer@ is the Android hardware buffer which will be imported.
---
--- -   @pProperties@ is a pointer to a
---     'AndroidHardwareBufferPropertiesANDROID' structure in which the
---     properties of @buffer@ are returned.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -117,7 +107,22 @@ foreign import ccall
 -- = See Also
 --
 -- 'AndroidHardwareBufferPropertiesANDROID', 'Vulkan.Core10.Handles.Device'
-getAndroidHardwareBufferPropertiesANDROID :: forall a io . (Extendss AndroidHardwareBufferPropertiesANDROID a, PokeChain a, PeekChain a, MonadIO io) => Device -> Ptr AHardwareBuffer -> io (AndroidHardwareBufferPropertiesANDROID a)
+getAndroidHardwareBufferPropertiesANDROID :: forall a io
+                                           . (Extendss AndroidHardwareBufferPropertiesANDROID a, PokeChain a, PeekChain a, MonadIO io)
+                                          => -- | @device@ is the logical device that will be importing @buffer@.
+                                             --
+                                             -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                             Device
+                                          -> -- | @buffer@ is the Android hardware buffer which will be imported.
+                                             --
+                                             -- @buffer@ /must/ be a valid Android hardware buffer object with at least
+                                             -- one of the @AHARDWAREBUFFER_USAGE_GPU_@* flags in its
+                                             -- @AHardwareBuffer_Desc@::@usage@
+                                             --
+                                             -- @buffer@ /must/ be a valid pointer to a valid
+                                             -- 'Vulkan.Extensions.WSITypes.AHardwareBuffer' value
+                                             Ptr AHardwareBuffer
+                                          -> io (AndroidHardwareBufferPropertiesANDROID a)
 getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
   let vkGetAndroidHardwareBufferPropertiesANDROIDPtr = pVkGetAndroidHardwareBufferPropertiesANDROID (deviceCmds (device :: Device))
   lift $ unless (vkGetAndroidHardwareBufferPropertiesANDROIDPtr /= nullFunPtr) $
@@ -139,18 +144,6 @@ foreign import ccall
 
 -- | vkGetMemoryAndroidHardwareBufferANDROID - Get an Android hardware buffer
 -- for a memory object
---
--- = Parameters
---
--- -   @device@ is the logical device that created the device memory being
---     exported.
---
--- -   @pInfo@ is a pointer to a
---     'MemoryGetAndroidHardwareBufferInfoANDROID' structure containing
---     parameters of the export operation.
---
--- -   @pBuffer@ will return an Android hardware buffer representing the
---     underlying resources of the device memory object.
 --
 -- = Description
 --
@@ -182,7 +175,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device',
 -- 'MemoryGetAndroidHardwareBufferInfoANDROID'
-getMemoryAndroidHardwareBufferANDROID :: forall io . MonadIO io => Device -> MemoryGetAndroidHardwareBufferInfoANDROID -> io (Ptr AHardwareBuffer)
+getMemoryAndroidHardwareBufferANDROID :: forall io
+                                       . (MonadIO io)
+                                      => -- | @device@ is the logical device that created the device memory being
+                                         -- exported.
+                                         --
+                                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                         Device
+                                      -> -- | @pInfo@ is a pointer to a 'MemoryGetAndroidHardwareBufferInfoANDROID'
+                                         -- structure containing parameters of the export operation.
+                                         --
+                                         -- @pInfo@ /must/ be a valid pointer to a valid
+                                         -- 'MemoryGetAndroidHardwareBufferInfoANDROID' structure
+                                         MemoryGetAndroidHardwareBufferInfoANDROID
+                                      -> io (Ptr AHardwareBuffer)
 getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
   let vkGetMemoryAndroidHardwareBufferANDROIDPtr = pVkGetMemoryAndroidHardwareBufferANDROID (deviceCmds (device :: Device))
   lift $ unless (vkGetMemoryAndroidHardwareBufferANDROIDPtr /= nullFunPtr) $
@@ -684,7 +690,10 @@ instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalFormatANDROID = ExternalFormatANDROID
-  { -- | @externalFormat@ /must/ be @0@ or a value returned in the
+  { -- | @externalFormat@ is an implementation-defined identifier for the
+    -- external format
+    --
+    -- @externalFormat@ /must/ be @0@ or a value returned in the
     -- @externalFormat@ member of
     -- 'AndroidHardwareBufferFormatPropertiesANDROID' by an earlier call to
     -- 'getAndroidHardwareBufferPropertiesANDROID'

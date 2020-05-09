@@ -222,9 +222,17 @@ instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
-  { -- | @dataSize@ /must/ be greater than @0@
+  { -- | @dataSize@ is the number of bytes of inline uniform block data pointed
+    -- to by @pData@.
+    --
+    -- @dataSize@ /must/ be an integer multiple of @4@
+    --
+    -- @dataSize@ /must/ be greater than @0@
     dataSize :: Word32
-  , -- | @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+  , -- | @pData@ is a pointer to @dataSize@ number of bytes of data to write to
+    -- the inline uniform block.
+    --
+    -- @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
     data' :: Ptr ()
   }
   deriving (Typeable)

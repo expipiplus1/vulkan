@@ -123,7 +123,10 @@ instance Zero PhysicalDeviceDiagnosticsConfigFeaturesNV where
 -- 'DeviceDiagnosticsConfigFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
-  { -- | @flags@ /must/ be a valid combination of
+  { -- | @flags@ is a bitmask of 'DeviceDiagnosticsConfigFlagBitsNV' specifying
+    -- addtional parameters for configuring diagnostic tools.
+    --
+    -- @flags@ /must/ be a valid combination of
     -- 'DeviceDiagnosticsConfigFlagBitsNV' values
     flags :: DeviceDiagnosticsConfigFlagsNV }
   deriving (Typeable)

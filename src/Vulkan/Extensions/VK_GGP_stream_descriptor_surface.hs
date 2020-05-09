@@ -83,22 +83,6 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' object for a Google Games
 -- Platform stream
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate with the surface.
---
--- -   @pCreateInfo@ is a pointer to a
---     'StreamDescriptorSurfaceCreateInfoGGP' structure containing
---     parameters that affect the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -133,7 +117,19 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'StreamDescriptorSurfaceCreateInfoGGP',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-createStreamDescriptorSurfaceGGP :: forall io . MonadIO io => Instance -> StreamDescriptorSurfaceCreateInfoGGP -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createStreamDescriptorSurfaceGGP :: forall io
+                                  . (MonadIO io)
+                                 => -- | @instance@ is the instance to associate with the surface.
+                                    Instance
+                                 -> -- | @pCreateInfo@ is a pointer to a 'StreamDescriptorSurfaceCreateInfoGGP'
+                                    -- structure containing parameters that affect the creation of the surface
+                                    -- object.
+                                    StreamDescriptorSurfaceCreateInfoGGP
+                                 -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                                    -- surface object when there is no more specific allocator available (see
+                                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                                    ("allocator" ::: Maybe AllocationCallbacks)
+                                 -> io (SurfaceKHR)
 createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateStreamDescriptorSurfaceGGPPtr = pVkCreateStreamDescriptorSurfaceGGP (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateStreamDescriptorSurfaceGGPPtr /= nullFunPtr) $
@@ -161,9 +157,14 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalC
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createStreamDescriptorSurfaceGGP'
 data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: StreamDescriptorSurfaceCreateFlagsGGP
-  , -- | @streamDescriptor@ /must/ be a valid
+  , -- | @streamDescriptor@ is a 'Vulkan.Extensions.WSITypes.GgpStreamDescriptor'
+    -- referring to the GGP stream descriptor to associate with the surface.
+    --
+    -- @streamDescriptor@ /must/ be a valid
     -- 'Vulkan.Extensions.WSITypes.GgpStreamDescriptor'
     streamDescriptor :: GgpStreamDescriptor
   }

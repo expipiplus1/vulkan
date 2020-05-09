@@ -107,6 +107,7 @@ dependencies:
   - template-haskell
   - text
   - th-abstraction
+  - th-desugar >= 1.11
   - th-orphans
   - timeit
   - transformers

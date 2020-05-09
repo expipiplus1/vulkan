@@ -85,24 +85,25 @@ foreign import ccall
 -- | vkGetBufferMemoryRequirements2 - Returns the memory requirements for
 -- specified Vulkan object
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the buffer.
---
--- -   @pInfo@ is a pointer to a 'BufferMemoryRequirementsInfo2' structure
---     containing parameters required for the memory requirements query.
---
--- -   @pMemoryRequirements@ is a pointer to a 'MemoryRequirements2'
---     structure in which the memory requirements of the buffer object are
---     returned.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'BufferMemoryRequirementsInfo2', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements2'
-getBufferMemoryRequirements2 :: forall a io . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io) => Device -> BufferMemoryRequirementsInfo2 -> io (MemoryRequirements2 a)
+getBufferMemoryRequirements2 :: forall a io
+                              . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io)
+                             => -- | @device@ is the logical device that owns the buffer.
+                                --
+                                -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                Device
+                             -> -- | @pInfo@ is a pointer to a 'BufferMemoryRequirementsInfo2' structure
+                                -- containing parameters required for the memory requirements query.
+                                --
+                                -- @pInfo@ /must/ be a valid pointer to a valid
+                                -- 'BufferMemoryRequirementsInfo2' structure
+                                BufferMemoryRequirementsInfo2
+                             -> io (MemoryRequirements2 a)
 getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirements2Ptr = pVkGetBufferMemoryRequirements2 (deviceCmds (device :: Device))
   lift $ unless (vkGetBufferMemoryRequirements2Ptr /= nullFunPtr) $
@@ -125,24 +126,25 @@ foreign import ccall
 -- | vkGetImageMemoryRequirements2 - Returns the memory requirements for
 -- specified Vulkan object
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the image.
---
--- -   @pInfo@ is a pointer to a 'ImageMemoryRequirementsInfo2' structure
---     containing parameters required for the memory requirements query.
---
--- -   @pMemoryRequirements@ is a pointer to a 'MemoryRequirements2'
---     structure in which the memory requirements of the image object are
---     returned.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
-getImageMemoryRequirements2 :: forall a b io . (Extendss ImageMemoryRequirementsInfo2 a, Extendss MemoryRequirements2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> ImageMemoryRequirementsInfo2 a -> io (MemoryRequirements2 b)
+getImageMemoryRequirements2 :: forall a b io
+                             . (Extendss ImageMemoryRequirementsInfo2 a, Extendss MemoryRequirements2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                            => -- | @device@ is the logical device that owns the image.
+                               --
+                               -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                               Device
+                            -> -- | @pInfo@ is a pointer to a 'ImageMemoryRequirementsInfo2' structure
+                               -- containing parameters required for the memory requirements query.
+                               --
+                               -- @pInfo@ /must/ be a valid pointer to a valid
+                               -- 'ImageMemoryRequirementsInfo2' structure
+                               ImageMemoryRequirementsInfo2 a
+                            -> io (MemoryRequirements2 b)
 getImageMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device))
   lift $ unless (vkGetImageMemoryRequirements2Ptr /= nullFunPtr) $
@@ -164,21 +166,6 @@ foreign import ccall
 
 -- | vkGetImageSparseMemoryRequirements2 - Query the memory requirements for
 -- a sparse image
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the image.
---
--- -   @pInfo@ is a pointer to a 'ImageSparseMemoryRequirementsInfo2'
---     structure containing parameters required for the memory requirements
---     query.
---
--- -   @pSparseMemoryRequirementCount@ is a pointer to an integer related
---     to the number of sparse memory requirements available or queried, as
---     described below.
---
--- -   @pSparseMemoryRequirements@ is either @NULL@ or a pointer to an
---     array of 'SparseImageMemoryRequirements2' structures.
 --
 -- == Valid Usage (Implicit)
 --
@@ -398,7 +385,9 @@ instance es ~ '[] => Zero (ImageMemoryRequirementsInfo2 es) where
 -- 'getImageSparseMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
 data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
-  { -- | @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+  { -- | @image@ is the image to query.
+    --
+    -- @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
     image :: Image }
   deriving (Typeable)
 deriving instance Show ImageSparseMemoryRequirementsInfo2

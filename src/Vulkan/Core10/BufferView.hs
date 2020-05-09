@@ -63,20 +63,6 @@ foreign import ccall
 
 -- | vkCreateBufferView - Create a new buffer view object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the buffer view.
---
--- -   @pCreateInfo@ is a pointer to a 'BufferViewCreateInfo' structure
---     containing parameters to be used to create the buffer.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pView@ is a pointer to a 'Vulkan.Core10.Handles.BufferView' handle
---     in which the resulting buffer view object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -108,7 +94,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.BufferView', 'BufferViewCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createBufferView :: forall io . MonadIO io => Device -> BufferViewCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (BufferView)
+createBufferView :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that creates the buffer view.
+                    Device
+                 -> -- | @pCreateInfo@ is a pointer to a 'BufferViewCreateInfo' structure
+                    -- containing parameters to be used to create the buffer.
+                    BufferViewCreateInfo
+                 -> -- | @pAllocator@ controls host memory allocation as described in the
+                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- chapter.
+                    ("allocator" ::: Maybe AllocationCallbacks)
+                 -> io (BufferView)
 createBufferView device createInfo allocator = liftIO . evalContT $ do
   let vkCreateBufferViewPtr = pVkCreateBufferView (deviceCmds (device :: Device))
   lift $ unless (vkCreateBufferViewPtr /= nullFunPtr) $
@@ -147,16 +144,6 @@ foreign import ccall
 
 -- | vkDestroyBufferView - Destroy a buffer view object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the buffer view.
---
--- -   @bufferView@ is the buffer view to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @bufferView@ /must/ have
@@ -193,7 +180,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.BufferView', 'Vulkan.Core10.Handles.Device'
-destroyBufferView :: forall io . MonadIO io => Device -> BufferView -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyBufferView :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device that destroys the buffer view.
+                     Device
+                  -> -- | @bufferView@ is the buffer view to destroy.
+                     BufferView
+                  -> -- | @pAllocator@ controls host memory allocation as described in the
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- chapter.
+                     ("allocator" ::: Maybe AllocationCallbacks)
+                  -> io ()
 destroyBufferView device bufferView allocator = liftIO . evalContT $ do
   let vkDestroyBufferViewPtr = pVkDestroyBufferView (deviceCmds (device :: Device))
   lift $ unless (vkDestroyBufferViewPtr /= nullFunPtr) $

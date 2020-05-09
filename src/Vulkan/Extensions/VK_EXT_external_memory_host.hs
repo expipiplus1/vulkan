@@ -64,19 +64,6 @@ foreign import ccall
 -- | vkGetMemoryHostPointerPropertiesEXT - Get properties of external memory
 -- host pointer
 --
--- = Parameters
---
--- -   @device@ is the logical device that will be importing
---     @pHostPointer@.
---
--- -   @handleType@ is the type of the handle @pHostPointer@.
---
--- -   @pHostPointer@ is the host pointer to import from.
---
--- -   @pMemoryHostPointerProperties@ is a pointer to a
---     'MemoryHostPointerPropertiesEXT' structure in which the host pointer
---     properties are returned.
---
 -- == Valid Usage
 --
 -- -   @handleType@ /must/ be
@@ -121,7 +108,15 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryHostPointerPropertiesEXT'
-getMemoryHostPointerPropertiesEXT :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> ("hostPointer" ::: Ptr ()) -> io (MemoryHostPointerPropertiesEXT)
+getMemoryHostPointerPropertiesEXT :: forall io
+                                   . (MonadIO io)
+                                  => -- | @device@ is the logical device that will be importing @pHostPointer@.
+                                     Device
+                                  -> -- | @handleType@ is the type of the handle @pHostPointer@.
+                                     ExternalMemoryHandleTypeFlagBits
+                                  -> -- | @pHostPointer@ is the host pointer to import from.
+                                     ("hostPointer" ::: Ptr ())
+                                  -> io (MemoryHostPointerPropertiesEXT)
 getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalContT $ do
   let vkGetMemoryHostPointerPropertiesEXTPtr = pVkGetMemoryHostPointerPropertiesEXT (deviceCmds (device :: Device))
   lift $ unless (vkGetMemoryHostPointerPropertiesEXTPtr /= nullFunPtr) $

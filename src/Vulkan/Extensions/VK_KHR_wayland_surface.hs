@@ -94,22 +94,6 @@ foreign import ccall
 -- | vkCreateWaylandSurfaceKHR - Create a
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' object for a Wayland window
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to a 'WaylandSurfaceCreateInfoKHR'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -141,7 +125,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'WaylandSurfaceCreateInfoKHR'
-createWaylandSurfaceKHR :: forall io . MonadIO io => Instance -> WaylandSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createWaylandSurfaceKHR :: forall io
+                         . (MonadIO io)
+                        => -- | @instance@ is the instance to associate the surface with.
+                           Instance
+                        -> -- | @pCreateInfo@ is a pointer to a 'WaylandSurfaceCreateInfoKHR' structure
+                           -- containing parameters affecting the creation of the surface object.
+                           WaylandSurfaceCreateInfoKHR
+                        -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                           -- surface object when there is no more specific allocator available (see
+                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                           ("allocator" ::: Maybe AllocationCallbacks)
+                        -> io (SurfaceKHR)
 createWaylandSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateWaylandSurfaceKHRPtr = pVkCreateWaylandSurfaceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateWaylandSurfaceKHRPtr /= nullFunPtr) $
@@ -168,15 +163,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceWaylandPresentationSupportKHR - Query physical device
 -- for presentation to Wayland
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @queueFamilyIndex@ is the queue family index.
---
--- -   @display@ is a pointer to the @wl_display@ associated with a Wayland
---     compositor.
---
 -- = Description
 --
 -- This platform-specific function /can/ be called prior to creating a
@@ -187,7 +173,26 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceWaylandPresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> Ptr Wl_display -> io (Bool)
+getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
+                                                . (MonadIO io)
+                                               => -- | @physicalDevice@ is the physical device.
+                                                  --
+                                                  -- @physicalDevice@ /must/ be a valid
+                                                  -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                                  PhysicalDevice
+                                               -> -- | @queueFamilyIndex@ is the queue family index.
+                                                  --
+                                                  -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+                                                  -- returned by
+                                                  -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+                                                  -- for the given @physicalDevice@
+                                                  ("queueFamilyIndex" ::: Word32)
+                                               -> -- | @display@ is a pointer to the @wl_display@ associated with a Wayland
+                                                  -- compositor.
+                                                  --
+                                                  -- @display@ /must/ be a valid pointer to a @wl_display@ value
+                                                  Ptr Wl_display
+                                               -> io (Bool)
 getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
   let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   unless (vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr /= nullFunPtr) $
@@ -207,9 +212,14 @@ getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex d
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'WaylandSurfaceCreateFlagsKHR', 'createWaylandSurfaceKHR'
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: WaylandSurfaceCreateFlagsKHR
-  , -- | @display@ /must/ point to a valid Wayland @wl_display@
+  , -- | @display@ and @surface@ are pointers to the Wayland @wl_display@ and
+    -- @wl_surface@ to associate the surface with.
+    --
+    -- @display@ /must/ point to a valid Wayland @wl_display@
     display :: Ptr Wl_display
   , -- | @surface@ /must/ point to a valid Wayland @wl_surface@
     surface :: Ptr Wl_surface

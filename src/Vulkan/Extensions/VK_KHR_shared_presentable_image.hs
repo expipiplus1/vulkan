@@ -58,12 +58,6 @@ foreign import ccall
 
 -- | vkGetSwapchainStatusKHR - Get a swapchain’s status
 --
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the swapchain to query.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -104,7 +98,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainStatusKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result)
+getSwapchainStatusKHR :: forall io
+                       . (MonadIO io)
+                      => -- | @device@ is the device associated with @swapchain@.
+                         Device
+                      -> -- | @swapchain@ is the swapchain to query.
+                         SwapchainKHR
+                      -> io (Result)
 getSwapchainStatusKHR device swapchain = liftIO $ do
   let vkGetSwapchainStatusKHRPtr = pVkGetSwapchainStatusKHR (deviceCmds (device :: Device))
   unless (vkGetSwapchainStatusKHRPtr /= nullFunPtr) $

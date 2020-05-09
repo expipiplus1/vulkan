@@ -245,7 +245,12 @@ instance Zero PhysicalDeviceSubgroupSizeControlPropertiesEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
-  { -- | @requiredSubgroupSize@ /must/ be less than or equal to
+  { -- | @requiredSubgroupSize@ /must/ be a power-of-two integer
+    --
+    -- @requiredSubgroupSize@ /must/ be greater or equal to
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minSubgroupSize>
+    --
+    -- @requiredSubgroupSize@ /must/ be less than or equal to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
     requiredSubgroupSize :: Word32 }
   deriving (Typeable)

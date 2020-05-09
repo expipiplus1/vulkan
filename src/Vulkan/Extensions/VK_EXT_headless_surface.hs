@@ -79,22 +79,6 @@ foreign import ccall
 -- | vkCreateHeadlessSurfaceEXT - Create a headless
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' object
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to a 'HeadlessSurfaceCreateInfoEXT'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -126,7 +110,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'HeadlessSurfaceCreateInfoEXT', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-createHeadlessSurfaceEXT :: forall io . MonadIO io => Instance -> HeadlessSurfaceCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createHeadlessSurfaceEXT :: forall io
+                          . (MonadIO io)
+                         => -- | @instance@ is the instance to associate the surface with.
+                            Instance
+                         -> -- | @pCreateInfo@ is a pointer to a 'HeadlessSurfaceCreateInfoEXT' structure
+                            -- containing parameters affecting the creation of the surface object.
+                            HeadlessSurfaceCreateInfoEXT
+                         -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                            -- surface object when there is no more specific allocator available (see
+                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                            ("allocator" ::: Maybe AllocationCallbacks)
+                         -> io (SurfaceKHR)
 createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateHeadlessSurfaceEXTPtr = pVkCreateHeadlessSurfaceEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateHeadlessSurfaceEXTPtr /= nullFunPtr) $
@@ -154,7 +149,9 @@ createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ d
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createHeadlessSurfaceEXT'
 data HeadlessSurfaceCreateInfoEXT = HeadlessSurfaceCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: HeadlessSurfaceCreateFlagsEXT }
   deriving (Typeable)
 deriving instance Show HeadlessSurfaceCreateInfoEXT

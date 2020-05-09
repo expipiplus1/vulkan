@@ -192,22 +192,6 @@ foreign import ccall
 
 -- | vkCreateSwapchainKHR - Create a swapchain
 --
--- = Parameters
---
--- -   @device@ is the device to create the swapchain for.
---
--- -   @pCreateInfo@ is a pointer to a 'SwapchainCreateInfoKHR' structure
---     specifying the parameters of the created swapchain.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     swapchain object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSwapchain@ is a pointer to a
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle in which the created
---     swapchain object will be returned.
---
 -- = Description
 --
 -- If the @oldSwapchain@ parameter of @pCreateInfo@ is a valid swapchain,
@@ -283,7 +267,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-createSwapchainKHR :: forall a io . (Extendss SwapchainCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> SwapchainCreateInfoKHR a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SwapchainKHR)
+createSwapchainKHR :: forall a io
+                    . (Extendss SwapchainCreateInfoKHR a, PokeChain a, MonadIO io)
+                   => -- | @device@ is the device to create the swapchain for.
+                      Device
+                   -> -- | @pCreateInfo@ is a pointer to a 'SwapchainCreateInfoKHR' structure
+                      -- specifying the parameters of the created swapchain.
+                      SwapchainCreateInfoKHR a
+                   -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                      -- swapchain object when there is no more specific allocator available (see
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                      ("allocator" ::: Maybe AllocationCallbacks)
+                   -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (deviceCmds (device :: Device))
   lift $ unless (vkCreateSwapchainKHRPtr /= nullFunPtr) $
@@ -321,18 +316,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> SwapchainKHR -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkDestroySwapchainKHR - Destroy a swapchain object
---
--- = Parameters
---
--- -   @device@ is the 'Vulkan.Core10.Handles.Device' associated with
---     @swapchain@.
---
--- -   @swapchain@ is the swapchain to destroy.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     swapchain object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
 -- = Description
 --
@@ -396,7 +379,18 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
-destroySwapchainKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySwapchainKHR :: forall io
+                     . (MonadIO io)
+                    => -- | @device@ is the 'Vulkan.Core10.Handles.Device' associated with
+                       -- @swapchain@.
+                       Device
+                    -> -- | @swapchain@ is the swapchain to destroy.
+                       SwapchainKHR
+                    -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                       -- swapchain object when there is no more specific allocator available (see
+                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                       ("allocator" ::: Maybe AllocationCallbacks)
+                    -> io ()
 destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
   let vkDestroySwapchainKHRPtr = pVkDestroySwapchainKHR (deviceCmds (device :: Device))
   lift $ unless (vkDestroySwapchainKHRPtr /= nullFunPtr) $
@@ -418,19 +412,6 @@ foreign import ccall
 
 -- | vkGetSwapchainImagesKHR - Obtain the array of presentable images
 -- associated with a swapchain
---
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the swapchain to query.
---
--- -   @pSwapchainImageCount@ is a pointer to an integer related to the
---     number of presentable images available or queried, as described
---     below.
---
--- -   @pSwapchainImages@ is either @NULL@ or a pointer to an array of
---     'Vulkan.Core10.Handles.Image' handles.
 --
 -- = Description
 --
@@ -512,26 +493,6 @@ foreign import ccall
 
 -- | vkAcquireNextImageKHR - Retrieve the index of the next available
 -- presentable image
---
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the non-retired swapchain from which an image is
---     being acquired.
---
--- -   @timeout@ specifies how long the function waits, in nanoseconds, if
---     no image is available.
---
--- -   @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a
---     semaphore to signal.
---
--- -   @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
---     signal.
---
--- -   @pImageIndex@ is a pointer to a @uint32_t@ in which the index of the
---     next image to use (i.e. an index into the array of images returned
---     by 'getSwapchainImagesKHR') is returned.
 --
 -- == Valid Usage
 --
@@ -628,7 +589,23 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-acquireNextImageKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> ("timeout" ::: Word64) -> Semaphore -> Fence -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImageKHR :: forall io
+                     . (MonadIO io)
+                    => -- | @device@ is the device associated with @swapchain@.
+                       Device
+                    -> -- | @swapchain@ is the non-retired swapchain from which an image is being
+                       -- acquired.
+                       SwapchainKHR
+                    -> -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
+                       -- image is available.
+                       ("timeout" ::: Word64)
+                    -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
+                       -- to signal.
+                       Semaphore
+                    -> -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
+                       -- signal.
+                       Fence
+                    -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
   let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (deviceCmds (device :: Device))
   lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
@@ -649,14 +626,6 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> Ptr (PresentInfoKHR a) -> IO Result) -> Ptr Queue_T -> Ptr (PresentInfoKHR a) -> IO Result
 
 -- | vkQueuePresentKHR - Queue an image for presentation
---
--- = Parameters
---
--- -   @queue@ is a queue that is capable of presentation to the target
---     surface’s platform on the same device as the image’s swapchain.
---
--- -   @pPresentInfo@ is a pointer to a 'PresentInfoKHR' structure
---     specifying parameters of the presentation.
 --
 -- = Description
 --
@@ -801,7 +770,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'PresentInfoKHR', 'Vulkan.Core10.Handles.Queue'
-queuePresentKHR :: forall a io . (Extendss PresentInfoKHR a, PokeChain a, MonadIO io) => Queue -> PresentInfoKHR a -> io (Result)
+queuePresentKHR :: forall a io
+                 . (Extendss PresentInfoKHR a, PokeChain a, MonadIO io)
+                => -- | @queue@ is a queue that is capable of presentation to the target
+                   -- surface’s platform on the same device as the image’s swapchain.
+                   Queue
+                -> -- | @pPresentInfo@ is a pointer to a 'PresentInfoKHR' structure specifying
+                   -- parameters of the presentation.
+                   PresentInfoKHR a
+                -> io (Result)
 queuePresentKHR queue presentInfo = liftIO . evalContT $ do
   let vkQueuePresentKHRPtr = pVkQueuePresentKHR (deviceCmds (queue :: Queue))
   lift $ unless (vkQueuePresentKHRPtr /= nullFunPtr) $
@@ -823,14 +800,6 @@ foreign import ccall
 -- | vkGetDeviceGroupPresentCapabilitiesKHR - Query present capabilities from
 -- other physical devices
 --
--- = Parameters
---
--- -   @device@ is the logical device.
---
--- -   @pDeviceGroupPresentCapabilities@ is a pointer to a
---     'DeviceGroupPresentCapabilitiesKHR' structure in which the device’s
---     capabilities are returned.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -846,7 +815,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'DeviceGroupPresentCapabilitiesKHR'
-getDeviceGroupPresentCapabilitiesKHR :: forall io . MonadIO io => Device -> io (DeviceGroupPresentCapabilitiesKHR)
+getDeviceGroupPresentCapabilitiesKHR :: forall io
+                                      . (MonadIO io)
+                                     => -- | @device@ is the logical device.
+                                        --
+                                        -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                        Device
+                                     -> io (DeviceGroupPresentCapabilitiesKHR)
 getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
   let vkGetDeviceGroupPresentCapabilitiesKHRPtr = pVkGetDeviceGroupPresentCapabilitiesKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetDeviceGroupPresentCapabilitiesKHRPtr /= nullFunPtr) $
@@ -868,16 +843,6 @@ foreign import ccall
 
 -- | vkGetDeviceGroupSurfacePresentModesKHR - Query present capabilities for
 -- a surface
---
--- = Parameters
---
--- -   @device@ is the logical device.
---
--- -   @surface@ is the surface.
---
--- -   @pModes@ is a pointer to a 'DeviceGroupPresentModeFlagsKHR' in which
---     the supported device group present modes for the surface are
---     returned.
 --
 -- = Description
 --
@@ -921,7 +886,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getDeviceGroupSurfacePresentModesKHR :: forall io . MonadIO io => Device -> SurfaceKHR -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
+getDeviceGroupSurfacePresentModesKHR :: forall io
+                                      . (MonadIO io)
+                                     => -- | @device@ is the logical device.
+                                        Device
+                                     -> -- | @surface@ is the surface.
+                                        SurfaceKHR
+                                     -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModesKHR device surface = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModesKHRPtr = pVkGetDeviceGroupSurfacePresentModesKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetDeviceGroupSurfacePresentModesKHRPtr /= nullFunPtr) $
@@ -943,16 +914,6 @@ foreign import ccall
 
 -- | vkAcquireNextImage2KHR - Retrieve the index of the next available
 -- presentable image
---
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
---     containing parameters of the acquire.
---
--- -   @pImageIndex@ is a pointer to a @uint32_t@ that is set to the index
---     of the next image to use.
 --
 -- == Valid Usage
 --
@@ -1003,7 +964,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'AcquireNextImageInfoKHR', 'Vulkan.Core10.Handles.Device'
-acquireNextImage2KHR :: forall io . MonadIO io => Device -> ("acquireInfo" ::: AcquireNextImageInfoKHR) -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImage2KHR :: forall io
+                      . (MonadIO io)
+                     => -- | @device@ is the device associated with @swapchain@.
+                        Device
+                     -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
+                        -- containing parameters of the acquire.
+                        ("acquireInfo" ::: AcquireNextImageInfoKHR)
+                     -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
   let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
   lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
@@ -1026,18 +994,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDevicePresentRectanglesKHR - Query present rectangles for a
 -- surface on a physical device
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @surface@ is the surface.
---
--- -   @pRectCount@ is a pointer to an integer related to the number of
---     rectangles available or queried, as described below.
---
--- -   @pRects@ is either @NULL@ or a pointer to an array of
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures.
 --
 -- = Description
 --
@@ -2304,7 +2260,12 @@ instance Zero DeviceGroupPresentInfoKHR where
 -- 'DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupSwapchainCreateInfoKHR = DeviceGroupSwapchainCreateInfoKHR
-  { -- | @modes@ /must/ not be @0@
+  { -- | @modes@ is a bitfield of modes that the swapchain /can/ be used with.
+    --
+    -- @modes@ /must/ be a valid combination of
+    -- 'DeviceGroupPresentModeFlagBitsKHR' values
+    --
+    -- @modes@ /must/ not be @0@
     modes :: DeviceGroupPresentModeFlagsKHR }
   deriving (Typeable)
 deriving instance Show DeviceGroupSwapchainCreateInfoKHR

@@ -58,7 +58,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ValidationCheckEXT'
 data ValidationFlagsEXT = ValidationFlagsEXT
-  { -- | @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
+  { -- | @pDisabledValidationChecks@ is a pointer to an array of
+    -- 'ValidationCheckEXT' values specifying the validation checks to be
+    -- disabled.
+    --
+    -- @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
     -- @disabledValidationCheckCount@ valid 'ValidationCheckEXT' values
     disabledValidationChecks :: Vector ValidationCheckEXT }
   deriving (Typeable)

@@ -122,7 +122,9 @@ instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
 -- 'PipelineRasterizationDepthClipStateCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDepthClipStateCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: PipelineRasterizationDepthClipStateCreateFlagsEXT
   , -- | @depthClipEnable@ controls whether depth clipping is enabled as
     -- described in

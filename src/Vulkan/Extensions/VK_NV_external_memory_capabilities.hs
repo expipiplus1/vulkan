@@ -90,33 +90,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceExternalImageFormatPropertiesNV - determine image
 -- capabilities compatible with external memory handle types
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     image capabilities
---
--- -   @format@ is the image format, corresponding to
---     'Vulkan.Core10.Image.ImageCreateInfo'::@format@.
---
--- -   @type@ is the image type, corresponding to
---     'Vulkan.Core10.Image.ImageCreateInfo'::@imageType@.
---
--- -   @tiling@ is the image tiling, corresponding to
---     'Vulkan.Core10.Image.ImageCreateInfo'::@tiling@.
---
--- -   @usage@ is the intended usage of the image, corresponding to
---     'Vulkan.Core10.Image.ImageCreateInfo'::@usage@.
---
--- -   @flags@ is a bitmask describing additional parameters of the image,
---     corresponding to 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
---
--- -   @externalHandleType@ is either one of the bits from
---     'ExternalMemoryHandleTypeFlagBitsNV', or 0.
---
--- -   @pExternalImageFormatProperties@ is a pointer to a
---     'ExternalImageFormatPropertiesNV' structure in which capabilities
---     are returned.
---
 -- = Description
 --
 -- If @externalHandleType@ is 0,
@@ -150,7 +123,51 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.ImageType.ImageType',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV) -> io (ExternalImageFormatPropertiesNV)
+getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io
+                                                  . (MonadIO io)
+                                                 => -- | @physicalDevice@ is the physical device from which to query the image
+                                                    -- capabilities
+                                                    --
+                                                    -- @physicalDevice@ /must/ be a valid
+                                                    -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                                    PhysicalDevice
+                                                 -> -- | @format@ is the image format, corresponding to
+                                                    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@format@.
+                                                    --
+                                                    -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+                                                    Format
+                                                 -> -- | @type@ is the image type, corresponding to
+                                                    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@imageType@.
+                                                    --
+                                                    -- @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
+                                                    ImageType
+                                                 -> -- | @tiling@ is the image tiling, corresponding to
+                                                    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@tiling@.
+                                                    --
+                                                    -- @tiling@ /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling'
+                                                    -- value
+                                                    ImageTiling
+                                                 -> -- | @usage@ is the intended usage of the image, corresponding to
+                                                    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@usage@.
+                                                    --
+                                                    -- @usage@ /must/ be a valid combination of
+                                                    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
+                                                    --
+                                                    -- @usage@ /must/ not be @0@
+                                                    ImageUsageFlags
+                                                 -> -- | @flags@ is a bitmask describing additional parameters of the image,
+                                                    -- corresponding to 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
+                                                    --
+                                                    -- @flags@ /must/ be a valid combination of
+                                                    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
+                                                    ImageCreateFlags
+                                                 -> -- | @externalHandleType@ is either one of the bits from
+                                                    -- 'ExternalMemoryHandleTypeFlagBitsNV', or 0.
+                                                    --
+                                                    -- @externalHandleType@ /must/ be a valid combination of
+                                                    -- 'ExternalMemoryHandleTypeFlagBitsNV' values
+                                                    ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV)
+                                                 -> io (ExternalImageFormatPropertiesNV)
 getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr = pVkGetPhysicalDeviceExternalImageFormatPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr /= nullFunPtr) $

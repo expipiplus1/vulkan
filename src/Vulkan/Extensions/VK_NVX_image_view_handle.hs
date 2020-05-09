@@ -66,18 +66,23 @@ foreign import ccall
 -- | vkGetImageViewHandleNVX - Get the handle for an image view for a
 -- specific descriptor type
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the image view.
---
--- -   @pInfo@ describes the image view to query and type of handle.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'
-getImageViewHandleNVX :: forall io . MonadIO io => Device -> ImageViewHandleInfoNVX -> io (Word32)
+getImageViewHandleNVX :: forall io
+                       . (MonadIO io)
+                      => -- | @device@ is the logical device that owns the image view.
+                         --
+                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                         Device
+                      -> -- | @pInfo@ describes the image view to query and type of handle.
+                         --
+                         -- @pInfo@ /must/ be a valid pointer to a valid 'ImageViewHandleInfoNVX'
+                         -- structure
+                         ImageViewHandleInfoNVX
+                      -> io (Word32)
 getImageViewHandleNVX device info = liftIO . evalContT $ do
   let vkGetImageViewHandleNVXPtr = pVkGetImageViewHandleNVX (deviceCmds (device :: Device))
   lift $ unless (vkGetImageViewHandleNVXPtr /= nullFunPtr) $
@@ -97,15 +102,6 @@ foreign import ccall
 
 -- | vkGetImageViewAddressNVX - Get the device address of an image view
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the image view.
---
--- -   @imageView@ is a handle to the image view.
---
--- -   @pProperties@ contains the device address and size when the call
---     returns.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -120,7 +116,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',
 -- 'ImageViewAddressPropertiesNVX'
-getImageViewAddressNVX :: forall io . MonadIO io => Device -> ImageView -> io (ImageViewAddressPropertiesNVX)
+getImageViewAddressNVX :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is the logical device that owns the image view.
+                          --
+                          -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                          Device
+                       -> -- | @imageView@ is a handle to the image view.
+                          --
+                          -- @imageView@ /must/ be a valid 'Vulkan.Core10.Handles.ImageView' handle
+                          --
+                          -- @imageView@ /must/ have been created, allocated, or retrieved from
+                          -- @device@
+                          ImageView
+                       -> io (ImageViewAddressPropertiesNVX)
 getImageViewAddressNVX device imageView = liftIO . evalContT $ do
   let vkGetImageViewAddressNVXPtr = pVkGetImageViewAddressNVX (deviceCmds (device :: Device))
   lift $ unless (vkGetImageViewAddressNVXPtr /= nullFunPtr) $

@@ -75,17 +75,6 @@ foreign import ccall
 
 -- | vkCmdSetLineStippleEXT - Set the dynamic line width state
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @lineStippleFactor@ is the repeat factor used in stippled line
---     rasterization.
---
--- -   @lineStipplePattern@ is the bit pattern used in stippled line
---     rasterization.
---
 -- == Valid Usage
 --
 -- -   @lineStippleFactor@ /must/ be in the range [1,256]
@@ -122,7 +111,18 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetLineStippleEXT :: forall io . MonadIO io => CommandBuffer -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> io ()
+cmdSetLineStippleEXT :: forall io
+                      . (MonadIO io)
+                     => -- | @commandBuffer@ is the command buffer into which the command will be
+                        -- recorded.
+                        CommandBuffer
+                     -> -- | @lineStippleFactor@ is the repeat factor used in stippled line
+                        -- rasterization.
+                        ("lineStippleFactor" ::: Word32)
+                     -> -- | @lineStipplePattern@ is the bit pattern used in stippled line
+                        -- rasterization.
+                        ("lineStipplePattern" ::: Word16)
+                     -> io ()
 cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
   let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetLineStippleEXTPtr /= nullFunPtr) $

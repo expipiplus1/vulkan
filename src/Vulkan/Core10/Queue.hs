@@ -92,19 +92,6 @@ foreign import ccall
 
 -- | vkGetDeviceQueue - Get a queue handle from a device
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the queue.
---
--- -   @queueFamilyIndex@ is the index of the queue family to which the
---     queue belongs.
---
--- -   @queueIndex@ is the index within this queue family of the queue to
---     retrieve.
---
--- -   @pQueue@ is a pointer to a 'Vulkan.Core10.Handles.Queue' object that
---     will be filled with the handle for the requested queue.
---
 -- = Description
 --
 -- 'getDeviceQueue' /must/ only be used to get queues that were created
@@ -137,7 +124,17 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Queue'
-getDeviceQueue :: forall io . MonadIO io => Device -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> io (Queue)
+getDeviceQueue :: forall io
+                . (MonadIO io)
+               => -- | @device@ is the logical device that owns the queue.
+                  Device
+               -> -- | @queueFamilyIndex@ is the index of the queue family to which the queue
+                  -- belongs.
+                  ("queueFamilyIndex" ::: Word32)
+               -> -- | @queueIndex@ is the index within this queue family of the queue to
+                  -- retrieve.
+                  ("queueIndex" ::: Word32)
+               -> io (Queue)
 getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
   let vkGetDeviceQueuePtr = pVkGetDeviceQueue cmds
@@ -159,20 +156,6 @@ foreign import ccall
 
 -- | vkQueueSubmit - Submits a sequence of semaphores or command buffers to a
 -- queue
---
--- = Parameters
---
--- -   @queue@ is the queue that the command buffers will be submitted to.
---
--- -   @submitCount@ is the number of elements in the @pSubmits@ array.
---
--- -   @pSubmits@ is a pointer to an array of 'SubmitInfo' structures, each
---     specifying a command buffer submission batch.
---
--- -   @fence@ is an /optional/ handle to a fence to be signaled once all
---     submitted command buffers have completed execution. If @fence@ is
---     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
 --
 -- = Description
 --
@@ -381,7 +364,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Fence', 'Vulkan.Core10.Handles.Queue',
 -- 'SubmitInfo'
-queueSubmit :: forall io . MonadIO io => Queue -> ("submits" ::: Vector (SomeStruct SubmitInfo)) -> Fence -> io ()
+queueSubmit :: forall io
+             . (MonadIO io)
+            => -- | @queue@ is the queue that the command buffers will be submitted to.
+               Queue
+            -> -- | @pSubmits@ is a pointer to an array of 'SubmitInfo' structures, each
+               -- specifying a command buffer submission batch.
+               ("submits" ::: Vector (SomeStruct SubmitInfo))
+            -> -- | @fence@ is an /optional/ handle to a fence to be signaled once all
+               -- submitted command buffers have completed execution. If @fence@ is not
+               -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
+               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
+               Fence
+            -> io ()
 queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmitPtr = pVkQueueSubmit (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueSubmitPtr /= nullFunPtr) $
@@ -401,10 +396,6 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result
 
 -- | vkQueueWaitIdle - Wait for a queue to become idle
---
--- = Parameters
---
--- -   @queue@ is the queue on which to wait.
 --
 -- = Description
 --
@@ -446,7 +437,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Queue'
-queueWaitIdle :: forall io . MonadIO io => Queue -> io ()
+queueWaitIdle :: forall io
+               . (MonadIO io)
+              => -- | @queue@ is the queue on which to wait.
+                 Queue
+              -> io ()
 queueWaitIdle queue = liftIO $ do
   let vkQueueWaitIdlePtr = pVkQueueWaitIdle (deviceCmds (queue :: Queue))
   unless (vkQueueWaitIdlePtr /= nullFunPtr) $
@@ -464,10 +459,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result
 
 -- | vkDeviceWaitIdle - Wait for a device to become idle
---
--- = Parameters
---
--- -   @device@ is the logical device to idle.
 --
 -- = Description
 --
@@ -500,7 +491,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device'
-deviceWaitIdle :: forall io . MonadIO io => Device -> io ()
+deviceWaitIdle :: forall io
+                . (MonadIO io)
+               => -- | @device@ is the logical device to idle.
+                  Device
+               -> io ()
 deviceWaitIdle device = liftIO $ do
   let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (deviceCmds (device :: Device))
   unless (vkDeviceWaitIdlePtr /= nullFunPtr) $

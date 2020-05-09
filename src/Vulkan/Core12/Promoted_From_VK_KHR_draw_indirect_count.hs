@@ -32,27 +32,6 @@ foreign import ccall
 -- | vkCmdDrawIndirectCount - Perform an indirect draw with the draw count
 -- sourced from a buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @buffer@ is the buffer containing draw parameters.
---
--- -   @offset@ is the byte offset into @buffer@ where parameters begin.
---
--- -   @countBuffer@ is the buffer containing the draw count.
---
--- -   @countBufferOffset@ is the byte offset into @countBuffer@ where the
---     draw count begins.
---
--- -   @maxDrawCount@ specifies the maximum number of draws that will be
---     executed. The actual number of executed draw calls is the minimum of
---     the count specified in @countBuffer@ and @maxDrawCount@.
---
--- -   @stride@ is the byte stride between successive sets of draw
---     parameters.
---
 -- = Description
 --
 -- 'cmdDrawIndirectCount' behaves similarly to
@@ -338,7 +317,27 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndirectCount :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndirectCount :: forall io
+                      . (MonadIO io)
+                     => -- | @commandBuffer@ is the command buffer into which the command is
+                        -- recorded.
+                        CommandBuffer
+                     -> -- | @buffer@ is the buffer containing draw parameters.
+                        Buffer
+                     -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
+                        ("offset" ::: DeviceSize)
+                     -> -- | @countBuffer@ is the buffer containing the draw count.
+                        ("countBuffer" ::: Buffer)
+                     -> -- | @countBufferOffset@ is the byte offset into @countBuffer@ where the draw
+                        -- count begins.
+                        ("countBufferOffset" ::: DeviceSize)
+                     -> -- | @maxDrawCount@ specifies the maximum number of draws that will be
+                        -- executed. The actual number of executed draw calls is the minimum of the
+                        -- count specified in @countBuffer@ and @maxDrawCount@.
+                        ("maxDrawCount" ::: Word32)
+                     -> -- | @stride@ is the byte stride between successive sets of draw parameters.
+                        ("stride" ::: Word32)
+                     -> io ()
 cmdDrawIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawIndirectCountPtr = pVkCmdDrawIndirectCount (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawIndirectCountPtr /= nullFunPtr) $
@@ -357,27 +356,6 @@ foreign import ccall
 
 -- | vkCmdDrawIndexedIndirectCount - Perform an indexed indirect draw with
 -- the draw count sourced from a buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @buffer@ is the buffer containing draw parameters.
---
--- -   @offset@ is the byte offset into @buffer@ where parameters begin.
---
--- -   @countBuffer@ is the buffer containing the draw count.
---
--- -   @countBufferOffset@ is the byte offset into @countBuffer@ where the
---     draw count begins.
---
--- -   @maxDrawCount@ specifies the maximum number of draws that will be
---     executed. The actual number of executed draw calls is the minimum of
---     the count specified in @countBuffer@ and @maxDrawCount@.
---
--- -   @stride@ is the byte stride between successive sets of draw
---     parameters.
 --
 -- = Description
 --
@@ -661,7 +639,27 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndexedIndirectCount :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndexedIndirectCount :: forall io
+                             . (MonadIO io)
+                            => -- | @commandBuffer@ is the command buffer into which the command is
+                               -- recorded.
+                               CommandBuffer
+                            -> -- | @buffer@ is the buffer containing draw parameters.
+                               Buffer
+                            -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
+                               ("offset" ::: DeviceSize)
+                            -> -- | @countBuffer@ is the buffer containing the draw count.
+                               ("countBuffer" ::: Buffer)
+                            -> -- | @countBufferOffset@ is the byte offset into @countBuffer@ where the draw
+                               -- count begins.
+                               ("countBufferOffset" ::: DeviceSize)
+                            -> -- | @maxDrawCount@ specifies the maximum number of draws that will be
+                               -- executed. The actual number of executed draw calls is the minimum of the
+                               -- count specified in @countBuffer@ and @maxDrawCount@.
+                               ("maxDrawCount" ::: Word32)
+                            -> -- | @stride@ is the byte stride between successive sets of draw parameters.
+                               ("stride" ::: Word32)
+                            -> io ()
 cmdDrawIndexedIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawIndexedIndirectCountPtr = pVkCmdDrawIndexedIndirectCount (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawIndexedIndirectCountPtr /= nullFunPtr) $

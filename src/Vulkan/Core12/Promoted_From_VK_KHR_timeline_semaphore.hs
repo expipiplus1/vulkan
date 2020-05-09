@@ -91,15 +91,6 @@ foreign import ccall
 -- | vkGetSemaphoreCounterValue - Query the current state of a timeline
 -- semaphore
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the semaphore.
---
--- -   @semaphore@ is the handle of the semaphore to query.
---
--- -   @pValue@ is a pointer to a 64-bit integer value in which the current
---     counter value of the semaphore is returned.
---
 -- = Description
 --
 -- Note
@@ -126,7 +117,24 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
-getSemaphoreCounterValue :: forall io . MonadIO io => Device -> Semaphore -> io (("value" ::: Word64))
+getSemaphoreCounterValue :: forall io
+                          . (MonadIO io)
+                         => -- | @device@ is the logical device that owns the semaphore.
+                            --
+                            -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                            Device
+                         -> -- | @semaphore@ is the handle of the semaphore to query.
+                            --
+                            -- @semaphore@ /must/ have been created with a
+                            -- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+                            -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
+                            --
+                            -- @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore' handle
+                            --
+                            -- @semaphore@ /must/ have been created, allocated, or retrieved from
+                            -- @device@
+                            Semaphore
+                         -> io (("value" ::: Word64))
 getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
   let vkGetSemaphoreCounterValuePtr = pVkGetSemaphoreCounterValue (deviceCmds (device :: Device))
   lift $ unless (vkGetSemaphoreCounterValuePtr /= nullFunPtr) $
@@ -147,19 +155,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result
 
 -- | vkWaitSemaphores - Wait for timeline semaphores on the host
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the semaphore.
---
--- -   @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure
---     containing information about the wait condition.
---
--- -   @timeout@ is the timeout period in units of nanoseconds. @timeout@
---     is adjusted to the closest value allowed by the
---     implementation-dependent timeout accuracy, which /may/ be
---     substantially longer than one nanosecond, and /may/ be longer than
---     the requested period.
 --
 -- = Description
 --
@@ -206,7 +201,24 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreWaitInfo'
-waitSemaphores :: forall io . MonadIO io => Device -> SemaphoreWaitInfo -> ("timeout" ::: Word64) -> io (Result)
+waitSemaphores :: forall io
+                . (MonadIO io)
+               => -- | @device@ is the logical device that owns the semaphore.
+                  --
+                  -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                  Device
+               -> -- | @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure containing
+                  -- information about the wait condition.
+                  --
+                  -- @pWaitInfo@ /must/ be a valid pointer to a valid 'SemaphoreWaitInfo'
+                  -- structure
+                  SemaphoreWaitInfo
+               -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
+                  -- adjusted to the closest value allowed by the implementation-dependent
+                  -- timeout accuracy, which /may/ be substantially longer than one
+                  -- nanosecond, and /may/ be longer than the requested period.
+                  ("timeout" ::: Word64)
+               -> io (Result)
 waitSemaphores device waitInfo timeout = liftIO . evalContT $ do
   let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
   lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
@@ -226,13 +238,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr SemaphoreSignalInfo -> IO Result) -> Ptr Device_T -> Ptr SemaphoreSignalInfo -> IO Result
 
 -- | vkSignalSemaphore - Signal a timeline semaphore on the host
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the semaphore.
---
--- -   @pSignalInfo@ is a pointer to a 'SemaphoreSignalInfo' structure
---     containing information about the signal operation.
 --
 -- = Description
 --
@@ -262,7 +267,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreSignalInfo'
-signalSemaphore :: forall io . MonadIO io => Device -> SemaphoreSignalInfo -> io ()
+signalSemaphore :: forall io
+                 . (MonadIO io)
+                => -- | @device@ is the logical device that owns the semaphore.
+                   --
+                   -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                   Device
+                -> -- | @pSignalInfo@ is a pointer to a 'SemaphoreSignalInfo' structure
+                   -- containing information about the signal operation.
+                   --
+                   -- @pSignalInfo@ /must/ be a valid pointer to a valid 'SemaphoreSignalInfo'
+                   -- structure
+                   SemaphoreSignalInfo
+                -> io ()
 signalSemaphore device signalInfo = liftIO . evalContT $ do
   let vkSignalSemaphorePtr = pVkSignalSemaphore (deviceCmds (device :: Device))
   lift $ unless (vkSignalSemaphorePtr /= nullFunPtr) $
@@ -694,9 +711,23 @@ instance Zero SemaphoreWaitInfo where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'signalSemaphore',
 -- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.signalSemaphoreKHR'
 data SemaphoreSignalInfo = SemaphoreSignalInfo
-  { -- | @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore' handle
+  { -- | @semaphore@ is the handle of the semaphore to signal.
+    --
+    -- @semaphore@ /must/ have been created with a
+    -- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+    -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
+    --
+    -- @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore' handle
     semaphore :: Semaphore
-  , -- | @value@ /must/ have a value which does not differ from the current value
+  , -- | @value@ is the value to signal.
+    --
+    -- @value@ /must/ have a value greater than the current value of the
+    -- semaphore
+    --
+    -- @value@ /must/ be less than the value of any pending semaphore signal
+    -- operations
+    --
+    -- @value@ /must/ have a value which does not differ from the current value
     -- of the semaphore or the value of any outstanding semaphore wait or
     -- signal operation on @semaphore@ by more than
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>

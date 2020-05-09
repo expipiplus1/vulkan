@@ -59,7 +59,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QU
 -- 'QueueGlobalPriorityEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInfoEXT
-  { -- | @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
+  { -- | @globalPriority@ is the system-wide priority associated to this queue as
+    -- specified by 'QueueGlobalPriorityEXT'
+    --
+    -- @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
     globalPriority :: QueueGlobalPriorityEXT }
   deriving (Typeable)
 deriving instance Show DeviceQueueGlobalPriorityCreateInfoEXT

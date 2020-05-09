@@ -159,23 +159,6 @@ foreign import ccall
 -- Reports properties of the performance query counters available on a
 -- queue family of a device
 --
--- = Parameters
---
--- -   @physicalDevice@ is the handle to the physical device whose queue
---     family performance query counter properties will be queried.
---
--- -   @queueFamilyIndex@ is the index into the queue family of the
---     physical device we want to get properties for.
---
--- -   @pCounterCount@ is a pointer to an integer related to the number of
---     counters available or queried, as described below.
---
--- -   @pCounters@ is either @NULL@ or a pointer to an array of
---     'PerformanceCounterKHR' structures.
---
--- -   @pCounterDescriptions@ is either @NULL@ or a pointer to an array of
---     'PerformanceCounterDescriptionKHR' structures.
---
 -- = Description
 --
 -- If @pCounters@ is @NULL@ and @pCounterDescriptions@ is @NULL@, then the
@@ -258,19 +241,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR - Reports the
 -- number of passes require for a performance query pool type
 --
--- = Parameters
---
--- -   @physicalDevice@ is the handle to the physical device whose queue
---     family performance query counter properties will be queried.
---
--- -   @pPerformanceQueryCreateInfo@ is a pointer to a
---     'QueryPoolPerformanceCreateInfoKHR' of the performance query that is
---     to be created.
---
--- -   @pNumPasses@ is a pointer to an integer related to the number of
---     passes required to query the performance query pool, as described
---     below.
---
 -- = Description
 --
 -- The @pPerformanceQueryCreateInfo@ member
@@ -286,7 +256,22 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'QueryPoolPerformanceCreateInfoKHR'
-getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io . MonadIO io => PhysicalDevice -> ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR) -> io (("numPasses" ::: Word32))
+getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
+                                                       . (MonadIO io)
+                                                      => -- | @physicalDevice@ is the handle to the physical device whose queue family
+                                                         -- performance query counter properties will be queried.
+                                                         --
+                                                         -- @physicalDevice@ /must/ be a valid
+                                                         -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                                         PhysicalDevice
+                                                      -> -- | @pPerformanceQueryCreateInfo@ is a pointer to a
+                                                         -- 'QueryPoolPerformanceCreateInfoKHR' of the performance query that is to
+                                                         -- be created.
+                                                         --
+                                                         -- @pPerformanceQueryCreateInfo@ /must/ be a valid pointer to a valid
+                                                         -- 'QueryPoolPerformanceCreateInfoKHR' structure
+                                                         ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR)
+                                                      -> io (("numPasses" ::: Word32))
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr = pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr /= nullFunPtr) $
@@ -308,14 +293,6 @@ foreign import ccall
 
 -- | vkAcquireProfilingLockKHR - Acquires the profiling lock
 --
--- = Parameters
---
--- -   @device@ is the logical device to profile.
---
--- -   @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure
---     which contains information about how the profiling is to be
---     acquired.
---
 -- = Description
 --
 -- Implementations /may/ allow multiple actors to hold the profiling lock
@@ -334,7 +311,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'AcquireProfilingLockInfoKHR', 'Vulkan.Core10.Handles.Device'
-acquireProfilingLockKHR :: forall io . MonadIO io => Device -> AcquireProfilingLockInfoKHR -> io ()
+acquireProfilingLockKHR :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is the logical device to profile.
+                           --
+                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                           Device
+                        -> -- | @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure which
+                           -- contains information about how the profiling is to be acquired.
+                           --
+                           -- @pInfo@ /must/ be a valid pointer to a valid
+                           -- 'AcquireProfilingLockInfoKHR' structure
+                           AcquireProfilingLockInfoKHR
+                        -> io ()
 acquireProfilingLockKHR device info = liftIO . evalContT $ do
   let vkAcquireProfilingLockKHRPtr = pVkAcquireProfilingLockKHR (deviceCmds (device :: Device))
   lift $ unless (vkAcquireProfilingLockKHRPtr /= nullFunPtr) $
@@ -354,10 +343,6 @@ foreign import ccall
 
 -- | vkReleaseProfilingLockKHR - Releases the profiling lock
 --
--- = Parameters
---
--- -   @device@ is the logical device to cease profiling on.
---
 -- == Valid Usage
 --
 -- -   The profiling lock of @device@ /must/ have been held via a previous
@@ -370,7 +355,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device'
-releaseProfilingLockKHR :: forall io . MonadIO io => Device -> io ()
+releaseProfilingLockKHR :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is the logical device to cease profiling on.
+                           Device
+                        -> io ()
 releaseProfilingLockKHR device = liftIO $ do
   let vkReleaseProfilingLockKHRPtr = pVkReleaseProfilingLockKHR (deviceCmds (device :: Device))
   unless (vkReleaseProfilingLockKHRPtr /= nullFunPtr) $
@@ -752,7 +741,9 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'acquireProfilingLockKHR'
 data AcquireProfilingLockInfoKHR = AcquireProfilingLockInfoKHR
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: AcquireProfilingLockFlagsKHR
   , -- | @timeout@ indicates how long the function waits, in nanoseconds, if the
     -- profiling lock is not available.
@@ -810,7 +801,9 @@ instance Zero AcquireProfilingLockInfoKHR where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PerformanceQuerySubmitInfoKHR = PerformanceQuerySubmitInfoKHR
-  { -- | @counterPassIndex@ /must/ be less than the number of counter passes
+  { -- | @counterPassIndex@ specifies which counter pass index is active.
+    --
+    -- @counterPassIndex@ /must/ be less than the number of counter passes
     -- required by any queries within the batch. The required number of counter
     -- passes for a performance query is obtained by calling
     -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'

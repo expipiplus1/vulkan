@@ -117,20 +117,6 @@ foreign import ccall
 -- | vkGetImageSparseMemoryRequirements - Query the memory requirements for a
 -- sparse image
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the image.
---
--- -   @image@ is the 'Vulkan.Core10.Handles.Image' object to get the
---     memory requirements for.
---
--- -   @pSparseMemoryRequirementCount@ is a pointer to an integer related
---     to the number of sparse memory requirements available or queried, as
---     described below.
---
--- -   @pSparseMemoryRequirements@ is either @NULL@ or a pointer to an
---     array of 'SparseImageMemoryRequirements' structures.
---
 -- = Description
 --
 -- If @pSparseMemoryRequirements@ is @NULL@, then the number of sparse
@@ -208,28 +194,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSparseImageFormatProperties - Retrieve properties of
 -- an image format applied to sparse images
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     sparse image capabilities.
---
--- -   @format@ is the image format.
---
--- -   @type@ is the dimensionality of image.
---
--- -   @samples@ is the number of samples per texel as defined in
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
---
--- -   @usage@ is a bitmask describing the intended usage of the image.
---
--- -   @tiling@ is the tiling arrangement of the texel blocks in memory.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     sparse format properties available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'SparseImageFormatProperties' structures.
 --
 -- = Description
 --
@@ -330,21 +294,6 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> Word32 -> Ptr (BindSparseInfo a) -> Fence -> IO Result) -> Ptr Queue_T -> Word32 -> Ptr (BindSparseInfo a) -> Fence -> IO Result
 
 -- | vkQueueBindSparse - Bind device memory to a sparse resource object
---
--- = Parameters
---
--- -   @queue@ is the queue that the sparse binding operations will be
---     submitted to.
---
--- -   @bindInfoCount@ is the number of elements in the @pBindInfo@ array.
---
--- -   @pBindInfo@ is a pointer to an array of 'BindSparseInfo' structures,
---     each specifying a sparse binding submission batch.
---
--- -   @fence@ is an /optional/ handle to a fence to be signaled. If
---     @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
 --
 -- = Description
 --
@@ -460,7 +409,19 @@ foreign import ccall
 --
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Handles.Queue'
-queueBindSparse :: forall io . MonadIO io => Queue -> ("bindInfo" ::: Vector (SomeStruct BindSparseInfo)) -> Fence -> io ()
+queueBindSparse :: forall io
+                 . (MonadIO io)
+                => -- | @queue@ is the queue that the sparse binding operations will be
+                   -- submitted to.
+                   Queue
+                -> -- | @pBindInfo@ is a pointer to an array of 'BindSparseInfo' structures,
+                   -- each specifying a sparse binding submission batch.
+                   ("bindInfo" ::: Vector (SomeStruct BindSparseInfo))
+                -> -- | @fence@ is an /optional/ handle to a fence to be signaled. If @fence@ is
+                   -- not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
+                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
+                   Fence
+                -> io ()
 queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
   let vkQueueBindSparsePtr = pVkQueueBindSparse (deviceCmds (queue :: Queue))
   lift $ unless (vkQueueBindSparsePtr /= nullFunPtr) $
@@ -898,9 +859,13 @@ instance Zero SparseImageMemoryBind where
 --
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Buffer', 'SparseMemoryBind'
 data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
-  { -- | @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+  { -- | @buffer@ is the 'Vulkan.Core10.Handles.Buffer' object to be bound.
+    --
+    -- @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
     buffer :: Buffer
-  , -- | @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
+  , -- | @pBinds@ is a pointer to array of 'SparseMemoryBind' structures.
+    --
+    -- @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
     -- 'SparseMemoryBind' structures
     binds :: Vector SparseMemoryBind
   }

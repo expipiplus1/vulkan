@@ -228,14 +228,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceFeatures2 - Reports capabilities of a physical device
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     supported features.
---
--- -   @pFeatures@ is a pointer to a 'PhysicalDeviceFeatures2' structure in
---     which the physical device features are returned.
---
 -- = Description
 --
 -- Each structure in @pFeatures@ and its @pNext@ chain contains members
@@ -248,7 +240,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceFeatures2'
-getPhysicalDeviceFeatures2 :: forall a io . (Extendss PhysicalDeviceFeatures2 a, PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceFeatures2 a)
+getPhysicalDeviceFeatures2 :: forall a io
+                            . (Extendss PhysicalDeviceFeatures2 a, PokeChain a, PeekChain a, MonadIO io)
+                           => -- | @physicalDevice@ is the physical device from which to query the
+                              -- supported features.
+                              --
+                              -- @physicalDevice@ /must/ be a valid
+                              -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                              PhysicalDevice
+                           -> io (PhysicalDeviceFeatures2 a)
 getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFeatures2Ptr = pVkGetPhysicalDeviceFeatures2 (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceFeatures2Ptr /= nullFunPtr) $
@@ -269,14 +269,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceProperties2 - Returns properties of a physical device
 --
--- = Parameters
---
--- -   @physicalDevice@ is the handle to the physical device whose
---     properties will be queried.
---
--- -   @pProperties@ is a pointer to a 'PhysicalDeviceProperties2'
---     structure in which properties are returned.
---
 -- = Description
 --
 -- Each structure in @pProperties@ and its @pNext@ chain contain members
@@ -289,7 +281,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceProperties2'
-getPhysicalDeviceProperties2 :: forall a io . (Extendss PhysicalDeviceProperties2 a, PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceProperties2 a)
+getPhysicalDeviceProperties2 :: forall a io
+                              . (Extendss PhysicalDeviceProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                             => -- | @physicalDevice@ is the handle to the physical device whose properties
+                                -- will be queried.
+                                --
+                                -- @physicalDevice@ /must/ be a valid
+                                -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                PhysicalDevice
+                             -> io (PhysicalDeviceProperties2 a)
 getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceProperties2Ptr = pVkGetPhysicalDeviceProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceProperties2Ptr /= nullFunPtr) $
@@ -311,16 +311,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceFormatProperties2 - Lists physical device’s format
 -- capabilities
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     format properties.
---
--- -   @format@ is the format whose properties are queried.
---
--- -   @pFormatProperties@ is a pointer to a 'FormatProperties2' structure
---     in which physical device properties for @format@ are returned.
---
 -- = Description
 --
 -- 'getPhysicalDeviceFormatProperties2' behaves similarly to
@@ -334,7 +324,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Enums.Format.Format', 'FormatProperties2',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceFormatProperties2 :: forall a io . (Extendss FormatProperties2 a, PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> Format -> io (FormatProperties2 a)
+getPhysicalDeviceFormatProperties2 :: forall a io
+                                    . (Extendss FormatProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                                   => -- | @physicalDevice@ is the physical device from which to query the format
+                                      -- properties.
+                                      --
+                                      -- @physicalDevice@ /must/ be a valid
+                                      -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                      PhysicalDevice
+                                   -> -- | @format@ is the format whose properties are queried.
+                                      --
+                                      -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+                                      Format
+                                   -> io (FormatProperties2 a)
 getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFormatProperties2Ptr = pVkGetPhysicalDeviceFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceFormatProperties2Ptr /= nullFunPtr) $
@@ -355,18 +357,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceImageFormatProperties2 - Lists physical device’s
 -- image format capabilities
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     image capabilities.
---
--- -   @pImageFormatInfo@ is a pointer to a
---     'PhysicalDeviceImageFormatInfo2' structure describing the parameters
---     that would be consumed by 'Vulkan.Core10.Image.createImage'.
---
--- -   @pImageFormatProperties@ is a pointer to a 'ImageFormatProperties2'
---     structure in which capabilities are returned.
 --
 -- = Description
 --
@@ -413,7 +403,16 @@ foreign import ccall
 --
 -- 'ImageFormatProperties2', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceImageFormatInfo2'
-getPhysicalDeviceImageFormatProperties2 :: forall a b io . (Extendss PhysicalDeviceImageFormatInfo2 a, Extendss ImageFormatProperties2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io) => PhysicalDevice -> PhysicalDeviceImageFormatInfo2 a -> io (ImageFormatProperties2 b)
+getPhysicalDeviceImageFormatProperties2 :: forall a b io
+                                         . (Extendss PhysicalDeviceImageFormatInfo2 a, Extendss ImageFormatProperties2 b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                                        => -- | @physicalDevice@ is the physical device from which to query the image
+                                           -- capabilities.
+                                           PhysicalDevice
+                                        -> -- | @pImageFormatInfo@ is a pointer to a 'PhysicalDeviceImageFormatInfo2'
+                                           -- structure describing the parameters that would be consumed by
+                                           -- 'Vulkan.Core10.Image.createImage'.
+                                           PhysicalDeviceImageFormatInfo2 a
+                                        -> io (ImageFormatProperties2 b)
 getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceImageFormatProperties2Ptr = pVkGetPhysicalDeviceImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceImageFormatProperties2Ptr /= nullFunPtr) $
@@ -436,18 +435,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceQueueFamilyProperties2 - Reports properties of the
 -- queues of the specified physical device
---
--- = Parameters
---
--- -   @physicalDevice@ is the handle to the physical device whose
---     properties will be queried.
---
--- -   @pQueueFamilyPropertyCount@ is a pointer to an integer related to
---     the number of queue families available or queried, as described in
---     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'.
---
--- -   @pQueueFamilyProperties@ is either @NULL@ or a pointer to an array
---     of 'QueueFamilyProperties2' structures.
 --
 -- = Description
 --
@@ -500,14 +487,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceMemoryProperties2 - Reports memory information for
 -- the specified physical device
 --
--- = Parameters
---
--- -   @physicalDevice@ is the handle to the device to query.
---
--- -   @pMemoryProperties@ is a pointer to a
---     'PhysicalDeviceMemoryProperties2' structure in which the properties
---     are returned.
---
 -- = Description
 --
 -- 'getPhysicalDeviceMemoryProperties2' behaves similarly to
@@ -521,7 +500,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceMemoryProperties2'
-getPhysicalDeviceMemoryProperties2 :: forall a io . (Extendss PhysicalDeviceMemoryProperties2 a, PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (PhysicalDeviceMemoryProperties2 a)
+getPhysicalDeviceMemoryProperties2 :: forall a io
+                                    . (Extendss PhysicalDeviceMemoryProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                                   => -- | @physicalDevice@ is the handle to the device to query.
+                                      --
+                                      -- @physicalDevice@ /must/ be a valid
+                                      -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                      PhysicalDevice
+                                   -> io (PhysicalDeviceMemoryProperties2 a)
 getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMemoryProperties2Ptr = pVkGetPhysicalDeviceMemoryProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceMemoryProperties2Ptr /= nullFunPtr) $
@@ -542,21 +528,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSparseImageFormatProperties2 - Retrieve properties of
 -- an image format applied to sparse images
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     sparse image capabilities.
---
--- -   @pFormatInfo@ is a pointer to a
---     'PhysicalDeviceSparseImageFormatInfo2' structure containing input
---     parameters to the command.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     sparse format properties available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'SparseImageFormatProperties2' structures.
 --
 -- = Description
 --
@@ -1436,16 +1407,38 @@ instance Zero SparseImageFormatProperties2 where
 -- 'getPhysicalDeviceSparseImageFormatProperties2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceSparseImageFormatProperties2KHR'
 data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
-  { -- | @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+  { -- | @format@ is the image format.
+    --
+    -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
     format :: Format
-  , -- | @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
+  , -- | @type@ is the dimensionality of image.
+    --
+    -- @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType' value
     type' :: ImageType
-  , -- | @samples@ /must/ be a valid
+  , -- | @samples@ is the number of samples per texel as defined in
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+    --
+    -- @samples@ /must/ be a bit value that is set in
+    -- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
+    -- returned by
+    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
+    -- with @format@, @type@, @tiling@, and @usage@ equal to those in this
+    -- command and @flags@ equal to the value that is set in
+    -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when the image is created
+    --
+    -- @samples@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
     samples :: SampleCountFlagBits
-  , -- | @usage@ /must/ not be @0@
+  , -- | @usage@ is a bitmask describing the intended usage of the image.
+    --
+    -- @usage@ /must/ be a valid combination of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
+    --
+    -- @usage@ /must/ not be @0@
     usage :: ImageUsageFlags
-  , -- | @tiling@ /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling'
+  , -- | @tiling@ is the tiling arrangement of the texel blocks in memory.
+    --
+    -- @tiling@ /must/ be a valid 'Vulkan.Core10.Enums.ImageTiling.ImageTiling'
     -- value
     tiling :: ImageTiling
   }

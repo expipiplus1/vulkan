@@ -97,21 +97,6 @@ foreign import ccall
 
 -- | vkCreatePrivateDataSlotEXT - Create a slot for private data storage
 --
--- = Parameters
---
--- -   @device@ is the logical device associated with the creation of the
---     object(s) holding the private data slot.
---
--- -   @pCreateInfo@ is a pointer to a 'PrivateDataSlotCreateInfoEXT'
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pPrivateDataSlot@ is a pointer to a
---     'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle in which the
---     resulting private data slot is returned
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -141,7 +126,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'PrivateDataSlotCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
-createPrivateDataSlotEXT :: forall io . MonadIO io => Device -> PrivateDataSlotCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (PrivateDataSlotEXT)
+createPrivateDataSlotEXT :: forall io
+                          . (MonadIO io)
+                         => -- | @device@ is the logical device associated with the creation of the
+                            -- object(s) holding the private data slot.
+                            Device
+                         -> -- | @pCreateInfo@ is a pointer to a 'PrivateDataSlotCreateInfoEXT'
+                            PrivateDataSlotCreateInfoEXT
+                         -> -- | @pAllocator@ controls host memory allocation as described in the
+                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                            -- chapter.
+                            ("allocator" ::: Maybe AllocationCallbacks)
+                         -> io (PrivateDataSlotEXT)
 createPrivateDataSlotEXT device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePrivateDataSlotEXTPtr = pVkCreatePrivateDataSlotEXT (deviceCmds (device :: Device))
   lift $ unless (vkCreatePrivateDataSlotEXTPtr /= nullFunPtr) $
@@ -180,23 +176,23 @@ foreign import ccall
 
 -- | vkDestroyPrivateDataSlotEXT - Destroy a private data slot
 --
--- = Parameters
---
--- -   @device@ is the logical device associated with the creation of the
---     object(s) holding the private data slot.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @privateDataSlot@ is the private data slot to destroy.
---
 -- = See Also
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
-destroyPrivateDataSlotEXT :: forall io . MonadIO io => Device -> PrivateDataSlotEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPrivateDataSlotEXT :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the logical device associated with the creation of the
+                             -- object(s) holding the private data slot.
+                             Device
+                          -> -- | @privateDataSlot@ is the private data slot to destroy.
+                             PrivateDataSlotEXT
+                          -> -- | @pAllocator@ controls host memory allocation as described in the
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                             -- chapter.
+                             ("allocator" ::: Maybe AllocationCallbacks)
+                          -> io ()
 destroyPrivateDataSlotEXT device privateDataSlot allocator = liftIO . evalContT $ do
   let vkDestroyPrivateDataSlotEXTPtr = pVkDestroyPrivateDataSlotEXT (deviceCmds (device :: Device))
   lift $ unless (vkDestroyPrivateDataSlotEXTPtr /= nullFunPtr) $
@@ -218,22 +214,6 @@ foreign import ccall
 
 -- | vkSetPrivateDataEXT - Associate data with a Vulkan object
 --
--- = Parameters
---
--- -   @device@ is the device that created the object.
---
--- -   @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType'
---     specifying the type of object to associate data with.
---
--- -   @objectHandle@ is a handle to the object to associate data with.
---
--- -   @privateDataSlot@ is a handle to a
---     'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location
---     of private data storage.
---
--- -   @data@ is user defined data to associate the object with. This data
---     will be stored at @privateDataSlot@.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -249,7 +229,39 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
-setPrivateDataEXT :: forall io . MonadIO io => Device -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("data" ::: Word64) -> io ()
+setPrivateDataEXT :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the device that created the object.
+                     --
+                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                     Device
+                  -> -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' specifying
+                     -- the type of object to associate data with.
+                     --
+                     -- @objectType@ /must/ be a valid
+                     -- 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
+                     ObjectType
+                  -> -- | @objectHandle@ is a handle to the object to associate data with.
+                     --
+                     -- @objectHandle@ /must/ be @device@ or a child of @device@
+                     --
+                     -- @objectHandle@ /must/ be a valid handle to an object of type
+                     -- @objectType@
+                     ("objectHandle" ::: Word64)
+                  -> -- | @privateDataSlot@ is a handle to a
+                     -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location of
+                     -- private data storage.
+                     --
+                     -- @privateDataSlot@ /must/ be a valid
+                     -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
+                     --
+                     -- @privateDataSlot@ /must/ have been created, allocated, or retrieved from
+                     -- @device@
+                     PrivateDataSlotEXT
+                  -> -- | @data@ is user defined data to associate the object with. This data will
+                     -- be stored at @privateDataSlot@.
+                     ("data" ::: Word64)
+                  -> io ()
 setPrivateDataEXT device objectType objectHandle privateDataSlot data' = liftIO $ do
   let vkSetPrivateDataEXTPtr = pVkSetPrivateDataEXT (deviceCmds (device :: Device))
   unless (vkSetPrivateDataEXTPtr /= nullFunPtr) $
@@ -267,23 +279,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> ObjectType -> Word64 -> PrivateDataSlotEXT -> Ptr Word64 -> IO ()) -> Ptr Device_T -> ObjectType -> Word64 -> PrivateDataSlotEXT -> Ptr Word64 -> IO ()
 
 -- | vkGetPrivateDataEXT - Retrieve data associated with a Vulkan object
---
--- = Parameters
---
--- -   @device@ is the device that created the object
---
--- -   @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType'
---     specifying the type of object data is associated with.
---
--- -   @objectHandle@ is a handle to the object data is associated with.
---
--- -   @privateDataSlot@ is a handle to a
---     'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location
---     of private data pointer storage.
---
--- -   @pData@ is a pointer to specify where user data is returned. @0@
---     will be written in the absence of a previous call to
---     'setPrivateDataEXT' using the object specified by @objectHandle@.
 --
 -- = Description
 --
@@ -303,7 +298,34 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
-getPrivateDataEXT :: forall io . MonadIO io => Device -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> io (("data" ::: Word64))
+getPrivateDataEXT :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the device that created the object
+                     --
+                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                     Device
+                  -> -- | @objectType@ is a 'Vulkan.Core10.Enums.ObjectType.ObjectType' specifying
+                     -- the type of object data is associated with.
+                     --
+                     -- @objectType@ /must/ be 'Vulkan.Core10.Handles.Device' or an object type
+                     -- whose parent is 'Vulkan.Core10.Handles.Device'
+                     --
+                     -- @objectType@ /must/ be a valid
+                     -- 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
+                     ObjectType
+                  -> -- | @objectHandle@ is a handle to the object data is associated with.
+                     ("objectHandle" ::: Word64)
+                  -> -- | @privateDataSlot@ is a handle to a
+                     -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location of
+                     -- private data pointer storage.
+                     --
+                     -- @privateDataSlot@ /must/ be a valid
+                     -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
+                     --
+                     -- @privateDataSlot@ /must/ have been created, allocated, or retrieved from
+                     -- @device@
+                     PrivateDataSlotEXT
+                  -> io (("data" ::: Word64))
 getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . evalContT $ do
   let vkGetPrivateDataEXTPtr = pVkGetPrivateDataEXT (deviceCmds (device :: Device))
   lift $ unless (vkGetPrivateDataEXTPtr /= nullFunPtr) $
@@ -371,7 +393,10 @@ instance Zero DevicePrivateDataCreateInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPrivateDataSlotEXT'
 data PrivateDataSlotCreateInfoEXT = PrivateDataSlotCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is a bitmask of 'PrivateDataSlotCreateFlagsEXT' specifying
+    -- additional parameters of the new private data slot
+    --
+    -- @flags@ /must/ be @0@
     flags :: PrivateDataSlotCreateFlagsEXT }
   deriving (Typeable)
 deriving instance Show PrivateDataSlotCreateInfoEXT

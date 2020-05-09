@@ -62,16 +62,6 @@ foreign import ccall
 -- | vkGetBufferMemoryRequirements - Returns the memory requirements for
 -- specified Vulkan object
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the buffer.
---
--- -   @buffer@ is the buffer to query.
---
--- -   @pMemoryRequirements@ is a pointer to a 'MemoryRequirements'
---     structure in which the memory requirements of the buffer object are
---     returned.
---
 -- == Valid Usage
 --
 -- -   If @buffer@ was created with the
@@ -94,7 +84,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements'
-getBufferMemoryRequirements :: forall io . MonadIO io => Device -> Buffer -> io (MemoryRequirements)
+getBufferMemoryRequirements :: forall io
+                             . (MonadIO io)
+                            => -- | @device@ is the logical device that owns the buffer.
+                               Device
+                            -> -- | @buffer@ is the buffer to query.
+                               Buffer
+                            -> io (MemoryRequirements)
 getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirementsPtr = pVkGetBufferMemoryRequirements (deviceCmds (device :: Device))
   lift $ unless (vkGetBufferMemoryRequirementsPtr /= nullFunPtr) $
@@ -114,20 +110,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Buffer -> DeviceMemory -> DeviceSize -> IO Result) -> Ptr Device_T -> Buffer -> DeviceMemory -> DeviceSize -> IO Result
 
 -- | vkBindBufferMemory - Bind device memory to a buffer object
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the buffer and memory.
---
--- -   @buffer@ is the buffer to be attached to memory.
---
--- -   @memory@ is a 'Vulkan.Core10.Handles.DeviceMemory' object describing
---     the device memory to attach.
---
--- -   @memoryOffset@ is the start offset of the region of @memory@ which
---     is to be bound to the buffer. The number of bytes returned in the
---     'MemoryRequirements'::@size@ member in @memory@, starting from
---     @memoryOffset@ bytes, will be bound to the specified buffer.
 --
 -- = Description
 --
@@ -263,7 +245,21 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-bindBufferMemory :: forall io . MonadIO io => Device -> Buffer -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> io ()
+bindBufferMemory :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that owns the buffer and memory.
+                    Device
+                 -> -- | @buffer@ is the buffer to be attached to memory.
+                    Buffer
+                 -> -- | @memory@ is a 'Vulkan.Core10.Handles.DeviceMemory' object describing the
+                    -- device memory to attach.
+                    DeviceMemory
+                 -> -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
+                    -- be bound to the buffer. The number of bytes returned in the
+                    -- 'MemoryRequirements'::@size@ member in @memory@, starting from
+                    -- @memoryOffset@ bytes, will be bound to the specified buffer.
+                    ("memoryOffset" ::: DeviceSize)
+                 -> io ()
 bindBufferMemory device buffer memory memoryOffset = liftIO $ do
   let vkBindBufferMemoryPtr = pVkBindBufferMemory (deviceCmds (device :: Device))
   unless (vkBindBufferMemoryPtr /= nullFunPtr) $
@@ -282,16 +278,6 @@ foreign import ccall
 
 -- | vkGetImageMemoryRequirements - Returns the memory requirements for
 -- specified Vulkan object
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the image.
---
--- -   @image@ is the image to query.
---
--- -   @pMemoryRequirements@ is a pointer to a 'MemoryRequirements'
---     structure in which the memory requirements of the image object are
---     returned.
 --
 -- == Valid Usage
 --
@@ -319,7 +305,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'MemoryRequirements'
-getImageMemoryRequirements :: forall io . MonadIO io => Device -> Image -> io (MemoryRequirements)
+getImageMemoryRequirements :: forall io
+                            . (MonadIO io)
+                           => -- | @device@ is the logical device that owns the image.
+                              Device
+                           -> -- | @image@ is the image to query.
+                              Image
+                           -> io (MemoryRequirements)
 getImageMemoryRequirements device image = liftIO . evalContT $ do
   let vkGetImageMemoryRequirementsPtr = pVkGetImageMemoryRequirements (deviceCmds (device :: Device))
   lift $ unless (vkGetImageMemoryRequirementsPtr /= nullFunPtr) $
@@ -339,20 +331,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Image -> DeviceMemory -> DeviceSize -> IO Result) -> Ptr Device_T -> Image -> DeviceMemory -> DeviceSize -> IO Result
 
 -- | vkBindImageMemory - Bind device memory to an image object
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the image and memory.
---
--- -   @image@ is the image.
---
--- -   @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object
---     describing the device memory to attach.
---
--- -   @memoryOffset@ is the start offset of the region of @memory@ which
---     is to be bound to the image. The number of bytes returned in the
---     'MemoryRequirements'::@size@ member in @memory@, starting from
---     @memoryOffset@ bytes, will be bound to the specified image.
 --
 -- = Description
 --
@@ -505,7 +483,21 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.BaseType.DeviceSize', 'Vulkan.Core10.Handles.Image'
-bindImageMemory :: forall io . MonadIO io => Device -> Image -> DeviceMemory -> ("memoryOffset" ::: DeviceSize) -> io ()
+bindImageMemory :: forall io
+                 . (MonadIO io)
+                => -- | @device@ is the logical device that owns the image and memory.
+                   Device
+                -> -- | @image@ is the image.
+                   Image
+                -> -- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object describing
+                   -- the device memory to attach.
+                   DeviceMemory
+                -> -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
+                   -- be bound to the image. The number of bytes returned in the
+                   -- 'MemoryRequirements'::@size@ member in @memory@, starting from
+                   -- @memoryOffset@ bytes, will be bound to the specified image.
+                   ("memoryOffset" ::: DeviceSize)
+                -> io ()
 bindImageMemory device image memory memoryOffset = liftIO $ do
   let vkBindImageMemoryPtr = pVkBindImageMemory (deviceCmds (device :: Device))
   unless (vkBindImageMemoryPtr /= nullFunPtr) $

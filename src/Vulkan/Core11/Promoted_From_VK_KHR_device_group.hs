@@ -95,31 +95,36 @@ foreign import ccall
 -- | vkGetDeviceGroupPeerMemoryFeatures - Query supported peer memory
 -- features of a device
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory.
---
--- -   @heapIndex@ is the index of the memory heap from which the memory is
---     allocated.
---
--- -   @localDeviceIndex@ is the device index of the physical device that
---     performs the memory access.
---
--- -   @remoteDeviceIndex@ is the device index of the physical device that
---     the memory is allocated for.
---
--- -   @pPeerMemoryFeatures@ is a pointer to a
---     'Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
---     bitmask indicating which types of memory accesses are supported for
---     the combination of heap, local, and remote devices.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
-getDeviceGroupPeerMemoryFeatures :: forall io . MonadIO io => Device -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
+getDeviceGroupPeerMemoryFeatures :: forall io
+                                  . (MonadIO io)
+                                 => -- | @device@ is the logical device that owns the memory.
+                                    --
+                                    -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                    Device
+                                 -> -- | @heapIndex@ is the index of the memory heap from which the memory is
+                                    -- allocated.
+                                    --
+                                    -- @heapIndex@ /must/ be less than @memoryHeapCount@
+                                    ("heapIndex" ::: Word32)
+                                 -> -- | @localDeviceIndex@ is the device index of the physical device that
+                                    -- performs the memory access.
+                                    --
+                                    -- @localDeviceIndex@ /must/ be a valid device index
+                                    --
+                                    -- @localDeviceIndex@ /must/ not equal @remoteDeviceIndex@
+                                    ("localDeviceIndex" ::: Word32)
+                                 -> -- | @remoteDeviceIndex@ is the device index of the physical device that the
+                                    -- memory is allocated for.
+                                    --
+                                    -- @remoteDeviceIndex@ /must/ be a valid device index
+                                    ("remoteDeviceIndex" ::: Word32)
+                                 -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
 getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = liftIO . evalContT $ do
   let vkGetDeviceGroupPeerMemoryFeaturesPtr = pVkGetDeviceGroupPeerMemoryFeatures (deviceCmds (device :: Device))
   lift $ unless (vkGetDeviceGroupPeerMemoryFeaturesPtr /= nullFunPtr) $
@@ -139,13 +144,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> IO ()
 
 -- | vkCmdSetDeviceMask - Modify device mask of a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is command buffer whose current device mask is
---     modified.
---
--- -   @deviceMask@ is the new value of the current device mask.
 --
 -- = Description
 --
@@ -207,7 +205,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDeviceMask :: forall io . MonadIO io => CommandBuffer -> ("deviceMask" ::: Word32) -> io ()
+cmdSetDeviceMask :: forall io
+                  . (MonadIO io)
+                 => -- | @commandBuffer@ is command buffer whose current device mask is modified.
+                    CommandBuffer
+                 -> -- | @deviceMask@ is the new value of the current device mask.
+                    ("deviceMask" ::: Word32)
+                 -> io ()
 cmdSetDeviceMask commandBuffer deviceMask = liftIO $ do
   let vkCmdSetDeviceMaskPtr = pVkCmdSetDeviceMask (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetDeviceMaskPtr /= nullFunPtr) $
@@ -225,29 +229,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdDispatchBase - Dispatch compute work items
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @baseGroupX@ is the start value for the X component of
---     @WorkgroupId@.
---
--- -   @baseGroupY@ is the start value for the Y component of
---     @WorkgroupId@.
---
--- -   @baseGroupZ@ is the start value for the Z component of
---     @WorkgroupId@.
---
--- -   @groupCountX@ is the number of local workgroups to dispatch in the X
---     dimension.
---
--- -   @groupCountY@ is the number of local workgroups to dispatch in the Y
---     dimension.
---
--- -   @groupCountZ@ is the number of local workgroups to dispatch in the Z
---     dimension.
 --
 -- = Description
 --
@@ -455,7 +436,27 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdDispatchBase :: forall io . MonadIO io => CommandBuffer -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> io ()
+cmdDispatchBase :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer into which the command will be
+                   -- recorded.
+                   CommandBuffer
+                -> -- | @baseGroupX@ is the start value for the X component of @WorkgroupId@.
+                   ("baseGroupX" ::: Word32)
+                -> -- | @baseGroupY@ is the start value for the Y component of @WorkgroupId@.
+                   ("baseGroupY" ::: Word32)
+                -> -- | @baseGroupZ@ is the start value for the Z component of @WorkgroupId@.
+                   ("baseGroupZ" ::: Word32)
+                -> -- | @groupCountX@ is the number of local workgroups to dispatch in the X
+                   -- dimension.
+                   ("groupCountX" ::: Word32)
+                -> -- | @groupCountY@ is the number of local workgroups to dispatch in the Y
+                   -- dimension.
+                   ("groupCountY" ::: Word32)
+                -> -- | @groupCountZ@ is the number of local workgroups to dispatch in the Z
+                   -- dimension.
+                   ("groupCountZ" ::: Word32)
+                -> io ()
 cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = liftIO $ do
   let vkCmdDispatchBasePtr = pVkCmdDispatchBase (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDispatchBasePtr /= nullFunPtr) $
@@ -695,7 +696,11 @@ instance Zero DeviceGroupRenderPassBeginInfo where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupCommandBufferBeginInfo = DeviceGroupCommandBufferBeginInfo
-  { -- | @deviceMask@ /must/ not be zero
+  { -- | @deviceMask@ is the initial value of the command buffer’s device mask.
+    --
+    -- @deviceMask@ /must/ be a valid device mask value
+    --
+    -- @deviceMask@ /must/ not be zero
     deviceMask :: Word32 }
   deriving (Typeable)
 deriving instance Show DeviceGroupCommandBufferBeginInfo

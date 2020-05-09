@@ -76,15 +76,6 @@ foreign import ccall
 -- | vkGetRefreshCycleDurationGOOGLE - Obtain the RC duration of the PE’s
 -- display
 --
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the swapchain to obtain the refresh duration for.
---
--- -   @pDisplayTimingProperties@ is a pointer to a
---     'RefreshCycleDurationGOOGLE' structure.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -119,7 +110,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'RefreshCycleDurationGOOGLE',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-getRefreshCycleDurationGOOGLE :: forall io . MonadIO io => Device -> SwapchainKHR -> io (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
+getRefreshCycleDurationGOOGLE :: forall io
+                               . (MonadIO io)
+                              => -- | @device@ is the device associated with @swapchain@.
+                                 Device
+                              -> -- | @swapchain@ is the swapchain to obtain the refresh duration for.
+                                 SwapchainKHR
+                              -> io (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
 getRefreshCycleDurationGOOGLE device swapchain = liftIO . evalContT $ do
   let vkGetRefreshCycleDurationGOOGLEPtr = pVkGetRefreshCycleDurationGOOGLE (deviceCmds (device :: Device))
   lift $ unless (vkGetRefreshCycleDurationGOOGLEPtr /= nullFunPtr) $
@@ -141,20 +138,6 @@ foreign import ccall
 
 -- | vkGetPastPresentationTimingGOOGLE - Obtain timing of a
 -- previously-presented image
---
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the swapchain to obtain presentation timing
---     information duration for.
---
--- -   @pPresentationTimingCount@ is a pointer to an integer related to the
---     number of 'PastPresentationTimingGOOGLE' structures to query, as
---     described below.
---
--- -   @pPresentationTimings@ is either @NULL@ or a pointer to an array of
---     'PastPresentationTimingGOOGLE' structures.
 --
 -- = Description
 --

@@ -59,15 +59,6 @@ foreign import ccall
 
 -- | vkSetLocalDimmingAMD - Set Local Dimming
 --
--- = Parameters
---
--- -   @device@ is the device associated with @swapChain@.
---
--- -   @swapChain@ handle to enable local dimming.
---
--- -   @localDimmingEnable@ specifies whether local dimming is enabled for
---     the swapchain.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -89,7 +80,16 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-setLocalDimmingAMD :: forall io . MonadIO io => Device -> SwapchainKHR -> ("localDimmingEnable" ::: Bool) -> io ()
+setLocalDimmingAMD :: forall io
+                    . (MonadIO io)
+                   => -- | @device@ is the device associated with @swapChain@.
+                      Device
+                   -> -- | @swapChain@ handle to enable local dimming.
+                      SwapchainKHR
+                   -> -- | @localDimmingEnable@ specifies whether local dimming is enabled for the
+                      -- swapchain.
+                      ("localDimmingEnable" ::: Bool)
+                   -> io ()
 setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
   let vkSetLocalDimmingAMDPtr = pVkSetLocalDimmingAMD (deviceCmds (device :: Device))
   unless (vkSetLocalDimmingAMDPtr /= nullFunPtr) $

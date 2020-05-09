@@ -50,7 +50,15 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
-  { -- | @handleTypes@ /must/ not be @0@
+  { -- | @handleTypes@ is a bitmask of
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- specifying one or more external memory handle types.
+    --
+    -- @handleTypes@ /must/ be a valid combination of
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- values
+    --
+    -- @handleTypes@ /must/ not be @0@
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable)
 deriving instance Show ExternalMemoryImageCreateInfo
@@ -105,7 +113,11 @@ instance Zero ExternalMemoryImageCreateInfo where
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
-  { -- | @handleTypes@ /must/ be a valid combination of
+  { -- | @handleTypes@ is a bitmask of
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- specifying one or more external memory handle types.
+    --
+    -- @handleTypes@ /must/ be a valid combination of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlags }

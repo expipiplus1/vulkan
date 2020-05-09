@@ -124,20 +124,6 @@ foreign import ccall
 
 -- | vkCreateRenderPass2 - Create a new render pass object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the render pass.
---
--- -   @pCreateInfo@ is a pointer to a 'RenderPassCreateInfo2' structure
---     describing the parameters of the render pass.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pRenderPass@ is a pointer to a 'Vulkan.Core10.Handles.RenderPass'
---     handle in which the resulting render pass object is returned.
---
 -- = Description
 --
 -- This command is functionally identical to
@@ -176,7 +162,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass',
 -- 'RenderPassCreateInfo2'
-createRenderPass2 :: forall a io . (Extendss RenderPassCreateInfo2 a, PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo2 a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
+createRenderPass2 :: forall a io
+                   . (Extendss RenderPassCreateInfo2 a, PokeChain a, MonadIO io)
+                  => -- | @device@ is the logical device that creates the render pass.
+                     Device
+                  -> -- | @pCreateInfo@ is a pointer to a 'RenderPassCreateInfo2' structure
+                     -- describing the parameters of the render pass.
+                     RenderPassCreateInfo2 a
+                  -> -- | @pAllocator@ controls host memory allocation as described in the
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- chapter.
+                     ("allocator" ::: Maybe AllocationCallbacks)
+                  -> io (RenderPass)
 createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (deviceCmds (device :: Device))
   lift $ unless (vkCreateRenderPass2Ptr /= nullFunPtr) $
@@ -201,20 +198,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> Ptr SubpassBeginInfo -> IO ()) -> Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> Ptr SubpassBeginInfo -> IO ()
 
 -- | vkCmdBeginRenderPass2 - Begin a new render pass
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer in which to record the
---     command.
---
--- -   @pRenderPassBegin@ is a pointer to a
---     'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo' structure
---     specifying the render pass to begin an instance of, and the
---     framebuffer the instance uses.
---
--- -   @pSubpassBeginInfo@ is a pointer to a 'SubpassBeginInfo' structure
---     containing information about the subpass which is about to begin
---     rendering.
 --
 -- = Description
 --
@@ -386,7 +369,20 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'SubpassBeginInfo'
-cmdBeginRenderPass2 :: forall a io . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> io ()
+cmdBeginRenderPass2 :: forall a io
+                     . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io)
+                    => -- | @commandBuffer@ is the command buffer in which to record the command.
+                       CommandBuffer
+                    -> -- | @pRenderPassBegin@ is a pointer to a
+                       -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo' structure
+                       -- specifying the render pass to begin an instance of, and the framebuffer
+                       -- the instance uses.
+                       RenderPassBeginInfo a
+                    -> -- | @pSubpassBeginInfo@ is a pointer to a 'SubpassBeginInfo' structure
+                       -- containing information about the subpass which is about to begin
+                       -- rendering.
+                       SubpassBeginInfo
+                    -> io ()
 cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . evalContT $ do
   let vkCmdBeginRenderPass2Ptr = pVkCmdBeginRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBeginRenderPass2Ptr /= nullFunPtr) $
@@ -415,18 +411,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr SubpassBeginInfo -> Ptr SubpassEndInfo -> IO ()) -> Ptr CommandBuffer_T -> Ptr SubpassBeginInfo -> Ptr SubpassEndInfo -> IO ()
 
 -- | vkCmdNextSubpass2 - Transition to the next subpass of a render pass
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer in which to record the
---     command.
---
--- -   @pSubpassBeginInfo@ is a pointer to a 'SubpassBeginInfo' structure
---     containing information about the subpass which is about to begin
---     rendering.
---
--- -   @pSubpassEndInfo@ is a pointer to a 'SubpassEndInfo' structure
---     containing information about how the previous subpass will be ended.
 --
 -- = Description
 --
@@ -486,7 +470,18 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SubpassBeginInfo',
 -- 'SubpassEndInfo'
-cmdNextSubpass2 :: forall io . MonadIO io => CommandBuffer -> SubpassBeginInfo -> SubpassEndInfo -> io ()
+cmdNextSubpass2 :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer in which to record the command.
+                   CommandBuffer
+                -> -- | @pSubpassBeginInfo@ is a pointer to a 'SubpassBeginInfo' structure
+                   -- containing information about the subpass which is about to begin
+                   -- rendering.
+                   SubpassBeginInfo
+                -> -- | @pSubpassEndInfo@ is a pointer to a 'SubpassEndInfo' structure
+                   -- containing information about how the previous subpass will be ended.
+                   SubpassEndInfo
+                -> io ()
 cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalContT $ do
   let vkCmdNextSubpass2Ptr = pVkCmdNextSubpass2 (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdNextSubpass2Ptr /= nullFunPtr) $
@@ -506,14 +501,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr SubpassEndInfo -> IO ()) -> Ptr CommandBuffer_T -> Ptr SubpassEndInfo -> IO ()
 
 -- | vkCmdEndRenderPass2 - End the current render pass
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer in which to end the current
---     render pass instance.
---
--- -   @pSubpassEndInfo@ is a pointer to a 'SubpassEndInfo' structure
---     containing information about how the previous subpass will be ended.
 --
 -- = Description
 --
@@ -568,7 +555,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SubpassEndInfo'
-cmdEndRenderPass2 :: forall io . MonadIO io => CommandBuffer -> SubpassEndInfo -> io ()
+cmdEndRenderPass2 :: forall io
+                   . (MonadIO io)
+                  => -- | @commandBuffer@ is the command buffer in which to end the current render
+                     -- pass instance.
+                     CommandBuffer
+                  -> -- | @pSubpassEndInfo@ is a pointer to a 'SubpassEndInfo' structure
+                     -- containing information about how the previous subpass will be ended.
+                     SubpassEndInfo
+                  -> io ()
 cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
   let vkCmdEndRenderPass2Ptr = pVkCmdEndRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdEndRenderPass2Ptr /= nullFunPtr) $
@@ -1855,7 +1850,10 @@ instance es ~ '[] => Zero (RenderPassCreateInfo2 es) where
 -- 'cmdNextSubpass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.cmdNextSubpass2KHR'
 data SubpassBeginInfo = SubpassBeginInfo
-  { -- | @contents@ /must/ be a valid
+  { -- | @contents@ is a 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
+    -- value specifying how the commands in the next subpass will be provided.
+    --
+    -- @contents@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents' value
     contents :: SubpassContents }
   deriving (Typeable)

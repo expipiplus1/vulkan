@@ -60,27 +60,28 @@ foreign import ccall
 -- | vkGetPhysicalDeviceExternalFenceProperties - Function for querying
 -- external fence handle capabilities.
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     fence capabilities.
---
--- -   @pExternalFenceInfo@ is a pointer to a
---     'PhysicalDeviceExternalFenceInfo' structure describing the
---     parameters that would be consumed by
---     'Vulkan.Core10.Fence.createFence'.
---
--- -   @pExternalFenceProperties@ is a pointer to a
---     'ExternalFenceProperties' structure in which capabilities are
---     returned.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'ExternalFenceProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalFenceInfo'
-getPhysicalDeviceExternalFenceProperties :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceExternalFenceInfo -> io (ExternalFenceProperties)
+getPhysicalDeviceExternalFenceProperties :: forall io
+                                          . (MonadIO io)
+                                         => -- | @physicalDevice@ is the physical device from which to query the fence
+                                            -- capabilities.
+                                            --
+                                            -- @physicalDevice@ /must/ be a valid
+                                            -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                            PhysicalDevice
+                                         -> -- | @pExternalFenceInfo@ is a pointer to a 'PhysicalDeviceExternalFenceInfo'
+                                            -- structure describing the parameters that would be consumed by
+                                            -- 'Vulkan.Core10.Fence.createFence'.
+                                            --
+                                            -- @pExternalFenceInfo@ /must/ be a valid pointer to a valid
+                                            -- 'PhysicalDeviceExternalFenceInfo' structure
+                                            PhysicalDeviceExternalFenceInfo
+                                         -> io (ExternalFenceProperties)
 getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalFencePropertiesPtr = pVkGetPhysicalDeviceExternalFenceProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceExternalFencePropertiesPtr /= nullFunPtr) $
@@ -118,7 +119,12 @@ getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = lift
 -- 'getPhysicalDeviceExternalFenceProperties',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_capabilities.getPhysicalDeviceExternalFencePropertiesKHR'
 data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
-  { -- | @handleType@ /must/ be a valid
+  { -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value indicating an external fence handle type for which capabilities
+    -- will be returned.
+    --
+    -- @handleType@ /must/ be a valid
     -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
     -- value
     handleType :: ExternalFenceHandleTypeFlagBits }

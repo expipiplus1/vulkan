@@ -50,7 +50,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- 'PipelineCompilerControlFlagsAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCompilerControlCreateInfoAMD = PipelineCompilerControlCreateInfoAMD
-  { -- | @compilerControlFlags@ /must/ be @0@
+  { -- | @compilerControlFlags@ is a bitmask of
+    -- 'PipelineCompilerControlFlagBitsAMD' affecting how the pipeline will be
+    -- compiled.
+    --
+    -- @compilerControlFlags@ /must/ be @0@
     compilerControlFlags :: PipelineCompilerControlFlagsAMD }
   deriving (Typeable)
 deriving instance Show PipelineCompilerControlCreateInfoAMD

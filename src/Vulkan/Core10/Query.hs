@@ -83,20 +83,6 @@ foreign import ccall
 
 -- | vkCreateQueryPool - Create a new query pool object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the query pool.
---
--- -   @pCreateInfo@ is a pointer to a 'QueryPoolCreateInfo' structure
---     containing the number and type of queries to be managed by the pool.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pQueryPool@ is a pointer to a 'Vulkan.Core10.Handles.QueryPool'
---     handle in which the resulting query pool object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -128,7 +114,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool',
 -- 'QueryPoolCreateInfo'
-createQueryPool :: forall a io . (Extendss QueryPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> QueryPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (QueryPool)
+createQueryPool :: forall a io
+                 . (Extendss QueryPoolCreateInfo a, PokeChain a, MonadIO io)
+                => -- | @device@ is the logical device that creates the query pool.
+                   Device
+                -> -- | @pCreateInfo@ is a pointer to a 'QueryPoolCreateInfo' structure
+                   -- containing the number and type of queries to be managed by the pool.
+                   QueryPoolCreateInfo a
+                -> -- | @pAllocator@ controls host memory allocation as described in the
+                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- chapter.
+                   ("allocator" ::: Maybe AllocationCallbacks)
+                -> io (QueryPool)
 createQueryPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateQueryPoolPtr = pVkCreateQueryPool (deviceCmds (device :: Device))
   lift $ unless (vkCreateQueryPoolPtr /= nullFunPtr) $
@@ -167,16 +164,6 @@ foreign import ccall
 
 -- | vkDestroyQueryPool - Destroy a query pool object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the query pool.
---
--- -   @queryPool@ is the query pool to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @queryPool@ /must/ have
@@ -212,7 +199,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'
-destroyQueryPool :: forall io . MonadIO io => Device -> QueryPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyQueryPool :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that destroys the query pool.
+                    Device
+                 -> -- | @queryPool@ is the query pool to destroy.
+                    QueryPool
+                 -> -- | @pAllocator@ controls host memory allocation as described in the
+                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- chapter.
+                    ("allocator" ::: Maybe AllocationCallbacks)
+                 -> io ()
 destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
   let vkDestroyQueryPoolPtr = pVkDestroyQueryPool (deviceCmds (device :: Device))
   lift $ unless (vkDestroyQueryPoolPtr /= nullFunPtr) $
@@ -234,29 +231,6 @@ foreign import ccall
 
 -- | vkGetQueryPoolResults - Copy results of queries in a query pool to a
 -- host memory region
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the query pool.
---
--- -   @queryPool@ is the query pool managing the queries containing the
---     desired results.
---
--- -   @firstQuery@ is the initial query index.
---
--- -   @queryCount@ is the number of queries to read.
---
--- -   @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
---
--- -   @pData@ is a pointer to a user-allocated buffer where the results
---     will be written
---
--- -   @stride@ is the stride in bytes between results for individual
---     queries within @pData@.
---
--- -   @flags@ is a bitmask of
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits'
---     specifying how and when results are returned.
 --
 -- = Description
 --
@@ -439,7 +413,30 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.BaseType.DeviceSize',
 -- 'Vulkan.Core10.Handles.QueryPool',
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
-getQueryPoolResults :: forall io . MonadIO io => Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> io (Result)
+getQueryPoolResults :: forall io
+                     . (MonadIO io)
+                    => -- | @device@ is the logical device that owns the query pool.
+                       Device
+                    -> -- | @queryPool@ is the query pool managing the queries containing the
+                       -- desired results.
+                       QueryPool
+                    -> -- | @firstQuery@ is the initial query index.
+                       ("firstQuery" ::: Word32)
+                    -> -- | @queryCount@ is the number of queries to read.
+                       ("queryCount" ::: Word32)
+                    -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
+                       ("dataSize" ::: Word64)
+                    -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
+                       -- be written
+                       ("data" ::: Ptr ())
+                    -> -- | @stride@ is the stride in bytes between results for individual queries
+                       -- within @pData@.
+                       ("stride" ::: DeviceSize)
+                    -> -- | @flags@ is a bitmask of
+                       -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits' specifying
+                       -- how and when results are returned.
+                       QueryResultFlags
+                    -> io (Result)
 getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = liftIO $ do
   let vkGetQueryPoolResultsPtr = pVkGetQueryPoolResults (deviceCmds (device :: Device))
   unless (vkGetQueryPoolResultsPtr /= nullFunPtr) $

@@ -100,20 +100,6 @@ foreign import ccall
 
 -- | vkCreateImage - Create a new image object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the image.
---
--- -   @pCreateInfo@ is a pointer to a 'ImageCreateInfo' structure
---     containing parameters to be used to create the image.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pImage@ is a pointer to a 'Vulkan.Core10.Handles.Image' handle in
---     which the resulting image object is returned.
---
 -- == Valid Usage
 --
 -- -   If the @flags@ member of @pCreateInfo@ includes
@@ -154,7 +140,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageCreateInfo'
-createImage :: forall a io . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Image)
+createImage :: forall a io
+             . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io)
+            => -- | @device@ is the logical device that creates the image.
+               Device
+            -> -- | @pCreateInfo@ is a pointer to a 'ImageCreateInfo' structure containing
+               -- parameters to be used to create the image.
+               ImageCreateInfo a
+            -> -- | @pAllocator@ controls host memory allocation as described in the
+               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- chapter.
+               ("allocator" ::: Maybe AllocationCallbacks)
+            -> io (Image)
 createImage device createInfo allocator = liftIO . evalContT $ do
   let vkCreateImagePtr = pVkCreateImage (deviceCmds (device :: Device))
   lift $ unless (vkCreateImagePtr /= nullFunPtr) $
@@ -193,16 +190,6 @@ foreign import ccall
 
 -- | vkDestroyImage - Destroy an image object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the image.
---
--- -   @image@ is the image to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @image@, either directly or via
@@ -237,7 +224,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image'
-destroyImage :: forall io . MonadIO io => Device -> Image -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyImage :: forall io
+              . (MonadIO io)
+             => -- | @device@ is the logical device that destroys the image.
+                Device
+             -> -- | @image@ is the image to destroy.
+                Image
+             -> -- | @pAllocator@ controls host memory allocation as described in the
+                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- chapter.
+                ("allocator" ::: Maybe AllocationCallbacks)
+             -> io ()
 destroyImage device image allocator = liftIO . evalContT $ do
   let vkDestroyImagePtr = pVkDestroyImage (deviceCmds (device :: Device))
   lift $ unless (vkDestroyImagePtr /= nullFunPtr) $
@@ -259,18 +256,6 @@ foreign import ccall
 
 -- | vkGetImageSubresourceLayout - Retrieve information about an image
 -- subresource
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the image.
---
--- -   @image@ is the image whose layout is being queried.
---
--- -   @pSubresource@ is a pointer to a 'ImageSubresource' structure
---     selecting a specific image for the image subresource.
---
--- -   @pLayout@ is a pointer to a 'SubresourceLayout' structure in which
---     the layout is returned.
 --
 -- = Description
 --
@@ -371,7 +356,16 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageSubresource', 'SubresourceLayout'
-getImageSubresourceLayout :: forall io . MonadIO io => Device -> Image -> ImageSubresource -> io (SubresourceLayout)
+getImageSubresourceLayout :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the logical device that owns the image.
+                             Device
+                          -> -- | @image@ is the image whose layout is being queried.
+                             Image
+                          -> -- | @pSubresource@ is a pointer to a 'ImageSubresource' structure selecting
+                             -- a specific image for the image subresource.
+                             ImageSubresource
+                          -> io (SubresourceLayout)
 getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
   let vkGetImageSubresourceLayoutPtr = pVkGetImageSubresourceLayout (deviceCmds (device :: Device))
   lift $ unless (vkGetImageSubresourceLayoutPtr /= nullFunPtr) $
@@ -394,7 +388,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
 -- 'getImageSubresourceLayout'
 data ImageSubresource = ImageSubresource
-  { -- | @aspectMask@ /must/ not be @0@
+  { -- | @aspectMask@ is a
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' selecting the
+    -- image /aspect/.
+    --
+    -- @aspectMask@ /must/ be a valid combination of
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
+    --
+    -- @aspectMask@ /must/ not be @0@
     aspectMask :: ImageAspectFlags
   , -- | @mipLevel@ selects the mipmap level.
     mipLevel :: Word32

@@ -224,12 +224,23 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- 'PipelineRasterizationConservativeStateCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterizationConservativeStateCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: PipelineRasterizationConservativeStateCreateFlagsEXT
-  , -- | @conservativeRasterizationMode@ /must/ be a valid
+  , -- | @conservativeRasterizationMode@ is the conservative rasterization mode
+    -- to use.
+    --
+    -- @conservativeRasterizationMode@ /must/ be a valid
     -- 'ConservativeRasterizationModeEXT' value
     conservativeRasterizationMode :: ConservativeRasterizationModeEXT
-  , -- | @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@ to
+  , -- | @extraPrimitiveOverestimationSize@ is the extra size in pixels to
+    -- increase the generating primitive during conservative rasterization at
+    -- each of its edges in @X@ and @Y@ equally in screen space beyond the base
+    -- overestimation specified in
+    -- 'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@primitiveOverestimationSize@.
+    --
+    -- @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@ to
     -- 'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@maxExtraPrimitiveOverestimationSize@
     -- inclusive
     extraPrimitiveOverestimationSize :: Float

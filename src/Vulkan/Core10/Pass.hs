@@ -112,20 +112,6 @@ foreign import ccall
 
 -- | vkCreateFramebuffer - Create a new framebuffer object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the framebuffer.
---
--- -   @pCreateInfo@ is a pointer to a 'FramebufferCreateInfo' structure
---     describing additional information about framebuffer creation.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pFramebuffer@ is a pointer to a 'Vulkan.Core10.Handles.Framebuffer'
---     handle in which the resulting framebuffer object is returned.
---
 -- == Valid Usage
 --
 -- -   If @pCreateInfo->flags@ does not include
@@ -164,7 +150,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Framebuffer',
 -- 'FramebufferCreateInfo'
-createFramebuffer :: forall a io . (Extendss FramebufferCreateInfo a, PokeChain a, MonadIO io) => Device -> FramebufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Framebuffer)
+createFramebuffer :: forall a io
+                   . (Extendss FramebufferCreateInfo a, PokeChain a, MonadIO io)
+                  => -- | @device@ is the logical device that creates the framebuffer.
+                     Device
+                  -> -- | @pCreateInfo@ is a pointer to a 'FramebufferCreateInfo' structure
+                     -- describing additional information about framebuffer creation.
+                     FramebufferCreateInfo a
+                  -> -- | @pAllocator@ controls host memory allocation as described in the
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- chapter.
+                     ("allocator" ::: Maybe AllocationCallbacks)
+                  -> io (Framebuffer)
 createFramebuffer device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFramebufferPtr = pVkCreateFramebuffer (deviceCmds (device :: Device))
   lift $ unless (vkCreateFramebufferPtr /= nullFunPtr) $
@@ -203,16 +200,6 @@ foreign import ccall
 
 -- | vkDestroyFramebuffer - Destroy a framebuffer object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the framebuffer.
---
--- -   @framebuffer@ is the handle of the framebuffer to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @framebuffer@ /must/ have
@@ -249,7 +236,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Framebuffer'
-destroyFramebuffer :: forall io . MonadIO io => Device -> Framebuffer -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyFramebuffer :: forall io
+                    . (MonadIO io)
+                   => -- | @device@ is the logical device that destroys the framebuffer.
+                      Device
+                   -> -- | @framebuffer@ is the handle of the framebuffer to destroy.
+                      Framebuffer
+                   -> -- | @pAllocator@ controls host memory allocation as described in the
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- chapter.
+                      ("allocator" ::: Maybe AllocationCallbacks)
+                   -> io ()
 destroyFramebuffer device framebuffer allocator = liftIO . evalContT $ do
   let vkDestroyFramebufferPtr = pVkDestroyFramebuffer (deviceCmds (device :: Device))
   lift $ unless (vkDestroyFramebufferPtr /= nullFunPtr) $
@@ -270,20 +267,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr (RenderPassCreateInfo a) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result) -> Ptr Device_T -> Ptr (RenderPassCreateInfo a) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
 
 -- | vkCreateRenderPass - Create a new render pass object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the render pass.
---
--- -   @pCreateInfo@ is a pointer to a 'RenderPassCreateInfo' structure
---     describing the parameters of the render pass.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pRenderPass@ is a pointer to a 'Vulkan.Core10.Handles.RenderPass'
---     handle in which the resulting render pass object is returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -316,7 +299,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass',
 -- 'RenderPassCreateInfo'
-createRenderPass :: forall a io . (Extendss RenderPassCreateInfo a, PokeChain a, MonadIO io) => Device -> RenderPassCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (RenderPass)
+createRenderPass :: forall a io
+                  . (Extendss RenderPassCreateInfo a, PokeChain a, MonadIO io)
+                 => -- | @device@ is the logical device that creates the render pass.
+                    Device
+                 -> -- | @pCreateInfo@ is a pointer to a 'RenderPassCreateInfo' structure
+                    -- describing the parameters of the render pass.
+                    RenderPassCreateInfo a
+                 -> -- | @pAllocator@ controls host memory allocation as described in the
+                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- chapter.
+                    ("allocator" ::: Maybe AllocationCallbacks)
+                 -> io (RenderPass)
 createRenderPass device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPassPtr = pVkCreateRenderPass (deviceCmds (device :: Device))
   lift $ unless (vkCreateRenderPassPtr /= nullFunPtr) $
@@ -355,16 +349,6 @@ foreign import ccall
 
 -- | vkDestroyRenderPass - Destroy a render pass object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the render pass.
---
--- -   @renderPass@ is the handle of the render pass to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @renderPass@ /must/ have
@@ -401,7 +385,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass'
-destroyRenderPass :: forall io . MonadIO io => Device -> RenderPass -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyRenderPass :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device that destroys the render pass.
+                     Device
+                  -> -- | @renderPass@ is the handle of the render pass to destroy.
+                     RenderPass
+                  -> -- | @pAllocator@ controls host memory allocation as described in the
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- chapter.
+                     ("allocator" ::: Maybe AllocationCallbacks)
+                  -> io ()
 destroyRenderPass device renderPass allocator = liftIO . evalContT $ do
   let vkDestroyRenderPassPtr = pVkDestroyRenderPass (deviceCmds (device :: Device))
   lift $ unless (vkDestroyRenderPassPtr /= nullFunPtr) $
@@ -423,16 +417,6 @@ foreign import ccall
 
 -- | vkGetRenderAreaGranularity - Returns the granularity for optimal render
 -- area
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the render pass.
---
--- -   @renderPass@ is a handle to a render pass.
---
--- -   @pGranularity@ is a pointer to a
---     'Vulkan.Core10.SharedTypes.Extent2D' structure in which the
---     granularity is returned.
 --
 -- = Description
 --
@@ -480,7 +464,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.SharedTypes.Extent2D',
 -- 'Vulkan.Core10.Handles.RenderPass'
-getRenderAreaGranularity :: forall io . MonadIO io => Device -> RenderPass -> io (("granularity" ::: Extent2D))
+getRenderAreaGranularity :: forall io
+                          . (MonadIO io)
+                         => -- | @device@ is the logical device that owns the render pass.
+                            Device
+                         -> -- | @renderPass@ is a handle to a render pass.
+                            RenderPass
+                         -> io (("granularity" ::: Extent2D))
 getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
   let vkGetRenderAreaGranularityPtr = pVkGetRenderAreaGranularity (deviceCmds (device :: Device))
   lift $ unless (vkGetRenderAreaGranularityPtr /= nullFunPtr) $

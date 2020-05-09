@@ -64,21 +64,6 @@ foreign import ccall
 -- | vkCmdSetExclusiveScissorNV - Set the dynamic exclusive scissor
 -- rectangles on a command buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @firstExclusiveScissor@ is the index of the first exclusive scissor
---     rectangle whose state is updated by the command.
---
--- -   @exclusiveScissorCount@ is the number of exclusive scissor
---     rectangles updated by the command.
---
--- -   @pExclusiveScissors@ is a pointer to an array of
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining
---     exclusive scissor rectangles.
---
 -- = Description
 --
 -- The scissor rectangles taken from element i of @pExclusiveScissors@
@@ -163,7 +148,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
-cmdSetExclusiveScissorNV :: forall io . MonadIO io => CommandBuffer -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissors" ::: Vector Rect2D) -> io ()
+cmdSetExclusiveScissorNV :: forall io
+                          . (MonadIO io)
+                         => -- | @commandBuffer@ is the command buffer into which the command will be
+                            -- recorded.
+                            CommandBuffer
+                         -> -- | @firstExclusiveScissor@ is the index of the first exclusive scissor
+                            -- rectangle whose state is updated by the command.
+                            ("firstExclusiveScissor" ::: Word32)
+                         -> -- | @pExclusiveScissors@ is a pointer to an array of
+                            -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining
+                            -- exclusive scissor rectangles.
+                            ("exclusiveScissors" ::: Vector Rect2D)
+                         -> io ()
 cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
   let vkCmdSetExclusiveScissorNVPtr = pVkCmdSetExclusiveScissorNV (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetExclusiveScissorNVPtr /= nullFunPtr) $

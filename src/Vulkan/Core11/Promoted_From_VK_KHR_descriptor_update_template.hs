@@ -90,25 +90,6 @@ foreign import ccall
 -- | vkCreateDescriptorUpdateTemplate - Create a new descriptor update
 -- template
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the descriptor update
---     template.
---
--- -   @pCreateInfo@ is a pointer to a 'DescriptorUpdateTemplateCreateInfo'
---     structure specifying the set of descriptors to update with a single
---     call to
---     'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR'
---     or 'updateDescriptorSetWithTemplate'.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pDescriptorUpdateTemplate@ is a pointer to a
---     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle in which the
---     resulting descriptor update template object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -140,7 +121,22 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'DescriptorUpdateTemplateCreateInfo', 'Vulkan.Core10.Handles.Device'
-createDescriptorUpdateTemplate :: forall io . MonadIO io => Device -> DescriptorUpdateTemplateCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorUpdateTemplate)
+createDescriptorUpdateTemplate :: forall io
+                                . (MonadIO io)
+                               => -- | @device@ is the logical device that creates the descriptor update
+                                  -- template.
+                                  Device
+                               -> -- | @pCreateInfo@ is a pointer to a 'DescriptorUpdateTemplateCreateInfo'
+                                  -- structure specifying the set of descriptors to update with a single call
+                                  -- to
+                                  -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetWithTemplateKHR'
+                                  -- or 'updateDescriptorSetWithTemplate'.
+                                  DescriptorUpdateTemplateCreateInfo
+                               -> -- | @pAllocator@ controls host memory allocation as described in the
+                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- chapter.
+                                  ("allocator" ::: Maybe AllocationCallbacks)
+                               -> io (DescriptorUpdateTemplate)
 createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorUpdateTemplatePtr = pVkCreateDescriptorUpdateTemplate (deviceCmds (device :: Device))
   lift $ unless (vkCreateDescriptorUpdateTemplatePtr /= nullFunPtr) $
@@ -180,18 +176,6 @@ foreign import ccall
 -- | vkDestroyDescriptorUpdateTemplate - Destroy a descriptor update template
 -- object
 --
--- = Parameters
---
--- -   @device@ is the logical device that has been used to create the
---     descriptor update template
---
--- -   @descriptorUpdateTemplate@ is the descriptor update template to
---     destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -228,7 +212,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Vulkan.Core10.Handles.Device'
-destroyDescriptorUpdateTemplate :: forall io . MonadIO io => Device -> DescriptorUpdateTemplate -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorUpdateTemplate :: forall io
+                                 . (MonadIO io)
+                                => -- | @device@ is the logical device that has been used to create the
+                                   -- descriptor update template
+                                   Device
+                                -> -- | @descriptorUpdateTemplate@ is the descriptor update template to destroy.
+                                   DescriptorUpdateTemplate
+                                -> -- | @pAllocator@ controls host memory allocation as described in the
+                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                   -- chapter.
+                                   ("allocator" ::: Maybe AllocationCallbacks)
+                                -> io ()
 destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorUpdateTemplatePtr = pVkDestroyDescriptorUpdateTemplate (deviceCmds (device :: Device))
   lift $ unless (vkDestroyDescriptorUpdateTemplatePtr /= nullFunPtr) $
@@ -250,22 +245,6 @@ foreign import ccall
 
 -- | vkUpdateDescriptorSetWithTemplate - Update the contents of a descriptor
 -- set object using an update template
---
--- = Parameters
---
--- -   @device@ is the logical device that updates the descriptor sets.
---
--- -   @descriptorSet@ is the descriptor set to update
---
--- -   @descriptorUpdateTemplate@ is a
---     'Vulkan.Core11.Handles.DescriptorUpdateTemplate' object specifying
---     the update mapping between @pData@ and the descriptor set to update.
---
--- -   @pData@ is a pointer to memory containing one or more
---     'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
---     'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
---     'Vulkan.Core10.Handles.BufferView' structures used to write the
---     descriptors.
 --
 -- == Valid Usage
 --
@@ -377,7 +356,23 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Vulkan.Core10.Handles.Device'
-updateDescriptorSetWithTemplate :: forall io . MonadIO io => Device -> DescriptorSet -> DescriptorUpdateTemplate -> ("data" ::: Ptr ()) -> io ()
+updateDescriptorSetWithTemplate :: forall io
+                                 . (MonadIO io)
+                                => -- | @device@ is the logical device that updates the descriptor sets.
+                                   Device
+                                -> -- | @descriptorSet@ is the descriptor set to update
+                                   DescriptorSet
+                                -> -- | @descriptorUpdateTemplate@ is a
+                                   -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate' object specifying the
+                                   -- update mapping between @pData@ and the descriptor set to update.
+                                   DescriptorUpdateTemplate
+                                -> -- | @pData@ is a pointer to memory containing one or more
+                                   -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+                                   -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
+                                   -- 'Vulkan.Core10.Handles.BufferView' structures used to write the
+                                   -- descriptors.
+                                   ("data" ::: Ptr ())
+                                -> io ()
 updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
   let vkUpdateDescriptorSetWithTemplatePtr = pVkUpdateDescriptorSetWithTemplate (deviceCmds (device :: Device))
   unless (vkUpdateDescriptorSetWithTemplatePtr /= nullFunPtr) $
