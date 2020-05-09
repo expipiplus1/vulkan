@@ -16,7 +16,11 @@ import           Data.Vector.Extra              ( pattern (:<|)
                                                 , pattern Empty
                                                 )
 import           Language.Haskell.TH.Datatype   ( quantifyType )
+import           Language.Haskell.TH.Desugar    ( FunArgs(..)
+                                                , unravelType
+                                                )
 import           Language.Haskell.TH.Syntax     ( Pred
+                                                , TyVarBndr(..)
                                                 , mkName
                                                 , mkNameG_tc
                                                 , nameBase
@@ -201,22 +205,75 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
   nts <- marshaledCommandInputTypes m
   r   <- makeReturnType True m
   let t         = foldr arrowUniqueVars r nts
-      paramName = pretty . mkParamName . pName . mpParam
+      paramName = pName . mpParam
       isArg p = case mpScheme p of
         ElidedLength{}    -> Nothing
         ElidedUnivalued _ -> Nothing
         ElidedVoid        -> Nothing
         Returned _        -> Nothing
         _                 -> Just p
-      paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
-  tDoc <- renderType . addMonadIO =<< constrainStructVariables t
-
+      paramNaughtyNames = toList (paramName <$> V.mapMaybe isArg mcParams)
+      paramNiceNames    = pretty . mkParamName <$> paramNaughtyNames
+      paramDocumentees  = Nested (cName mcCommand) <$> paramNaughtyNames
+  constrainedType <- addMonadIO <$> constrainStructVariables t
+  tDocParts       <- renderInParts paramDocumentees constrainedType
 
   tellDocWithHaddock $ \getDoc -> vsep
     [ getDoc (TopLevel (cName mcCommand))
-    , pretty commandName <+> "::" <+> indent 0 tDoc
-    , pretty commandName <+> sep paramNames <+> "=" <+> rhs
+    , pretty commandName
+      <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+    , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
     ]
+
+renderInParts
+  :: (HasRenderElem r, HasRenderParams r)
+  => [a]
+  -> Type
+  -> Sem
+       r
+       (Maybe (Doc ()), Maybe (Doc ()), [(Maybe a, Doc ())], Doc ())
+  -- ^ (vars, predicates, args, return)
+renderInParts names t = do
+  let (funArgs, ret) = unravelType t
+      go             = \case
+        FANil             -> mempty
+        FAForalls _ vs as -> (vs, [], []) <> go as
+        FACxt  ps as      -> ([], ps, []) <> go as
+        FAAnon t  as      -> ([], [], [t]) <> go as
+      (vars, preds, argTypes) = go funArgs
+      renderVar               = \case
+        PlainTV n    -> pure $ viaShow n
+        KindedTV n k -> do
+          kDoc <- renderType k
+          pure $ parens (viaShow n <+> "::" <+> kDoc)
+      paddedNames = (Just <$> names) <> repeat Nothing
+  vDocs    <- traverse renderVar vars
+  predDocs <- traverse renderType preds
+  argDocs  <- traverse renderType argTypes
+  retDoc   <- renderType ret
+  pure
+    ( if null vDocs then Nothing else Just $ "forall" <+> hsep vDocs
+    , if null predDocs then Nothing else Just $ tupled predDocs
+    , zip paddedNames argDocs
+    , retDoc
+    )
+
+-- | Render the output of 'renderInParts' with documentation attached to the
+-- parameters.
+renderWithComments
+  :: (Documentee -> Doc ())
+  -> (Maybe (Doc ()), Maybe (Doc ()), [(Maybe Documentee, Doc ())], Doc ())
+  -> Doc ()
+renderWithComments getDoc (vars, preds, args, ret) =
+  let withComment = \case
+        (Nothing, d) -> d
+        (Just n , d) -> getDoc n <> line <> d
+      as = zipWith ($)
+                   (id : repeat ("->" <>))
+                   (indent 1 <$> (withComment <$> args) <> [ret])
+  in  maybe mempty (\v -> indent 1 v <> line <> " .") vars
+        <> maybe mempty (\p -> indent 1 p <> line <> "=>") preds
+        <> vsep as
 
 ----------------------------------------------------------------
 -- Checking the result and throwing an exception if something went wrong

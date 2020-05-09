@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9c3df7b851ab981c84f70d3edc4107682b384d7f9e726c416b375eb3c6e799da
+-- hash: 7069db853d48775968fa82171b112c752c823dd01f3d6725ed97515aa5926777
 
 name:           generate-new
 version:        0.0.0
@@ -116,6 +116,7 @@ library
     , template-haskell
     , text
     , th-abstraction
+    , th-desugar >=1.11
     , th-orphans
     , timeit
     , transformers
@@ -174,6 +175,7 @@ executable vk
     , template-haskell
     , text
     , th-abstraction
+    , th-desugar >=1.11
     , th-orphans
     , timeit
     , transformers
@@ -234,6 +236,7 @@ executable vma
     , template-haskell
     , text
     , th-abstraction
+    , th-desugar >=1.11
     , th-orphans
     , timeit
     , transformers

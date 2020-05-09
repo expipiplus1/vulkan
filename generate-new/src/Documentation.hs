@@ -143,8 +143,8 @@ memberDocs parent m blocks =
 
 main :: IO ()
 main = do
-  [d, m] <- getArgs
-  manTxtToDocbook [] d m >>= \case
+  [vulkanDocsDir, manPage] <- getArgs
+  manTxtToDocbook [] vulkanDocsDir manPage >>= \case
     Left  e  -> sayErr e
     Right d' -> case docBookToDocumentation (const True) d' of
       Left  e  -> sayErr e
