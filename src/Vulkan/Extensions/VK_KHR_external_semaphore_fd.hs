@@ -69,17 +69,6 @@ foreign import ccall
 
 -- | vkGetSemaphoreFdKHR - Get a POSIX file descriptor handle for a semaphore
 --
--- = Parameters
---
--- -   @device@ is the logical device that created the semaphore being
---     exported.
---
--- -   @pGetFdInfo@ is a pointer to a 'SemaphoreGetFdInfoKHR' structure
---     containing parameters of the export operation.
---
--- -   @pFd@ will return the file descriptor representing the semaphore
---     payload.
---
 -- = Description
 --
 -- Each call to 'getSemaphoreFdKHR' /must/ create a new file descriptor and
@@ -117,7 +106,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetFdInfoKHR'
-getSemaphoreFdKHR :: forall io . MonadIO io => Device -> SemaphoreGetFdInfoKHR -> io (("fd" ::: Int32))
+getSemaphoreFdKHR :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device that created the semaphore being
+                     -- exported.
+                     --
+                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                     Device
+                  -> -- | @pGetFdInfo@ is a pointer to a 'SemaphoreGetFdInfoKHR' structure
+                     -- containing parameters of the export operation.
+                     --
+                     -- @pGetFdInfo@ /must/ be a valid pointer to a valid
+                     -- 'SemaphoreGetFdInfoKHR' structure
+                     SemaphoreGetFdInfoKHR
+                  -> io (("fd" ::: Int32))
 getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetSemaphoreFdKHRPtr = pVkGetSemaphoreFdKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetSemaphoreFdKHRPtr /= nullFunPtr) $
@@ -139,14 +141,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr ImportSemaphoreFdInfoKHR -> IO Result) -> Ptr Device_T -> Ptr ImportSemaphoreFdInfoKHR -> IO Result
 
 -- | vkImportSemaphoreFdKHR - Import a semaphore from a POSIX file descriptor
---
--- = Parameters
---
--- -   @device@ is the logical device that created the semaphore.
---
--- -   @pImportSemaphoreFdInfo@ is a pointer to a
---     'ImportSemaphoreFdInfoKHR' structure specifying the semaphore and
---     import parameters.
 --
 -- = Description
 --
@@ -174,7 +168,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreFdInfoKHR'
-importSemaphoreFdKHR :: forall io . MonadIO io => Device -> ImportSemaphoreFdInfoKHR -> io ()
+importSemaphoreFdKHR :: forall io
+                      . (MonadIO io)
+                     => -- | @device@ is the logical device that created the semaphore.
+                        --
+                        -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                        Device
+                     -> -- | @pImportSemaphoreFdInfo@ is a pointer to a 'ImportSemaphoreFdInfoKHR'
+                        -- structure specifying the semaphore and import parameters.
+                        --
+                        -- @pImportSemaphoreFdInfo@ /must/ be a valid pointer to a valid
+                        -- 'ImportSemaphoreFdInfoKHR' structure
+                        ImportSemaphoreFdInfoKHR
+                     -> io ()
 importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
   let vkImportSemaphoreFdKHRPtr = pVkImportSemaphoreFdKHR (deviceCmds (device :: Device))
   lift $ unless (vkImportSemaphoreFdKHRPtr /= nullFunPtr) $

@@ -38,13 +38,6 @@ foreign import ccall
 -- | vkEnumerateInstanceVersion - Query instance-level version before
 -- instance creation
 --
--- = Parameters
---
--- -   @pApiVersion@ is a pointer to a @uint32_t@, which is the version of
---     Vulkan supported by instance-level functionality, encoded as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
---
 -- = Description
 --
 -- Note
@@ -69,7 +62,9 @@ foreign import ccall
 -- = See Also
 --
 -- No cross-references are available
-enumerateInstanceVersion :: forall io . MonadIO io => io (("apiVersion" ::: Word32))
+enumerateInstanceVersion :: forall io
+                          . (MonadIO io)
+                         => io (("apiVersion" ::: Word32))
 enumerateInstanceVersion  = liftIO . evalContT $ do
   vkEnumerateInstanceVersionPtr <- lift $ castFunPtr @_ @(("pApiVersion" ::: Ptr Word32) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceVersion"#)
   lift $ unless (vkEnumerateInstanceVersionPtr /= nullFunPtr) $

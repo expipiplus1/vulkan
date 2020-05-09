@@ -73,15 +73,6 @@ foreign import ccall
 -- | vkGetImageDrmFormatModifierPropertiesEXT - Returns an image’s DRM format
 -- modifier
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the image.
---
--- -   @image@ is the queried image.
---
--- -   @pProperties@ will return properties of the image’s /DRM format
---     modifier/.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -92,7 +83,23 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageDrmFormatModifierPropertiesEXT'
-getImageDrmFormatModifierPropertiesEXT :: forall io . MonadIO io => Device -> Image -> io (ImageDrmFormatModifierPropertiesEXT)
+getImageDrmFormatModifierPropertiesEXT :: forall io
+                                        . (MonadIO io)
+                                       => -- | @device@ is the logical device that owns the image.
+                                          --
+                                          -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                          Device
+                                       -> -- | @image@ is the queried image.
+                                          --
+                                          -- @image@ /must/ have been created with <VkImageCreateInfo.html tiling>
+                                          -- equal to
+                                          -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
+                                          --
+                                          -- @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+                                          --
+                                          -- @image@ /must/ have been created, allocated, or retrieved from @device@
+                                          Image
+                                       -> io (ImageDrmFormatModifierPropertiesEXT)
 getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
   let vkGetImageDrmFormatModifierPropertiesEXTPtr = pVkGetImageDrmFormatModifierPropertiesEXT (deviceCmds (device :: Device))
   lift $ unless (vkGetImageDrmFormatModifierPropertiesEXTPtr /= nullFunPtr) $

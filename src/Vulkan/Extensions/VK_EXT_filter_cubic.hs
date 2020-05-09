@@ -53,7 +53,10 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = FORMAT_FEATURE_SAMPL
 -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFormatInfoEXT
-  { -- | @imageViewType@ /must/ be a valid
+  { -- | @imageViewType@ is a 'Vulkan.Core10.Enums.ImageViewType.ImageViewType'
+    -- value specifying the type of the image view.
+    --
+    -- @imageViewType@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
     imageViewType :: ImageViewType }
   deriving (Typeable)

@@ -35,7 +35,9 @@ import Vulkan.Extensions.WSITypes (GgpFrameToken)
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentFrameTokenGGP = PresentFrameTokenGGP
-  { -- | @frameToken@ /must/ be a valid
+  { -- | @frameToken@ is the Google Games Platform frame token.
+    --
+    -- @frameToken@ /must/ be a valid
     -- 'Vulkan.Extensions.WSITypes.GgpFrameToken'
     frameToken :: GgpFrameToken }
   deriving (Typeable)

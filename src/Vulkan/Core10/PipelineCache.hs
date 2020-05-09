@@ -76,22 +76,6 @@ foreign import ccall
 
 -- | vkCreatePipelineCache - Creates a new pipeline cache
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the pipeline cache
---     object.
---
--- -   @pCreateInfo@ is a pointer to a 'PipelineCacheCreateInfo' structure
---     containing initial parameters for the pipeline cache object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pPipelineCache@ is a pointer to a
---     'Vulkan.Core10.Handles.PipelineCache' handle in which the resulting
---     pipeline cache object is returned.
---
 -- = Description
 --
 -- Note
@@ -158,7 +142,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache',
 -- 'PipelineCacheCreateInfo'
-createPipelineCache :: forall io . MonadIO io => Device -> PipelineCacheCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (PipelineCache)
+createPipelineCache :: forall io
+                     . (MonadIO io)
+                    => -- | @device@ is the logical device that creates the pipeline cache object.
+                       Device
+                    -> -- | @pCreateInfo@ is a pointer to a 'PipelineCacheCreateInfo' structure
+                       -- containing initial parameters for the pipeline cache object.
+                       PipelineCacheCreateInfo
+                    -> -- | @pAllocator@ controls host memory allocation as described in the
+                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                       -- chapter.
+                       ("allocator" ::: Maybe AllocationCallbacks)
+                    -> io (PipelineCache)
 createPipelineCache device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePipelineCachePtr = pVkCreatePipelineCache (deviceCmds (device :: Device))
   lift $ unless (vkCreatePipelineCachePtr /= nullFunPtr) $
@@ -197,17 +192,6 @@ foreign import ccall
 
 -- | vkDestroyPipelineCache - Destroy a pipeline cache object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the pipeline cache
---     object.
---
--- -   @pipelineCache@ is the handle of the pipeline cache to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -241,7 +225,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
-destroyPipelineCache :: forall io . MonadIO io => Device -> PipelineCache -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPipelineCache :: forall io
+                      . (MonadIO io)
+                     => -- | @device@ is the logical device that destroys the pipeline cache object.
+                        Device
+                     -> -- | @pipelineCache@ is the handle of the pipeline cache to destroy.
+                        PipelineCache
+                     -> -- | @pAllocator@ controls host memory allocation as described in the
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- chapter.
+                        ("allocator" ::: Maybe AllocationCallbacks)
+                     -> io ()
 destroyPipelineCache device pipelineCache allocator = liftIO . evalContT $ do
   let vkDestroyPipelineCachePtr = pVkDestroyPipelineCache (deviceCmds (device :: Device))
   lift $ unless (vkDestroyPipelineCachePtr /= nullFunPtr) $
@@ -262,17 +256,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> PipelineCache -> Ptr CSize -> Ptr () -> IO Result) -> Ptr Device_T -> PipelineCache -> Ptr CSize -> Ptr () -> IO Result
 
 -- | vkGetPipelineCacheData - Get the data store from a pipeline cache
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the pipeline cache.
---
--- -   @pipelineCache@ is the pipeline cache to retrieve data from.
---
--- -   @pDataSize@ is a pointer to a @size_t@ value related to the amount
---     of data in the pipeline cache, as described below.
---
--- -   @pData@ is either @NULL@ or a pointer to a buffer.
 --
 -- = Description
 --
@@ -401,19 +384,6 @@ foreign import ccall
 
 -- | vkMergePipelineCaches - Combine the data stores of pipeline caches
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the pipeline cache objects.
---
--- -   @dstCache@ is the handle of the pipeline cache to merge results
---     into.
---
--- -   @srcCacheCount@ is the length of the @pSrcCaches@ array.
---
--- -   @pSrcCaches@ is a pointer to an array of pipeline cache handles,
---     which will be merged into @dstCache@. The previous contents of
---     @dstCache@ are included after the merge.
---
 -- = Description
 --
 -- Note
@@ -463,7 +433,17 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
-mergePipelineCaches :: forall io . MonadIO io => Device -> ("dstCache" ::: PipelineCache) -> ("srcCaches" ::: Vector PipelineCache) -> io ()
+mergePipelineCaches :: forall io
+                     . (MonadIO io)
+                    => -- | @device@ is the logical device that owns the pipeline cache objects.
+                       Device
+                    -> -- | @dstCache@ is the handle of the pipeline cache to merge results into.
+                       ("dstCache" ::: PipelineCache)
+                    -> -- | @pSrcCaches@ is a pointer to an array of pipeline cache handles, which
+                       -- will be merged into @dstCache@. The previous contents of @dstCache@ are
+                       -- included after the merge.
+                       ("srcCaches" ::: Vector PipelineCache)
+                    -> io ()
 mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergePipelineCachesPtr = pVkMergePipelineCaches (deviceCmds (device :: Device))
   lift $ unless (vkMergePipelineCachesPtr /= nullFunPtr) $

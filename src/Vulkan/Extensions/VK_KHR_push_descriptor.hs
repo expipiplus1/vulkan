@@ -67,31 +67,6 @@ foreign import ccall
 -- | vkCmdPushDescriptorSetKHR - Pushes descriptor updates into a command
 -- buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer that the descriptors will be
---     recorded in.
---
--- -   @pipelineBindPoint@ is a
---     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating
---     whether the descriptors will be used by graphics pipelines or
---     compute pipelines. There is a separate set of push descriptor
---     bindings for each of graphics and compute, so binding one does not
---     disturb the other.
---
--- -   @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
---     program the bindings.
---
--- -   @set@ is the set number of the descriptor set in the pipeline layout
---     that will be updated.
---
--- -   @descriptorWriteCount@ is the number of elements in the
---     @pDescriptorWrites@ array.
---
--- -   @pDescriptorWrites@ is a pointer to an array of
---     'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures
---     describing the descriptors to be updated.
---
 -- = Description
 --
 -- /Push descriptors/ are a small bank of descriptors whose storage is
@@ -204,7 +179,28 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
-cmdPushDescriptorSetKHR :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("set" ::: Word32) -> ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet)) -> io ()
+cmdPushDescriptorSetKHR :: forall io
+                         . (MonadIO io)
+                        => -- | @commandBuffer@ is the command buffer that the descriptors will be
+                           -- recorded in.
+                           CommandBuffer
+                        -> -- | @pipelineBindPoint@ is a
+                           -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating
+                           -- whether the descriptors will be used by graphics pipelines or compute
+                           -- pipelines. There is a separate set of push descriptor bindings for each
+                           -- of graphics and compute, so binding one does not disturb the other.
+                           PipelineBindPoint
+                        -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
+                           -- program the bindings.
+                           PipelineLayout
+                        -> -- | @set@ is the set number of the descriptor set in the pipeline layout
+                           -- that will be updated.
+                           ("set" ::: Word32)
+                        -> -- | @pDescriptorWrites@ is a pointer to an array of
+                           -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures describing
+                           -- the descriptors to be updated.
+                           ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
+                        -> io ()
 cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
   let vkCmdPushDescriptorSetKHRPtr = pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdPushDescriptorSetKHRPtr /= nullFunPtr) $
@@ -225,25 +221,6 @@ foreign import ccall
 
 -- | vkCmdPushDescriptorSetWithTemplateKHR - Pushes descriptor updates into a
 -- command buffer using a descriptor update template
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer that the descriptors will be
---     recorded in.
---
--- -   @descriptorUpdateTemplate@ is a descriptor update template defining
---     how to interpret the descriptor information in @pData@.
---
--- -   @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
---     program the bindings. It /must/ be compatible with the layout used
---     to create the @descriptorUpdateTemplate@ handle.
---
--- -   @set@ is the set number of the descriptor set in the pipeline layout
---     that will be updated. This /must/ be the same number used to create
---     the @descriptorUpdateTemplate@ handle.
---
--- -   @pData@ is a pointer to memory containing descriptors for the
---     templated update.
 --
 -- == Valid Usage
 --
@@ -352,7 +329,26 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Vulkan.Core10.Handles.PipelineLayout'
-cmdPushDescriptorSetWithTemplateKHR :: forall io . MonadIO io => CommandBuffer -> DescriptorUpdateTemplate -> PipelineLayout -> ("set" ::: Word32) -> ("data" ::: Ptr ()) -> io ()
+cmdPushDescriptorSetWithTemplateKHR :: forall io
+                                     . (MonadIO io)
+                                    => -- | @commandBuffer@ is the command buffer that the descriptors will be
+                                       -- recorded in.
+                                       CommandBuffer
+                                    -> -- | @descriptorUpdateTemplate@ is a descriptor update template defining how
+                                       -- to interpret the descriptor information in @pData@.
+                                       DescriptorUpdateTemplate
+                                    -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
+                                       -- program the bindings. It /must/ be compatible with the layout used to
+                                       -- create the @descriptorUpdateTemplate@ handle.
+                                       PipelineLayout
+                                    -> -- | @set@ is the set number of the descriptor set in the pipeline layout
+                                       -- that will be updated. This /must/ be the same number used to create the
+                                       -- @descriptorUpdateTemplate@ handle.
+                                       ("set" ::: Word32)
+                                    -> -- | @pData@ is a pointer to memory containing descriptors for the templated
+                                       -- update.
+                                       ("data" ::: Ptr ())
+                                    -> io ()
 cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = liftIO $ do
   let vkCmdPushDescriptorSetWithTemplateKHRPtr = pVkCmdPushDescriptorSetWithTemplateKHR (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdPushDescriptorSetWithTemplateKHRPtr /= nullFunPtr) $

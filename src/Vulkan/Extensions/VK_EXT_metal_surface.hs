@@ -81,22 +81,6 @@ foreign import ccall
 
 -- | vkCreateMetalSurfaceEXT - Create a VkSurfaceKHR object for CAMetalLayer
 --
--- = Parameters
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to a 'MetalSurfaceCreateInfoEXT'
---     structure specifying parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -130,7 +114,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'MetalSurfaceCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-createMetalSurfaceEXT :: forall io . MonadIO io => Instance -> MetalSurfaceCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createMetalSurfaceEXT :: forall io
+                       . (MonadIO io)
+                      => -- | @instance@ is the instance with which to associate the surface.
+                         Instance
+                      -> -- | @pCreateInfo@ is a pointer to a 'MetalSurfaceCreateInfoEXT' structure
+                         -- specifying parameters affecting the creation of the surface object.
+                         MetalSurfaceCreateInfoEXT
+                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                         -- surface object when there is no more specific allocator available (see
+                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                         ("allocator" ::: Maybe AllocationCallbacks)
+                      -> io (SurfaceKHR)
 createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateMetalSurfaceEXTPtr = pVkCreateMetalSurfaceEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateMetalSurfaceEXTPtr /= nullFunPtr) $
@@ -158,7 +153,9 @@ createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createMetalSurfaceEXT'
 data MetalSurfaceCreateInfoEXT = MetalSurfaceCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: MetalSurfaceCreateFlagsEXT
   , -- | @pLayer@ is a reference to a 'Vulkan.Extensions.WSITypes.CAMetalLayer'
     -- object representing a renderable surface.

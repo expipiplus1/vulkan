@@ -80,13 +80,6 @@ foreign import ccall
 -- | vkGetBufferOpaqueCaptureAddress - Query an opaque capture address of a
 -- buffer
 --
--- = Parameters
---
--- -   @device@ is the logical device that the buffer was created on.
---
--- -   @pInfo@ is a pointer to a 'BufferDeviceAddressInfo' structure
---     specifying the buffer to retrieve an address for.
---
 -- = Description
 --
 -- The 64-bit return value is an opaque capture address of the start of
@@ -116,7 +109,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
-getBufferOpaqueCaptureAddress :: forall io . MonadIO io => Device -> BufferDeviceAddressInfo -> io (Word64)
+getBufferOpaqueCaptureAddress :: forall io
+                               . (MonadIO io)
+                              => -- | @device@ is the logical device that the buffer was created on.
+                                 Device
+                              -> -- | @pInfo@ is a pointer to a 'BufferDeviceAddressInfo' structure specifying
+                                 -- the buffer to retrieve an address for.
+                                 BufferDeviceAddressInfo
+                              -> io (Word64)
 getBufferOpaqueCaptureAddress device info = liftIO . evalContT $ do
   let vkGetBufferOpaqueCaptureAddressPtr = pVkGetBufferOpaqueCaptureAddress (deviceCmds (device :: Device))
   lift $ unless (vkGetBufferOpaqueCaptureAddressPtr /= nullFunPtr) $
@@ -135,13 +135,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr BufferDeviceAddressInfo -> IO DeviceAddress) -> Ptr Device_T -> Ptr BufferDeviceAddressInfo -> IO DeviceAddress
 
 -- | vkGetBufferDeviceAddress - Query an address of a buffer
---
--- = Parameters
---
--- -   @device@ is the logical device that the buffer was created on.
---
--- -   @pInfo@ is a pointer to a 'BufferDeviceAddressInfo' structure
---     specifying the buffer to retrieve an address for.
 --
 -- = Description
 --
@@ -188,7 +181,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
-getBufferDeviceAddress :: forall io . MonadIO io => Device -> BufferDeviceAddressInfo -> io (DeviceAddress)
+getBufferDeviceAddress :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is the logical device that the buffer was created on.
+                          Device
+                       -> -- | @pInfo@ is a pointer to a 'BufferDeviceAddressInfo' structure specifying
+                          -- the buffer to retrieve an address for.
+                          BufferDeviceAddressInfo
+                       -> io (DeviceAddress)
 getBufferDeviceAddress device info = liftIO . evalContT $ do
   let vkGetBufferDeviceAddressPtr = pVkGetBufferDeviceAddress (deviceCmds (device :: Device))
   lift $ unless (vkGetBufferDeviceAddressPtr /= nullFunPtr) $
@@ -208,14 +208,6 @@ foreign import ccall
 
 -- | vkGetDeviceMemoryOpaqueCaptureAddress - Query an opaque capture address
 -- of a memory object
---
--- = Parameters
---
--- -   @device@ is the logical device that the memory object was allocated
---     on.
---
--- -   @pInfo@ is a pointer to a 'DeviceMemoryOpaqueCaptureAddressInfo'
---     structure specifying the memory object to retrieve an address for.
 --
 -- = Description
 --
@@ -252,7 +244,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'DeviceMemoryOpaqueCaptureAddressInfo'
-getDeviceMemoryOpaqueCaptureAddress :: forall io . MonadIO io => Device -> DeviceMemoryOpaqueCaptureAddressInfo -> io (Word64)
+getDeviceMemoryOpaqueCaptureAddress :: forall io
+                                     . (MonadIO io)
+                                    => -- | @device@ is the logical device that the memory object was allocated on.
+                                       Device
+                                    -> -- | @pInfo@ is a pointer to a 'DeviceMemoryOpaqueCaptureAddressInfo'
+                                       -- structure specifying the memory object to retrieve an address for.
+                                       DeviceMemoryOpaqueCaptureAddressInfo
+                                    -> io (Word64)
 getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
   let vkGetDeviceMemoryOpaqueCaptureAddressPtr = pVkGetDeviceMemoryOpaqueCaptureAddress (deviceCmds (device :: Device))
   lift $ unless (vkGetDeviceMemoryOpaqueCaptureAddressPtr /= nullFunPtr) $
@@ -589,7 +588,12 @@ instance Zero MemoryOpaqueCaptureAddressAllocateInfo where
 -- 'getDeviceMemoryOpaqueCaptureAddress',
 -- 'Vulkan.Extensions.VK_KHR_buffer_device_address.getDeviceMemoryOpaqueCaptureAddressKHR'
 data DeviceMemoryOpaqueCaptureAddressInfo = DeviceMemoryOpaqueCaptureAddressInfo
-  { -- | @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
+  { -- | @memory@ specifies the memory whose address is being queried.
+    --
+    -- @memory@ /must/ have been allocated with
+    -- 'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+    --
+    -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory }
   deriving (Typeable)
 deriving instance Show DeviceMemoryOpaqueCaptureAddressInfo

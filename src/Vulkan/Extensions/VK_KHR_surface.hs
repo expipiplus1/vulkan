@@ -144,17 +144,6 @@ foreign import ccall
 
 -- | vkDestroySurfaceKHR - Destroy a VkSurfaceKHR object
 --
--- = Parameters
---
--- -   @instance@ is the instance used to create the surface.
---
--- -   @surface@ is the surface to destroy.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
 -- = Description
 --
 -- Destroying a 'Vulkan.Extensions.Handles.SurfaceKHR' merely severs the
@@ -196,7 +185,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'Vulkan.Extensions.Handles.SurfaceKHR'
-destroySurfaceKHR :: forall io . MonadIO io => Instance -> SurfaceKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySurfaceKHR :: forall io
+                   . (MonadIO io)
+                  => -- | @instance@ is the instance used to create the surface.
+                     Instance
+                  -> -- | @surface@ is the surface to destroy.
+                     SurfaceKHR
+                  -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                     -- surface object when there is no more specific allocator available (see
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                     ("allocator" ::: Maybe AllocationCallbacks)
+                  -> io ()
 destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
   let vkDestroySurfaceKHRPtr = pVkDestroySurfaceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (vkDestroySurfaceKHRPtr /= nullFunPtr) $
@@ -218,18 +217,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSurfaceSupportKHR - Query if presentation is
 -- supported
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @queueFamilyIndex@ is the queue family.
---
--- -   @surface@ is the surface.
---
--- -   @pSupported@ is a pointer to a 'Vulkan.Core10.BaseType.Bool32',
---     which is set to 'Vulkan.Core10.BaseType.TRUE' to indicate support,
---     and 'Vulkan.Core10.BaseType.FALSE' otherwise.
 --
 -- == Valid Usage
 --
@@ -271,7 +258,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> SurfaceKHR -> io (("supported" ::: Bool))
+getPhysicalDeviceSurfaceSupportKHR :: forall io
+                                    . (MonadIO io)
+                                   => -- | @physicalDevice@ is the physical device.
+                                      PhysicalDevice
+                                   -> -- | @queueFamilyIndex@ is the queue family.
+                                      ("queueFamilyIndex" ::: Word32)
+                                   -> -- | @surface@ is the surface.
+                                      SurfaceKHR
+                                   -> io (("supported" ::: Bool))
 getPhysicalDeviceSurfaceSupportKHR physicalDevice queueFamilyIndex surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceSupportKHRPtr = pVkGetPhysicalDeviceSurfaceSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfaceSupportKHRPtr /= nullFunPtr) $
@@ -292,17 +287,6 @@ foreign import ccall
   :: FunPtr (Ptr PhysicalDevice_T -> SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO Result) -> Ptr PhysicalDevice_T -> SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO Result
 
 -- | vkGetPhysicalDeviceSurfaceCapabilitiesKHR - Query surface capabilities
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @surface@ is the surface that will be associated with the swapchain.
---
--- -   @pSurfaceCapabilities@ is a pointer to a 'SurfaceCapabilitiesKHR'
---     structure in which the capabilities are returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -337,7 +321,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceCapabilitiesKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (SurfaceCapabilitiesKHR)
+getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io
+                                         . (MonadIO io)
+                                        => -- | @physicalDevice@ is the physical device that will be associated with the
+                                           -- swapchain to be created, as described for
+                                           -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                           PhysicalDevice
+                                        -> -- | @surface@ is the surface that will be associated with the swapchain.
+                                           SurfaceKHR
+                                        -> io (SurfaceCapabilitiesKHR)
 getPhysicalDeviceSurfaceCapabilitiesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr = pVkGetPhysicalDeviceSurfaceCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr /= nullFunPtr) $
@@ -359,20 +351,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSurfaceFormatsKHR - Query color formats supported by
 -- surface
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @surface@ is the surface that will be associated with the swapchain.
---
--- -   @pSurfaceFormatCount@ is a pointer to an integer related to the
---     number of format pairs available or queried, as described below.
---
--- -   @pSurfaceFormats@ is either @NULL@ or a pointer to an array of
---     'SurfaceFormatKHR' structures.
 --
 -- = Description
 --
@@ -478,21 +456,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSurfacePresentModesKHR - Query supported presentation
 -- modes
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @surface@ is the surface that will be associated with the swapchain.
---
--- -   @pPresentModeCount@ is a pointer to an integer related to the number
---     of presentation modes available or queried, as described below.
---
--- -   @pPresentModes@ is either @NULL@ or a pointer to an array of
---     'PresentModeKHR' values, indicating the supported presentation
---     modes.
 --
 -- = Description
 --

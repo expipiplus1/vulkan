@@ -121,7 +121,11 @@ instance Zero RenderPassTransformBeginInfoQCOM where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
 data CommandBufferInheritanceRenderPassTransformInfoQCOM = CommandBufferInheritanceRenderPassTransformInfoQCOM
-  { -- | @transform@ /must/ be
+  { -- | @transform@ is a
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
+    -- describing the transform to be applied to the render pass.
+    --
+    -- @transform@ /must/ be
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',

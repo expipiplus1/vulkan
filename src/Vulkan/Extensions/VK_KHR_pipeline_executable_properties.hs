@@ -118,18 +118,6 @@ foreign import ccall
 -- | vkGetPipelineExecutablePropertiesKHR - Get the executables associated
 -- with a pipeline
 --
--- = Parameters
---
--- -   @device@ is the device that created the pipeline.
---
--- -   @pPipelineInfo@ describes the pipeline being queried.
---
--- -   @pExecutableCount@ is a pointer to an integer related to the number
---     of pipeline executables available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'PipelineExecutablePropertiesKHR' structures.
---
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of executables associated
@@ -212,18 +200,6 @@ foreign import ccall
 
 -- | vkGetPipelineExecutableStatisticsKHR - Get compile time statistics
 -- associated with a pipeline executable
---
--- = Parameters
---
--- -   @device@ is the device that created the pipeline.
---
--- -   @pExecutableInfo@ describes the pipeline executable being queried.
---
--- -   @pStatisticCount@ is a pointer to an integer related to the number
---     of statistics available or queried, as described below.
---
--- -   @pStatistics@ is either @NULL@ or a pointer to an array of
---     'PipelineExecutableStatisticKHR' structures.
 --
 -- = Description
 --
@@ -314,19 +290,6 @@ foreign import ccall
 
 -- | vkGetPipelineExecutableInternalRepresentationsKHR - Get internal
 -- representations of the pipeline executable
---
--- = Parameters
---
--- -   @device@ is the device that created the pipeline.
---
--- -   @pExecutableInfo@ describes the pipeline executable being queried.
---
--- -   @pInternalRepresentationCount@ is a pointer to an integer related to
---     the number of internal representations available or queried, as
---     described below.
---
--- -   @pInternalRepresentations@ is either @NULL@ or a pointer to an array
---     of 'PipelineExecutableInternalRepresentationKHR' structures.
 --
 -- = Description
 --
@@ -492,7 +455,9 @@ instance Zero PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutablePropertiesKHR'
 data PipelineInfoKHR = PipelineInfoKHR
-  { -- | @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+  { -- | @pipeline@ is a 'Vulkan.Core10.Handles.Pipeline' handle.
+    --
+    -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline }
   deriving (Typeable)
 deriving instance Show PipelineInfoKHR
@@ -631,9 +596,15 @@ instance Zero PipelineExecutablePropertiesKHR where
 -- 'getPipelineExecutableInternalRepresentationsKHR',
 -- 'getPipelineExecutableStatisticsKHR'
 data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
-  { -- | @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+  { -- | @pipeline@ is the pipeline to query.
+    --
+    -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline
-  , -- | @executableIndex@ /must/ be less than the number of executables
+  , -- | @executableIndex@ is the index of the executable to query in the array
+    -- of executable properties returned by
+    -- 'getPipelineExecutablePropertiesKHR'.
+    --
+    -- @executableIndex@ /must/ be less than the number of executables
     -- associated with @pipeline@ as returned in the @pExecutableCount@
     -- parameter of 'getPipelineExecutablePropertiesKHR'
     executableIndex :: Word32

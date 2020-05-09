@@ -97,21 +97,6 @@ foreign import ccall
 -- | vkCreateXcbSurfaceKHR - Create a 'Vulkan.Extensions.Handles.SurfaceKHR'
 -- object for a X11 window, using the XCB client-side library
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to a 'XcbSurfaceCreateInfoKHR' structure
---     containing parameters affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -143,7 +128,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'XcbSurfaceCreateInfoKHR'
-createXcbSurfaceKHR :: forall io . MonadIO io => Instance -> XcbSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createXcbSurfaceKHR :: forall io
+                     . (MonadIO io)
+                    => -- | @instance@ is the instance to associate the surface with.
+                       Instance
+                    -> -- | @pCreateInfo@ is a pointer to a 'XcbSurfaceCreateInfoKHR' structure
+                       -- containing parameters affecting the creation of the surface object.
+                       XcbSurfaceCreateInfoKHR
+                    -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                       -- surface object when there is no more specific allocator available (see
+                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                       ("allocator" ::: Maybe AllocationCallbacks)
+                    -> io (SurfaceKHR)
 createXcbSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateXcbSurfaceKHRPtr = pVkCreateXcbSurfaceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateXcbSurfaceKHRPtr /= nullFunPtr) $
@@ -170,16 +166,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceXcbPresentationSupportKHR - Query physical device for
 -- presentation to X11 server using XCB
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @queueFamilyIndex@ is the queue family index.
---
--- -   @connection@ is a pointer to an @xcb_connection_t@ to the X server.
---
--- -   @visual_id@ is an X11 visual (@xcb_visualid_t@).
---
 -- = Description
 --
 -- This platform-specific function /can/ be called prior to creating a
@@ -190,7 +176,27 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceXcbPresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> Ptr Xcb_connection_t -> ("visual_id" ::: Xcb_visualid_t) -> io (Bool)
+getPhysicalDeviceXcbPresentationSupportKHR :: forall io
+                                            . (MonadIO io)
+                                           => -- | @physicalDevice@ is the physical device.
+                                              --
+                                              -- @physicalDevice@ /must/ be a valid
+                                              -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                              PhysicalDevice
+                                           -> -- | @queueFamilyIndex@ is the queue family index.
+                                              --
+                                              -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+                                              -- returned by
+                                              -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+                                              -- for the given @physicalDevice@
+                                              ("queueFamilyIndex" ::: Word32)
+                                           -> -- | @connection@ is a pointer to an @xcb_connection_t@ to the X server.
+                                              --
+                                              -- @connection@ /must/ be a valid pointer to an @xcb_connection_t@ value
+                                              Ptr Xcb_connection_t
+                                           -> -- | @visual_id@ is an X11 visual (@xcb_visualid_t@).
+                                              ("visual_id" ::: Xcb_visualid_t)
+                                           -> io (Bool)
 getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id = liftIO $ do
   let vkGetPhysicalDeviceXcbPresentationSupportKHRPtr = pVkGetPhysicalDeviceXcbPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   unless (vkGetPhysicalDeviceXcbPresentationSupportKHRPtr /= nullFunPtr) $
@@ -210,11 +216,18 @@ getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex conne
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'XcbSurfaceCreateFlagsKHR', 'createXcbSurfaceKHR'
 data XcbSurfaceCreateInfoKHR = XcbSurfaceCreateInfoKHR
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: XcbSurfaceCreateFlagsKHR
-  , -- | @connection@ /must/ point to a valid X11 @xcb_connection_t@
+  , -- | @connection@ is a pointer to an @xcb_connection_t@ to the X server.
+    --
+    -- @connection@ /must/ point to a valid X11 @xcb_connection_t@
     connection :: Ptr Xcb_connection_t
-  , -- | @window@ /must/ be a valid X11 @xcb_window_t@
+  , -- | @window@ is the @xcb_window_t@ for the X11 window to associate the
+    -- surface with.
+    --
+    -- @window@ /must/ be a valid X11 @xcb_window_t@
     window :: Xcb_window_t
   }
   deriving (Typeable)

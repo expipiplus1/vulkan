@@ -103,20 +103,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceSurfaceCapabilities2KHR - Reports capabilities of a
 -- surface on a physical device
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
---     structure describing the surface and other fixed parameters that
---     would be consumed by
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @pSurfaceCapabilities@ is a pointer to a 'SurfaceCapabilities2KHR'
---     structure in which the capabilities are returned.
---
 -- = Description
 --
 -- 'getPhysicalDeviceSurfaceCapabilities2KHR' behaves similarly to
@@ -163,7 +149,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceCapabilities2KHR'
-getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io . (Extendss PhysicalDeviceSurfaceInfo2KHR a, Extendss SurfaceCapabilities2KHR b, PokeChain a, PokeChain b, PeekChain b, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (SurfaceCapabilities2KHR b)
+getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
+                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, Extendss SurfaceCapabilities2KHR b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                                         => -- | @physicalDevice@ is the physical device that will be associated with the
+                                            -- swapchain to be created, as described for
+                                            -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                            PhysicalDevice
+                                         -> -- | @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
+                                            -- structure describing the surface and other fixed parameters that would
+                                            -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                            PhysicalDeviceSurfaceInfo2KHR a
+                                         -> io (SurfaceCapabilities2KHR b)
 getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr = pVkGetPhysicalDeviceSurfaceCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr /= nullFunPtr) $
@@ -186,23 +182,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSurfaceFormats2KHR - Query color formats supported by
 -- surface
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
---     structure describing the surface and other fixed parameters that
---     would be consumed by
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @pSurfaceFormatCount@ is a pointer to an integer related to the
---     number of format tuples available or queried, as described below.
---
--- -   @pSurfaceFormats@ is either @NULL@ or a pointer to an array of
---     'SurfaceFormat2KHR' structures.
 --
 -- = Description
 --

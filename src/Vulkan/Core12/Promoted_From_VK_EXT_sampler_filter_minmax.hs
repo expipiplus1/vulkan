@@ -143,7 +143,11 @@ instance Zero PhysicalDeviceSamplerFilterMinmaxProperties where
 -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerReductionModeCreateInfo = SamplerReductionModeCreateInfo
-  { -- | @reductionMode@ /must/ be a valid
+  { -- | @reductionMode@ is a
+    -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
+    -- controlling how texture filtering combines texel values.
+    --
+    -- @reductionMode@ /must/ be a valid
     -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
     reductionMode :: SamplerReductionMode }
   deriving (Typeable)

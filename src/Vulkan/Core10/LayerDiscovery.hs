@@ -68,14 +68,6 @@ foreign import ccall
 -- | vkEnumerateInstanceLayerProperties - Returns up to requested number of
 -- global layer properties
 --
--- = Parameters
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     layer properties available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'LayerProperties' structures.
---
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of layer properties
@@ -152,14 +144,6 @@ foreign import ccall
 
 -- | vkEnumerateDeviceLayerProperties - Returns properties of available
 -- physical device layers
---
--- = Parameters
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     layer properties available or queried.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'LayerProperties' structures.
 --
 -- = Description
 --

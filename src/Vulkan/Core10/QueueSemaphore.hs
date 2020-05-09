@@ -72,20 +72,6 @@ foreign import ccall
 
 -- | vkCreateSemaphore - Create a new queue semaphore object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the semaphore.
---
--- -   @pCreateInfo@ is a pointer to a 'SemaphoreCreateInfo' structure
---     containing information about how the semaphore is to be created.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pSemaphore@ is a pointer to a handle in which the resulting
---     semaphore object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -117,7 +103,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore',
 -- 'SemaphoreCreateInfo'
-createSemaphore :: forall a io . (Extendss SemaphoreCreateInfo a, PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Semaphore)
+createSemaphore :: forall a io
+                 . (Extendss SemaphoreCreateInfo a, PokeChain a, MonadIO io)
+                => -- | @device@ is the logical device that creates the semaphore.
+                   Device
+                -> -- | @pCreateInfo@ is a pointer to a 'SemaphoreCreateInfo' structure
+                   -- containing information about how the semaphore is to be created.
+                   SemaphoreCreateInfo a
+                -> -- | @pAllocator@ controls host memory allocation as described in the
+                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- chapter.
+                   ("allocator" ::: Maybe AllocationCallbacks)
+                -> io (Semaphore)
 createSemaphore device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSemaphorePtr = pVkCreateSemaphore (deviceCmds (device :: Device))
   lift $ unless (vkCreateSemaphorePtr /= nullFunPtr) $
@@ -156,16 +153,6 @@ foreign import ccall
 
 -- | vkDestroySemaphore - Destroy a semaphore object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the semaphore.
---
--- -   @semaphore@ is the handle of the semaphore to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted batches that refer to @semaphore@ /must/ have
@@ -201,7 +188,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
-destroySemaphore :: forall io . MonadIO io => Device -> Semaphore -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySemaphore :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that destroys the semaphore.
+                    Device
+                 -> -- | @semaphore@ is the handle of the semaphore to destroy.
+                    Semaphore
+                 -> -- | @pAllocator@ controls host memory allocation as described in the
+                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- chapter.
+                    ("allocator" ::: Maybe AllocationCallbacks)
+                 -> io ()
 destroySemaphore device semaphore allocator = liftIO . evalContT $ do
   let vkDestroySemaphorePtr = pVkDestroySemaphore (deviceCmds (device :: Device))
   lift $ unless (vkDestroySemaphorePtr /= nullFunPtr) $

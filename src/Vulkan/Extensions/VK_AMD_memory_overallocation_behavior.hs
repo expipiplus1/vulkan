@@ -52,7 +52,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_ME
 -- 'MemoryOverallocationBehaviorAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceMemoryOverallocationCreateInfoAMD = DeviceMemoryOverallocationCreateInfoAMD
-  { -- | @overallocationBehavior@ /must/ be a valid
+  { -- | @overallocationBehavior@ is the desired overallocation behavior.
+    --
+    -- @overallocationBehavior@ /must/ be a valid
     -- 'MemoryOverallocationBehaviorAMD' value
     overallocationBehavior :: MemoryOverallocationBehaviorAMD }
   deriving (Typeable)

@@ -127,22 +127,6 @@ foreign import ccall
 
 -- | vkCreateDescriptorSetLayout - Create a new descriptor set layout
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the descriptor set
---     layout.
---
--- -   @pCreateInfo@ is a pointer to a 'DescriptorSetLayoutCreateInfo'
---     structure specifying the state of the descriptor set layout object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pSetLayout@ is a pointer to a
---     'Vulkan.Core10.Handles.DescriptorSetLayout' handle in which the
---     resulting descriptor set layout object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -174,7 +158,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'DescriptorSetLayoutCreateInfo', 'Vulkan.Core10.Handles.Device'
-createDescriptorSetLayout :: forall a io . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorSetLayout)
+createDescriptorSetLayout :: forall a io
+                           . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, MonadIO io)
+                          => -- | @device@ is the logical device that creates the descriptor set layout.
+                             Device
+                          -> -- | @pCreateInfo@ is a pointer to a 'DescriptorSetLayoutCreateInfo'
+                             -- structure specifying the state of the descriptor set layout object.
+                             DescriptorSetLayoutCreateInfo a
+                          -> -- | @pAllocator@ controls host memory allocation as described in the
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                             -- chapter.
+                             ("allocator" ::: Maybe AllocationCallbacks)
+                          -> io (DescriptorSetLayout)
 createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (deviceCmds (device :: Device))
   lift $ unless (vkCreateDescriptorSetLayoutPtr /= nullFunPtr) $
@@ -213,17 +208,6 @@ foreign import ccall
 
 -- | vkDestroyDescriptorSetLayout - Destroy a descriptor set layout object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the descriptor set
---     layout.
---
--- -   @descriptorSetLayout@ is the descriptor set layout to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -259,7 +243,17 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core10.Handles.Device'
-destroyDescriptorSetLayout :: forall io . MonadIO io => Device -> DescriptorSetLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorSetLayout :: forall io
+                            . (MonadIO io)
+                           => -- | @device@ is the logical device that destroys the descriptor set layout.
+                              Device
+                           -> -- | @descriptorSetLayout@ is the descriptor set layout to destroy.
+                              DescriptorSetLayout
+                           -> -- | @pAllocator@ controls host memory allocation as described in the
+                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                              -- chapter.
+                              ("allocator" ::: Maybe AllocationCallbacks)
+                           -> io ()
 destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorSetLayoutPtr = pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device))
   lift $ unless (vkDestroyDescriptorSetLayoutPtr /= nullFunPtr) $
@@ -280,21 +274,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr (DescriptorPoolCreateInfo a) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result) -> Ptr Device_T -> Ptr (DescriptorPoolCreateInfo a) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result
 
 -- | vkCreateDescriptorPool - Creates a descriptor pool object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the descriptor pool.
---
--- -   @pCreateInfo@ is a pointer to a 'DescriptorPoolCreateInfo' structure
---     specifying the state of the descriptor pool object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pDescriptorPool@ is a pointer to a
---     'Vulkan.Core10.Handles.DescriptorPool' handle in which the resulting
---     descriptor pool object is returned.
 --
 -- = Description
 --
@@ -337,7 +316,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'DescriptorPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createDescriptorPool :: forall a io . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorPool)
+createDescriptorPool :: forall a io
+                      . (Extendss DescriptorPoolCreateInfo a, PokeChain a, MonadIO io)
+                     => -- | @device@ is the logical device that creates the descriptor pool.
+                        Device
+                     -> -- | @pCreateInfo@ is a pointer to a 'DescriptorPoolCreateInfo' structure
+                        -- specifying the state of the descriptor pool object.
+                        DescriptorPoolCreateInfo a
+                     -> -- | @pAllocator@ controls host memory allocation as described in the
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- chapter.
+                        ("allocator" ::: Maybe AllocationCallbacks)
+                     -> io (DescriptorPool)
 createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (deviceCmds (device :: Device))
   lift $ unless (vkCreateDescriptorPoolPtr /= nullFunPtr) $
@@ -375,16 +365,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DescriptorPool -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> DescriptorPool -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkDestroyDescriptorPool - Destroy a descriptor pool object
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the descriptor pool.
---
--- -   @descriptorPool@ is the descriptor pool to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
 --
 -- = Description
 --
@@ -429,7 +409,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'Vulkan.Core10.Handles.Device'
-destroyDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorPool :: forall io
+                       . (MonadIO io)
+                      => -- | @device@ is the logical device that destroys the descriptor pool.
+                         Device
+                      -> -- | @descriptorPool@ is the descriptor pool to destroy.
+                         DescriptorPool
+                      -> -- | @pAllocator@ controls host memory allocation as described in the
+                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- chapter.
+                         ("allocator" ::: Maybe AllocationCallbacks)
+                      -> io ()
 destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorPoolPtr = pVkDestroyDescriptorPool (deviceCmds (device :: Device))
   lift $ unless (vkDestroyDescriptorPoolPtr /= nullFunPtr) $
@@ -450,14 +440,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DescriptorPool -> DescriptorPoolResetFlags -> IO Result) -> Ptr Device_T -> DescriptorPool -> DescriptorPoolResetFlags -> IO Result
 
 -- | vkResetDescriptorPool - Resets a descriptor pool object
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the descriptor pool.
---
--- -   @descriptorPool@ is the descriptor pool to be reset.
---
--- -   @flags@ is reserved for future use.
 --
 -- = Description
 --
@@ -500,7 +482,15 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Enums.DescriptorPoolResetFlags.DescriptorPoolResetFlags',
 -- 'Vulkan.Core10.Handles.Device'
-resetDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> DescriptorPoolResetFlags -> io ()
+resetDescriptorPool :: forall io
+                     . (MonadIO io)
+                    => -- | @device@ is the logical device that owns the descriptor pool.
+                       Device
+                    -> -- | @descriptorPool@ is the descriptor pool to be reset.
+                       DescriptorPool
+                    -> -- | @flags@ is reserved for future use.
+                       DescriptorPoolResetFlags
+                    -> io ()
 resetDescriptorPool device descriptorPool flags = liftIO $ do
   let vkResetDescriptorPoolPtr = pVkResetDescriptorPool (deviceCmds (device :: Device))
   unless (vkResetDescriptorPoolPtr /= nullFunPtr) $
@@ -518,17 +508,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr (DescriptorSetAllocateInfo a) -> Ptr DescriptorSet -> IO Result) -> Ptr Device_T -> Ptr (DescriptorSetAllocateInfo a) -> Ptr DescriptorSet -> IO Result
 
 -- | vkAllocateDescriptorSets - Allocate one or more descriptor sets
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the descriptor pool.
---
--- -   @pAllocateInfo@ is a pointer to a 'DescriptorSetAllocateInfo'
---     structure describing parameters of the allocation.
---
--- -   @pDescriptorSets@ is a pointer to an array of
---     'Vulkan.Core10.Handles.DescriptorSet' handles in which the resulting
---     descriptor set objects are returned.
 --
 -- = Description
 --
@@ -628,7 +607,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'DescriptorSetAllocateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-allocateDescriptorSets :: forall a io . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> io (("descriptorSets" ::: Vector DescriptorSet))
+allocateDescriptorSets :: forall a io
+                        . (Extendss DescriptorSetAllocateInfo a, PokeChain a, MonadIO io)
+                       => -- | @device@ is the logical device that owns the descriptor pool.
+                          Device
+                       -> -- | @pAllocateInfo@ is a pointer to a 'DescriptorSetAllocateInfo' structure
+                          -- describing parameters of the allocation.
+                          DescriptorSetAllocateInfo a
+                       -> io (("descriptorSets" ::: Vector DescriptorSet))
 allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (deviceCmds (device :: Device))
   lift $ unless (vkAllocateDescriptorSetsPtr /= nullFunPtr) $
@@ -663,19 +649,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DescriptorPool -> Word32 -> Ptr DescriptorSet -> IO Result) -> Ptr Device_T -> DescriptorPool -> Word32 -> Ptr DescriptorSet -> IO Result
 
 -- | vkFreeDescriptorSets - Free one or more descriptor sets
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the descriptor pool.
---
--- -   @descriptorPool@ is the descriptor pool from which the descriptor
---     sets were allocated.
---
--- -   @descriptorSetCount@ is the number of elements in the
---     @pDescriptorSets@ array.
---
--- -   @pDescriptorSets@ is a pointer to an array of handles to
---     'Vulkan.Core10.Handles.DescriptorSet' objects.
 --
 -- = Description
 --
@@ -731,7 +704,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'Vulkan.Core10.Handles.Device'
-freeDescriptorSets :: forall io . MonadIO io => Device -> DescriptorPool -> ("descriptorSets" ::: Vector DescriptorSet) -> io ()
+freeDescriptorSets :: forall io
+                    . (MonadIO io)
+                   => -- | @device@ is the logical device that owns the descriptor pool.
+                      Device
+                   -> -- | @descriptorPool@ is the descriptor pool from which the descriptor sets
+                      -- were allocated.
+                      DescriptorPool
+                   -> -- | @pDescriptorSets@ is a pointer to an array of handles to
+                      -- 'Vulkan.Core10.Handles.DescriptorSet' objects.
+                      ("descriptorSets" ::: Vector DescriptorSet)
+                   -> io ()
 freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
   let vkFreeDescriptorSetsPtr = pVkFreeDescriptorSets (deviceCmds (device :: Device))
   lift $ unless (vkFreeDescriptorSetsPtr /= nullFunPtr) $
@@ -751,22 +734,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr (WriteDescriptorSet a) -> Word32 -> Ptr CopyDescriptorSet -> IO ()) -> Ptr Device_T -> Word32 -> Ptr (WriteDescriptorSet a) -> Word32 -> Ptr CopyDescriptorSet -> IO ()
 
 -- | vkUpdateDescriptorSets - Update the contents of a descriptor set object
---
--- = Parameters
---
--- -   @device@ is the logical device that updates the descriptor sets.
---
--- -   @descriptorWriteCount@ is the number of elements in the
---     @pDescriptorWrites@ array.
---
--- -   @pDescriptorWrites@ is a pointer to an array of 'WriteDescriptorSet'
---     structures describing the descriptor sets to write to.
---
--- -   @descriptorCopyCount@ is the number of elements in the
---     @pDescriptorCopies@ array.
---
--- -   @pDescriptorCopies@ is a pointer to an array of 'CopyDescriptorSet'
---     structures describing the descriptor sets to copy between.
 --
 -- = Description
 --
@@ -829,7 +796,17 @@ foreign import ccall
 --
 -- 'CopyDescriptorSet', 'Vulkan.Core10.Handles.Device',
 -- 'WriteDescriptorSet'
-updateDescriptorSets :: forall io . MonadIO io => Device -> ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
+updateDescriptorSets :: forall io
+                      . (MonadIO io)
+                     => -- | @device@ is the logical device that updates the descriptor sets.
+                        Device
+                     -> -- | @pDescriptorWrites@ is a pointer to an array of 'WriteDescriptorSet'
+                        -- structures describing the descriptor sets to write to.
+                        ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
+                     -> -- | @pDescriptorCopies@ is a pointer to an array of 'CopyDescriptorSet'
+                        -- structures describing the descriptor sets to copy between.
+                        ("descriptorCopies" ::: Vector CopyDescriptorSet)
+                     -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
   let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (deviceCmds (device :: Device))
   lift $ unless (vkUpdateDescriptorSetsPtr /= nullFunPtr) $

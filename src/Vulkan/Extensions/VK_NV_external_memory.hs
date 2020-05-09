@@ -41,7 +41,11 @@ import Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandl
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
-  { -- | @handleTypes@ /must/ be a valid combination of
+  { -- | @handleTypes@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+    -- specifying one or more external memory handle types.
+    --
+    -- @handleTypes@ /must/ be a valid combination of
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }
@@ -89,7 +93,14 @@ instance Zero ExternalMemoryImageCreateInfoNV where
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
-  { -- | @handleTypes@ /must/ be a valid combination of
+  { -- | @handleTypes@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+    -- specifying one or more memory handle types that /may/ be exported.
+    -- Multiple handle types /may/ be requested for the same allocation as long
+    -- as they are compatible, as reported by
+    -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.getPhysicalDeviceExternalImageFormatPropertiesNV'.
+    --
+    -- @handleTypes@ /must/ be a valid combination of
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }

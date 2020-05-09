@@ -61,19 +61,6 @@ foreign import ccall
 
 -- | vkSetHdrMetadataEXT - function to set Hdr metadata
 --
--- = Parameters
---
--- -   @device@ is the logical device where the swapchain(s) were created.
---
--- -   @swapchainCount@ is the number of swapchains included in
---     @pSwapchains@.
---
--- -   @pSwapchains@ is a pointer to an array of @swapchainCount@
---     'Vulkan.Extensions.Handles.SwapchainKHR' handles.
---
--- -   @pMetadata@ is a pointer to an array of @swapchainCount@
---     'HdrMetadataEXT' structures.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -95,7 +82,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'HdrMetadataEXT',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-setHdrMetadataEXT :: forall io . MonadIO io => Device -> ("swapchains" ::: Vector SwapchainKHR) -> ("metadata" ::: Vector HdrMetadataEXT) -> io ()
+setHdrMetadataEXT :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device where the swapchain(s) were created.
+                     Device
+                  -> -- | @pSwapchains@ is a pointer to an array of @swapchainCount@
+                     -- 'Vulkan.Extensions.Handles.SwapchainKHR' handles.
+                     ("swapchains" ::: Vector SwapchainKHR)
+                  -> -- | @pMetadata@ is a pointer to an array of @swapchainCount@
+                     -- 'HdrMetadataEXT' structures.
+                     ("metadata" ::: Vector HdrMetadataEXT)
+                  -> io ()
 setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   let vkSetHdrMetadataEXTPtr = pVkSetHdrMetadataEXT (deviceCmds (device :: Device))
   lift $ unless (vkSetHdrMetadataEXTPtr /= nullFunPtr) $

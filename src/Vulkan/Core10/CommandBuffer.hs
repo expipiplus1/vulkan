@@ -110,20 +110,6 @@ foreign import ccall
 -- | vkAllocateCommandBuffers - Allocate command buffers from an existing
 -- command pool
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the command pool.
---
--- -   @pAllocateInfo@ is a pointer to a 'CommandBufferAllocateInfo'
---     structure describing parameters of the allocation.
---
--- -   @pCommandBuffers@ is a pointer to an array of
---     'Vulkan.Core10.Handles.CommandBuffer' handles in which the resulting
---     command buffer objects are returned. The array /must/ be at least
---     the length specified by the @commandBufferCount@ member of
---     @pAllocateInfo@. Each allocated command buffer begins in the initial
---     state.
---
 -- = Description
 --
 -- 'allocateCommandBuffers' /can/ be used to create multiple command
@@ -170,7 +156,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferAllocateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-allocateCommandBuffers :: forall io . MonadIO io => Device -> CommandBufferAllocateInfo -> io (("commandBuffers" ::: Vector CommandBuffer))
+allocateCommandBuffers :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is the logical device that owns the command pool.
+                          Device
+                       -> -- | @pAllocateInfo@ is a pointer to a 'CommandBufferAllocateInfo' structure
+                          -- describing parameters of the allocation.
+                          CommandBufferAllocateInfo
+                       -> io (("commandBuffers" ::: Vector CommandBuffer))
 allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
   let vkAllocateCommandBuffersPtr = pVkAllocateCommandBuffers cmds
@@ -208,18 +201,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> CommandPool -> Word32 -> Ptr (Ptr CommandBuffer_T) -> IO ()) -> Ptr Device_T -> CommandPool -> Word32 -> Ptr (Ptr CommandBuffer_T) -> IO ()
 
 -- | vkFreeCommandBuffers - Free command buffers
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the command pool.
---
--- -   @commandPool@ is the command pool from which the command buffers
---     were allocated.
---
--- -   @commandBufferCount@ is the length of the @pCommandBuffers@ array.
---
--- -   @pCommandBuffers@ is a pointer to an array of handles of command
---     buffers to free.
 --
 -- = Description
 --
@@ -263,7 +244,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
-freeCommandBuffers :: forall io . MonadIO io => Device -> CommandPool -> ("commandBuffers" ::: Vector CommandBuffer) -> io ()
+freeCommandBuffers :: forall io
+                    . (MonadIO io)
+                   => -- | @device@ is the logical device that owns the command pool.
+                      Device
+                   -> -- | @commandPool@ is the command pool from which the command buffers were
+                      -- allocated.
+                      CommandPool
+                   -> -- | @pCommandBuffers@ is a pointer to an array of handles of command buffers
+                      -- to free.
+                      ("commandBuffers" ::: Vector CommandBuffer)
+                   -> io ()
 freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
   let vkFreeCommandBuffersPtr = pVkFreeCommandBuffers (deviceCmds (device :: Device))
   lift $ unless (vkFreeCommandBuffersPtr /= nullFunPtr) $
@@ -283,15 +274,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr (CommandBufferBeginInfo a) -> IO Result) -> Ptr CommandBuffer_T -> Ptr (CommandBufferBeginInfo a) -> IO Result
 
 -- | vkBeginCommandBuffer - Start recording a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the handle of the command buffer which is to be
---     put in the recording state.
---
--- -   @pBeginInfo@ points to a 'CommandBufferBeginInfo' structure defining
---     additional information about how the command buffer begins
---     recording.
 --
 -- == Valid Usage
 --
@@ -352,7 +334,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferBeginInfo'
-beginCommandBuffer :: forall a io . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io ()
+beginCommandBuffer :: forall a io
+                    . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO io)
+                   => -- | @commandBuffer@ is the handle of the command buffer which is to be put
+                      -- in the recording state.
+                      CommandBuffer
+                   -> -- | @pBeginInfo@ points to a 'CommandBufferBeginInfo' structure defining
+                      -- additional information about how the command buffer begins recording.
+                      CommandBufferBeginInfo a
+                   -> io ()
 beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
   let vkBeginCommandBufferPtr = pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkBeginCommandBufferPtr /= nullFunPtr) $
@@ -380,10 +370,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> IO Result) -> Ptr CommandBuffer_T -> IO Result
 
 -- | vkEndCommandBuffer - Finish recording a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer to complete recording.
 --
 -- = Description
 --
@@ -452,7 +438,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-endCommandBuffer :: forall io . MonadIO io => CommandBuffer -> io ()
+endCommandBuffer :: forall io
+                  . (MonadIO io)
+                 => -- | @commandBuffer@ is the command buffer to complete recording.
+                    CommandBuffer
+                 -> io ()
 endCommandBuffer commandBuffer = liftIO $ do
   let vkEndCommandBufferPtr = pVkEndCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkEndCommandBufferPtr /= nullFunPtr) $
@@ -470,18 +460,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> CommandBufferResetFlags -> IO Result) -> Ptr CommandBuffer_T -> CommandBufferResetFlags -> IO Result
 
 -- | vkResetCommandBuffer - Reset a command buffer to the initial state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer to reset. The command buffer
---     /can/ be in any state other than
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending>,
---     and is moved into the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
---
--- -   @flags@ is a bitmask of
---     'Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlagBits'
---     controlling the reset operation.
 --
 -- = Description
 --
@@ -528,7 +506,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlags'
-resetCommandBuffer :: forall io . MonadIO io => CommandBuffer -> CommandBufferResetFlags -> io ()
+resetCommandBuffer :: forall io
+                    . (MonadIO io)
+                   => -- | @commandBuffer@ is the command buffer to reset. The command buffer /can/
+                      -- be in any state other than
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending>,
+                      -- and is moved into the
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
+                      CommandBuffer
+                   -> -- | @flags@ is a bitmask of
+                      -- 'Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlagBits'
+                      -- controlling the reset operation.
+                      CommandBufferResetFlags
+                   -> io ()
 resetCommandBuffer commandBuffer flags = liftIO $ do
   let vkResetCommandBufferPtr = pVkResetCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkResetCommandBufferPtr /= nullFunPtr) $
@@ -550,13 +540,22 @@ resetCommandBuffer commandBuffer flags = liftIO $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'allocateCommandBuffers'
 data CommandBufferAllocateInfo = CommandBufferAllocateInfo
-  { -- | @commandPool@ /must/ be a valid 'Vulkan.Core10.Handles.CommandPool'
+  { -- | @commandPool@ is the command pool from which the command buffers are
+    -- allocated.
+    --
+    -- @commandPool@ /must/ be a valid 'Vulkan.Core10.Handles.CommandPool'
     -- handle
     commandPool :: CommandPool
-  , -- | @level@ /must/ be a valid
+  , -- | @level@ is a 'Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel'
+    -- value specifying the command buffer level.
+    --
+    -- @level@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel' value
     level :: CommandBufferLevel
-  , -- | @commandBufferCount@ /must/ be greater than @0@
+  , -- | @commandBufferCount@ is the number of command buffers to allocate from
+    -- the pool.
+    --
+    -- @commandBufferCount@ /must/ be greater than @0@
     commandBufferCount :: Word32
   }
   deriving (Typeable)

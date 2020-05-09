@@ -97,22 +97,6 @@ foreign import ccall
 -- | vkCreateXlibSurfaceKHR - Create a 'Vulkan.Extensions.Handles.SurfaceKHR'
 -- object for an X11 window, using the Xlib client-side library
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to a 'XlibSurfaceCreateInfoKHR' structure
---     containing the parameters affecting the creation of the surface
---     object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -144,7 +128,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'XlibSurfaceCreateInfoKHR'
-createXlibSurfaceKHR :: forall io . MonadIO io => Instance -> XlibSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createXlibSurfaceKHR :: forall io
+                      . (MonadIO io)
+                     => -- | @instance@ is the instance to associate the surface with.
+                        Instance
+                     -> -- | @pCreateInfo@ is a pointer to a 'XlibSurfaceCreateInfoKHR' structure
+                        -- containing the parameters affecting the creation of the surface object.
+                        XlibSurfaceCreateInfoKHR
+                     -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                        -- surface object when there is no more specific allocator available (see
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                        ("allocator" ::: Maybe AllocationCallbacks)
+                     -> io (SurfaceKHR)
 createXlibSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateXlibSurfaceKHRPtr = pVkCreateXlibSurfaceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateXlibSurfaceKHRPtr /= nullFunPtr) $
@@ -171,17 +166,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceXlibPresentationSupportKHR - Query physical device
 -- for presentation to X11 server using Xlib
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @queueFamilyIndex@ is the queue family index.
---
--- -   @dpy@ is a pointer to an Xlib 'Vulkan.Extensions.WSITypes.Display'
---     connection to the server.
---
--- -   @visualId@ is an X11 visual ('Vulkan.Extensions.WSITypes.VisualID').
---
 -- = Description
 --
 -- This platform-specific function /can/ be called prior to creating a
@@ -192,7 +176,29 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceXlibPresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> ("dpy" ::: Ptr Display) -> VisualID -> io (Bool)
+getPhysicalDeviceXlibPresentationSupportKHR :: forall io
+                                             . (MonadIO io)
+                                            => -- | @physicalDevice@ is the physical device.
+                                               --
+                                               -- @physicalDevice@ /must/ be a valid
+                                               -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                               PhysicalDevice
+                                            -> -- | @queueFamilyIndex@ is the queue family index.
+                                               --
+                                               -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+                                               -- returned by
+                                               -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+                                               -- for the given @physicalDevice@
+                                               ("queueFamilyIndex" ::: Word32)
+                                            -> -- | @dpy@ is a pointer to an Xlib 'Vulkan.Extensions.WSITypes.Display'
+                                               -- connection to the server.
+                                               --
+                                               -- @dpy@ /must/ be a valid pointer to a
+                                               -- 'Vulkan.Extensions.WSITypes.Display' value
+                                               ("dpy" ::: Ptr Display)
+                                            -> -- No documentation found for Nested "vkGetPhysicalDeviceXlibPresentationSupportKHR" "visualID"
+                                               VisualID
+                                            -> io (Bool)
 getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy visualID = liftIO $ do
   let vkGetPhysicalDeviceXlibPresentationSupportKHRPtr = pVkGetPhysicalDeviceXlibPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   unless (vkGetPhysicalDeviceXlibPresentationSupportKHRPtr /= nullFunPtr) $
@@ -212,11 +218,19 @@ getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy 
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'XlibSurfaceCreateFlagsKHR', 'createXlibSurfaceKHR'
 data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: XlibSurfaceCreateFlagsKHR
-  , -- | @dpy@ /must/ point to a valid Xlib 'Vulkan.Extensions.WSITypes.Display'
+  , -- | @dpy@ is a pointer to an Xlib 'Vulkan.Extensions.WSITypes.Display'
+    -- connection to the X server.
+    --
+    -- @dpy@ /must/ point to a valid Xlib 'Vulkan.Extensions.WSITypes.Display'
     dpy :: Ptr Display
-  , -- | @window@ /must/ be a valid Xlib 'Vulkan.Extensions.WSITypes.Window'
+  , -- | @window@ is an Xlib 'Vulkan.Extensions.WSITypes.Window' to associate the
+    -- surface with.
+    --
+    -- @window@ /must/ be a valid Xlib 'Vulkan.Extensions.WSITypes.Window'
     window :: Window
   }
   deriving (Typeable)

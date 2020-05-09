@@ -90,19 +90,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceCalibrateableTimeDomainsEXT - Query calibrateable
 -- time domains
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the set
---     of calibrateable time domains.
---
--- -   @pTimeDomainCount@ is a pointer to an integer related to the number
---     of calibrateable time domains available or queried, as described
---     below.
---
--- -   @pTimeDomains@ is either @NULL@ or a pointer to an array of
---     'TimeDomainEXT' values, indicating the supported calibrateable time
---     domains.
---
 -- = Description
 --
 -- If @pTimeDomains@ is @NULL@, then the number of calibrateable time
@@ -175,24 +162,6 @@ foreign import ccall
 
 -- | vkGetCalibratedTimestampsEXT - Query calibrated timestamps
 --
--- = Parameters
---
--- -   @device@ is the logical device used to perform the query.
---
--- -   @timestampCount@ is the number of timestamps to query.
---
--- -   @pTimestampInfos@ is a pointer to an array of @timestampCount@
---     'CalibratedTimestampInfoEXT' structures, describing the time domains
---     the calibrated timestamps should be captured from.
---
--- -   @pTimestamps@ is a pointer to an array of @timestampCount@ 64-bit
---     unsigned integer values in which the requested calibrated timestamp
---     values are returned.
---
--- -   @pMaxDeviation@ is a pointer to a 64-bit unsigned integer value in
---     which the strictly positive maximum deviation, in nanoseconds, of
---     the calibrated timestamp values is returned.
---
 -- = Description
 --
 -- Note
@@ -227,7 +196,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'CalibratedTimestampInfoEXT', 'Vulkan.Core10.Handles.Device'
-getCalibratedTimestampsEXT :: forall io . MonadIO io => Device -> ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT) -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
+getCalibratedTimestampsEXT :: forall io
+                            . (MonadIO io)
+                           => -- | @device@ is the logical device used to perform the query.
+                              --
+                              -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                              Device
+                           -> -- | @pTimestampInfos@ is a pointer to an array of @timestampCount@
+                              -- 'CalibratedTimestampInfoEXT' structures, describing the time domains the
+                              -- calibrated timestamps should be captured from.
+                              --
+                              -- @pTimestampInfos@ /must/ be a valid pointer to an array of
+                              -- @timestampCount@ valid 'CalibratedTimestampInfoEXT' structures
+                              ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT)
+                           -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
 getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
   let vkGetCalibratedTimestampsEXTPtr = pVkGetCalibratedTimestampsEXT (deviceCmds (device :: Device))
   lift $ unless (vkGetCalibratedTimestampsEXTPtr /= nullFunPtr) $
@@ -254,7 +236,13 @@ getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'TimeDomainEXT',
 -- 'getCalibratedTimestampsEXT'
 data CalibratedTimestampInfoEXT = CalibratedTimestampInfoEXT
-  { -- | @timeDomain@ /must/ be a valid 'TimeDomainEXT' value
+  { -- | @timeDomain@ is a 'TimeDomainEXT' value specifying the time domain from
+    -- which the calibrated timestamp value should be returned.
+    --
+    -- @timeDomain@ /must/ be one of the 'TimeDomainEXT' values returned by
+    -- 'getPhysicalDeviceCalibrateableTimeDomainsEXT'
+    --
+    -- @timeDomain@ /must/ be a valid 'TimeDomainEXT' value
     timeDomain :: TimeDomainEXT }
   deriving (Typeable)
 deriving instance Show CalibratedTimestampInfoEXT

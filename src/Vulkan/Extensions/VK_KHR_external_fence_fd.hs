@@ -69,17 +69,6 @@ foreign import ccall
 
 -- | vkGetFenceFdKHR - Get a POSIX file descriptor handle for a fence
 --
--- = Parameters
---
--- -   @device@ is the logical device that created the fence being
---     exported.
---
--- -   @pGetFdInfo@ is a pointer to a 'FenceGetFdInfoKHR' structure
---     containing parameters of the export operation.
---
--- -   @pFd@ will return the file descriptor representing the fence
---     payload.
---
 -- = Description
 --
 -- Each call to 'getFenceFdKHR' /must/ create a new file descriptor and
@@ -122,7 +111,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'FenceGetFdInfoKHR'
-getFenceFdKHR :: forall io . MonadIO io => Device -> FenceGetFdInfoKHR -> io (("fd" ::: Int32))
+getFenceFdKHR :: forall io
+               . (MonadIO io)
+              => -- | @device@ is the logical device that created the fence being exported.
+                 --
+                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                 Device
+              -> -- | @pGetFdInfo@ is a pointer to a 'FenceGetFdInfoKHR' structure containing
+                 -- parameters of the export operation.
+                 --
+                 -- @pGetFdInfo@ /must/ be a valid pointer to a valid 'FenceGetFdInfoKHR'
+                 -- structure
+                 FenceGetFdInfoKHR
+              -> io (("fd" ::: Int32))
 getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetFenceFdKHRPtr = pVkGetFenceFdKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetFenceFdKHRPtr /= nullFunPtr) $
@@ -144,13 +145,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr ImportFenceFdInfoKHR -> IO Result) -> Ptr Device_T -> Ptr ImportFenceFdInfoKHR -> IO Result
 
 -- | vkImportFenceFdKHR - Import a fence from a POSIX file descriptor
---
--- = Parameters
---
--- -   @device@ is the logical device that created the fence.
---
--- -   @pImportFenceFdInfo@ is a pointer to a 'ImportFenceFdInfoKHR'
---     structure specifying the fence and import parameters.
 --
 -- = Description
 --
@@ -178,7 +172,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImportFenceFdInfoKHR'
-importFenceFdKHR :: forall io . MonadIO io => Device -> ImportFenceFdInfoKHR -> io ()
+importFenceFdKHR :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that created the fence.
+                    --
+                    -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                    Device
+                 -> -- | @pImportFenceFdInfo@ is a pointer to a 'ImportFenceFdInfoKHR' structure
+                    -- specifying the fence and import parameters.
+                    --
+                    -- @pImportFenceFdInfo@ /must/ be a valid pointer to a valid
+                    -- 'ImportFenceFdInfoKHR' structure
+                    ImportFenceFdInfoKHR
+                 -> io ()
 importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
   let vkImportFenceFdKHRPtr = pVkImportFenceFdKHR (deviceCmds (device :: Device))
   lift $ unless (vkImportFenceFdKHRPtr /= nullFunPtr) $

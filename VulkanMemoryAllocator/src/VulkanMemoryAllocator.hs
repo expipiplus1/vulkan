@@ -260,7 +260,11 @@ foreign import ccall
   :: Ptr AllocatorCreateInfo -> Ptr Allocator -> IO Result
 
 -- | Creates Allocator object.
-createAllocator :: forall io . MonadIO io => AllocatorCreateInfo -> io (Allocator)
+createAllocator :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaCreateAllocator" "pCreateInfo"
+                   AllocatorCreateInfo
+                -> io (Allocator)
 createAllocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocator <- ContT $ bracket (callocBytes @Allocator 8) free
@@ -291,7 +295,11 @@ foreign import ccall
   :: Allocator -> IO ()
 
 -- | Destroys allocator object.
-destroyAllocator :: forall io . MonadIO io => Allocator -> io ()
+destroyAllocator :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaDestroyAllocator" "allocator"
+                    Allocator
+                 -> io ()
 destroyAllocator allocator = liftIO $ do
   (ffiVmaDestroyAllocator) (allocator)
   pure $ ()
@@ -310,7 +318,11 @@ foreign import ccall
 -- It might be useful if you want to keep just the 'Allocator' handle and
 -- fetch other required handles to @VkPhysicalDevice@, @VkDevice@ etc.
 -- every time using this function.
-getAllocatorInfo :: forall io . MonadIO io => Allocator -> io (AllocatorInfo)
+getAllocatorInfo :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaGetAllocatorInfo" "allocator"
+                    Allocator
+                 -> io (AllocatorInfo)
 getAllocatorInfo allocator = liftIO . evalContT $ do
   pPAllocatorInfo <- ContT (withZeroCStruct @AllocatorInfo)
   lift $ (ffiVmaGetAllocatorInfo) (allocator) (pPAllocatorInfo)
@@ -328,7 +340,11 @@ foreign import ccall
 -- | PhysicalDeviceProperties are fetched from physicalDevice by the
 -- allocator. You can access it here, without fetching it again on your
 -- own.
-getPhysicalDeviceProperties :: forall io . MonadIO io => Allocator -> io (Ptr PhysicalDeviceProperties)
+getPhysicalDeviceProperties :: forall io
+                             . (MonadIO io)
+                            => -- No documentation found for Nested "vmaGetPhysicalDeviceProperties" "allocator"
+                               Allocator
+                            -> io (Ptr PhysicalDeviceProperties)
 getPhysicalDeviceProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceProperties) 8) free
   lift $ (ffiVmaGetPhysicalDeviceProperties) (allocator) (pPpPhysicalDeviceProperties)
@@ -346,7 +362,11 @@ foreign import ccall
 -- | PhysicalDeviceMemoryProperties are fetched from physicalDevice by the
 -- allocator. You can access it here, without fetching it again on your
 -- own.
-getMemoryProperties :: forall io . MonadIO io => Allocator -> io (Ptr PhysicalDeviceMemoryProperties)
+getMemoryProperties :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaGetMemoryProperties" "allocator"
+                       Allocator
+                    -> io (Ptr PhysicalDeviceMemoryProperties)
 getMemoryProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceMemoryProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceMemoryProperties) 8) free
   lift $ (ffiVmaGetMemoryProperties) (allocator) (pPpPhysicalDeviceMemoryProperties)
@@ -365,7 +385,13 @@ foreign import ccall
 --
 -- This is just a convenience function. Same information can be obtained
 -- using 'getMemoryProperties'.
-getMemoryTypeProperties :: forall io . MonadIO io => Allocator -> ("memoryTypeIndex" ::: Word32) -> io (MemoryPropertyFlags)
+getMemoryTypeProperties :: forall io
+                         . (MonadIO io)
+                        => -- No documentation found for Nested "vmaGetMemoryTypeProperties" "allocator"
+                           Allocator
+                        -> -- No documentation found for Nested "vmaGetMemoryTypeProperties" "memoryTypeIndex"
+                           ("memoryTypeIndex" ::: Word32)
+                        -> io (MemoryPropertyFlags)
 getMemoryTypeProperties allocator memoryTypeIndex = liftIO . evalContT $ do
   pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
   lift $ (ffiVmaGetMemoryTypeProperties) (allocator) (memoryTypeIndex) (pPFlags)
@@ -387,7 +413,13 @@ foreign import ccall
 -- 'ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT' flags to inform the
 -- allocator when a new frame begins. Allocations queried using
 -- 'getAllocationInfo' cannot become lost in the current frame.
-setCurrentFrameIndex :: forall io . MonadIO io => Allocator -> ("frameIndex" ::: Word32) -> io ()
+setCurrentFrameIndex :: forall io
+                      . (MonadIO io)
+                     => -- No documentation found for Nested "vmaSetCurrentFrameIndex" "allocator"
+                        Allocator
+                     -> -- No documentation found for Nested "vmaSetCurrentFrameIndex" "frameIndex"
+                        ("frameIndex" ::: Word32)
+                     -> io ()
 setCurrentFrameIndex allocator frameIndex = liftIO $ do
   (ffiVmaSetCurrentFrameIndex) (allocator) (frameIndex)
   pure $ ()
@@ -409,7 +441,11 @@ foreign import ccall
 --
 -- Note that when using allocator from multiple threads, returned
 -- information may immediately become outdated.
-calculateStats :: forall io . MonadIO io => Allocator -> io (Stats)
+calculateStats :: forall io
+                . (MonadIO io)
+               => -- No documentation found for Nested "vmaCalculateStats" "allocator"
+                  Allocator
+               -> io (Stats)
 calculateStats allocator = liftIO . evalContT $ do
   pPStats <- ContT (withZeroCStruct @Stats)
   lift $ (ffiVmaCalculateStats) (allocator) (pPStats)
@@ -440,7 +476,11 @@ foreign import ccall
 --
 -- Note that when using allocator from multiple threads, returned
 -- information may immediately become outdated.
-getBudget :: forall io . MonadIO io => Allocator -> io (Budget)
+getBudget :: forall io
+           . (MonadIO io)
+          => -- No documentation found for Nested "vmaGetBudget" "allocator"
+             Allocator
+          -> io (Budget)
 getBudget allocator = liftIO . evalContT $ do
   pPBudget <- ContT (withZeroCStruct @Budget)
   lift $ (ffiVmaGetBudget) (allocator) (pPBudget)
@@ -463,7 +503,13 @@ foreign import ccall
 -- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
 -- |           |               | function.                                     |
 -- +-----------+---------------+-----------------------------------------------+
-buildStatsString :: forall io . MonadIO io => Allocator -> ("detailedMap" ::: Bool) -> io (("statsString" ::: Ptr CChar))
+buildStatsString :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaBuildStatsString" "allocator"
+                    Allocator
+                 -> -- No documentation found for Nested "vmaBuildStatsString" "detailedMap"
+                    ("detailedMap" ::: Bool)
+                 -> io (("statsString" ::: Ptr CChar))
 buildStatsString allocator detailedMap = liftIO . evalContT $ do
   pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
   lift $ (ffiVmaBuildStatsString) (allocator) (pPpStatsString) (boolToBool32 (detailedMap))
@@ -479,7 +525,13 @@ foreign import ccall
   :: Allocator -> Ptr CChar -> IO ()
 
 
-freeStatsString :: forall io . MonadIO io => Allocator -> ("statsString" ::: Ptr CChar) -> io ()
+freeStatsString :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaFreeStatsString" "allocator"
+                   Allocator
+                -> -- No documentation found for Nested "vmaFreeStatsString" "pStatsString"
+                   ("statsString" ::: Ptr CChar)
+                -> io ()
 freeStatsString allocator statsString = liftIO $ do
   (ffiVmaFreeStatsString) (allocator) (statsString)
   pure $ ()
@@ -514,7 +566,15 @@ foreign import ccall
 -- the specific type of resource you want to use it for. Please check
 -- parameters of your resource, like image layout (OPTIMAL versus LINEAR)
 -- or mip level count.
-findMemoryTypeIndex :: forall io . MonadIO io => Allocator -> ("memoryTypeBits" ::: Word32) -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndex :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaFindMemoryTypeIndex" "allocator"
+                       Allocator
+                    -> -- No documentation found for Nested "vmaFindMemoryTypeIndex" "memoryTypeBits"
+                       ("memoryTypeBits" ::: Word32)
+                    -> -- No documentation found for Nested "vmaFindMemoryTypeIndex" "pAllocationCreateInfo"
+                       AllocationCreateInfo
+                    -> io (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndex allocator memoryTypeBits allocationCreateInfo = liftIO . evalContT $ do
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
@@ -546,7 +606,15 @@ foreign import ccall
 -- -   'findMemoryTypeIndex'
 --
 -- -   @vkDestroyBuffer@
-findMemoryTypeIndexForBufferInfo :: forall a io . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndexForBufferInfo :: forall a io
+                                  . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
+                                 => -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "allocator"
+                                    Allocator
+                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pBufferCreateInfo"
+                                    BufferCreateInfo a
+                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pAllocationCreateInfo"
+                                    AllocationCreateInfo
+                                 -> io (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -579,7 +647,15 @@ foreign import ccall
 -- -   'findMemoryTypeIndex'
 --
 -- -   @vkDestroyImage@
-findMemoryTypeIndexForImageInfo :: forall a io . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (("memoryTypeIndex" ::: Word32))
+findMemoryTypeIndexForImageInfo :: forall a io
+                                 . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io)
+                                => -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "allocator"
+                                   Allocator
+                                -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pImageCreateInfo"
+                                   ImageCreateInfo a
+                                -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pAllocationCreateInfo"
+                                   AllocationCreateInfo
+                                -> io (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -608,7 +684,13 @@ foreign import ccall
 -- +-----------+-------------+-----------------------------------------------+
 -- | out       | pPool       | Handle to created pool.                       |
 -- +-----------+-------------+-----------------------------------------------+
-createPool :: forall io . MonadIO io => Allocator -> PoolCreateInfo -> io (Pool)
+createPool :: forall io
+            . (MonadIO io)
+           => -- No documentation found for Nested "vmaCreatePool" "allocator"
+              Allocator
+           -> -- No documentation found for Nested "vmaCreatePool" "pCreateInfo"
+              PoolCreateInfo
+           -> io (Pool)
 createPool allocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPPool <- ContT $ bracket (callocBytes @Pool 8) free
@@ -639,7 +721,13 @@ foreign import ccall
   :: Allocator -> Pool -> IO ()
 
 -- | Destroys 'Pool' object and frees Vulkan device memory.
-destroyPool :: forall io . MonadIO io => Allocator -> Pool -> io ()
+destroyPool :: forall io
+             . (MonadIO io)
+            => -- No documentation found for Nested "vmaDestroyPool" "allocator"
+               Allocator
+            -> -- No documentation found for Nested "vmaDestroyPool" "pool"
+               Pool
+            -> io ()
 destroyPool allocator pool = liftIO $ do
   (ffiVmaDestroyPool) (allocator) (pool)
   pure $ ()
@@ -663,7 +751,13 @@ foreign import ccall
 -- +-----------+------------+-----------------------------------------------+
 -- | out       | pPoolStats | Statistics of specified pool.                 |
 -- +-----------+------------+-----------------------------------------------+
-getPoolStats :: forall io . MonadIO io => Allocator -> Pool -> io (PoolStats)
+getPoolStats :: forall io
+              . (MonadIO io)
+             => -- No documentation found for Nested "vmaGetPoolStats" "allocator"
+                Allocator
+             -> -- No documentation found for Nested "vmaGetPoolStats" "pool"
+                Pool
+             -> io (PoolStats)
 getPoolStats allocator pool = liftIO . evalContT $ do
   pPPoolStats <- ContT (withZeroCStruct @PoolStats)
   lift $ (ffiVmaGetPoolStats) (allocator) (pool) (pPPoolStats)
@@ -692,7 +786,13 @@ foreign import ccall
 -- |           |                      | Optional - pass null if you don\'t need this  |
 -- |           |                      | information.                                  |
 -- +-----------+----------------------+-----------------------------------------------+
-makePoolAllocationsLost :: forall io . MonadIO io => Allocator -> Pool -> io (("lostAllocationCount" ::: Word64))
+makePoolAllocationsLost :: forall io
+                         . (MonadIO io)
+                        => -- No documentation found for Nested "vmaMakePoolAllocationsLost" "allocator"
+                           Allocator
+                        -> -- No documentation found for Nested "vmaMakePoolAllocationsLost" "pool"
+                           Pool
+                        -> io (("lostAllocationCount" ::: Word64))
 makePoolAllocationsLost allocator pool = liftIO . evalContT $ do
   pPLostAllocationCount <- ContT $ bracket (callocBytes @CSize 8) free
   lift $ (ffiVmaMakePoolAllocationsLost) (allocator) (pool) (pPLostAllocationCount)
@@ -728,7 +828,13 @@ foreign import ccall
 --     allocations. @VMA_ASSERT@ is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
-checkPoolCorruption :: forall io . MonadIO io => Allocator -> Pool -> io ()
+checkPoolCorruption :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaCheckPoolCorruption" "allocator"
+                       Allocator
+                    -> -- No documentation found for Nested "vmaCheckPoolCorruption" "pool"
+                       Pool
+                    -> io ()
 checkPoolCorruption allocator pool = liftIO $ do
   r <- (ffiVmaCheckPoolCorruption) (allocator) (pool)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -747,7 +853,13 @@ foreign import ccall
 -- null-terminated string containing name of the pool that was previously
 -- set. The pointer becomes invalid when the pool is destroyed or its name
 -- is changed using 'setPoolName'.
-getPoolName :: forall io . MonadIO io => Allocator -> Pool -> io (("name" ::: Ptr CChar))
+getPoolName :: forall io
+             . (MonadIO io)
+            => -- No documentation found for Nested "vmaGetPoolName" "allocator"
+               Allocator
+            -> -- No documentation found for Nested "vmaGetPoolName" "pool"
+               Pool
+            -> io (("name" ::: Ptr CChar))
 getPoolName allocator pool = liftIO . evalContT $ do
   pPpName <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
   lift $ (ffiVmaGetPoolName) (allocator) (pool) (pPpName)
@@ -767,7 +879,15 @@ foreign import ccall
 -- @pName@ can be either null or pointer to a null-terminated string with
 -- new name for the pool. Function makes internal copy of the string, so it
 -- can be changed or freed immediately after this call.
-setPoolName :: forall io . MonadIO io => Allocator -> Pool -> ("name" ::: Maybe ByteString) -> io ()
+setPoolName :: forall io
+             . (MonadIO io)
+            => -- No documentation found for Nested "vmaSetPoolName" "allocator"
+               Allocator
+            -> -- No documentation found for Nested "vmaSetPoolName" "pool"
+               Pool
+            -> -- No documentation found for Nested "vmaSetPoolName" "pName"
+               ("name" ::: Maybe ByteString)
+            -> io ()
 setPoolName allocator pool name = liftIO . evalContT $ do
   pName <- case (name) of
     Nothing -> pure nullPtr
@@ -800,7 +920,15 @@ foreign import ccall
 -- It is recommended to use 'allocateMemoryForBuffer',
 -- 'allocateMemoryForImage', 'createBuffer', 'createImage' instead whenever
 -- possible.
-allocateMemory :: forall io . MonadIO io => Allocator -> ("vkMemoryRequirements" ::: MemoryRequirements) -> AllocationCreateInfo -> io (Allocation, AllocationInfo)
+allocateMemory :: forall io
+                . (MonadIO io)
+               => -- No documentation found for Nested "vmaAllocateMemory" "allocator"
+                  Allocator
+               -> -- No documentation found for Nested "vmaAllocateMemory" "pVkMemoryRequirements"
+                  ("vkMemoryRequirements" ::: MemoryRequirements)
+               -> -- No documentation found for Nested "vmaAllocateMemory" "pCreateInfo"
+                  AllocationCreateInfo
+               -> io (Allocation, AllocationInfo)
 allocateMemory allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
   pVkMemoryRequirements <- ContT $ withCStruct (vkMemoryRequirements)
   pCreateInfo <- ContT $ withCStruct (createInfo)
@@ -868,7 +996,15 @@ foreign import ccall
 -- allocations already made within this function call are also freed, so
 -- that when returned result is not @VK_SUCCESS@, @pAllocation@ array is
 -- always entirely filled with @VK_NULL_HANDLE@.
-allocateMemoryPages :: forall io . MonadIO io => Allocator -> ("vkMemoryRequirements" ::: Vector MemoryRequirements) -> ("createInfo" ::: Vector AllocationCreateInfo) -> io (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
+allocateMemoryPages :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaAllocateMemoryPages" "allocator"
+                       Allocator
+                    -> -- No documentation found for Nested "vmaAllocateMemoryPages" "pVkMemoryRequirements"
+                       ("vkMemoryRequirements" ::: Vector MemoryRequirements)
+                    -> -- No documentation found for Nested "vmaAllocateMemoryPages" "pCreateInfo"
+                       ("createInfo" ::: Vector AllocationCreateInfo)
+                    -> io (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
 allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
   pPVkMemoryRequirements <- ContT $ allocaBytesAligned @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVkMemoryRequirements `plusPtr` (24 * (i)) :: Ptr MemoryRequirements) (e) . ($ ())) (vkMemoryRequirements)
@@ -918,7 +1054,15 @@ foreign import ccall
 -- +-----------+-----------------+-----------------------------------------------+
 --
 -- You should free the memory using 'freeMemory'.
-allocateMemoryForBuffer :: forall io . MonadIO io => Allocator -> Buffer -> AllocationCreateInfo -> io (Allocation, AllocationInfo)
+allocateMemoryForBuffer :: forall io
+                         . (MonadIO io)
+                        => -- No documentation found for Nested "vmaAllocateMemoryForBuffer" "allocator"
+                           Allocator
+                        -> -- No documentation found for Nested "vmaAllocateMemoryForBuffer" "buffer"
+                           Buffer
+                        -> -- No documentation found for Nested "vmaAllocateMemoryForBuffer" "pCreateInfo"
+                           AllocationCreateInfo
+                        -> io (Allocation, AllocationInfo)
 allocateMemoryForBuffer allocator buffer createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
@@ -951,7 +1095,15 @@ foreign import ccall
   :: Allocator -> Image -> Ptr AllocationCreateInfo -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
 -- | Function similar to 'allocateMemoryForBuffer'.
-allocateMemoryForImage :: forall io . MonadIO io => Allocator -> Image -> AllocationCreateInfo -> io (Allocation, AllocationInfo)
+allocateMemoryForImage :: forall io
+                        . (MonadIO io)
+                       => -- No documentation found for Nested "vmaAllocateMemoryForImage" "allocator"
+                          Allocator
+                       -> -- No documentation found for Nested "vmaAllocateMemoryForImage" "image"
+                          Image
+                       -> -- No documentation found for Nested "vmaAllocateMemoryForImage" "pCreateInfo"
+                          AllocationCreateInfo
+                       -> io (Allocation, AllocationInfo)
 allocateMemoryForImage allocator image createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
@@ -988,7 +1140,13 @@ foreign import ccall
 --
 -- Passing @VK_NULL_HANDLE@ as @allocation@ is valid. Such function call is
 -- just skipped.
-freeMemory :: forall io . MonadIO io => Allocator -> Allocation -> io ()
+freeMemory :: forall io
+            . (MonadIO io)
+           => -- No documentation found for Nested "vmaFreeMemory" "allocator"
+              Allocator
+           -> -- No documentation found for Nested "vmaFreeMemory" "allocation"
+              Allocation
+           -> io ()
 freeMemory allocator allocation = liftIO $ do
   (ffiVmaFreeMemory) (allocator) (allocation)
   pure $ ()
@@ -1013,7 +1171,13 @@ foreign import ccall
 -- Allocations in @pAllocations@ array can come from any memory pools and
 -- types. Passing @VK_NULL_HANDLE@ as elements of @pAllocations@ array is
 -- valid. Such entries are just skipped.
-freeMemoryPages :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> io ()
+freeMemoryPages :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaFreeMemoryPages" "allocator"
+                   Allocator
+                -> -- No documentation found for Nested "vmaFreeMemoryPages" "pAllocations"
+                   ("allocations" ::: Vector Allocation)
+                -> io ()
 freeMemoryPages allocator allocations = liftIO . evalContT $ do
   pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
@@ -1037,7 +1201,15 @@ foreign import ccall
 -- only if @newSize@ equals current allocation\'s size. Otherwise returns
 -- @VK_ERROR_OUT_OF_POOL_MEMORY@, indicating that allocation\'s size could
 -- not be changed.
-resizeAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("newSize" ::: DeviceSize) -> io ()
+resizeAllocation :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaResizeAllocation" "allocator"
+                    Allocator
+                 -> -- No documentation found for Nested "vmaResizeAllocation" "allocation"
+                    Allocation
+                 -> -- No documentation found for Nested "vmaResizeAllocation" "newSize"
+                    ("newSize" ::: DeviceSize)
+                 -> io ()
 resizeAllocation allocator allocation newSize = liftIO $ do
   r <- (ffiVmaResizeAllocation) (allocator) (allocation) (newSize)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1069,7 +1241,13 @@ foreign import ccall
 --
 -- -   If you just want to check if allocation is not lost,
 --     'touchAllocation' will work faster.
-getAllocationInfo :: forall io . MonadIO io => Allocator -> Allocation -> io (AllocationInfo)
+getAllocationInfo :: forall io
+                   . (MonadIO io)
+                  => -- No documentation found for Nested "vmaGetAllocationInfo" "allocator"
+                     Allocator
+                  -> -- No documentation found for Nested "vmaGetAllocationInfo" "allocation"
+                     Allocation
+                  -> io (AllocationInfo)
 getAllocationInfo allocator allocation = liftIO . evalContT $ do
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
   lift $ (ffiVmaGetAllocationInfo) (allocator) (allocation) (pPAllocationInfo)
@@ -1102,7 +1280,13 @@ foreign import ccall
 -- If the allocation has been created without
 -- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function always
 -- returns @VK_TRUE@.
-touchAllocation :: forall io . MonadIO io => Allocator -> Allocation -> io (Bool)
+touchAllocation :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaTouchAllocation" "allocator"
+                   Allocator
+                -> -- No documentation found for Nested "vmaTouchAllocation" "allocation"
+                   Allocation
+                -> io (Bool)
 touchAllocation allocator allocation = liftIO $ do
   r <- (ffiVmaTouchAllocation) (allocator) (allocation)
   pure $ ((bool32ToBool r))
@@ -1129,7 +1313,15 @@ foreign import ccall
 -- copied to allocation\'s @pUserData@. It is opaque, so you can use it
 -- however you want - e.g. as a pointer, ordinal number or some handle to
 -- you own data.
-setAllocationUserData :: forall io . MonadIO io => Allocator -> Allocation -> ("userData" ::: Ptr ()) -> io ()
+setAllocationUserData :: forall io
+                       . (MonadIO io)
+                      => -- No documentation found for Nested "vmaSetAllocationUserData" "allocator"
+                         Allocator
+                      -> -- No documentation found for Nested "vmaSetAllocationUserData" "allocation"
+                         Allocation
+                      -> -- No documentation found for Nested "vmaSetAllocationUserData" "pUserData"
+                         ("userData" ::: Ptr ())
+                      -> io ()
 setAllocationUserData allocator allocation userData = liftIO $ do
   (ffiVmaSetAllocationUserData) (allocator) (allocation) (userData)
   pure $ ()
@@ -1151,7 +1343,11 @@ foreign import ccall
 -- Returned allocation is not tied to any specific memory pool or memory
 -- type and not bound to any image or buffer. It has size = 0. It cannot be
 -- turned into a real, non-empty allocation.
-createLostAllocation :: forall io . MonadIO io => Allocator -> io (Allocation)
+createLostAllocation :: forall io
+                      . (MonadIO io)
+                     => -- No documentation found for Nested "vmaCreateLostAllocation" "allocator"
+                        Allocator
+                     -> io (Allocation)
 createLostAllocation allocator = liftIO . evalContT $ do
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   lift $ (ffiVmaCreateLostAllocation) (allocator) (pPAllocation)
@@ -1219,7 +1415,13 @@ foreign import ccall
 -- allocation is made from a memory types that is not @HOST_COHERENT@, you
 -- also need to use 'invalidateAllocation' \/ 'flushAllocation', as
 -- required by Vulkan specification.
-mapMemory :: forall io . MonadIO io => Allocator -> Allocation -> io (("data" ::: Ptr ()))
+mapMemory :: forall io
+           . (MonadIO io)
+          => -- No documentation found for Nested "vmaMapMemory" "allocator"
+             Allocator
+          -> -- No documentation found for Nested "vmaMapMemory" "allocation"
+             Allocation
+          -> io (("data" ::: Ptr ()))
 mapMemory allocator allocation = liftIO . evalContT $ do
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
   r <- lift $ (ffiVmaMapMemory) (allocator) (allocation) (pPpData)
@@ -1257,7 +1459,13 @@ foreign import ccall
 -- allocation is made from a memory types that is not @HOST_COHERENT@, you
 -- also need to use 'invalidateAllocation' \/ 'flushAllocation', as
 -- required by Vulkan specification.
-unmapMemory :: forall io . MonadIO io => Allocator -> Allocation -> io ()
+unmapMemory :: forall io
+             . (MonadIO io)
+            => -- No documentation found for Nested "vmaUnmapMemory" "allocator"
+               Allocator
+            -> -- No documentation found for Nested "vmaUnmapMemory" "allocation"
+               Allocation
+            -> io ()
 unmapMemory allocator allocation = liftIO $ do
   (ffiVmaUnmapMemory) (allocator) (allocation)
   pure $ ()
@@ -1297,7 +1505,17 @@ foreign import ccall
 --
 -- This function returns the @VkResult@ from @vkFlushMappedMemoryRanges@ if
 -- it is called, otherwise @VK_SUCCESS@.
-flushAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> io ()
+flushAllocation :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaFlushAllocation" "allocator"
+                   Allocator
+                -> -- No documentation found for Nested "vmaFlushAllocation" "allocation"
+                   Allocation
+                -> -- No documentation found for Nested "vmaFlushAllocation" "offset"
+                   ("offset" ::: DeviceSize)
+                -> -- No documentation found for Nested "vmaFlushAllocation" "size"
+                   DeviceSize
+                -> io ()
 flushAllocation allocator allocation offset size = liftIO $ do
   r <- (ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1338,7 +1556,17 @@ foreign import ccall
 -- This function returns the @VkResult@ from
 -- @vkInvalidateMappedMemoryRanges@ if it is called, otherwise
 -- @VK_SUCCESS@.
-invalidateAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> io ()
+invalidateAllocation :: forall io
+                      . (MonadIO io)
+                     => -- No documentation found for Nested "vmaInvalidateAllocation" "allocator"
+                        Allocator
+                     -> -- No documentation found for Nested "vmaInvalidateAllocation" "allocation"
+                        Allocation
+                     -> -- No documentation found for Nested "vmaInvalidateAllocation" "offset"
+                        ("offset" ::: DeviceSize)
+                     -> -- No documentation found for Nested "vmaInvalidateAllocation" "size"
+                        DeviceSize
+                     -> io ()
 invalidateAllocation allocator allocation offset size = liftIO $ do
   r <- (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1378,7 +1606,17 @@ foreign import ccall
 --
 -- This function returns the @VkResult@ from @vkFlushMappedMemoryRanges@ if
 -- it is called, otherwise @VK_SUCCESS@.
-flushAllocations :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
+flushAllocations :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaFlushAllocations" "allocator"
+                    Allocator
+                 -> -- No documentation found for Nested "vmaFlushAllocations" "allocations"
+                    ("allocations" ::: Vector Allocation)
+                 -> -- No documentation found for Nested "vmaFlushAllocations" "offsets"
+                    ("offsets" ::: Vector DeviceSize)
+                 -> -- No documentation found for Nested "vmaFlushAllocations" "sizes"
+                    ("sizes" ::: Vector DeviceSize)
+                 -> io ()
 flushAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
   let allocationsLength = Data.Vector.length $ (allocations)
   let offsetsLength = Data.Vector.length $ (offsets)
@@ -1440,7 +1678,17 @@ foreign import ccall
 -- This function returns the @VkResult@ from
 -- @vkInvalidateMappedMemoryRanges@ if it is called, otherwise
 -- @VK_SUCCESS@.
-invalidateAllocations :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
+invalidateAllocations :: forall io
+                       . (MonadIO io)
+                      => -- No documentation found for Nested "vmaInvalidateAllocations" "allocator"
+                         Allocator
+                      -> -- No documentation found for Nested "vmaInvalidateAllocations" "allocations"
+                         ("allocations" ::: Vector Allocation)
+                      -> -- No documentation found for Nested "vmaInvalidateAllocations" "offsets"
+                         ("offsets" ::: Vector DeviceSize)
+                      -> -- No documentation found for Nested "vmaInvalidateAllocations" "sizes"
+                         ("sizes" ::: Vector DeviceSize)
+                      -> io ()
 invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
   let allocationsLength = Data.Vector.length $ (allocations)
   let offsetsLength = Data.Vector.length $ (offsets)
@@ -1502,7 +1750,13 @@ foreign import ccall
 --     allocations. @VMA_ASSERT@ is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
-checkCorruption :: forall io . MonadIO io => Allocator -> ("memoryTypeBits" ::: Word32) -> io ()
+checkCorruption :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaCheckCorruption" "allocator"
+                   Allocator
+                -> -- No documentation found for Nested "vmaCheckCorruption" "memoryTypeBits"
+                   ("memoryTypeBits" ::: Word32)
+                -> io ()
 checkCorruption allocator memoryTypeBits = liftIO $ do
   r <- (ffiVmaCheckCorruption) (allocator) (memoryTypeBits)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1567,7 +1821,13 @@ foreign import ccall
 --
 -- For more information and important limitations regarding
 -- defragmentation, see documentation chapter: /Defragmentation/.
-defragmentationBegin :: forall io . MonadIO io => Allocator -> DefragmentationInfo2 -> io (Result, DefragmentationStats, DefragmentationContext)
+defragmentationBegin :: forall io
+                      . (MonadIO io)
+                     => -- No documentation found for Nested "vmaDefragmentationBegin" "allocator"
+                        Allocator
+                     -> -- No documentation found for Nested "vmaDefragmentationBegin" "pInfo"
+                        DefragmentationInfo2
+                     -> io (Result, DefragmentationStats, DefragmentationContext)
 defragmentationBegin allocator info = liftIO . evalContT $ do
   pInfo <- ContT $ withCStruct (info)
   pPStats <- ContT (withZeroCStruct @DefragmentationStats)
@@ -1604,7 +1864,13 @@ foreign import ccall
 -- Use this function to finish defragmentation started by
 -- 'defragmentationBegin'. It is safe to pass @context == null@. The
 -- function then does nothing.
-defragmentationEnd :: forall io . MonadIO io => Allocator -> DefragmentationContext -> io ()
+defragmentationEnd :: forall io
+                    . (MonadIO io)
+                   => -- No documentation found for Nested "vmaDefragmentationEnd" "allocator"
+                      Allocator
+                   -> -- No documentation found for Nested "vmaDefragmentationEnd" "context"
+                      DefragmentationContext
+                   -> io ()
 defragmentationEnd allocator context = liftIO $ do
   r <- (ffiVmaDefragmentationEnd) (allocator) (context)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1618,7 +1884,13 @@ foreign import ccall
   :: Allocator -> DefragmentationContext -> Ptr DefragmentationPassInfo -> IO Result
 
 
-beginDefragmentationPass :: forall io . MonadIO io => Allocator -> DefragmentationContext -> io (DefragmentationPassInfo)
+beginDefragmentationPass :: forall io
+                          . (MonadIO io)
+                         => -- No documentation found for Nested "vmaBeginDefragmentationPass" "allocator"
+                            Allocator
+                         -> -- No documentation found for Nested "vmaBeginDefragmentationPass" "context"
+                            DefragmentationContext
+                         -> io (DefragmentationPassInfo)
 beginDefragmentationPass allocator context = liftIO . evalContT $ do
   pPInfo <- ContT (withZeroCStruct @DefragmentationPassInfo)
   r <- lift $ (ffiVmaBeginDefragmentationPass) (allocator) (context) (pPInfo)
@@ -1648,7 +1920,13 @@ foreign import ccall
   :: Allocator -> DefragmentationContext -> IO Result
 
 
-endDefragmentationPass :: forall io . MonadIO io => Allocator -> DefragmentationContext -> io ()
+endDefragmentationPass :: forall io
+                        . (MonadIO io)
+                       => -- No documentation found for Nested "vmaEndDefragmentationPass" "allocator"
+                          Allocator
+                       -> -- No documentation found for Nested "vmaEndDefragmentationPass" "context"
+                          DefragmentationContext
+                       -> io ()
 endDefragmentationPass allocator context = liftIO $ do
   r <- (ffiVmaEndDefragmentationPass) (allocator) (context)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1732,7 +2010,15 @@ foreign import ccall
 -- but you should measure that on your platform.
 --
 -- For more information, see /Defragmentation/ chapter.
-defragment :: forall io . MonadIO io => Allocator -> ("allocations" ::: Vector Allocation) -> ("defragmentationInfo" ::: Maybe DefragmentationInfo) -> io (("allocationsChanged" ::: Vector Bool), DefragmentationStats)
+defragment :: forall io
+            . (MonadIO io)
+           => -- No documentation found for Nested "vmaDefragment" "allocator"
+              Allocator
+           -> -- No documentation found for Nested "vmaDefragment" "pAllocations"
+              ("allocations" ::: Vector Allocation)
+           -> -- No documentation found for Nested "vmaDefragment" "pDefragmentationInfo"
+              ("defragmentationInfo" ::: Maybe DefragmentationInfo)
+           -> io (("allocationsChanged" ::: Vector Bool), DefragmentationStats)
 defragment allocator allocations defragmentationInfo = liftIO . evalContT $ do
   pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
@@ -1770,7 +2056,15 @@ foreign import ccall
 -- Vulkan).
 --
 -- It is recommended to use function 'createBuffer' instead of this one.
-bindBufferMemory :: forall io . MonadIO io => Allocator -> Allocation -> Buffer -> io ()
+bindBufferMemory :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaBindBufferMemory" "allocator"
+                    Allocator
+                 -> -- No documentation found for Nested "vmaBindBufferMemory" "allocation"
+                    Allocation
+                 -> -- No documentation found for Nested "vmaBindBufferMemory" "buffer"
+                    Buffer
+                 -> io ()
 bindBufferMemory allocator allocation buffer = liftIO $ do
   r <- (ffiVmaBindBufferMemory) (allocator) (allocation) (buffer)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1804,7 +2098,19 @@ foreign import ccall
 -- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
 -- /VmaAllocatorCreateInfo::vulkanApiVersion/ @== VK_API_VERSION_1_1@.
 -- Otherwise the call fails.
-bindBufferMemory2 :: forall io . MonadIO io => Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Buffer -> ("next" ::: Ptr ()) -> io ()
+bindBufferMemory2 :: forall io
+                   . (MonadIO io)
+                  => -- No documentation found for Nested "vmaBindBufferMemory2" "allocator"
+                     Allocator
+                  -> -- No documentation found for Nested "vmaBindBufferMemory2" "allocation"
+                     Allocation
+                  -> -- No documentation found for Nested "vmaBindBufferMemory2" "allocationLocalOffset"
+                     ("allocationLocalOffset" ::: DeviceSize)
+                  -> -- No documentation found for Nested "vmaBindBufferMemory2" "buffer"
+                     Buffer
+                  -> -- No documentation found for Nested "vmaBindBufferMemory2" "pNext"
+                     ("next" ::: Ptr ())
+                  -> io ()
 bindBufferMemory2 allocator allocation allocationLocalOffset buffer next = liftIO $ do
   r <- (ffiVmaBindBufferMemory2) (allocator) (allocation) (allocationLocalOffset) (buffer) (next)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1830,7 +2136,15 @@ foreign import ccall
 -- Vulkan).
 --
 -- It is recommended to use function 'createImage' instead of this one.
-bindImageMemory :: forall io . MonadIO io => Allocator -> Allocation -> Image -> io ()
+bindImageMemory :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaBindImageMemory" "allocator"
+                   Allocator
+                -> -- No documentation found for Nested "vmaBindImageMemory" "allocation"
+                   Allocation
+                -> -- No documentation found for Nested "vmaBindImageMemory" "image"
+                   Image
+                -> io ()
 bindImageMemory allocator allocation image = liftIO $ do
   r <- (ffiVmaBindImageMemory) (allocator) (allocation) (image)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1864,7 +2178,19 @@ foreign import ccall
 -- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
 -- /VmaAllocatorCreateInfo::vulkanApiVersion/ @== VK_API_VERSION_1_1@.
 -- Otherwise the call fails.
-bindImageMemory2 :: forall io . MonadIO io => Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Image -> ("next" ::: Ptr ()) -> io ()
+bindImageMemory2 :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaBindImageMemory2" "allocator"
+                    Allocator
+                 -> -- No documentation found for Nested "vmaBindImageMemory2" "allocation"
+                    Allocation
+                 -> -- No documentation found for Nested "vmaBindImageMemory2" "allocationLocalOffset"
+                    ("allocationLocalOffset" ::: DeviceSize)
+                 -> -- No documentation found for Nested "vmaBindImageMemory2" "image"
+                    Image
+                 -> -- No documentation found for Nested "vmaBindImageMemory2" "pNext"
+                    ("next" ::: Ptr ())
+                 -> io ()
 bindImageMemory2 allocator allocation allocationLocalOffset image next = liftIO $ do
   r <- (ffiVmaBindImageMemory2) (allocator) (allocation) (allocationLocalOffset) (image) (next)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1914,7 +2240,15 @@ foreign import ccall
 -- VMA_ALLOCATION_CREATE_NEVER_ALLOCATE_BIT is not used), it creates
 -- dedicated allocation for this buffer, just like when using
 -- VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT.
-createBuffer :: forall a io . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io) => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> io (Buffer, Allocation, AllocationInfo)
+createBuffer :: forall a io
+              . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
+             => -- No documentation found for Nested "vmaCreateBuffer" "allocator"
+                Allocator
+             -> -- No documentation found for Nested "vmaCreateBuffer" "pBufferCreateInfo"
+                BufferCreateInfo a
+             -> -- No documentation found for Nested "vmaCreateBuffer" "pAllocationCreateInfo"
+                AllocationCreateInfo
+             -> io (Buffer, Allocation, AllocationInfo)
 createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -1958,7 +2292,15 @@ foreign import ccall
 -- @
 --
 -- It it safe to pass null as buffer and\/or allocation.
-destroyBuffer :: forall io . MonadIO io => Allocator -> Buffer -> Allocation -> io ()
+destroyBuffer :: forall io
+               . (MonadIO io)
+              => -- No documentation found for Nested "vmaDestroyBuffer" "allocator"
+                 Allocator
+              -> -- No documentation found for Nested "vmaDestroyBuffer" "buffer"
+                 Buffer
+              -> -- No documentation found for Nested "vmaDestroyBuffer" "allocation"
+                 Allocation
+              -> io ()
 destroyBuffer allocator buffer allocation = liftIO $ do
   (ffiVmaDestroyBuffer) (allocator) (buffer) (allocation)
   pure $ ()
@@ -1972,7 +2314,15 @@ foreign import ccall
   :: Allocator -> Ptr (ImageCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Image -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
 -- | Function similar to 'createBuffer'.
-createImage :: forall a io . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io) => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> io (Image, Allocation, AllocationInfo)
+createImage :: forall a io
+             . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io)
+            => -- No documentation found for Nested "vmaCreateImage" "allocator"
+               Allocator
+            -> -- No documentation found for Nested "vmaCreateImage" "pImageCreateInfo"
+               ImageCreateInfo a
+            -> -- No documentation found for Nested "vmaCreateImage" "pAllocationCreateInfo"
+               AllocationCreateInfo
+            -> io (Image, Allocation, AllocationInfo)
 createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -2016,7 +2366,15 @@ foreign import ccall
 -- @
 --
 -- It it safe to pass null as image and\/or allocation.
-destroyImage :: forall io . MonadIO io => Allocator -> Image -> Allocation -> io ()
+destroyImage :: forall io
+              . (MonadIO io)
+             => -- No documentation found for Nested "vmaDestroyImage" "allocator"
+                Allocator
+             -> -- No documentation found for Nested "vmaDestroyImage" "image"
+                Image
+             -> -- No documentation found for Nested "vmaDestroyImage" "allocation"
+                Allocation
+             -> io ()
 destroyImage allocator image allocation = liftIO $ do
   (ffiVmaDestroyImage) (allocator) (image) (allocation)
   pure $ ()

@@ -113,15 +113,6 @@ foreign import ccall
 
 -- | vkDisplayPowerControlEXT - Set the power state of a display
 --
--- = Parameters
---
--- -   @device@ is a logical device associated with @display@.
---
--- -   @display@ is the display whose power state is modified.
---
--- -   @pDisplayPowerInfo@ is a 'DisplayPowerInfoEXT' structure specifying
---     the new power state of @display@.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -145,7 +136,16 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'DisplayPowerInfoEXT'
-displayPowerControlEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayPowerInfoEXT -> io ()
+displayPowerControlEXT :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is a logical device associated with @display@.
+                          Device
+                       -> -- | @display@ is the display whose power state is modified.
+                          DisplayKHR
+                       -> -- | @pDisplayPowerInfo@ is a 'DisplayPowerInfoEXT' structure specifying the
+                          -- new power state of @display@.
+                          DisplayPowerInfoEXT
+                       -> io ()
 displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
   let vkDisplayPowerControlEXTPtr = pVkDisplayPowerControlEXT (deviceCmds (device :: Device))
   lift $ unless (vkDisplayPowerControlEXTPtr /= nullFunPtr) $
@@ -164,20 +164,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr DeviceEventInfoEXT -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result) -> Ptr Device_T -> Ptr DeviceEventInfoEXT -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result
 
 -- | vkRegisterDeviceEventEXT - Signal a fence when a device event occurs
---
--- = Parameters
---
--- -   @device@ is a logical device on which the event /may/ occur.
---
--- -   @pDeviceEventInfo@ is a pointer to a 'DeviceEventInfoEXT' structure
---     describing the event of interest to the application.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pFence@ is a pointer to a handle in which the resulting fence
---     object is returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -204,7 +190,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DeviceEventInfoEXT',
 -- 'Vulkan.Core10.Handles.Fence'
-registerDeviceEventEXT :: forall io . MonadIO io => Device -> DeviceEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+registerDeviceEventEXT :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is a logical device on which the event /may/ occur.
+                          Device
+                       -> -- | @pDeviceEventInfo@ is a pointer to a 'DeviceEventInfoEXT' structure
+                          -- describing the event of interest to the application.
+                          DeviceEventInfoEXT
+                       -> -- | @pAllocator@ controls host memory allocation as described in the
+                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                          -- chapter.
+                          ("allocator" ::: Maybe AllocationCallbacks)
+                       -> io (Fence)
 registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (deviceCmds (device :: Device))
   lift $ unless (vkRegisterDeviceEventEXTPtr /= nullFunPtr) $
@@ -228,22 +225,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DisplayKHR -> Ptr DisplayEventInfoEXT -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result) -> Ptr Device_T -> DisplayKHR -> Ptr DisplayEventInfoEXT -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result
 
 -- | vkRegisterDisplayEventEXT - Signal a fence when a display event occurs
---
--- = Parameters
---
--- -   @device@ is a logical device associated with @display@
---
--- -   @display@ is the display on which the event /may/ occur.
---
--- -   @pDisplayEventInfo@ is a pointer to a 'DisplayEventInfoEXT'
---     structure describing the event of interest to the application.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pFence@ is a pointer to a handle in which the resulting fence
---     object is returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -276,7 +257,20 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DisplayEventInfoEXT',
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'Vulkan.Core10.Handles.Fence'
-registerDisplayEventEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+registerDisplayEventEXT :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is a logical device associated with @display@
+                           Device
+                        -> -- | @display@ is the display on which the event /may/ occur.
+                           DisplayKHR
+                        -> -- | @pDisplayEventInfo@ is a pointer to a 'DisplayEventInfoEXT' structure
+                           -- describing the event of interest to the application.
+                           DisplayEventInfoEXT
+                        -> -- | @pAllocator@ controls host memory allocation as described in the
+                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                           -- chapter.
+                           ("allocator" ::: Maybe AllocationCallbacks)
+                        -> io (Fence)
 registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (deviceCmds (device :: Device))
   lift $ unless (vkRegisterDisplayEventEXTPtr /= nullFunPtr) $
@@ -300,17 +294,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> Ptr Word64 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> Ptr Word64 -> IO Result
 
 -- | vkGetSwapchainCounterEXT - Query the current value of a surface counter
---
--- = Parameters
---
--- -   @device@ is the 'Vulkan.Core10.Handles.Device' associated with
---     @swapchain@.
---
--- -   @swapchain@ is the swapchain from which to query the counter value.
---
--- -   @counter@ is the counter to query.
---
--- -   @pCounterValue@ will return the current value of the counter.
 --
 -- = Description
 --
@@ -357,7 +340,16 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainCounterEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> io (("counterValue" ::: Word64))
+getSwapchainCounterEXT :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is the 'Vulkan.Core10.Handles.Device' associated with
+                          -- @swapchain@.
+                          Device
+                       -> -- | @swapchain@ is the swapchain from which to query the counter value.
+                          SwapchainKHR
+                       -> -- | @counter@ is the counter to query.
+                          SurfaceCounterFlagBitsEXT
+                       -> io (("counterValue" ::: Word64))
 getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
   let vkGetSwapchainCounterEXTPtr = pVkGetSwapchainCounterEXT (deviceCmds (device :: Device))
   lift $ unless (vkGetSwapchainCounterEXTPtr /= nullFunPtr) $
@@ -380,7 +372,10 @@ getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'displayPowerControlEXT'
 data DisplayPowerInfoEXT = DisplayPowerInfoEXT
-  { -- | @powerState@ /must/ be a valid 'DisplayPowerStateEXT' value
+  { -- | @powerState@ is a 'DisplayPowerStateEXT' value specifying the new power
+    -- state of the display.
+    --
+    -- @powerState@ /must/ be a valid 'DisplayPowerStateEXT' value
     powerState :: DisplayPowerStateEXT }
   deriving (Typeable)
 deriving instance Show DisplayPowerInfoEXT
@@ -473,7 +468,10 @@ instance Zero DeviceEventInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'registerDisplayEventEXT'
 data DisplayEventInfoEXT = DisplayEventInfoEXT
-  { -- | @displayEvent@ /must/ be a valid 'DisplayEventTypeEXT' value
+  { -- | @displayEvent@ is a 'DisplayEventTypeEXT' specifying when the fence will
+    -- be signaled.
+    --
+    -- @displayEvent@ /must/ be a valid 'DisplayEventTypeEXT' value
     displayEvent :: DisplayEventTypeEXT }
   deriving (Typeable)
 deriving instance Show DisplayEventInfoEXT

@@ -80,20 +80,6 @@ foreign import ccall
 
 -- | vkCreateImageView - Create an image view from an existing image
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the image view.
---
--- -   @pCreateInfo@ is a pointer to a 'ImageViewCreateInfo' structure
---     containing parameters to be used to create the image view.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pView@ is a pointer to a 'Vulkan.Core10.Handles.ImageView' handle
---     in which the resulting image view object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -125,7 +111,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',
 -- 'ImageViewCreateInfo'
-createImageView :: forall a io . (Extendss ImageViewCreateInfo a, PokeChain a, MonadIO io) => Device -> ImageViewCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ImageView)
+createImageView :: forall a io
+                 . (Extendss ImageViewCreateInfo a, PokeChain a, MonadIO io)
+                => -- | @device@ is the logical device that creates the image view.
+                   Device
+                -> -- | @pCreateInfo@ is a pointer to a 'ImageViewCreateInfo' structure
+                   -- containing parameters to be used to create the image view.
+                   ImageViewCreateInfo a
+                -> -- | @pAllocator@ controls host memory allocation as described in the
+                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- chapter.
+                   ("allocator" ::: Maybe AllocationCallbacks)
+                -> io (ImageView)
 createImageView device createInfo allocator = liftIO . evalContT $ do
   let vkCreateImageViewPtr = pVkCreateImageView (deviceCmds (device :: Device))
   lift $ unless (vkCreateImageViewPtr /= nullFunPtr) $
@@ -164,16 +161,6 @@ foreign import ccall
 
 -- | vkDestroyImageView - Destroy an image view object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the image view.
---
--- -   @imageView@ is the image view to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @imageView@ /must/ have
@@ -209,7 +196,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView'
-destroyImageView :: forall io . MonadIO io => Device -> ImageView -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyImageView :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that destroys the image view.
+                    Device
+                 -> -- | @imageView@ is the image view to destroy.
+                    ImageView
+                 -> -- | @pAllocator@ controls host memory allocation as described in the
+                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- chapter.
+                    ("allocator" ::: Maybe AllocationCallbacks)
+                 -> io ()
 destroyImageView device imageView allocator = liftIO . evalContT $ do
   let vkDestroyImageViewPtr = pVkDestroyImageView (deviceCmds (device :: Device))
   lift $ unless (vkDestroyImageViewPtr /= nullFunPtr) $
@@ -233,16 +230,32 @@ destroyImageView device imageView allocator = liftIO . evalContT $ do
 -- 'ImageViewCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
 data ComponentMapping = ComponentMapping
-  { -- | @r@ /must/ be a valid
+  { -- | @r@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
+    -- specifying the component value placed in the R component of the output
+    -- vector.
+    --
+    -- @r@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     r :: ComponentSwizzle
-  , -- | @g@ /must/ be a valid
+  , -- | @g@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
+    -- specifying the component value placed in the G component of the output
+    -- vector.
+    --
+    -- @g@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     g :: ComponentSwizzle
-  , -- | @b@ /must/ be a valid
+  , -- | @b@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
+    -- specifying the component value placed in the B component of the output
+    -- vector.
+    --
+    -- @b@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     b :: ComponentSwizzle
-  , -- | @a@ /must/ be a valid
+  , -- | @a@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
+    -- specifying the component value placed in the A component of the output
+    -- vector.
+    --
+    -- @a@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle' value
     a :: ComponentSwizzle
   }

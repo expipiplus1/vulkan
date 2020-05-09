@@ -138,16 +138,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceDisplayPropertiesKHR - Query information about the
 -- available displays
 --
--- = Parameters
---
--- -   @physicalDevice@ is a physical device.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display devices available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'DisplayPropertiesKHR' structures.
---
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display devices available
@@ -221,16 +211,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceDisplayPlanePropertiesKHR - Query the plane
 -- properties
 --
--- = Parameters
---
--- -   @physicalDevice@ is a physical device.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display planes available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'DisplayPlanePropertiesKHR' structures.
---
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display planes available
@@ -300,19 +280,6 @@ foreign import ccall
 
 -- | vkGetDisplayPlaneSupportedDisplaysKHR - Query the list of displays a
 -- plane supports
---
--- = Parameters
---
--- -   @physicalDevice@ is a physical device.
---
--- -   @planeIndex@ is the plane which the application wishes to use, and
---     /must/ be in the range [0, physical device plane count - 1].
---
--- -   @pDisplayCount@ is a pointer to an integer related to the number of
---     displays available or queried, as described below.
---
--- -   @pDisplays@ is either @NULL@ or a pointer to an array of
---     'Vulkan.Extensions.Handles.DisplayKHR' handles.
 --
 -- = Description
 --
@@ -394,18 +361,6 @@ foreign import ccall
 -- | vkGetDisplayModePropertiesKHR - Query the set of mode properties
 -- supported by the display
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device associated with @display@.
---
--- -   @display@ is the display to query.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display modes available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'DisplayModePropertiesKHR' structures.
---
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display modes available
@@ -486,22 +441,6 @@ foreign import ccall
 
 -- | vkCreateDisplayModeKHR - Create a display mode
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device associated with @display@.
---
--- -   @display@ is the display to create an additional mode for.
---
--- -   @pCreateInfo@ is a 'DisplayModeCreateInfoKHR' structure describing
---     the new mode to create.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     display mode object when there is no more specific allocator
---     available (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pMode@ returns the handle of the mode created.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @physicalDevice@ /must/ be a valid
@@ -547,7 +486,21 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-createDisplayModeKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> DisplayModeCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DisplayModeKHR)
+createDisplayModeKHR :: forall io
+                      . (MonadIO io)
+                     => -- | @physicalDevice@ is the physical device associated with @display@.
+                        PhysicalDevice
+                     -> -- | @display@ is the display to create an additional mode for.
+                        DisplayKHR
+                     -> -- | @pCreateInfo@ is a 'DisplayModeCreateInfoKHR' structure describing the
+                        -- new mode to create.
+                        DisplayModeCreateInfoKHR
+                     -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                        -- display mode object when there is no more specific allocator available
+                        -- (see
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                        ("allocator" ::: Maybe AllocationCallbacks)
+                     -> io (DisplayModeKHR)
 createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayModeKHRPtr = pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkCreateDisplayModeKHRPtr /= nullFunPtr) $
@@ -573,21 +526,6 @@ foreign import ccall
 
 -- | vkGetDisplayPlaneCapabilitiesKHR - Query capabilities of a mode and
 -- plane combination
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device associated with @display@
---
--- -   @mode@ is the display mode the application intends to program when
---     using the specified plane. Note this parameter also implicitly
---     specifies a display.
---
--- -   @planeIndex@ is the plane which the application intends to use with
---     the display, and is less than the number of display planes supported
---     by the device.
---
--- -   @pCapabilities@ is a pointer to a 'DisplayPlaneCapabilitiesKHR'
---     structure in which the capabilities are returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -620,7 +558,19 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneCapabilitiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayModeKHR -> ("planeIndex" ::: Word32) -> io (DisplayPlaneCapabilitiesKHR)
+getDisplayPlaneCapabilitiesKHR :: forall io
+                                . (MonadIO io)
+                               => -- | @physicalDevice@ is the physical device associated with @display@
+                                  PhysicalDevice
+                               -> -- | @mode@ is the display mode the application intends to program when using
+                                  -- the specified plane. Note this parameter also implicitly specifies a
+                                  -- display.
+                                  DisplayModeKHR
+                               -> -- | @planeIndex@ is the plane which the application intends to use with the
+                                  -- display, and is less than the number of display planes supported by the
+                                  -- device.
+                                  ("planeIndex" ::: Word32)
+                               -> io (DisplayPlaneCapabilitiesKHR)
 getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneCapabilitiesKHRPtr = pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetDisplayPlaneCapabilitiesKHRPtr /= nullFunPtr) $
@@ -643,23 +593,6 @@ foreign import ccall
 -- | vkCreateDisplayPlaneSurfaceKHR - Create a
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' structure representing a display
 -- plane and mode
---
--- = Parameters
---
--- -   @instance@ is the instance corresponding to the physical device the
---     targeted display is on.
---
--- -   @pCreateInfo@ is a pointer to a 'DisplaySurfaceCreateInfoKHR'
---     structure specifying which mode, plane, and other parameters to use,
---     as described below.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface is returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -692,7 +625,20 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DisplaySurfaceCreateInfoKHR', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-createDisplayPlaneSurfaceKHR :: forall io . MonadIO io => Instance -> DisplaySurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createDisplayPlaneSurfaceKHR :: forall io
+                              . (MonadIO io)
+                             => -- | @instance@ is the instance corresponding to the physical device the
+                                -- targeted display is on.
+                                Instance
+                             -> -- | @pCreateInfo@ is a pointer to a 'DisplaySurfaceCreateInfoKHR' structure
+                                -- specifying which mode, plane, and other parameters to use, as described
+                                -- below.
+                                DisplaySurfaceCreateInfoKHR
+                             -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                                -- surface object when there is no more specific allocator available (see
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                                ("allocator" ::: Maybe AllocationCallbacks)
+                             -> io (SurfaceKHR)
 createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayPlaneSurfaceKHRPtr = pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateDisplayPlaneSurfaceKHRPtr /= nullFunPtr) $
@@ -980,9 +926,16 @@ instance Zero DisplayModePropertiesKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDisplayModeKHR'
 data DisplayModeCreateInfoKHR = DisplayModeCreateInfoKHR
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use, and /must/ be zero.
+    --
+    -- @flags@ /must/ be @0@
     flags :: DisplayModeCreateFlagsKHR
-  , -- | @parameters@ /must/ be a valid 'DisplayModeParametersKHR' structure
+  , -- | @parameters@ is a 'DisplayModeParametersKHR' structure describing the
+    -- display parameters to use in creating the new mode. If the parameters
+    -- are not compatible with the specified display, the implementation /must/
+    -- return 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
+    --
+    -- @parameters@ /must/ be a valid 'DisplayModeParametersKHR' structure
     parameters :: DisplayModeParametersKHR
   }
   deriving (Typeable)

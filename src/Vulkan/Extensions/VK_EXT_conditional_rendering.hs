@@ -80,15 +80,6 @@ foreign import ccall
 -- | vkCmdBeginConditionalRenderingEXT - Define the beginning of a
 -- conditional rendering block
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
---
--- -   @pConditionalRenderingBegin@ is a pointer to a
---     'ConditionalRenderingBeginInfoEXT' structure specifying parameters
---     of conditional rendering.
---
 -- == Valid Usage
 --
 -- -   Conditional rendering /must/ not already be
@@ -130,7 +121,16 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'ConditionalRenderingBeginInfoEXT'
-cmdBeginConditionalRenderingEXT :: forall io . MonadIO io => CommandBuffer -> ConditionalRenderingBeginInfoEXT -> io ()
+cmdBeginConditionalRenderingEXT :: forall io
+                                 . (MonadIO io)
+                                => -- | @commandBuffer@ is the command buffer into which this command will be
+                                   -- recorded.
+                                   CommandBuffer
+                                -> -- | @pConditionalRenderingBegin@ is a pointer to a
+                                   -- 'ConditionalRenderingBeginInfoEXT' structure specifying parameters of
+                                   -- conditional rendering.
+                                   ConditionalRenderingBeginInfoEXT
+                                -> io ()
 cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO . evalContT $ do
   let vkCmdBeginConditionalRenderingEXTPtr = pVkCmdBeginConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBeginConditionalRenderingEXTPtr /= nullFunPtr) $
@@ -159,11 +159,6 @@ foreign import ccall
 
 -- | vkCmdEndConditionalRenderingEXT - Define the end of a conditional
 -- rendering block
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
 --
 -- = Description
 --
@@ -215,7 +210,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdEndConditionalRenderingEXT :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdEndConditionalRenderingEXT :: forall io
+                               . (MonadIO io)
+                              => -- | @commandBuffer@ is the command buffer into which this command will be
+                                 -- recorded.
+                                 CommandBuffer
+                              -> io ()
 cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
   let vkCmdEndConditionalRenderingEXTPtr = pVkCmdEndConditionalRenderingEXT (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdEndConditionalRenderingEXTPtr /= nullFunPtr) $

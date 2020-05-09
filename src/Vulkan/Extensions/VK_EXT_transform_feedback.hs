@@ -97,28 +97,6 @@ foreign import ccall
 -- | vkCmdBindTransformFeedbackBuffersEXT - Bind transform feedback buffers
 -- to a command buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @firstBinding@ is the index of the first transform feedback binding
---     whose state is updated by the command.
---
--- -   @bindingCount@ is the number of transform feedback bindings whose
---     state is updated by the command.
---
--- -   @pBuffers@ is a pointer to an array of buffer handles.
---
--- -   @pOffsets@ is a pointer to an array of buffer offsets.
---
--- -   @pSizes@ is an optional array of buffer sizes, specifying the
---     maximum number of bytes to capture to the corresponding transform
---     feedback buffer. If @pSizes@ is @NULL@, or the value of the @pSizes@
---     array element is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', then the
---     maximum bytes captured will be the size of the corresponding buffer
---     minus the buffer offset.
---
 -- = Description
 --
 -- The values taken from elements i of @pBuffers@, @pOffsets@ and @pSizes@
@@ -213,7 +191,26 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdBindTransformFeedbackBuffersEXT :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Vector DeviceSize) -> io ()
+cmdBindTransformFeedbackBuffersEXT :: forall io
+                                    . (MonadIO io)
+                                   => -- | @commandBuffer@ is the command buffer into which the command is
+                                      -- recorded.
+                                      CommandBuffer
+                                   -> -- | @firstBinding@ is the index of the first transform feedback binding
+                                      -- whose state is updated by the command.
+                                      ("firstBinding" ::: Word32)
+                                   -> -- | @pBuffers@ is a pointer to an array of buffer handles.
+                                      ("buffers" ::: Vector Buffer)
+                                   -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
+                                      ("offsets" ::: Vector DeviceSize)
+                                   -> -- | @pSizes@ is an optional array of buffer sizes, specifying the maximum
+                                      -- number of bytes to capture to the corresponding transform feedback
+                                      -- buffer. If @pSizes@ is @NULL@, or the value of the @pSizes@ array
+                                      -- element is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', then the maximum
+                                      -- bytes captured will be the size of the corresponding buffer minus the
+                                      -- buffer offset.
+                                      ("sizes" ::: Vector DeviceSize)
+                                   -> io ()
 cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
   let vkCmdBindTransformFeedbackBuffersEXTPtr = pVkCmdBindTransformFeedbackBuffersEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBindTransformFeedbackBuffersEXTPtr /= nullFunPtr) $
@@ -248,40 +245,6 @@ foreign import ccall
 
 -- | vkCmdBeginTransformFeedbackEXT - Make transform feedback active in the
 -- command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @firstCounterBuffer@ is the index of the first transform feedback
---     buffer corresponding to @pCounterBuffers@[0] and
---     @pCounterBufferOffsets@[0].
---
--- -   @counterBufferCount@ is the size of the @pCounterBuffers@ and
---     @pCounterBufferOffsets@ arrays.
---
--- -   @pCounterBuffers@ is an optional array of buffer handles to the
---     counter buffers which contain a 4 byte integer value representing
---     the byte offset from the start of the corresponding transform
---     feedback buffer from where to start capturing vertex data. If the
---     byte offset stored to the counter buffer location was done using
---     'cmdEndTransformFeedbackEXT' it can be used to resume transform
---     feedback from the previous location. If @pCounterBuffers@ is @NULL@,
---     then transform feedback will start capturing vertex data to byte
---     offset zero in all bound transform feedback buffers. For each
---     element of @pCounterBuffers@ that is
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', transform feedback will
---     start capturing vertex data to byte zero in the corresponding bound
---     transform feedback buffer.
---
--- -   @pCounterBufferOffsets@ is an optional array of offsets within each
---     of the @pCounterBuffers@ where the counter values were previously
---     written. The location in each counter buffer at these offsets /must/
---     be large enough to contain 4 bytes of data. This data is the number
---     of bytes captured by the previous transform feedback to this buffer.
---     If @pCounterBufferOffsets@ is @NULL@, then it is assumed the offsets
---     are zero.
 --
 -- = Description
 --
@@ -370,7 +333,36 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdBeginTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Vector DeviceSize) -> io ()
+cmdBeginTransformFeedbackEXT :: forall io
+                              . (MonadIO io)
+                             => -- | @commandBuffer@ is the command buffer into which the command is
+                                -- recorded.
+                                CommandBuffer
+                             -> -- | @firstCounterBuffer@ is the index of the first transform feedback buffer
+                                -- corresponding to @pCounterBuffers@[0] and @pCounterBufferOffsets@[0].
+                                ("firstCounterBuffer" ::: Word32)
+                             -> -- | @pCounterBuffers@ is an optional array of buffer handles to the counter
+                                -- buffers which contain a 4 byte integer value representing the byte
+                                -- offset from the start of the corresponding transform feedback buffer
+                                -- from where to start capturing vertex data. If the byte offset stored to
+                                -- the counter buffer location was done using 'cmdEndTransformFeedbackEXT'
+                                -- it can be used to resume transform feedback from the previous location.
+                                -- If @pCounterBuffers@ is @NULL@, then transform feedback will start
+                                -- capturing vertex data to byte offset zero in all bound transform
+                                -- feedback buffers. For each element of @pCounterBuffers@ that is
+                                -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', transform feedback will start
+                                -- capturing vertex data to byte zero in the corresponding bound transform
+                                -- feedback buffer.
+                                ("counterBuffers" ::: Vector Buffer)
+                             -> -- | @pCounterBufferOffsets@ is an optional array of offsets within each of
+                                -- the @pCounterBuffers@ where the counter values were previously written.
+                                -- The location in each counter buffer at these offsets /must/ be large
+                                -- enough to contain 4 bytes of data. This data is the number of bytes
+                                -- captured by the previous transform feedback to this buffer. If
+                                -- @pCounterBufferOffsets@ is @NULL@, then it is assumed the offsets are
+                                -- zero.
+                                ("counterBufferOffsets" ::: Vector DeviceSize)
+                             -> io ()
 cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdBeginTransformFeedbackEXTPtr = pVkCmdBeginTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBeginTransformFeedbackEXTPtr /= nullFunPtr) $
@@ -410,36 +402,6 @@ foreign import ccall
 
 -- | vkCmdEndTransformFeedbackEXT - Make transform feedback inactive in the
 -- command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @firstCounterBuffer@ is the index of the first transform feedback
---     buffer corresponding to @pCounterBuffers@[0] and
---     @pCounterBufferOffsets@[0].
---
--- -   @counterBufferCount@ is the size of the @pCounterBuffers@ and
---     @pCounterBufferOffsets@ arrays.
---
--- -   @pCounterBuffers@ is an optional array of buffer handles to the
---     counter buffers used to record the current byte positions of each
---     transform feedback buffer where the next vertex output data would be
---     captured. This /can/ be used by a subsequent
---     'cmdBeginTransformFeedbackEXT' call to resume transform feedback
---     capture from this position. It can also be used by
---     'cmdDrawIndirectByteCountEXT' to determine the vertex count of the
---     draw call.
---
--- -   @pCounterBufferOffsets@ is an optional array of offsets within each
---     of the @pCounterBuffers@ where the counter values can be written.
---     The location in each counter buffer at these offsets /must/ be large
---     enough to contain 4 bytes of data. The data stored at this location
---     is the byte offset from the start of the transform feedback buffer
---     binding where the next vertex data would be written. If
---     @pCounterBufferOffsets@ is @NULL@, then it is assumed the offsets
---     are zero.
 --
 -- == Valid Usage
 --
@@ -518,7 +480,31 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdEndTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Vector DeviceSize) -> io ()
+cmdEndTransformFeedbackEXT :: forall io
+                            . (MonadIO io)
+                           => -- | @commandBuffer@ is the command buffer into which the command is
+                              -- recorded.
+                              CommandBuffer
+                           -> -- | @firstCounterBuffer@ is the index of the first transform feedback buffer
+                              -- corresponding to @pCounterBuffers@[0] and @pCounterBufferOffsets@[0].
+                              ("firstCounterBuffer" ::: Word32)
+                           -> -- | @pCounterBuffers@ is an optional array of buffer handles to the counter
+                              -- buffers used to record the current byte positions of each transform
+                              -- feedback buffer where the next vertex output data would be captured.
+                              -- This /can/ be used by a subsequent 'cmdBeginTransformFeedbackEXT' call
+                              -- to resume transform feedback capture from this position. It can also be
+                              -- used by 'cmdDrawIndirectByteCountEXT' to determine the vertex count of
+                              -- the draw call.
+                              ("counterBuffers" ::: Vector Buffer)
+                           -> -- | @pCounterBufferOffsets@ is an optional array of offsets within each of
+                              -- the @pCounterBuffers@ where the counter values can be written. The
+                              -- location in each counter buffer at these offsets /must/ be large enough
+                              -- to contain 4 bytes of data. The data stored at this location is the byte
+                              -- offset from the start of the transform feedback buffer binding where the
+                              -- next vertex data would be written. If @pCounterBufferOffsets@ is @NULL@,
+                              -- then it is assumed the offsets are zero.
+                              ("counterBufferOffsets" ::: Vector DeviceSize)
+                           -> io ()
 cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdEndTransformFeedbackEXTPtr = pVkCmdEndTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdEndTransformFeedbackEXTPtr /= nullFunPtr) $
@@ -548,26 +534,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO ()
 
 -- | vkCmdBeginQueryIndexedEXT - Begin an indexed query
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
---
--- -   @queryPool@ is the query pool that will manage the results of the
---     query.
---
--- -   @query@ is the query index within the query pool that will contain
---     the results.
---
--- -   @flags@ is a bitmask of
---     'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
---     specifying constraints on the types of queries that /can/ be
---     performed.
---
--- -   @index@ is the query type specific index. When the query type is
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
---     the index represents the vertex stream.
 --
 -- = Description
 --
@@ -723,7 +689,25 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Vulkan.Core10.Handles.QueryPool'
-cmdBeginQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> ("index" ::: Word32) -> io ()
+cmdBeginQueryIndexedEXT :: forall io
+                         . (MonadIO io)
+                        => -- | @commandBuffer@ is the command buffer into which this command will be
+                           -- recorded.
+                           CommandBuffer
+                        -> -- | @queryPool@ is the query pool that will manage the results of the query.
+                           QueryPool
+                        -> -- | @query@ is the query index within the query pool that will contain the
+                           -- results.
+                           ("query" ::: Word32)
+                        -> -- | @flags@ is a bitmask of
+                           -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
+                           -- specifying constraints on the types of queries that /can/ be performed.
+                           QueryControlFlags
+                        -> -- | @index@ is the query type specific index. When the query type is
+                           -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+                           -- the index represents the vertex stream.
+                           ("index" ::: Word32)
+                        -> io ()
 cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   let vkCmdBeginQueryIndexedEXTPtr = pVkCmdBeginQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdBeginQueryIndexedEXTPtr /= nullFunPtr) $
@@ -750,19 +734,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> QueryPool -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> QueryPool -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdEndQueryIndexedEXT - Ends a query
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
---
--- -   @queryPool@ is the query pool that is managing the results of the
---     query.
---
--- -   @query@ is the query index within the query pool where the result is
---     stored.
---
--- -   @index@ is the query type specific index.
 --
 -- = Description
 --
@@ -835,7 +806,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
-cmdEndQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> io ()
+cmdEndQueryIndexedEXT :: forall io
+                       . (MonadIO io)
+                      => -- | @commandBuffer@ is the command buffer into which this command will be
+                         -- recorded.
+                         CommandBuffer
+                      -> -- | @queryPool@ is the query pool that is managing the results of the query.
+                         QueryPool
+                      -> -- | @query@ is the query index within the query pool where the result is
+                         -- stored.
+                         ("query" ::: Word32)
+                      -> -- | @index@ is the query type specific index.
+                         ("index" ::: Word32)
+                      -> io ()
 cmdEndQueryIndexedEXT commandBuffer queryPool query index = liftIO $ do
   let vkCmdEndQueryIndexedEXTPtr = pVkCmdEndQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdEndQueryIndexedEXTPtr /= nullFunPtr) $
@@ -854,31 +837,6 @@ foreign import ccall
 
 -- | vkCmdDrawIndirectByteCountEXT - Draw primitives where the vertex count
 -- is derived from the counter byte value in the counter buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @instanceCount@ is the number of instances to draw.
---
--- -   @firstInstance@ is the instance ID of the first instance to draw.
---
--- -   @counterBuffer@ is the buffer handle from where the byte count is
---     read.
---
--- -   @counterBufferOffset@ is the offset into the buffer used to read the
---     byte count, which is used to calculate the vertex count for this
---     draw call.
---
--- -   @counterOffset@ is subtracted from the byte count read from the
---     @counterBuffer@ at the @counterBufferOffset@
---
--- -   @vertexStride@ is the stride in bytes between each element of the
---     vertex data that is used to calculate the vertex count from the
---     counter value. This value is typically the same value that was used
---     in the graphics pipeline state when the transform feedback was
---     captured as the @XfbStride@.
 --
 -- = Description
 --
@@ -1140,7 +1098,31 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndirectByteCountEXT :: forall io . MonadIO io => CommandBuffer -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> io ()
+cmdDrawIndirectByteCountEXT :: forall io
+                             . (MonadIO io)
+                            => -- | @commandBuffer@ is the command buffer into which the command is
+                               -- recorded.
+                               CommandBuffer
+                            -> -- | @instanceCount@ is the number of instances to draw.
+                               ("instanceCount" ::: Word32)
+                            -> -- | @firstInstance@ is the instance ID of the first instance to draw.
+                               ("firstInstance" ::: Word32)
+                            -> -- | @counterBuffer@ is the buffer handle from where the byte count is read.
+                               ("counterBuffer" ::: Buffer)
+                            -> -- | @counterBufferOffset@ is the offset into the buffer used to read the
+                               -- byte count, which is used to calculate the vertex count for this draw
+                               -- call.
+                               ("counterBufferOffset" ::: DeviceSize)
+                            -> -- | @counterOffset@ is subtracted from the byte count read from the
+                               -- @counterBuffer@ at the @counterBufferOffset@
+                               ("counterOffset" ::: Word32)
+                            -> -- | @vertexStride@ is the stride in bytes between each element of the vertex
+                               -- data that is used to calculate the vertex count from the counter value.
+                               -- This value is typically the same value that was used in the graphics
+                               -- pipeline state when the transform feedback was captured as the
+                               -- @XfbStride@.
+                               ("vertexStride" ::: Word32)
+                            -> io ()
 cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = liftIO $ do
   let vkCmdDrawIndirectByteCountEXTPtr = pVkCmdDrawIndirectByteCountEXT (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawIndirectByteCountEXTPtr /= nullFunPtr) $
@@ -1379,9 +1361,16 @@ instance Zero PhysicalDeviceTransformFeedbackPropertiesEXT where
 -- 'PipelineRasterizationStateStreamCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateStreamCreateInfoEXT = PipelineRasterizationStateStreamCreateInfoEXT
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: PipelineRasterizationStateStreamCreateFlagsEXT
-  , -- | @rasterizationStream@ /must/ be zero if
+  , -- | @rasterizationStream@ is the vertex stream selected for rasterization.
+    --
+    -- @rasterizationStream@ /must/ be less than
+    -- 'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
+    --
+    -- @rasterizationStream@ /must/ be zero if
     -- 'PhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackRasterizationStreamSelect@
     -- is 'Vulkan.Core10.BaseType.FALSE'
     rasterizationStream :: Word32

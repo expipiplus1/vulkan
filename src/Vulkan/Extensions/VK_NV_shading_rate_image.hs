@@ -112,19 +112,6 @@ foreign import ccall
 -- | vkCmdBindShadingRateImageNV - Bind a shading rate image on a command
 -- buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @imageView@ is an image view handle specifying the shading rate
---     image. @imageView@ /may/ be set to
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', which is equivalent to
---     specifying a view of an image filled with zero values.
---
--- -   @imageLayout@ is the layout that the image subresources accessible
---     from @imageView@ will be in when the shading rate image is accessed.
---
 -- == Valid Usage
 --
 -- -   The
@@ -198,7 +185,20 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Handles.ImageView'
-cmdBindShadingRateImageNV :: forall io . MonadIO io => CommandBuffer -> ImageView -> ImageLayout -> io ()
+cmdBindShadingRateImageNV :: forall io
+                           . (MonadIO io)
+                          => -- | @commandBuffer@ is the command buffer into which the command will be
+                             -- recorded.
+                             CommandBuffer
+                          -> -- | @imageView@ is an image view handle specifying the shading rate image.
+                             -- @imageView@ /may/ be set to 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+                             -- which is equivalent to specifying a view of an image filled with zero
+                             -- values.
+                             ImageView
+                          -> -- | @imageLayout@ is the layout that the image subresources accessible from
+                             -- @imageView@ will be in when the shading rate image is accessed.
+                             ImageLayout
+                          -> io ()
 cmdBindShadingRateImageNV commandBuffer imageView imageLayout = liftIO $ do
   let vkCmdBindShadingRateImageNVPtr = pVkCmdBindShadingRateImageNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdBindShadingRateImageNVPtr /= nullFunPtr) $
@@ -217,21 +217,6 @@ foreign import ccall
 
 -- | vkCmdSetViewportShadingRatePaletteNV - Set shading rate image palettes
 -- on a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @firstViewport@ is the index of the first viewport whose shading
---     rate palette is updated by the command.
---
--- -   @viewportCount@ is the number of viewports whose shading rate
---     palettes are updated by the command.
---
--- -   @pShadingRatePalettes@ is a pointer to an array of
---     'ShadingRatePaletteNV' structures defining the palette for each
---     viewport.
 --
 -- == Valid Usage
 --
@@ -292,7 +277,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ShadingRatePaletteNV'
-cmdSetViewportShadingRatePaletteNV :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("shadingRatePalettes" ::: Vector ShadingRatePaletteNV) -> io ()
+cmdSetViewportShadingRatePaletteNV :: forall io
+                                    . (MonadIO io)
+                                   => -- | @commandBuffer@ is the command buffer into which the command will be
+                                      -- recorded.
+                                      CommandBuffer
+                                   -> -- | @firstViewport@ is the index of the first viewport whose shading rate
+                                      -- palette is updated by the command.
+                                      ("firstViewport" ::: Word32)
+                                   -> -- | @pShadingRatePalettes@ is a pointer to an array of
+                                      -- 'ShadingRatePaletteNV' structures defining the palette for each
+                                      -- viewport.
+                                      ("shadingRatePalettes" ::: Vector ShadingRatePaletteNV)
+                                   -> io ()
 cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalettes = liftIO . evalContT $ do
   let vkCmdSetViewportShadingRatePaletteNVPtr = pVkCmdSetViewportShadingRatePaletteNV (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetViewportShadingRatePaletteNVPtr /= nullFunPtr) $
@@ -313,22 +310,6 @@ foreign import ccall
 
 -- | vkCmdSetCoarseSampleOrderNV - Set sample order for coarse fragments on a
 -- command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @sampleOrderType@ specifies the mechanism used to order coverage
---     samples in fragments larger than one pixel.
---
--- -   @customSampleOrderCount@ specifies the number of custom sample
---     orderings to use when ordering coverage samples.
---
--- -   @pCustomSampleOrders@ is a pointer to an array of
---     'CoarseSampleOrderCustomNV' structures, each of which specifies the
---     coverage sample order for a single combination of fragment area and
---     coverage sample count.
 --
 -- = Description
 --
@@ -385,7 +366,20 @@ foreign import ccall
 --
 -- 'CoarseSampleOrderCustomNV', 'CoarseSampleOrderTypeNV',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetCoarseSampleOrderNV :: forall io . MonadIO io => CommandBuffer -> CoarseSampleOrderTypeNV -> ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV) -> io ()
+cmdSetCoarseSampleOrderNV :: forall io
+                           . (MonadIO io)
+                          => -- | @commandBuffer@ is the command buffer into which the command will be
+                             -- recorded.
+                             CommandBuffer
+                          -> -- | @sampleOrderType@ specifies the mechanism used to order coverage samples
+                             -- in fragments larger than one pixel.
+                             CoarseSampleOrderTypeNV
+                          -> -- | @pCustomSampleOrders@ is a pointer to an array of
+                             -- 'CoarseSampleOrderCustomNV' structures, each of which specifies the
+                             -- coverage sample order for a single combination of fragment area and
+                             -- coverage sample count.
+                             ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV)
+                          -> io ()
 cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = liftIO . evalContT $ do
   let vkCmdSetCoarseSampleOrderNVPtr = pVkCmdSetCoarseSampleOrderNV (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetCoarseSampleOrderNVPtr /= nullFunPtr) $
@@ -407,7 +401,11 @@ cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = lif
 -- 'PipelineViewportShadingRateImageStateCreateInfoNV',
 -- 'ShadingRatePaletteEntryNV', 'cmdSetViewportShadingRatePaletteNV'
 data ShadingRatePaletteNV = ShadingRatePaletteNV
-  { -- | @pShadingRatePaletteEntries@ /must/ be a valid pointer to an array of
+  { -- | @pShadingRatePaletteEntries@ is a pointer to an array of
+    -- 'ShadingRatePaletteEntryNV' enums defining the shading rate for each
+    -- palette entry.
+    --
+    -- @pShadingRatePaletteEntries@ /must/ be a valid pointer to an array of
     -- @shadingRatePaletteEntryCount@ valid 'ShadingRatePaletteEntryNV' values
     shadingRatePaletteEntries :: Vector ShadingRatePaletteEntryNV }
   deriving (Typeable)
@@ -707,11 +705,20 @@ instance Zero PhysicalDeviceShadingRateImagePropertiesNV where
 --
 -- 'CoarseSampleOrderCustomNV'
 data CoarseSampleLocationNV = CoarseSampleLocationNV
-  { -- | @pixelX@ /must/ be less than the width (in pixels) of the fragment
+  { -- | @pixelX@ is added to the x coordinate of the upper-leftmost pixel of
+    -- each fragment to identify the pixel containing the coverage sample.
+    --
+    -- @pixelX@ /must/ be less than the width (in pixels) of the fragment
     pixelX :: Word32
-  , -- | @pixelY@ /must/ be less than the height (in pixels) of the fragment
+  , -- | @pixelY@ is added to the y coordinate of the upper-leftmost pixel of
+    -- each fragment to identify the pixel containing the coverage sample.
+    --
+    -- @pixelY@ /must/ be less than the height (in pixels) of the fragment
     pixelY :: Word32
-  , -- | @sample@ /must/ be less than the number of coverage samples in each
+  , -- | @sample@ is the number of the coverage sample in the pixel identified by
+    -- @pixelX@ and @pixelY@.
+    --
+    -- @sample@ /must/ be less than the number of coverage samples in each
     -- pixel belonging to the fragment
     sample :: Word32
   }

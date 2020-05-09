@@ -84,14 +84,6 @@ foreign import ccall
 
 -- | vkDebugMarkerSetObjectNameEXT - Give a user-friendly name to an object
 --
--- = Parameters
---
--- -   @device@ is the device that created the object.
---
--- -   @pNameInfo@ is a pointer to a 'DebugMarkerObjectNameInfoEXT'
---     structure specifying the parameters of the name to set on the
---     object.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -118,7 +110,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugMarkerObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
-debugMarkerSetObjectNameEXT :: forall io . MonadIO io => Device -> DebugMarkerObjectNameInfoEXT -> io ()
+debugMarkerSetObjectNameEXT :: forall io
+                             . (MonadIO io)
+                            => -- | @device@ is the device that created the object.
+                               Device
+                            -> -- | @pNameInfo@ is a pointer to a 'DebugMarkerObjectNameInfoEXT' structure
+                               -- specifying the parameters of the name to set on the object.
+                               DebugMarkerObjectNameInfoEXT
+                            -> io ()
 debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
   let vkDebugMarkerSetObjectNameEXTPtr = pVkDebugMarkerSetObjectNameEXT (deviceCmds (device :: Device))
   lift $ unless (vkDebugMarkerSetObjectNameEXTPtr /= nullFunPtr) $
@@ -137,13 +136,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr DebugMarkerObjectTagInfoEXT -> IO Result) -> Ptr Device_T -> Ptr DebugMarkerObjectTagInfoEXT -> IO Result
 
 -- | vkDebugMarkerSetObjectTagEXT - Attach arbitrary data to an object
---
--- = Parameters
---
--- -   @device@ is the device that created the object.
---
--- -   @pTagInfo@ is a pointer to a 'DebugMarkerObjectTagInfoEXT' structure
---     specifying the parameters of the tag to attach to the object.
 --
 -- == Valid Usage (Implicit)
 --
@@ -171,7 +163,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugMarkerObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
-debugMarkerSetObjectTagEXT :: forall io . MonadIO io => Device -> DebugMarkerObjectTagInfoEXT -> io ()
+debugMarkerSetObjectTagEXT :: forall io
+                            . (MonadIO io)
+                           => -- | @device@ is the device that created the object.
+                              Device
+                           -> -- | @pTagInfo@ is a pointer to a 'DebugMarkerObjectTagInfoEXT' structure
+                              -- specifying the parameters of the tag to attach to the object.
+                              DebugMarkerObjectTagInfoEXT
+                           -> io ()
 debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
   let vkDebugMarkerSetObjectTagEXTPtr = pVkDebugMarkerSetObjectTagEXT (deviceCmds (device :: Device))
   lift $ unless (vkDebugMarkerSetObjectTagEXTPtr /= nullFunPtr) $
@@ -190,14 +189,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()
 
 -- | vkCmdDebugMarkerBeginEXT - Open a command buffer marker region
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
---     specifying the parameters of the marker region to open.
 --
 -- == Valid Usage (Implicit)
 --
@@ -232,7 +223,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
-cmdDebugMarkerBeginEXT :: forall io . MonadIO io => CommandBuffer -> DebugMarkerMarkerInfoEXT -> io ()
+cmdDebugMarkerBeginEXT :: forall io
+                        . (MonadIO io)
+                       => -- | @commandBuffer@ is the command buffer into which the command is
+                          -- recorded.
+                          CommandBuffer
+                       -> -- | @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
+                          -- specifying the parameters of the marker region to open.
+                          DebugMarkerMarkerInfoEXT
+                       -> io ()
 cmdDebugMarkerBeginEXT commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdDebugMarkerBeginEXTPtr = pVkCmdDebugMarkerBeginEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdDebugMarkerBeginEXTPtr /= nullFunPtr) $
@@ -251,11 +250,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> IO ()) -> Ptr CommandBuffer_T -> IO ()
 
 -- | vkCmdDebugMarkerEndEXT - Close a command buffer marker region
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
 --
 -- = Description
 --
@@ -307,7 +301,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdDebugMarkerEndEXT :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdDebugMarkerEndEXT :: forall io
+                      . (MonadIO io)
+                     => -- | @commandBuffer@ is the command buffer into which the command is
+                        -- recorded.
+                        CommandBuffer
+                     -> io ()
 cmdDebugMarkerEndEXT commandBuffer = liftIO $ do
   let vkCmdDebugMarkerEndEXTPtr = pVkCmdDebugMarkerEndEXT (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDebugMarkerEndEXTPtr /= nullFunPtr) $
@@ -325,14 +324,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr DebugMarkerMarkerInfoEXT -> IO ()
 
 -- | vkCmdDebugMarkerInsertEXT - Insert a marker label into a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
---     specifying the parameters of the marker to insert.
 --
 -- == Valid Usage (Implicit)
 --
@@ -367,7 +358,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugMarkerMarkerInfoEXT'
-cmdDebugMarkerInsertEXT :: forall io . MonadIO io => CommandBuffer -> DebugMarkerMarkerInfoEXT -> io ()
+cmdDebugMarkerInsertEXT :: forall io
+                         . (MonadIO io)
+                        => -- | @commandBuffer@ is the command buffer into which the command is
+                           -- recorded.
+                           CommandBuffer
+                        -> -- | @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
+                           -- specifying the parameters of the marker to insert.
+                           DebugMarkerMarkerInfoEXT
+                        -> io ()
 cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdDebugMarkerInsertEXTPtr = pVkCmdDebugMarkerInsertEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdDebugMarkerInsertEXTPtr /= nullFunPtr) $
@@ -395,14 +394,28 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'debugMarkerSetObjectNameEXT'
 data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
-  { -- | @objectType@ /must/ be a valid
+  { -- | @objectType@ is a
+    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
+    -- specifying the type of the object to be named.
+    --
+    -- @objectType@ /must/ not be
+    -- 'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
+    --
+    -- @objectType@ /must/ be a valid
     -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' value
     objectType :: DebugReportObjectTypeEXT
-  , -- | @object@ /must/ be a Vulkan object of the type associated with
+  , -- | @object@ is the object to be named.
+    --
+    -- @object@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+    --
+    -- @object@ /must/ be a Vulkan object of the type associated with
     -- @objectType@ as defined in
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
-  , -- | @pObjectName@ /must/ be a null-terminated UTF-8 string
+  , -- | @pObjectName@ is a null-terminated UTF-8 string specifying the name to
+    -- apply to @object@.
+    --
+    -- @pObjectName@ /must/ be a null-terminated UTF-8 string
     objectName :: ByteString
   }
   deriving (Typeable)
@@ -461,18 +474,34 @@ instance Zero DebugMarkerObjectNameInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'debugMarkerSetObjectTagEXT'
 data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
-  { -- | @objectType@ /must/ be a valid
+  { -- | @objectType@ is a
+    -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
+    -- specifying the type of the object to be named.
+    --
+    -- @objectType@ /must/ not be
+    -- 'Vulkan.Extensions.VK_EXT_debug_report.DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
+    --
+    -- @objectType@ /must/ be a valid
     -- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT' value
     objectType :: DebugReportObjectTypeEXT
-  , -- | @object@ /must/ be a Vulkan object of the type associated with
+  , -- | @object@ is the object to be tagged.
+    --
+    -- @object@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+    --
+    -- @object@ /must/ be a Vulkan object of the type associated with
     -- @objectType@ as defined in
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
     tagName :: Word64
-  , -- | @tagSize@ /must/ be greater than @0@
+  , -- | @tagSize@ is the number of bytes of data to attach to the object.
+    --
+    -- @tagSize@ /must/ be greater than @0@
     tagSize :: Word64
-  , -- | @pTag@ /must/ be a valid pointer to an array of @tagSize@ bytes
+  , -- | @pTag@ is a pointer to an array of @tagSize@ bytes containing the data
+    -- to be associated with the object.
+    --
+    -- @pTag@ /must/ be a valid pointer to an array of @tagSize@ bytes
     tag :: Ptr ()
   }
   deriving (Typeable)
@@ -536,7 +565,10 @@ instance Zero DebugMarkerObjectTagInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdDebugMarkerBeginEXT', 'cmdDebugMarkerInsertEXT'
 data DebugMarkerMarkerInfoEXT = DebugMarkerMarkerInfoEXT
-  { -- | @pMarkerName@ /must/ be a null-terminated UTF-8 string
+  { -- | @pMarkerName@ is a pointer to a null-terminated UTF-8 string containing
+    -- the name of the marker.
+    --
+    -- @pMarkerName@ /must/ be a null-terminated UTF-8 string
     markerName :: ByteString
   , -- | @color@ is an /optional/ RGBA color value that can be associated with
     -- the marker. A particular implementation /may/ choose to ignore this

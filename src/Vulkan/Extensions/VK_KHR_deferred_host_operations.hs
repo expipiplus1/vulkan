@@ -73,17 +73,6 @@ foreign import ccall
 
 -- | vkCreateDeferredOperationKHR - Create a deferred operation handle
 --
--- = Parameters
---
--- -   @device@ is the device which owns @operation@.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pDeferredOperation@ is a pointer to a handle in which the created
---     'Vulkan.Extensions.Handles.DeferredOperationKHR' is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -110,7 +99,15 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
-createDeferredOperationKHR :: forall io . MonadIO io => Device -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DeferredOperationKHR)
+createDeferredOperationKHR :: forall io
+                            . (MonadIO io)
+                           => -- | @device@ is the device which owns @operation@.
+                              Device
+                           -> -- | @pAllocator@ controls host memory allocation as described in the
+                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                              -- chapter.
+                              ("allocator" ::: Maybe AllocationCallbacks)
+                           -> io (DeferredOperationKHR)
 createDeferredOperationKHR device allocator = liftIO . evalContT $ do
   let vkCreateDeferredOperationKHRPtr = pVkCreateDeferredOperationKHR (deviceCmds (device :: Device))
   lift $ unless (vkCreateDeferredOperationKHRPtr /= nullFunPtr) $
@@ -148,16 +145,6 @@ foreign import ccall
 
 -- | vkDestroyDeferredOperationKHR - Destroy a deferred operation handle
 --
--- = Parameters
---
--- -   @device@ is the device which owns @operation@.
---
--- -   @operation@ is the completed operation to be destroyed.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -193,7 +180,17 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
-destroyDeferredOperationKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDeferredOperationKHR :: forall io
+                             . (MonadIO io)
+                            => -- | @device@ is the device which owns @operation@.
+                               Device
+                            -> -- | @operation@ is the completed operation to be destroyed.
+                               DeferredOperationKHR
+                            -> -- | @pAllocator@ controls host memory allocation as described in the
+                               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                               -- chapter.
+                               ("allocator" ::: Maybe AllocationCallbacks)
+                            -> io ()
 destroyDeferredOperationKHR device operation allocator = liftIO . evalContT $ do
   let vkDestroyDeferredOperationKHRPtr = pVkDestroyDeferredOperationKHR (deviceCmds (device :: Device))
   lift $ unless (vkDestroyDeferredOperationKHRPtr /= nullFunPtr) $
@@ -215,12 +212,6 @@ foreign import ccall
 
 -- | vkGetDeferredOperationMaxConcurrencyKHR - Query the maximum concurrency
 -- on a deferred operation
---
--- = Parameters
---
--- -   @device@ is the device which owns @operation@.
---
--- -   @operation@ is the deferred operation to be queried.
 --
 -- = Description
 --
@@ -250,7 +241,21 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
-getDeferredOperationMaxConcurrencyKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> io (Word32)
+getDeferredOperationMaxConcurrencyKHR :: forall io
+                                       . (MonadIO io)
+                                      => -- | @device@ is the device which owns @operation@.
+                                         --
+                                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                         Device
+                                      -> -- | @operation@ is the deferred operation to be queried.
+                                         --
+                                         -- @operation@ /must/ be a valid
+                                         -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' handle
+                                         --
+                                         -- @operation@ /must/ have been created, allocated, or retrieved from
+                                         -- @device@
+                                         DeferredOperationKHR
+                                      -> io (Word32)
 getDeferredOperationMaxConcurrencyKHR device operation = liftIO $ do
   let vkGetDeferredOperationMaxConcurrencyKHRPtr = pVkGetDeferredOperationMaxConcurrencyKHR (deviceCmds (device :: Device))
   unless (vkGetDeferredOperationMaxConcurrencyKHRPtr /= nullFunPtr) $
@@ -269,12 +274,6 @@ foreign import ccall
 
 -- | vkGetDeferredOperationResultKHR - Query the result of a deferred
 -- operation
---
--- = Parameters
---
--- -   @device@ is the device which owns @operation@.
---
--- -   @operation@ is the operation whose deferred result is being queried.
 --
 -- = Description
 --
@@ -296,7 +295,21 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
-getDeferredOperationResultKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> io (Result)
+getDeferredOperationResultKHR :: forall io
+                               . (MonadIO io)
+                              => -- | @device@ is the device which owns @operation@.
+                                 --
+                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 Device
+                              -> -- | @operation@ is the operation whose deferred result is being queried.
+                                 --
+                                 -- @operation@ /must/ be a valid
+                                 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' handle
+                                 --
+                                 -- @operation@ /must/ have been created, allocated, or retrieved from
+                                 -- @device@
+                                 DeferredOperationKHR
+                              -> io (Result)
 getDeferredOperationResultKHR device operation = liftIO $ do
   let vkGetDeferredOperationResultKHRPtr = pVkGetDeferredOperationResultKHR (deviceCmds (device :: Device))
   unless (vkGetDeferredOperationResultKHRPtr /= nullFunPtr) $
@@ -314,13 +327,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> IO Result) -> Ptr Device_T -> DeferredOperationKHR -> IO Result
 
 -- | vkDeferredOperationJoinKHR - Assign a thread to a deferred operation
---
--- = Parameters
---
--- -   @device@ is the device which owns @operation@.
---
--- -   @operation@ is the deferred operation that the calling thread should
---     work on.
 --
 -- = Description
 --
@@ -395,7 +401,14 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
-deferredOperationJoinKHR :: forall io . MonadIO io => Device -> DeferredOperationKHR -> io (Result)
+deferredOperationJoinKHR :: forall io
+                          . (MonadIO io)
+                         => -- | @device@ is the device which owns @operation@.
+                            Device
+                         -> -- | @operation@ is the deferred operation that the calling thread should
+                            -- work on.
+                            DeferredOperationKHR
+                         -> io (Result)
 deferredOperationJoinKHR device operation = liftIO $ do
   let vkDeferredOperationJoinKHRPtr = pVkDeferredOperationJoinKHR (deviceCmds (device :: Device))
   unless (vkDeferredOperationJoinKHRPtr /= nullFunPtr) $

@@ -83,22 +83,6 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' object for an Android native
 -- window
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to a 'AndroidSurfaceCreateInfoKHR'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- = Description
 --
 -- During the lifetime of a surface created using a particular
@@ -159,7 +143,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'AndroidSurfaceCreateInfoKHR', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-createAndroidSurfaceKHR :: forall io . MonadIO io => Instance -> AndroidSurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createAndroidSurfaceKHR :: forall io
+                         . (MonadIO io)
+                        => -- | @instance@ is the instance to associate the surface with.
+                           Instance
+                        -> -- | @pCreateInfo@ is a pointer to a 'AndroidSurfaceCreateInfoKHR' structure
+                           -- containing parameters affecting the creation of the surface object.
+                           AndroidSurfaceCreateInfoKHR
+                        -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                           -- surface object when there is no more specific allocator available (see
+                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                           ("allocator" ::: Maybe AllocationCallbacks)
+                        -> io (SurfaceKHR)
 createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateAndroidSurfaceKHRPtr = pVkCreateAndroidSurfaceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateAndroidSurfaceKHRPtr /= nullFunPtr) $
@@ -187,9 +182,14 @@ createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAndroidSurfaceKHR'
 data AndroidSurfaceCreateInfoKHR = AndroidSurfaceCreateInfoKHR
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: AndroidSurfaceCreateFlagsKHR
-  , -- | @window@ /must/ point to a valid Android
+  , -- | @window@ is a pointer to the 'Vulkan.Extensions.WSITypes.ANativeWindow'
+    -- to associate the surface with.
+    --
+    -- @window@ /must/ point to a valid Android
     -- 'Vulkan.Extensions.WSITypes.ANativeWindow'
     window :: Ptr ANativeWindow
   }

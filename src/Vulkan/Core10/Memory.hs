@@ -104,22 +104,6 @@ foreign import ccall
 
 -- | vkAllocateMemory - Allocate device memory
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory.
---
--- -   @pAllocateInfo@ is a pointer to a 'MemoryAllocateInfo' structure
---     describing parameters of the allocation. A successful returned
---     allocation /must/ use the requested parameters — no substitution is
---     permitted by the implementation.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pMemory@ is a pointer to a 'Vulkan.Core10.Handles.DeviceMemory'
---     handle in which information about the allocated memory is returned.
---
 -- = Description
 --
 -- Allocations returned by 'allocateMemory' are guaranteed to meet any
@@ -228,7 +212,20 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'MemoryAllocateInfo'
-allocateMemory :: forall a io . (Extendss MemoryAllocateInfo a, PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DeviceMemory)
+allocateMemory :: forall a io
+                . (Extendss MemoryAllocateInfo a, PokeChain a, MonadIO io)
+               => -- | @device@ is the logical device that owns the memory.
+                  Device
+               -> -- | @pAllocateInfo@ is a pointer to a 'MemoryAllocateInfo' structure
+                  -- describing parameters of the allocation. A successful returned
+                  -- allocation /must/ use the requested parameters — no substitution is
+                  -- permitted by the implementation.
+                  MemoryAllocateInfo a
+               -> -- | @pAllocator@ controls host memory allocation as described in the
+                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                  -- chapter.
+                  ("allocator" ::: Maybe AllocationCallbacks)
+               -> io (DeviceMemory)
 allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   let vkAllocateMemoryPtr = pVkAllocateMemory (deviceCmds (device :: Device))
   lift $ unless (vkAllocateMemoryPtr /= nullFunPtr) $
@@ -266,17 +263,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DeviceMemory -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> DeviceMemory -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkFreeMemory - Free device memory
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory.
---
--- -   @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object to be
---     freed.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
 --
 -- = Description
 --
@@ -333,7 +319,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory'
-freeMemory :: forall io . MonadIO io => Device -> DeviceMemory -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+freeMemory :: forall io
+            . (MonadIO io)
+           => -- | @device@ is the logical device that owns the memory.
+              Device
+           -> -- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object to be freed.
+              DeviceMemory
+           -> -- | @pAllocator@ controls host memory allocation as described in the
+              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+              -- chapter.
+              ("allocator" ::: Maybe AllocationCallbacks)
+           -> io ()
 freeMemory device memory allocator = liftIO . evalContT $ do
   let vkFreeMemoryPtr = pVkFreeMemory (deviceCmds (device :: Device))
   lift $ unless (vkFreeMemoryPtr /= nullFunPtr) $
@@ -354,27 +350,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> Ptr (Ptr ()) -> IO Result) -> Ptr Device_T -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> Ptr (Ptr ()) -> IO Result
 
 -- | vkMapMemory - Map a memory object into application address space
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory.
---
--- -   @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object to be
---     mapped.
---
--- -   @offset@ is a zero-based byte offset from the beginning of the
---     memory object.
---
--- -   @size@ is the size of the memory range to map, or
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE' to map from @offset@ to the
---     end of the allocation.
---
--- -   @flags@ is reserved for future use.
---
--- -   @ppData@ is a pointer to a @void *@ variable in which is returned a
---     host-accessible pointer to the beginning of the mapped range. This
---     pointer minus @offset@ /must/ be aligned to at least
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minMemoryMapAlignment@.
 --
 -- = Description
 --
@@ -479,7 +454,23 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.BaseType.DeviceSize',
 -- 'Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
-mapMemory :: forall io . MonadIO io => Device -> DeviceMemory -> ("offset" ::: DeviceSize) -> DeviceSize -> MemoryMapFlags -> io (("data" ::: Ptr ()))
+mapMemory :: forall io
+           . (MonadIO io)
+          => -- | @device@ is the logical device that owns the memory.
+             Device
+          -> -- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object to be
+             -- mapped.
+             DeviceMemory
+          -> -- | @offset@ is a zero-based byte offset from the beginning of the memory
+             -- object.
+             ("offset" ::: DeviceSize)
+          -> -- | @size@ is the size of the memory range to map, or
+             -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to map from @offset@ to the end
+             -- of the allocation.
+             DeviceSize
+          -> -- | @flags@ is reserved for future use.
+             MemoryMapFlags
+          -> io (("data" ::: Ptr ()))
 mapMemory device memory offset size flags = liftIO . evalContT $ do
   let vkMapMemoryPtr = pVkMapMemory (deviceCmds (device :: Device))
   lift $ unless (vkMapMemoryPtr /= nullFunPtr) $
@@ -514,12 +505,6 @@ foreign import ccall
 
 -- | vkUnmapMemory - Unmap a previously mapped memory object
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory.
---
--- -   @memory@ is the memory object to be unmapped.
---
 -- == Valid Usage
 --
 -- -   @memory@ /must/ be currently host mapped
@@ -541,7 +526,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory'
-unmapMemory :: forall io . MonadIO io => Device -> DeviceMemory -> io ()
+unmapMemory :: forall io
+             . (MonadIO io)
+            => -- | @device@ is the logical device that owns the memory.
+               Device
+            -> -- | @memory@ is the memory object to be unmapped.
+               DeviceMemory
+            -> io ()
 unmapMemory device memory = liftIO $ do
   let vkUnmapMemoryPtr = pVkUnmapMemory (deviceCmds (device :: Device))
   unless (vkUnmapMemoryPtr /= nullFunPtr) $
@@ -559,15 +550,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr MappedMemoryRange -> IO Result) -> Ptr Device_T -> Word32 -> Ptr MappedMemoryRange -> IO Result
 
 -- | vkFlushMappedMemoryRanges - Flush mapped memory ranges
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory ranges.
---
--- -   @memoryRangeCount@ is the length of the @pMemoryRanges@ array.
---
--- -   @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
---     structures describing the memory ranges to flush.
 --
 -- = Description
 --
@@ -614,7 +596,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
-flushMappedMemoryRanges :: forall io . MonadIO io => Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> io ()
+flushMappedMemoryRanges :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is the logical device that owns the memory ranges.
+                           --
+                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                           Device
+                        -> -- | @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
+                           -- structures describing the memory ranges to flush.
+                           --
+                           -- @pMemoryRanges@ /must/ be a valid pointer to an array of
+                           -- @memoryRangeCount@ valid 'MappedMemoryRange' structures
+                           ("memoryRanges" ::: Vector MappedMemoryRange)
+                        -> io ()
 flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkFlushMappedMemoryRangesPtr = pVkFlushMappedMemoryRanges (deviceCmds (device :: Device))
   lift $ unless (vkFlushMappedMemoryRangesPtr /= nullFunPtr) $
@@ -635,15 +629,6 @@ foreign import ccall
 
 -- | vkInvalidateMappedMemoryRanges - Invalidate ranges of mapped memory
 -- objects
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory ranges.
---
--- -   @memoryRangeCount@ is the length of the @pMemoryRanges@ array.
---
--- -   @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
---     structures describing the memory ranges to invalidate.
 --
 -- = Description
 --
@@ -681,7 +666,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
-invalidateMappedMemoryRanges :: forall io . MonadIO io => Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> io ()
+invalidateMappedMemoryRanges :: forall io
+                              . (MonadIO io)
+                             => -- | @device@ is the logical device that owns the memory ranges.
+                                --
+                                -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                Device
+                             -> -- | @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
+                                -- structures describing the memory ranges to invalidate.
+                                --
+                                -- @pMemoryRanges@ /must/ be a valid pointer to an array of
+                                -- @memoryRangeCount@ valid 'MappedMemoryRange' structures
+                                ("memoryRanges" ::: Vector MappedMemoryRange)
+                             -> io ()
 invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkInvalidateMappedMemoryRangesPtr = pVkInvalidateMappedMemoryRanges (deviceCmds (device :: Device))
   lift $ unless (vkInvalidateMappedMemoryRangesPtr /= nullFunPtr) $
@@ -703,16 +700,6 @@ foreign import ccall
 -- | vkGetDeviceMemoryCommitment - Query the current commitment for a
 -- VkDeviceMemory
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory.
---
--- -   @memory@ is the memory object being queried.
---
--- -   @pCommittedMemoryInBytes@ is a pointer to a
---     'Vulkan.Core10.BaseType.DeviceSize' value in which the number of
---     bytes currently committed is returned, on success.
---
 -- = Description
 --
 -- The implementation /may/ update the commitment at any time, and the
@@ -728,7 +715,22 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-getDeviceMemoryCommitment :: forall io . MonadIO io => Device -> DeviceMemory -> io (("committedMemoryInBytes" ::: DeviceSize))
+getDeviceMemoryCommitment :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the logical device that owns the memory.
+                             --
+                             -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                             Device
+                          -> -- | @memory@ is the memory object being queried.
+                             --
+                             -- @memory@ /must/ have been created with a memory type that reports
+                             -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
+                             --
+                             -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
+                             --
+                             -- @memory@ /must/ have been created, allocated, or retrieved from @device@
+                             DeviceMemory
+                          -> io (("committedMemoryInBytes" ::: DeviceSize))
 getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
   let vkGetDeviceMemoryCommitmentPtr = pVkGetDeviceMemoryCommitment (deviceCmds (device :: Device))
   lift $ unless (vkGetDeviceMemoryCommitmentPtr /= nullFunPtr) $

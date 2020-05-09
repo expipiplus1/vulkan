@@ -336,15 +336,6 @@ foreign import ccall
 
 -- | vkCompileDeferredNV - Deferred compilation of shaders
 --
--- = Parameters
---
--- -   @device@ is the logical device containing the ray tracing pipeline.
---
--- -   @pipeline@ is the ray tracing pipeline object containing the
---     shaders.
---
--- -   @shader@ is the index of the shader to compile.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -360,7 +351,27 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
-compileDeferredNV :: forall io . MonadIO io => Device -> Pipeline -> ("shader" ::: Word32) -> io ()
+compileDeferredNV :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device containing the ray tracing pipeline.
+                     --
+                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                     Device
+                  -> -- | @pipeline@ is the ray tracing pipeline object containing the shaders.
+                     --
+                     -- @pipeline@ /must/ have been created with
+                     -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEFER_COMPILE_BIT_NV'
+                     --
+                     -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
+                     --
+                     -- @pipeline@ /must/ have been created, allocated, or retrieved from
+                     -- @device@
+                     Pipeline
+                  -> -- | @shader@ is the index of the shader to compile.
+                     --
+                     -- @shader@ /must/ not have been called as a deferred compile before
+                     ("shader" ::: Word32)
+                  -> io ()
 compileDeferredNV device pipeline shader = liftIO $ do
   let vkCompileDeferredNVPtr = pVkCompileDeferredNV (deviceCmds (device :: Device))
   unless (vkCompileDeferredNVPtr /= nullFunPtr) $
@@ -379,22 +390,6 @@ foreign import ccall
 
 -- | vkCreateAccelerationStructureNV - Create a new acceleration structure
 -- object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the buffer object.
---
--- -   @pCreateInfo@ is a pointer to a 'AccelerationStructureCreateInfoNV'
---     structure containing parameters affecting creation of the
---     acceleration structure.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pAccelerationStructure@ is a pointer to a 'AccelerationStructureNV'
---     handle in which the resulting acceleration structure object is
---     returned.
 --
 -- = Description
 --
@@ -437,7 +432,19 @@ foreign import ccall
 -- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureNV',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
-createAccelerationStructureNV :: forall io . MonadIO io => Device -> AccelerationStructureCreateInfoNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io (AccelerationStructureNV)
+createAccelerationStructureNV :: forall io
+                               . (MonadIO io)
+                              => -- | @device@ is the logical device that creates the buffer object.
+                                 Device
+                              -> -- | @pCreateInfo@ is a pointer to a 'AccelerationStructureCreateInfoNV'
+                                 -- structure containing parameters affecting creation of the acceleration
+                                 -- structure.
+                                 AccelerationStructureCreateInfoNV
+                              -> -- | @pAllocator@ controls host memory allocation as described in the
+                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- chapter.
+                                 ("allocator" ::: Maybe AllocationCallbacks)
+                              -> io (AccelerationStructureNV)
 createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $ do
   let vkCreateAccelerationStructureNVPtr = pVkCreateAccelerationStructureNV (deviceCmds (device :: Device))
   lift $ unless (vkCreateAccelerationStructureNVPtr /= nullFunPtr) $
@@ -464,17 +471,6 @@ foreign import ccall
 -- | vkGetAccelerationStructureMemoryRequirementsNV - Get acceleration
 -- structure memory requirements
 --
--- = Parameters
---
--- -   @device@ is the logical device on which the acceleration structure
---     was created.
---
--- -   @pInfo@ specifies the acceleration structure to get memory
---     requirements for.
---
--- -   @pMemoryRequirements@ returns the requested acceleration structure
---     memory requirements.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -482,7 +478,20 @@ foreign import ccall
 -- 'AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
-getAccelerationStructureMemoryRequirementsNV :: forall a io . (Extendss MemoryRequirements2KHR a, PokeChain a, PeekChain a, MonadIO io) => Device -> AccelerationStructureMemoryRequirementsInfoNV -> io (MemoryRequirements2KHR a)
+getAccelerationStructureMemoryRequirementsNV :: forall a io
+                                              . (Extendss MemoryRequirements2KHR a, PokeChain a, PeekChain a, MonadIO io)
+                                             => -- | @device@ is the logical device on which the acceleration structure was
+                                                -- created.
+                                                --
+                                                -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                                Device
+                                             -> -- | @pInfo@ specifies the acceleration structure to get memory requirements
+                                                -- for.
+                                                --
+                                                -- @pInfo@ /must/ be a valid pointer to a valid
+                                                -- 'AccelerationStructureMemoryRequirementsInfoNV' structure
+                                                AccelerationStructureMemoryRequirementsInfoNV
+                                             -> io (MemoryRequirements2KHR a)
 getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetAccelerationStructureMemoryRequirementsNVPtr = pVkGetAccelerationStructureMemoryRequirementsNV (deviceCmds (device :: Device))
   lift $ unless (vkGetAccelerationStructureMemoryRequirementsNVPtr /= nullFunPtr) $
@@ -503,21 +512,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> AccelerationStructureKHR -> AccelerationStructureKHR -> CopyAccelerationStructureModeKHR -> IO ()) -> Ptr CommandBuffer_T -> AccelerationStructureKHR -> AccelerationStructureKHR -> CopyAccelerationStructureModeKHR -> IO ()
 
 -- | vkCmdCopyAccelerationStructureNV - Copy an acceleration structure
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @dst@ is a pointer to the target acceleration structure for the
---     copy.
---
--- -   @src@ is a pointer to the source acceleration structure for the
---     copy.
---
--- -   @mode@ is a
---     'Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
---     value specifying additional operations to perform during the copy.
 --
 -- == Valid Usage
 --
@@ -578,7 +572,20 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
-cmdCopyAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> ("dst" ::: AccelerationStructureKHR) -> ("src" ::: AccelerationStructureKHR) -> CopyAccelerationStructureModeKHR -> io ()
+cmdCopyAccelerationStructureNV :: forall io
+                                . (MonadIO io)
+                               => -- | @commandBuffer@ is the command buffer into which the command will be
+                                  -- recorded.
+                                  CommandBuffer
+                               -> -- | @dst@ is a pointer to the target acceleration structure for the copy.
+                                  ("dst" ::: AccelerationStructureKHR)
+                               -> -- | @src@ is a pointer to the source acceleration structure for the copy.
+                                  ("src" ::: AccelerationStructureKHR)
+                               -> -- | @mode@ is a
+                                  -- 'Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
+                                  -- value specifying additional operations to perform during the copy.
+                                  CopyAccelerationStructureModeKHR
+                               -> io ()
 cmdCopyAccelerationStructureNV commandBuffer dst src mode = liftIO $ do
   let vkCmdCopyAccelerationStructureNVPtr = pVkCmdCopyAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdCopyAccelerationStructureNVPtr /= nullFunPtr) $
@@ -596,37 +603,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr AccelerationStructureInfoNV -> Buffer -> DeviceSize -> Bool32 -> AccelerationStructureKHR -> AccelerationStructureKHR -> Buffer -> DeviceSize -> IO ()) -> Ptr CommandBuffer_T -> Ptr AccelerationStructureInfoNV -> Buffer -> DeviceSize -> Bool32 -> AccelerationStructureKHR -> AccelerationStructureKHR -> Buffer -> DeviceSize -> IO ()
 
 -- | vkCmdBuildAccelerationStructureNV - Build an acceleration structure
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @pInfo@ contains the shared information for the acceleration
---     structure’s structure.
---
--- -   @instanceData@ is the buffer containing an array of
---     'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureInstanceKHR'
---     structures defining acceleration structures. This parameter /must/
---     be @NULL@ for bottom level acceleration structures.
---
--- -   @instanceOffset@ is the offset in bytes (relative to the start of
---     @instanceData@) at which the instance data is located.
---
--- -   @update@ specifies whether to update the @dst@ acceleration
---     structure with the data in @src@.
---
--- -   @dst@ is a pointer to the target acceleration structure for the
---     build.
---
--- -   @src@ is a pointer to an existing acceleration structure that is to
---     be used to update the @dst@ acceleration structure.
---
--- -   @scratch@ is the 'Vulkan.Core10.Handles.Buffer' that will be used as
---     scratch memory for the build.
---
--- -   @scratchOffset@ is the offset in bytes relative to the start of
---     @scratch@ that will be used as a scratch memory.
 --
 -- == Valid Usage
 --
@@ -748,7 +724,37 @@ foreign import ccall
 -- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdBuildAccelerationStructureNV :: forall io . MonadIO io => CommandBuffer -> AccelerationStructureInfoNV -> ("instanceData" ::: Buffer) -> ("instanceOffset" ::: DeviceSize) -> ("update" ::: Bool) -> ("dst" ::: AccelerationStructureKHR) -> ("src" ::: AccelerationStructureKHR) -> ("scratch" ::: Buffer) -> ("scratchOffset" ::: DeviceSize) -> io ()
+cmdBuildAccelerationStructureNV :: forall io
+                                 . (MonadIO io)
+                                => -- | @commandBuffer@ is the command buffer into which the command will be
+                                   -- recorded.
+                                   CommandBuffer
+                                -> -- | @pInfo@ contains the shared information for the acceleration structure’s
+                                   -- structure.
+                                   AccelerationStructureInfoNV
+                                -> -- | @instanceData@ is the buffer containing an array of
+                                   -- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureInstanceKHR'
+                                   -- structures defining acceleration structures. This parameter /must/ be
+                                   -- @NULL@ for bottom level acceleration structures.
+                                   ("instanceData" ::: Buffer)
+                                -> -- | @instanceOffset@ is the offset in bytes (relative to the start of
+                                   -- @instanceData@) at which the instance data is located.
+                                   ("instanceOffset" ::: DeviceSize)
+                                -> -- | @update@ specifies whether to update the @dst@ acceleration structure
+                                   -- with the data in @src@.
+                                   ("update" ::: Bool)
+                                -> -- | @dst@ is a pointer to the target acceleration structure for the build.
+                                   ("dst" ::: AccelerationStructureKHR)
+                                -> -- | @src@ is a pointer to an existing acceleration structure that is to be
+                                   -- used to update the @dst@ acceleration structure.
+                                   ("src" ::: AccelerationStructureKHR)
+                                -> -- | @scratch@ is the 'Vulkan.Core10.Handles.Buffer' that will be used as
+                                   -- scratch memory for the build.
+                                   ("scratch" ::: Buffer)
+                                -> -- | @scratchOffset@ is the offset in bytes relative to the start of
+                                   -- @scratch@ that will be used as a scratch memory.
+                                   ("scratchOffset" ::: DeviceSize)
+                                -> io ()
 cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureNVPtr = pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBuildAccelerationStructureNVPtr /= nullFunPtr) $
@@ -767,54 +773,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Buffer -> DeviceSize -> DeviceSize -> Buffer -> DeviceSize -> DeviceSize -> Buffer -> DeviceSize -> DeviceSize -> Word32 -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Buffer -> DeviceSize -> DeviceSize -> Buffer -> DeviceSize -> DeviceSize -> Buffer -> DeviceSize -> DeviceSize -> Word32 -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdTraceRaysNV - Initialize a ray tracing dispatch
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @raygenShaderBindingTableBuffer@ is the buffer object that holds the
---     shader binding table data for the ray generation shader stage.
---
--- -   @raygenShaderBindingOffset@ is the offset in bytes (relative to
---     @raygenShaderBindingTableBuffer@) of the ray generation shader being
---     used for the trace.
---
--- -   @missShaderBindingTableBuffer@ is the buffer object that holds the
---     shader binding table data for the miss shader stage.
---
--- -   @missShaderBindingOffset@ is the offset in bytes (relative to
---     @missShaderBindingTableBuffer@) of the miss shader being used for
---     the trace.
---
--- -   @missShaderBindingStride@ is the size in bytes of each shader
---     binding table record in @missShaderBindingTableBuffer@.
---
--- -   @hitShaderBindingTableBuffer@ is the buffer object that holds the
---     shader binding table data for the hit shader stages.
---
--- -   @hitShaderBindingOffset@ is the offset in bytes (relative to
---     @hitShaderBindingTableBuffer@) of the hit shader group being used
---     for the trace.
---
--- -   @hitShaderBindingStride@ is the size in bytes of each shader binding
---     table record in @hitShaderBindingTableBuffer@.
---
--- -   @callableShaderBindingTableBuffer@ is the buffer object that holds
---     the shader binding table data for the callable shader stage.
---
--- -   @callableShaderBindingOffset@ is the offset in bytes (relative to
---     @callableShaderBindingTableBuffer@) of the callable shader being
---     used for the trace.
---
--- -   @callableShaderBindingStride@ is the size in bytes of each shader
---     binding table record in @callableShaderBindingTableBuffer@.
---
--- -   @width@ is the width of the ray trace query dimensions.
---
--- -   @height@ is height of the ray trace query dimensions.
---
--- -   @depth@ is depth of the ray trace query dimensions.
 --
 -- = Description
 --
@@ -1102,7 +1060,55 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdTraceRaysNV :: forall io . MonadIO io => CommandBuffer -> ("raygenShaderBindingTableBuffer" ::: Buffer) -> ("raygenShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingTableBuffer" ::: Buffer) -> ("missShaderBindingOffset" ::: DeviceSize) -> ("missShaderBindingStride" ::: DeviceSize) -> ("hitShaderBindingTableBuffer" ::: Buffer) -> ("hitShaderBindingOffset" ::: DeviceSize) -> ("hitShaderBindingStride" ::: DeviceSize) -> ("callableShaderBindingTableBuffer" ::: Buffer) -> ("callableShaderBindingOffset" ::: DeviceSize) -> ("callableShaderBindingStride" ::: DeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> io ()
+cmdTraceRaysNV :: forall io
+                . (MonadIO io)
+               => -- | @commandBuffer@ is the command buffer into which the command will be
+                  -- recorded.
+                  CommandBuffer
+               -> -- | @raygenShaderBindingTableBuffer@ is the buffer object that holds the
+                  -- shader binding table data for the ray generation shader stage.
+                  ("raygenShaderBindingTableBuffer" ::: Buffer)
+               -> -- | @raygenShaderBindingOffset@ is the offset in bytes (relative to
+                  -- @raygenShaderBindingTableBuffer@) of the ray generation shader being
+                  -- used for the trace.
+                  ("raygenShaderBindingOffset" ::: DeviceSize)
+               -> -- | @missShaderBindingTableBuffer@ is the buffer object that holds the
+                  -- shader binding table data for the miss shader stage.
+                  ("missShaderBindingTableBuffer" ::: Buffer)
+               -> -- | @missShaderBindingOffset@ is the offset in bytes (relative to
+                  -- @missShaderBindingTableBuffer@) of the miss shader being used for the
+                  -- trace.
+                  ("missShaderBindingOffset" ::: DeviceSize)
+               -> -- | @missShaderBindingStride@ is the size in bytes of each shader binding
+                  -- table record in @missShaderBindingTableBuffer@.
+                  ("missShaderBindingStride" ::: DeviceSize)
+               -> -- | @hitShaderBindingTableBuffer@ is the buffer object that holds the shader
+                  -- binding table data for the hit shader stages.
+                  ("hitShaderBindingTableBuffer" ::: Buffer)
+               -> -- | @hitShaderBindingOffset@ is the offset in bytes (relative to
+                  -- @hitShaderBindingTableBuffer@) of the hit shader group being used for
+                  -- the trace.
+                  ("hitShaderBindingOffset" ::: DeviceSize)
+               -> -- | @hitShaderBindingStride@ is the size in bytes of each shader binding
+                  -- table record in @hitShaderBindingTableBuffer@.
+                  ("hitShaderBindingStride" ::: DeviceSize)
+               -> -- | @callableShaderBindingTableBuffer@ is the buffer object that holds the
+                  -- shader binding table data for the callable shader stage.
+                  ("callableShaderBindingTableBuffer" ::: Buffer)
+               -> -- | @callableShaderBindingOffset@ is the offset in bytes (relative to
+                  -- @callableShaderBindingTableBuffer@) of the callable shader being used
+                  -- for the trace.
+                  ("callableShaderBindingOffset" ::: DeviceSize)
+               -> -- | @callableShaderBindingStride@ is the size in bytes of each shader
+                  -- binding table record in @callableShaderBindingTableBuffer@.
+                  ("callableShaderBindingStride" ::: DeviceSize)
+               -> -- | @width@ is the width of the ray trace query dimensions.
+                  ("width" ::: Word32)
+               -> -- | @height@ is height of the ray trace query dimensions.
+                  ("height" ::: Word32)
+               -> -- | @depth@ is depth of the ray trace query dimensions.
+                  ("depth" ::: Word32)
+               -> io ()
 cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth = liftIO $ do
   let vkCmdTraceRaysNVPtr = pVkCmdTraceRaysNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdTraceRaysNVPtr /= nullFunPtr) $
@@ -1122,18 +1128,6 @@ foreign import ccall
 -- | vkGetAccelerationStructureHandleNV - Get opaque acceleration structure
 -- handle
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the acceleration
---     structures.
---
--- -   @accelerationStructure@ is the acceleration structure.
---
--- -   @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
---
--- -   @pData@ is a pointer to a user-allocated buffer where the results
---     will be written.
---
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -1150,7 +1144,37 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Handles.Device'
-getAccelerationStructureHandleNV :: forall io . MonadIO io => Device -> AccelerationStructureKHR -> ("dataSize" ::: Word64) -> ("data" ::: Ptr ()) -> io ()
+getAccelerationStructureHandleNV :: forall io
+                                  . (MonadIO io)
+                                 => -- | @device@ is the logical device that owns the acceleration structures.
+                                    --
+                                    -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                    Device
+                                 -> -- | @accelerationStructure@ is the acceleration structure.
+                                    --
+                                    -- @accelerationStructure@ /must/ be bound completely and contiguously to a
+                                    -- single 'Vulkan.Core10.Handles.DeviceMemory' object via
+                                    -- 'Vulkan.Extensions.VK_KHR_ray_tracing.bindAccelerationStructureMemoryKHR'
+                                    --
+                                    -- @accelerationStructure@ /must/ be a valid
+                                    -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
+                                    --
+                                    -- @accelerationStructure@ /must/ have been created, allocated, or
+                                    -- retrieved from @device@
+                                    AccelerationStructureKHR
+                                 -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
+                                    --
+                                    -- @dataSize@ /must/ be large enough to contain the result of the query, as
+                                    -- described above
+                                    --
+                                    -- @dataSize@ /must/ be greater than @0@
+                                    ("dataSize" ::: Word64)
+                                 -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
+                                    -- be written.
+                                    --
+                                    -- @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+                                    ("data" ::: Ptr ())
+                                 -> io ()
 getAccelerationStructureHandleNV device accelerationStructure dataSize data' = liftIO $ do
   let vkGetAccelerationStructureHandleNVPtr = pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device))
   unless (vkGetAccelerationStructureHandleNVPtr /= nullFunPtr) $
@@ -1169,31 +1193,6 @@ foreign import ccall
 
 -- | vkCreateRayTracingPipelinesNV - Creates a new ray tracing pipeline
 -- object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the ray tracing
---     pipelines.
---
--- -   @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     indicating that pipeline caching is disabled, or the handle of a
---     valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
---     object, in which case use of that cache is enabled for the duration
---     of the command.
---
--- -   @createInfoCount@ is the length of the @pCreateInfos@ and
---     @pPipelines@ arrays.
---
--- -   @pCreateInfos@ is a pointer to an array of
---     'RayTracingPipelineCreateInfoNV' structures.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pPipelines@ is a pointer to an array in which the resulting ray
---     tracing pipeline objects are returned.
 --
 -- == Valid Usage
 --
@@ -1258,7 +1257,24 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Handles.PipelineCache', 'RayTracingPipelineCreateInfoNV'
-createRayTracingPipelinesNV :: forall io . MonadIO io => Device -> PipelineCache -> ("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoNV)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createRayTracingPipelinesNV :: forall io
+                             . (MonadIO io)
+                            => -- | @device@ is the logical device that creates the ray tracing pipelines.
+                               Device
+                            -> -- | @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+                               -- indicating that pipeline caching is disabled, or the handle of a valid
+                               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
+                               -- object, in which case use of that cache is enabled for the duration of
+                               -- the command.
+                               PipelineCache
+                            -> -- | @pCreateInfos@ is a pointer to an array of
+                               -- 'RayTracingPipelineCreateInfoNV' structures.
+                               ("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoNV))
+                            -> -- | @pAllocator@ controls host memory allocation as described in the
+                               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                               -- chapter.
+                               ("allocator" ::: Maybe AllocationCallbacks)
+                            -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device))
   lift $ unless (vkCreateRayTracingPipelinesNVPtr /= nullFunPtr) $
@@ -2110,9 +2126,15 @@ instance Zero GeometryAABBNV where
 --
 -- 'GeometryAABBNV', 'GeometryNV', 'GeometryTrianglesNV'
 data GeometryDataNV = GeometryDataNV
-  { -- | @triangles@ /must/ be a valid 'GeometryTrianglesNV' structure
+  { -- | @triangles@ contains triangle data if 'GeometryNV'::@geometryType@ is
+    -- 'GEOMETRY_TYPE_TRIANGLES_NV'.
+    --
+    -- @triangles@ /must/ be a valid 'GeometryTrianglesNV' structure
     triangles :: GeometryTrianglesNV
-  , -- | @aabbs@ /must/ be a valid 'GeometryAABBNV' structure
+  , -- | @aabbs@ contains axis-aligned bounding box data if
+    -- 'GeometryNV'::@geometryType@ is 'GEOMETRY_TYPE_AABBS_NV'.
+    --
+    -- @aabbs@ /must/ be a valid 'GeometryAABBNV' structure
     aabbs :: GeometryAABBNV
   }
   deriving (Typeable)
@@ -2156,12 +2178,24 @@ instance Zero GeometryDataNV where
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing.GeometryTypeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data GeometryNV = GeometryNV
-  { -- | @geometryType@ /must/ be a valid
+  { -- | @geometryType@ specifies the
+    -- 'Vulkan.Extensions.VK_KHR_ray_tracing.GeometryTypeKHR' which this
+    -- geometry refers to.
+    --
+    -- @geometryType@ /must/ be 'GEOMETRY_TYPE_TRIANGLES_NV' or
+    -- 'GEOMETRY_TYPE_AABBS_NV'
+    --
+    -- @geometryType@ /must/ be a valid
     -- 'Vulkan.Extensions.VK_KHR_ray_tracing.GeometryTypeKHR' value
     geometryType :: GeometryTypeKHR
-  , -- | @geometry@ /must/ be a valid 'GeometryDataNV' structure
+  , -- | @geometry@ contains the geometry data as described in 'GeometryDataNV'.
+    --
+    -- @geometry@ /must/ be a valid 'GeometryDataNV' structure
     geometry :: GeometryDataNV
-  , -- | @flags@ /must/ be a valid combination of
+  , -- | @flags@ has 'Vulkan.Extensions.VK_KHR_ray_tracing.GeometryFlagBitsKHR'
+    -- describing options for this geometry.
+    --
+    -- @flags@ /must/ be a valid combination of
     -- 'Vulkan.Extensions.VK_KHR_ray_tracing.GeometryFlagBitsKHR' values
     flags :: GeometryFlagsKHR
   }
@@ -2405,10 +2439,23 @@ instance Zero AccelerationStructureCreateInfoNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAccelerationStructureMemoryRequirementsNV'
 data AccelerationStructureMemoryRequirementsInfoNV = AccelerationStructureMemoryRequirementsInfoNV
-  { -- | @type@ /must/ be a valid 'AccelerationStructureMemoryRequirementsTypeNV'
+  { -- | @type@ selects the type of memory requirement being queried.
+    -- 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV' returns the
+    -- memory requirements for the object itself.
+    -- 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV'
+    -- returns the memory requirements for the scratch memory when doing a
+    -- build.
+    -- 'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV'
+    -- returns the memory requirements for the scratch memory when doing an
+    -- update.
+    --
+    -- @type@ /must/ be a valid 'AccelerationStructureMemoryRequirementsTypeNV'
     -- value
     type' :: AccelerationStructureMemoryRequirementsTypeNV
-  , -- | @accelerationStructure@ /must/ be a valid 'AccelerationStructureNV'
+  , -- | @accelerationStructure@ is the acceleration structure to be queried for
+    -- memory requirements.
+    --
+    -- @accelerationStructure@ /must/ be a valid 'AccelerationStructureNV'
     -- handle
     accelerationStructure :: AccelerationStructureNV
   }

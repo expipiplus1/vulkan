@@ -64,16 +64,6 @@ foreign import ccall
 
 -- | vkCmdDrawMeshTasksNV - Draw mesh task work items
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @taskCount@ is the number of local workgroups to dispatch in the X
---     dimension. Y and Z dimension are implicitly set to one.
---
--- -   @firstTask@ is the X component of the first workgroup ID.
---
 -- = Description
 --
 -- When the command is executed, a global workgroup consisting of
@@ -288,7 +278,17 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdDrawMeshTasksNV :: forall io . MonadIO io => CommandBuffer -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> io ()
+cmdDrawMeshTasksNV :: forall io
+                    . (MonadIO io)
+                   => -- | @commandBuffer@ is the command buffer into which the command will be
+                      -- recorded.
+                      CommandBuffer
+                   -> -- | @taskCount@ is the number of local workgroups to dispatch in the X
+                      -- dimension. Y and Z dimension are implicitly set to one.
+                      ("taskCount" ::: Word32)
+                   -> -- | @firstTask@ is the X component of the first workgroup ID.
+                      ("firstTask" ::: Word32)
+                   -> io ()
 cmdDrawMeshTasksNV commandBuffer taskCount firstTask = liftIO $ do
   let vkCmdDrawMeshTasksNVPtr = pVkCmdDrawMeshTasksNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawMeshTasksNVPtr /= nullFunPtr) $
@@ -307,20 +307,6 @@ foreign import ccall
 
 -- | vkCmdDrawMeshTasksIndirectNV - Issue an indirect mesh tasks draw into a
 -- command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @buffer@ is the buffer containing draw parameters.
---
--- -   @offset@ is the byte offset into @buffer@ where parameters begin.
---
--- -   @drawCount@ is the number of draws to execute, and /can/ be zero.
---
--- -   @stride@ is the byte stride between successive sets of draw
---     parameters.
 --
 -- = Description
 --
@@ -574,7 +560,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawMeshTasksIndirectNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawMeshTasksIndirectNV :: forall io
+                            . (MonadIO io)
+                           => -- | @commandBuffer@ is the command buffer into which the command is
+                              -- recorded.
+                              CommandBuffer
+                           -> -- | @buffer@ is the buffer containing draw parameters.
+                              Buffer
+                           -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
+                              ("offset" ::: DeviceSize)
+                           -> -- | @drawCount@ is the number of draws to execute, and /can/ be zero.
+                              ("drawCount" ::: Word32)
+                           -> -- | @stride@ is the byte stride between successive sets of draw parameters.
+                              ("stride" ::: Word32)
+                           -> io ()
 cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectNVPtr = pVkCmdDrawMeshTasksIndirectNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawMeshTasksIndirectNVPtr /= nullFunPtr) $
@@ -593,27 +592,6 @@ foreign import ccall
 
 -- | vkCmdDrawMeshTasksIndirectCountNV - Perform an indirect mesh tasks draw
 -- with the draw count sourced from a buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @buffer@ is the buffer containing draw parameters.
---
--- -   @offset@ is the byte offset into @buffer@ where parameters begin.
---
--- -   @countBuffer@ is the buffer containing the draw count.
---
--- -   @countBufferOffset@ is the byte offset into @countBuffer@ where the
---     draw count begins.
---
--- -   @maxDrawCount@ specifies the maximum number of draws that will be
---     executed. The actual number of executed draw calls is the minimum of
---     the count specified in @countBuffer@ and @maxDrawCount@.
---
--- -   @stride@ is the byte stride between successive sets of draw
---     parameters.
 --
 -- = Description
 --
@@ -880,7 +858,27 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawMeshTasksIndirectCountNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawMeshTasksIndirectCountNV :: forall io
+                                 . (MonadIO io)
+                                => -- | @commandBuffer@ is the command buffer into which the command is
+                                   -- recorded.
+                                   CommandBuffer
+                                -> -- | @buffer@ is the buffer containing draw parameters.
+                                   Buffer
+                                -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
+                                   ("offset" ::: DeviceSize)
+                                -> -- | @countBuffer@ is the buffer containing the draw count.
+                                   ("countBuffer" ::: Buffer)
+                                -> -- | @countBufferOffset@ is the byte offset into @countBuffer@ where the draw
+                                   -- count begins.
+                                   ("countBufferOffset" ::: DeviceSize)
+                                -> -- | @maxDrawCount@ specifies the maximum number of draws that will be
+                                   -- executed. The actual number of executed draw calls is the minimum of the
+                                   -- count specified in @countBuffer@ and @maxDrawCount@.
+                                   ("maxDrawCount" ::: Word32)
+                                -> -- | @stride@ is the byte stride between successive sets of draw parameters.
+                                   ("stride" ::: Word32)
+                                -> io ()
 cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectCountNVPtr = pVkCmdDrawMeshTasksIndirectCountNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawMeshTasksIndirectCountNVPtr /= nullFunPtr) $
@@ -1156,7 +1154,10 @@ instance Zero PhysicalDeviceMeshShaderPropertiesNV where
 --
 -- 'cmdDrawMeshTasksIndirectNV'
 data DrawMeshTasksIndirectCommandNV = DrawMeshTasksIndirectCommandNV
-  { -- | @taskCount@ /must/ be less than or equal to
+  { -- | @taskCount@ is the number of local workgroups to dispatch in the X
+    -- dimension. Y and Z dimension are implicitly set to one.
+    --
+    -- @taskCount@ /must/ be less than or equal to
     -- 'PhysicalDeviceMeshShaderPropertiesNV'::@maxDrawMeshTasksCount@
     taskCount :: Word32
   , -- | @firstTask@ is the X component of the first workgroup ID.

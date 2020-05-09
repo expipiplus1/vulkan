@@ -79,22 +79,6 @@ foreign import ccall
 -- | vkCreateMacOSSurfaceMVK - Create a VkSurfaceKHR object for a macOS
 -- NSView
 --
--- = Parameters
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to a 'MacOSSurfaceCreateInfoMVK'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -128,7 +112,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'MacOSSurfaceCreateInfoMVK',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-createMacOSSurfaceMVK :: forall io . MonadIO io => Instance -> MacOSSurfaceCreateInfoMVK -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createMacOSSurfaceMVK :: forall io
+                       . (MonadIO io)
+                      => -- | @instance@ is the instance with which to associate the surface.
+                         Instance
+                      -> -- | @pCreateInfo@ is a pointer to a 'MacOSSurfaceCreateInfoMVK' structure
+                         -- containing parameters affecting the creation of the surface object.
+                         MacOSSurfaceCreateInfoMVK
+                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                         -- surface object when there is no more specific allocator available (see
+                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                         ("allocator" ::: Maybe AllocationCallbacks)
+                      -> io (SurfaceKHR)
 createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateMacOSSurfaceMVKPtr = pVkCreateMacOSSurfaceMVK (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateMacOSSurfaceMVKPtr /= nullFunPtr) $
@@ -156,9 +151,15 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createMacOSSurfaceMVK'
 data MacOSSurfaceCreateInfoMVK = MacOSSurfaceCreateInfoMVK
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: MacOSSurfaceCreateFlagsMVK
-  , -- | @pView@ /must/ be a valid @NSView@ and /must/ be backed by a @CALayer@
+  , -- | @pView@ is a reference to a @NSView@ object which will display this
+    -- surface. This @NSView@ /must/ be backed by a @CALayer@ instance of type
+    -- 'Vulkan.Extensions.WSITypes.CAMetalLayer'.
+    --
+    -- @pView@ /must/ be a valid @NSView@ and /must/ be backed by a @CALayer@
     -- instance of type 'Vulkan.Extensions.WSITypes.CAMetalLayer'
     view :: Ptr ()
   }

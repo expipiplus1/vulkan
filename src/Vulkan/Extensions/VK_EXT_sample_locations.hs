@@ -83,13 +83,6 @@ foreign import ccall
 
 -- | vkCmdSetSampleLocationsEXT - Set the dynamic sample locations state
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @pSampleLocationsInfo@ is the sample locations state to set.
---
 -- == Valid Usage
 --
 -- -   The @sampleLocationsPerPixel@ member of @pSampleLocationsInfo@
@@ -142,7 +135,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SampleLocationsInfoEXT'
-cmdSetSampleLocationsEXT :: forall io . MonadIO io => CommandBuffer -> SampleLocationsInfoEXT -> io ()
+cmdSetSampleLocationsEXT :: forall io
+                          . (MonadIO io)
+                         => -- | @commandBuffer@ is the command buffer into which the command will be
+                            -- recorded.
+                            CommandBuffer
+                         -> -- | @pSampleLocationsInfo@ is the sample locations state to set.
+                            SampleLocationsInfoEXT
+                         -> io ()
 cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT $ do
   let vkCmdSetSampleLocationsEXTPtr = pVkCmdSetSampleLocationsEXT (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetSampleLocationsEXTPtr /= nullFunPtr) $
@@ -163,25 +163,26 @@ foreign import ccall
 -- | vkGetPhysicalDeviceMultisamplePropertiesEXT - Report sample count
 -- specific multisampling capabilities of a physical device
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the
---     additional multisampling capabilities.
---
--- -   @samples@ is the sample count to query the capabilities for.
---
--- -   @pMultisampleProperties@ is a pointer to a
---     'MultisamplePropertiesEXT' structure in which information about the
---     additional multisampling capabilities specific to the sample count
---     is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'MultisamplePropertiesEXT', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-getPhysicalDeviceMultisamplePropertiesEXT :: forall io . MonadIO io => PhysicalDevice -> ("samples" ::: SampleCountFlagBits) -> io (MultisamplePropertiesEXT)
+getPhysicalDeviceMultisamplePropertiesEXT :: forall io
+                                           . (MonadIO io)
+                                          => -- | @physicalDevice@ is the physical device from which to query the
+                                             -- additional multisampling capabilities.
+                                             --
+                                             -- @physicalDevice@ /must/ be a valid
+                                             -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                             PhysicalDevice
+                                          -> -- | @samples@ is the sample count to query the capabilities for.
+                                             --
+                                             -- @samples@ /must/ be a valid
+                                             -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+                                             ("samples" ::: SampleCountFlagBits)
+                                          -> io (MultisamplePropertiesEXT)
 getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMultisamplePropertiesEXTPtr = pVkGetPhysicalDeviceMultisamplePropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceMultisamplePropertiesEXTPtr /= nullFunPtr) $
@@ -374,12 +375,20 @@ instance Zero SampleLocationsInfoEXT where
 --
 -- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
 data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
-  { -- | @attachmentIndex@ /must/ be less than the @attachmentCount@ specified in
+  { -- | @attachmentIndex@ is the index of the attachment for which the sample
+    -- locations state is provided.
+    --
+    -- @attachmentIndex@ /must/ be less than the @attachmentCount@ specified in
     -- 'Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass specified by
     -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
     -- was created with
     attachmentIndex :: Word32
-  , -- | @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
+  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
+    -- layout transition of the given attachment from the initial layout of the
+    -- attachment to the image layout specified for the attachment in the first
+    -- subpass using it.
+    --
+    -- @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
     -- structure
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
@@ -432,12 +441,20 @@ instance Zero AttachmentSampleLocationsEXT where
 --
 -- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
 data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
-  { -- | @subpassIndex@ /must/ be less than the @subpassCount@ specified in
+  { -- | @subpassIndex@ is the index of the subpass for which the sample
+    -- locations state is provided.
+    --
+    -- @subpassIndex@ /must/ be less than the @subpassCount@ specified in
     -- 'Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass specified by
     -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
     -- was created with
     subpassIndex :: Word32
-  , -- | @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
+  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
+    -- layout transition of the depth\/stencil attachment away from the image
+    -- layout the attachment is used with in the subpass specified in
+    -- @subpassIndex@.
+    --
+    -- @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
     -- structure
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
@@ -586,7 +603,13 @@ data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCre
     -- default sample locations are used and the values specified in
     -- @sampleLocationsInfo@ are ignored.
     sampleLocationsEnable :: Bool
-  , -- | @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
+  , -- | @sampleLocationsInfo@ is the sample locations to use during
+    -- rasterization if @sampleLocationsEnable@ is
+    -- 'Vulkan.Core10.BaseType.TRUE' and the graphics pipeline is not created
+    -- with
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'.
+    --
+    -- @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
     -- structure
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }

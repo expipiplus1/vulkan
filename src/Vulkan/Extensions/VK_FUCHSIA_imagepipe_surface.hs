@@ -82,22 +82,6 @@ foreign import ccall
 -- | vkCreateImagePipeSurfaceFUCHSIA - Create a
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' object for a Fuchsia ImagePipe
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate with the surface.
---
--- -   @pCreateInfo@ is a pointer to a 'ImagePipeSurfaceCreateInfoFUCHSIA'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -129,7 +113,19 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-createImagePipeSurfaceFUCHSIA :: forall io . MonadIO io => Instance -> ImagePipeSurfaceCreateInfoFUCHSIA -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createImagePipeSurfaceFUCHSIA :: forall io
+                               . (MonadIO io)
+                              => -- | @instance@ is the instance to associate with the surface.
+                                 Instance
+                              -> -- | @pCreateInfo@ is a pointer to a 'ImagePipeSurfaceCreateInfoFUCHSIA'
+                                 -- structure containing parameters affecting the creation of the surface
+                                 -- object.
+                                 ImagePipeSurfaceCreateInfoFUCHSIA
+                              -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                                 -- surface object when there is no more specific allocator available (see
+                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                                 ("allocator" ::: Maybe AllocationCallbacks)
+                              -> io (SurfaceKHR)
 createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateImagePipeSurfaceFUCHSIAPtr = pVkCreateImagePipeSurfaceFUCHSIA (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateImagePipeSurfaceFUCHSIAPtr /= nullFunPtr) $
@@ -157,9 +153,14 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalCont
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createImagePipeSurfaceFUCHSIA'
 data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: ImagePipeSurfaceCreateFlagsFUCHSIA
-  , -- | @imagePipeHandle@ /must/ be a valid @zx_handle_t@
+  , -- | @imagePipeHandle@ is a @zx_handle_t@ referring to the ImagePipe to
+    -- associate with the surface.
+    --
+    -- @imagePipeHandle@ /must/ be a valid @zx_handle_t@
     imagePipeHandle :: Zx_handle_t
   }
   deriving (Typeable)

@@ -167,20 +167,6 @@ foreign import ccall
 -- | vkCmdExecuteGeneratedCommandsNV - Performs the generation and execution
 -- of commands on the device
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @isPreprocessed@ represents whether the input data has already been
---     preprocessed on the device. If it is 'Vulkan.Core10.BaseType.FALSE'
---     this command will implicitly trigger the preprocessing step,
---     otherwise not.
---
--- -   @pGeneratedCommandsInfo@ is a pointer to an instance of the
---     'GeneratedCommandsInfoNV' structure containing parameters affecting
---     the generation of commands.
---
 -- == Valid Usage
 --
 -- -   [[VUID-{refpage}-None-02690]] If a 'Vulkan.Core10.Handles.ImageView'
@@ -441,7 +427,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'GeneratedCommandsInfoNV'
-cmdExecuteGeneratedCommandsNV :: forall io . MonadIO io => CommandBuffer -> ("isPreprocessed" ::: Bool) -> GeneratedCommandsInfoNV -> io ()
+cmdExecuteGeneratedCommandsNV :: forall io
+                               . (MonadIO io)
+                              => -- | @commandBuffer@ is the command buffer into which the command is
+                                 -- recorded.
+                                 CommandBuffer
+                              -> -- | @isPreprocessed@ represents whether the input data has already been
+                                 -- preprocessed on the device. If it is 'Vulkan.Core10.BaseType.FALSE' this
+                                 -- command will implicitly trigger the preprocessing step, otherwise not.
+                                 ("isPreprocessed" ::: Bool)
+                              -> -- | @pGeneratedCommandsInfo@ is a pointer to an instance of the
+                                 -- 'GeneratedCommandsInfoNV' structure containing parameters affecting the
+                                 -- generation of commands.
+                                 GeneratedCommandsInfoNV
+                              -> io ()
 cmdExecuteGeneratedCommandsNV commandBuffer isPreprocessed generatedCommandsInfo = liftIO . evalContT $ do
   let vkCmdExecuteGeneratedCommandsNVPtr = pVkCmdExecuteGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdExecuteGeneratedCommandsNVPtr /= nullFunPtr) $
@@ -461,14 +460,6 @@ foreign import ccall
 
 -- | vkCmdPreprocessGeneratedCommandsNV - Performs preprocessing for
 -- generated commands
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer which does the preprocessing.
---
--- -   @pGeneratedCommandsInfo@ is a pointer to an instance of the
---     'GeneratedCommandsInfoNV' structure containing parameters affecting
---     the preprocessing step.
 --
 -- == Valid Usage
 --
@@ -519,7 +510,15 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'GeneratedCommandsInfoNV'
-cmdPreprocessGeneratedCommandsNV :: forall io . MonadIO io => CommandBuffer -> GeneratedCommandsInfoNV -> io ()
+cmdPreprocessGeneratedCommandsNV :: forall io
+                                  . (MonadIO io)
+                                 => -- | @commandBuffer@ is the command buffer which does the preprocessing.
+                                    CommandBuffer
+                                 -> -- | @pGeneratedCommandsInfo@ is a pointer to an instance of the
+                                    -- 'GeneratedCommandsInfoNV' structure containing parameters affecting the
+                                    -- preprocessing step.
+                                    GeneratedCommandsInfoNV
+                                 -> io ()
 cmdPreprocessGeneratedCommandsNV commandBuffer generatedCommandsInfo = liftIO . evalContT $ do
   let vkCmdPreprocessGeneratedCommandsNVPtr = pVkCmdPreprocessGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdPreprocessGeneratedCommandsNVPtr /= nullFunPtr) $
@@ -538,19 +537,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> PipelineBindPoint -> Pipeline -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> PipelineBindPoint -> Pipeline -> Word32 -> IO ()
 
 -- | vkCmdBindPipelineShaderGroupNV - Bind a pipeline object
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer that the pipeline will be
---     bound to.
---
--- -   @pipelineBindPoint@ is a
---     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
---     specifying to which bind point the pipeline is bound.
---
--- -   @pipeline@ is the pipeline to be bound.
---
--- -   @groupIndex@ is the shader group to be bound.
 --
 -- == Valid Usage
 --
@@ -611,7 +597,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
-cmdBindPipelineShaderGroupNV :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> Pipeline -> ("groupIndex" ::: Word32) -> io ()
+cmdBindPipelineShaderGroupNV :: forall io
+                              . (MonadIO io)
+                             => -- | @commandBuffer@ is the command buffer that the pipeline will be bound
+                                -- to.
+                                CommandBuffer
+                             -> -- | @pipelineBindPoint@ is a
+                                -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
+                                -- specifying to which bind point the pipeline is bound.
+                                PipelineBindPoint
+                             -> -- | @pipeline@ is the pipeline to be bound.
+                                Pipeline
+                             -> -- | @groupIndex@ is the shader group to be bound.
+                                ("groupIndex" ::: Word32)
+                             -> io ()
 cmdBindPipelineShaderGroupNV commandBuffer pipelineBindPoint pipeline groupIndex = liftIO $ do
   let vkCmdBindPipelineShaderGroupNVPtr = pVkCmdBindPipelineShaderGroupNV (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdBindPipelineShaderGroupNVPtr /= nullFunPtr) $
@@ -630,19 +629,6 @@ foreign import ccall
 
 -- | vkGetGeneratedCommandsMemoryRequirementsNV - Retrieve the buffer
 -- allocation requirements for generated commands
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the buffer.
---
--- -   @pInfo@ is a pointer to an instance of the
---     'GeneratedCommandsMemoryRequirementsInfoNV' structure containing
---     parameters required for the memory requirements query.
---
--- -   @pMemoryRequirements@ points to an instance of the
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
---     structure in which the memory requirements of the buffer object are
---     returned.
 --
 -- == Valid Usage
 --
@@ -666,7 +652,15 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
-getGeneratedCommandsMemoryRequirementsNV :: forall a io . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io) => Device -> GeneratedCommandsMemoryRequirementsInfoNV -> io (MemoryRequirements2 a)
+getGeneratedCommandsMemoryRequirementsNV :: forall a io
+                                          . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io)
+                                         => -- | @device@ is the logical device that owns the buffer.
+                                            Device
+                                         -> -- | @pInfo@ is a pointer to an instance of the
+                                            -- 'GeneratedCommandsMemoryRequirementsInfoNV' structure containing
+                                            -- parameters required for the memory requirements query.
+                                            GeneratedCommandsMemoryRequirementsInfoNV
+                                         -> io (MemoryRequirements2 a)
 getGeneratedCommandsMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetGeneratedCommandsMemoryRequirementsNVPtr = pVkGetGeneratedCommandsMemoryRequirementsNV (deviceCmds (device :: Device))
   lift $ unless (vkGetGeneratedCommandsMemoryRequirementsNVPtr /= nullFunPtr) $
@@ -688,23 +682,6 @@ foreign import ccall
 
 -- | vkCreateIndirectCommandsLayoutNV - Create an indirect command layout
 -- object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the indirect command
---     layout.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'IndirectCommandsLayoutCreateInfoNV' structure containing parameters
---     affecting creation of the indirect command layout.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pIndirectCommandsLayout@ points to a
---     'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' handle in which
---     the resulting indirect command layout is returned.
 --
 -- == Valid Usage
 --
@@ -743,7 +720,19 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'IndirectCommandsLayoutCreateInfoNV',
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'
-createIndirectCommandsLayoutNV :: forall io . MonadIO io => Device -> IndirectCommandsLayoutCreateInfoNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io (IndirectCommandsLayoutNV)
+createIndirectCommandsLayoutNV :: forall io
+                                . (MonadIO io)
+                               => -- | @device@ is the logical device that creates the indirect command layout.
+                                  Device
+                               -> -- | @pCreateInfo@ is a pointer to an instance of the
+                                  -- 'IndirectCommandsLayoutCreateInfoNV' structure containing parameters
+                                  -- affecting creation of the indirect command layout.
+                                  IndirectCommandsLayoutCreateInfoNV
+                               -> -- | @pAllocator@ controls host memory allocation as described in the
+                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- chapter.
+                                  ("allocator" ::: Maybe AllocationCallbacks)
+                               -> io (IndirectCommandsLayoutNV)
 createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT $ do
   let vkCreateIndirectCommandsLayoutNVPtr = pVkCreateIndirectCommandsLayoutNV (deviceCmds (device :: Device))
   lift $ unless (vkCreateIndirectCommandsLayoutNVPtr /= nullFunPtr) $
@@ -781,16 +770,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> IndirectCommandsLayoutNV -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> IndirectCommandsLayoutNV -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkDestroyIndirectCommandsLayoutNV - Destroy an indirect commands layout
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the layout.
---
--- -   @indirectCommandsLayout@ is the layout to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
 --
 -- == Valid Usage
 --
@@ -835,7 +814,17 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'
-destroyIndirectCommandsLayoutNV :: forall io . MonadIO io => Device -> IndirectCommandsLayoutNV -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyIndirectCommandsLayoutNV :: forall io
+                                 . (MonadIO io)
+                                => -- | @device@ is the logical device that destroys the layout.
+                                   Device
+                                -> -- | @indirectCommandsLayout@ is the layout to destroy.
+                                   IndirectCommandsLayoutNV
+                                -> -- | @pAllocator@ controls host memory allocation as described in the
+                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                   -- chapter.
+                                   ("allocator" ::: Maybe AllocationCallbacks)
+                                -> io ()
 destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO . evalContT $ do
   let vkDestroyIndirectCommandsLayoutNVPtr = pVkDestroyIndirectCommandsLayoutNV (deviceCmds (device :: Device))
   lift $ unless (vkDestroyIndirectCommandsLayoutNVPtr /= nullFunPtr) $

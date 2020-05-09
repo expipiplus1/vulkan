@@ -66,20 +66,6 @@ foreign import ccall
 
 -- | vkCreateEvent - Create a new event object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the event.
---
--- -   @pCreateInfo@ is a pointer to a 'EventCreateInfo' structure
---     containing information about how the event is to be created.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pEvent@ is a pointer to a handle in which the resulting event
---     object is returned.
---
 -- = Description
 --
 -- When created, the event object is in the unsignaled state.
@@ -115,7 +101,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event',
 -- 'EventCreateInfo'
-createEvent :: forall io . MonadIO io => Device -> EventCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Event)
+createEvent :: forall io
+             . (MonadIO io)
+            => -- | @device@ is the logical device that creates the event.
+               Device
+            -> -- | @pCreateInfo@ is a pointer to a 'EventCreateInfo' structure containing
+               -- information about how the event is to be created.
+               EventCreateInfo
+            -> -- | @pAllocator@ controls host memory allocation as described in the
+               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- chapter.
+               ("allocator" ::: Maybe AllocationCallbacks)
+            -> io (Event)
 createEvent device createInfo allocator = liftIO . evalContT $ do
   let vkCreateEventPtr = pVkCreateEvent (deviceCmds (device :: Device))
   lift $ unless (vkCreateEventPtr /= nullFunPtr) $
@@ -154,16 +151,6 @@ foreign import ccall
 
 -- | vkDestroyEvent - Destroy an event object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the event.
---
--- -   @event@ is the handle of the event to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @event@ /must/ have completed
@@ -198,7 +185,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
-destroyEvent :: forall io . MonadIO io => Device -> Event -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyEvent :: forall io
+              . (MonadIO io)
+             => -- | @device@ is the logical device that destroys the event.
+                Device
+             -> -- | @event@ is the handle of the event to destroy.
+                Event
+             -> -- | @pAllocator@ controls host memory allocation as described in the
+                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- chapter.
+                ("allocator" ::: Maybe AllocationCallbacks)
+             -> io ()
 destroyEvent device event allocator = liftIO . evalContT $ do
   let vkDestroyEventPtr = pVkDestroyEvent (deviceCmds (device :: Device))
   lift $ unless (vkDestroyEventPtr /= nullFunPtr) $
@@ -219,12 +216,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
 
 -- | vkGetEventStatus - Retrieve the status of an event object
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the event.
---
--- -   @event@ is the handle of the event to query.
 --
 -- = Description
 --
@@ -274,7 +265,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
-getEventStatus :: forall io . MonadIO io => Device -> Event -> io (Result)
+getEventStatus :: forall io
+                . (MonadIO io)
+               => -- | @device@ is the logical device that owns the event.
+                  --
+                  -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                  Device
+               -> -- | @event@ is the handle of the event to query.
+                  --
+                  -- @event@ /must/ be a valid 'Vulkan.Core10.Handles.Event' handle
+                  --
+                  -- @event@ /must/ have been created, allocated, or retrieved from @device@
+                  Event
+               -> io (Result)
 getEventStatus device event = liftIO $ do
   let vkGetEventStatusPtr = pVkGetEventStatus (deviceCmds (device :: Device))
   unless (vkGetEventStatusPtr /= nullFunPtr) $
@@ -293,12 +296,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
 
 -- | vkSetEvent - Set an event to signaled state
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the event.
---
--- -   @event@ is the event to set.
 --
 -- = Description
 --
@@ -336,7 +333,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
-setEvent :: forall io . MonadIO io => Device -> Event -> io ()
+setEvent :: forall io
+          . (MonadIO io)
+         => -- | @device@ is the logical device that owns the event.
+            Device
+         -> -- | @event@ is the event to set.
+            Event
+         -> io ()
 setEvent device event = liftIO $ do
   let vkSetEventPtr = pVkSetEvent (deviceCmds (device :: Device))
   unless (vkSetEventPtr /= nullFunPtr) $
@@ -354,12 +357,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
 
 -- | vkResetEvent - Reset an event to non-signaled state
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the event.
---
--- -   @event@ is the event to reset.
 --
 -- = Description
 --
@@ -404,7 +401,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
-resetEvent :: forall io . MonadIO io => Device -> Event -> io ()
+resetEvent :: forall io
+            . (MonadIO io)
+           => -- | @device@ is the logical device that owns the event.
+              Device
+           -> -- | @event@ is the event to reset.
+              Event
+           -> io ()
 resetEvent device event = liftIO $ do
   let vkResetEventPtr = pVkResetEvent (deviceCmds (device :: Device))
   unless (vkResetEventPtr /= nullFunPtr) $
@@ -424,7 +427,9 @@ resetEvent device event = liftIO $ do
 -- 'Vulkan.Core10.Enums.EventCreateFlags.EventCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createEvent'
 data EventCreateInfo = EventCreateInfo
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: EventCreateFlags }
   deriving (Typeable)
 deriving instance Show EventCreateInfo

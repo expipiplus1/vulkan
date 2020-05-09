@@ -141,22 +141,6 @@ foreign import ccall
 
 -- | vkCreateDebugReportCallbackEXT - Create a debug report callback object
 --
--- = Parameters
---
--- -   @instance@ is the instance the callback will be logged on.
---
--- -   @pCreateInfo@ is a pointer to a 'DebugReportCallbackCreateInfoEXT'
---     structure defining the conditions under which this callback will be
---     called.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pCallback@ is a pointer to a
---     'Vulkan.Extensions.Handles.DebugReportCallbackEXT' handle in which
---     the created object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -187,7 +171,19 @@ foreign import ccall
 -- 'DebugReportCallbackCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Vulkan.Core10.Handles.Instance'
-createDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugReportCallbackEXT)
+createDebugReportCallbackEXT :: forall io
+                              . (MonadIO io)
+                             => -- | @instance@ is the instance the callback will be logged on.
+                                Instance
+                             -> -- | @pCreateInfo@ is a pointer to a 'DebugReportCallbackCreateInfoEXT'
+                                -- structure defining the conditions under which this callback will be
+                                -- called.
+                                DebugReportCallbackCreateInfoEXT
+                             -> -- | @pAllocator@ controls host memory allocation as described in the
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                -- chapter.
+                                ("allocator" ::: Maybe AllocationCallbacks)
+                             -> io (DebugReportCallbackEXT)
 createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateDebugReportCallbackEXTPtr /= nullFunPtr) $
@@ -226,20 +222,6 @@ foreign import ccall
 
 -- | vkDestroyDebugReportCallbackEXT - Destroy a debug report callback object
 --
--- = Parameters
---
--- -   @instance@ is the instance where the callback was created.
---
--- -   @callback@ is the 'Vulkan.Extensions.Handles.DebugReportCallbackEXT'
---     object to destroy. @callback@ is an externally synchronized object
---     and /must/ not be used on more than one thread at a time. This means
---     that 'destroyDebugReportCallbackEXT' /must/ not be called when a
---     callback is active.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -273,7 +255,21 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Vulkan.Core10.Handles.Instance'
-destroyDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDebugReportCallbackEXT :: forall io
+                               . (MonadIO io)
+                              => -- | @instance@ is the instance where the callback was created.
+                                 Instance
+                              -> -- | @callback@ is the 'Vulkan.Extensions.Handles.DebugReportCallbackEXT'
+                                 -- object to destroy. @callback@ is an externally synchronized object and
+                                 -- /must/ not be used on more than one thread at a time. This means that
+                                 -- 'destroyDebugReportCallbackEXT' /must/ not be called when a callback is
+                                 -- active.
+                                 DebugReportCallbackEXT
+                              -> -- | @pAllocator@ controls host memory allocation as described in the
+                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- chapter.
+                                 ("allocator" ::: Maybe AllocationCallbacks)
+                              -> io ()
 destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
   let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkDestroyDebugReportCallbackEXTPtr /= nullFunPtr) $
@@ -294,30 +290,6 @@ foreign import ccall
   :: FunPtr (Ptr Instance_T -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> Word64 -> CSize -> Int32 -> Ptr CChar -> Ptr CChar -> IO ()) -> Ptr Instance_T -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> Word64 -> CSize -> Int32 -> Ptr CChar -> Ptr CChar -> IO ()
 
 -- | vkDebugReportMessageEXT - Inject a message into a debug stream
---
--- = Parameters
---
--- -   @instance@ is the debug stream’s 'Vulkan.Core10.Handles.Instance'.
---
--- -   @flags@ specifies the 'DebugReportFlagBitsEXT' classification of
---     this event\/message.
---
--- -   @objectType@ is a 'DebugReportObjectTypeEXT' specifying the type of
---     object being used or created at the time the event was triggered.
---
--- -   @object@ is the object where the issue was detected. @object@ /can/
---     be 'Vulkan.Core10.APIConstants.NULL_HANDLE' if there is no object
---     associated with the event.
---
--- -   @location@ is an application defined value.
---
--- -   @messageCode@ is an application defined value.
---
--- -   @pLayerPrefix@ is the abbreviation of the component making this
---     event\/message.
---
--- -   @pMessage@ is a null-terminated string detailing the trigger
---     conditions.
 --
 -- = Description
 --
@@ -356,7 +328,30 @@ foreign import ccall
 --
 -- 'DebugReportFlagsEXT', 'DebugReportObjectTypeEXT',
 -- 'Vulkan.Core10.Handles.Instance'
-debugReportMessageEXT :: forall io . MonadIO io => Instance -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: Word64) -> ("messageCode" ::: Int32) -> ("layerPrefix" ::: ByteString) -> ("message" ::: ByteString) -> io ()
+debugReportMessageEXT :: forall io
+                       . (MonadIO io)
+                      => -- | @instance@ is the debug stream’s 'Vulkan.Core10.Handles.Instance'.
+                         Instance
+                      -> -- | @flags@ specifies the 'DebugReportFlagBitsEXT' classification of this
+                         -- event\/message.
+                         DebugReportFlagsEXT
+                      -> -- | @objectType@ is a 'DebugReportObjectTypeEXT' specifying the type of
+                         -- object being used or created at the time the event was triggered.
+                         DebugReportObjectTypeEXT
+                      -> -- | @object@ is the object where the issue was detected. @object@ /can/ be
+                         -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' if there is no object
+                         -- associated with the event.
+                         ("object" ::: Word64)
+                      -> -- | @location@ is an application defined value.
+                         ("location" ::: Word64)
+                      -> -- | @messageCode@ is an application defined value.
+                         ("messageCode" ::: Int32)
+                      -> -- | @pLayerPrefix@ is the abbreviation of the component making this
+                         -- event\/message.
+                         ("layerPrefix" ::: ByteString)
+                      -> -- | @pMessage@ is a null-terminated string detailing the trigger conditions.
+                         ("message" ::: ByteString)
+                      -> io ()
 debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
   let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance))
   lift $ unless (vkDebugReportMessageEXTPtr /= nullFunPtr) $
@@ -404,9 +399,14 @@ pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = STRUCTURE_TYPE_DEBUG_REPOR
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDebugReportCallbackEXT'
 data DebugReportCallbackCreateInfoEXT = DebugReportCallbackCreateInfoEXT
-  { -- | @flags@ /must/ be a valid combination of 'DebugReportFlagBitsEXT' values
+  { -- | @flags@ is a bitmask of 'DebugReportFlagBitsEXT' specifying which
+    -- event(s) will cause this callback to be called.
+    --
+    -- @flags@ /must/ be a valid combination of 'DebugReportFlagBitsEXT' values
     flags :: DebugReportFlagsEXT
-  , -- | @pfnCallback@ /must/ be a valid 'PFN_vkDebugReportCallbackEXT' value
+  , -- | @pfnCallback@ is the application callback function to call.
+    --
+    -- @pfnCallback@ /must/ be a valid 'PFN_vkDebugReportCallbackEXT' value
     pfnCallback :: PFN_vkDebugReportCallbackEXT
   , -- | @pUserData@ is user data to be passed to the callback.
     userData :: Ptr ()
@@ -793,36 +793,6 @@ instance Read DebugReportObjectTypeEXT where
 type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> ("pUserData" ::: Ptr ()) -> IO Bool32
 -- | PFN_vkDebugReportCallbackEXT - Application-defined debug report callback
 -- function
---
--- = Parameters
---
--- -   @flags@ specifies the 'DebugReportFlagBitsEXT' that triggered this
---     callback.
---
--- -   @objectType@ is a 'DebugReportObjectTypeEXT' value specifying the
---     type of object being used or created at the time the event was
---     triggered.
---
--- -   @object@ is the object where the issue was detected. If @objectType@
---     is 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT', @object@ is undefined.
---
--- -   @location@ is a component (layer, driver, loader) defined value
---     specifying the /location/ of the trigger. This is an /optional/
---     value.
---
--- -   @messageCode@ is a layer-defined value indicating what test
---     triggered this callback.
---
--- -   @pLayerPrefix@ is a null-terminated string that is an abbreviation
---     of the name of the component making the callback. @pLayerPrefix@ is
---     only valid for the duration of the callback.
---
--- -   @pMessage@ is a null-terminated string detailing the trigger
---     conditions. @pMessage@ is only valid for the duration of the
---     callback.
---
--- -   @pUserData@ is the user data given when the
---     'Vulkan.Extensions.Handles.DebugReportCallbackEXT' was created.
 --
 -- = Description
 --

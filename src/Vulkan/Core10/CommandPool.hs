@@ -65,20 +65,6 @@ foreign import ccall
 
 -- | vkCreateCommandPool - Create a new command pool object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the command pool.
---
--- -   @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
---     specifying the state of the command pool object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pCommandPool@ is a pointer to a 'Vulkan.Core10.Handles.CommandPool'
---     handle in which the created pool is returned.
---
 -- == Valid Usage
 --
 -- -   @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
@@ -115,7 +101,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createCommandPool :: forall io . MonadIO io => Device -> CommandPoolCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (CommandPool)
+createCommandPool :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device that creates the command pool.
+                     Device
+                  -> -- | @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
+                     -- specifying the state of the command pool object.
+                     CommandPoolCreateInfo
+                  -> -- | @pAllocator@ controls host memory allocation as described in the
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- chapter.
+                     ("allocator" ::: Maybe AllocationCallbacks)
+                  -> io (CommandPool)
 createCommandPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateCommandPoolPtr = pVkCreateCommandPool (deviceCmds (device :: Device))
   lift $ unless (vkCreateCommandPoolPtr /= nullFunPtr) $
@@ -153,16 +150,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> CommandPool -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> CommandPool -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkDestroyCommandPool - Destroy a command pool object
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the command pool.
---
--- -   @commandPool@ is the handle of the command pool to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
 --
 -- = Description
 --
@@ -213,7 +200,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
-destroyCommandPool :: forall io . MonadIO io => Device -> CommandPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyCommandPool :: forall io
+                    . (MonadIO io)
+                   => -- | @device@ is the logical device that destroys the command pool.
+                      Device
+                   -> -- | @commandPool@ is the handle of the command pool to destroy.
+                      CommandPool
+                   -> -- | @pAllocator@ controls host memory allocation as described in the
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- chapter.
+                      ("allocator" ::: Maybe AllocationCallbacks)
+                   -> io ()
 destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
   let vkDestroyCommandPoolPtr = pVkDestroyCommandPool (deviceCmds (device :: Device))
   lift $ unless (vkDestroyCommandPoolPtr /= nullFunPtr) $
@@ -234,16 +231,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> CommandPool -> CommandPoolResetFlags -> IO Result) -> Ptr Device_T -> CommandPool -> CommandPoolResetFlags -> IO Result
 
 -- | vkResetCommandPool - Reset a command pool
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the command pool.
---
--- -   @commandPool@ is the command pool to reset.
---
--- -   @flags@ is a bitmask of
---     'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
---     controlling the reset operation.
 --
 -- = Description
 --
@@ -301,7 +288,17 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandPool',
 -- 'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlags',
 -- 'Vulkan.Core10.Handles.Device'
-resetCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolResetFlags -> io ()
+resetCommandPool :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that owns the command pool.
+                    Device
+                 -> -- | @commandPool@ is the command pool to reset.
+                    CommandPool
+                 -> -- | @flags@ is a bitmask of
+                    -- 'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
+                    -- controlling the reset operation.
+                    CommandPoolResetFlags
+                 -> io ()
 resetCommandPool device commandPool flags = liftIO $ do
   let vkResetCommandPoolPtr = pVkResetCommandPool (deviceCmds (device :: Device))
   unless (vkResetCommandPoolPtr /= nullFunPtr) $

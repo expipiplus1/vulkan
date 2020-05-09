@@ -81,20 +81,6 @@ foreign import ccall
 
 -- | vkCreateShaderModule - Creates a new shader module object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the shader module.
---
--- -   @pCreateInfo@ is a pointer to a 'ShaderModuleCreateInfo' structure.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pShaderModule@ is a pointer to a
---     'Vulkan.Core10.Handles.ShaderModule' handle in which the resulting
---     shader module object is returned.
---
 -- = Description
 --
 -- Once a shader module has been created, any entry points it contains
@@ -141,7 +127,17 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule',
 -- 'ShaderModuleCreateInfo'
-createShaderModule :: forall a io . (Extendss ShaderModuleCreateInfo a, PokeChain a, MonadIO io) => Device -> ShaderModuleCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ShaderModule)
+createShaderModule :: forall a io
+                    . (Extendss ShaderModuleCreateInfo a, PokeChain a, MonadIO io)
+                   => -- | @device@ is the logical device that creates the shader module.
+                      Device
+                   -> -- | @pCreateInfo@ is a pointer to a 'ShaderModuleCreateInfo' structure.
+                      ShaderModuleCreateInfo a
+                   -> -- | @pAllocator@ controls host memory allocation as described in the
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- chapter.
+                      ("allocator" ::: Maybe AllocationCallbacks)
+                   -> io (ShaderModule)
 createShaderModule device createInfo allocator = liftIO . evalContT $ do
   let vkCreateShaderModulePtr = pVkCreateShaderModule (deviceCmds (device :: Device))
   lift $ unless (vkCreateShaderModulePtr /= nullFunPtr) $
@@ -179,16 +175,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> ShaderModule -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> ShaderModule -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkDestroyShaderModule - Destroy a shader module
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the shader module.
---
--- -   @shaderModule@ is the handle of the shader module to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
 --
 -- = Description
 --
@@ -228,7 +214,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule'
-destroyShaderModule :: forall io . MonadIO io => Device -> ShaderModule -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyShaderModule :: forall io
+                     . (MonadIO io)
+                    => -- | @device@ is the logical device that destroys the shader module.
+                       Device
+                    -> -- | @shaderModule@ is the handle of the shader module to destroy.
+                       ShaderModule
+                    -> -- | @pAllocator@ controls host memory allocation as described in the
+                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                       -- chapter.
+                       ("allocator" ::: Maybe AllocationCallbacks)
+                    -> io ()
 destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
   let vkDestroyShaderModulePtr = pVkDestroyShaderModule (deviceCmds (device :: Device))
   lift $ unless (vkDestroyShaderModulePtr /= nullFunPtr) $

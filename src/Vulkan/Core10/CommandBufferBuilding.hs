@@ -221,18 +221,6 @@ foreign import ccall
 
 -- | vkCmdBindPipeline - Bind a pipeline object to a command buffer
 --
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer that the pipeline will be
---     bound to.
---
--- -   @pipelineBindPoint@ is a
---     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
---     specifying whether to bind to the compute or graphics bind point.
---     Binding one does not disturb the other.
---
--- -   @pipeline@ is the pipeline to be bound.
---
 -- = Description
 --
 -- Once bound, a pipeline binding affects subsequent graphics or compute
@@ -355,7 +343,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
-cmdBindPipeline :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> Pipeline -> io ()
+cmdBindPipeline :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer that the pipeline will be bound
+                   -- to.
+                   CommandBuffer
+                -> -- | @pipelineBindPoint@ is a
+                   -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
+                   -- specifying whether to bind to the compute or graphics bind point.
+                   -- Binding one does not disturb the other.
+                   PipelineBindPoint
+                -> -- | @pipeline@ is the pipeline to be bound.
+                   Pipeline
+                -> io ()
 cmdBindPipeline commandBuffer pipelineBindPoint pipeline = liftIO $ do
   let vkCmdBindPipelinePtr = pVkCmdBindPipeline (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdBindPipelinePtr /= nullFunPtr) $
@@ -373,20 +373,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Viewport -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Viewport -> IO ()
 
 -- | vkCmdSetViewport - Set the viewport on a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @firstViewport@ is the index of the first viewport whose parameters
---     are updated by the command.
---
--- -   @viewportCount@ is the number of viewports whose parameters are
---     updated by the command.
---
--- -   @pViewports@ is a pointer to an array of 'Viewport' structures
---     specifying viewport parameters.
 --
 -- = Description
 --
@@ -449,7 +435,18 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Viewport'
-cmdSetViewport :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewports" ::: Vector Viewport) -> io ()
+cmdSetViewport :: forall io
+                . (MonadIO io)
+               => -- | @commandBuffer@ is the command buffer into which the command will be
+                  -- recorded.
+                  CommandBuffer
+               -> -- | @firstViewport@ is the index of the first viewport whose parameters are
+                  -- updated by the command.
+                  ("firstViewport" ::: Word32)
+               -> -- | @pViewports@ is a pointer to an array of 'Viewport' structures
+                  -- specifying viewport parameters.
+                  ("viewports" ::: Vector Viewport)
+               -> io ()
 cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
   let vkCmdSetViewportPtr = pVkCmdSetViewport (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetViewportPtr /= nullFunPtr) $
@@ -469,20 +466,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
 -- | vkCmdSetScissor - Set the dynamic scissor rectangles on a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @firstScissor@ is the index of the first scissor whose state is
---     updated by the command.
---
--- -   @scissorCount@ is the number of scissors whose rectangles are
---     updated by the command.
---
--- -   @pScissors@ is a pointer to an array of 'Rect2D' structures defining
---     scissor rectangles.
 --
 -- = Description
 --
@@ -559,7 +542,18 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Rect2D'
-cmdSetScissor :: forall io . MonadIO io => CommandBuffer -> ("firstScissor" ::: Word32) -> ("scissors" ::: Vector Rect2D) -> io ()
+cmdSetScissor :: forall io
+               . (MonadIO io)
+              => -- | @commandBuffer@ is the command buffer into which the command will be
+                 -- recorded.
+                 CommandBuffer
+              -> -- | @firstScissor@ is the index of the first scissor whose state is updated
+                 -- by the command.
+                 ("firstScissor" ::: Word32)
+              -> -- | @pScissors@ is a pointer to an array of 'Rect2D' structures defining
+                 -- scissor rectangles.
+                 ("scissors" ::: Vector Rect2D)
+              -> io ()
 cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
   let vkCmdSetScissorPtr = pVkCmdSetScissor (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetScissorPtr /= nullFunPtr) $
@@ -579,13 +573,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> IO ()
 
 -- | vkCmdSetLineWidth - Set the dynamic line width state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @lineWidth@ is the width of rasterized line segments.
 --
 -- == Valid Usage
 --
@@ -625,7 +612,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetLineWidth :: forall io . MonadIO io => CommandBuffer -> ("lineWidth" ::: Float) -> io ()
+cmdSetLineWidth :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer into which the command will be
+                   -- recorded.
+                   CommandBuffer
+                -> -- | @lineWidth@ is the width of rasterized line segments.
+                   ("lineWidth" ::: Float)
+                -> io ()
 cmdSetLineWidth commandBuffer lineWidth = liftIO $ do
   let vkCmdSetLineWidthPtr = pVkCmdSetLineWidth (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetLineWidthPtr /= nullFunPtr) $
@@ -643,20 +637,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> CFloat -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> CFloat -> CFloat -> IO ()
 
 -- | vkCmdSetDepthBias - Set the depth bias dynamic state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @depthBiasConstantFactor@ is a scalar factor controlling the
---     constant depth value added to each fragment.
---
--- -   @depthBiasClamp@ is the maximum (or minimum) depth bias of a
---     fragment.
---
--- -   @depthBiasSlopeFactor@ is a scalar factor applied to a fragment’s
---     slope in depth bias calculations.
 --
 -- = Description
 --
@@ -768,7 +748,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDepthBias :: forall io . MonadIO io => CommandBuffer -> ("depthBiasConstantFactor" ::: Float) -> ("depthBiasClamp" ::: Float) -> ("depthBiasSlopeFactor" ::: Float) -> io ()
+cmdSetDepthBias :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer into which the command will be
+                   -- recorded.
+                   CommandBuffer
+                -> -- | @depthBiasConstantFactor@ is a scalar factor controlling the constant
+                   -- depth value added to each fragment.
+                   ("depthBiasConstantFactor" ::: Float)
+                -> -- | @depthBiasClamp@ is the maximum (or minimum) depth bias of a fragment.
+                   ("depthBiasClamp" ::: Float)
+                -> -- | @depthBiasSlopeFactor@ is a scalar factor applied to a fragment’s slope
+                   -- in depth bias calculations.
+                   ("depthBiasSlopeFactor" ::: Float)
+                -> io ()
 cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = liftIO $ do
   let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetDepthBiasPtr /= nullFunPtr) $
@@ -786,16 +779,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()
 
 -- | vkCmdSetBlendConstants - Set the values of blend constants
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @blendConstants@ is a pointer to an array of four values specifying
---     the R, G, B, and A components of the blend constant color used in
---     blending, depending on the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendfactors blend factor>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -829,7 +812,17 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetBlendConstants :: forall io . MonadIO io => CommandBuffer -> ("blendConstants" ::: (Float, Float, Float, Float)) -> io ()
+cmdSetBlendConstants :: forall io
+                      . (MonadIO io)
+                     => -- | @commandBuffer@ is the command buffer into which the command will be
+                        -- recorded.
+                        CommandBuffer
+                     -> -- | @blendConstants@ is a pointer to an array of four values specifying the
+                        -- R, G, B, and A components of the blend constant color used in blending,
+                        -- depending on the
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendfactors blend factor>.
+                        ("blendConstants" ::: (Float, Float, Float, Float))
+                     -> io ()
 cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
   let vkCmdSetBlendConstantsPtr = pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdSetBlendConstantsPtr /= nullFunPtr) $
@@ -856,15 +849,6 @@ foreign import ccall
 
 -- | vkCmdSetDepthBounds - Set the depth bounds test values for a command
 -- buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @minDepthBounds@ is the minimum depth bound.
---
--- -   @maxDepthBounds@ is the maximum depth bound.
 --
 -- = Description
 --
@@ -913,7 +897,16 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDepthBounds :: forall io . MonadIO io => CommandBuffer -> ("minDepthBounds" ::: Float) -> ("maxDepthBounds" ::: Float) -> io ()
+cmdSetDepthBounds :: forall io
+                   . (MonadIO io)
+                  => -- | @commandBuffer@ is the command buffer into which the command will be
+                     -- recorded.
+                     CommandBuffer
+                  -> -- | @minDepthBounds@ is the minimum depth bound.
+                     ("minDepthBounds" ::: Float)
+                  -> -- | @maxDepthBounds@ is the maximum depth bound.
+                     ("maxDepthBounds" ::: Float)
+                  -> io ()
 cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = liftIO $ do
   let vkCmdSetDepthBoundsPtr = pVkCmdSetDepthBounds (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetDepthBoundsPtr /= nullFunPtr) $
@@ -931,18 +924,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
 -- | vkCmdSetStencilCompareMask - Set the stencil compare mask dynamic state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @faceMask@ is a bitmask of
---     'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits'
---     specifying the set of stencil state for which to update the compare
---     mask.
---
--- -   @compareMask@ is the new value to use as the stencil compare mask.
 --
 -- = Description
 --
@@ -990,7 +971,18 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
-cmdSetStencilCompareMask :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("compareMask" ::: Word32) -> io ()
+cmdSetStencilCompareMask :: forall io
+                          . (MonadIO io)
+                         => -- | @commandBuffer@ is the command buffer into which the command will be
+                            -- recorded.
+                            CommandBuffer
+                         -> -- | @faceMask@ is a bitmask of
+                            -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' specifying
+                            -- the set of stencil state for which to update the compare mask.
+                            ("faceMask" ::: StencilFaceFlags)
+                         -> -- | @compareMask@ is the new value to use as the stencil compare mask.
+                            ("compareMask" ::: Word32)
+                         -> io ()
 cmdSetStencilCompareMask commandBuffer faceMask compareMask = liftIO $ do
   let vkCmdSetStencilCompareMaskPtr = pVkCmdSetStencilCompareMask (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetStencilCompareMaskPtr /= nullFunPtr) $
@@ -1008,18 +1000,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
 -- | vkCmdSetStencilWriteMask - Set the stencil write mask dynamic state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @faceMask@ is a bitmask of
---     'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits'
---     specifying the set of stencil state for which to update the write
---     mask, as described above for 'cmdSetStencilCompareMask'.
---
--- -   @writeMask@ is the new value to use as the stencil write mask.
 --
 -- = Description
 --
@@ -1067,7 +1047,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
-cmdSetStencilWriteMask :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("writeMask" ::: Word32) -> io ()
+cmdSetStencilWriteMask :: forall io
+                        . (MonadIO io)
+                       => -- | @commandBuffer@ is the command buffer into which the command will be
+                          -- recorded.
+                          CommandBuffer
+                       -> -- | @faceMask@ is a bitmask of
+                          -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' specifying
+                          -- the set of stencil state for which to update the write mask, as
+                          -- described above for 'cmdSetStencilCompareMask'.
+                          ("faceMask" ::: StencilFaceFlags)
+                       -> -- | @writeMask@ is the new value to use as the stencil write mask.
+                          ("writeMask" ::: Word32)
+                       -> io ()
 cmdSetStencilWriteMask commandBuffer faceMask writeMask = liftIO $ do
   let vkCmdSetStencilWriteMaskPtr = pVkCmdSetStencilWriteMask (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetStencilWriteMaskPtr /= nullFunPtr) $
@@ -1085,18 +1077,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
 -- | vkCmdSetStencilReference - Set the stencil reference dynamic state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @faceMask@ is a bitmask of
---     'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits'
---     specifying the set of stencil state for which to update the
---     reference value, as described above for 'cmdSetStencilCompareMask'.
---
--- -   @reference@ is the new value to use as the stencil reference value.
 --
 -- = Description
 --
@@ -1144,7 +1124,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
-cmdSetStencilReference :: forall io . MonadIO io => CommandBuffer -> ("faceMask" ::: StencilFaceFlags) -> ("reference" ::: Word32) -> io ()
+cmdSetStencilReference :: forall io
+                        . (MonadIO io)
+                       => -- | @commandBuffer@ is the command buffer into which the command will be
+                          -- recorded.
+                          CommandBuffer
+                       -> -- | @faceMask@ is a bitmask of
+                          -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' specifying
+                          -- the set of stencil state for which to update the reference value, as
+                          -- described above for 'cmdSetStencilCompareMask'.
+                          ("faceMask" ::: StencilFaceFlags)
+                       -> -- | @reference@ is the new value to use as the stencil reference value.
+                          ("reference" ::: Word32)
+                       -> io ()
 cmdSetStencilReference commandBuffer faceMask reference = liftIO $ do
   let vkCmdSetStencilReferencePtr = pVkCmdSetStencilReference (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetStencilReferencePtr /= nullFunPtr) $
@@ -1162,36 +1154,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> PipelineBindPoint -> PipelineLayout -> Word32 -> Word32 -> Ptr DescriptorSet -> Word32 -> Ptr Word32 -> IO ()) -> Ptr CommandBuffer_T -> PipelineBindPoint -> PipelineLayout -> Word32 -> Word32 -> Ptr DescriptorSet -> Word32 -> Ptr Word32 -> IO ()
 
 -- | vkCmdBindDescriptorSets - Binds descriptor sets to a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer that the descriptor sets will
---     be bound to.
---
--- -   @pipelineBindPoint@ is a
---     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating
---     whether the descriptors will be used by graphics pipelines or
---     compute pipelines. There is a separate set of bind points for each
---     of graphics and compute, so binding one does not disturb the other.
---
--- -   @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
---     program the bindings.
---
--- -   @firstSet@ is the set number of the first descriptor set to be
---     bound.
---
--- -   @descriptorSetCount@ is the number of elements in the
---     @pDescriptorSets@ array.
---
--- -   @pDescriptorSets@ is a pointer to an array of handles to
---     'Vulkan.Core10.Handles.DescriptorSet' objects describing the
---     descriptor sets to write to.
---
--- -   @dynamicOffsetCount@ is the number of dynamic offsets in the
---     @pDynamicOffsets@ array.
---
--- -   @pDynamicOffsets@ is a pointer to an array of @uint32_t@ values
---     specifying dynamic offsets.
 --
 -- = Description
 --
@@ -1349,7 +1311,30 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Vulkan.Core10.Handles.PipelineLayout'
-cmdBindDescriptorSets :: forall io . MonadIO io => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("firstSet" ::: Word32) -> ("descriptorSets" ::: Vector DescriptorSet) -> ("dynamicOffsets" ::: Vector Word32) -> io ()
+cmdBindDescriptorSets :: forall io
+                       . (MonadIO io)
+                      => -- | @commandBuffer@ is the command buffer that the descriptor sets will be
+                         -- bound to.
+                         CommandBuffer
+                      -> -- | @pipelineBindPoint@ is a
+                         -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating
+                         -- whether the descriptors will be used by graphics pipelines or compute
+                         -- pipelines. There is a separate set of bind points for each of graphics
+                         -- and compute, so binding one does not disturb the other.
+                         PipelineBindPoint
+                      -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
+                         -- program the bindings.
+                         PipelineLayout
+                      -> -- | @firstSet@ is the set number of the first descriptor set to be bound.
+                         ("firstSet" ::: Word32)
+                      -> -- | @pDescriptorSets@ is a pointer to an array of handles to
+                         -- 'Vulkan.Core10.Handles.DescriptorSet' objects describing the descriptor
+                         -- sets to write to.
+                         ("descriptorSets" ::: Vector DescriptorSet)
+                      -> -- | @pDynamicOffsets@ is a pointer to an array of @uint32_t@ values
+                         -- specifying dynamic offsets.
+                         ("dynamicOffsets" ::: Vector Word32)
+                      -> io ()
 cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = liftIO . evalContT $ do
   let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBindDescriptorSetsPtr /= nullFunPtr) $
@@ -1371,19 +1356,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> IndexType -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> IndexType -> IO ()
 
 -- | vkCmdBindIndexBuffer - Bind an index buffer to a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @buffer@ is the buffer being bound.
---
--- -   @offset@ is the starting offset in bytes within @buffer@ used in
---     index buffer address calculations.
---
--- -   @indexType@ is a 'Vulkan.Core10.Enums.IndexType.IndexType' value
---     specifying whether indices are treated as 16 bits or 32 bits.
 --
 -- == Valid Usage
 --
@@ -1450,7 +1422,20 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType'
-cmdBindIndexBuffer :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> IndexType -> io ()
+cmdBindIndexBuffer :: forall io
+                    . (MonadIO io)
+                   => -- | @commandBuffer@ is the command buffer into which the command is
+                      -- recorded.
+                      CommandBuffer
+                   -> -- | @buffer@ is the buffer being bound.
+                      Buffer
+                   -> -- | @offset@ is the starting offset in bytes within @buffer@ used in index
+                      -- buffer address calculations.
+                      ("offset" ::: DeviceSize)
+                   -> -- | @indexType@ is a 'Vulkan.Core10.Enums.IndexType.IndexType' value
+                      -- specifying whether indices are treated as 16 bits or 32 bits.
+                      IndexType
+                   -> io ()
 cmdBindIndexBuffer commandBuffer buffer offset indexType = liftIO $ do
   let vkCmdBindIndexBufferPtr = pVkCmdBindIndexBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdBindIndexBufferPtr /= nullFunPtr) $
@@ -1468,21 +1453,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Buffer -> Ptr DeviceSize -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Buffer -> Ptr DeviceSize -> IO ()
 
 -- | vkCmdBindVertexBuffers - Bind vertex buffers to a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @firstBinding@ is the index of the first vertex input binding whose
---     state is updated by the command.
---
--- -   @bindingCount@ is the number of vertex input bindings whose state is
---     updated by the command.
---
--- -   @pBuffers@ is a pointer to an array of buffer handles.
---
--- -   @pOffsets@ is a pointer to an array of buffer offsets.
 --
 -- = Description
 --
@@ -1577,7 +1547,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdBindVertexBuffers :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> io ()
+cmdBindVertexBuffers :: forall io
+                      . (MonadIO io)
+                     => -- | @commandBuffer@ is the command buffer into which the command is
+                        -- recorded.
+                        CommandBuffer
+                     -> -- | @firstBinding@ is the index of the first vertex input binding whose
+                        -- state is updated by the command.
+                        ("firstBinding" ::: Word32)
+                     -> -- | @pBuffers@ is a pointer to an array of buffer handles.
+                        ("buffers" ::: Vector Buffer)
+                     -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
+                        ("offsets" ::: Vector DeviceSize)
+                     -> io ()
 cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalContT $ do
   let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBindVertexBuffersPtr /= nullFunPtr) $
@@ -1602,19 +1584,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdDraw - Draw primitives
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @vertexCount@ is the number of vertices to draw.
---
--- -   @instanceCount@ is the number of instances to draw.
---
--- -   @firstVertex@ is the index of the first vertex to draw.
---
--- -   @firstInstance@ is the instance ID of the first instance to draw.
 --
 -- = Description
 --
@@ -1856,7 +1825,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdDraw :: forall io . MonadIO io => CommandBuffer -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> io ()
+cmdDraw :: forall io
+         . (MonadIO io)
+        => -- | @commandBuffer@ is the command buffer into which the command is
+           -- recorded.
+           CommandBuffer
+        -> -- | @vertexCount@ is the number of vertices to draw.
+           ("vertexCount" ::: Word32)
+        -> -- | @instanceCount@ is the number of instances to draw.
+           ("instanceCount" ::: Word32)
+        -> -- | @firstVertex@ is the index of the first vertex to draw.
+           ("firstVertex" ::: Word32)
+        -> -- | @firstInstance@ is the instance ID of the first instance to draw.
+           ("firstInstance" ::: Word32)
+        -> io ()
 cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = liftIO $ do
   let vkCmdDrawPtr = pVkCmdDraw (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawPtr /= nullFunPtr) $
@@ -1874,22 +1856,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Int32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Int32 -> Word32 -> IO ()
 
 -- | vkCmdDrawIndexed - Issue an indexed draw into a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @indexCount@ is the number of vertices to draw.
---
--- -   @instanceCount@ is the number of instances to draw.
---
--- -   @firstIndex@ is the base index within the index buffer.
---
--- -   @vertexOffset@ is the value added to the vertex index before
---     indexing into the vertex buffer.
---
--- -   @firstInstance@ is the instance ID of the first instance to draw.
 --
 -- = Description
 --
@@ -2153,7 +2119,23 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdDrawIndexed :: forall io . MonadIO io => CommandBuffer -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> io ()
+cmdDrawIndexed :: forall io
+                . (MonadIO io)
+               => -- | @commandBuffer@ is the command buffer into which the command is
+                  -- recorded.
+                  CommandBuffer
+               -> -- | @indexCount@ is the number of vertices to draw.
+                  ("indexCount" ::: Word32)
+               -> -- | @instanceCount@ is the number of instances to draw.
+                  ("instanceCount" ::: Word32)
+               -> -- | @firstIndex@ is the base index within the index buffer.
+                  ("firstIndex" ::: Word32)
+               -> -- | @vertexOffset@ is the value added to the vertex index before indexing
+                  -- into the vertex buffer.
+                  ("vertexOffset" ::: Int32)
+               -> -- | @firstInstance@ is the instance ID of the first instance to draw.
+                  ("firstInstance" ::: Word32)
+               -> io ()
 cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = liftIO $ do
   let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawIndexedPtr /= nullFunPtr) $
@@ -2171,20 +2153,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdDrawIndirect - Issue an indirect draw into a command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @buffer@ is the buffer containing draw parameters.
---
--- -   @offset@ is the byte offset into @buffer@ where parameters begin.
---
--- -   @drawCount@ is the number of draws to execute, and /can/ be zero.
---
--- -   @stride@ is the byte stride between successive sets of draw
---     parameters.
 --
 -- = Description
 --
@@ -2459,7 +2427,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndirect :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer into which the command is
+                   -- recorded.
+                   CommandBuffer
+                -> -- | @buffer@ is the buffer containing draw parameters.
+                   Buffer
+                -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
+                   ("offset" ::: DeviceSize)
+                -> -- | @drawCount@ is the number of draws to execute, and /can/ be zero.
+                   ("drawCount" ::: Word32)
+                -> -- | @stride@ is the byte stride between successive sets of draw parameters.
+                   ("stride" ::: Word32)
+                -> io ()
 cmdDrawIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawIndirectPtr = pVkCmdDrawIndirect (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawIndirectPtr /= nullFunPtr) $
@@ -2477,20 +2458,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdDrawIndexedIndirect - Perform an indexed indirect draw
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @buffer@ is the buffer containing draw parameters.
---
--- -   @offset@ is the byte offset into @buffer@ where parameters begin.
---
--- -   @drawCount@ is the number of draws to execute, and /can/ be zero.
---
--- -   @stride@ is the byte stride between successive sets of draw
---     parameters.
 --
 -- = Description
 --
@@ -2771,7 +2738,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndexedIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawIndexedIndirect :: forall io
+                        . (MonadIO io)
+                       => -- | @commandBuffer@ is the command buffer into which the command is
+                          -- recorded.
+                          CommandBuffer
+                       -> -- | @buffer@ is the buffer containing draw parameters.
+                          Buffer
+                       -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
+                          ("offset" ::: DeviceSize)
+                       -> -- | @drawCount@ is the number of draws to execute, and /can/ be zero.
+                          ("drawCount" ::: Word32)
+                       -> -- | @stride@ is the byte stride between successive sets of draw parameters.
+                          ("stride" ::: Word32)
+                       -> io ()
 cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDrawIndexedIndirectPtr /= nullFunPtr) $
@@ -2789,20 +2769,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdDispatch - Dispatch compute work items
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @groupCountX@ is the number of local workgroups to dispatch in the X
---     dimension.
---
--- -   @groupCountY@ is the number of local workgroups to dispatch in the Y
---     dimension.
---
--- -   @groupCountZ@ is the number of local workgroups to dispatch in the Z
---     dimension.
 --
 -- = Description
 --
@@ -3000,7 +2966,21 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdDispatch :: forall io . MonadIO io => CommandBuffer -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> io ()
+cmdDispatch :: forall io
+             . (MonadIO io)
+            => -- | @commandBuffer@ is the command buffer into which the command will be
+               -- recorded.
+               CommandBuffer
+            -> -- | @groupCountX@ is the number of local workgroups to dispatch in the X
+               -- dimension.
+               ("groupCountX" ::: Word32)
+            -> -- | @groupCountY@ is the number of local workgroups to dispatch in the Y
+               -- dimension.
+               ("groupCountY" ::: Word32)
+            -> -- | @groupCountZ@ is the number of local workgroups to dispatch in the Z
+               -- dimension.
+               ("groupCountZ" ::: Word32)
+            -> io ()
 cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
   let vkCmdDispatchPtr = pVkCmdDispatch (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDispatchPtr /= nullFunPtr) $
@@ -3019,15 +2999,6 @@ foreign import ccall
 
 -- | vkCmdDispatchIndirect - Dispatch compute work items using indirect
 -- parameters
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @buffer@ is the buffer containing dispatch parameters.
---
--- -   @offset@ is the byte offset into @buffer@ where parameters begin.
 --
 -- = Description
 --
@@ -3229,7 +3200,16 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdDispatchIndirect :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> io ()
+cmdDispatchIndirect :: forall io
+                     . (MonadIO io)
+                    => -- | @commandBuffer@ is the command buffer into which the command will be
+                       -- recorded.
+                       CommandBuffer
+                    -> -- | @buffer@ is the buffer containing dispatch parameters.
+                       Buffer
+                    -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
+                       ("offset" ::: DeviceSize)
+                    -> io ()
 cmdDispatchIndirect commandBuffer buffer offset = liftIO $ do
   let vkCmdDispatchIndirectPtr = pVkCmdDispatchIndirect (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdDispatchIndirectPtr /= nullFunPtr) $
@@ -3247,20 +3227,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> Buffer -> Word32 -> Ptr BufferCopy -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> Buffer -> Word32 -> Ptr BufferCopy -> IO ()
 
 -- | vkCmdCopyBuffer - Copy data between buffer regions
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @srcBuffer@ is the source buffer.
---
--- -   @dstBuffer@ is the destination buffer.
---
--- -   @regionCount@ is the number of regions to copy.
---
--- -   @pRegions@ is a pointer to an array of 'BufferCopy' structures
---     specifying the regions to copy.
 --
 -- = Description
 --
@@ -3360,7 +3326,19 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdCopyBuffer :: forall io . MonadIO io => CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferCopy) -> io ()
+cmdCopyBuffer :: forall io
+               . (MonadIO io)
+              => -- | @commandBuffer@ is the command buffer into which the command will be
+                 -- recorded.
+                 CommandBuffer
+              -> -- | @srcBuffer@ is the source buffer.
+                 ("srcBuffer" ::: Buffer)
+              -> -- | @dstBuffer@ is the destination buffer.
+                 ("dstBuffer" ::: Buffer)
+              -> -- | @pRegions@ is a pointer to an array of 'BufferCopy' structures
+                 -- specifying the regions to copy.
+                 ("regions" ::: Vector BufferCopy)
+              -> io ()
 cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ do
   let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdCopyBufferPtr /= nullFunPtr) $
@@ -3380,26 +3358,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Image -> ImageLayout -> Image -> ImageLayout -> Word32 -> Ptr ImageCopy -> IO ()) -> Ptr CommandBuffer_T -> Image -> ImageLayout -> Image -> ImageLayout -> Word32 -> Ptr ImageCopy -> IO ()
 
 -- | vkCmdCopyImage - Copy data between images
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @srcImage@ is the source image.
---
--- -   @srcImageLayout@ is the current layout of the source image
---     subresource.
---
--- -   @dstImage@ is the destination image.
---
--- -   @dstImageLayout@ is the current layout of the destination image
---     subresource.
---
--- -   @regionCount@ is the number of regions to copy.
---
--- -   @pRegions@ is a pointer to an array of 'ImageCopy' structures
---     specifying the regions to copy.
 --
 -- = Description
 --
@@ -3678,7 +3636,24 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'ImageCopy', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdCopyImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageCopy) -> io ()
+cmdCopyImage :: forall io
+              . (MonadIO io)
+             => -- | @commandBuffer@ is the command buffer into which the command will be
+                -- recorded.
+                CommandBuffer
+             -> -- | @srcImage@ is the source image.
+                ("srcImage" ::: Image)
+             -> -- | @srcImageLayout@ is the current layout of the source image subresource.
+                ("srcImageLayout" ::: ImageLayout)
+             -> -- | @dstImage@ is the destination image.
+                ("dstImage" ::: Image)
+             -> -- | @dstImageLayout@ is the current layout of the destination image
+                -- subresource.
+                ("dstImageLayout" ::: ImageLayout)
+             -> -- | @pRegions@ is a pointer to an array of 'ImageCopy' structures specifying
+                -- the regions to copy.
+                ("regions" ::: Vector ImageCopy)
+             -> io ()
 cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdCopyImagePtr = pVkCmdCopyImage (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdCopyImagePtr /= nullFunPtr) $
@@ -3699,29 +3674,6 @@ foreign import ccall
 
 -- | vkCmdBlitImage - Copy regions of an image, potentially performing format
 -- conversion,
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @srcImage@ is the source image.
---
--- -   @srcImageLayout@ is the layout of the source image subresources for
---     the blit.
---
--- -   @dstImage@ is the destination image.
---
--- -   @dstImageLayout@ is the layout of the destination image subresources
---     for the blit.
---
--- -   @regionCount@ is the number of regions to blit.
---
--- -   @pRegions@ is a pointer to an array of 'ImageBlit' structures
---     specifying the regions to blit.
---
--- -   @filter@ is a 'Vulkan.Core10.Enums.Filter.Filter' specifying the
---     filter to apply if the blits require scaling.
 --
 -- = Description
 --
@@ -4027,7 +3979,28 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.Filter.Filter', 'Vulkan.Core10.Handles.Image',
 -- 'ImageBlit', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdBlitImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageBlit) -> Filter -> io ()
+cmdBlitImage :: forall io
+              . (MonadIO io)
+             => -- | @commandBuffer@ is the command buffer into which the command will be
+                -- recorded.
+                CommandBuffer
+             -> -- | @srcImage@ is the source image.
+                ("srcImage" ::: Image)
+             -> -- | @srcImageLayout@ is the layout of the source image subresources for the
+                -- blit.
+                ("srcImageLayout" ::: ImageLayout)
+             -> -- | @dstImage@ is the destination image.
+                ("dstImage" ::: Image)
+             -> -- | @dstImageLayout@ is the layout of the destination image subresources for
+                -- the blit.
+                ("dstImageLayout" ::: ImageLayout)
+             -> -- | @pRegions@ is a pointer to an array of 'ImageBlit' structures specifying
+                -- the regions to blit.
+                ("regions" ::: Vector ImageBlit)
+             -> -- | @filter@ is a 'Vulkan.Core10.Enums.Filter.Filter' specifying the filter
+                -- to apply if the blits require scaling.
+                Filter
+             -> io ()
 cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions filter' = liftIO . evalContT $ do
   let vkCmdBlitImagePtr = pVkCmdBlitImage (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBlitImagePtr /= nullFunPtr) $
@@ -4047,23 +4020,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> Image -> ImageLayout -> Word32 -> Ptr BufferImageCopy -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> Image -> ImageLayout -> Word32 -> Ptr BufferImageCopy -> IO ()
 
 -- | vkCmdCopyBufferToImage - Copy data from a buffer into an image
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @srcBuffer@ is the source buffer.
---
--- -   @dstImage@ is the destination image.
---
--- -   @dstImageLayout@ is the layout of the destination image subresources
---     for the copy.
---
--- -   @regionCount@ is the number of regions to copy.
---
--- -   @pRegions@ is a pointer to an array of 'BufferImageCopy' structures
---     specifying the regions to copy.
 --
 -- = Description
 --
@@ -4218,7 +4174,22 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdCopyBufferToImage :: forall io . MonadIO io => CommandBuffer -> ("srcBuffer" ::: Buffer) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector BufferImageCopy) -> io ()
+cmdCopyBufferToImage :: forall io
+                      . (MonadIO io)
+                     => -- | @commandBuffer@ is the command buffer into which the command will be
+                        -- recorded.
+                        CommandBuffer
+                     -> -- | @srcBuffer@ is the source buffer.
+                        ("srcBuffer" ::: Buffer)
+                     -> -- | @dstImage@ is the destination image.
+                        ("dstImage" ::: Image)
+                     -> -- | @dstImageLayout@ is the layout of the destination image subresources for
+                        -- the copy.
+                        ("dstImageLayout" ::: ImageLayout)
+                     -> -- | @pRegions@ is a pointer to an array of 'BufferImageCopy' structures
+                        -- specifying the regions to copy.
+                        ("regions" ::: Vector BufferImageCopy)
+                     -> io ()
 cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdCopyBufferToImagePtr /= nullFunPtr) $
@@ -4238,23 +4209,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Image -> ImageLayout -> Buffer -> Word32 -> Ptr BufferImageCopy -> IO ()) -> Ptr CommandBuffer_T -> Image -> ImageLayout -> Buffer -> Word32 -> Ptr BufferImageCopy -> IO ()
 
 -- | vkCmdCopyImageToBuffer - Copy image data into a buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @srcImage@ is the source image.
---
--- -   @srcImageLayout@ is the layout of the source image subresources for
---     the copy.
---
--- -   @dstBuffer@ is the destination buffer.
---
--- -   @regionCount@ is the number of regions to copy.
---
--- -   @pRegions@ is a pointer to an array of 'BufferImageCopy' structures
---     specifying the regions to copy.
 --
 -- = Description
 --
@@ -4409,7 +4363,22 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
-cmdCopyImageToBuffer :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstBuffer" ::: Buffer) -> ("regions" ::: Vector BufferImageCopy) -> io ()
+cmdCopyImageToBuffer :: forall io
+                      . (MonadIO io)
+                     => -- | @commandBuffer@ is the command buffer into which the command will be
+                        -- recorded.
+                        CommandBuffer
+                     -> -- | @srcImage@ is the source image.
+                        ("srcImage" ::: Image)
+                     -> -- | @srcImageLayout@ is the layout of the source image subresources for the
+                        -- copy.
+                        ("srcImageLayout" ::: ImageLayout)
+                     -> -- | @dstBuffer@ is the destination buffer.
+                        ("dstBuffer" ::: Buffer)
+                     -> -- | @pRegions@ is a pointer to an array of 'BufferImageCopy' structures
+                        -- specifying the regions to copy.
+                        ("regions" ::: Vector BufferImageCopy)
+                     -> io ()
 cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = liftIO . evalContT $ do
   let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdCopyImageToBufferPtr /= nullFunPtr) $
@@ -4429,22 +4398,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> DeviceSize -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> DeviceSize -> Ptr () -> IO ()
 
 -- | vkCmdUpdateBuffer - Update a buffer’s contents from host memory
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @dstBuffer@ is a handle to the buffer to be updated.
---
--- -   @dstOffset@ is the byte offset into the buffer to start updating,
---     and /must/ be a multiple of 4.
---
--- -   @dataSize@ is the number of bytes to update, and /must/ be a
---     multiple of 4.
---
--- -   @pData@ is a pointer to the source data for the buffer update, and
---     /must/ be at least @dataSize@ bytes in size.
 --
 -- = Description
 --
@@ -4552,7 +4505,23 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdUpdateBuffer :: forall io . MonadIO io => CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("dataSize" ::: DeviceSize) -> ("data" ::: Ptr ()) -> io ()
+cmdUpdateBuffer :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer into which the command will be
+                   -- recorded.
+                   CommandBuffer
+                -> -- | @dstBuffer@ is a handle to the buffer to be updated.
+                   ("dstBuffer" ::: Buffer)
+                -> -- | @dstOffset@ is the byte offset into the buffer to start updating, and
+                   -- /must/ be a multiple of 4.
+                   ("dstOffset" ::: DeviceSize)
+                -> -- | @dataSize@ is the number of bytes to update, and /must/ be a multiple of
+                   -- 4.
+                   ("dataSize" ::: DeviceSize)
+                -> -- | @pData@ is a pointer to the source data for the buffer update, and
+                   -- /must/ be at least @dataSize@ bytes in size.
+                   ("data" ::: Ptr ())
+                -> io ()
 cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = liftIO $ do
   let vkCmdUpdateBufferPtr = pVkCmdUpdateBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdUpdateBufferPtr /= nullFunPtr) $
@@ -4570,27 +4539,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> DeviceSize -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> DeviceSize -> Word32 -> IO ()
 
 -- | vkCmdFillBuffer - Fill a region of a buffer with a fixed value
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @dstBuffer@ is the buffer to be filled.
---
--- -   @dstOffset@ is the byte offset into the buffer at which to start
---     filling, and /must/ be a multiple of 4.
---
--- -   @size@ is the number of bytes to fill, and /must/ be either a
---     multiple of 4, or 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to fill
---     the range from @offset@ to the end of the buffer. If
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE' is used and the remaining
---     size of the buffer is not a multiple of 4, then the nearest smaller
---     multiple is used.
---
--- -   @data@ is the 4-byte word written repeatedly to the buffer to fill
---     @size@ bytes of data. The data word is written to memory according
---     to the host endianness.
 --
 -- = Description
 --
@@ -4672,7 +4620,28 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize'
-cmdFillBuffer :: forall io . MonadIO io => CommandBuffer -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> DeviceSize -> ("data" ::: Word32) -> io ()
+cmdFillBuffer :: forall io
+               . (MonadIO io)
+              => -- | @commandBuffer@ is the command buffer into which the command will be
+                 -- recorded.
+                 CommandBuffer
+              -> -- | @dstBuffer@ is the buffer to be filled.
+                 ("dstBuffer" ::: Buffer)
+              -> -- | @dstOffset@ is the byte offset into the buffer at which to start
+                 -- filling, and /must/ be a multiple of 4.
+                 ("dstOffset" ::: DeviceSize)
+              -> -- | @size@ is the number of bytes to fill, and /must/ be either a multiple
+                 -- of 4, or 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to fill the range from
+                 -- @offset@ to the end of the buffer. If
+                 -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' is used and the remaining size
+                 -- of the buffer is not a multiple of 4, then the nearest smaller multiple
+                 -- is used.
+                 DeviceSize
+              -> -- | @data@ is the 4-byte word written repeatedly to the buffer to fill
+                 -- @size@ bytes of data. The data word is written to memory according to
+                 -- the host endianness.
+                 ("data" ::: Word32)
+              -> io ()
 cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = liftIO $ do
   let vkCmdFillBufferPtr = pVkCmdFillBuffer (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdFillBufferPtr /= nullFunPtr) $
@@ -4690,34 +4659,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Image -> ImageLayout -> Ptr ClearColorValue -> Word32 -> Ptr ImageSubresourceRange -> IO ()) -> Ptr CommandBuffer_T -> Image -> ImageLayout -> Ptr ClearColorValue -> Word32 -> Ptr ImageSubresourceRange -> IO ()
 
 -- | vkCmdClearColorImage - Clear regions of a color image
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @image@ is the image to be cleared.
---
--- -   @imageLayout@ specifies the current layout of the image subresource
---     ranges to be cleared, and /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
---
--- -   @pColor@ is a pointer to a
---     'Vulkan.Core10.SharedTypes.ClearColorValue' structure containing the
---     values that the image subresource ranges will be cleared to (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears-values>
---     below).
---
--- -   @rangeCount@ is the number of image subresource range structures in
---     @pRanges@.
---
--- -   @pRanges@ is a pointer to an array of
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures
---     describing a range of mipmap levels, array layers, and aspects to be
---     cleared, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
 --
 -- = Description
 --
@@ -4842,7 +4783,32 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'
-cmdClearColorImage :: forall io . MonadIO io => CommandBuffer -> Image -> ImageLayout -> ClearColorValue -> ("ranges" ::: Vector ImageSubresourceRange) -> io ()
+cmdClearColorImage :: forall io
+                    . (MonadIO io)
+                   => -- | @commandBuffer@ is the command buffer into which the command will be
+                      -- recorded.
+                      CommandBuffer
+                   -> -- | @image@ is the image to be cleared.
+                      Image
+                   -> -- | @imageLayout@ specifies the current layout of the image subresource
+                      -- ranges to be cleared, and /must/ be
+                      -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+                      -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+                      -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
+                      ImageLayout
+                   -> -- | @pColor@ is a pointer to a 'Vulkan.Core10.SharedTypes.ClearColorValue'
+                      -- structure containing the values that the image subresource ranges will
+                      -- be cleared to (see
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears-values>
+                      -- below).
+                      ClearColorValue
+                   -> -- | @pRanges@ is a pointer to an array of
+                      -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures describing
+                      -- a range of mipmap levels, array layers, and aspects to be cleared, as
+                      -- described in
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
+                      ("ranges" ::: Vector ImageSubresourceRange)
+                   -> io ()
 cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalContT $ do
   let vkCmdClearColorImagePtr = pVkCmdClearColorImage (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdClearColorImagePtr /= nullFunPtr) $
@@ -4864,34 +4830,6 @@ foreign import ccall
 
 -- | vkCmdClearDepthStencilImage - Fill regions of a combined depth\/stencil
 -- image
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @image@ is the image to be cleared.
---
--- -   @imageLayout@ specifies the current layout of the image subresource
---     ranges to be cleared, and /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
---
--- -   @pDepthStencil@ is a pointer to a
---     'Vulkan.Core10.SharedTypes.ClearDepthStencilValue' structure
---     containing the values that the depth and stencil image subresource
---     ranges will be cleared to (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears-values>
---     below).
---
--- -   @rangeCount@ is the number of image subresource range structures in
---     @pRanges@.
---
--- -   @pRanges@ is a pointer to an array of
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures
---     describing a range of mipmap levels, array layers, and aspects to be
---     cleared, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
 --
 -- == Valid Usage
 --
@@ -5040,7 +4978,32 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'
-cmdClearDepthStencilImage :: forall io . MonadIO io => CommandBuffer -> Image -> ImageLayout -> ClearDepthStencilValue -> ("ranges" ::: Vector ImageSubresourceRange) -> io ()
+cmdClearDepthStencilImage :: forall io
+                           . (MonadIO io)
+                          => -- | @commandBuffer@ is the command buffer into which the command will be
+                             -- recorded.
+                             CommandBuffer
+                          -> -- | @image@ is the image to be cleared.
+                             Image
+                          -> -- | @imageLayout@ specifies the current layout of the image subresource
+                             -- ranges to be cleared, and /must/ be
+                             -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
+                             -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
+                             ImageLayout
+                          -> -- | @pDepthStencil@ is a pointer to a
+                             -- 'Vulkan.Core10.SharedTypes.ClearDepthStencilValue' structure containing
+                             -- the values that the depth and stencil image subresource ranges will be
+                             -- cleared to (see
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears-values>
+                             -- below).
+                             ClearDepthStencilValue
+                          -> -- | @pRanges@ is a pointer to an array of
+                             -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures describing
+                             -- a range of mipmap levels, array layers, and aspects to be cleared, as
+                             -- described in
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
+                             ("ranges" ::: Vector ImageSubresourceRange)
+                          -> io ()
 cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = liftIO . evalContT $ do
   let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdClearDepthStencilImagePtr /= nullFunPtr) $
@@ -5062,25 +5025,6 @@ foreign import ccall
 
 -- | vkCmdClearAttachments - Clear regions within bound framebuffer
 -- attachments
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @attachmentCount@ is the number of entries in the @pAttachments@
---     array.
---
--- -   @pAttachments@ is a pointer to an array of 'ClearAttachment'
---     structures defining the attachments to clear and the clear values to
---     use. If any attachment to be cleared in the current subpass is
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the clear has
---     no effect on that attachment.
---
--- -   @rectCount@ is the number of entries in the @pRects@ array.
---
--- -   @pRects@ is a pointer to an array of 'ClearRect' structures defining
---     regions within each selected attachment to clear.
 --
 -- = Description
 --
@@ -5207,7 +5151,21 @@ foreign import ccall
 -- = See Also
 --
 -- 'ClearAttachment', 'ClearRect', 'Vulkan.Core10.Handles.CommandBuffer'
-cmdClearAttachments :: forall io . MonadIO io => CommandBuffer -> ("attachments" ::: Vector ClearAttachment) -> ("rects" ::: Vector ClearRect) -> io ()
+cmdClearAttachments :: forall io
+                     . (MonadIO io)
+                    => -- | @commandBuffer@ is the command buffer into which the command will be
+                       -- recorded.
+                       CommandBuffer
+                    -> -- | @pAttachments@ is a pointer to an array of 'ClearAttachment' structures
+                       -- defining the attachments to clear and the clear values to use. If any
+                       -- attachment to be cleared in the current subpass is
+                       -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the clear has no
+                       -- effect on that attachment.
+                       ("attachments" ::: Vector ClearAttachment)
+                    -> -- | @pRects@ is a pointer to an array of 'ClearRect' structures defining
+                       -- regions within each selected attachment to clear.
+                       ("rects" ::: Vector ClearRect)
+                    -> io ()
 cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
   let vkCmdClearAttachmentsPtr = pVkCmdClearAttachments (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdClearAttachmentsPtr /= nullFunPtr) $
@@ -5229,26 +5187,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Image -> ImageLayout -> Image -> ImageLayout -> Word32 -> Ptr ImageResolve -> IO ()) -> Ptr CommandBuffer_T -> Image -> ImageLayout -> Image -> ImageLayout -> Word32 -> Ptr ImageResolve -> IO ()
 
 -- | vkCmdResolveImage - Resolve regions of an image
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @srcImage@ is the source image.
---
--- -   @srcImageLayout@ is the layout of the source image subresources for
---     the resolve.
---
--- -   @dstImage@ is the destination image.
---
--- -   @dstImageLayout@ is the layout of the destination image subresources
---     for the resolve.
---
--- -   @regionCount@ is the number of regions to resolve.
---
--- -   @pRegions@ is a pointer to an array of 'ImageResolve' structures
---     specifying the regions to resolve.
 --
 -- = Description
 --
@@ -5404,7 +5342,25 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve'
-cmdResolveImage :: forall io . MonadIO io => CommandBuffer -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regions" ::: Vector ImageResolve) -> io ()
+cmdResolveImage :: forall io
+                 . (MonadIO io)
+                => -- | @commandBuffer@ is the command buffer into which the command will be
+                   -- recorded.
+                   CommandBuffer
+                -> -- | @srcImage@ is the source image.
+                   ("srcImage" ::: Image)
+                -> -- | @srcImageLayout@ is the layout of the source image subresources for the
+                   -- resolve.
+                   ("srcImageLayout" ::: ImageLayout)
+                -> -- | @dstImage@ is the destination image.
+                   ("dstImage" ::: Image)
+                -> -- | @dstImageLayout@ is the layout of the destination image subresources for
+                   -- the resolve.
+                   ("dstImageLayout" ::: ImageLayout)
+                -> -- | @pRegions@ is a pointer to an array of 'ImageResolve' structures
+                   -- specifying the regions to resolve.
+                   ("regions" ::: Vector ImageResolve)
+                -> io ()
 cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdResolveImagePtr = pVkCmdResolveImage (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdResolveImagePtr /= nullFunPtr) $
@@ -5424,17 +5380,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Event -> PipelineStageFlags -> IO ()) -> Ptr CommandBuffer_T -> Event -> PipelineStageFlags -> IO ()
 
 -- | vkCmdSetEvent - Set an event object to signaled state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @event@ is the event that will be signaled.
---
--- -   @stageMask@ specifies the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
---     used to determine when the @event@ is signaled.
 --
 -- = Description
 --
@@ -5535,7 +5480,18 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdSetEvent :: forall io . MonadIO io => CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> io ()
+cmdSetEvent :: forall io
+             . (MonadIO io)
+            => -- | @commandBuffer@ is the command buffer into which the command is
+               -- recorded.
+               CommandBuffer
+            -> -- | @event@ is the event that will be signaled.
+               Event
+            -> -- | @stageMask@ specifies the
+               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
+               -- used to determine when the @event@ is signaled.
+               ("stageMask" ::: PipelineStageFlags)
+            -> io ()
 cmdSetEvent commandBuffer event stageMask = liftIO $ do
   let vkCmdSetEventPtr = pVkCmdSetEvent (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdSetEventPtr /= nullFunPtr) $
@@ -5553,19 +5509,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Event -> PipelineStageFlags -> IO ()) -> Ptr CommandBuffer_T -> Event -> PipelineStageFlags -> IO ()
 
 -- | vkCmdResetEvent - Reset an event object to non-signaled state
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @event@ is the event that will be unsignaled.
---
--- -   @stageMask@ is a bitmask of
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
---     specifying the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
---     used to determine when the @event@ is unsignaled.
 --
 -- = Description
 --
@@ -5669,7 +5612,20 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdResetEvent :: forall io . MonadIO io => CommandBuffer -> Event -> ("stageMask" ::: PipelineStageFlags) -> io ()
+cmdResetEvent :: forall io
+               . (MonadIO io)
+              => -- | @commandBuffer@ is the command buffer into which the command is
+                 -- recorded.
+                 CommandBuffer
+              -> -- | @event@ is the event that will be unsignaled.
+                 Event
+              -> -- | @stageMask@ is a bitmask of
+                 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                 -- specifying the
+                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
+                 -- used to determine when the @event@ is unsignaled.
+                 ("stageMask" ::: PipelineStageFlags)
+              -> io ()
 cmdResetEvent commandBuffer event stageMask = liftIO $ do
   let vkCmdResetEventPtr = pVkCmdResetEvent (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdResetEventPtr /= nullFunPtr) $
@@ -5687,43 +5643,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()
 
 -- | vkCmdWaitEvents - Wait for one or more events and insert a set of memory
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @eventCount@ is the length of the @pEvents@ array.
---
--- -   @pEvents@ is a pointer to an array of event object handles to wait
---     on.
---
--- -   @srcStageMask@ is a bitmask of
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
---     specifying the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
---
--- -   @dstStageMask@ is a bitmask of
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
---     specifying the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
---
--- -   @memoryBarrierCount@ is the length of the @pMemoryBarriers@ array.
---
--- -   @pMemoryBarriers@ is a pointer to an array of
---     'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
---
--- -   @bufferMemoryBarrierCount@ is the length of the
---     @pBufferMemoryBarriers@ array.
---
--- -   @pBufferMemoryBarriers@ is a pointer to an array of
---     'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
---
--- -   @imageMemoryBarrierCount@ is the length of the
---     @pImageMemoryBarriers@ array.
---
--- -   @pImageMemoryBarriers@ is a pointer to an array of
---     'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
 --
 -- = Description
 --
@@ -5987,7 +5906,33 @@ foreign import ccall
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdWaitEvents :: forall io . MonadIO io => CommandBuffer -> ("events" ::: Vector Event) -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier)) -> io ()
+cmdWaitEvents :: forall io
+               . (MonadIO io)
+              => -- | @commandBuffer@ is the command buffer into which the command is
+                 -- recorded.
+                 CommandBuffer
+              -> -- | @pEvents@ is a pointer to an array of event object handles to wait on.
+                 ("events" ::: Vector Event)
+              -> -- | @srcStageMask@ is a bitmask of
+                 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                 -- specifying the
+                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
+                 ("srcStageMask" ::: PipelineStageFlags)
+              -> -- | @dstStageMask@ is a bitmask of
+                 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                 -- specifying the
+                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
+                 ("dstStageMask" ::: PipelineStageFlags)
+              -> -- | @pMemoryBarriers@ is a pointer to an array of
+                 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
+                 ("memoryBarriers" ::: Vector MemoryBarrier)
+              -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
+                 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
+                 ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
+              -> -- | @pImageMemoryBarriers@ is a pointer to an array of
+                 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
+                 ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
+              -> io ()
 cmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
@@ -6013,42 +5958,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags -> PipelineStageFlags -> DependencyFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> Ptr CommandBuffer_T -> PipelineStageFlags -> PipelineStageFlags -> DependencyFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()
 
 -- | vkCmdPipelineBarrier - Insert a memory dependency
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command is
---     recorded.
---
--- -   @srcStageMask@ is a bitmask of
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
---     specifying the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
---
--- -   @dstStageMask@ is a bitmask of
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
---     specifying the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>.
---
--- -   @dependencyFlags@ is a bitmask of
---     'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits'
---     specifying how execution and memory dependencies are formed.
---
--- -   @memoryBarrierCount@ is the length of the @pMemoryBarriers@ array.
---
--- -   @pMemoryBarriers@ is a pointer to an array of
---     'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
---
--- -   @bufferMemoryBarrierCount@ is the length of the
---     @pBufferMemoryBarriers@ array.
---
--- -   @pBufferMemoryBarriers@ is a pointer to an array of
---     'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
---
--- -   @imageMemoryBarrierCount@ is the length of the
---     @pImageMemoryBarriers@ array.
---
--- -   @pImageMemoryBarriers@ is a pointer to an array of
---     'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
 --
 -- = Description
 --
@@ -6337,7 +6246,35 @@ foreign import ccall
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Core10.OtherTypes.MemoryBarrier',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
-cmdPipelineBarrier :: forall io . MonadIO io => CommandBuffer -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> DependencyFlags -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier)) -> io ()
+cmdPipelineBarrier :: forall io
+                    . (MonadIO io)
+                   => -- | @commandBuffer@ is the command buffer into which the command is
+                      -- recorded.
+                      CommandBuffer
+                   -> -- | @srcStageMask@ is a bitmask of
+                      -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                      -- specifying the
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
+                      ("srcStageMask" ::: PipelineStageFlags)
+                   -> -- | @dstStageMask@ is a bitmask of
+                      -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                      -- specifying the
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>.
+                      ("dstStageMask" ::: PipelineStageFlags)
+                   -> -- | @dependencyFlags@ is a bitmask of
+                      -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits' specifying
+                      -- how execution and memory dependencies are formed.
+                      DependencyFlags
+                   -> -- | @pMemoryBarriers@ is a pointer to an array of
+                      -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
+                      ("memoryBarriers" ::: Vector MemoryBarrier)
+                   -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
+                      -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
+                      ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
+                   -> -- | @pImageMemoryBarriers@ is a pointer to an array of
+                      -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
+                      ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
+                   -> io ()
 cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdPipelineBarrierPtr /= nullFunPtr) $
@@ -6361,22 +6298,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> QueryPool -> Word32 -> QueryControlFlags -> IO ()) -> Ptr CommandBuffer_T -> QueryPool -> Word32 -> QueryControlFlags -> IO ()
 
 -- | vkCmdBeginQuery - Begin a query
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
---
--- -   @queryPool@ is the query pool that will manage the results of the
---     query.
---
--- -   @query@ is the query index within the query pool that will contain
---     the results.
---
--- -   @flags@ is a bitmask of
---     'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
---     specifying constraints on the types of queries that /can/ be
---     performed.
 --
 -- = Description
 --
@@ -6535,7 +6456,21 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Vulkan.Core10.Handles.QueryPool'
-cmdBeginQuery :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> io ()
+cmdBeginQuery :: forall io
+               . (MonadIO io)
+              => -- | @commandBuffer@ is the command buffer into which this command will be
+                 -- recorded.
+                 CommandBuffer
+              -> -- | @queryPool@ is the query pool that will manage the results of the query.
+                 QueryPool
+              -> -- | @query@ is the query index within the query pool that will contain the
+                 -- results.
+                 ("query" ::: Word32)
+              -> -- | @flags@ is a bitmask of
+                 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
+                 -- specifying constraints on the types of queries that /can/ be performed.
+                 QueryControlFlags
+              -> io ()
 cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
   let vkCmdBeginQueryPtr = pVkCmdBeginQuery (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdBeginQueryPtr /= nullFunPtr) $
@@ -6562,17 +6497,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> QueryPool -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> QueryPool -> Word32 -> IO ()
 
 -- | vkCmdEndQuery - Ends a query
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
---
--- -   @queryPool@ is the query pool that is managing the results of the
---     query.
---
--- -   @query@ is the query index within the query pool where the result is
---     stored.
 --
 -- = Description
 --
@@ -6656,7 +6580,17 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
-cmdEndQuery :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> io ()
+cmdEndQuery :: forall io
+             . (MonadIO io)
+            => -- | @commandBuffer@ is the command buffer into which this command will be
+               -- recorded.
+               CommandBuffer
+            -> -- | @queryPool@ is the query pool that is managing the results of the query.
+               QueryPool
+            -> -- | @query@ is the query index within the query pool where the result is
+               -- stored.
+               ("query" ::: Word32)
+            -> io ()
 cmdEndQuery commandBuffer queryPool query = liftIO $ do
   let vkCmdEndQueryPtr = pVkCmdEndQuery (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdEndQueryPtr /= nullFunPtr) $
@@ -6674,18 +6608,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> QueryPool -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> QueryPool -> Word32 -> Word32 -> IO ()
 
 -- | vkCmdResetQueryPool - Reset queries in a query pool
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
---
--- -   @queryPool@ is the handle of the query pool managing the queries
---     being reset.
---
--- -   @firstQuery@ is the initial query index to reset.
---
--- -   @queryCount@ is the number of queries to reset.
 --
 -- = Description
 --
@@ -6768,7 +6690,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
-cmdResetQueryPool :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> io ()
+cmdResetQueryPool :: forall io
+                   . (MonadIO io)
+                  => -- | @commandBuffer@ is the command buffer into which this command will be
+                     -- recorded.
+                     CommandBuffer
+                  -> -- | @queryPool@ is the handle of the query pool managing the queries being
+                     -- reset.
+                     QueryPool
+                  -> -- | @firstQuery@ is the initial query index to reset.
+                     ("firstQuery" ::: Word32)
+                  -> -- | @queryCount@ is the number of queries to reset.
+                     ("queryCount" ::: Word32)
+                  -> io ()
 cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = liftIO $ do
   let vkCmdResetQueryPoolPtr = pVkCmdResetQueryPool (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdResetQueryPoolPtr /= nullFunPtr) $
@@ -6786,20 +6720,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlagBits -> QueryPool -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> PipelineStageFlagBits -> QueryPool -> Word32 -> IO ()
 
 -- | vkCmdWriteTimestamp - Write a device timestamp into a query object
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
---
--- -   @pipelineStage@ is one of the
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
---     specifying a stage of the pipeline.
---
--- -   @queryPool@ is the query pool that will manage the timestamp.
---
--- -   @query@ is the query within the query pool that will contain the
---     timestamp.
 --
 -- = Description
 --
@@ -6922,7 +6842,21 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
 -- 'Vulkan.Core10.Handles.QueryPool'
-cmdWriteTimestamp :: forall io . MonadIO io => CommandBuffer -> PipelineStageFlagBits -> QueryPool -> ("query" ::: Word32) -> io ()
+cmdWriteTimestamp :: forall io
+                   . (MonadIO io)
+                  => -- | @commandBuffer@ is the command buffer into which the command will be
+                     -- recorded.
+                     CommandBuffer
+                  -> -- | @pipelineStage@ is one of the
+                     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
+                     -- specifying a stage of the pipeline.
+                     PipelineStageFlagBits
+                  -> -- | @queryPool@ is the query pool that will manage the timestamp.
+                     QueryPool
+                  -> -- | @query@ is the query within the query pool that will contain the
+                     -- timestamp.
+                     ("query" ::: Word32)
+                  -> io ()
 cmdWriteTimestamp commandBuffer pipelineStage queryPool query = liftIO $ do
   let vkCmdWriteTimestampPtr = pVkCmdWriteTimestamp (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdWriteTimestampPtr /= nullFunPtr) $
@@ -6941,33 +6875,6 @@ foreign import ccall
 
 -- | vkCmdCopyQueryPoolResults - Copy the results of queries in a query pool
 -- to a buffer object
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer into which this command will
---     be recorded.
---
--- -   @queryPool@ is the query pool managing the queries containing the
---     desired results.
---
--- -   @firstQuery@ is the initial query index.
---
--- -   @queryCount@ is the number of queries. @firstQuery@ and @queryCount@
---     together define a range of queries.
---
--- -   @dstBuffer@ is a 'Vulkan.Core10.Handles.Buffer' object that will
---     receive the results of the copy command.
---
--- -   @dstOffset@ is an offset into @dstBuffer@.
---
--- -   @stride@ is the stride in bytes between results for individual
---     queries within @dstBuffer@. The required size of the backing memory
---     for @dstBuffer@ is determined as described above for
---     'Vulkan.Core10.Query.getQueryPoolResults'.
---
--- -   @flags@ is a bitmask of
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits'
---     specifying how and when results are returned.
 --
 -- = Description
 --
@@ -7137,7 +7044,34 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.BaseType.DeviceSize', 'Vulkan.Core10.Handles.QueryPool',
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
-cmdCopyQueryPoolResults :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("stride" ::: DeviceSize) -> QueryResultFlags -> io ()
+cmdCopyQueryPoolResults :: forall io
+                         . (MonadIO io)
+                        => -- | @commandBuffer@ is the command buffer into which this command will be
+                           -- recorded.
+                           CommandBuffer
+                        -> -- | @queryPool@ is the query pool managing the queries containing the
+                           -- desired results.
+                           QueryPool
+                        -> -- | @firstQuery@ is the initial query index.
+                           ("firstQuery" ::: Word32)
+                        -> -- | @queryCount@ is the number of queries. @firstQuery@ and @queryCount@
+                           -- together define a range of queries.
+                           ("queryCount" ::: Word32)
+                        -> -- | @dstBuffer@ is a 'Vulkan.Core10.Handles.Buffer' object that will receive
+                           -- the results of the copy command.
+                           ("dstBuffer" ::: Buffer)
+                        -> -- | @dstOffset@ is an offset into @dstBuffer@.
+                           ("dstOffset" ::: DeviceSize)
+                        -> -- | @stride@ is the stride in bytes between results for individual queries
+                           -- within @dstBuffer@. The required size of the backing memory for
+                           -- @dstBuffer@ is determined as described above for
+                           -- 'Vulkan.Core10.Query.getQueryPoolResults'.
+                           ("stride" ::: DeviceSize)
+                        -> -- | @flags@ is a bitmask of
+                           -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits' specifying
+                           -- how and when results are returned.
+                           QueryResultFlags
+                        -> io ()
 cmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags = liftIO $ do
   let vkCmdCopyQueryPoolResultsPtr = pVkCmdCopyQueryPoolResults (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdCopyQueryPoolResultsPtr /= nullFunPtr) $
@@ -7155,28 +7089,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> PipelineLayout -> ShaderStageFlags -> Word32 -> Word32 -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> PipelineLayout -> ShaderStageFlags -> Word32 -> Word32 -> Ptr () -> IO ()
 
 -- | vkCmdPushConstants - Update the values of push constants
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer in which the push constant
---     update will be recorded.
---
--- -   @layout@ is the pipeline layout used to program the push constant
---     updates.
---
--- -   @stageFlags@ is a bitmask of
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
---     specifying the shader stages that will use the push constants in the
---     updated range.
---
--- -   @offset@ is the start offset of the push constant range to update,
---     in units of bytes.
---
--- -   @size@ is the size of the push constant range to update, in units of
---     bytes.
---
--- -   @pValues@ is a pointer to an array of @size@ bytes containing the
---     new push constant values.
 --
 -- = Description
 --
@@ -7258,7 +7170,28 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
-cmdPushConstants :: forall io . MonadIO io => CommandBuffer -> PipelineLayout -> ShaderStageFlags -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("values" ::: Ptr ()) -> io ()
+cmdPushConstants :: forall io
+                  . (MonadIO io)
+                 => -- | @commandBuffer@ is the command buffer in which the push constant update
+                    -- will be recorded.
+                    CommandBuffer
+                 -> -- | @layout@ is the pipeline layout used to program the push constant
+                    -- updates.
+                    PipelineLayout
+                 -> -- | @stageFlags@ is a bitmask of
+                    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' specifying
+                    -- the shader stages that will use the push constants in the updated range.
+                    ShaderStageFlags
+                 -> -- | @offset@ is the start offset of the push constant range to update, in
+                    -- units of bytes.
+                    ("offset" ::: Word32)
+                 -> -- | @size@ is the size of the push constant range to update, in units of
+                    -- bytes.
+                    ("size" ::: Word32)
+                 -> -- | @pValues@ is a pointer to an array of @size@ bytes containing the new
+                    -- push constant values.
+                    ("values" ::: Ptr ())
+                 -> io ()
 cmdPushConstants commandBuffer layout stageFlags offset size values = liftIO $ do
   let vkCmdPushConstantsPtr = pVkCmdPushConstants (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdPushConstantsPtr /= nullFunPtr) $
@@ -7276,19 +7209,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> SubpassContents -> IO ()) -> Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> SubpassContents -> IO ()
 
 -- | vkCmdBeginRenderPass - Begin a new render pass
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer in which to record the
---     command.
---
--- -   @pRenderPassBegin@ is a pointer to a 'RenderPassBeginInfo' structure
---     specifying the render pass to begin an instance of, and the
---     framebuffer the instance uses.
---
--- -   @contents@ is a
---     'Vulkan.Core10.Enums.SubpassContents.SubpassContents' value
---     specifying how the commands in the first subpass will be provided.
 --
 -- = Description
 --
@@ -7455,7 +7375,18 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'RenderPassBeginInfo',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
-cmdBeginRenderPass :: forall a io . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io ()
+cmdBeginRenderPass :: forall a io
+                    . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io)
+                   => -- | @commandBuffer@ is the command buffer in which to record the command.
+                      CommandBuffer
+                   -> -- | @pRenderPassBegin@ is a pointer to a 'RenderPassBeginInfo' structure
+                      -- specifying the render pass to begin an instance of, and the framebuffer
+                      -- the instance uses.
+                      RenderPassBeginInfo a
+                   -> -- | @contents@ is a 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
+                      -- value specifying how the commands in the first subpass will be provided.
+                      SubpassContents
+                   -> io ()
 cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $ do
   let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdBeginRenderPassPtr /= nullFunPtr) $
@@ -7483,15 +7414,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> SubpassContents -> IO ()) -> Ptr CommandBuffer_T -> SubpassContents -> IO ()
 
 -- | vkCmdNextSubpass - Transition to the next subpass of a render pass
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer in which to record the
---     command.
---
--- -   @contents@ specifies how the commands in the next subpass will be
---     provided, in the same fashion as the corresponding parameter of
---     'cmdBeginRenderPass'.
 --
 -- = Description
 --
@@ -7565,7 +7487,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
-cmdNextSubpass :: forall io . MonadIO io => CommandBuffer -> SubpassContents -> io ()
+cmdNextSubpass :: forall io
+                . (MonadIO io)
+               => -- | @commandBuffer@ is the command buffer in which to record the command.
+                  CommandBuffer
+               -> -- | @contents@ specifies how the commands in the next subpass will be
+                  -- provided, in the same fashion as the corresponding parameter of
+                  -- 'cmdBeginRenderPass'.
+                  SubpassContents
+               -> io ()
 cmdNextSubpass commandBuffer contents = liftIO $ do
   let vkCmdNextSubpassPtr = pVkCmdNextSubpass (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdNextSubpassPtr /= nullFunPtr) $
@@ -7583,11 +7513,6 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> IO ()) -> Ptr CommandBuffer_T -> IO ()
 
 -- | vkCmdEndRenderPass - End the current render pass
---
--- = Parameters
---
--- -   @commandBuffer@ is the command buffer in which to end the current
---     render pass instance.
 --
 -- = Description
 --
@@ -7638,7 +7563,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdEndRenderPass :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdEndRenderPass :: forall io
+                  . (MonadIO io)
+                 => -- | @commandBuffer@ is the command buffer in which to end the current render
+                    -- pass instance.
+                    CommandBuffer
+                 -> io ()
 cmdEndRenderPass commandBuffer = liftIO $ do
   let vkCmdEndRenderPassPtr = pVkCmdEndRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
   unless (vkCmdEndRenderPassPtr /= nullFunPtr) $
@@ -7657,18 +7587,6 @@ foreign import ccall
 
 -- | vkCmdExecuteCommands - Execute a secondary command buffer from a primary
 -- command buffer
---
--- = Parameters
---
--- -   @commandBuffer@ is a handle to a primary command buffer that the
---     secondary command buffers are executed in.
---
--- -   @commandBufferCount@ is the length of the @pCommandBuffers@ array.
---
--- -   @pCommandBuffers@ is a pointer to an array of @commandBufferCount@
---     secondary command buffer handles, which are recorded to execute in
---     the primary command buffer in the order they are listed in the
---     array.
 --
 -- = Description
 --
@@ -7862,7 +7780,16 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdExecuteCommands :: forall io . MonadIO io => CommandBuffer -> ("commandBuffers" ::: Vector CommandBuffer) -> io ()
+cmdExecuteCommands :: forall io
+                    . (MonadIO io)
+                   => -- | @commandBuffer@ is a handle to a primary command buffer that the
+                      -- secondary command buffers are executed in.
+                      CommandBuffer
+                   -> -- | @pCommandBuffers@ is a pointer to an array of @commandBufferCount@
+                      -- secondary command buffer handles, which are recorded to execute in the
+                      -- primary command buffer in the order they are listed in the array.
+                      ("commandBuffers" ::: Vector CommandBuffer)
+                   -> io ()
 cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
   let vkCmdExecuteCommandsPtr = pVkCmdExecuteCommands (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdExecuteCommandsPtr /= nullFunPtr) $

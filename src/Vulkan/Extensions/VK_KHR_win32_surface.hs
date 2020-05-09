@@ -94,22 +94,6 @@ foreign import ccall
 -- | vkCreateWin32SurfaceKHR - Create a
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' object for an Win32 native window
 --
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to a 'Win32SurfaceCreateInfoKHR'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -141,7 +125,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'Win32SurfaceCreateInfoKHR'
-createWin32SurfaceKHR :: forall io . MonadIO io => Instance -> Win32SurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createWin32SurfaceKHR :: forall io
+                       . (MonadIO io)
+                      => -- | @instance@ is the instance to associate the surface with.
+                         Instance
+                      -> -- | @pCreateInfo@ is a pointer to a 'Win32SurfaceCreateInfoKHR' structure
+                         -- containing parameters affecting the creation of the surface object.
+                         Win32SurfaceCreateInfoKHR
+                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                         -- surface object when there is no more specific allocator available (see
+                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                         ("allocator" ::: Maybe AllocationCallbacks)
+                      -> io (SurfaceKHR)
 createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateWin32SurfaceKHRPtr = pVkCreateWin32SurfaceKHR (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateWin32SurfaceKHRPtr /= nullFunPtr) $
@@ -168,12 +163,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceWin32PresentationSupportKHR - query queue family
 -- support for presentation on a Win32 display
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @queueFamilyIndex@ is the queue family index.
---
 -- = Description
 --
 -- This platform-specific function /can/ be called prior to creating a
@@ -184,7 +173,21 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceWin32PresentationSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> io (Bool)
+getPhysicalDeviceWin32PresentationSupportKHR :: forall io
+                                              . (MonadIO io)
+                                             => -- | @physicalDevice@ is the physical device.
+                                                --
+                                                -- @physicalDevice@ /must/ be a valid
+                                                -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                                                PhysicalDevice
+                                             -> -- | @queueFamilyIndex@ is the queue family index.
+                                                --
+                                                -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+                                                -- returned by
+                                                -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+                                                -- for the given @physicalDevice@
+                                                ("queueFamilyIndex" ::: Word32)
+                                             -> io (Bool)
 getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = liftIO $ do
   let vkGetPhysicalDeviceWin32PresentationSupportKHRPtr = pVkGetPhysicalDeviceWin32PresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   unless (vkGetPhysicalDeviceWin32PresentationSupportKHRPtr /= nullFunPtr) $
@@ -204,12 +207,20 @@ getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = l
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Win32SurfaceCreateFlagsKHR', 'createWin32SurfaceKHR'
 data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: Win32SurfaceCreateFlagsKHR
-  , -- | @hinstance@ /must/ be a valid Win32
+  , -- | @hinstance@ is the Win32 'Vulkan.Extensions.WSITypes.HINSTANCE' for the
+    -- window to associate the surface with.
+    --
+    -- @hinstance@ /must/ be a valid Win32
     -- 'Vulkan.Extensions.WSITypes.HINSTANCE'
     hinstance :: HINSTANCE
-  , -- | @hwnd@ /must/ be a valid Win32 'Vulkan.Extensions.WSITypes.HWND'
+  , -- | @hwnd@ is the Win32 'Vulkan.Extensions.WSITypes.HWND' for the window to
+    -- associate the surface with.
+    --
+    -- @hwnd@ /must/ be a valid Win32 'Vulkan.Extensions.WSITypes.HWND'
     hwnd :: HWND
   }
   deriving (Typeable)

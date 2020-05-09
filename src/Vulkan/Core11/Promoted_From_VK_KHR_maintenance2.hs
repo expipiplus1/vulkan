@@ -67,7 +67,19 @@ data InputAttachmentAspectReference = InputAttachmentAspectReference
   , -- | @inputAttachmentIndex@ is an index into the @pInputAttachments@ of the
     -- specified subpass.
     inputAttachmentIndex :: Word32
-  , -- | @aspectMask@ /must/ not be @0@
+  , -- | @aspectMask@ is a mask of which aspect(s) /can/ be accessed within the
+    -- specified subpass.
+    --
+    -- @aspectMask@ /must/ not include
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
+    --
+    -- @aspectMask@ /must/ not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@
+    -- for any index @i@
+    --
+    -- @aspectMask@ /must/ be a valid combination of
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
+    --
+    -- @aspectMask@ /must/ not be @0@
     aspectMask :: ImageAspectFlags
   }
   deriving (Typeable)
@@ -126,7 +138,12 @@ instance Zero InputAttachmentAspectReference where
 -- 'InputAttachmentAspectReference',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassInputAttachmentAspectCreateInfo = RenderPassInputAttachmentAspectCreateInfo
-  { -- | @pAspectReferences@ /must/ be a valid pointer to an array of
+  { -- | @pAspectReferences@ is a pointer to an array of @aspectReferenceCount@
+    -- 'InputAttachmentAspectReference' structures containing a mask describing
+    -- which aspect(s) /can/ be accessed for a given input attachment within a
+    -- given subpass.
+    --
+    -- @pAspectReferences@ /must/ be a valid pointer to an array of
     -- @aspectReferenceCount@ valid 'InputAttachmentAspectReference' structures
     aspectReferences :: Vector InputAttachmentAspectReference }
   deriving (Typeable)
@@ -243,7 +260,14 @@ instance Zero PhysicalDevicePointClippingProperties where
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
-  { -- | @usage@ /must/ not be @0@
+  { -- | @usage@ is a bitmask describing the allowed usages of the image view.
+    -- See 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' for a
+    -- description of the supported bits.
+    --
+    -- @usage@ /must/ be a valid combination of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
+    --
+    -- @usage@ /must/ not be @0@
     usage :: ImageUsageFlags }
   deriving (Typeable)
 deriving instance Show ImageViewUsageCreateInfo
@@ -299,7 +323,11 @@ instance Zero ImageViewUsageCreateInfo where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
 data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomainOriginStateCreateInfo
-  { -- | @domainOrigin@ /must/ be a valid
+  { -- | @domainOrigin@ is a
+    -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
+    -- value controlling the origin of the tessellation domain space.
+    --
+    -- @domainOrigin@ /must/ be a valid
     -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
     -- value
     domainOrigin :: TessellationDomainOrigin }

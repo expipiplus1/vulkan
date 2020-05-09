@@ -85,20 +85,6 @@ foreign import ccall
 
 -- | vkCreateFence - Create a new fence object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the fence.
---
--- -   @pCreateInfo@ is a pointer to a 'FenceCreateInfo' structure
---     containing information about how the fence is to be created.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pFence@ is a pointer to a handle in which the resulting fence
---     object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -130,7 +116,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence',
 -- 'FenceCreateInfo'
-createFence :: forall a io . (Extendss FenceCreateInfo a, PokeChain a, MonadIO io) => Device -> FenceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+createFence :: forall a io
+             . (Extendss FenceCreateInfo a, PokeChain a, MonadIO io)
+            => -- | @device@ is the logical device that creates the fence.
+               Device
+            -> -- | @pCreateInfo@ is a pointer to a 'FenceCreateInfo' structure containing
+               -- information about how the fence is to be created.
+               FenceCreateInfo a
+            -> -- | @pAllocator@ controls host memory allocation as described in the
+               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- chapter.
+               ("allocator" ::: Maybe AllocationCallbacks)
+            -> io (Fence)
 createFence device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFencePtr = pVkCreateFence (deviceCmds (device :: Device))
   lift $ unless (vkCreateFencePtr /= nullFunPtr) $
@@ -169,16 +166,6 @@ foreign import ccall
 
 -- | vkDestroyFence - Destroy a fence object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the fence.
---
--- -   @fence@ is the handle of the fence to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All
@@ -214,7 +201,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
-destroyFence :: forall io . MonadIO io => Device -> Fence -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyFence :: forall io
+              . (MonadIO io)
+             => -- | @device@ is the logical device that destroys the fence.
+                Device
+             -> -- | @fence@ is the handle of the fence to destroy.
+                Fence
+             -> -- | @pAllocator@ controls host memory allocation as described in the
+                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- chapter.
+                ("allocator" ::: Maybe AllocationCallbacks)
+             -> io ()
 destroyFence device fence allocator = liftIO . evalContT $ do
   let vkDestroyFencePtr = pVkDestroyFence (deviceCmds (device :: Device))
   lift $ unless (vkDestroyFencePtr /= nullFunPtr) $
@@ -235,14 +232,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> IO Result
 
 -- | vkResetFences - Resets one or more fence objects
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the fences.
---
--- -   @fenceCount@ is the number of fences to reset.
---
--- -   @pFences@ is a pointer to an array of fence handles to reset.
 --
 -- = Description
 --
@@ -297,7 +286,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
-resetFences :: forall io . MonadIO io => Device -> ("fences" ::: Vector Fence) -> io ()
+resetFences :: forall io
+             . (MonadIO io)
+            => -- | @device@ is the logical device that owns the fences.
+               Device
+            -> -- | @pFences@ is a pointer to an array of fence handles to reset.
+               ("fences" ::: Vector Fence)
+            -> io ()
 resetFences device fences = liftIO . evalContT $ do
   let vkResetFencesPtr = pVkResetFences (deviceCmds (device :: Device))
   lift $ unless (vkResetFencesPtr /= nullFunPtr) $
@@ -317,12 +312,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Fence -> IO Result) -> Ptr Device_T -> Fence -> IO Result
 
 -- | vkGetFenceStatus - Return the status of a fence
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the fence.
---
--- -   @fence@ is the handle of the fence to query.
 --
 -- = Description
 --
@@ -373,7 +362,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
-getFenceStatus :: forall io . MonadIO io => Device -> Fence -> io (Result)
+getFenceStatus :: forall io
+                . (MonadIO io)
+               => -- | @device@ is the logical device that owns the fence.
+                  --
+                  -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                  Device
+               -> -- | @fence@ is the handle of the fence to query.
+                  --
+                  -- @fence@ /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+                  --
+                  -- @fence@ /must/ have been created, allocated, or retrieved from @device@
+                  Fence
+               -> io (Result)
 getFenceStatus device fence = liftIO $ do
   let vkGetFenceStatusPtr = pVkGetFenceStatus (deviceCmds (device :: Device))
   unless (vkGetFenceStatusPtr /= nullFunPtr) $
@@ -392,26 +393,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
 
 -- | vkWaitForFences - Wait for one or more fences to become signaled
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the fences.
---
--- -   @fenceCount@ is the number of fences to wait on.
---
--- -   @pFences@ is a pointer to an array of @fenceCount@ fence handles.
---
--- -   @waitAll@ is the condition that /must/ be satisfied to successfully
---     unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE',
---     then the condition is that all fences in @pFences@ are signaled.
---     Otherwise, the condition is that at least one fence in @pFences@ is
---     signaled.
---
--- -   @timeout@ is the timeout period in units of nanoseconds. @timeout@
---     is adjusted to the closest value allowed by the
---     implementation-dependent timeout accuracy, which /may/ be
---     substantially longer than one nanosecond, and /may/ be longer than
---     the requested period.
 --
 -- = Description
 --
@@ -478,7 +459,23 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.Fence'
-waitForFences :: forall io . MonadIO io => Device -> ("fences" ::: Vector Fence) -> ("waitAll" ::: Bool) -> ("timeout" ::: Word64) -> io (Result)
+waitForFences :: forall io
+               . (MonadIO io)
+              => -- | @device@ is the logical device that owns the fences.
+                 Device
+              -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
+                 ("fences" ::: Vector Fence)
+              -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
+                 -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
+                 -- the condition is that all fences in @pFences@ are signaled. Otherwise,
+                 -- the condition is that at least one fence in @pFences@ is signaled.
+                 ("waitAll" ::: Bool)
+              -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
+                 -- adjusted to the closest value allowed by the implementation-dependent
+                 -- timeout accuracy, which /may/ be substantially longer than one
+                 -- nanosecond, and /may/ be longer than the requested period.
+                 ("timeout" ::: Word64)
+              -> io (Result)
 waitForFences device fences waitAll timeout = liftIO . evalContT $ do
   let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
   lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $

@@ -83,16 +83,6 @@ foreign import ccall
 
 -- | vkBindBufferMemory2 - Bind device memory to buffer objects
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the buffers and memory.
---
--- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
---
--- -   @pBindInfos@ is a pointer to an array of @bindInfoCount@
---     'BindBufferMemoryInfo' structures describing buffers and memory to
---     bind.
---
 -- = Description
 --
 -- On some implementations, it /may/ be more efficient to batch memory
@@ -115,7 +105,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindBufferMemoryInfo', 'Vulkan.Core10.Handles.Device'
-bindBufferMemory2 :: forall io . MonadIO io => Device -> ("bindInfos" ::: Vector (SomeStruct BindBufferMemoryInfo)) -> io ()
+bindBufferMemory2 :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device that owns the buffers and memory.
+                     --
+                     -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                     Device
+                  -> -- | @pBindInfos@ is a pointer to an array of @bindInfoCount@
+                     -- 'BindBufferMemoryInfo' structures describing buffers and memory to bind.
+                     --
+                     -- @pBindInfos@ /must/ be a valid pointer to an array of @bindInfoCount@
+                     -- valid 'BindBufferMemoryInfo' structures
+                     ("bindInfos" ::: Vector (SomeStruct BindBufferMemoryInfo))
+                  -> io ()
 bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (deviceCmds (device :: Device))
   lift $ unless (vkBindBufferMemory2Ptr /= nullFunPtr) $
@@ -135,15 +137,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr (BindImageMemoryInfo a) -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (BindImageMemoryInfo a) -> IO Result
 
 -- | vkBindImageMemory2 - Bind device memory to image objects
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the images and memory.
---
--- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
---
--- -   @pBindInfos@ is a pointer to an array of 'BindImageMemoryInfo'
---     structures, describing images and memory to bind.
 --
 -- = Description
 --
@@ -184,7 +177,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindImageMemoryInfo', 'Vulkan.Core10.Handles.Device'
-bindImageMemory2 :: forall io . MonadIO io => Device -> ("bindInfos" ::: Vector (SomeStruct BindImageMemoryInfo)) -> io ()
+bindImageMemory2 :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the logical device that owns the images and memory.
+                    Device
+                 -> -- | @pBindInfos@ is a pointer to an array of 'BindImageMemoryInfo'
+                    -- structures, describing images and memory to bind.
+                    ("bindInfos" ::: Vector (SomeStruct BindImageMemoryInfo))
+                 -> io ()
 bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2Ptr = pVkBindImageMemory2 (deviceCmds (device :: Device))
   lift $ unless (vkBindImageMemory2Ptr /= nullFunPtr) $

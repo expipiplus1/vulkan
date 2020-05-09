@@ -118,22 +118,6 @@ foreign import ccall
 
 -- | vkCreateSamplerYcbcrConversion - Create a new Y′CBCR conversion
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the sampler Y′CBCR
---     conversion.
---
--- -   @pCreateInfo@ is a pointer to a 'SamplerYcbcrConversionCreateInfo'
---     structure specifying the requested sampler Y′CBCR conversion.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pYcbcrConversion@ is a pointer to a
---     'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle in which the
---     resulting sampler Y′CBCR conversion is returned.
---
 -- = Description
 --
 -- The interpretation of the configured sampler Y′CBCR conversion is
@@ -181,7 +165,19 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'SamplerYcbcrConversionCreateInfo'
-createSamplerYcbcrConversion :: forall a io . (Extendss SamplerYcbcrConversionCreateInfo a, PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SamplerYcbcrConversion)
+createSamplerYcbcrConversion :: forall a io
+                              . (Extendss SamplerYcbcrConversionCreateInfo a, PokeChain a, MonadIO io)
+                             => -- | @device@ is the logical device that creates the sampler Y′CBCR
+                                -- conversion.
+                                Device
+                             -> -- | @pCreateInfo@ is a pointer to a 'SamplerYcbcrConversionCreateInfo'
+                                -- structure specifying the requested sampler Y′CBCR conversion.
+                                SamplerYcbcrConversionCreateInfo a
+                             -> -- | @pAllocator@ controls host memory allocation as described in the
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                -- chapter.
+                                ("allocator" ::: Maybe AllocationCallbacks)
+                             -> io (SamplerYcbcrConversion)
 createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device))
   lift $ unless (vkCreateSamplerYcbcrConversionPtr /= nullFunPtr) $
@@ -220,16 +216,6 @@ foreign import ccall
 
 -- | vkDestroySamplerYcbcrConversion - Destroy a created Y′CBCR conversion
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the Y′CBCR conversion.
---
--- -   @ycbcrConversion@ is the conversion to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -254,7 +240,17 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion'
-destroySamplerYcbcrConversion :: forall io . MonadIO io => Device -> SamplerYcbcrConversion -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySamplerYcbcrConversion :: forall io
+                               . (MonadIO io)
+                              => -- | @device@ is the logical device that destroys the Y′CBCR conversion.
+                                 Device
+                              -> -- | @ycbcrConversion@ is the conversion to destroy.
+                                 SamplerYcbcrConversion
+                              -> -- | @pAllocator@ controls host memory allocation as described in the
+                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- chapter.
+                                 ("allocator" ::: Maybe AllocationCallbacks)
+                              -> io ()
 destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
   let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device))
   lift $ unless (vkDestroySamplerYcbcrConversionPtr /= nullFunPtr) $
@@ -277,7 +273,10 @@ destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalCo
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
-  { -- | @conversion@ /must/ be a valid
+  { -- | @conversion@ is a 'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
+    -- created with 'createSamplerYcbcrConversion'.
+    --
+    -- @conversion@ /must/ be a valid
     -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
     conversion :: SamplerYcbcrConversion }
   deriving (Typeable)

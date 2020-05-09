@@ -40,14 +40,6 @@ foreign import ccall
 
 -- | vkTrimCommandPool - Trim a command pool
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the command pool.
---
--- -   @commandPool@ is the command pool to trim.
---
--- -   @flags@ is reserved for future use.
---
 -- = Description
 --
 -- Trimming a command pool recycles unused memory from the command pool
@@ -110,7 +102,15 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.CommandPool',
 -- 'Vulkan.Core11.Enums.CommandPoolTrimFlags.CommandPoolTrimFlags',
 -- 'Vulkan.Core10.Handles.Device'
-trimCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolTrimFlags -> io ()
+trimCommandPool :: forall io
+                 . (MonadIO io)
+                => -- | @device@ is the logical device that owns the command pool.
+                   Device
+                -> -- | @commandPool@ is the command pool to trim.
+                   CommandPool
+                -> -- | @flags@ is reserved for future use.
+                   CommandPoolTrimFlags
+                -> io ()
 trimCommandPool device commandPool flags = liftIO $ do
   let vkTrimCommandPoolPtr = pVkTrimCommandPool (deviceCmds (device :: Device))
   unless (vkTrimCommandPoolPtr /= nullFunPtr) $

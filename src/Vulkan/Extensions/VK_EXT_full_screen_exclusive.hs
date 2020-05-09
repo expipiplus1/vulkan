@@ -122,25 +122,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceSurfacePresentModes2EXT - Query supported
 -- presentation modes
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @pSurfaceInfo@ is a pointer to a
---     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
---     structure describing the surface and other fixed parameters that
---     would be consumed by
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @pPresentModeCount@ is a pointer to an integer related to the number
---     of presentation modes available or queried, as described below.
---
--- -   @pPresentModes@ is either @NULL@ or a pointer to an array of
---     'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' values, indicating
---     the supported presentation modes.
---
 -- = Description
 --
 -- 'getPhysicalDeviceSurfacePresentModes2EXT' behaves similarly to
@@ -215,21 +196,6 @@ foreign import ccall
 -- | vkGetDeviceGroupSurfacePresentModes2EXT - Query device group present
 -- capabilities for a surface
 --
--- = Parameters
---
--- -   @device@ is the logical device.
---
--- -   @pSurfaceInfo@ is a pointer to a
---     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
---     structure describing the surface and other fixed parameters that
---     would be consumed by
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @pModes@ is a pointer to a
---     'Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR'
---     in which the supported device group present modes for the surface
---     are returned.
---
 -- = Description
 --
 -- 'getDeviceGroupSurfacePresentModes2EXT' behaves similarly to
@@ -256,7 +222,22 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
-getDeviceGroupSurfacePresentModes2EXT :: forall a io . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io) => Device -> PhysicalDeviceSurfaceInfo2KHR a -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
+getDeviceGroupSurfacePresentModes2EXT :: forall a io
+                                       . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
+                                      => -- | @device@ is the logical device.
+                                         --
+                                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                         Device
+                                      -> -- | @pSurfaceInfo@ is a pointer to a
+                                         -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+                                         -- structure describing the surface and other fixed parameters that would
+                                         -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                         --
+                                         -- @pSurfaceInfo@ /must/ be a valid pointer to a valid
+                                         -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+                                         -- structure
+                                         PhysicalDeviceSurfaceInfo2KHR a
+                                      -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device))
   lift $ unless (vkGetDeviceGroupSurfacePresentModes2EXTPtr /= nullFunPtr) $
@@ -279,13 +260,6 @@ foreign import ccall
 
 -- | vkAcquireFullScreenExclusiveModeEXT - Acquire full-screen exclusive mode
 -- for a swapchain
---
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the swapchain to acquire exclusive full-screen access
---     for.
 --
 -- == Valid Usage
 --
@@ -345,7 +319,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
-acquireFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
+acquireFullScreenExclusiveModeEXT :: forall io
+                                   . (MonadIO io)
+                                  => -- | @device@ is the device associated with @swapchain@.
+                                     Device
+                                  -> -- | @swapchain@ is the swapchain to acquire exclusive full-screen access
+                                     -- for.
+                                     SwapchainKHR
+                                  -> io ()
 acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   let vkAcquireFullScreenExclusiveModeEXTPtr = pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
   unless (vkAcquireFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
@@ -365,13 +346,6 @@ foreign import ccall
 -- | vkReleaseFullScreenExclusiveModeEXT - Release full-screen exclusive mode
 -- from a swapchain
 --
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the swapchain to release exclusive full-screen access
---     from.
---
 -- = Description
 --
 -- Note
@@ -386,7 +360,21 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
-releaseFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
+releaseFullScreenExclusiveModeEXT :: forall io
+                                   . (MonadIO io)
+                                  => -- | @device@ is the device associated with @swapchain@.
+                                     Device
+                                  -> -- | @swapchain@ is the swapchain to release exclusive full-screen access
+                                     -- from.
+                                     --
+                                     -- @swapchain@ /must/ not be in the retired state
+                                     --
+                                     -- @swapchain@ /must/ be a swapchain created with a
+                                     -- 'SurfaceFullScreenExclusiveInfoEXT' structure, with
+                                     -- @fullScreenExclusive@ set to
+                                     -- 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
+                                     SwapchainKHR
+                                  -> io ()
 releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   let vkReleaseFullScreenExclusiveModeEXTPtr = pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
   unless (vkReleaseFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
@@ -411,7 +399,10 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
 -- 'FullScreenExclusiveEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
-  { -- | @fullScreenExclusive@ /must/ be a valid 'FullScreenExclusiveEXT' value
+  { -- | @fullScreenExclusive@ is a 'FullScreenExclusiveEXT' value specifying the
+    -- preferred full-screen transition behavior.
+    --
+    -- @fullScreenExclusive@ /must/ be a valid 'FullScreenExclusiveEXT' value
     fullScreenExclusive :: FullScreenExclusiveEXT }
   deriving (Typeable)
 deriving instance Show SurfaceFullScreenExclusiveInfoEXT
@@ -474,7 +465,10 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
-  { -- | @hmonitor@ /must/ be a valid 'Vulkan.Extensions.WSITypes.HMONITOR'
+  { -- | @hmonitor@ is the Win32 'Vulkan.Extensions.WSITypes.HMONITOR' handle
+    -- identifying the display to create the surface with.
+    --
+    -- @hmonitor@ /must/ be a valid 'Vulkan.Extensions.WSITypes.HMONITOR'
     hmonitor :: HMONITOR }
   deriving (Typeable)
 deriving instance Show SurfaceFullScreenExclusiveWin32InfoEXT

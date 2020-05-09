@@ -50,17 +50,6 @@ foreign import ccall
 
 -- | vkResetQueryPool - Reset queries in a query pool
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the query pool.
---
--- -   @queryPool@ is the handle of the query pool managing the queries
---     being reset.
---
--- -   @firstQuery@ is the initial query index to reset.
---
--- -   @queryCount@ is the number of queries to reset.
---
 -- = Description
 --
 -- This command sets the status of query indices [@firstQuery@,
@@ -104,7 +93,18 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'
-resetQueryPool :: forall io . MonadIO io => Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> io ()
+resetQueryPool :: forall io
+                . (MonadIO io)
+               => -- | @device@ is the logical device that owns the query pool.
+                  Device
+               -> -- | @queryPool@ is the handle of the query pool managing the queries being
+                  -- reset.
+                  QueryPool
+               -> -- | @firstQuery@ is the initial query index to reset.
+                  ("firstQuery" ::: Word32)
+               -> -- | @queryCount@ is the number of queries to reset.
+                  ("queryCount" ::: Word32)
+               -> io ()
 resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
   let vkResetQueryPoolPtr = pVkResetQueryPool (deviceCmds (device :: Device))
   unless (vkResetQueryPoolPtr /= nullFunPtr) $

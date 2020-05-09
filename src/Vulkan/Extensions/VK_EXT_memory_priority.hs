@@ -111,7 +111,12 @@ instance Zero PhysicalDeviceMemoryPriorityFeaturesEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryPriorityAllocateInfoEXT = MemoryPriorityAllocateInfoEXT
-  { -- | @priority@ /must/ be between @0@ and @1@, inclusive
+  { -- | @priority@ is a floating-point value between @0@ and @1@, indicating the
+    -- priority of the allocation relative to other memory allocations. Larger
+    -- values are higher priority. The granularity of the priorities is
+    -- implementation-dependent.
+    --
+    -- @priority@ /must/ be between @0@ and @1@, inclusive
     priority :: Float }
   deriving (Typeable)
 deriving instance Show MemoryPriorityAllocateInfoEXT

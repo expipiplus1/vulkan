@@ -96,25 +96,6 @@ foreign import ccall
 -- | vkCreateSharedSwapchainsKHR - Create multiple swapchains that share
 -- presentable images
 --
--- = Parameters
---
--- -   @device@ is the device to create the swapchains for.
---
--- -   @swapchainCount@ is the number of swapchains to create.
---
--- -   @pCreateInfos@ is a pointer to an array of
---     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
---     structures specifying the parameters of the created swapchains.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     swapchain objects when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSwapchains@ is a pointer to an array of
---     'Vulkan.Extensions.Handles.SwapchainKHR' handles in which the
---     created swapchain objects will be returned.
---
 -- = Description
 --
 -- 'createSharedSwapchainsKHR' is similar to
@@ -186,7 +167,20 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-createSharedSwapchainsKHR :: forall io . MonadIO io => Device -> ("createInfos" ::: Vector (SomeStruct SwapchainCreateInfoKHR)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("swapchains" ::: Vector SwapchainKHR))
+createSharedSwapchainsKHR :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the device to create the swapchains for.
+                             Device
+                          -> -- | @pCreateInfos@ is a pointer to an array of
+                             -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR' structures
+                             -- specifying the parameters of the created swapchains.
+                             ("createInfos" ::: Vector (SomeStruct SwapchainCreateInfoKHR))
+                          -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                             -- swapchain objects when there is no more specific allocator available
+                             -- (see
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                             ("allocator" ::: Maybe AllocationCallbacks)
+                          -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
   let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device))
   lift $ unless (vkCreateSharedSwapchainsKHRPtr /= nullFunPtr) $

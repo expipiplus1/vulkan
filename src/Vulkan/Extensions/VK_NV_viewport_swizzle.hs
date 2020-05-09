@@ -70,13 +70,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- 'PipelineViewportSwizzleStateCreateInfoNV',
 -- 'ViewportCoordinateSwizzleNV'
 data ViewportSwizzleNV = ViewportSwizzleNV
-  { -- | @x@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+  { -- | @x@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
+    -- operation to apply to the x component of the primitive
+    --
+    -- @x@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     x :: ViewportCoordinateSwizzleNV
-  , -- | @y@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+  , -- | @y@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
+    -- operation to apply to the y component of the primitive
+    --
+    -- @y@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     y :: ViewportCoordinateSwizzleNV
-  , -- | @z@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+  , -- | @z@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
+    -- operation to apply to the z component of the primitive
+    --
+    -- @z@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     z :: ViewportCoordinateSwizzleNV
-  , -- | @w@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+  , -- | @w@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
+    -- operation to apply to the w component of the primitive
+    --
+    -- @w@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     w :: ViewportCoordinateSwizzleNV
   }
   deriving (Typeable)
@@ -132,9 +144,14 @@ instance Zero ViewportSwizzleNV where
 -- 'PipelineViewportSwizzleStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ViewportSwizzleNV'
 data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCreateInfoNV
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: PipelineViewportSwizzleStateCreateFlagsNV
-  , -- | @pViewportSwizzles@ /must/ be a valid pointer to an array of
+  , -- | @pViewportSwizzles@ is a pointer to an array of 'ViewportSwizzleNV'
+    -- structures, defining the viewport swizzles.
+    --
+    -- @pViewportSwizzles@ /must/ be a valid pointer to an array of
     -- @viewportCount@ valid 'ViewportSwizzleNV' structures
     viewportSwizzles :: Vector ViewportSwizzleNV
   }

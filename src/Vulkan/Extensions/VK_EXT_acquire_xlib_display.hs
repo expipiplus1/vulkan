@@ -54,14 +54,6 @@ foreign import ccall
 
 -- | vkAcquireXlibDisplayEXT - Acquire access to a VkDisplayKHR using Xlib
 --
--- = Parameters
---
--- -   @physicalDevice@ The physical device the display is on.
---
--- -   @dpy@ A connection to the X11 server that currently owns @display@.
---
--- -   @display@ The display the caller wishes to control in Vulkan.
---
 -- = Description
 --
 -- All permissions necessary to control the display are granted to the
@@ -95,7 +87,27 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-acquireXlibDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> DisplayKHR -> io ()
+acquireXlibDisplayEXT :: forall io
+                       . (MonadIO io)
+                      => -- | @physicalDevice@ The physical device the display is on.
+                         --
+                         -- @physicalDevice@ /must/ be a valid
+                         -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                         PhysicalDevice
+                      -> -- | @dpy@ A connection to the X11 server that currently owns @display@.
+                         --
+                         -- @dpy@ /must/ be a valid pointer to a
+                         -- 'Vulkan.Extensions.WSITypes.Display' value
+                         ("dpy" ::: Ptr Display)
+                      -> -- | @display@ The display the caller wishes to control in Vulkan.
+                         --
+                         -- @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
+                         -- handle
+                         --
+                         -- @display@ /must/ have been created, allocated, or retrieved from
+                         -- @physicalDevice@
+                         DisplayKHR
+                      -> io ()
 acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
   let vkAcquireXlibDisplayEXTPtr = pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
   unless (vkAcquireXlibDisplayEXTPtr /= nullFunPtr) $
@@ -115,18 +127,6 @@ foreign import ccall
 -- | vkGetRandROutputDisplayEXT - Query the VkDisplayKHR corresponding to an
 -- X11 RandR Output
 --
--- = Parameters
---
--- -   @physicalDevice@ The physical device to query the display handle on.
---
--- -   @dpy@ A connection to the X11 server from which @rrOutput@ was
---     queried.
---
--- -   @rrOutput@ An X11 RandR output ID.
---
--- -   @pDisplay@ The corresponding 'Vulkan.Extensions.Handles.DisplayKHR'
---     handle will be returned here.
---
 -- = Description
 --
 -- If there is no 'Vulkan.Extensions.Handles.DisplayKHR' corresponding to
@@ -143,7 +143,21 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getRandROutputDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> RROutput -> io (DisplayKHR)
+getRandROutputDisplayEXT :: forall io
+                          . (MonadIO io)
+                         => -- | @physicalDevice@ The physical device to query the display handle on.
+                            --
+                            -- @physicalDevice@ /must/ be a valid
+                            -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
+                            PhysicalDevice
+                         -> -- | @dpy@ A connection to the X11 server from which @rrOutput@ was queried.
+                            --
+                            -- @dpy@ /must/ be a valid pointer to a
+                            -- 'Vulkan.Extensions.WSITypes.Display' value
+                            ("dpy" ::: Ptr Display)
+                         -> -- | @rrOutput@ An X11 RandR output ID.
+                            RROutput
+                         -> io (DisplayKHR)
 getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
   let vkGetRandROutputDisplayEXTPtr = pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetRandROutputDisplayEXTPtr /= nullFunPtr) $

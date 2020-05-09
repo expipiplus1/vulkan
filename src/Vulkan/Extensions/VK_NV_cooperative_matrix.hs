@@ -103,16 +103,6 @@ foreign import ccall
 -- | vkGetPhysicalDeviceCooperativeMatrixPropertiesNV - Returns properties
 -- describing what cooperative matrix types are supported
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     cooperative matrix properties available or queried.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'CooperativeMatrixPropertiesNV' structures.
---
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of cooperative matrix
@@ -340,15 +330,25 @@ data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV
     nSize :: Word32
   , -- | @KSize@ is the number of columns in matrix A and rows in matrix B.
     kSize :: Word32
-  , -- | @AType@ /must/ be a valid 'ComponentTypeNV' value
+  , -- | @AType@ is the component type of matrix A, of type 'ComponentTypeNV'.
+    --
+    -- @AType@ /must/ be a valid 'ComponentTypeNV' value
     aType :: ComponentTypeNV
-  , -- | @BType@ /must/ be a valid 'ComponentTypeNV' value
+  , -- | @BType@ is the component type of matrix B, of type 'ComponentTypeNV'.
+    --
+    -- @BType@ /must/ be a valid 'ComponentTypeNV' value
     bType :: ComponentTypeNV
-  , -- | @CType@ /must/ be a valid 'ComponentTypeNV' value
+  , -- | @CType@ is the component type of matrix C, of type 'ComponentTypeNV'.
+    --
+    -- @CType@ /must/ be a valid 'ComponentTypeNV' value
     cType :: ComponentTypeNV
-  , -- | @DType@ /must/ be a valid 'ComponentTypeNV' value
+  , -- | @DType@ is the component type of matrix D, of type 'ComponentTypeNV'.
+    --
+    -- @DType@ /must/ be a valid 'ComponentTypeNV' value
     dType :: ComponentTypeNV
-  , -- | @scope@ /must/ be a valid 'ScopeNV' value
+  , -- | @scope@ is the scope of all the matrix types, of type 'ScopeNV'.
+    --
+    -- @scope@ /must/ be a valid 'ScopeNV' value
     scope :: ScopeNV
   }
   deriving (Typeable)

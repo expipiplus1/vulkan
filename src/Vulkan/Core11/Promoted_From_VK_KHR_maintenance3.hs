@@ -67,19 +67,6 @@ foreign import ccall
 -- | vkGetDescriptorSetLayoutSupport - Query whether a descriptor set layout
 -- can be created
 --
--- = Parameters
---
--- -   @device@ is the logical device that would create the descriptor set
---     layout.
---
--- -   @pCreateInfo@ is a pointer to a
---     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'
---     structure specifying the state of the descriptor set layout object.
---
--- -   @pSupport@ is a pointer to a 'DescriptorSetLayoutSupport' structure,
---     in which information about support for the descriptor set layout
---     object is returned.
---
 -- = Description
 --
 -- Some implementations have limitations on what fits in a descriptor set
@@ -115,7 +102,21 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
-getDescriptorSetLayoutSupport :: forall a b io . (Extendss DescriptorSetLayoutCreateInfo a, Extendss DescriptorSetLayoutSupport b, PokeChain a, PokeChain b, PeekChain b, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> io (DescriptorSetLayoutSupport b)
+getDescriptorSetLayoutSupport :: forall a b io
+                               . (Extendss DescriptorSetLayoutCreateInfo a, Extendss DescriptorSetLayoutSupport b, PokeChain a, PokeChain b, PeekChain b, MonadIO io)
+                              => -- | @device@ is the logical device that would create the descriptor set
+                                 -- layout.
+                                 --
+                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 Device
+                              -> -- | @pCreateInfo@ is a pointer to a
+                                 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
+                                 -- specifying the state of the descriptor set layout object.
+                                 --
+                                 -- @pCreateInfo@ /must/ be a valid pointer to a valid
+                                 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
+                                 DescriptorSetLayoutCreateInfo a
+                              -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device))
   lift $ unless (vkGetDescriptorSetLayoutSupportPtr /= nullFunPtr) $

@@ -69,21 +69,6 @@ foreign import ccall
 
 -- | vkCreatePipelineLayout - Creates a new pipeline layout object
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the pipeline layout.
---
--- -   @pCreateInfo@ is a pointer to a 'PipelineLayoutCreateInfo' structure
---     specifying the state of the pipeline layout object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pPipelineLayout@ is a pointer to a
---     'Vulkan.Core10.Handles.PipelineLayout' handle in which the resulting
---     pipeline layout object is returned.
---
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -115,7 +100,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'PipelineLayoutCreateInfo'
-createPipelineLayout :: forall io . MonadIO io => Device -> PipelineLayoutCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (PipelineLayout)
+createPipelineLayout :: forall io
+                      . (MonadIO io)
+                     => -- | @device@ is the logical device that creates the pipeline layout.
+                        Device
+                     -> -- | @pCreateInfo@ is a pointer to a 'PipelineLayoutCreateInfo' structure
+                        -- specifying the state of the pipeline layout object.
+                        PipelineLayoutCreateInfo
+                     -> -- | @pAllocator@ controls host memory allocation as described in the
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- chapter.
+                        ("allocator" ::: Maybe AllocationCallbacks)
+                     -> io (PipelineLayout)
 createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePipelineLayoutPtr = pVkCreatePipelineLayout (deviceCmds (device :: Device))
   lift $ unless (vkCreatePipelineLayoutPtr /= nullFunPtr) $
@@ -153,16 +149,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> PipelineLayout -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> PipelineLayout -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkDestroyPipelineLayout - Destroy a pipeline layout object
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the pipeline layout.
---
--- -   @pipelineLayout@ is the pipeline layout to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
 --
 -- == Valid Usage
 --
@@ -202,7 +188,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineLayout'
-destroyPipelineLayout :: forall io . MonadIO io => Device -> PipelineLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPipelineLayout :: forall io
+                       . (MonadIO io)
+                      => -- | @device@ is the logical device that destroys the pipeline layout.
+                         Device
+                      -> -- | @pipelineLayout@ is the pipeline layout to destroy.
+                         PipelineLayout
+                      -> -- | @pAllocator@ controls host memory allocation as described in the
+                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- chapter.
+                         ("allocator" ::: Maybe AllocationCallbacks)
+                      -> io ()
 destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
   let vkDestroyPipelineLayoutPtr = pVkDestroyPipelineLayout (deviceCmds (device :: Device))
   lift $ unless (vkDestroyPipelineLayoutPtr /= nullFunPtr) $
@@ -224,11 +220,32 @@ destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
 -- 'PipelineLayoutCreateInfo',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
 data PushConstantRange = PushConstantRange
-  { -- | @stageFlags@ /must/ not be @0@
+  { -- | @stageFlags@ is a set of stage flags describing the shader stages that
+    -- will access a range of push constants. If a particular stage is not
+    -- included in the range, then accessing members of that range of push
+    -- constants from the corresponding shader stage will return undefined
+    -- values.
+    --
+    -- @stageFlags@ /must/ be a valid combination of
+    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' values
+    --
+    -- @stageFlags@ /must/ not be @0@
     stageFlags :: ShaderStageFlags
-  , -- | @offset@ /must/ be a multiple of @4@
+  , -- | @offset@ and @size@ are the start offset and size, respectively,
+    -- consumed by the range. Both @offset@ and @size@ are in units of bytes
+    -- and /must/ be a multiple of 4. The layout of the push constant variables
+    -- is specified in the shader.
+    --
+    -- @offset@ /must/ be less than
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPushConstantsSize@
+    --
+    -- @offset@ /must/ be a multiple of @4@
     offset :: Word32
-  , -- | @size@ /must/ be less than or equal to
+  , -- | @size@ /must/ be greater than @0@
+    --
+    -- @size@ /must/ be a multiple of @4@
+    --
+    -- @size@ /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPushConstantsSize@
     -- minus @offset@
     size :: Word32

@@ -78,17 +78,6 @@ foreign import ccall
 
 -- | vkGetFenceWin32HandleKHR - Get a Windows HANDLE for a fence
 --
--- = Parameters
---
--- -   @device@ is the logical device that created the fence being
---     exported.
---
--- -   @pGetWin32HandleInfo@ is a pointer to a 'FenceGetWin32HandleInfoKHR'
---     structure containing parameters of the export operation.
---
--- -   @pHandle@ will return the Windows handle representing the fence
---     state.
---
 -- = Description
 --
 -- For handle types defined as NT handles, the handles returned by
@@ -116,7 +105,19 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'FenceGetWin32HandleInfoKHR'
-getFenceWin32HandleKHR :: forall io . MonadIO io => Device -> FenceGetWin32HandleInfoKHR -> io (HANDLE)
+getFenceWin32HandleKHR :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is the logical device that created the fence being exported.
+                          --
+                          -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                          Device
+                       -> -- | @pGetWin32HandleInfo@ is a pointer to a 'FenceGetWin32HandleInfoKHR'
+                          -- structure containing parameters of the export operation.
+                          --
+                          -- @pGetWin32HandleInfo@ /must/ be a valid pointer to a valid
+                          -- 'FenceGetWin32HandleInfoKHR' structure
+                          FenceGetWin32HandleInfoKHR
+                       -> io (HANDLE)
 getFenceWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetFenceWin32HandleKHRPtr = pVkGetFenceWin32HandleKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetFenceWin32HandleKHRPtr /= nullFunPtr) $
@@ -138,14 +139,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr ImportFenceWin32HandleInfoKHR -> IO Result) -> Ptr Device_T -> Ptr ImportFenceWin32HandleInfoKHR -> IO Result
 
 -- | vkImportFenceWin32HandleKHR - Import a fence from a Windows HANDLE
---
--- = Parameters
---
--- -   @device@ is the logical device that created the fence.
---
--- -   @pImportFenceWin32HandleInfo@ is a pointer to a
---     'ImportFenceWin32HandleInfoKHR' structure specifying the fence and
---     import parameters.
 --
 -- = Description
 --
@@ -173,7 +166,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImportFenceWin32HandleInfoKHR'
-importFenceWin32HandleKHR :: forall io . MonadIO io => Device -> ImportFenceWin32HandleInfoKHR -> io ()
+importFenceWin32HandleKHR :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the logical device that created the fence.
+                             --
+                             -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                             Device
+                          -> -- | @pImportFenceWin32HandleInfo@ is a pointer to a
+                             -- 'ImportFenceWin32HandleInfoKHR' structure specifying the fence and
+                             -- import parameters.
+                             --
+                             -- @pImportFenceWin32HandleInfo@ /must/ be a valid pointer to a valid
+                             -- 'ImportFenceWin32HandleInfoKHR' structure
+                             ImportFenceWin32HandleInfoKHR
+                          -> io ()
 importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT $ do
   let vkImportFenceWin32HandleKHRPtr = pVkImportFenceWin32HandleKHR (deviceCmds (device :: Device))
   lift $ unless (vkImportFenceWin32HandleKHRPtr /= nullFunPtr) $

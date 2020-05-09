@@ -190,31 +190,6 @@ foreign import ccall
 
 -- | vkCreateGraphicsPipelines - Create graphics pipelines
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the graphics pipelines.
---
--- -   @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     indicating that pipeline caching is disabled; or the handle of a
---     valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
---     object, in which case use of that cache is enabled for the duration
---     of the command.
---
--- -   @createInfoCount@ is the length of the @pCreateInfos@ and
---     @pPipelines@ arrays.
---
--- -   @pCreateInfos@ is a pointer to an array of
---     'GraphicsPipelineCreateInfo' structures.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pPipelines@ is a pointer to an array of
---     'Vulkan.Core10.Handles.Pipeline' handles in which the resulting
---     graphics pipeline objects are returned.
---
 -- = Description
 --
 -- The 'GraphicsPipelineCreateInfo' structure includes an array of shader
@@ -293,7 +268,24 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
-createGraphicsPipelines :: forall io . MonadIO io => Device -> PipelineCache -> ("createInfos" ::: Vector (SomeStruct GraphicsPipelineCreateInfo)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createGraphicsPipelines :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is the logical device that creates the graphics pipelines.
+                           Device
+                        -> -- | @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+                           -- indicating that pipeline caching is disabled; or the handle of a valid
+                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
+                           -- object, in which case use of that cache is enabled for the duration of
+                           -- the command.
+                           PipelineCache
+                        -> -- | @pCreateInfos@ is a pointer to an array of 'GraphicsPipelineCreateInfo'
+                           -- structures.
+                           ("createInfos" ::: Vector (SomeStruct GraphicsPipelineCreateInfo))
+                        -> -- | @pAllocator@ controls host memory allocation as described in the
+                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                           -- chapter.
+                           ("allocator" ::: Maybe AllocationCallbacks)
+                        -> io (Result, ("pipelines" ::: Vector Pipeline))
 createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateGraphicsPipelinesPtr = pVkCreateGraphicsPipelines (deviceCmds (device :: Device))
   lift $ unless (vkCreateGraphicsPipelinesPtr /= nullFunPtr) $
@@ -332,31 +324,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> PipelineCache -> Word32 -> Ptr (ComputePipelineCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result) -> Ptr Device_T -> PipelineCache -> Word32 -> Ptr (ComputePipelineCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
 
 -- | vkCreateComputePipelines - Creates a new compute pipeline object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the compute pipelines.
---
--- -   @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     indicating that pipeline caching is disabled; or the handle of a
---     valid
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
---     object, in which case use of that cache is enabled for the duration
---     of the command.
---
--- -   @createInfoCount@ is the length of the @pCreateInfos@ and
---     @pPipelines@ arrays.
---
--- -   @pCreateInfos@ is a pointer to an array of
---     'ComputePipelineCreateInfo' structures.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pPipelines@ is a pointer to an array of
---     'Vulkan.Core10.Handles.Pipeline' handles in which the resulting
---     compute pipeline objects are returned.
 --
 -- == Valid Usage
 --
@@ -421,7 +388,24 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'ComputePipelineCreateInfo', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.Pipeline', 'Vulkan.Core10.Handles.PipelineCache'
-createComputePipelines :: forall io . MonadIO io => Device -> PipelineCache -> ("createInfos" ::: Vector (SomeStruct ComputePipelineCreateInfo)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Result, ("pipelines" ::: Vector Pipeline))
+createComputePipelines :: forall io
+                        . (MonadIO io)
+                       => -- | @device@ is the logical device that creates the compute pipelines.
+                          Device
+                       -> -- | @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+                          -- indicating that pipeline caching is disabled; or the handle of a valid
+                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
+                          -- object, in which case use of that cache is enabled for the duration of
+                          -- the command.
+                          PipelineCache
+                       -> -- | @pCreateInfos@ is a pointer to an array of 'ComputePipelineCreateInfo'
+                          -- structures.
+                          ("createInfos" ::: Vector (SomeStruct ComputePipelineCreateInfo))
+                       -> -- | @pAllocator@ controls host memory allocation as described in the
+                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                          -- chapter.
+                          ("allocator" ::: Maybe AllocationCallbacks)
+                       -> io (Result, ("pipelines" ::: Vector Pipeline))
 createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateComputePipelinesPtr = pVkCreateComputePipelines (deviceCmds (device :: Device))
   lift $ unless (vkCreateComputePipelinesPtr /= nullFunPtr) $
@@ -461,16 +445,6 @@ foreign import ccall
 
 -- | vkDestroyPipeline - Destroy a pipeline object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the pipeline.
---
--- -   @pipeline@ is the handle of the pipeline to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   All submitted commands that refer to @pipeline@ /must/ have
@@ -505,7 +479,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
-destroyPipeline :: forall io . MonadIO io => Device -> Pipeline -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPipeline :: forall io
+                 . (MonadIO io)
+                => -- | @device@ is the logical device that destroys the pipeline.
+                   Device
+                -> -- | @pipeline@ is the handle of the pipeline to destroy.
+                   Pipeline
+                -> -- | @pAllocator@ controls host memory allocation as described in the
+                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- chapter.
+                   ("allocator" ::: Maybe AllocationCallbacks)
+                -> io ()
 destroyPipeline device pipeline allocator = liftIO . evalContT $ do
   let vkDestroyPipelinePtr = pVkDestroyPipeline (deviceCmds (device :: Device))
   lift $ unless (vkDestroyPipelinePtr /= nullFunPtr) $
@@ -1172,13 +1156,22 @@ instance es ~ '[] => Zero (ComputePipelineCreateInfo es) where
 -- 'PipelineVertexInputStateCreateInfo',
 -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate'
 data VertexInputBindingDescription = VertexInputBindingDescription
-  { -- | @binding@ /must/ be less than
+  { -- | @binding@ is the binding number that this structure describes.
+    --
+    -- @binding@ /must/ be less than
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
     binding :: Word32
-  , -- | @stride@ /must/ be less than or equal to
+  , -- | @stride@ is the distance in bytes between two consecutive elements
+    -- within the buffer.
+    --
+    -- @stride@ /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindingStride@
     stride :: Word32
-  , -- | @inputRate@ /must/ be a valid
+  , -- | @inputRate@ is a 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate'
+    -- value specifying whether vertex attribute addressing is a function of
+    -- the vertex index or of the instance index.
+    --
+    -- @inputRate@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate' value
     inputRate :: VertexInputRate
   }
@@ -1231,15 +1224,33 @@ instance Zero VertexInputBindingDescription where
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'PipelineVertexInputStateCreateInfo'
 data VertexInputAttributeDescription = VertexInputAttributeDescription
-  { -- | @location@ /must/ be less than
+  { -- | @location@ is the shader binding location number for this attribute.
+    --
+    -- @location@ /must/ be less than
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributes@
     location :: Word32
-  , -- | @binding@ /must/ be less than
+  , -- | @binding@ is the binding number which this attribute takes its data
+    -- from.
+    --
+    -- @binding@ /must/ be less than
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
     binding :: Word32
-  , -- | @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+  , -- | @format@ is the size and type of the vertex attribute data.
+    --
+    -- @format@ /must/ be allowed as a vertex buffer format, as specified by
+    -- the
+    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_VERTEX_BUFFER_BIT'
+    -- flag in
+    -- 'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
+    -- returned by
+    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
+    --
+    -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
     format :: Format
-  , -- | @offset@ /must/ be less than or equal to
+  , -- | @offset@ is a byte offset of this attribute relative to the start of an
+    -- element in the vertex input binding.
+    --
+    -- @offset@ /must/ be less than or equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributeOffset@
     offset :: Word32
   }
@@ -2619,16 +2630,30 @@ instance Zero PipelineDynamicStateCreateInfo where
 -- 'PipelineDepthStencilStateCreateInfo',
 -- 'Vulkan.Core10.Enums.StencilOp.StencilOp'
 data StencilOpState = StencilOpState
-  { -- | @failOp@ /must/ be a valid 'Vulkan.Core10.Enums.StencilOp.StencilOp'
+  { -- | @failOp@ is a 'Vulkan.Core10.Enums.StencilOp.StencilOp' value specifying
+    -- the action performed on samples that fail the stencil test.
+    --
+    -- @failOp@ /must/ be a valid 'Vulkan.Core10.Enums.StencilOp.StencilOp'
     -- value
     failOp :: StencilOp
-  , -- | @passOp@ /must/ be a valid 'Vulkan.Core10.Enums.StencilOp.StencilOp'
+  , -- | @passOp@ is a 'Vulkan.Core10.Enums.StencilOp.StencilOp' value specifying
+    -- the action performed on samples that pass both the depth and stencil
+    -- tests.
+    --
+    -- @passOp@ /must/ be a valid 'Vulkan.Core10.Enums.StencilOp.StencilOp'
     -- value
     passOp :: StencilOp
-  , -- | @depthFailOp@ /must/ be a valid
+  , -- | @depthFailOp@ is a 'Vulkan.Core10.Enums.StencilOp.StencilOp' value
+    -- specifying the action performed on samples that pass the stencil test
+    -- and fail the depth test.
+    --
+    -- @depthFailOp@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.StencilOp.StencilOp' value
     depthFailOp :: StencilOp
-  , -- | @compareOp@ /must/ be a valid 'Vulkan.Core10.Enums.CompareOp.CompareOp'
+  , -- | @compareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
+    -- specifying the comparison operator used in the stencil test.
+    --
+    -- @compareOp@ /must/ be a valid 'Vulkan.Core10.Enums.CompareOp.CompareOp'
     -- value
     compareOp :: CompareOp
   , -- | @compareMask@ selects the bits of the unsigned integer stencil values

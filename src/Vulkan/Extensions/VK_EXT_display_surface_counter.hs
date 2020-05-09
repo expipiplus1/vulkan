@@ -90,17 +90,6 @@ foreign import ccall
 
 -- | vkGetPhysicalDeviceSurfaceCapabilities2EXT - Query surface capabilities
 --
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
---
--- -   @surface@ is the surface that will be associated with the swapchain.
---
--- -   @pSurfaceCapabilities@ is a pointer to a 'SurfaceCapabilities2EXT'
---     structure in which the capabilities are returned.
---
 -- = Description
 --
 -- 'getPhysicalDeviceSurfaceCapabilities2EXT' behaves similarly to
@@ -141,7 +130,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceCapabilities2EXT',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceCapabilities2EXT :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (SurfaceCapabilities2EXT)
+getPhysicalDeviceSurfaceCapabilities2EXT :: forall io
+                                          . (MonadIO io)
+                                         => -- | @physicalDevice@ is the physical device that will be associated with the
+                                            -- swapchain to be created, as described for
+                                            -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                            PhysicalDevice
+                                         -> -- | @surface@ is the surface that will be associated with the swapchain.
+                                            SurfaceKHR
+                                         -> io (SurfaceCapabilities2EXT)
 getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr = pVkGetPhysicalDeviceSurfaceCapabilities2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr /= nullFunPtr) $
@@ -201,7 +198,10 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     supportedCompositeAlpha :: CompositeAlphaFlagsKHR
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
     supportedUsageFlags :: ImageUsageFlags
-  , -- | @supportedSurfaceCounters@ /must/ not include
+  , -- | @supportedSurfaceCounters@ is a bitmask of 'SurfaceCounterFlagBitsEXT'
+    -- indicating the supported surface counter types.
+    --
+    -- @supportedSurfaceCounters@ /must/ not include
     -- 'SURFACE_COUNTER_VBLANK_EXT' unless the surface queried is a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#wsi-display-surfaces display surface>
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT

@@ -79,21 +79,6 @@ foreign import ccall
 -- | vkCreateViSurfaceNN - Create a 'Vulkan.Extensions.Handles.SurfaceKHR'
 -- object for a VI layer
 --
--- = Parameters
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to a 'ViSurfaceCreateInfoNN' structure
---     containing parameters affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle in which the created surface object is returned.
---
 -- = Description
 --
 -- During the lifetime of a surface created using a particular
@@ -143,7 +128,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'ViSurfaceCreateInfoNN'
-createViSurfaceNN :: forall io . MonadIO io => Instance -> ViSurfaceCreateInfoNN -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createViSurfaceNN :: forall io
+                   . (MonadIO io)
+                  => -- | @instance@ is the instance with which to associate the surface.
+                     Instance
+                  -> -- | @pCreateInfo@ is a pointer to a 'ViSurfaceCreateInfoNN' structure
+                     -- containing parameters affecting the creation of the surface object.
+                     ViSurfaceCreateInfoNN
+                  -> -- | @pAllocator@ is the allocator used for host memory allocated for the
+                     -- surface object when there is no more specific allocator available (see
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                     ("allocator" ::: Maybe AllocationCallbacks)
+                  -> io (SurfaceKHR)
 createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateViSurfaceNNPtr = pVkCreateViSurfaceNN (instanceCmds (instance' :: Instance))
   lift $ unless (vkCreateViSurfaceNNPtr /= nullFunPtr) $
@@ -170,9 +166,14 @@ createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ViSurfaceCreateFlagsNN', 'createViSurfaceNN'
 data ViSurfaceCreateInfoNN = ViSurfaceCreateInfoNN
-  { -- | @flags@ /must/ be @0@
+  { -- | @flags@ is reserved for future use.
+    --
+    -- @flags@ /must/ be @0@
     flags :: ViSurfaceCreateFlagsNN
-  , -- | @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
+  , -- | @window@ is the @nn@::@vi@::@NativeWindowHandle@ for the
+    -- @nn@::@vi@::@Layer@ with which to associate the surface.
+    --
+    -- @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
     window :: Ptr ()
   }
   deriving (Typeable)

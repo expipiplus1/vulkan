@@ -88,18 +88,6 @@ foreign import ccall
 
 -- | vkGetSemaphoreWin32HandleKHR - Get a Windows HANDLE for a semaphore
 --
--- = Parameters
---
--- -   @device@ is the logical device that created the semaphore being
---     exported.
---
--- -   @pGetWin32HandleInfo@ is a pointer to a
---     'SemaphoreGetWin32HandleInfoKHR' structure containing parameters of
---     the export operation.
---
--- -   @pHandle@ will return the Windows handle representing the semaphore
---     state.
---
 -- = Description
 --
 -- For handle types defined as NT handles, the handles returned by
@@ -127,7 +115,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetWin32HandleInfoKHR'
-getSemaphoreWin32HandleKHR :: forall io . MonadIO io => Device -> SemaphoreGetWin32HandleInfoKHR -> io (HANDLE)
+getSemaphoreWin32HandleKHR :: forall io
+                            . (MonadIO io)
+                           => -- | @device@ is the logical device that created the semaphore being
+                              -- exported.
+                              --
+                              -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                              Device
+                           -> -- | @pGetWin32HandleInfo@ is a pointer to a 'SemaphoreGetWin32HandleInfoKHR'
+                              -- structure containing parameters of the export operation.
+                              --
+                              -- @pGetWin32HandleInfo@ /must/ be a valid pointer to a valid
+                              -- 'SemaphoreGetWin32HandleInfoKHR' structure
+                              SemaphoreGetWin32HandleInfoKHR
+                           -> io (HANDLE)
 getSemaphoreWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetSemaphoreWin32HandleKHRPtr = pVkGetSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
@@ -150,14 +151,6 @@ foreign import ccall
 
 -- | vkImportSemaphoreWin32HandleKHR - Import a semaphore from a Windows
 -- HANDLE
---
--- = Parameters
---
--- -   @device@ is the logical device that created the semaphore.
---
--- -   @pImportSemaphoreWin32HandleInfo@ is a pointer to a
---     'ImportSemaphoreWin32HandleInfoKHR' structure specifying the
---     semaphore and import parameters.
 --
 -- = Description
 --
@@ -185,7 +178,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreWin32HandleInfoKHR'
-importSemaphoreWin32HandleKHR :: forall io . MonadIO io => Device -> ImportSemaphoreWin32HandleInfoKHR -> io ()
+importSemaphoreWin32HandleKHR :: forall io
+                               . (MonadIO io)
+                              => -- | @device@ is the logical device that created the semaphore.
+                                 --
+                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 Device
+                              -> -- | @pImportSemaphoreWin32HandleInfo@ is a pointer to a
+                                 -- 'ImportSemaphoreWin32HandleInfoKHR' structure specifying the semaphore
+                                 -- and import parameters.
+                                 --
+                                 -- @pImportSemaphoreWin32HandleInfo@ /must/ be a valid pointer to a valid
+                                 -- 'ImportSemaphoreWin32HandleInfoKHR' structure
+                                 ImportSemaphoreWin32HandleInfoKHR
+                              -> io ()
 importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . evalContT $ do
   let vkImportSemaphoreWin32HandleKHRPtr = pVkImportSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
   lift $ unless (vkImportSemaphoreWin32HandleKHRPtr /= nullFunPtr) $

@@ -104,23 +104,6 @@ foreign import ccall
 
 -- | vkCreateValidationCacheEXT - Creates a new validation cache
 --
--- = Parameters
---
--- -   @device@ is the logical device that creates the validation cache
---     object.
---
--- -   @pCreateInfo@ is a pointer to a 'ValidationCacheCreateInfoEXT'
---     structure containing the initial parameters for the validation cache
---     object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pValidationCache@ is a pointer to a
---     'Vulkan.Extensions.Handles.ValidationCacheEXT' handle in which the
---     resulting validation cache object is returned.
---
 -- = Description
 --
 -- Note
@@ -180,7 +163,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'ValidationCacheCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
-createValidationCacheEXT :: forall io . MonadIO io => Device -> ValidationCacheCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ValidationCacheEXT)
+createValidationCacheEXT :: forall io
+                          . (MonadIO io)
+                         => -- | @device@ is the logical device that creates the validation cache object.
+                            Device
+                         -> -- | @pCreateInfo@ is a pointer to a 'ValidationCacheCreateInfoEXT' structure
+                            -- containing the initial parameters for the validation cache object.
+                            ValidationCacheCreateInfoEXT
+                         -> -- | @pAllocator@ controls host memory allocation as described in the
+                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                            -- chapter.
+                            ("allocator" ::: Maybe AllocationCallbacks)
+                         -> io (ValidationCacheEXT)
 createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
   let vkCreateValidationCacheEXTPtr = pVkCreateValidationCacheEXT (deviceCmds (device :: Device))
   lift $ unless (vkCreateValidationCacheEXTPtr /= nullFunPtr) $
@@ -219,17 +213,6 @@ foreign import ccall
 
 -- | vkDestroyValidationCacheEXT - Destroy a validation cache object
 --
--- = Parameters
---
--- -   @device@ is the logical device that destroys the validation cache
---     object.
---
--- -   @validationCache@ is the handle of the validation cache to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
 -- == Valid Usage
 --
 -- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -264,7 +247,18 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
-destroyValidationCacheEXT :: forall io . MonadIO io => Device -> ValidationCacheEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyValidationCacheEXT :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the logical device that destroys the validation cache
+                             -- object.
+                             Device
+                          -> -- | @validationCache@ is the handle of the validation cache to destroy.
+                             ValidationCacheEXT
+                          -> -- | @pAllocator@ controls host memory allocation as described in the
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                             -- chapter.
+                             ("allocator" ::: Maybe AllocationCallbacks)
+                          -> io ()
 destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT $ do
   let vkDestroyValidationCacheEXTPtr = pVkDestroyValidationCacheEXT (deviceCmds (device :: Device))
   lift $ unless (vkDestroyValidationCacheEXTPtr /= nullFunPtr) $
@@ -285,17 +279,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> ValidationCacheEXT -> Ptr CSize -> Ptr () -> IO Result) -> Ptr Device_T -> ValidationCacheEXT -> Ptr CSize -> Ptr () -> IO Result
 
 -- | vkGetValidationCacheDataEXT - Get the data store from a validation cache
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the validation cache.
---
--- -   @validationCache@ is the validation cache to retrieve data from.
---
--- -   @pDataSize@ is a pointer to a value related to the amount of data in
---     the validation cache, as described below.
---
--- -   @pData@ is either @NULL@ or a pointer to a buffer.
 --
 -- = Description
 --
@@ -423,20 +406,6 @@ foreign import ccall
 -- | vkMergeValidationCachesEXT - Combine the data stores of validation
 -- caches
 --
--- = Parameters
---
--- -   @device@ is the logical device that owns the validation cache
---     objects.
---
--- -   @dstCache@ is the handle of the validation cache to merge results
---     into.
---
--- -   @srcCacheCount@ is the length of the @pSrcCaches@ array.
---
--- -   @pSrcCaches@ is a pointer to an array of validation cache handles,
---     which will be merged into @dstCache@. The previous contents of
---     @dstCache@ are included after the merge.
---
 -- = Description
 --
 -- Note
@@ -488,7 +457,17 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
-mergeValidationCachesEXT :: forall io . MonadIO io => Device -> ("dstCache" ::: ValidationCacheEXT) -> ("srcCaches" ::: Vector ValidationCacheEXT) -> io ()
+mergeValidationCachesEXT :: forall io
+                          . (MonadIO io)
+                         => -- | @device@ is the logical device that owns the validation cache objects.
+                            Device
+                         -> -- | @dstCache@ is the handle of the validation cache to merge results into.
+                            ("dstCache" ::: ValidationCacheEXT)
+                         -> -- | @pSrcCaches@ is a pointer to an array of validation cache handles, which
+                            -- will be merged into @dstCache@. The previous contents of @dstCache@ are
+                            -- included after the merge.
+                            ("srcCaches" ::: Vector ValidationCacheEXT)
+                         -> io ()
 mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergeValidationCachesEXTPtr = pVkMergeValidationCachesEXT (deviceCmds (device :: Device))
   lift $ unless (vkMergeValidationCachesEXTPtr /= nullFunPtr) $
@@ -591,7 +570,12 @@ instance Zero ValidationCacheCreateInfoEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
 data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreateInfoEXT
-  { -- | @validationCache@ /must/ be a valid
+  { -- | @validationCache@ is the validation cache object from which the results
+    -- of prior validation attempts will be written, and to which new
+    -- validation results for this 'Vulkan.Core10.Handles.ShaderModule' will be
+    -- written (if not already present).
+    --
+    -- @validationCache@ /must/ be a valid
     -- 'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
     validationCache :: ValidationCacheEXT }
   deriving (Typeable)

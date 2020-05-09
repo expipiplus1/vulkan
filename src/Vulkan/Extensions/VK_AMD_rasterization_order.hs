@@ -57,7 +57,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- 'RasterizationOrderAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateRasterizationOrderAMD = PipelineRasterizationStateRasterizationOrderAMD
-  { -- | @rasterizationOrder@ /must/ be a valid 'RasterizationOrderAMD' value
+  { -- | @rasterizationOrder@ is a 'RasterizationOrderAMD' value specifying the
+    -- primitive rasterization order to use.
+    --
+    -- @rasterizationOrder@ /must/ be a valid 'RasterizationOrderAMD' value
     rasterizationOrder :: RasterizationOrderAMD }
   deriving (Typeable)
 deriving instance Show PipelineRasterizationStateRasterizationOrderAMD

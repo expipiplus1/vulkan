@@ -133,7 +133,11 @@ instance Zero VertexInputBindingDivisorDescriptionEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'VertexInputBindingDivisorDescriptionEXT'
 data PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorStateCreateInfoEXT
-  { -- | @pVertexBindingDivisors@ /must/ be a valid pointer to an array of
+  { -- | @pVertexBindingDivisors@ is a pointer to an array of
+    -- 'VertexInputBindingDivisorDescriptionEXT' structures, which specifies
+    -- the divisor value for each binding.
+    --
+    -- @pVertexBindingDivisors@ /must/ be a valid pointer to an array of
     -- @vertexBindingDivisorCount@ 'VertexInputBindingDivisorDescriptionEXT'
     -- structures
     vertexBindingDivisors :: Vector VertexInputBindingDivisorDescriptionEXT }

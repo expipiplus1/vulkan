@@ -160,23 +160,6 @@ foreign import ccall
 
 -- | vkCreateDevice - Create a new device instance
 --
--- = Parameters
---
--- -   @physicalDevice@ /must/ be one of the device handles returned from a
---     call to
---     'Vulkan.Core10.DeviceInitialization.enumeratePhysicalDevices' (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-physical-device-enumeration Physical Device Enumeration>).
---
--- -   @pCreateInfo@ is a pointer to a 'DeviceCreateInfo' structure
---     containing information about how to create the device.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pDevice@ is a pointer to a handle in which the created
---     'Vulkan.Core10.Handles.Device' is returned.
---
 -- = Description
 --
 -- 'createDevice' verifies that extensions and features requested in the
@@ -254,7 +237,21 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DeviceCreateInfo',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-createDevice :: forall a io . (Extendss DeviceCreateInfo a, PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Device)
+createDevice :: forall a io
+              . (Extendss DeviceCreateInfo a, PokeChain a, MonadIO io)
+             => -- | @physicalDevice@ /must/ be one of the device handles returned from a
+                -- call to 'Vulkan.Core10.DeviceInitialization.enumeratePhysicalDevices'
+                -- (see
+                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-physical-device-enumeration Physical Device Enumeration>).
+                PhysicalDevice
+             -> -- | @pCreateInfo@ is a pointer to a 'DeviceCreateInfo' structure containing
+                -- information about how to create the device.
+                DeviceCreateInfo a
+             -> -- | @pAllocator@ controls host memory allocation as described in the
+                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- chapter.
+                ("allocator" ::: Maybe AllocationCallbacks)
+             -> io (Device)
 createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
   let cmds = instanceCmds (physicalDevice :: PhysicalDevice)
   let vkCreateDevicePtr = pVkCreateDevice cmds
@@ -294,14 +291,6 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Ptr AllocationCallbacks -> IO ()
 
 -- | vkDestroyDevice - Destroy a logical device
---
--- = Parameters
---
--- -   @device@ is the logical device to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
 --
 -- = Description
 --
@@ -351,7 +340,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
-destroyDevice :: forall io . MonadIO io => Device -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDevice :: forall io
+               . (MonadIO io)
+              => -- | @device@ is the logical device to destroy.
+                 Device
+              -> -- | @pAllocator@ controls host memory allocation as described in the
+                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                 -- chapter.
+                 ("allocator" ::: Maybe AllocationCallbacks)
+              -> io ()
 destroyDevice device allocator = liftIO . evalContT $ do
   let vkDestroyDevicePtr = pVkDestroyDevice (deviceCmds (device :: Device))
   lift $ unless (vkDestroyDevicePtr /= nullFunPtr) $
