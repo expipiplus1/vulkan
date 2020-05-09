@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d90f57578125186862943db038bf587abca797b46cc453bcdf0388bd49301cb7
+-- hash: 5a67f56b46e41aa832c6181d91c1c2b2da83e8269f4e86734238b9a842e3aa01
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -97,6 +97,37 @@ executable offscreen
     build-depends:
         containers
       , inline-c
+  default-language: Haskell2010
+
+executable resize
+  main-is: Main.hs
+  other-modules:
+      Framebuffer
+      Init
+      MonadVulkan
+      Pipeline
+      Swapchain
+      Window
+      Paths_vulkan_examples
+  hs-source-dirs:
+      resize
+  default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall
+  build-depends:
+      VulkanMemoryAllocator
+    , autoapply >=0.4
+    , base <4.15
+    , bytestring
+    , extra
+    , resourcet >=1.2.4
+    , safe-exceptions
+    , say
+    , sdl2 >=2.5.2.0
+    , text
+    , transformers
+    , vector
+    , vulkan
+    , vulkan-utils
   default-language: Haskell2010
 
 executable sdl-triangle

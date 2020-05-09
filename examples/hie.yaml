@@ -11,3 +11,6 @@ cradle:
 
     - path: "./compute/"
       component: "exe:compute"
+
+    - path: "./resize/"
+      component: "exe:resize"

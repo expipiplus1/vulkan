@@ -80,6 +80,25 @@ executables:
       - vulkan
       - vulkan-utils
 
+  resize:
+    main: Main.hs
+    source-dirs: resize
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base < 4.15
+      - bytestring
+      - extra
+      - resourcet >= 1.2.4
+      - safe-exceptions
+      - say
+      - sdl2 >= 2.5.2.0
+      - text
+      - transformers
+      - vector
+      - vulkan
+      - vulkan-utils
+
 flags:
   renderdoc:
     description:
