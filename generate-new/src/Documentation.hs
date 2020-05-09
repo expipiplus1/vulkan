@@ -26,6 +26,7 @@ import           Say
 import           Spec.Name
 import           System.Environment
 import           Text.Pandoc
+import           Text.Show.Pretty
 
 data Documentation = Documentation
   { dDocumentee    :: Documentee
@@ -48,10 +49,25 @@ docBookToDocumentation
   -> Either Text [Documentation]
 docBookToDocumentation isValid db = mdo
   let readerOptions = def
-  pandoc             <- first show $ runPure (readDocBook readerOptions db)
-  (removed, subDocs) <- splitDocumentation name pandoc
-  name               <- guessDocumentee isValid removed
-  pure $ Documentation (TopLevel name) removed : subDocs
+  pandoc <- first show $ runPure (readDocBook readerOptions db)
+  (removed, unmergedSubDocs) <- splitDocumentation name pandoc
+  name <- guessDocumentee isValid removed
+
+  let mergedSubDocs =
+        let sorted = sortOn dDocumentee unmergedSubDocs
+        in  foldr
+              (curry
+                (\case
+                  (x, (y : ys)) | dDocumentee x == dDocumentee y ->
+                    Documentation (dDocumentee x)
+                                  (dDocumentation x <> dDocumentation y)
+                      : ys
+                  (x, ys) -> x : ys
+                )
+              )
+              []
+              sorted
+  pure $ Documentation (TopLevel name) removed : mergedSubDocs
 
 guessDocumentee :: (Documentee -> Bool) -> Pandoc -> Either Text CName
 guessDocumentee isValid (Pandoc _ bs) = do
@@ -71,43 +87,42 @@ splitDocumentation :: CName -> Pandoc -> Either Text (Pandoc, [Documentation])
 splitDocumentation parent (Pandoc meta bs) = do
   (es, bs') <- iterateSuffixesM (splitPrefix meta) bs
   pure (Pandoc meta bs', join es)
-  where
-    splitPrefix m = \case
-      -- Remove the "Document Notes" section
-      Section "_document_notes"  _    rem -> pure (Nothing, rem)
+ where
+  splitPrefix m = \case
+    -- Remove the "Document Notes" section
+    Section "_document_notes"  _    rem -> pure (Nothing, rem)
 
-      -- Remove the "C Specification" section
-      Section "_c_specification" _    rem -> pure (Nothing, rem)
+    -- Remove the "C Specification" section
+    Section "_c_specification" _    rem -> pure (Nothing, rem)
 
-      -- Remove the "Name" header
-      Section "_name"            bs'' rem -> pure (Nothing, bs'' ++ rem)
+    -- Remove the "Name" header
+    Section "_name"            bs'' rem -> pure (Nothing, bs'' ++ rem)
 
-      -- If the description section is a list of documentation for enumeration
-      -- values or members, split them into separate documentation elements
-      -- TODO: command parameters
-      xs@(Section sectionTag bs'' rem)
-        | h : _ <- xs, sectionTag `elem` ["_description", "_members"]
-        -> case memberDocs parent m bs'' of
-          Left  _                    -> pure (Nothing, xs)
-          Right (ds, []            ) -> pure (Just ds, rem)
-          Right (ds, leftoverBlocks) -> do
-            let includeSubdocumentation = any
-                  (\case
-                    Para ws ->
-                      [Str "The", Space, Str "following", Space, Str "bits"]
-                        `isPrefixOf` ws
+    -- If the description section is a list of documentation for enumeration
+    -- values or members, split them into separate documentation elements
+    xs@(Section sectionTag bs'' rem)
+      | h : _ <- xs, sectionTag `elem` ["_parameters", "_description", "_members"]
+      -> case memberDocs parent m bs'' of
+        Left  _                    -> pure (Nothing, xs)
+        Right (ds, []            ) -> pure (Just ds, rem)
+        Right (ds, leftoverBlocks) -> do
+          let includeSubdocumentation = any
+                (\case
+                  Para ws ->
+                    [Str "The", Space, Str "following", Space, Str "bits"]
+                      `isPrefixOf` ws
 
-                    _ -> False
-                  )
-                  leftoverBlocks
-                --- ^ Include the member docs as well, some documentation makes
-                -- reference to them and makes no sense without the bullet
-                -- points, for instance 'VkFormatFeatureFlagBits'
-                ps = if includeSubdocumentation then bs'' else leftoverBlocks
-            pure (Just ds, h : ps ++ rem)
+                  _ -> False
+                )
+                leftoverBlocks
+              --- ^ Include the member docs as well, some documentation makes
+              -- reference to them and makes no sense without the bullet
+              -- points, for instance 'VkFormatFeatureFlagBits'
+              ps = if includeSubdocumentation then bs'' else leftoverBlocks
+          pure (Just ds, h : ps ++ rem)
 
-      -- Leave everything else alone
-      xs -> pure (Nothing, xs)
+    -- Leave everything else alone
+    xs -> pure (Nothing, xs)
 
 pattern Section :: Text -> [Block] -> [Block] -> [Block]
 pattern Section ref blocks remainder
@@ -148,7 +163,7 @@ main = do
     Left  e  -> sayErr e
     Right d' -> case docBookToDocumentation (const True) d' of
       Left  e  -> sayErr e
-      Right ds -> for_ ds sayShow
+      Right ds -> for_ ds pPrint
 
 ----------------------------------------------------------------
 -- Utils

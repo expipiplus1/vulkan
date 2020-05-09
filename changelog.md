@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Generate haddocks for command parameters, #92
 
 ## [3.3] - 2020-05-07
   - Move package from `Graphics.Vulkan` to just `Vulkan`, #60
