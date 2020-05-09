@@ -583,3 +583,30 @@ isNegative = \case
   WrappedStruct _   -> True
   Custom        _   -> True
   ElidedCustom  _   -> False
+
+-- | A bit of an ad-hoc test
+isSimple :: HasSpecInfo r => MarshalScheme a -> Sem r Bool
+isSimple = \case
+  Unit       -> pure True
+  Preserve _ -> pure True
+  Normal (TypeName n) ->
+    (isNothing <$> getStruct n) <&&> (isNothing <$> getUnion n)
+  Normal _          -> pure True
+  Length{}          -> pure True
+  ElidedLength{}    -> pure True
+  ElidedUnivalued _ -> pure True
+  ElidedVoid        -> pure True
+  VoidPtr           -> pure False
+  ByteString        -> pure False
+  Maybe s           -> isSimple s
+  Vector _ _        -> pure False
+  EitherWord32 _    -> pure False
+  Tupled _ s        -> isSimple s
+  Returned      _   -> pure False
+  InOutCount    _   -> pure False
+  WrappedStruct _   -> pure False
+  Custom        _   -> pure False
+  ElidedCustom  _   -> pure False
+
+(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<&&>) = liftA2 (&&)
