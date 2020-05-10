@@ -368,7 +368,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetAccelerationStructureMemoryRequirementsKHR
-  :: FunPtr (Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoKHR -> Ptr (MemoryRequirements2 a) -> IO ()) -> Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoKHR -> Ptr (MemoryRequirements2 a) -> IO ()
+  :: FunPtr (Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoKHR -> Ptr (SomeStruct MemoryRequirements2) -> IO ()) -> Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoKHR -> Ptr (SomeStruct MemoryRequirements2) -> IO ()
 
 -- | vkGetAccelerationStructureMemoryRequirementsKHR - Get acceleration
 -- structure memory requirements
@@ -401,7 +401,7 @@ getAccelerationStructureMemoryRequirementsKHR device info = liftIO . evalContT $
   let vkGetAccelerationStructureMemoryRequirementsKHR' = mkVkGetAccelerationStructureMemoryRequirementsKHR vkGetAccelerationStructureMemoryRequirementsKHRPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ vkGetAccelerationStructureMemoryRequirementsKHR' (deviceHandle (device)) pInfo (pPMemoryRequirements)
+  lift $ vkGetAccelerationStructureMemoryRequirementsKHR' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -462,7 +462,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdCopyAccelerationStructureKHR
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (CopyAccelerationStructureInfoKHR a) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (CopyAccelerationStructureInfoKHR a) -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct CopyAccelerationStructureInfoKHR) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct CopyAccelerationStructureInfoKHR) -> IO ()
 
 -- | vkCmdCopyAccelerationStructureKHR - Copy an acceleration structure
 --
@@ -527,7 +527,7 @@ cmdCopyAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureKHR' = mkVkCmdCopyAccelerationStructureKHR vkCmdCopyAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdCopyAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo
+  lift $ vkCmdCopyAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) (forgetExtensions pInfo)
   pure $ ()
 
 
@@ -536,7 +536,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCopyAccelerationStructureKHR
-  :: FunPtr (Ptr Device_T -> Ptr (CopyAccelerationStructureInfoKHR a) -> IO Result) -> Ptr Device_T -> Ptr (CopyAccelerationStructureInfoKHR a) -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct CopyAccelerationStructureInfoKHR) -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct CopyAccelerationStructureInfoKHR) -> IO Result
 
 -- | vkCopyAccelerationStructureKHR - Copy an acceleration structure on the
 -- host
@@ -609,7 +609,7 @@ copyAccelerationStructureKHR device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureKHR' = mkVkCopyAccelerationStructureKHR vkCopyAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkCopyAccelerationStructureKHR' (deviceHandle (device)) pInfo
+  r <- lift $ vkCopyAccelerationStructureKHR' (deviceHandle (device)) (forgetExtensions pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -619,7 +619,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdCopyAccelerationStructureToMemoryKHR
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (CopyAccelerationStructureToMemoryInfoKHR a) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (CopyAccelerationStructureToMemoryInfoKHR a) -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct CopyAccelerationStructureToMemoryInfoKHR) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct CopyAccelerationStructureToMemoryInfoKHR) -> IO ()
 
 -- | vkCmdCopyAccelerationStructureToMemoryKHR - Copy an acceleration
 -- structure to device memory
@@ -735,7 +735,7 @@ cmdCopyAccelerationStructureToMemoryKHR commandBuffer info = liftIO . evalContT 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureToMemoryKHR' = mkVkCmdCopyAccelerationStructureToMemoryKHR vkCmdCopyAccelerationStructureToMemoryKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdCopyAccelerationStructureToMemoryKHR' (commandBufferHandle (commandBuffer)) pInfo
+  lift $ vkCmdCopyAccelerationStructureToMemoryKHR' (commandBufferHandle (commandBuffer)) (forgetExtensions pInfo)
   pure $ ()
 
 
@@ -744,7 +744,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCopyAccelerationStructureToMemoryKHR
-  :: FunPtr (Ptr Device_T -> Ptr (CopyAccelerationStructureToMemoryInfoKHR a) -> IO Result) -> Ptr Device_T -> Ptr (CopyAccelerationStructureToMemoryInfoKHR a) -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct CopyAccelerationStructureToMemoryInfoKHR) -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct CopyAccelerationStructureToMemoryInfoKHR) -> IO Result
 
 -- | vkCopyAccelerationStructureToMemoryKHR - Serialize an acceleration
 -- structure on the host
@@ -829,7 +829,7 @@ copyAccelerationStructureToMemoryKHR device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureToMemoryKHR' = mkVkCopyAccelerationStructureToMemoryKHR vkCopyAccelerationStructureToMemoryKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkCopyAccelerationStructureToMemoryKHR' (deviceHandle (device)) pInfo
+  r <- lift $ vkCopyAccelerationStructureToMemoryKHR' (deviceHandle (device)) (forgetExtensions pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -839,7 +839,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdCopyMemoryToAccelerationStructureKHR
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (CopyMemoryToAccelerationStructureInfoKHR a) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (CopyMemoryToAccelerationStructureInfoKHR a) -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct CopyMemoryToAccelerationStructureInfoKHR) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct CopyMemoryToAccelerationStructureInfoKHR) -> IO ()
 
 -- | vkCmdCopyMemoryToAccelerationStructureKHR - Copy device memory to an
 -- acceleration structure
@@ -934,7 +934,7 @@ cmdCopyMemoryToAccelerationStructureKHR commandBuffer info = liftIO . evalContT 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyMemoryToAccelerationStructureKHR' = mkVkCmdCopyMemoryToAccelerationStructureKHR vkCmdCopyMemoryToAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdCopyMemoryToAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo
+  lift $ vkCmdCopyMemoryToAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) (forgetExtensions pInfo)
   pure $ ()
 
 
@@ -943,7 +943,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCopyMemoryToAccelerationStructureKHR
-  :: FunPtr (Ptr Device_T -> Ptr (CopyMemoryToAccelerationStructureInfoKHR a) -> IO Result) -> Ptr Device_T -> Ptr (CopyMemoryToAccelerationStructureInfoKHR a) -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct CopyMemoryToAccelerationStructureInfoKHR) -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct CopyMemoryToAccelerationStructureInfoKHR) -> IO Result
 
 -- | vkCopyMemoryToAccelerationStructureKHR - Deserialize an acceleration
 -- structure on the host
@@ -1024,7 +1024,7 @@ copyMemoryToAccelerationStructureKHR device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyMemoryToAccelerationStructureKHR' = mkVkCopyMemoryToAccelerationStructureKHR vkCopyMemoryToAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ vkCopyMemoryToAccelerationStructureKHR' (deviceHandle (device)) pInfo
+  r <- lift $ vkCopyMemoryToAccelerationStructureKHR' (deviceHandle (device)) (forgetExtensions pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -1828,7 +1828,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateRayTracingPipelinesKHR
-  :: FunPtr (Ptr Device_T -> PipelineCache -> Word32 -> Ptr (RayTracingPipelineCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result) -> Ptr Device_T -> PipelineCache -> Word32 -> Ptr (RayTracingPipelineCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
+  :: FunPtr (Ptr Device_T -> PipelineCache -> Word32 -> Ptr (SomeStruct RayTracingPipelineCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result) -> Ptr Device_T -> PipelineCache -> Word32 -> Ptr (SomeStruct RayTracingPipelineCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
 
 -- | vkCreateRayTracingPipelinesKHR - Creates a new ray tracing pipeline
 -- object
@@ -1943,7 +1943,7 @@ createRayTracingPipelinesKHR device pipelineCache createInfos allocator = liftIO
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPipelines <- ContT $ bracket (callocBytes @Pipeline ((fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) * 8)) free
-  r <- lift $ vkCreateRayTracingPipelinesKHR' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (pPCreateInfos) pAllocator (pPPipelines)
+  r <- lift $ vkCreateRayTracingPipelinesKHR' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPPipelines)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (r, pPipelines)
@@ -2542,7 +2542,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdBuildAccelerationStructureKHR
-  :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr (AccelerationStructureBuildGeometryInfoKHR a) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr (AccelerationStructureBuildGeometryInfoKHR a) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr (SomeStruct AccelerationStructureBuildGeometryInfoKHR) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr (SomeStruct AccelerationStructureBuildGeometryInfoKHR) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO ()
 
 -- | vkCmdBuildAccelerationStructureKHR - Build an acceleration structure
 --
@@ -2729,7 +2729,7 @@ cmdBuildAccelerationStructureKHR commandBuffer infos offsetInfos = liftIO . eval
   Data.Vector.imapM_ (\i e -> do
     ppOffsetInfos <- ContT $ withCStruct (e)
     lift $ poke (pPpOffsetInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR)) ppOffsetInfos) (offsetInfos)
-  lift $ vkCmdBuildAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpOffsetInfos)
+  lift $ vkCmdBuildAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (forgetExtensions (pPInfos)) (pPpOffsetInfos)
   pure $ ()
 
 
@@ -2738,7 +2738,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdBuildAccelerationStructureIndirectKHR
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (AccelerationStructureBuildGeometryInfoKHR a) -> Buffer -> DeviceSize -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Ptr (AccelerationStructureBuildGeometryInfoKHR a) -> Buffer -> DeviceSize -> Word32 -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct AccelerationStructureBuildGeometryInfoKHR) -> Buffer -> DeviceSize -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct AccelerationStructureBuildGeometryInfoKHR) -> Buffer -> DeviceSize -> Word32 -> IO ()
 
 -- | vkCmdBuildAccelerationStructureIndirectKHR - Build an acceleration
 -- structure with some parameters provided on the device
@@ -2833,7 +2833,7 @@ cmdBuildAccelerationStructureIndirectKHR commandBuffer info indirectBuffer indir
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructureIndirectKHR is null" Nothing Nothing
   let vkCmdBuildAccelerationStructureIndirectKHR' = mkVkCmdBuildAccelerationStructureIndirectKHR vkCmdBuildAccelerationStructureIndirectKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ vkCmdBuildAccelerationStructureIndirectKHR' (commandBufferHandle (commandBuffer)) pInfo (indirectBuffer) (indirectOffset) (indirectStride)
+  lift $ vkCmdBuildAccelerationStructureIndirectKHR' (commandBufferHandle (commandBuffer)) (forgetExtensions pInfo) (indirectBuffer) (indirectOffset) (indirectStride)
   pure $ ()
 
 
@@ -2842,7 +2842,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkBuildAccelerationStructureKHR
-  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (AccelerationStructureBuildGeometryInfoKHR a) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (AccelerationStructureBuildGeometryInfoKHR a) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO Result
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SomeStruct AccelerationStructureBuildGeometryInfoKHR) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (SomeStruct AccelerationStructureBuildGeometryInfoKHR) -> Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR) -> IO Result
 
 -- | vkBuildAccelerationStructureKHR - Build an acceleration structure on the
 -- host
@@ -3011,7 +3011,7 @@ buildAccelerationStructureKHR device infos offsetInfos = liftIO . evalContT $ do
   Data.Vector.imapM_ (\i e -> do
     ppOffsetInfos <- ContT $ withCStruct (e)
     lift $ poke (pPpOffsetInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildOffsetInfoKHR)) ppOffsetInfos) (offsetInfos)
-  r <- lift $ vkBuildAccelerationStructureKHR' (deviceHandle (device)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpOffsetInfos)
+  r <- lift $ vkBuildAccelerationStructureKHR' (deviceHandle (device)) ((fromIntegral pInfosLength :: Word32)) (forgetExtensions (pPInfos)) (pPpOffsetInfos)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

@@ -120,7 +120,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateRenderPass2
-  :: FunPtr (Ptr Device_T -> Ptr (RenderPassCreateInfo2 a) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result) -> Ptr Device_T -> Ptr (RenderPassCreateInfo2 a) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct RenderPassCreateInfo2) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct RenderPassCreateInfo2) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
 
 -- | vkCreateRenderPass2 - Create a new render pass object
 --
@@ -184,7 +184,7 @@ createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPRenderPass <- ContT $ bracket (callocBytes @RenderPass 8) free
-  r <- lift $ vkCreateRenderPass2' (deviceHandle (device)) pCreateInfo pAllocator (pPRenderPass)
+  r <- lift $ vkCreateRenderPass2' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPRenderPass)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pRenderPass <- lift $ peek @RenderPass pPRenderPass
   pure $ (pRenderPass)
@@ -195,7 +195,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdBeginRenderPass2
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> Ptr SubpassBeginInfo -> IO ()) -> Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> Ptr SubpassBeginInfo -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct RenderPassBeginInfo) -> Ptr SubpassBeginInfo -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct RenderPassBeginInfo) -> Ptr SubpassBeginInfo -> IO ()
 
 -- | vkCmdBeginRenderPass2 - Begin a new render pass
 --
@@ -390,7 +390,7 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
   let vkCmdBeginRenderPass2' = mkVkCmdBeginRenderPass2 vkCmdBeginRenderPass2Ptr
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
-  lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) pRenderPassBegin pSubpassBeginInfo
+  lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) (forgetExtensions pRenderPassBegin) pSubpassBeginInfo
   pure $ ()
 
 -- | This function will call the supplied action between calls to

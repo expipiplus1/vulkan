@@ -50,6 +50,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (AndroidHardwareBufferUsageANDROID)
 import Vulkan.CStruct.Extends (Chain)
@@ -201,6 +202,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (SamplerYcbcrConversionImageFormatProperties)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.SparseResourceMemoryManagement (SparseImageFormatProperties)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (TextureLODGatherFormatPropertiesAMD)
@@ -224,7 +226,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceFeatures2
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceFeatures2 a) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceFeatures2 a) -> IO ()
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceFeatures2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceFeatures2) -> IO ()
 
 -- | vkGetPhysicalDeviceFeatures2 - Reports capabilities of a physical device
 --
@@ -255,7 +257,7 @@ getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures2' = mkVkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2Ptr
   pPFeatures <- ContT (withZeroCStruct @(PhysicalDeviceFeatures2 _))
-  lift $ vkGetPhysicalDeviceFeatures2' (physicalDeviceHandle (physicalDevice)) (pPFeatures)
+  lift $ vkGetPhysicalDeviceFeatures2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPFeatures))
   pFeatures <- lift $ peekCStruct @(PhysicalDeviceFeatures2 _) pPFeatures
   pure $ (pFeatures)
 
@@ -265,7 +267,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceProperties2
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceProperties2 a) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceProperties2 a) -> IO ()
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceProperties2) -> IO ()
 
 -- | vkGetPhysicalDeviceProperties2 - Returns properties of a physical device
 --
@@ -296,7 +298,7 @@ getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties2' = mkVkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2Ptr
   pPProperties <- ContT (withZeroCStruct @(PhysicalDeviceProperties2 _))
-  lift $ vkGetPhysicalDeviceProperties2' (physicalDeviceHandle (physicalDevice)) (pPProperties)
+  lift $ vkGetPhysicalDeviceProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPProperties))
   pProperties <- lift $ peekCStruct @(PhysicalDeviceProperties2 _) pPProperties
   pure $ (pProperties)
 
@@ -306,7 +308,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceFormatProperties2
-  :: FunPtr (Ptr PhysicalDevice_T -> Format -> Ptr (FormatProperties2 a) -> IO ()) -> Ptr PhysicalDevice_T -> Format -> Ptr (FormatProperties2 a) -> IO ()
+  :: FunPtr (Ptr PhysicalDevice_T -> Format -> Ptr (SomeStruct FormatProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Format -> Ptr (SomeStruct FormatProperties2) -> IO ()
 
 -- | vkGetPhysicalDeviceFormatProperties2 - Lists physical device’s format
 -- capabilities
@@ -343,7 +345,7 @@ getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ 
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties2' = mkVkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2Ptr
   pPFormatProperties <- ContT (withZeroCStruct @(FormatProperties2 _))
-  lift $ vkGetPhysicalDeviceFormatProperties2' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties)
+  lift $ vkGetPhysicalDeviceFormatProperties2' (physicalDeviceHandle (physicalDevice)) (format) (forgetExtensions (pPFormatProperties))
   pFormatProperties <- lift $ peekCStruct @(FormatProperties2 _) pPFormatProperties
   pure $ (pFormatProperties)
 
@@ -353,7 +355,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceImageFormatProperties2
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceImageFormatInfo2 a) -> Ptr (ImageFormatProperties2 b) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceImageFormatInfo2 a) -> Ptr (ImageFormatProperties2 b) -> IO Result
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceImageFormatInfo2) -> Ptr (SomeStruct ImageFormatProperties2) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceImageFormatInfo2) -> Ptr (SomeStruct ImageFormatProperties2) -> IO Result
 
 -- | vkGetPhysicalDeviceImageFormatProperties2 - Lists physical device’s
 -- image format capabilities
@@ -420,7 +422,7 @@ getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO 
   let vkGetPhysicalDeviceImageFormatProperties2' = mkVkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2Ptr
   pImageFormatInfo <- ContT $ withCStruct (imageFormatInfo)
   pPImageFormatProperties <- ContT (withZeroCStruct @(ImageFormatProperties2 _))
-  r <- lift $ vkGetPhysicalDeviceImageFormatProperties2' (physicalDeviceHandle (physicalDevice)) pImageFormatInfo (pPImageFormatProperties)
+  r <- lift $ vkGetPhysicalDeviceImageFormatProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pImageFormatInfo) (forgetExtensions (pPImageFormatProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageFormatProperties <- lift $ peekCStruct @(ImageFormatProperties2 _) pPImageFormatProperties
   pure $ (pImageFormatProperties)
@@ -431,7 +433,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceQueueFamilyProperties2
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr (QueueFamilyProperties2 a) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr (QueueFamilyProperties2 a) -> IO ()
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr (SomeStruct QueueFamilyProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr (SomeStruct QueueFamilyProperties2) -> IO ()
 
 -- | vkGetPhysicalDeviceQueueFamilyProperties2 - Reports properties of the
 -- queues of the specified physical device
@@ -472,7 +474,7 @@ getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties2' = mkVkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2Ptr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (nullPtr)
+  lift $ vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions (nullPtr))
   pQueueFamilyPropertyCount <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pPQueueFamilyProperties <- ContT $ bracket (callocBytes @(QueueFamilyProperties2 _) ((fromIntegral (pQueueFamilyPropertyCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPQueueFamilyProperties `advancePtrBytes` (i * 40) :: Ptr (QueueFamilyProperties2 _)) . ($ ())) [0..(fromIntegral (pQueueFamilyPropertyCount)) - 1]
@@ -487,7 +489,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceMemoryProperties2
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceMemoryProperties2 a) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceMemoryProperties2 a) -> IO ()
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceMemoryProperties2) -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceMemoryProperties2) -> IO ()
 
 -- | vkGetPhysicalDeviceMemoryProperties2 - Reports memory information for
 -- the specified physical device
@@ -519,7 +521,7 @@ getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties2' = mkVkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2Ptr
   pPMemoryProperties <- ContT (withZeroCStruct @(PhysicalDeviceMemoryProperties2 _))
-  lift $ vkGetPhysicalDeviceMemoryProperties2' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties)
+  lift $ vkGetPhysicalDeviceMemoryProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPMemoryProperties))
   pMemoryProperties <- lift $ peekCStruct @(PhysicalDeviceMemoryProperties2 _) pPMemoryProperties
   pure $ (pMemoryProperties)
 

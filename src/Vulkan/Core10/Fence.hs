@@ -41,6 +41,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.BaseType (Bool32)
@@ -70,6 +71,7 @@ import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -82,7 +84,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateFence
-  :: FunPtr (Ptr Device_T -> Ptr (FenceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result) -> Ptr Device_T -> Ptr (FenceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct FenceCreateInfo) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct FenceCreateInfo) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result
 
 -- | vkCreateFence - Create a new fence object
 --
@@ -139,7 +141,7 @@ createFence device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ vkCreateFence' (deviceHandle (device)) pCreateInfo pAllocator (pPFence)
+  r <- lift $ vkCreateFence' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFence)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)

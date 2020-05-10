@@ -156,7 +156,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateDevice
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (DeviceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr (Ptr Device_T) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (DeviceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr (Ptr Device_T) -> IO Result
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct DeviceCreateInfo) -> Ptr AllocationCallbacks -> Ptr (Ptr Device_T) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct DeviceCreateInfo) -> Ptr AllocationCallbacks -> Ptr (Ptr Device_T) -> IO Result
 
 -- | vkCreateDevice - Create a new device instance
 --
@@ -263,7 +263,7 @@ createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDevice <- ContT $ bracket (callocBytes @(Ptr Device_T) 8) free
-  r <- lift $ vkCreateDevice' (physicalDeviceHandle (physicalDevice)) pCreateInfo pAllocator (pPDevice)
+  r <- lift $ vkCreateDevice' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pCreateInfo) pAllocator (pPDevice)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDevice <- lift $ peek @(Ptr Device_T) pPDevice
   pDevice' <- lift $ (\h -> Device h <$> initDeviceCmds cmds h) pDevice

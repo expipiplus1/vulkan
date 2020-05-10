@@ -314,7 +314,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkQueueBindSparse
-  :: FunPtr (Ptr Queue_T -> Word32 -> Ptr (BindSparseInfo a) -> Fence -> IO Result) -> Ptr Queue_T -> Word32 -> Ptr (BindSparseInfo a) -> Fence -> IO Result
+  :: FunPtr (Ptr Queue_T -> Word32 -> Ptr (SomeStruct BindSparseInfo) -> Fence -> IO Result) -> Ptr Queue_T -> Word32 -> Ptr (SomeStruct BindSparseInfo) -> Fence -> IO Result
 
 -- | vkQueueBindSparse - Bind device memory to a sparse resource object
 --
@@ -452,7 +452,7 @@ queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
   let vkQueueBindSparse' = mkVkQueueBindSparse vkQueueBindSparsePtr
   pPBindInfo <- ContT $ allocaBytesAligned @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _))) (e) . ($ ())) (bindInfo)
-  r <- lift $ vkQueueBindSparse' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (bindInfo)) :: Word32)) (pPBindInfo) (fence)
+  r <- lift $ vkQueueBindSparse' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (bindInfo)) :: Word32)) (forgetExtensions (pPBindInfo)) (fence)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

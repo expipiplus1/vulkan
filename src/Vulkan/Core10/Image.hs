@@ -42,6 +42,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
@@ -84,6 +85,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.Core10.Enums.SharingMode (SharingMode)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -96,7 +98,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateImage
-  :: FunPtr (Ptr Device_T -> Ptr (ImageCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Image -> IO Result) -> Ptr Device_T -> Ptr (ImageCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Image -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct ImageCreateInfo) -> Ptr AllocationCallbacks -> Ptr Image -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct ImageCreateInfo) -> Ptr AllocationCallbacks -> Ptr Image -> IO Result
 
 -- | vkCreateImage - Create a new image object
 --
@@ -162,7 +164,7 @@ createImage device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
-  r <- lift $ vkCreateImage' (deviceHandle (device)) pCreateInfo pAllocator (pPImage)
+  r <- lift $ vkCreateImage' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPImage)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pure $ (pImage)

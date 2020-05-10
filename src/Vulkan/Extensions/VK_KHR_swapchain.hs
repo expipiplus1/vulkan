@@ -97,6 +97,7 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.BaseType (bool32ToBool)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
@@ -152,6 +153,7 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.Core10.Handles (Semaphore(..))
 import Vulkan.Core10.Enums.SharingMode (SharingMode)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
@@ -190,7 +192,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateSwapchainKHR
-  :: FunPtr (Ptr Device_T -> Ptr (SwapchainCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result) -> Ptr Device_T -> Ptr (SwapchainCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct SwapchainCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct SwapchainCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
 
 -- | vkCreateSwapchainKHR - Create a swapchain
 --
@@ -291,7 +293,7 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSwapchain <- ContT $ bracket (callocBytes @SwapchainKHR 8) free
-  r <- lift $ vkCreateSwapchainKHR' (deviceHandle (device)) pCreateInfo pAllocator (pPSwapchain)
+  r <- lift $ vkCreateSwapchainKHR' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSwapchain)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchain <- lift $ peek @SwapchainKHR pPSwapchain
   pure $ (pSwapchain)
@@ -677,7 +679,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkQueuePresentKHR
-  :: FunPtr (Ptr Queue_T -> Ptr (PresentInfoKHR a) -> IO Result) -> Ptr Queue_T -> Ptr (PresentInfoKHR a) -> IO Result
+  :: FunPtr (Ptr Queue_T -> Ptr (SomeStruct PresentInfoKHR) -> IO Result) -> Ptr Queue_T -> Ptr (SomeStruct PresentInfoKHR) -> IO Result
 
 -- | vkQueuePresentKHR - Queue an image for presentation
 --
@@ -839,7 +841,7 @@ queuePresentKHR queue presentInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueuePresentKHR is null" Nothing Nothing
   let vkQueuePresentKHR' = mkVkQueuePresentKHR vkQueuePresentKHRPtr
   pPresentInfo <- ContT $ withCStruct (presentInfo)
-  r <- lift $ vkQueuePresentKHR' (queueHandle (queue)) pPresentInfo
+  r <- lift $ vkQueuePresentKHR' (queueHandle (queue)) (forgetExtensions pPresentInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

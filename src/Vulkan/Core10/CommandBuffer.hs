@@ -271,7 +271,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkBeginCommandBuffer
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (CommandBufferBeginInfo a) -> IO Result) -> Ptr CommandBuffer_T -> Ptr (CommandBufferBeginInfo a) -> IO Result
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct CommandBufferBeginInfo) -> IO Result) -> Ptr CommandBuffer_T -> Ptr (SomeStruct CommandBufferBeginInfo) -> IO Result
 
 -- | vkBeginCommandBuffer - Start recording a command buffer
 --
@@ -349,7 +349,7 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBeginCommandBuffer is null" Nothing Nothing
   let vkBeginCommandBuffer' = mkVkBeginCommandBuffer vkBeginCommandBufferPtr
   pBeginInfo <- ContT $ withCStruct (beginInfo)
-  r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) pBeginInfo
+  r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) (forgetExtensions pBeginInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | This function will call the supplied action between calls to

@@ -45,6 +45,7 @@ import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.Extensions.WSITypes (AHardwareBuffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
@@ -71,6 +72,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core11.Enums.SamplerYcbcrModelConversion (SamplerYcbcrModelConversion)
 import Vulkan.Core11.Enums.SamplerYcbcrRange (SamplerYcbcrRange)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -89,7 +91,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetAndroidHardwareBufferPropertiesANDROID
-  :: FunPtr (Ptr Device_T -> Ptr AHardwareBuffer -> Ptr (AndroidHardwareBufferPropertiesANDROID a) -> IO Result) -> Ptr Device_T -> Ptr AHardwareBuffer -> Ptr (AndroidHardwareBufferPropertiesANDROID a) -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr AHardwareBuffer -> Ptr (SomeStruct AndroidHardwareBufferPropertiesANDROID) -> IO Result) -> Ptr Device_T -> Ptr AHardwareBuffer -> Ptr (SomeStruct AndroidHardwareBufferPropertiesANDROID) -> IO Result
 
 -- | vkGetAndroidHardwareBufferPropertiesANDROID - Get Properties of External
 -- Memory Android Hardware Buffers
@@ -129,7 +131,7 @@ getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ d
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAndroidHardwareBufferPropertiesANDROID is null" Nothing Nothing
   let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROIDPtr
   pPProperties <- ContT (withZeroCStruct @(AndroidHardwareBufferPropertiesANDROID _))
-  r <- lift $ vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (pPProperties)
+  r <- lift $ vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (forgetExtensions (pPProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @(AndroidHardwareBufferPropertiesANDROID _) pPProperties
   pure $ (pProperties)

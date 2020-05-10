@@ -42,6 +42,7 @@ import Data.Word (Word32)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
@@ -65,6 +66,7 @@ import Vulkan.Core10.Handles (ShaderModule)
 import Vulkan.Core10.Handles (ShaderModule(..))
 import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits (ShaderModuleCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ShaderModuleValidationCacheCreateInfoEXT)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -77,7 +79,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateShaderModule
-  :: FunPtr (Ptr Device_T -> Ptr (ShaderModuleCreateInfo a) -> Ptr AllocationCallbacks -> Ptr ShaderModule -> IO Result) -> Ptr Device_T -> Ptr (ShaderModuleCreateInfo a) -> Ptr AllocationCallbacks -> Ptr ShaderModule -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct ShaderModuleCreateInfo) -> Ptr AllocationCallbacks -> Ptr ShaderModule -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct ShaderModuleCreateInfo) -> Ptr AllocationCallbacks -> Ptr ShaderModule -> IO Result
 
 -- | vkCreateShaderModule - Creates a new shader module object
 --
@@ -148,7 +150,7 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPShaderModule <- ContT $ bracket (callocBytes @ShaderModule 8) free
-  r <- lift $ vkCreateShaderModule' (deviceHandle (device)) pCreateInfo pAllocator (pPShaderModule)
+  r <- lift $ vkCreateShaderModule' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPShaderModule)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pShaderModule <- lift $ peek @ShaderModule pPShaderModule
   pure $ (pShaderModule)

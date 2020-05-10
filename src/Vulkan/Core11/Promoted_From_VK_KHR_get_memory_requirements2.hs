@@ -42,6 +42,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
@@ -64,6 +65,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.SparseResourceMemoryManagement (SparseImageMemoryRequirements)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
@@ -80,7 +82,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetBufferMemoryRequirements2
-  :: FunPtr (Ptr Device_T -> Ptr BufferMemoryRequirementsInfo2 -> Ptr (MemoryRequirements2 a) -> IO ()) -> Ptr Device_T -> Ptr BufferMemoryRequirementsInfo2 -> Ptr (MemoryRequirements2 a) -> IO ()
+  :: FunPtr (Ptr Device_T -> Ptr BufferMemoryRequirementsInfo2 -> Ptr (SomeStruct MemoryRequirements2) -> IO ()) -> Ptr Device_T -> Ptr BufferMemoryRequirementsInfo2 -> Ptr (SomeStruct MemoryRequirements2) -> IO ()
 
 -- | vkGetBufferMemoryRequirements2 - Returns the memory requirements for
 -- specified Vulkan object
@@ -111,7 +113,7 @@ getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ vkGetBufferMemoryRequirements2' (deviceHandle (device)) pInfo (pPMemoryRequirements)
+  lift $ vkGetBufferMemoryRequirements2' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -121,7 +123,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetImageMemoryRequirements2
-  :: FunPtr (Ptr Device_T -> Ptr (ImageMemoryRequirementsInfo2 a) -> Ptr (MemoryRequirements2 b) -> IO ()) -> Ptr Device_T -> Ptr (ImageMemoryRequirementsInfo2 a) -> Ptr (MemoryRequirements2 b) -> IO ()
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct ImageMemoryRequirementsInfo2) -> Ptr (SomeStruct MemoryRequirements2) -> IO ()) -> Ptr Device_T -> Ptr (SomeStruct ImageMemoryRequirementsInfo2) -> Ptr (SomeStruct MemoryRequirements2) -> IO ()
 
 -- | vkGetImageMemoryRequirements2 - Returns the memory requirements for
 -- specified Vulkan object
@@ -152,7 +154,7 @@ getImageMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ vkGetImageMemoryRequirements2' (deviceHandle (device)) pInfo (pPMemoryRequirements)
+  lift $ vkGetImageMemoryRequirements2' (deviceHandle (device)) (forgetExtensions pInfo) (forgetExtensions (pPMemoryRequirements))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 

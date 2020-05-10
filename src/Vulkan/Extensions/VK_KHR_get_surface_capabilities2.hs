@@ -49,6 +49,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (DisplayNativeHdrSurfaceCapabilitiesAMD)
@@ -69,6 +70,7 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shared_presentable_image (SharedPresentSurfaceCapabilitiesKHR)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceCapabilitiesFullScreenExclusiveEXT)
 import Vulkan.Extensions.VK_KHR_surface (SurfaceCapabilitiesKHR)
@@ -98,7 +100,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceSurfaceCapabilities2KHR
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr (SurfaceCapabilities2KHR b) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr (SurfaceCapabilities2KHR b) -> IO Result
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr (SomeStruct SurfaceCapabilities2KHR) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr (SomeStruct SurfaceCapabilities2KHR) -> IO Result
 
 -- | vkGetPhysicalDeviceSurfaceCapabilities2KHR - Reports capabilities of a
 -- surface on a physical device
@@ -167,7 +169,7 @@ getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . e
   let vkGetPhysicalDeviceSurfaceCapabilities2KHR' = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPSurfaceCapabilities <- ContT (withZeroCStruct @(SurfaceCapabilities2KHR _))
-  r <- lift $ vkGetPhysicalDeviceSurfaceCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) pSurfaceInfo (pPSurfaceCapabilities)
+  r <- lift $ vkGetPhysicalDeviceSurfaceCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pSurfaceInfo) (forgetExtensions (pPSurfaceCapabilities))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceCapabilities <- lift $ peekCStruct @(SurfaceCapabilities2KHR _) pPSurfaceCapabilities
   pure $ (pSurfaceCapabilities)
@@ -178,7 +180,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceSurfaceFormats2KHR
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result
 
 -- | vkGetPhysicalDeviceSurfaceFormats2KHR - Query color formats supported by
 -- surface
@@ -264,13 +266,14 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
   let vkGetPhysicalDeviceSurfaceFormats2KHR' = mkVkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
+  let x9 = forgetExtensions pSurfaceInfo
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' pSurfaceInfo (pPSurfaceFormatCount) (nullPtr)
+  r <- lift $ vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (nullPtr)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceFormatCount <- lift $ peek @Word32 pPSurfaceFormatCount
   pPSurfaceFormats <- ContT $ bracket (callocBytes @SurfaceFormat2KHR ((fromIntegral (pSurfaceFormatCount)) * 24)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSurfaceFormats `advancePtrBytes` (i * 24) :: Ptr SurfaceFormat2KHR) . ($ ())) [0..(fromIntegral (pSurfaceFormatCount)) - 1]
-  r' <- lift $ vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' pSurfaceInfo (pPSurfaceFormatCount) ((pPSurfaceFormats))
+  r' <- lift $ vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) ((pPSurfaceFormats))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pSurfaceFormatCount' <- lift $ peek @Word32 pPSurfaceFormatCount
   pSurfaceFormats' <- lift $ generateM (fromIntegral (pSurfaceFormatCount')) (\i -> peekCStruct @SurfaceFormat2KHR (((pPSurfaceFormats) `advancePtrBytes` (24 * (i)) :: Ptr SurfaceFormat2KHR)))

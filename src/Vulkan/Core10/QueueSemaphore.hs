@@ -31,6 +31,7 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
@@ -56,6 +57,7 @@ import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.Core10.Handles (Semaphore(..))
 import Vulkan.Core10.Enums.SemaphoreCreateFlags (SemaphoreCreateFlags)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreTypeCreateInfo)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -68,7 +70,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateSemaphore
-  :: FunPtr (Ptr Device_T -> Ptr (SemaphoreCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result) -> Ptr Device_T -> Ptr (SemaphoreCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct SemaphoreCreateInfo) -> Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct SemaphoreCreateInfo) -> Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result
 
 -- | vkCreateSemaphore - Create a new queue semaphore object
 --
@@ -125,7 +127,7 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSemaphore <- ContT $ bracket (callocBytes @Semaphore 8) free
-  r <- lift $ vkCreateSemaphore' (deviceHandle (device)) pCreateInfo pAllocator (pPSemaphore)
+  r <- lift $ vkCreateSemaphore' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSemaphore)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSemaphore <- lift $ peek @Semaphore pPSemaphore
   pure $ (pSemaphore)

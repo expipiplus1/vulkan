@@ -77,6 +77,7 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.BaseType (bool32ToBool)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.Dynamic (getInstanceProcAddr')
 import Vulkan.Dynamic (initInstanceCmds)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
@@ -144,6 +145,7 @@ import Vulkan.Core10.Enums.QueueFlagBits (QueueFlags)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlags)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -162,7 +164,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateInstance
-  :: FunPtr (Ptr (InstanceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr (Ptr Instance_T) -> IO Result) -> Ptr (InstanceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr (Ptr Instance_T) -> IO Result
+  :: FunPtr (Ptr (SomeStruct InstanceCreateInfo) -> Ptr AllocationCallbacks -> Ptr (Ptr Instance_T) -> IO Result) -> Ptr (SomeStruct InstanceCreateInfo) -> Ptr AllocationCallbacks -> Ptr (Ptr Instance_T) -> IO Result
 
 -- | vkCreateInstance - Create a new Vulkan instance
 --
@@ -236,7 +238,7 @@ createInstance :: forall a io
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io (Instance)
 createInstance createInfo allocator = liftIO . evalContT $ do
-  vkCreateInstancePtr <- lift $ castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
+  vkCreateInstancePtr <- lift $ castFunPtr @_ @(("pCreateInfo" ::: Ptr (SomeStruct InstanceCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
   lift $ unless (vkCreateInstancePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateInstance is null" Nothing Nothing
   let vkCreateInstance' = mkVkCreateInstance vkCreateInstancePtr
@@ -245,7 +247,7 @@ createInstance createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPInstance <- ContT $ bracket (callocBytes @(Ptr Instance_T) 8) free
-  r <- lift $ vkCreateInstance' pCreateInfo pAllocator (pPInstance)
+  r <- lift $ vkCreateInstance' (forgetExtensions pCreateInfo) pAllocator (pPInstance)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInstance <- lift $ peek @(Ptr Instance_T) pPInstance
   pInstance' <- lift $ (\h -> Instance h <$> initInstanceCmds h) pInstance

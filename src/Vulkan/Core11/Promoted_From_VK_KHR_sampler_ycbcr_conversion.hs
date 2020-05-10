@@ -54,6 +54,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.BaseType (bool32ToBool)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.BaseType (Bool32)
@@ -84,6 +85,7 @@ import Vulkan.Core11.Handles (SamplerYcbcrConversion)
 import Vulkan.Core11.Handles (SamplerYcbcrConversion(..))
 import Vulkan.Core11.Enums.SamplerYcbcrModelConversion (SamplerYcbcrModelConversion)
 import Vulkan.Core11.Enums.SamplerYcbcrRange (SamplerYcbcrRange)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -114,7 +116,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateSamplerYcbcrConversion
-  :: FunPtr (Ptr Device_T -> Ptr (SamplerYcbcrConversionCreateInfo a) -> Ptr AllocationCallbacks -> Ptr SamplerYcbcrConversion -> IO Result) -> Ptr Device_T -> Ptr (SamplerYcbcrConversionCreateInfo a) -> Ptr AllocationCallbacks -> Ptr SamplerYcbcrConversion -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct SamplerYcbcrConversionCreateInfo) -> Ptr AllocationCallbacks -> Ptr SamplerYcbcrConversion -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct SamplerYcbcrConversionCreateInfo) -> Ptr AllocationCallbacks -> Ptr SamplerYcbcrConversion -> IO Result
 
 -- | vkCreateSamplerYcbcrConversion - Create a new Y′CBCR conversion
 --
@@ -188,7 +190,7 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPYcbcrConversion <- ContT $ bracket (callocBytes @SamplerYcbcrConversion 8) free
-  r <- lift $ vkCreateSamplerYcbcrConversion' (deviceHandle (device)) pCreateInfo pAllocator (pPYcbcrConversion)
+  r <- lift $ vkCreateSamplerYcbcrConversion' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPYcbcrConversion)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pYcbcrConversion <- lift $ peek @SamplerYcbcrConversion pPYcbcrConversion
   pure $ (pYcbcrConversion)

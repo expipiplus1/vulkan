@@ -32,6 +32,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.BaseType (bool32ToBool)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.Core10.BaseType (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.DescriptorSet (DescriptorSetLayoutCreateInfo)
@@ -50,6 +51,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -62,7 +64,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetDescriptorSetLayoutSupport
-  :: FunPtr (Ptr Device_T -> Ptr (DescriptorSetLayoutCreateInfo a) -> Ptr (DescriptorSetLayoutSupport b) -> IO ()) -> Ptr Device_T -> Ptr (DescriptorSetLayoutCreateInfo a) -> Ptr (DescriptorSetLayoutSupport b) -> IO ()
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr (SomeStruct DescriptorSetLayoutSupport) -> IO ()) -> Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr (SomeStruct DescriptorSetLayoutSupport) -> IO ()
 
 -- | vkGetDescriptorSetLayoutSupport - Query whether a descriptor set layout
 -- can be created
@@ -124,7 +126,7 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupportPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPSupport <- ContT (withZeroCStruct @(DescriptorSetLayoutSupport _))
-  lift $ vkGetDescriptorSetLayoutSupport' (deviceHandle (device)) pCreateInfo (pPSupport)
+  lift $ vkGetDescriptorSetLayoutSupport' (deviceHandle (device)) (forgetExtensions pCreateInfo) (forgetExtensions (pPSupport))
   pSupport <- lift $ peekCStruct @(DescriptorSetLayoutSupport _) pPSupport
   pure $ (pSupport)
 

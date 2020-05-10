@@ -154,7 +154,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkQueueSubmit
-  :: FunPtr (Ptr Queue_T -> Word32 -> Ptr (SubmitInfo a) -> Fence -> IO Result) -> Ptr Queue_T -> Word32 -> Ptr (SubmitInfo a) -> Fence -> IO Result
+  :: FunPtr (Ptr Queue_T -> Word32 -> Ptr (SomeStruct SubmitInfo) -> Fence -> IO Result) -> Ptr Queue_T -> Word32 -> Ptr (SomeStruct SubmitInfo) -> Fence -> IO Result
 
 -- | vkQueueSubmit - Submits a sequence of semaphores or command buffers to a
 -- queue
@@ -386,7 +386,7 @@ queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
   pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _))) (e) . ($ ())) (submits)
-  r <- lift $ vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (pPSubmits) (fence)
+  r <- lift $ vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
