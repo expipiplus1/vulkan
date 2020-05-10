@@ -168,7 +168,7 @@ getMemoryFdPropertiesKHR :: forall io
                             --
                             -- @fd@ /must/ be an external memory handle created outside of the Vulkan
                             -- API
-                            ("fd" ::: Int32)
+                            (("fd" ::: Int32))
                          -> io (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
   let vkGetMemoryFdPropertiesKHRPtr = pVkGetMemoryFdPropertiesKHR (deviceCmds (device :: Device))

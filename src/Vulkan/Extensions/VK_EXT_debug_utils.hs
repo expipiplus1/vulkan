@@ -294,7 +294,7 @@ queueBeginDebugUtilsLabelEXT :: forall io
                                 --
                                 -- @pLabelInfo@ /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT'
                                 -- structure
-                                ("labelInfo" ::: DebugUtilsLabelEXT)
+                                (("labelInfo" ::: DebugUtilsLabelEXT))
                              -> io ()
 queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueBeginDebugUtilsLabelEXTPtr = pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
@@ -389,7 +389,7 @@ queueInsertDebugUtilsLabelEXT :: forall io
                                  --
                                  -- @pLabelInfo@ /must/ be a valid pointer to a valid 'DebugUtilsLabelEXT'
                                  -- structure
-                                 ("labelInfo" ::: DebugUtilsLabelEXT)
+                                 (("labelInfo" ::: DebugUtilsLabelEXT))
                               -> io ()
 queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueInsertDebugUtilsLabelEXTPtr = pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
@@ -450,7 +450,7 @@ cmdBeginDebugUtilsLabelEXT :: forall io
                               CommandBuffer
                            -> -- | @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
                               -- parameters of the label region to open.
-                              ("labelInfo" ::: DebugUtilsLabelEXT)
+                              (("labelInfo" ::: DebugUtilsLabelEXT))
                            -> io ()
 cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdBeginDebugUtilsLabelEXTPtr = pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
@@ -593,7 +593,7 @@ cmdInsertDebugUtilsLabelEXT :: forall io
                                -- recorded.
                                CommandBuffer
                             -> -- No documentation found for Nested "vkCmdInsertDebugUtilsLabelEXT" "pLabelInfo"
-                               ("labelInfo" ::: DebugUtilsLabelEXT)
+                               (("labelInfo" ::: DebugUtilsLabelEXT))
                             -> io ()
 cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdInsertDebugUtilsLabelEXTPtr = pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
@@ -659,7 +659,7 @@ createDebugUtilsMessengerEXT :: forall io
                              -> -- | @pAllocator@ controls host memory allocation as described in the
                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                 -- chapter.
-                                ("allocator" ::: Maybe AllocationCallbacks)
+                                (("allocator" ::: Maybe AllocationCallbacks))
                              -> io (DebugUtilsMessengerEXT)
 createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
@@ -749,7 +749,7 @@ destroyDebugUtilsMessengerEXT :: forall io
                               -> -- | @pAllocator@ controls host memory allocation as described in the
                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter.
-                                 ("allocator" ::: Maybe AllocationCallbacks)
+                                 (("allocator" ::: Maybe AllocationCallbacks))
                               -> io ()
 destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
   let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
@@ -812,7 +812,7 @@ submitDebugUtilsMessageEXT :: forall io
                               DebugUtilsMessageSeverityFlagBitsEXT
                            -> -- | @messageTypes@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
                               -- specifying which type of event(s) to identify with this message.
-                              ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT)
+                              (("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT))
                            -> -- | @pCallbackData@ contains all the callback related data in the
                               -- 'DebugUtilsMessengerCallbackDataEXT' structure.
                               DebugUtilsMessengerCallbackDataEXT

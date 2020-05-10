@@ -213,7 +213,7 @@ getCalibratedTimestampsEXT :: forall io
                               --
                               -- @pTimestampInfos@ /must/ be a valid pointer to an array of
                               -- @timestampCount@ valid 'CalibratedTimestampInfoEXT' structures
-                              ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT)
+                              (("timestampInfos" ::: Vector CalibratedTimestampInfoEXT))
                            -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
 getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
   let vkGetCalibratedTimestampsEXTPtr = pVkGetCalibratedTimestampsEXT (deviceCmds (device :: Device))

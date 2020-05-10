@@ -115,7 +115,7 @@ getDescriptorSetLayoutSupport :: forall a b io
                                  --
                                  -- @pCreateInfo@ /must/ be a valid pointer to a valid
                                  -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
-                                 DescriptorSetLayoutCreateInfo a
+                                 (DescriptorSetLayoutCreateInfo a)
                               -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device))

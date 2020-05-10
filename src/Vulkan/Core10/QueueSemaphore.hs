@@ -109,11 +109,11 @@ createSemaphore :: forall a io
                    Device
                 -> -- | @pCreateInfo@ is a pointer to a 'SemaphoreCreateInfo' structure
                    -- containing information about how the semaphore is to be created.
-                   SemaphoreCreateInfo a
+                   (SemaphoreCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
-                   ("allocator" ::: Maybe AllocationCallbacks)
+                   (("allocator" ::: Maybe AllocationCallbacks))
                 -> io (Semaphore)
 createSemaphore device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSemaphorePtr = pVkCreateSemaphore (deviceCmds (device :: Device))
@@ -197,7 +197,7 @@ destroySemaphore :: forall io
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
-                    ("allocator" ::: Maybe AllocationCallbacks)
+                    (("allocator" ::: Maybe AllocationCallbacks))
                  -> io ()
 destroySemaphore device semaphore allocator = liftIO . evalContT $ do
   let vkDestroySemaphorePtr = pVkDestroySemaphore (deviceCmds (device :: Device))

@@ -253,7 +253,7 @@ freeCommandBuffers :: forall io
                       CommandPool
                    -> -- | @pCommandBuffers@ is a pointer to an array of handles of command buffers
                       -- to free.
-                      ("commandBuffers" ::: Vector CommandBuffer)
+                      (("commandBuffers" ::: Vector CommandBuffer))
                    -> io ()
 freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
   let vkFreeCommandBuffersPtr = pVkFreeCommandBuffers (deviceCmds (device :: Device))
@@ -341,7 +341,7 @@ beginCommandBuffer :: forall a io
                       CommandBuffer
                    -> -- | @pBeginInfo@ points to a 'CommandBufferBeginInfo' structure defining
                       -- additional information about how the command buffer begins recording.
-                      CommandBufferBeginInfo a
+                      (CommandBufferBeginInfo a)
                    -> io ()
 beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
   let vkBeginCommandBufferPtr = pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer))

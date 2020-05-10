@@ -110,7 +110,7 @@ createPipelineLayout :: forall io
                      -> -- | @pAllocator@ controls host memory allocation as described in the
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
-                        ("allocator" ::: Maybe AllocationCallbacks)
+                        (("allocator" ::: Maybe AllocationCallbacks))
                      -> io (PipelineLayout)
 createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePipelineLayoutPtr = pVkCreatePipelineLayout (deviceCmds (device :: Device))
@@ -197,7 +197,7 @@ destroyPipelineLayout :: forall io
                       -> -- | @pAllocator@ controls host memory allocation as described in the
                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
-                         ("allocator" ::: Maybe AllocationCallbacks)
+                         (("allocator" ::: Maybe AllocationCallbacks))
                       -> io ()
 destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
   let vkDestroyPipelineLayoutPtr = pVkDestroyPipelineLayout (deviceCmds (device :: Device))

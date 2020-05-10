@@ -93,7 +93,7 @@ getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                                 --
                                                 -- @pExternalSemaphoreInfo@ /must/ be a valid pointer to a valid
                                                 -- 'PhysicalDeviceExternalSemaphoreInfo' structure
-                                                PhysicalDeviceExternalSemaphoreInfo a
+                                                (PhysicalDeviceExternalSemaphoreInfo a)
                                              -> io (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (instanceCmds (physicalDevice :: PhysicalDevice))

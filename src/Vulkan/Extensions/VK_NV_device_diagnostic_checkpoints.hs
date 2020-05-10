@@ -104,7 +104,7 @@ cmdSetCheckpointNV :: forall io
                       CommandBuffer
                    -> -- | @pCheckpointMarker@ is an opaque application-provided value that will be
                       -- associated with the checkpoint.
-                      ("checkpointMarker" ::: Ptr ())
+                      (("checkpointMarker" ::: Ptr ()))
                    -> io ()
 cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
   let vkCmdSetCheckpointNVPtr = pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer))

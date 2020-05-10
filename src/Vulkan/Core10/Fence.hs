@@ -123,11 +123,11 @@ createFence :: forall a io
                Device
             -> -- | @pCreateInfo@ is a pointer to a 'FenceCreateInfo' structure containing
                -- information about how the fence is to be created.
-               FenceCreateInfo a
+               (FenceCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
-               ("allocator" ::: Maybe AllocationCallbacks)
+               (("allocator" ::: Maybe AllocationCallbacks))
             -> io (Fence)
 createFence device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFencePtr = pVkCreateFence (deviceCmds (device :: Device))
@@ -211,7 +211,7 @@ destroyFence :: forall io
              -> -- | @pAllocator@ controls host memory allocation as described in the
                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
-                ("allocator" ::: Maybe AllocationCallbacks)
+                (("allocator" ::: Maybe AllocationCallbacks))
              -> io ()
 destroyFence device fence allocator = liftIO . evalContT $ do
   let vkDestroyFencePtr = pVkDestroyFence (deviceCmds (device :: Device))
@@ -292,7 +292,7 @@ resetFences :: forall io
             => -- | @device@ is the logical device that owns the fences.
                Device
             -> -- | @pFences@ is a pointer to an array of fence handles to reset.
-               ("fences" ::: Vector Fence)
+               (("fences" ::: Vector Fence))
             -> io ()
 resetFences device fences = liftIO . evalContT $ do
   let vkResetFencesPtr = pVkResetFences (deviceCmds (device :: Device))
@@ -398,24 +398,24 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
 
 -- | waitForFences with selectable safeness
-waitForFencesSafeOrUnsafe ::  forall io
+waitForFencesSafeOrUnsafe :: forall io
                            . (MonadIO io)
                           => -- No documentation found for TopLevel ""
-                             FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
+                             (FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result)
                           -> -- | @device@ is the logical device that owns the fences.
                              Device
                           -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
-                             ("fences" ::: Vector Fence)
+                             (("fences" ::: Vector Fence))
                           -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
                              -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
                              -- the condition is that all fences in @pFences@ are signaled. Otherwise,
                              -- the condition is that at least one fence in @pFences@ is signaled.
-                             ("waitAll" ::: Bool)
+                             (("waitAll" ::: Bool))
                           -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
                              -- adjusted to the closest value allowed by the implementation-dependent
                              -- timeout accuracy, which /may/ be substantially longer than one
                              -- nanosecond, and /may/ be longer than the requested period.
-                             ("timeout" ::: Word64)
+                             (("timeout" ::: Word64))
                           -> io (Result)
 waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = liftIO . evalContT $ do
   let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
@@ -500,17 +500,17 @@ waitForFences :: forall io
               => -- | @device@ is the logical device that owns the fences.
                  Device
               -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
-                 ("fences" ::: Vector Fence)
+                 (("fences" ::: Vector Fence))
               -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
                  -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
                  -- the condition is that all fences in @pFences@ are signaled. Otherwise,
                  -- the condition is that at least one fence in @pFences@ is signaled.
-                 ("waitAll" ::: Bool)
+                 (("waitAll" ::: Bool))
               -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
                  -- adjusted to the closest value allowed by the implementation-dependent
                  -- timeout accuracy, which /may/ be substantially longer than one
                  -- nanosecond, and /may/ be longer than the requested period.
-                 ("timeout" ::: Word64)
+                 (("timeout" ::: Word64))
               -> io (Result)
 waitForFences = waitForFencesSafeOrUnsafe mkVkWaitForFencesUnsafe
 
@@ -520,17 +520,17 @@ waitForFencesSafe :: forall io
                   => -- | @device@ is the logical device that owns the fences.
                      Device
                   -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
-                     ("fences" ::: Vector Fence)
+                     (("fences" ::: Vector Fence))
                   -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
                      -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
                      -- the condition is that all fences in @pFences@ are signaled. Otherwise,
                      -- the condition is that at least one fence in @pFences@ is signaled.
-                     ("waitAll" ::: Bool)
+                     (("waitAll" ::: Bool))
                   -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
                      -- adjusted to the closest value allowed by the implementation-dependent
                      -- timeout accuracy, which /may/ be substantially longer than one
                      -- nanosecond, and /may/ be longer than the requested period.
-                     ("timeout" ::: Word64)
+                     (("timeout" ::: Word64))
                   -> io (Result)
 waitForFencesSafe = waitForFencesSafeOrUnsafe mkVkWaitForFencesSafe
 

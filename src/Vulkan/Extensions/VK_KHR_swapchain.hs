@@ -275,11 +275,11 @@ createSwapchainKHR :: forall a io
                       Device
                    -> -- | @pCreateInfo@ is a pointer to a 'SwapchainCreateInfoKHR' structure
                       -- specifying the parameters of the created swapchain.
-                      SwapchainCreateInfoKHR a
+                      (SwapchainCreateInfoKHR a)
                    -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                       -- swapchain object when there is no more specific allocator available (see
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                      ("allocator" ::: Maybe AllocationCallbacks)
+                      (("allocator" ::: Maybe AllocationCallbacks))
                    -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (deviceCmds (device :: Device))
@@ -391,7 +391,7 @@ destroySwapchainKHR :: forall io
                     -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                        -- swapchain object when there is no more specific allocator available (see
                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                       ("allocator" ::: Maybe AllocationCallbacks)
+                       (("allocator" ::: Maybe AllocationCallbacks))
                     -> io ()
 destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
   let vkDestroySwapchainKHRPtr = pVkDestroySwapchainKHR (deviceCmds (device :: Device))
@@ -504,10 +504,10 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result
 
 -- | acquireNextImageKHR with selectable safeness
-acquireNextImageKHRSafeOrUnsafe ::  forall io
+acquireNextImageKHRSafeOrUnsafe :: forall io
                                  . (MonadIO io)
                                 => -- No documentation found for TopLevel ""
-                                   FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result
+                                   (FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result)
                                 -> -- | @device@ is the device associated with @swapchain@.
                                    Device
                                 -> -- | @swapchain@ is the non-retired swapchain from which an image is being
@@ -515,7 +515,7 @@ acquireNextImageKHRSafeOrUnsafe ::  forall io
                                    SwapchainKHR
                                 -> -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
                                    -- image is available.
-                                   ("timeout" ::: Word64)
+                                   (("timeout" ::: Word64))
                                 -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
                                    -- to signal.
                                    Semaphore
@@ -641,7 +641,7 @@ acquireNextImageKHR :: forall io
                        SwapchainKHR
                     -> -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
                        -- image is available.
-                       ("timeout" ::: Word64)
+                       (("timeout" ::: Word64))
                     -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
                        -- to signal.
                        Semaphore
@@ -661,7 +661,7 @@ acquireNextImageKHRSafe :: forall io
                            SwapchainKHR
                         -> -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
                            -- image is available.
-                           ("timeout" ::: Word64)
+                           (("timeout" ::: Word64))
                         -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
                            -- to signal.
                            Semaphore
@@ -831,7 +831,7 @@ queuePresentKHR :: forall a io
                    Queue
                 -> -- | @pPresentInfo@ is a pointer to a 'PresentInfoKHR' structure specifying
                    -- parameters of the presentation.
-                   PresentInfoKHR a
+                   (PresentInfoKHR a)
                 -> io (Result)
 queuePresentKHR queue presentInfo = liftIO . evalContT $ do
   let vkQueuePresentKHRPtr = pVkQueuePresentKHR (deviceCmds (queue :: Queue))
@@ -971,15 +971,15 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result
 
 -- | acquireNextImage2KHR with selectable safeness
-acquireNextImage2KHRSafeOrUnsafe ::  forall io
+acquireNextImage2KHRSafeOrUnsafe :: forall io
                                   . (MonadIO io)
                                  => -- No documentation found for TopLevel ""
-                                    FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result
+                                    (FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result)
                                  -> -- | @device@ is the device associated with @swapchain@.
                                     Device
                                  -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
                                     -- containing parameters of the acquire.
-                                    ("acquireInfo" ::: AcquireNextImageInfoKHR)
+                                    (("acquireInfo" ::: AcquireNextImageInfoKHR))
                                  -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
   let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
@@ -1051,7 +1051,7 @@ acquireNextImage2KHR :: forall io
                         Device
                      -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
                         -- containing parameters of the acquire.
-                        ("acquireInfo" ::: AcquireNextImageInfoKHR)
+                        (("acquireInfo" ::: AcquireNextImageInfoKHR))
                      -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHR = acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHRUnsafe
 
@@ -1062,7 +1062,7 @@ acquireNextImage2KHRSafe :: forall io
                             Device
                          -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
                             -- containing parameters of the acquire.
-                            ("acquireInfo" ::: AcquireNextImageInfoKHR)
+                            (("acquireInfo" ::: AcquireNextImageInfoKHR))
                          -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHRSafe = acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHRSafe
 

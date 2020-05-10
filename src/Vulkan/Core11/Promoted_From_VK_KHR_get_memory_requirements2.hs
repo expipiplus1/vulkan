@@ -143,7 +143,7 @@ getImageMemoryRequirements2 :: forall a b io
                                --
                                -- @pInfo@ /must/ be a valid pointer to a valid
                                -- 'ImageMemoryRequirementsInfo2' structure
-                               ImageMemoryRequirementsInfo2 a
+                               (ImageMemoryRequirementsInfo2 a)
                             -> io (MemoryRequirements2 b)
 getImageMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device))

@@ -411,7 +411,7 @@ getPhysicalDeviceImageFormatProperties2 :: forall a b io
                                         -> -- | @pImageFormatInfo@ is a pointer to a 'PhysicalDeviceImageFormatInfo2'
                                            -- structure describing the parameters that would be consumed by
                                            -- 'Vulkan.Core10.Image.createImage'.
-                                           PhysicalDeviceImageFormatInfo2 a
+                                           (PhysicalDeviceImageFormatInfo2 a)
                                         -> io (ImageFormatProperties2 b)
 getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceImageFormatProperties2Ptr = pVkGetPhysicalDeviceImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))

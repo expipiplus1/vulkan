@@ -194,7 +194,7 @@ destroySurfaceKHR :: forall io
                   -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                      -- surface object when there is no more specific allocator available (see
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                     ("allocator" ::: Maybe AllocationCallbacks)
+                     (("allocator" ::: Maybe AllocationCallbacks))
                   -> io ()
 destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
   let vkDestroySurfaceKHRPtr = pVkDestroySurfaceKHR (instanceCmds (instance' :: Instance))
@@ -263,7 +263,7 @@ getPhysicalDeviceSurfaceSupportKHR :: forall io
                                    => -- | @physicalDevice@ is the physical device.
                                       PhysicalDevice
                                    -> -- | @queueFamilyIndex@ is the queue family.
-                                      ("queueFamilyIndex" ::: Word32)
+                                      (("queueFamilyIndex" ::: Word32))
                                    -> -- | @surface@ is the surface.
                                       SurfaceKHR
                                    -> io (("supported" ::: Bool))

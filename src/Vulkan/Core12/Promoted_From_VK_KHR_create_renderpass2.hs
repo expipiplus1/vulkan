@@ -168,11 +168,11 @@ createRenderPass2 :: forall a io
                      Device
                   -> -- | @pCreateInfo@ is a pointer to a 'RenderPassCreateInfo2' structure
                      -- describing the parameters of the render pass.
-                     RenderPassCreateInfo2 a
+                     (RenderPassCreateInfo2 a)
                   -> -- | @pAllocator@ controls host memory allocation as described in the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
-                     ("allocator" ::: Maybe AllocationCallbacks)
+                     (("allocator" ::: Maybe AllocationCallbacks))
                   -> io (RenderPass)
 createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (deviceCmds (device :: Device))
@@ -377,7 +377,7 @@ cmdBeginRenderPass2 :: forall a io
                        -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo' structure
                        -- specifying the render pass to begin an instance of, and the framebuffer
                        -- the instance uses.
-                       RenderPassBeginInfo a
+                       (RenderPassBeginInfo a)
                     -> -- | @pSubpassBeginInfo@ is a pointer to a 'SubpassBeginInfo' structure
                        -- containing information about the subpass which is about to begin
                        -- rendering.

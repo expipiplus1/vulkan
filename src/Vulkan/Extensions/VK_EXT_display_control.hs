@@ -200,7 +200,7 @@ registerDeviceEventEXT :: forall io
                        -> -- | @pAllocator@ controls host memory allocation as described in the
                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                           -- chapter.
-                          ("allocator" ::: Maybe AllocationCallbacks)
+                          (("allocator" ::: Maybe AllocationCallbacks))
                        -> io (Fence)
 registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (deviceCmds (device :: Device))
@@ -269,7 +269,7 @@ registerDisplayEventEXT :: forall io
                         -> -- | @pAllocator@ controls host memory allocation as described in the
                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                            -- chapter.
-                           ("allocator" ::: Maybe AllocationCallbacks)
+                           (("allocator" ::: Maybe AllocationCallbacks))
                         -> io (Fence)
 registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (deviceCmds (device :: Device))

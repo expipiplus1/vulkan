@@ -173,7 +173,7 @@ createValidationCacheEXT :: forall io
                          -> -- | @pAllocator@ controls host memory allocation as described in the
                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                             -- chapter.
-                            ("allocator" ::: Maybe AllocationCallbacks)
+                            (("allocator" ::: Maybe AllocationCallbacks))
                          -> io (ValidationCacheEXT)
 createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
   let vkCreateValidationCacheEXTPtr = pVkCreateValidationCacheEXT (deviceCmds (device :: Device))
@@ -257,7 +257,7 @@ destroyValidationCacheEXT :: forall io
                           -> -- | @pAllocator@ controls host memory allocation as described in the
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
-                             ("allocator" ::: Maybe AllocationCallbacks)
+                             (("allocator" ::: Maybe AllocationCallbacks))
                           -> io ()
 destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT $ do
   let vkDestroyValidationCacheEXTPtr = pVkDestroyValidationCacheEXT (deviceCmds (device :: Device))
@@ -468,11 +468,11 @@ mergeValidationCachesEXT :: forall io
                          => -- | @device@ is the logical device that owns the validation cache objects.
                             Device
                          -> -- | @dstCache@ is the handle of the validation cache to merge results into.
-                            ("dstCache" ::: ValidationCacheEXT)
+                            (("dstCache" ::: ValidationCacheEXT))
                          -> -- | @pSrcCaches@ is a pointer to an array of validation cache handles, which
                             -- will be merged into @dstCache@. The previous contents of @dstCache@ are
                             -- included after the merge.
-                            ("srcCaches" ::: Vector ValidationCacheEXT)
+                            (("srcCaches" ::: Vector ValidationCacheEXT))
                          -> io ()
 mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergeValidationCachesEXTPtr = pVkMergeValidationCachesEXT (deviceCmds (device :: Device))

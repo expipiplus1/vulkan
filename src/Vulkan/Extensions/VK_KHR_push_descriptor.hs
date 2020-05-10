@@ -195,11 +195,11 @@ cmdPushDescriptorSetKHR :: forall io
                            PipelineLayout
                         -> -- | @set@ is the set number of the descriptor set in the pipeline layout
                            -- that will be updated.
-                           ("set" ::: Word32)
+                           (("set" ::: Word32))
                         -> -- | @pDescriptorWrites@ is a pointer to an array of
                            -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures describing
                            -- the descriptors to be updated.
-                           ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
+                           (("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet)))
                         -> io ()
 cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
   let vkCmdPushDescriptorSetKHRPtr = pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -344,10 +344,10 @@ cmdPushDescriptorSetWithTemplateKHR :: forall io
                                     -> -- | @set@ is the set number of the descriptor set in the pipeline layout
                                        -- that will be updated. This /must/ be the same number used to create the
                                        -- @descriptorUpdateTemplate@ handle.
-                                       ("set" ::: Word32)
+                                       (("set" ::: Word32))
                                     -> -- | @pData@ is a pointer to memory containing descriptors for the templated
                                        -- update.
-                                       ("data" ::: Ptr ())
+                                       (("data" ::: Ptr ()))
                                     -> io ()
 cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = liftIO $ do
   let vkCmdPushDescriptorSetWithTemplateKHRPtr = pVkCmdPushDescriptorSetWithTemplateKHR (deviceCmds (commandBuffer :: CommandBuffer))

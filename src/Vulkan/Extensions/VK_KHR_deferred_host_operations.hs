@@ -106,7 +106,7 @@ createDeferredOperationKHR :: forall io
                            -> -- | @pAllocator@ controls host memory allocation as described in the
                               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                               -- chapter.
-                              ("allocator" ::: Maybe AllocationCallbacks)
+                              (("allocator" ::: Maybe AllocationCallbacks))
                            -> io (DeferredOperationKHR)
 createDeferredOperationKHR device allocator = liftIO . evalContT $ do
   let vkCreateDeferredOperationKHRPtr = pVkCreateDeferredOperationKHR (deviceCmds (device :: Device))
@@ -189,7 +189,7 @@ destroyDeferredOperationKHR :: forall io
                             -> -- | @pAllocator@ controls host memory allocation as described in the
                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                -- chapter.
-                               ("allocator" ::: Maybe AllocationCallbacks)
+                               (("allocator" ::: Maybe AllocationCallbacks))
                             -> io ()
 destroyDeferredOperationKHR device operation allocator = liftIO . evalContT $ do
   let vkDestroyDeferredOperationKHRPtr = pVkDestroyDeferredOperationKHR (deviceCmds (device :: Device))

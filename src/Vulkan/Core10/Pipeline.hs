@@ -280,11 +280,11 @@ createGraphicsPipelines :: forall io
                            PipelineCache
                         -> -- | @pCreateInfos@ is a pointer to an array of 'GraphicsPipelineCreateInfo'
                            -- structures.
-                           ("createInfos" ::: Vector (SomeStruct GraphicsPipelineCreateInfo))
+                           (("createInfos" ::: Vector (SomeStruct GraphicsPipelineCreateInfo)))
                         -> -- | @pAllocator@ controls host memory allocation as described in the
                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                            -- chapter.
-                           ("allocator" ::: Maybe AllocationCallbacks)
+                           (("allocator" ::: Maybe AllocationCallbacks))
                         -> io (Result, ("pipelines" ::: Vector Pipeline))
 createGraphicsPipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateGraphicsPipelinesPtr = pVkCreateGraphicsPipelines (deviceCmds (device :: Device))
@@ -400,11 +400,11 @@ createComputePipelines :: forall io
                           PipelineCache
                        -> -- | @pCreateInfos@ is a pointer to an array of 'ComputePipelineCreateInfo'
                           -- structures.
-                          ("createInfos" ::: Vector (SomeStruct ComputePipelineCreateInfo))
+                          (("createInfos" ::: Vector (SomeStruct ComputePipelineCreateInfo)))
                        -> -- | @pAllocator@ controls host memory allocation as described in the
                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                           -- chapter.
-                          ("allocator" ::: Maybe AllocationCallbacks)
+                          (("allocator" ::: Maybe AllocationCallbacks))
                        -> io (Result, ("pipelines" ::: Vector Pipeline))
 createComputePipelines device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateComputePipelinesPtr = pVkCreateComputePipelines (deviceCmds (device :: Device))
@@ -488,7 +488,7 @@ destroyPipeline :: forall io
                 -> -- | @pAllocator@ controls host memory allocation as described in the
                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
-                   ("allocator" ::: Maybe AllocationCallbacks)
+                   (("allocator" ::: Maybe AllocationCallbacks))
                 -> io ()
 destroyPipeline device pipeline allocator = liftIO . evalContT $ do
   let vkDestroyPipelinePtr = pVkDestroyPipeline (deviceCmds (device :: Device))

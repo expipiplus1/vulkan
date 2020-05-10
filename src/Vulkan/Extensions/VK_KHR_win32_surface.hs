@@ -135,7 +135,7 @@ createWin32SurfaceKHR :: forall io
                       -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                          -- surface object when there is no more specific allocator available (see
                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                         ("allocator" ::: Maybe AllocationCallbacks)
+                         (("allocator" ::: Maybe AllocationCallbacks))
                       -> io (SurfaceKHR)
 createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateWin32SurfaceKHRPtr = pVkCreateWin32SurfaceKHR (instanceCmds (instance' :: Instance))
@@ -186,7 +186,7 @@ getPhysicalDeviceWin32PresentationSupportKHR :: forall io
                                                 -- returned by
                                                 -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
                                                 -- for the given @physicalDevice@
-                                                ("queueFamilyIndex" ::: Word32)
+                                                (("queueFamilyIndex" ::: Word32))
                                              -> io (Bool)
 getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = liftIO $ do
   let vkGetPhysicalDeviceWin32PresentationSupportKHRPtr = pVkGetPhysicalDeviceWin32PresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))

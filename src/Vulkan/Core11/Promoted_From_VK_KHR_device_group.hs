@@ -111,19 +111,19 @@ getDeviceGroupPeerMemoryFeatures :: forall io
                                     -- allocated.
                                     --
                                     -- @heapIndex@ /must/ be less than @memoryHeapCount@
-                                    ("heapIndex" ::: Word32)
+                                    (("heapIndex" ::: Word32))
                                  -> -- | @localDeviceIndex@ is the device index of the physical device that
                                     -- performs the memory access.
                                     --
                                     -- @localDeviceIndex@ /must/ be a valid device index
                                     --
                                     -- @localDeviceIndex@ /must/ not equal @remoteDeviceIndex@
-                                    ("localDeviceIndex" ::: Word32)
+                                    (("localDeviceIndex" ::: Word32))
                                  -> -- | @remoteDeviceIndex@ is the device index of the physical device that the
                                     -- memory is allocated for.
                                     --
                                     -- @remoteDeviceIndex@ /must/ be a valid device index
-                                    ("remoteDeviceIndex" ::: Word32)
+                                    (("remoteDeviceIndex" ::: Word32))
                                  -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
 getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = liftIO . evalContT $ do
   let vkGetDeviceGroupPeerMemoryFeaturesPtr = pVkGetDeviceGroupPeerMemoryFeatures (deviceCmds (device :: Device))
@@ -210,7 +210,7 @@ cmdSetDeviceMask :: forall io
                  => -- | @commandBuffer@ is command buffer whose current device mask is modified.
                     CommandBuffer
                  -> -- | @deviceMask@ is the new value of the current device mask.
-                    ("deviceMask" ::: Word32)
+                    (("deviceMask" ::: Word32))
                  -> io ()
 cmdSetDeviceMask commandBuffer deviceMask = liftIO $ do
   let vkCmdSetDeviceMaskPtr = pVkCmdSetDeviceMask (deviceCmds (commandBuffer :: CommandBuffer))
@@ -442,20 +442,20 @@ cmdDispatchBase :: forall io
                    -- recorded.
                    CommandBuffer
                 -> -- | @baseGroupX@ is the start value for the X component of @WorkgroupId@.
-                   ("baseGroupX" ::: Word32)
+                   (("baseGroupX" ::: Word32))
                 -> -- | @baseGroupY@ is the start value for the Y component of @WorkgroupId@.
-                   ("baseGroupY" ::: Word32)
+                   (("baseGroupY" ::: Word32))
                 -> -- | @baseGroupZ@ is the start value for the Z component of @WorkgroupId@.
-                   ("baseGroupZ" ::: Word32)
+                   (("baseGroupZ" ::: Word32))
                 -> -- | @groupCountX@ is the number of local workgroups to dispatch in the X
                    -- dimension.
-                   ("groupCountX" ::: Word32)
+                   (("groupCountX" ::: Word32))
                 -> -- | @groupCountY@ is the number of local workgroups to dispatch in the Y
                    -- dimension.
-                   ("groupCountY" ::: Word32)
+                   (("groupCountY" ::: Word32))
                 -> -- | @groupCountZ@ is the number of local workgroups to dispatch in the Z
                    -- dimension.
-                   ("groupCountZ" ::: Word32)
+                   (("groupCountZ" ::: Word32))
                 -> io ()
 cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = liftIO $ do
   let vkCmdDispatchBasePtr = pVkCmdDispatchBase (deviceCmds (commandBuffer :: CommandBuffer))

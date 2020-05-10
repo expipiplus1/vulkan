@@ -117,11 +117,11 @@ createImageView :: forall a io
                    Device
                 -> -- | @pCreateInfo@ is a pointer to a 'ImageViewCreateInfo' structure
                    -- containing parameters to be used to create the image view.
-                   ImageViewCreateInfo a
+                   (ImageViewCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
-                   ("allocator" ::: Maybe AllocationCallbacks)
+                   (("allocator" ::: Maybe AllocationCallbacks))
                 -> io (ImageView)
 createImageView device createInfo allocator = liftIO . evalContT $ do
   let vkCreateImageViewPtr = pVkCreateImageView (deviceCmds (device :: Device))
@@ -205,7 +205,7 @@ destroyImageView :: forall io
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
-                    ("allocator" ::: Maybe AllocationCallbacks)
+                    (("allocator" ::: Maybe AllocationCallbacks))
                  -> io ()
 destroyImageView device imageView allocator = liftIO . evalContT $ do
   let vkDestroyImageViewPtr = pVkDestroyImageView (deviceCmds (device :: Device))

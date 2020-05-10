@@ -158,7 +158,7 @@ getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
                                          -> -- | @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
                                             -- structure describing the surface and other fixed parameters that would
                                             -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
-                                            PhysicalDeviceSurfaceInfo2KHR a
+                                            (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (SurfaceCapabilities2KHR b)
 getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr = pVkGetPhysicalDeviceSurfaceCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
@@ -255,7 +255,7 @@ getPhysicalDeviceSurfaceFormats2KHR :: forall a io
                                     -> -- | @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
                                        -- structure describing the surface and other fixed parameters that would
                                        -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
-                                       PhysicalDeviceSurfaceInfo2KHR a
+                                       (PhysicalDeviceSurfaceInfo2KHR a)
                                     -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormat2KHR))
 getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceFormats2KHRPtr = pVkGetPhysicalDeviceSurfaceFormats2KHR (instanceCmds (physicalDevice :: PhysicalDevice))

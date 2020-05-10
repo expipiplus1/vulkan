@@ -174,12 +174,12 @@ createSharedSwapchainsKHR :: forall io
                           -> -- | @pCreateInfos@ is a pointer to an array of
                              -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR' structures
                              -- specifying the parameters of the created swapchains.
-                             ("createInfos" ::: Vector (SomeStruct SwapchainCreateInfoKHR))
+                             (("createInfos" ::: Vector (SomeStruct SwapchainCreateInfoKHR)))
                           -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                              -- swapchain objects when there is no more specific allocator available
                              -- (see
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                             ("allocator" ::: Maybe AllocationCallbacks)
+                             (("allocator" ::: Maybe AllocationCallbacks))
                           -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
   let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device))

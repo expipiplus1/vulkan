@@ -159,11 +159,11 @@ cmdSetDiscardRectangleEXT :: forall io
                              CommandBuffer
                           -> -- | @firstDiscardRectangle@ is the index of the first discard rectangle
                              -- whose state is updated by the command.
-                             ("firstDiscardRectangle" ::: Word32)
+                             (("firstDiscardRectangle" ::: Word32))
                           -> -- | @pDiscardRectangles@ is a pointer to an array of
                              -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures specifying
                              -- discard rectangles.
-                             ("discardRectangles" ::: Vector Rect2D)
+                             (("discardRectangles" ::: Vector Rect2D))
                           -> io ()
 cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
   let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer))

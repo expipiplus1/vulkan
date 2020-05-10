@@ -88,7 +88,7 @@ setLocalDimmingAMD :: forall io
                       SwapchainKHR
                    -> -- | @localDimmingEnable@ specifies whether local dimming is enabled for the
                       -- swapchain.
-                      ("localDimmingEnable" ::: Bool)
+                      (("localDimmingEnable" ::: Bool))
                    -> io ()
 setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
   let vkSetLocalDimmingAMDPtr = pVkSetLocalDimmingAMD (deviceCmds (device :: Device))

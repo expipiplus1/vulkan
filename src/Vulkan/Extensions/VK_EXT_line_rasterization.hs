@@ -118,10 +118,10 @@ cmdSetLineStippleEXT :: forall io
                         CommandBuffer
                      -> -- | @lineStippleFactor@ is the repeat factor used in stippled line
                         -- rasterization.
-                        ("lineStippleFactor" ::: Word32)
+                        (("lineStippleFactor" ::: Word32))
                      -> -- | @lineStipplePattern@ is the bit pattern used in stippled line
                         -- rasterization.
-                        ("lineStipplePattern" ::: Word16)
+                        (("lineStipplePattern" ::: Word16))
                      -> io ()
 cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
   let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer))

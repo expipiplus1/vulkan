@@ -98,7 +98,7 @@ acquireXlibDisplayEXT :: forall io
                          --
                          -- @dpy@ /must/ be a valid pointer to a
                          -- 'Vulkan.Extensions.WSITypes.Display' value
-                         ("dpy" ::: Ptr Display)
+                         (("dpy" ::: Ptr Display))
                       -> -- | @display@ The display the caller wishes to control in Vulkan.
                          --
                          -- @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
@@ -154,7 +154,7 @@ getRandROutputDisplayEXT :: forall io
                             --
                             -- @dpy@ /must/ be a valid pointer to a
                             -- 'Vulkan.Extensions.WSITypes.Display' value
-                            ("dpy" ::: Ptr Display)
+                            (("dpy" ::: Ptr Display))
                          -> -- | @rrOutput@ An X11 RandR output ID.
                             RROutput
                          -> io (DisplayKHR)

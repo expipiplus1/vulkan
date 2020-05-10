@@ -346,7 +346,7 @@ getDisplayPlaneSupportedDisplaysKHR :: forall io
                                        PhysicalDevice
                                     -> -- | @planeIndex@ is the plane which the application wishes to use, and
                                        -- /must/ be in the range [0, physical device plane count - 1].
-                                       ("planeIndex" ::: Word32)
+                                       (("planeIndex" ::: Word32))
                                     -> io (Result, ("displays" ::: Vector DisplayKHR))
 getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneSupportedDisplaysKHRPtr = pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice))
@@ -520,7 +520,7 @@ createDisplayModeKHR :: forall io
                         -- display mode object when there is no more specific allocator available
                         -- (see
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                        ("allocator" ::: Maybe AllocationCallbacks)
+                        (("allocator" ::: Maybe AllocationCallbacks))
                      -> io (DisplayModeKHR)
 createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayModeKHRPtr = pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice))
@@ -590,7 +590,7 @@ getDisplayPlaneCapabilitiesKHR :: forall io
                                -> -- | @planeIndex@ is the plane which the application intends to use with the
                                   -- display, and is less than the number of display planes supported by the
                                   -- device.
-                                  ("planeIndex" ::: Word32)
+                                  (("planeIndex" ::: Word32))
                                -> io (DisplayPlaneCapabilitiesKHR)
 getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneCapabilitiesKHRPtr = pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
@@ -658,7 +658,7 @@ createDisplayPlaneSurfaceKHR :: forall io
                              -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                                 -- surface object when there is no more specific allocator available (see
                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                                ("allocator" ::: Maybe AllocationCallbacks)
+                                (("allocator" ::: Maybe AllocationCallbacks))
                              -> io (SurfaceKHR)
 createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayPlaneSurfaceKHRPtr = pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance))

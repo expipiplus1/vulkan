@@ -285,9 +285,9 @@ cmdDrawMeshTasksNV :: forall io
                       CommandBuffer
                    -> -- | @taskCount@ is the number of local workgroups to dispatch in the X
                       -- dimension. Y and Z dimension are implicitly set to one.
-                      ("taskCount" ::: Word32)
+                      (("taskCount" ::: Word32))
                    -> -- | @firstTask@ is the X component of the first workgroup ID.
-                      ("firstTask" ::: Word32)
+                      (("firstTask" ::: Word32))
                    -> io ()
 cmdDrawMeshTasksNV commandBuffer taskCount firstTask = liftIO $ do
   let vkCmdDrawMeshTasksNVPtr = pVkCmdDrawMeshTasksNV (deviceCmds (commandBuffer :: CommandBuffer))
@@ -568,11 +568,11 @@ cmdDrawMeshTasksIndirectNV :: forall io
                            -> -- | @buffer@ is the buffer containing draw parameters.
                               Buffer
                            -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                              ("offset" ::: DeviceSize)
+                              (("offset" ::: DeviceSize))
                            -> -- | @drawCount@ is the number of draws to execute, and /can/ be zero.
-                              ("drawCount" ::: Word32)
+                              (("drawCount" ::: Word32))
                            -> -- | @stride@ is the byte stride between successive sets of draw parameters.
-                              ("stride" ::: Word32)
+                              (("stride" ::: Word32))
                            -> io ()
 cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectNVPtr = pVkCmdDrawMeshTasksIndirectNV (deviceCmds (commandBuffer :: CommandBuffer))
@@ -866,18 +866,18 @@ cmdDrawMeshTasksIndirectCountNV :: forall io
                                 -> -- | @buffer@ is the buffer containing draw parameters.
                                    Buffer
                                 -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                                   ("offset" ::: DeviceSize)
+                                   (("offset" ::: DeviceSize))
                                 -> -- | @countBuffer@ is the buffer containing the draw count.
-                                   ("countBuffer" ::: Buffer)
+                                   (("countBuffer" ::: Buffer))
                                 -> -- | @countBufferOffset@ is the byte offset into @countBuffer@ where the draw
                                    -- count begins.
-                                   ("countBufferOffset" ::: DeviceSize)
+                                   (("countBufferOffset" ::: DeviceSize))
                                 -> -- | @maxDrawCount@ specifies the maximum number of draws that will be
                                    -- executed. The actual number of executed draw calls is the minimum of the
                                    -- count specified in @countBuffer@ and @maxDrawCount@.
-                                   ("maxDrawCount" ::: Word32)
+                                   (("maxDrawCount" ::: Word32))
                                 -> -- | @stride@ is the byte stride between successive sets of draw parameters.
-                                   ("stride" ::: Word32)
+                                   (("stride" ::: Word32))
                                 -> io ()
 cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectCountNVPtr = pVkCmdDrawMeshTasksIndirectCountNV (deviceCmds (commandBuffer :: CommandBuffer))

@@ -138,12 +138,12 @@ cmdWriteBufferMarkerAMD :: forall io
                            -- marker write.
                            PipelineStageFlagBits
                         -> -- | @dstBuffer@ is the buffer where the marker will be written to.
-                           ("dstBuffer" ::: Buffer)
+                           (("dstBuffer" ::: Buffer))
                         -> -- | @dstOffset@ is the byte offset into the buffer where the marker will be
                            -- written to.
-                           ("dstOffset" ::: DeviceSize)
+                           (("dstOffset" ::: DeviceSize))
                         -> -- | @marker@ is the 32-bit value of the marker.
-                           ("marker" ::: Word32)
+                           (("marker" ::: Word32))
                         -> io ()
 cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = liftIO $ do
   let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer))

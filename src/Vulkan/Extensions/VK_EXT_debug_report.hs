@@ -182,7 +182,7 @@ createDebugReportCallbackEXT :: forall io
                              -> -- | @pAllocator@ controls host memory allocation as described in the
                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                 -- chapter.
-                                ("allocator" ::: Maybe AllocationCallbacks)
+                                (("allocator" ::: Maybe AllocationCallbacks))
                              -> io (DebugReportCallbackEXT)
 createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
@@ -268,7 +268,7 @@ destroyDebugReportCallbackEXT :: forall io
                               -> -- | @pAllocator@ controls host memory allocation as described in the
                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter.
-                                 ("allocator" ::: Maybe AllocationCallbacks)
+                                 (("allocator" ::: Maybe AllocationCallbacks))
                               -> io ()
 destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
   let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
@@ -341,16 +341,16 @@ debugReportMessageEXT :: forall io
                       -> -- | @object@ is the object where the issue was detected. @object@ /can/ be
                          -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' if there is no object
                          -- associated with the event.
-                         ("object" ::: Word64)
+                         (("object" ::: Word64))
                       -> -- | @location@ is an application defined value.
-                         ("location" ::: Word64)
+                         (("location" ::: Word64))
                       -> -- | @messageCode@ is an application defined value.
-                         ("messageCode" ::: Int32)
+                         (("messageCode" ::: Int32))
                       -> -- | @pLayerPrefix@ is the abbreviation of the component making this
                          -- event\/message.
-                         ("layerPrefix" ::: ByteString)
+                         (("layerPrefix" ::: ByteString))
                       -> -- | @pMessage@ is a null-terminated string detailing the trigger conditions.
-                         ("message" ::: ByteString)
+                         (("message" ::: ByteString))
                       -> io ()
 debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
   let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance))

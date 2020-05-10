@@ -166,7 +166,7 @@ getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io
                                                     --
                                                     -- @externalHandleType@ /must/ be a valid combination of
                                                     -- 'ExternalMemoryHandleTypeFlagBitsNV' values
-                                                    ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV)
+                                                    (("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV))
                                                  -> io (ExternalImageFormatPropertiesNV)
 getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr = pVkGetPhysicalDeviceExternalImageFormatPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice))

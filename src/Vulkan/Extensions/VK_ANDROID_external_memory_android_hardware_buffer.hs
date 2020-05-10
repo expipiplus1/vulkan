@@ -121,7 +121,7 @@ getAndroidHardwareBufferPropertiesANDROID :: forall a io
                                              --
                                              -- @buffer@ /must/ be a valid pointer to a valid
                                              -- 'Vulkan.Extensions.WSITypes.AHardwareBuffer' value
-                                             Ptr AHardwareBuffer
+                                             (Ptr AHardwareBuffer)
                                           -> io (AndroidHardwareBufferPropertiesANDROID a)
 getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
   let vkGetAndroidHardwareBufferPropertiesANDROIDPtr = pVkGetAndroidHardwareBufferPropertiesANDROID (deviceCmds (device :: Device))

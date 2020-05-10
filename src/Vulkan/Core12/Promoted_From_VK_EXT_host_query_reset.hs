@@ -101,9 +101,9 @@ resetQueryPool :: forall io
                   -- reset.
                   QueryPool
                -> -- | @firstQuery@ is the initial query index to reset.
-                  ("firstQuery" ::: Word32)
+                  (("firstQuery" ::: Word32))
                -> -- | @queryCount@ is the number of queries to reset.
-                  ("queryCount" ::: Word32)
+                  (("queryCount" ::: Word32))
                -> io ()
 resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
   let vkResetQueryPoolPtr = pVkResetQueryPool (deviceCmds (device :: Device))

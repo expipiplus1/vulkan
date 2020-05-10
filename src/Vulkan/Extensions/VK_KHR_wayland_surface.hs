@@ -135,7 +135,7 @@ createWaylandSurfaceKHR :: forall io
                         -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                            -- surface object when there is no more specific allocator available (see
                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                           ("allocator" ::: Maybe AllocationCallbacks)
+                           (("allocator" ::: Maybe AllocationCallbacks))
                         -> io (SurfaceKHR)
 createWaylandSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateWaylandSurfaceKHRPtr = pVkCreateWaylandSurfaceKHR (instanceCmds (instance' :: Instance))
@@ -186,12 +186,12 @@ getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                   -- returned by
                                                   -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
                                                   -- for the given @physicalDevice@
-                                                  ("queueFamilyIndex" ::: Word32)
+                                                  (("queueFamilyIndex" ::: Word32))
                                                -> -- | @display@ is a pointer to the @wl_display@ associated with a Wayland
                                                   -- compositor.
                                                   --
                                                   -- @display@ /must/ be a valid pointer to a @wl_display@ value
-                                                  Ptr Wl_display
+                                                  (Ptr Wl_display)
                                                -> io (Bool)
 getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
   let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))

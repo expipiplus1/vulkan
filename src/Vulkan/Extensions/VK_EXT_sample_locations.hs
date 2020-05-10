@@ -181,7 +181,7 @@ getPhysicalDeviceMultisamplePropertiesEXT :: forall io
                                              --
                                              -- @samples@ /must/ be a valid
                                              -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
-                                             ("samples" ::: SampleCountFlagBits)
+                                             (("samples" ::: SampleCountFlagBits))
                                           -> io (MultisamplePropertiesEXT)
 getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMultisamplePropertiesEXTPtr = pVkGetPhysicalDeviceMultisamplePropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice))

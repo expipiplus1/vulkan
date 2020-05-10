@@ -435,7 +435,7 @@ cmdExecuteGeneratedCommandsNV :: forall io
                               -> -- | @isPreprocessed@ represents whether the input data has already been
                                  -- preprocessed on the device. If it is 'Vulkan.Core10.BaseType.FALSE' this
                                  -- command will implicitly trigger the preprocessing step, otherwise not.
-                                 ("isPreprocessed" ::: Bool)
+                                 (("isPreprocessed" ::: Bool))
                               -> -- | @pGeneratedCommandsInfo@ is a pointer to an instance of the
                                  -- 'GeneratedCommandsInfoNV' structure containing parameters affecting the
                                  -- generation of commands.
@@ -609,7 +609,7 @@ cmdBindPipelineShaderGroupNV :: forall io
                              -> -- | @pipeline@ is the pipeline to be bound.
                                 Pipeline
                              -> -- | @groupIndex@ is the shader group to be bound.
-                                ("groupIndex" ::: Word32)
+                                (("groupIndex" ::: Word32))
                              -> io ()
 cmdBindPipelineShaderGroupNV commandBuffer pipelineBindPoint pipeline groupIndex = liftIO $ do
   let vkCmdBindPipelineShaderGroupNVPtr = pVkCmdBindPipelineShaderGroupNV (deviceCmds (commandBuffer :: CommandBuffer))
@@ -731,7 +731,7 @@ createIndirectCommandsLayoutNV :: forall io
                                -> -- | @pAllocator@ controls host memory allocation as described in the
                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
-                                  ("allocator" ::: Maybe AllocationCallbacks)
+                                  (("allocator" ::: Maybe AllocationCallbacks))
                                -> io (IndirectCommandsLayoutNV)
 createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT $ do
   let vkCreateIndirectCommandsLayoutNVPtr = pVkCreateIndirectCommandsLayoutNV (deviceCmds (device :: Device))
@@ -823,7 +823,7 @@ destroyIndirectCommandsLayoutNV :: forall io
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
                                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
-                                   ("allocator" ::: Maybe AllocationCallbacks)
+                                   (("allocator" ::: Maybe AllocationCallbacks))
                                 -> io ()
 destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO . evalContT $ do
   let vkDestroyIndirectCommandsLayoutNVPtr = pVkDestroyIndirectCommandsLayoutNV (deviceCmds (device :: Device))

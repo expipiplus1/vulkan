@@ -176,7 +176,7 @@ getPhysicalDeviceSurfacePresentModes2EXT :: forall a io
                                             -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
                                             -- structure describing the surface and other fixed parameters that would
                                             -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
-                                            PhysicalDeviceSurfaceInfo2KHR a
+                                            (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
@@ -247,7 +247,7 @@ getDeviceGroupSurfacePresentModes2EXT :: forall a io
                                          -- @pSurfaceInfo@ /must/ be a valid pointer to a valid
                                          -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
                                          -- structure
-                                         PhysicalDeviceSurfaceInfo2KHR a
+                                         (PhysicalDeviceSurfaceInfo2KHR a)
                                       -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device))

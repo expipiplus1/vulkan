@@ -132,10 +132,10 @@ getDeviceQueue :: forall io
                   Device
                -> -- | @queueFamilyIndex@ is the index of the queue family to which the queue
                   -- belongs.
-                  ("queueFamilyIndex" ::: Word32)
+                  (("queueFamilyIndex" ::: Word32))
                -> -- | @queueIndex@ is the index within this queue family of the queue to
                   -- retrieve.
-                  ("queueIndex" ::: Word32)
+                  (("queueIndex" ::: Word32))
                -> io (Queue)
 getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
@@ -372,7 +372,7 @@ queueSubmit :: forall io
                Queue
             -> -- | @pSubmits@ is a pointer to an array of 'SubmitInfo' structures, each
                -- specifying a command buffer submission batch.
-               ("submits" ::: Vector (SomeStruct SubmitInfo))
+               (("submits" ::: Vector (SomeStruct SubmitInfo)))
             -> -- | @fence@ is an /optional/ handle to a fence to be signaled once all
                -- submitted command buffers have completed execution. If @fence@ is not
                -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
@@ -402,10 +402,10 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result
 
 -- | queueWaitIdle with selectable safeness
-queueWaitIdleSafeOrUnsafe ::  forall io
+queueWaitIdleSafeOrUnsafe :: forall io
                            . (MonadIO io)
                           => -- No documentation found for TopLevel ""
-                             FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result
+                             (FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result)
                           -> -- | @queue@ is the queue on which to wait.
                              Queue
                           -> io ()
@@ -487,10 +487,10 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result
 
 -- | deviceWaitIdle with selectable safeness
-deviceWaitIdleSafeOrUnsafe ::  forall io
+deviceWaitIdleSafeOrUnsafe :: forall io
                             . (MonadIO io)
                            => -- No documentation found for TopLevel ""
-                              FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result
+                              (FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result)
                            -> -- | @device@ is the logical device to idle.
                               Device
                            -> io ()

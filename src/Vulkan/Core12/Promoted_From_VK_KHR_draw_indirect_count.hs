@@ -325,18 +325,18 @@ cmdDrawIndirectCount :: forall io
                      -> -- | @buffer@ is the buffer containing draw parameters.
                         Buffer
                      -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                        ("offset" ::: DeviceSize)
+                        (("offset" ::: DeviceSize))
                      -> -- | @countBuffer@ is the buffer containing the draw count.
-                        ("countBuffer" ::: Buffer)
+                        (("countBuffer" ::: Buffer))
                      -> -- | @countBufferOffset@ is the byte offset into @countBuffer@ where the draw
                         -- count begins.
-                        ("countBufferOffset" ::: DeviceSize)
+                        (("countBufferOffset" ::: DeviceSize))
                      -> -- | @maxDrawCount@ specifies the maximum number of draws that will be
                         -- executed. The actual number of executed draw calls is the minimum of the
                         -- count specified in @countBuffer@ and @maxDrawCount@.
-                        ("maxDrawCount" ::: Word32)
+                        (("maxDrawCount" ::: Word32))
                      -> -- | @stride@ is the byte stride between successive sets of draw parameters.
-                        ("stride" ::: Word32)
+                        (("stride" ::: Word32))
                      -> io ()
 cmdDrawIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawIndirectCountPtr = pVkCmdDrawIndirectCount (deviceCmds (commandBuffer :: CommandBuffer))
@@ -647,18 +647,18 @@ cmdDrawIndexedIndirectCount :: forall io
                             -> -- | @buffer@ is the buffer containing draw parameters.
                                Buffer
                             -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                               ("offset" ::: DeviceSize)
+                               (("offset" ::: DeviceSize))
                             -> -- | @countBuffer@ is the buffer containing the draw count.
-                               ("countBuffer" ::: Buffer)
+                               (("countBuffer" ::: Buffer))
                             -> -- | @countBufferOffset@ is the byte offset into @countBuffer@ where the draw
                                -- count begins.
-                               ("countBufferOffset" ::: DeviceSize)
+                               (("countBufferOffset" ::: DeviceSize))
                             -> -- | @maxDrawCount@ specifies the maximum number of draws that will be
                                -- executed. The actual number of executed draw calls is the minimum of the
                                -- count specified in @countBuffer@ and @maxDrawCount@.
-                               ("maxDrawCount" ::: Word32)
+                               (("maxDrawCount" ::: Word32))
                             -> -- | @stride@ is the byte stride between successive sets of draw parameters.
-                               ("stride" ::: Word32)
+                               (("stride" ::: Word32))
                             -> io ()
 cmdDrawIndexedIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawIndexedIndirectCountPtr = pVkCmdDrawIndexedIndirectCount (deviceCmds (commandBuffer :: CommandBuffer))

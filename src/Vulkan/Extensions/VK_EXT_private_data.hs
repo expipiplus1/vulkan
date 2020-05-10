@@ -136,7 +136,7 @@ createPrivateDataSlotEXT :: forall io
                          -> -- | @pAllocator@ controls host memory allocation as described in the
                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                             -- chapter.
-                            ("allocator" ::: Maybe AllocationCallbacks)
+                            (("allocator" ::: Maybe AllocationCallbacks))
                          -> io (PrivateDataSlotEXT)
 createPrivateDataSlotEXT device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePrivateDataSlotEXTPtr = pVkCreatePrivateDataSlotEXT (deviceCmds (device :: Device))
@@ -191,7 +191,7 @@ destroyPrivateDataSlotEXT :: forall io
                           -> -- | @pAllocator@ controls host memory allocation as described in the
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
-                             ("allocator" ::: Maybe AllocationCallbacks)
+                             (("allocator" ::: Maybe AllocationCallbacks))
                           -> io ()
 destroyPrivateDataSlotEXT device privateDataSlot allocator = liftIO . evalContT $ do
   let vkDestroyPrivateDataSlotEXTPtr = pVkDestroyPrivateDataSlotEXT (deviceCmds (device :: Device))
@@ -247,7 +247,7 @@ setPrivateDataEXT :: forall io
                      --
                      -- @objectHandle@ /must/ be a valid handle to an object of type
                      -- @objectType@
-                     ("objectHandle" ::: Word64)
+                     (("objectHandle" ::: Word64))
                   -> -- | @privateDataSlot@ is a handle to a
                      -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location of
                      -- private data storage.
@@ -260,7 +260,7 @@ setPrivateDataEXT :: forall io
                      PrivateDataSlotEXT
                   -> -- | @data@ is user defined data to associate the object with. This data will
                      -- be stored at @privateDataSlot@.
-                     ("data" ::: Word64)
+                     (("data" ::: Word64))
                   -> io ()
 setPrivateDataEXT device objectType objectHandle privateDataSlot data' = liftIO $ do
   let vkSetPrivateDataEXTPtr = pVkSetPrivateDataEXT (deviceCmds (device :: Device))
@@ -314,7 +314,7 @@ getPrivateDataEXT :: forall io
                      -- 'Vulkan.Core10.Enums.ObjectType.ObjectType' value
                      ObjectType
                   -> -- | @objectHandle@ is a handle to the object data is associated with.
-                     ("objectHandle" ::: Word64)
+                     (("objectHandle" ::: Word64))
                   -> -- | @privateDataSlot@ is a handle to a
                      -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' specifying location of
                      -- private data pointer storage.

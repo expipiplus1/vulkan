@@ -133,7 +133,7 @@ enumerateInstanceExtensionProperties :: forall io
                                       . (MonadIO io)
                                      => -- | @pLayerName@ is either @NULL@ or a pointer to a null-terminated UTF-8
                                         -- string naming the layer to retrieve extensions from.
-                                        ("layerName" ::: Maybe ByteString)
+                                        (("layerName" ::: Maybe ByteString))
                                      -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateInstanceExtensionProperties layerName = liftIO . evalContT $ do
   vkEnumerateInstanceExtensionPropertiesPtr <- lift $ castFunPtr @_ @(("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr ExtensionProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceExtensionProperties"#)
@@ -216,7 +216,7 @@ enumerateDeviceExtensionProperties :: forall io
                                       PhysicalDevice
                                    -> -- | @pLayerName@ is either @NULL@ or a pointer to a null-terminated UTF-8
                                       -- string naming the layer to retrieve extensions from.
-                                      ("layerName" ::: Maybe ByteString)
+                                      (("layerName" ::: Maybe ByteString))
                                    -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT $ do
   let vkEnumerateDeviceExtensionPropertiesPtr = pVkEnumerateDeviceExtensionProperties (instanceCmds (physicalDevice :: PhysicalDevice))

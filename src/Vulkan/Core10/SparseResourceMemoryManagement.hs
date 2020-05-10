@@ -286,7 +286,7 @@ getPhysicalDeviceSparseImageFormatProperties :: forall io
                                                 ImageType
                                              -> -- | @samples@ is the number of samples per texel as defined in
                                                 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
-                                                ("samples" ::: SampleCountFlagBits)
+                                                (("samples" ::: SampleCountFlagBits))
                                              -> -- | @usage@ is a bitmask describing the intended usage of the image.
                                                 ImageUsageFlags
                                              -> -- | @tiling@ is the tiling arrangement of the texel blocks in memory.
@@ -439,7 +439,7 @@ queueBindSparse :: forall io
                    Queue
                 -> -- | @pBindInfo@ is a pointer to an array of 'BindSparseInfo' structures,
                    -- each specifying a sparse binding submission batch.
-                   ("bindInfo" ::: Vector (SomeStruct BindSparseInfo))
+                   (("bindInfo" ::: Vector (SomeStruct BindSparseInfo)))
                 -> -- | @fence@ is an /optional/ handle to a fence to be signaled. If @fence@ is
                    -- not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.

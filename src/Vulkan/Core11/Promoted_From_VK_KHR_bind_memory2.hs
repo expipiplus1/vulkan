@@ -116,7 +116,7 @@ bindBufferMemory2 :: forall io
                      --
                      -- @pBindInfos@ /must/ be a valid pointer to an array of @bindInfoCount@
                      -- valid 'BindBufferMemoryInfo' structures
-                     ("bindInfos" ::: Vector (SomeStruct BindBufferMemoryInfo))
+                     (("bindInfos" ::: Vector (SomeStruct BindBufferMemoryInfo)))
                   -> io ()
 bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (deviceCmds (device :: Device))
@@ -183,7 +183,7 @@ bindImageMemory2 :: forall io
                     Device
                  -> -- | @pBindInfos@ is a pointer to an array of 'BindImageMemoryInfo'
                     -- structures, describing images and memory to bind.
-                    ("bindInfos" ::: Vector (SomeStruct BindImageMemoryInfo))
+                    (("bindInfos" ::: Vector (SomeStruct BindImageMemoryInfo)))
                  -> io ()
 bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2Ptr = pVkBindImageMemory2 (deviceCmds (device :: Device))
