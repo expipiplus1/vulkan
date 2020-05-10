@@ -2,7 +2,9 @@
 module Vulkan.Core10.Queue  ( getDeviceQueue
                             , queueSubmit
                             , queueWaitIdle
+                            , queueWaitIdleSafe
                             , deviceWaitIdle
+                            , deviceWaitIdleSafe
                             , SubmitInfo(..)
                             ) where
 
@@ -392,8 +394,22 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkQueueWaitIdle
+  "dynamic" mkVkQueueWaitIdleUnsafe
   :: FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result
+
+foreign import ccall
+  "dynamic" mkVkQueueWaitIdleSafe
+  :: FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result
+
+-- | queueWaitIdle with selectable safeness
+queueWaitIdleSafeOrUnsafe :: (FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result) -> forall io . MonadIO io => Queue -> io ()
+queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
+  let vkQueueWaitIdlePtr = pVkQueueWaitIdle (deviceCmds (queue :: Queue))
+  unless (vkQueueWaitIdlePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueWaitIdle is null" Nothing Nothing
+  let vkQueueWaitIdle' = mkVkQueueWaitIdle vkQueueWaitIdlePtr
+  r <- vkQueueWaitIdle' (queueHandle (queue))
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | vkQueueWaitIdle - Wait for a queue to become idle
 --
@@ -442,21 +458,37 @@ queueWaitIdle :: forall io
               => -- | @queue@ is the queue on which to wait.
                  Queue
               -> io ()
-queueWaitIdle queue = liftIO $ do
-  let vkQueueWaitIdlePtr = pVkQueueWaitIdle (deviceCmds (queue :: Queue))
-  unless (vkQueueWaitIdlePtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueWaitIdle is null" Nothing Nothing
-  let vkQueueWaitIdle' = mkVkQueueWaitIdle vkQueueWaitIdlePtr
-  r <- vkQueueWaitIdle' (queueHandle (queue))
-  when (r < SUCCESS) (throwIO (VulkanException r))
+queueWaitIdle = queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdleUnafe
+
+-- | A variant of 'queueWaitIdle' which makes a *safe* FFI call
+queueWaitIdleSafe :: forall io
+                   . (MonadIO io)
+                  => -- | @queue@ is the queue on which to wait.
+                     Queue
+                  -> io ()
+queueWaitIdleSafe = queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdleSafe
 
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkDeviceWaitIdle
+  "dynamic" mkVkDeviceWaitIdleUnsafe
   :: FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result
+
+foreign import ccall
+  "dynamic" mkVkDeviceWaitIdleSafe
+  :: FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result
+
+-- | deviceWaitIdle with selectable safeness
+deviceWaitIdleSafeOrUnsafe :: (FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result) -> forall io . MonadIO io => Device -> io ()
+deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
+  let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (deviceCmds (device :: Device))
+  unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeviceWaitIdle is null" Nothing Nothing
+  let vkDeviceWaitIdle' = mkVkDeviceWaitIdle vkDeviceWaitIdlePtr
+  r <- vkDeviceWaitIdle' (deviceHandle (device))
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | vkDeviceWaitIdle - Wait for a device to become idle
 --
@@ -496,13 +528,15 @@ deviceWaitIdle :: forall io
                => -- | @device@ is the logical device to idle.
                   Device
                -> io ()
-deviceWaitIdle device = liftIO $ do
-  let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (deviceCmds (device :: Device))
-  unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeviceWaitIdle is null" Nothing Nothing
-  let vkDeviceWaitIdle' = mkVkDeviceWaitIdle vkDeviceWaitIdlePtr
-  r <- vkDeviceWaitIdle' (deviceHandle (device))
-  when (r < SUCCESS) (throwIO (VulkanException r))
+deviceWaitIdle = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleUnafe
+
+-- | A variant of 'deviceWaitIdle' which makes a *safe* FFI call
+deviceWaitIdleSafe :: forall io
+                    . (MonadIO io)
+                   => -- | @device@ is the logical device to idle.
+                      Device
+                   -> io ()
+deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 
 
 -- | VkSubmitInfo - Structure specifying a queue submit operation

@@ -44,6 +44,7 @@ module Vulkan.Extensions.VK_KHR_device_group  ( pattern STRUCTURE_TYPE_MEMORY_AL
                                               , getDeviceGroupPresentCapabilitiesKHR
                                               , getDeviceGroupSurfacePresentModesKHR
                                               , acquireNextImage2KHR
+                                              , acquireNextImage2KHRSafe
                                               , getPhysicalDevicePresentRectanglesKHR
                                               , DeviceGroupPresentModeFlagBitsKHR(..)
                                               , DeviceGroupPresentModeFlagsKHR
@@ -91,6 +92,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GR
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO))
 import Vulkan.Extensions.VK_KHR_swapchain (acquireNextImage2KHR)
+import Vulkan.Extensions.VK_KHR_swapchain (acquireNextImage2KHRSafe)
 import Vulkan.Extensions.VK_KHR_swapchain (getDeviceGroupPresentCapabilitiesKHR)
 import Vulkan.Extensions.VK_KHR_swapchain (getDeviceGroupSurfacePresentModesKHR)
 import Vulkan.Extensions.VK_KHR_swapchain (getPhysicalDevicePresentRectanglesKHR)

@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore  ( getSemaphoreCounterValue
                                                               , waitSemaphores
+                                                              , waitSemaphoresSafe
                                                               , signalSemaphore
                                                               , PhysicalDeviceTimelineSemaphoreFeatures(..)
                                                               , PhysicalDeviceTimelineSemaphoreProperties(..)
@@ -151,8 +152,24 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkWaitSemaphores
+  "dynamic" mkVkWaitSemaphoresUnsafe
   :: FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result
+
+foreign import ccall
+  "dynamic" mkVkWaitSemaphoresSafe
+  :: FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result
+
+-- | waitSemaphores with selectable safeness
+waitSemaphoresSafeOrUnsafe :: (FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> forall io . MonadIO io => Device -> SemaphoreWaitInfo -> ("timeout" ::: Word64) -> io (Result)
+waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO . evalContT $ do
+  let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
+  lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitSemaphores is null" Nothing Nothing
+  let vkWaitSemaphores' = mkVkWaitSemaphores vkWaitSemaphoresPtr
+  pWaitInfo <- ContT $ withCStruct (waitInfo)
+  r <- lift $ vkWaitSemaphores' (deviceHandle (device)) pWaitInfo (timeout)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pure $ (r)
 
 -- | vkWaitSemaphores - Wait for timeline semaphores on the host
 --
@@ -219,15 +236,28 @@ waitSemaphores :: forall io
                   -- nanosecond, and /may/ be longer than the requested period.
                   ("timeout" ::: Word64)
                -> io (Result)
-waitSemaphores device waitInfo timeout = liftIO . evalContT $ do
-  let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
-  lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitSemaphores is null" Nothing Nothing
-  let vkWaitSemaphores' = mkVkWaitSemaphores vkWaitSemaphoresPtr
-  pWaitInfo <- ContT $ withCStruct (waitInfo)
-  r <- lift $ vkWaitSemaphores' (deviceHandle (device)) pWaitInfo (timeout)
-  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
-  pure $ (r)
+waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnafe
+
+-- | A variant of 'waitSemaphores' which makes a *safe* FFI call
+waitSemaphoresSafe :: forall io
+                    . (MonadIO io)
+                   => -- | @device@ is the logical device that owns the semaphore.
+                      --
+                      -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                      Device
+                   -> -- | @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure containing
+                      -- information about the wait condition.
+                      --
+                      -- @pWaitInfo@ /must/ be a valid pointer to a valid 'SemaphoreWaitInfo'
+                      -- structure
+                      SemaphoreWaitInfo
+                   -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
+                      -- adjusted to the closest value allowed by the implementation-dependent
+                      -- timeout accuracy, which /may/ be substantially longer than one
+                      -- nanosecond, and /may/ be longer than the requested period.
+                      ("timeout" ::: Word64)
+                   -> io (Result)
+waitSemaphoresSafe = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresSafe
 
 
 foreign import ccall
