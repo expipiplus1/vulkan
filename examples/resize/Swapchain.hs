@@ -2,7 +2,9 @@ module Swapchain
   where
 
 import           Control.Exception.Safe
+import           Control.Monad.Trans.Resource
 import qualified Data.Vector                   as V
+import           Say
 import           Vulkan.Core10
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
@@ -12,11 +14,13 @@ import           MonadVulkan
 
 -- Create a swapchain from an image
 createSwapchain
-  :: Extent2D
+  :: SwapchainKHR
+  -- ^ Old swapchain, can be NULL_HANDLE
+  -> Extent2D
   -- ^ If the swapchain size determines the surface size, use this size
   -> SurfaceKHR
-  -> V (SwapchainKHR, SurfaceFormatKHR, Extent2D)
-createSwapchain explicitSize surf = do
+  -> V (ReleaseKey, SwapchainKHR, SurfaceFormatKHR, Extent2D)
+createSwapchain oldSwapchain explicitSize surf = do
   surfaceCaps                <- getPhysicalDeviceSurfaceCapabilitiesKHR' surf
 
   (_, availablePresentModes) <- getPhysicalDeviceSurfacePresentModesKHR' surf
@@ -29,6 +33,7 @@ createSwapchain explicitSize surf = do
     case filter (`V.elem` availablePresentModes) desiredPresentModes of
       [] -> throwString "Unable to find a suitable present mode for swapchain"
       x : _ -> pure x
+  sayErrString $ "Using present mode " <> show presentMode
 
   (_, availableFormats) <- getPhysicalDeviceSurfaceFormatsKHR' surf
   let desiredFormats = []
@@ -36,6 +41,7 @@ createSwapchain explicitSize surf = do
         -- Use the first available format if we don't have our desired one
         []    -> V.head availableFormats
         x : _ -> x
+  sayErrString $ "Using surface format " <> show surfaceFormat
 
   let imageExtent =
         case currentExtent (surfaceCaps :: SurfaceCapabilitiesKHR) of
@@ -57,7 +63,8 @@ createSwapchain explicitSize surf = do
       , compositeAlpha   = COMPOSITE_ALPHA_OPAQUE_BIT_KHR
       , presentMode      = presentMode
       , clipped          = True
+      , oldSwapchain     = oldSwapchain
       }
 
-  (_, swapchain) <- withSwapchainKHR' swapchainCreateInfo
-  pure (swapchain, surfaceFormat, imageExtent)
+  (key, swapchain) <- withSwapchainKHR' swapchainCreateInfo
+  pure (key, swapchain, surfaceFormat, imageExtent)

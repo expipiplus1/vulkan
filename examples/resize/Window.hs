@@ -40,6 +40,7 @@ createWindow title width height = do
                                              (fromIntegral height)
         , SDL.windowGraphicsContext = SDL.VulkanContext
         , SDL.windowResizable       = True
+        , SDL.windowHighDPI         = True
         , SDL.windowVisible         = False
         }
       )
@@ -49,7 +50,8 @@ createWindow title width height = do
     liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
   pure (windowExtensions, window)
 
-createSurface :: MonadResource m => Instance -> SDL.Window -> m SurfaceKHR
-createSurface inst window = snd <$> allocate
+createSurface
+  :: MonadResource m => Instance -> SDL.Window -> m (ReleaseKey, SurfaceKHR)
+createSurface inst window = allocate
   (SurfaceKHR <$> SDL.vkCreateSurface window (castPtr (instanceHandle inst)))
   (\s -> destroySurfaceKHR inst s Nothing)

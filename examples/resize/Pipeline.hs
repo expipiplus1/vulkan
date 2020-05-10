@@ -7,8 +7,10 @@ module Pipeline
   , Pipeline.createRenderPass
   ) where
 
+import           Control.Monad.Trans.Resource
 import           Data.Bits
 import qualified Data.Vector                   as V
+import           Data.Foldable                  ( traverse_ )
 
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
@@ -21,10 +23,10 @@ import           Vulkan.Zero
 import           MonadVulkan
 
 -- Create the most vanilla rendering pipeline
-createPipeline :: Extent2D -> RenderPass -> V Pipeline
+createPipeline :: Extent2D -> RenderPass -> V (ReleaseKey, Pipeline)
 createPipeline imageExtent renderPass = do
-  shaderStages        <- createShaders
-  (_, pipelineLayout) <- withPipelineLayout' zero
+  (shaderKeys, shaderStages  ) <- V.unzip <$> createShaders
+  (layoutKey , pipelineLayout) <- withPipelineLayout' zero
   let
     pipelineCreateInfo :: GraphicsPipelineCreateInfo '[]
     pipelineCreateInfo = zero
@@ -80,13 +82,15 @@ createPipeline imageExtent renderPass = do
       , subpass            = 0
       , basePipelineHandle = zero
       }
-  (_, (_, [graphicsPipeline])) <- withGraphicsPipelines'
+  (key, (_, [graphicsPipeline])) <- withGraphicsPipelines'
     zero
     [SomeStruct pipelineCreateInfo]
-  pure graphicsPipeline
+  release layoutKey
+  traverse_ release shaderKeys
+  pure (key, graphicsPipeline)
 
 -- | Create a renderpass with a single subpass
-createRenderPass :: Format -> V RenderPass
+createRenderPass :: Format -> V (ReleaseKey, RenderPass)
 createRenderPass imageFormat = do
   let
     attachmentDescription :: AttachmentDescription
@@ -119,15 +123,14 @@ createRenderPass imageFormat = do
       , dstAccessMask = ACCESS_COLOR_ATTACHMENT_READ_BIT
                           .|. ACCESS_COLOR_ATTACHMENT_WRITE_BIT
       }
-  (_, renderPass) <- withRenderPass' zero
-    { attachments  = [attachmentDescription]
-    , subpasses    = [subpass]
-    , dependencies = [subpassDependency]
-    }
-  pure renderPass
+  withRenderPass' zero { attachments  = [attachmentDescription]
+                       , subpasses    = [subpass]
+                       , dependencies = [subpassDependency]
+                       }
 
 -- | Create a vertex and fragment shader which render a colored triangle
-createShaders :: V (V.Vector (SomeStruct PipelineShaderStageCreateInfo))
+createShaders
+  :: V (V.Vector (ReleaseKey, SomeStruct PipelineShaderStageCreateInfo))
 createShaders = do
   let fragCode = [frag|
         #version 450
@@ -163,8 +166,8 @@ createShaders = do
           fragColor = colors[gl_VertexIndex];
         }
       |]
-  (_, fragModule) <- withShaderModule' zero { code = fragCode }
-  (_, vertModule) <- withShaderModule' zero { code = vertCode }
+  (fragKey, fragModule) <- withShaderModule' zero { code = fragCode }
+  (vertKey, vertModule) <- withShaderModule' zero { code = vertCode }
   let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
                                        , module' = vertModule
                                        , name    = "main"
@@ -174,4 +177,6 @@ createShaders = do
                                        , name    = "main"
                                        }
   pure
-    [SomeStruct vertShaderStageCreateInfo, SomeStruct fragShaderStageCreateInfo]
+    [ (vertKey, SomeStruct vertShaderStageCreateInfo)
+    , (fragKey, SomeStruct fragShaderStageCreateInfo)
+    ]

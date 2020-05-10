@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5a67f56b46e41aa832c6181d91c1c2b2da83e8269f4e86734238b9a842e3aa01
+-- hash: 79d4aa70e4f4c3865952b5eb41db30d8326fa8bd39c0d46c8443a316470657f5
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -125,6 +125,7 @@ executable resize
     , sdl2 >=2.5.2.0
     , text
     , transformers
+    , unliftio
     , vector
     , vulkan
     , vulkan-utils

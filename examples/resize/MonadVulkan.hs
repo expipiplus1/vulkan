@@ -10,7 +10,9 @@ import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
+import           UnliftIO
 
+import           Data.Word
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -38,6 +40,9 @@ newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
                    , MonadIO
                    , MonadResource
                    )
+
+instance MonadUnliftIO V where
+  withRunInIO a = V $ withRunInIO (\r -> a (r . unV))
 
 newtype Cmd a = Cmd { _unCmd :: ReaderT CommandBuffer V a }
   deriving newtype ( Functor
@@ -75,6 +80,9 @@ instance HasVulkan Cmd where
   getAllocator      = Cmd $ lift getAllocator
   getCommandPool    = Cmd $ lift getCommandPool
 
+getGraphicsQueueFamilyIndex :: V Word32
+getGraphicsQueueFamilyIndex = V (asks ghGraphicsQueueFamilyIndex)
+
 noAllocationCallbacks :: Maybe AllocationCallbacks
 noAllocationCallbacks = Nothing
 
@@ -96,20 +104,22 @@ runV
   -> PhysicalDevice
   -> Device
   -> Queue
+  -> Word32
   -> CommandPool
   -> Allocator
   -> V a
   -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghDevice ghGraphicsQueue ghCommandPool ghAllocator
+runV ghInstance ghPhysicalDevice ghDevice ghGraphicsQueue ghGraphicsQueueFamilyIndex ghCommandPool ghAllocator
   = flip runReaderT GlobalHandles { .. } . unV
 
 data GlobalHandles = GlobalHandles
-  { ghInstance       :: Instance
-  , ghPhysicalDevice :: PhysicalDevice
-  , ghDevice         :: Device
-  , ghAllocator      :: Allocator
-  , ghGraphicsQueue  :: Queue
-  , ghCommandPool    :: CommandPool
+  { ghInstance                 :: Instance
+  , ghPhysicalDevice           :: PhysicalDevice
+  , ghDevice                   :: Device
+  , ghAllocator                :: Allocator
+  , ghGraphicsQueue            :: Queue
+  , ghGraphicsQueueFamilyIndex :: Word32
+  , ghCommandPool              :: CommandPool
   }
 
 
@@ -136,6 +146,7 @@ autoapplyDecs
   , 'deviceWaitIdle
   , 'getDeviceQueue
   , 'waitForFences
+  , 'waitForFencesSafe
   , 'withCommandBuffers
   , 'withCommandPool
   , 'withFence
@@ -161,4 +172,5 @@ autoapplyDecs
   , 'withFramebuffer
   , 'acquireNextImageKHR
   , 'withSemaphore
+  , 'deviceWaitIdleSafe
   ]

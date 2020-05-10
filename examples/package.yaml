@@ -95,6 +95,7 @@ executables:
       - sdl2 >= 2.5.2.0
       - text
       - transformers
+      - unliftio
       - vector
       - vulkan
       - vulkan-utils

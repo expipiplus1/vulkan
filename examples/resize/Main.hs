@@ -6,15 +6,30 @@ module Main
   )
 where
 
-import           Control.Exception.Safe         ( finally
-                                                , displayException
+import           Control.Exception              ( handle
+                                                , mask
                                                 )
-import           Control.Exception              ( handle )
+import           Control.Exception.Safe         ( catchJust
+                                                , displayException
+                                                , finally
+                                                , throwString
+                                                )
+import           Control.Monad.Extra            ( unlessM )
+import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import qualified SDL
+import qualified SDL.Video.Vulkan              as SDL
 import           Say
+import           UnliftIO                       ( toIO )
+import           UnliftIO.Async                 ( async
+                                                , uninterruptibleCancel
+                                                )
 
+import           Data.Foldable                  ( traverse_ )
+import           Data.IORef
 import qualified Data.Vector                   as V
+import           Data.Word
+
 import           Vulkan.CStruct.Extends         ( SomeStruct(..) )
 import           Vulkan.Core10                 as Vk
                                          hiding ( createDevice
@@ -61,7 +76,7 @@ main = prettyError . runResourceT $ do
   inst    <- createInstance windowExts
   surface <- createSurface inst sdlWindow
   DeviceParams devName phys dev graphicsQueue graphicsQueueFamilyIndex <-
-    createDevice inst surface
+    createDevice inst (snd surface)
   let commandPoolCreateInfo :: CommandPoolCreateInfo
       commandPoolCreateInfo =
         zero { queueFamilyIndex = graphicsQueueFamilyIndex }
@@ -71,92 +86,222 @@ main = prettyError . runResourceT $ do
   sayErr $ "Using device: " <> devName
 
   -- Now all the globals are initialized
-  runV inst phys dev graphicsQueue commandPool allocator
-    . (`finally` deviceWaitIdle')
+  runV inst
+       phys
+       dev
+       graphicsQueue
+       graphicsQueueFamilyIndex
+       commandPool
+       allocator
+    . (`finally` deviceWaitIdleSafe')
     $ do
-    -- The first swapchain initialization
-        (swapchain, surfaceFormat, imageExtent) <- createSwapchain
-          (Extent2D initWidth initHeight)
-          surface
 
-        renderPass <- Pipeline.createRenderPass
-          (format (surfaceFormat :: SurfaceFormatKHR))
-        pipeline             <- createPipeline imageExtent renderPass
-
-        (_, swapchainImages) <- getSwapchainImagesKHR' swapchain
-        imageViews           <- V.forM swapchainImages $ \image ->
-          createImageView (format (surfaceFormat :: SurfaceFormatKHR)) image
-
-        framebuffers <- V.forM imageViews
-          $ \imageView -> createFramebuffer renderPass imageView imageExtent
-
-        (_, imageAvailableSemaphore) <- withSemaphore' zero
-        (_, renderFinishedSemaphore) <- withSemaphore' zero
+        frame <- initialFrame sdlWindow
+                              (Just surface)
+                              (Extent2D initWidth initHeight)
 
         SDL.showWindow sdlWindow
 
-        let
-          go = do
-            (_, imageIndex) <- acquireNextImageKHR' swapchain
-                                                    maxBound
-                                                    imageAvailableSemaphore
+        render frame
+
+data Frame = Frame
+  { fWindow                  :: SDL.Window
+    -- Vulkan items
+  , fSurface                 :: SurfaceKHR
+  , fSwapchain               :: SwapchainKHR
+  , fRenderPass              :: RenderPass
+  , fImageExtent             :: Extent2D
+  , fImageAvailableSemaphore :: Semaphore
+  , fRenderFinishedSemaphore :: Semaphore
+  , fPipeline                :: Pipeline
+  , fFramebuffers            :: Word32 -> Framebuffer
+  , fReleaseSwapchain        :: RefCounted
+  }
+
+initialFrame
+  :: SDL.Window
+  -> Maybe (ReleaseKey, SurfaceKHR)
+  -- ^ existing surface for window
+  -> Extent2D
+  -> V Frame
+initialFrame window surfaceM windowSize = do
+  inst                     <- getInstance
+  (_, surface)             <- maybe (createSurface inst window) pure surfaceM
+
+  graphicsQueueFamilyIndex <- getGraphicsQueueFamilyIndex
+  phys                     <- getPhysicalDevice
+  unlessM
+      (getPhysicalDeviceSurfaceSupportKHR phys graphicsQueueFamilyIndex surface)
+    $ throwString "Device isn't able to present to the new surface"
+
+
+  (swapchain, imageExtent, framebuffers, pipeline, renderPass, releaseSwapchain) <-
+    allocSwapchainResources windowSize NULL_HANDLE surface
+
+  (_, imageAvailableSemaphore) <- withSemaphore' zero
+  (_, renderFinishedSemaphore) <- withSemaphore' zero
+  pure
+    (Frame window
+           surface
+           swapchain
+           renderPass
+           imageExtent
+           imageAvailableSemaphore
+           renderFinishedSemaphore
+           pipeline
+           ((framebuffers V.!) . fromIntegral)
+           releaseSwapchain
+    )
+
+allocSwapchainResources
+  :: Extent2D
+  -> SwapchainKHR
+  -- ^ Previous swapchain, can be NULL_HANDLE
+  -> SurfaceKHR
+  -> V
+       ( SwapchainKHR
+       , Extent2D
+       , V.Vector Framebuffer
+       , Pipeline
+       , RenderPass
+       , RefCounted
+       )
+allocSwapchainResources windowSize oldSwapchain surface = do
+  (swapchainKey, swapchain, surfaceFormat, imageExtent) <- createSwapchain
+    oldSwapchain
+    windowSize
+    surface
+
+  (renderPassKey, renderPass) <- Pipeline.createRenderPass
+    (format (surfaceFormat :: SurfaceFormatKHR))
+  (pipelineKey  , pipeline       ) <- createPipeline imageExtent renderPass
+
+  (_            , swapchainImages) <- getSwapchainImagesKHR' swapchain
+  (imageViewKeys, imageViews     ) <-
+    fmap V.unzip . V.forM swapchainImages $ \image ->
+      createImageView (format (surfaceFormat :: SurfaceFormatKHR)) image
+
+  (framebufferKeys, framebuffers) <-
+    fmap V.unzip . V.forM imageViews $ \imageView ->
+      createFramebuffer renderPass imageView imageExtent
+
+  releaseSwapchain <- newRefCounted $ do
+    sayErr "Releasing swapchain resources"
+    traverse_ release framebufferKeys
+    traverse_ release imageViewKeys
+    release pipelineKey
+    release renderPassKey
+    release swapchainKey
+
+  pure
+    ( swapchain
+    , imageExtent
+    , framebuffers
+    , pipeline
+    , renderPass
+    , releaseSwapchain
+    )
+
+render :: Frame -> V ()
+render Frame {..} =
+  do
+      (SUCCESS, imageIndex) <- acquireNextImageKHR' fSwapchain
+                                                    0
+                                                    fImageAvailableSemaphore
                                                     zero
-            commandPool <- getCommandPool
-            let commandBufferAllocateInfo = zero
-                  { commandPool        = commandPool
-                  , level              = COMMAND_BUFFER_LEVEL_PRIMARY
-                  , commandBufferCount = 1
-                  }
-            (_, [commandBuffer]) <- withCommandBuffers'
-              commandBufferAllocateInfo
 
-            useCommandBuffer'
-                commandBuffer
-                zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+      commandPool <- getCommandPool
+      let commandBufferAllocateInfo = zero
+            { commandPool        = commandPool
+            , level              = COMMAND_BUFFER_LEVEL_PRIMARY
+            , commandBufferCount = 1
+            }
+      (_, [commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
+
+      useCommandBuffer'
+          commandBuffer
+          zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+        $ do
+            let renderPassBeginInfo = zero
+                  { renderPass  = fRenderPass
+                  , framebuffer = fFramebuffers imageIndex
+                  , renderArea  = Rect2D zero fImageExtent
+                  , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
+                  }
+            cmdUseRenderPass commandBuffer
+                             renderPassBeginInfo
+                             SUBPASS_CONTENTS_INLINE
               $ do
-                  let renderPassBeginInfo = zero
-                        { renderPass  = renderPass
-                        , framebuffer = framebuffers V.! fromIntegral imageIndex
-                        , renderArea  = Rect2D zero imageExtent
-                        , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
-                        }
-                  cmdUseRenderPass commandBuffer
-                                   renderPassBeginInfo
-                                   SUBPASS_CONTENTS_INLINE
-                    $ do
-                        cmdBindPipeline commandBuffer
-                                        PIPELINE_BIND_POINT_GRAPHICS
-                                        pipeline
-                        cmdDraw commandBuffer 3 1 0 0
+                  cmdBindPipeline commandBuffer
+                                  PIPELINE_BIND_POINT_GRAPHICS
+                                  fPipeline
+                  cmdDraw commandBuffer 3 1 0 0
 
-            let submitInfo = zero
-                  { waitSemaphores   = [imageAvailableSemaphore]
-                  , waitDstStageMask =
-                    [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-                  , commandBuffers   = [commandBufferHandle commandBuffer]
-                  , signalSemaphores = [renderFinishedSemaphore]
-                  }
-            graphicsQueue <- getGraphicsQueue
-            queueSubmit graphicsQueue [SomeStruct submitInfo] zero
+      let submitInfo = zero
+            { waitSemaphores   = [fImageAvailableSemaphore]
+            , waitDstStageMask = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+            , commandBuffers   = [commandBufferHandle commandBuffer]
+            , signalSemaphores = [fRenderFinishedSemaphore]
+            }
+      graphicsQueue           <- getGraphicsQueue
+      (fenceKey, renderFence) <- withFence' zero
+      queueSubmit graphicsQueue [SomeStruct submitInfo] renderFence
 
-            let presentInfo = zero { waitSemaphores = [renderFinishedSemaphore]
-                                   , swapchains     = [swapchain]
-                                   , imageIndices   = [imageIndex]
-                                   }
-            _ <- queuePresentKHR graphicsQueue presentInfo
-            sayErr "frame"
-            pure ()
+      useRefCounted fReleaseSwapchain
+      waitAndRelease <- toIO $ do
+        waitForFencesSafe' [renderFence] True 1e9 >>= \case
+          TIMEOUT -> throwString "AAA"
+          _       -> pure ()
+        release fenceKey
+        releaseRefCounted fReleaseSwapchain
+      _ <- allocate (async waitAndRelease) uninterruptibleCancel
 
-        sequence_ $ replicate 400 go
+      let presentInfo = zero { waitSemaphores = [fRenderFinishedSemaphore]
+                             , swapchains     = [fSwapchain]
+                             , imageIndices   = [imageIndex]
+                             }
+      _ <- queuePresentKHR graphicsQueue presentInfo
+
+      unlessM shouldQuit $ render Frame { .. }
+    `catchSwapchainError` \_ -> do
+                            SDL.V2 width height <- SDL.vkGetDrawableSize fWindow
+                            (swapchain, imageExtent, framebuffers, pipeline, renderPass, releaseSwapchain) <-
+                              allocSwapchainResources
+                                (Extent2D (fromIntegral width)
+                                          (fromIntegral height)
+                                )
+                                fSwapchain
+                                fSurface
+
+                            releaseRefCounted fReleaseSwapchain
+                            render $ Frame fWindow
+                                           fSurface
+                                           swapchain
+                                           renderPass
+                                           imageExtent
+                                           fImageAvailableSemaphore
+                                           fRenderFinishedSemaphore
+                                           pipeline
+                                           ((framebuffers V.!) . fromIntegral)
+                                           releaseSwapchain
+
+
+catchSwapchainError :: V a -> (Result -> V a) -> V a
+catchSwapchainError = catchJust $ \case
+  VulkanException e@ERROR_OUT_OF_DATE_KHR  -> Just e
+  -- TODO handle this case
+  -- VulkanException e@ERROR_SURFACE_LOST_KHR -> Just e
+  VulkanException _                        -> Nothing
+
 
 ----------------------------------------------------------------
 -- Helpers
 ----------------------------------------------------------------
 
 -- | Create a pretty vanilla ImageView covering the whole image
-createImageView :: Format -> Image -> V ImageView
+createImageView :: Format -> Image -> V (ReleaseKey, ImageView)
 createImageView format = \image ->
-  snd <$> withImageView' imageViewCreateInfo { image = image }
+  withImageView' imageViewCreateInfo { image = image }
  where
   imageViewCreateInfo = zero
     { viewType         = IMAGE_VIEW_TYPE_2D
@@ -173,3 +318,43 @@ createImageView format = \image ->
                               , layerCount     = 1
                               }
     }
+
+----------------------------------------------------------------
+-- Ref counting helper
+----------------------------------------------------------------
+
+-- A 'RefCounted' will perform the specified action when the count reaches 0
+data RefCounted = RefCounted
+  { rcCount  :: IORef Word
+  , rcAction :: IO ()
+  }
+
+newRefCounted :: MonadIO m => IO () -> m RefCounted
+newRefCounted rcAction = do
+  rcCount <- liftIO $ newIORef 1
+  pure RefCounted { .. }
+
+releaseRefCounted :: MonadIO m => RefCounted -> m ()
+releaseRefCounted RefCounted {..} = liftIO $ mask $ \_ ->
+  atomicModifyIORef' rcCount (\c -> (pred c, pred c)) >>= \case
+    0 -> rcAction
+    _ -> pure ()
+
+useRefCounted :: MonadIO m => RefCounted -> m ()
+useRefCounted RefCounted {..} =
+  liftIO $ atomicModifyIORef' rcCount (\c -> (succ c, ()))
+
+----------------------------------------------------------------
+-- SDL helpers
+----------------------------------------------------------------
+
+shouldQuit :: MonadIO m => m Bool
+shouldQuit = maybe False isQuitEvent <$> SDL.pollEvent
+ where
+  isQuitEvent :: SDL.Event -> Bool
+  isQuitEvent = \case
+    (SDL.Event _ SDL.QuitEvent) -> True
+    SDL.Event _ (SDL.KeyboardEvent (SDL.KeyboardEventData _ SDL.Released False (SDL.Keysym _ code _)))
+      | code == SDL.KeycodeQ || code == SDL.KeycodeEscape
+      -> True
+    _ -> False
