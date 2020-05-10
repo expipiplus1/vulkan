@@ -83,9 +83,12 @@ renderTypeHighPrec, renderTypeHighPrecSource
   => Type
   -> Sem r (Doc ())
 renderTypeHighPrec = \case
-  t@(ConT _) -> renderType t
-  t@(VarT _) -> renderType t
-  t          -> parens <$> renderType t
+  t@(ConT    _) -> renderType t
+  t@(VarT    _) -> renderType t
+  t@(ParensT _) -> renderType t
+  -- Infix applications are pretty printed with brackets already
+  t@InfixT{}    -> renderType t
+  t             -> parens <$> renderType t
 
 renderTypeHighPrecSource = \case
   t@(ConT _) -> renderTypeSource t
