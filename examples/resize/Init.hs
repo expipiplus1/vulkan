@@ -31,6 +31,7 @@ import           Vulkan.Core10                 as Vk
                                                 , withImage
                                                 )
 import           Vulkan.Extensions.VK_EXT_debug_utils
+import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Debug
@@ -49,14 +50,17 @@ myApiVersion = API_VERSION_1_0
 -- Instance Creation
 ----------------------------------------------------------------
 
--- | Create an instance with a debug messenger
+-- | Create an instance with a debug messenger and validation
 createInstance :: MonadResource m => [ByteString] -> m Instance
 createInstance requestedExtensions = do
   availableExtensionNames <-
     fmap layerName . snd <$> enumerateInstanceLayerProperties
   let requiredLayers = []
       requiredExtensions =
-        V.fromList $ EXT_DEBUG_UTILS_EXTENSION_NAME : requestedExtensions
+        V.fromList
+          $ EXT_DEBUG_UTILS_EXTENSION_NAME
+          : EXT_VALIDATION_FEATURES_EXTENSION_NAME
+          : requestedExtensions
   optionalLayers <-
     fmap (V.fromList . catMaybes)
     . sequence
@@ -74,6 +78,9 @@ createInstance requestedExtensions = do
             , enabledExtensionNames = requiredExtensions
             }
           ::& debugMessengerCreateInfo
+          :&  ValidationFeaturesEXT
+                [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT]
+                []
           :&  ()
   (_, inst) <- withInstance' instanceCreateInfo
   pure inst
