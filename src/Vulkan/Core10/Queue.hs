@@ -402,7 +402,13 @@ foreign import ccall
   :: FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result
 
 -- | queueWaitIdle with selectable safeness
-queueWaitIdleSafeOrUnsafe :: (FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result) -> forall io . MonadIO io => Queue -> io ()
+queueWaitIdleSafeOrUnsafe ::  forall io
+                           . (MonadIO io)
+                          => -- No documentation found for TopLevel ""
+                             FunPtr (Ptr Queue_T -> IO Result) -> Ptr Queue_T -> IO Result
+                          -> -- | @queue@ is the queue on which to wait.
+                             Queue
+                          -> io ()
 queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
   let vkQueueWaitIdlePtr = pVkQueueWaitIdle (deviceCmds (queue :: Queue))
   unless (vkQueueWaitIdlePtr /= nullFunPtr) $
@@ -458,7 +464,7 @@ queueWaitIdle :: forall io
               => -- | @queue@ is the queue on which to wait.
                  Queue
               -> io ()
-queueWaitIdle = queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdleUnafe
+queueWaitIdle = queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdleUnsafe
 
 -- | A variant of 'queueWaitIdle' which makes a *safe* FFI call
 queueWaitIdleSafe :: forall io
@@ -481,7 +487,13 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result
 
 -- | deviceWaitIdle with selectable safeness
-deviceWaitIdleSafeOrUnsafe :: (FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result) -> forall io . MonadIO io => Device -> io ()
+deviceWaitIdleSafeOrUnsafe ::  forall io
+                            . (MonadIO io)
+                           => -- No documentation found for TopLevel ""
+                              FunPtr (Ptr Device_T -> IO Result) -> Ptr Device_T -> IO Result
+                           -> -- | @device@ is the logical device to idle.
+                              Device
+                           -> io ()
 deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
   let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (deviceCmds (device :: Device))
   unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
@@ -528,7 +540,7 @@ deviceWaitIdle :: forall io
                => -- | @device@ is the logical device to idle.
                   Device
                -> io ()
-deviceWaitIdle = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleUnafe
+deviceWaitIdle = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleUnsafe
 
 -- | A variant of 'deviceWaitIdle' which makes a *safe* FFI call
 deviceWaitIdleSafe :: forall io

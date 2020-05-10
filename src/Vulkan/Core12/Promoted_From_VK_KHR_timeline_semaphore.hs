@@ -160,7 +160,26 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result
 
 -- | waitSemaphores with selectable safeness
-waitSemaphoresSafeOrUnsafe :: (FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> forall io . MonadIO io => Device -> SemaphoreWaitInfo -> ("timeout" ::: Word64) -> io (Result)
+waitSemaphoresSafeOrUnsafe ::  forall io
+                            . (MonadIO io)
+                           => -- No documentation found for TopLevel ""
+                              FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result
+                           -> -- | @device@ is the logical device that owns the semaphore.
+                              --
+                              -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                              Device
+                           -> -- | @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure containing
+                              -- information about the wait condition.
+                              --
+                              -- @pWaitInfo@ /must/ be a valid pointer to a valid 'SemaphoreWaitInfo'
+                              -- structure
+                              SemaphoreWaitInfo
+                           -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
+                              -- adjusted to the closest value allowed by the implementation-dependent
+                              -- timeout accuracy, which /may/ be substantially longer than one
+                              -- nanosecond, and /may/ be longer than the requested period.
+                              ("timeout" ::: Word64)
+                           -> io (Result)
 waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO . evalContT $ do
   let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
   lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
@@ -236,7 +255,7 @@ waitSemaphores :: forall io
                   -- nanosecond, and /may/ be longer than the requested period.
                   ("timeout" ::: Word64)
                -> io (Result)
-waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnafe
+waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnsafe
 
 -- | A variant of 'waitSemaphores' which makes a *safe* FFI call
 waitSemaphoresSafe :: forall io

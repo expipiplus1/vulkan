@@ -398,7 +398,25 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
 
 -- | waitForFences with selectable safeness
-waitForFencesSafeOrUnsafe :: (FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> forall io . MonadIO io => Device -> ("fences" ::: Vector Fence) -> ("waitAll" ::: Bool) -> ("timeout" ::: Word64) -> io (Result)
+waitForFencesSafeOrUnsafe ::  forall io
+                           . (MonadIO io)
+                          => -- No documentation found for TopLevel ""
+                             FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
+                          -> -- | @device@ is the logical device that owns the fences.
+                             Device
+                          -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
+                             ("fences" ::: Vector Fence)
+                          -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
+                             -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
+                             -- the condition is that all fences in @pFences@ are signaled. Otherwise,
+                             -- the condition is that at least one fence in @pFences@ is signaled.
+                             ("waitAll" ::: Bool)
+                          -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
+                             -- adjusted to the closest value allowed by the implementation-dependent
+                             -- timeout accuracy, which /may/ be substantially longer than one
+                             -- nanosecond, and /may/ be longer than the requested period.
+                             ("timeout" ::: Word64)
+                          -> io (Result)
 waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = liftIO . evalContT $ do
   let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
   lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
@@ -494,7 +512,7 @@ waitForFences :: forall io
                  -- nanosecond, and /may/ be longer than the requested period.
                  ("timeout" ::: Word64)
               -> io (Result)
-waitForFences = waitForFencesSafeOrUnsafe mkVkWaitForFencesUnafe
+waitForFences = waitForFencesSafeOrUnsafe mkVkWaitForFencesUnsafe
 
 -- | A variant of 'waitForFences' which makes a *safe* FFI call
 waitForFencesSafe :: forall io

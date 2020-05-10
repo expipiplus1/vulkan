@@ -5648,7 +5648,35 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()
 
 -- | cmdWaitEvents with selectable safeness
-cmdWaitEventsSafeOrUnsafe :: (FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> forall io . MonadIO io => CommandBuffer -> ("events" ::: Vector Event) -> ("srcStageMask" ::: PipelineStageFlags) -> ("dstStageMask" ::: PipelineStageFlags) -> ("memoryBarriers" ::: Vector MemoryBarrier) -> ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier) -> ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier)) -> io ()
+cmdWaitEventsSafeOrUnsafe ::  forall io
+                           . (MonadIO io)
+                          => -- No documentation found for TopLevel ""
+                             FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()
+                          -> -- | @commandBuffer@ is the command buffer into which the command is
+                             -- recorded.
+                             CommandBuffer
+                          -> -- | @pEvents@ is a pointer to an array of event object handles to wait on.
+                             ("events" ::: Vector Event)
+                          -> -- | @srcStageMask@ is a bitmask of
+                             -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                             -- specifying the
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
+                             ("srcStageMask" ::: PipelineStageFlags)
+                          -> -- | @dstStageMask@ is a bitmask of
+                             -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                             -- specifying the
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
+                             ("dstStageMask" ::: PipelineStageFlags)
+                          -> -- | @pMemoryBarriers@ is a pointer to an array of
+                             -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
+                             ("memoryBarriers" ::: Vector MemoryBarrier)
+                          -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
+                             -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
+                             ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
+                          -> -- | @pImageMemoryBarriers@ is a pointer to an array of
+                             -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
+                             ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
+                          -> io ()
 cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
   lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
@@ -5956,7 +5984,7 @@ cmdWaitEvents :: forall io
                  -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
                  ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
               -> io ()
-cmdWaitEvents = cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEventsUnafe
+cmdWaitEvents = cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEventsUnsafe
 
 -- | A variant of 'cmdWaitEvents' which makes a *safe* FFI call
 cmdWaitEventsSafe :: forall io

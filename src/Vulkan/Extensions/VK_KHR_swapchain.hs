@@ -504,7 +504,25 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result
 
 -- | acquireNextImageKHR with selectable safeness
-acquireNextImageKHRSafeOrUnsafe :: (FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> forall io . MonadIO io => Device -> SwapchainKHR -> ("timeout" ::: Word64) -> Semaphore -> Fence -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImageKHRSafeOrUnsafe ::  forall io
+                                 . (MonadIO io)
+                                => -- No documentation found for TopLevel ""
+                                   FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result
+                                -> -- | @device@ is the device associated with @swapchain@.
+                                   Device
+                                -> -- | @swapchain@ is the non-retired swapchain from which an image is being
+                                   -- acquired.
+                                   SwapchainKHR
+                                -> -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
+                                   -- image is available.
+                                   ("timeout" ::: Word64)
+                                -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
+                                   -- to signal.
+                                   Semaphore
+                                -> -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
+                                   -- signal.
+                                   Fence
+                                -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
   let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (deviceCmds (device :: Device))
   lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
@@ -631,7 +649,7 @@ acquireNextImageKHR :: forall io
                        -- signal.
                        Fence
                     -> io (Result, ("imageIndex" ::: Word32))
-acquireNextImageKHR = acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHRUnafe
+acquireNextImageKHR = acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHRUnsafe
 
 -- | A variant of 'acquireNextImageKHR' which makes a *safe* FFI call
 acquireNextImageKHRSafe :: forall io
@@ -953,7 +971,16 @@ foreign import ccall
   :: FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result
 
 -- | acquireNextImage2KHR with selectable safeness
-acquireNextImage2KHRSafeOrUnsafe :: (FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> forall io . MonadIO io => Device -> ("acquireInfo" ::: AcquireNextImageInfoKHR) -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImage2KHRSafeOrUnsafe ::  forall io
+                                  . (MonadIO io)
+                                 => -- No documentation found for TopLevel ""
+                                    FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result
+                                 -> -- | @device@ is the device associated with @swapchain@.
+                                    Device
+                                 -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
+                                    -- containing parameters of the acquire.
+                                    ("acquireInfo" ::: AcquireNextImageInfoKHR)
+                                 -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
   let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
   lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
@@ -1026,7 +1053,7 @@ acquireNextImage2KHR :: forall io
                         -- containing parameters of the acquire.
                         ("acquireInfo" ::: AcquireNextImageInfoKHR)
                      -> io (Result, ("imageIndex" ::: Word32))
-acquireNextImage2KHR = acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHRUnafe
+acquireNextImage2KHR = acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHRUnsafe
 
 -- | A variant of 'acquireNextImage2KHR' which makes a *safe* FFI call
 acquireNextImage2KHRSafe :: forall io
