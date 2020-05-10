@@ -192,7 +192,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       tellDocWithHaddock $ \getDoc -> vsep
         [ comment $ unName commandName <> " with selectable safeness"
         , safeOrUnsafeName
-          <+> indent 0 ("::" <+> renderWithComments getDoc tDocSafeOrUnsafe)
+          <+> indent 0 ("::" <> renderWithComments getDoc tDocSafeOrUnsafe)
         , safeOrUnsafeName <+> dynName <+> sep paramNiceNames <+> "=" <+> rhs
         ]
 
@@ -321,7 +321,7 @@ renderInParts names t = do
       paddedNames = (Just <$> names) <> repeat Nothing
   vDocs    <- traverse renderVar vars
   predDocs <- traverse renderType preds
-  argDocs  <- traverse renderType argTypes
+  argDocs  <- traverse renderTypeHighPrec argTypes
   retDoc   <- renderType ret
   pure
     ( if null vDocs then Nothing else Just $ "forall" <+> hsep vDocs
