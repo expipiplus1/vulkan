@@ -135,7 +135,7 @@ createDescriptorUpdateTemplate :: forall io
                                -> -- | @pAllocator@ controls host memory allocation as described in the
                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
-                                  (("allocator" ::: Maybe AllocationCallbacks))
+                                  ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (DescriptorUpdateTemplate)
 createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorUpdateTemplatePtr = pVkCreateDescriptorUpdateTemplate (deviceCmds (device :: Device))
@@ -222,7 +222,7 @@ destroyDescriptorUpdateTemplate :: forall io
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
                                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
-                                   (("allocator" ::: Maybe AllocationCallbacks))
+                                   ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
 destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorUpdateTemplatePtr = pVkDestroyDescriptorUpdateTemplate (deviceCmds (device :: Device))
@@ -371,7 +371,7 @@ updateDescriptorSetWithTemplate :: forall io
                                    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
                                    -- 'Vulkan.Core10.Handles.BufferView' structures used to write the
                                    -- descriptors.
-                                   (("data" ::: Ptr ()))
+                                   ("data" ::: Ptr ())
                                 -> io ()
 updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
   let vkUpdateDescriptorSetWithTemplatePtr = pVkUpdateDescriptorSetWithTemplate (deviceCmds (device :: Device))

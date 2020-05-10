@@ -152,7 +152,7 @@ createPipelineCache :: forall io
                     -> -- | @pAllocator@ controls host memory allocation as described in the
                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                        -- chapter.
-                       (("allocator" ::: Maybe AllocationCallbacks))
+                       ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (PipelineCache)
 createPipelineCache device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePipelineCachePtr = pVkCreatePipelineCache (deviceCmds (device :: Device))
@@ -234,7 +234,7 @@ destroyPipelineCache :: forall io
                      -> -- | @pAllocator@ controls host memory allocation as described in the
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
-                        (("allocator" ::: Maybe AllocationCallbacks))
+                        ("allocator" ::: Maybe AllocationCallbacks)
                      -> io ()
 destroyPipelineCache device pipelineCache allocator = liftIO . evalContT $ do
   let vkDestroyPipelineCachePtr = pVkDestroyPipelineCache (deviceCmds (device :: Device))
@@ -444,11 +444,11 @@ mergePipelineCaches :: forall io
                     => -- | @device@ is the logical device that owns the pipeline cache objects.
                        Device
                     -> -- | @dstCache@ is the handle of the pipeline cache to merge results into.
-                       (("dstCache" ::: PipelineCache))
+                       ("dstCache" ::: PipelineCache)
                     -> -- | @pSrcCaches@ is a pointer to an array of pipeline cache handles, which
                        -- will be merged into @dstCache@. The previous contents of @dstCache@ are
                        -- included after the merge.
-                       (("srcCaches" ::: Vector PipelineCache))
+                       ("srcCaches" ::: Vector PipelineCache)
                     -> io ()
 mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergePipelineCachesPtr = pVkMergePipelineCaches (deviceCmds (device :: Device))

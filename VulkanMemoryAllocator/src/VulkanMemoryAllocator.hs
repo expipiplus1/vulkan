@@ -611,7 +611,7 @@ findMemoryTypeIndexForBufferInfo :: forall a io
                                  => -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "allocator"
                                     Allocator
                                  -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pBufferCreateInfo"
-                                    BufferCreateInfo a
+                                    (BufferCreateInfo a)
                                  -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pAllocationCreateInfo"
                                     AllocationCreateInfo
                                  -> io (("memoryTypeIndex" ::: Word32))
@@ -652,7 +652,7 @@ findMemoryTypeIndexForImageInfo :: forall a io
                                 => -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "allocator"
                                    Allocator
                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pImageCreateInfo"
-                                   ImageCreateInfo a
+                                   (ImageCreateInfo a)
                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pAllocationCreateInfo"
                                    AllocationCreateInfo
                                 -> io (("memoryTypeIndex" ::: Word32))
@@ -2245,7 +2245,7 @@ createBuffer :: forall a io
              => -- No documentation found for Nested "vmaCreateBuffer" "allocator"
                 Allocator
              -> -- No documentation found for Nested "vmaCreateBuffer" "pBufferCreateInfo"
-                BufferCreateInfo a
+                (BufferCreateInfo a)
              -> -- No documentation found for Nested "vmaCreateBuffer" "pAllocationCreateInfo"
                 AllocationCreateInfo
              -> io (Buffer, Allocation, AllocationInfo)
@@ -2319,7 +2319,7 @@ createImage :: forall a io
             => -- No documentation found for Nested "vmaCreateImage" "allocator"
                Allocator
             -> -- No documentation found for Nested "vmaCreateImage" "pImageCreateInfo"
-               ImageCreateInfo a
+               (ImageCreateInfo a)
             -> -- No documentation found for Nested "vmaCreateImage" "pAllocationCreateInfo"
                AllocationCreateInfo
             -> io (Image, Allocation, AllocationInfo)

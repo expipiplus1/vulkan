@@ -233,7 +233,7 @@ createInstance :: forall a io
                -> -- | @pAllocator@ controls host memory allocation as described in the
                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                   -- chapter.
-                  (("allocator" ::: Maybe AllocationCallbacks))
+                  ("allocator" ::: Maybe AllocationCallbacks)
                -> io (Instance)
 createInstance createInfo allocator = liftIO . evalContT $ do
   vkCreateInstancePtr <- lift $ castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
@@ -313,7 +313,7 @@ destroyInstance :: forall io
                 -> -- | @pAllocator@ controls host memory allocation as described in the
                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
-                   (("allocator" ::: Maybe AllocationCallbacks))
+                   ("allocator" ::: Maybe AllocationCallbacks)
                 -> io ()
 destroyInstance instance' allocator = liftIO . evalContT $ do
   let vkDestroyInstancePtr = pVkDestroyInstance (instanceCmds (instance' :: Instance))
@@ -475,7 +475,7 @@ getDeviceProcAddr :: forall io
                   => -- | @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                      Device
                   -> -- | @pName@ /must/ be a null-terminated UTF-8 string
-                     (("name" ::: ByteString))
+                     ("name" ::: ByteString)
                   -> io (PFN_vkVoidFunction)
 getDeviceProcAddr device name = liftIO . evalContT $ do
   let vkGetDeviceProcAddrPtr = pVkGetDeviceProcAddr (deviceCmds (device :: Device))
@@ -572,7 +572,7 @@ getInstanceProcAddr :: forall io
                        -- with, or @NULL@ for commands not dependent on any instance.
                        Instance
                     -> -- | @pName@ is the name of the command to obtain.
-                       (("name" ::: ByteString))
+                       ("name" ::: ByteString)
                     -> io (PFN_vkVoidFunction)
 getInstanceProcAddr instance' name = liftIO . evalContT $ do
   let vkGetInstanceProcAddrPtr = pVkGetInstanceProcAddr (instanceCmds (instance' :: Instance))

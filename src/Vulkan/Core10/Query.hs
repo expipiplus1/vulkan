@@ -124,7 +124,7 @@ createQueryPool :: forall a io
                 -> -- | @pAllocator@ controls host memory allocation as described in the
                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
-                   (("allocator" ::: Maybe AllocationCallbacks))
+                   ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (QueryPool)
 createQueryPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateQueryPoolPtr = pVkCreateQueryPool (deviceCmds (device :: Device))
@@ -208,7 +208,7 @@ destroyQueryPool :: forall io
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
-                    (("allocator" ::: Maybe AllocationCallbacks))
+                    ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
   let vkDestroyQueryPoolPtr = pVkDestroyQueryPool (deviceCmds (device :: Device))
@@ -421,17 +421,17 @@ getQueryPoolResults :: forall io
                        -- desired results.
                        QueryPool
                     -> -- | @firstQuery@ is the initial query index.
-                       (("firstQuery" ::: Word32))
+                       ("firstQuery" ::: Word32)
                     -> -- | @queryCount@ is the number of queries to read.
-                       (("queryCount" ::: Word32))
+                       ("queryCount" ::: Word32)
                     -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
-                       (("dataSize" ::: Word64))
+                       ("dataSize" ::: Word64)
                     -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
                        -- be written
-                       (("data" ::: Ptr ()))
+                       ("data" ::: Ptr ())
                     -> -- | @stride@ is the stride in bytes between results for individual queries
                        -- within @pData@.
-                       (("stride" ::: DeviceSize))
+                       ("stride" ::: DeviceSize)
                     -> -- | @flags@ is a bitmask of
                        -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits' specifying
                        -- how and when results are returned.

@@ -370,7 +370,7 @@ compileDeferredNV :: forall io
                   -> -- | @shader@ is the index of the shader to compile.
                      --
                      -- @shader@ /must/ not have been called as a deferred compile before
-                     (("shader" ::: Word32))
+                     ("shader" ::: Word32)
                   -> io ()
 compileDeferredNV device pipeline shader = liftIO $ do
   let vkCompileDeferredNVPtr = pVkCompileDeferredNV (deviceCmds (device :: Device))
@@ -443,7 +443,7 @@ createAccelerationStructureNV :: forall io
                               -> -- | @pAllocator@ controls host memory allocation as described in the
                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter.
-                                 (("allocator" ::: Maybe AllocationCallbacks))
+                                 ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (AccelerationStructureNV)
 createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $ do
   let vkCreateAccelerationStructureNVPtr = pVkCreateAccelerationStructureNV (deviceCmds (device :: Device))
@@ -578,9 +578,9 @@ cmdCopyAccelerationStructureNV :: forall io
                                   -- recorded.
                                   CommandBuffer
                                -> -- | @dst@ is a pointer to the target acceleration structure for the copy.
-                                  (("dst" ::: AccelerationStructureKHR))
+                                  ("dst" ::: AccelerationStructureKHR)
                                -> -- | @src@ is a pointer to the source acceleration structure for the copy.
-                                  (("src" ::: AccelerationStructureKHR))
+                                  ("src" ::: AccelerationStructureKHR)
                                -> -- | @mode@ is a
                                   -- 'Vulkan.Extensions.VK_KHR_ray_tracing.CopyAccelerationStructureModeKHR'
                                   -- value specifying additional operations to perform during the copy.
@@ -736,24 +736,24 @@ cmdBuildAccelerationStructureNV :: forall io
                                    -- 'Vulkan.Extensions.VK_KHR_ray_tracing.AccelerationStructureInstanceKHR'
                                    -- structures defining acceleration structures. This parameter /must/ be
                                    -- @NULL@ for bottom level acceleration structures.
-                                   (("instanceData" ::: Buffer))
+                                   ("instanceData" ::: Buffer)
                                 -> -- | @instanceOffset@ is the offset in bytes (relative to the start of
                                    -- @instanceData@) at which the instance data is located.
-                                   (("instanceOffset" ::: DeviceSize))
+                                   ("instanceOffset" ::: DeviceSize)
                                 -> -- | @update@ specifies whether to update the @dst@ acceleration structure
                                    -- with the data in @src@.
-                                   (("update" ::: Bool))
+                                   ("update" ::: Bool)
                                 -> -- | @dst@ is a pointer to the target acceleration structure for the build.
-                                   (("dst" ::: AccelerationStructureKHR))
+                                   ("dst" ::: AccelerationStructureKHR)
                                 -> -- | @src@ is a pointer to an existing acceleration structure that is to be
                                    -- used to update the @dst@ acceleration structure.
-                                   (("src" ::: AccelerationStructureKHR))
+                                   ("src" ::: AccelerationStructureKHR)
                                 -> -- | @scratch@ is the 'Vulkan.Core10.Handles.Buffer' that will be used as
                                    -- scratch memory for the build.
-                                   (("scratch" ::: Buffer))
+                                   ("scratch" ::: Buffer)
                                 -> -- | @scratchOffset@ is the offset in bytes relative to the start of
                                    -- @scratch@ that will be used as a scratch memory.
-                                   (("scratchOffset" ::: DeviceSize))
+                                   ("scratchOffset" ::: DeviceSize)
                                 -> io ()
 cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureNVPtr = pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1067,47 +1067,47 @@ cmdTraceRaysNV :: forall io
                   CommandBuffer
                -> -- | @raygenShaderBindingTableBuffer@ is the buffer object that holds the
                   -- shader binding table data for the ray generation shader stage.
-                  (("raygenShaderBindingTableBuffer" ::: Buffer))
+                  ("raygenShaderBindingTableBuffer" ::: Buffer)
                -> -- | @raygenShaderBindingOffset@ is the offset in bytes (relative to
                   -- @raygenShaderBindingTableBuffer@) of the ray generation shader being
                   -- used for the trace.
-                  (("raygenShaderBindingOffset" ::: DeviceSize))
+                  ("raygenShaderBindingOffset" ::: DeviceSize)
                -> -- | @missShaderBindingTableBuffer@ is the buffer object that holds the
                   -- shader binding table data for the miss shader stage.
-                  (("missShaderBindingTableBuffer" ::: Buffer))
+                  ("missShaderBindingTableBuffer" ::: Buffer)
                -> -- | @missShaderBindingOffset@ is the offset in bytes (relative to
                   -- @missShaderBindingTableBuffer@) of the miss shader being used for the
                   -- trace.
-                  (("missShaderBindingOffset" ::: DeviceSize))
+                  ("missShaderBindingOffset" ::: DeviceSize)
                -> -- | @missShaderBindingStride@ is the size in bytes of each shader binding
                   -- table record in @missShaderBindingTableBuffer@.
-                  (("missShaderBindingStride" ::: DeviceSize))
+                  ("missShaderBindingStride" ::: DeviceSize)
                -> -- | @hitShaderBindingTableBuffer@ is the buffer object that holds the shader
                   -- binding table data for the hit shader stages.
-                  (("hitShaderBindingTableBuffer" ::: Buffer))
+                  ("hitShaderBindingTableBuffer" ::: Buffer)
                -> -- | @hitShaderBindingOffset@ is the offset in bytes (relative to
                   -- @hitShaderBindingTableBuffer@) of the hit shader group being used for
                   -- the trace.
-                  (("hitShaderBindingOffset" ::: DeviceSize))
+                  ("hitShaderBindingOffset" ::: DeviceSize)
                -> -- | @hitShaderBindingStride@ is the size in bytes of each shader binding
                   -- table record in @hitShaderBindingTableBuffer@.
-                  (("hitShaderBindingStride" ::: DeviceSize))
+                  ("hitShaderBindingStride" ::: DeviceSize)
                -> -- | @callableShaderBindingTableBuffer@ is the buffer object that holds the
                   -- shader binding table data for the callable shader stage.
-                  (("callableShaderBindingTableBuffer" ::: Buffer))
+                  ("callableShaderBindingTableBuffer" ::: Buffer)
                -> -- | @callableShaderBindingOffset@ is the offset in bytes (relative to
                   -- @callableShaderBindingTableBuffer@) of the callable shader being used
                   -- for the trace.
-                  (("callableShaderBindingOffset" ::: DeviceSize))
+                  ("callableShaderBindingOffset" ::: DeviceSize)
                -> -- | @callableShaderBindingStride@ is the size in bytes of each shader
                   -- binding table record in @callableShaderBindingTableBuffer@.
-                  (("callableShaderBindingStride" ::: DeviceSize))
+                  ("callableShaderBindingStride" ::: DeviceSize)
                -> -- | @width@ is the width of the ray trace query dimensions.
-                  (("width" ::: Word32))
+                  ("width" ::: Word32)
                -> -- | @height@ is height of the ray trace query dimensions.
-                  (("height" ::: Word32))
+                  ("height" ::: Word32)
                -> -- | @depth@ is depth of the ray trace query dimensions.
-                  (("depth" ::: Word32))
+                  ("depth" ::: Word32)
                -> io ()
 cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth = liftIO $ do
   let vkCmdTraceRaysNVPtr = pVkCmdTraceRaysNV (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1168,12 +1168,12 @@ getAccelerationStructureHandleNV :: forall io
                                     -- described above
                                     --
                                     -- @dataSize@ /must/ be greater than @0@
-                                    (("dataSize" ::: Word64))
+                                    ("dataSize" ::: Word64)
                                  -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
                                     -- be written.
                                     --
                                     -- @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
-                                    (("data" ::: Ptr ()))
+                                    ("data" ::: Ptr ())
                                  -> io ()
 getAccelerationStructureHandleNV device accelerationStructure dataSize data' = liftIO $ do
   let vkGetAccelerationStructureHandleNVPtr = pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device))
@@ -1269,11 +1269,11 @@ createRayTracingPipelinesNV :: forall io
                                PipelineCache
                             -> -- | @pCreateInfos@ is a pointer to an array of
                                -- 'RayTracingPipelineCreateInfoNV' structures.
-                               (("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoNV)))
+                               ("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoNV))
                             -> -- | @pAllocator@ controls host memory allocation as described in the
                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                -- chapter.
-                               (("allocator" ::: Maybe AllocationCallbacks))
+                               ("allocator" ::: Maybe AllocationCallbacks)
                             -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device))

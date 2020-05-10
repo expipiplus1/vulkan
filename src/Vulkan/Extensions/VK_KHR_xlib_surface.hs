@@ -138,7 +138,7 @@ createXlibSurfaceKHR :: forall io
                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                         -- surface object when there is no more specific allocator available (see
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                        (("allocator" ::: Maybe AllocationCallbacks))
+                        ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (SurfaceKHR)
 createXlibSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateXlibSurfaceKHRPtr = pVkCreateXlibSurfaceKHR (instanceCmds (instance' :: Instance))
@@ -189,13 +189,13 @@ getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                                -- returned by
                                                -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
                                                -- for the given @physicalDevice@
-                                               (("queueFamilyIndex" ::: Word32))
+                                               ("queueFamilyIndex" ::: Word32)
                                             -> -- | @dpy@ is a pointer to an Xlib 'Vulkan.Extensions.WSITypes.Display'
                                                -- connection to the server.
                                                --
                                                -- @dpy@ /must/ be a valid pointer to a
                                                -- 'Vulkan.Extensions.WSITypes.Display' value
-                                               (("dpy" ::: Ptr Display))
+                                               ("dpy" ::: Ptr Display)
                                             -> -- No documentation found for Nested "vkGetPhysicalDeviceXlibPresentationSupportKHR" "visualID"
                                                VisualID
                                             -> io (Bool)

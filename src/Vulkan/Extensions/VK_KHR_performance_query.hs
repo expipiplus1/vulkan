@@ -214,7 +214,7 @@ enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io
                                                                  PhysicalDevice
                                                               -> -- | @queueFamilyIndex@ is the index into the queue family of the physical
                                                                  -- device we want to get properties for.
-                                                                 (("queueFamilyIndex" ::: Word32))
+                                                                 ("queueFamilyIndex" ::: Word32)
                                                               -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr = pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (instanceCmds (physicalDevice :: PhysicalDevice))
@@ -278,7 +278,7 @@ getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
                                                          --
                                                          -- @pPerformanceQueryCreateInfo@ /must/ be a valid pointer to a valid
                                                          -- 'QueryPoolPerformanceCreateInfoKHR' structure
-                                                         (("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR))
+                                                         ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR)
                                                       -> io (("numPasses" ::: Word32))
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr = pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (instanceCmds (physicalDevice :: PhysicalDevice))

@@ -88,10 +88,10 @@ setHdrMetadataEXT :: forall io
                      Device
                   -> -- | @pSwapchains@ is a pointer to an array of @swapchainCount@
                      -- 'Vulkan.Extensions.Handles.SwapchainKHR' handles.
-                     (("swapchains" ::: Vector SwapchainKHR))
+                     ("swapchains" ::: Vector SwapchainKHR)
                   -> -- | @pMetadata@ is a pointer to an array of @swapchainCount@
                      -- 'HdrMetadataEXT' structures.
-                     (("metadata" ::: Vector HdrMetadataEXT))
+                     ("metadata" ::: Vector HdrMetadataEXT)
                   -> io ()
 setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   let vkSetHdrMetadataEXTPtr = pVkSetHdrMetadataEXT (deviceCmds (device :: Device))

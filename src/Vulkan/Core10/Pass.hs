@@ -160,7 +160,7 @@ createFramebuffer :: forall a io
                   -> -- | @pAllocator@ controls host memory allocation as described in the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
-                     (("allocator" ::: Maybe AllocationCallbacks))
+                     ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (Framebuffer)
 createFramebuffer device createInfo allocator = liftIO . evalContT $ do
   let vkCreateFramebufferPtr = pVkCreateFramebuffer (deviceCmds (device :: Device))
@@ -245,7 +245,7 @@ destroyFramebuffer :: forall io
                    -> -- | @pAllocator@ controls host memory allocation as described in the
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                       -- chapter.
-                      (("allocator" ::: Maybe AllocationCallbacks))
+                      ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
 destroyFramebuffer device framebuffer allocator = liftIO . evalContT $ do
   let vkDestroyFramebufferPtr = pVkDestroyFramebuffer (deviceCmds (device :: Device))
@@ -309,7 +309,7 @@ createRenderPass :: forall a io
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
-                    (("allocator" ::: Maybe AllocationCallbacks))
+                    ("allocator" ::: Maybe AllocationCallbacks)
                  -> io (RenderPass)
 createRenderPass device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPassPtr = pVkCreateRenderPass (deviceCmds (device :: Device))
@@ -394,7 +394,7 @@ destroyRenderPass :: forall io
                   -> -- | @pAllocator@ controls host memory allocation as described in the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
-                     (("allocator" ::: Maybe AllocationCallbacks))
+                     ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroyRenderPass device renderPass allocator = liftIO . evalContT $ do
   let vkDestroyRenderPassPtr = pVkDestroyRenderPass (deviceCmds (device :: Device))

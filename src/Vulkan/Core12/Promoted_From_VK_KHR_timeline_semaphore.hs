@@ -178,7 +178,7 @@ waitSemaphoresSafeOrUnsafe :: forall io
                               -- adjusted to the closest value allowed by the implementation-dependent
                               -- timeout accuracy, which /may/ be substantially longer than one
                               -- nanosecond, and /may/ be longer than the requested period.
-                              (("timeout" ::: Word64))
+                              ("timeout" ::: Word64)
                            -> io (Result)
 waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO . evalContT $ do
   let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
@@ -253,7 +253,7 @@ waitSemaphores :: forall io
                   -- adjusted to the closest value allowed by the implementation-dependent
                   -- timeout accuracy, which /may/ be substantially longer than one
                   -- nanosecond, and /may/ be longer than the requested period.
-                  (("timeout" ::: Word64))
+                  ("timeout" ::: Word64)
                -> io (Result)
 waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnsafe
 
@@ -274,7 +274,7 @@ waitSemaphoresSafe :: forall io
                       -- adjusted to the closest value allowed by the implementation-dependent
                       -- timeout accuracy, which /may/ be substantially longer than one
                       -- nanosecond, and /may/ be longer than the requested period.
-                      (("timeout" ::: Word64))
+                      ("timeout" ::: Word64)
                    -> io (Result)
 waitSemaphoresSafe = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresSafe
 

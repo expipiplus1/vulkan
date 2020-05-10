@@ -253,7 +253,7 @@ freeCommandBuffers :: forall io
                       CommandPool
                    -> -- | @pCommandBuffers@ is a pointer to an array of handles of command buffers
                       -- to free.
-                      (("commandBuffers" ::: Vector CommandBuffer))
+                      ("commandBuffers" ::: Vector CommandBuffer)
                    -> io ()
 freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
   let vkFreeCommandBuffersPtr = pVkFreeCommandBuffers (deviceCmds (device :: Device))

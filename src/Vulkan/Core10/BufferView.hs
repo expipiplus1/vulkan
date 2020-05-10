@@ -104,7 +104,7 @@ createBufferView :: forall io
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
-                    (("allocator" ::: Maybe AllocationCallbacks))
+                    ("allocator" ::: Maybe AllocationCallbacks)
                  -> io (BufferView)
 createBufferView device createInfo allocator = liftIO . evalContT $ do
   let vkCreateBufferViewPtr = pVkCreateBufferView (deviceCmds (device :: Device))
@@ -189,7 +189,7 @@ destroyBufferView :: forall io
                   -> -- | @pAllocator@ controls host memory allocation as described in the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
-                     (("allocator" ::: Maybe AllocationCallbacks))
+                     ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroyBufferView device bufferView allocator = liftIO . evalContT $ do
   let vkDestroyBufferViewPtr = pVkDestroyBufferView (deviceCmds (device :: Device))

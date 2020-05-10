@@ -284,11 +284,11 @@ cmdSetViewportShadingRatePaletteNV :: forall io
                                       CommandBuffer
                                    -> -- | @firstViewport@ is the index of the first viewport whose shading rate
                                       -- palette is updated by the command.
-                                      (("firstViewport" ::: Word32))
+                                      ("firstViewport" ::: Word32)
                                    -> -- | @pShadingRatePalettes@ is a pointer to an array of
                                       -- 'ShadingRatePaletteNV' structures defining the palette for each
                                       -- viewport.
-                                      (("shadingRatePalettes" ::: Vector ShadingRatePaletteNV))
+                                      ("shadingRatePalettes" ::: Vector ShadingRatePaletteNV)
                                    -> io ()
 cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalettes = liftIO . evalContT $ do
   let vkCmdSetViewportShadingRatePaletteNVPtr = pVkCmdSetViewportShadingRatePaletteNV (deviceCmds (commandBuffer :: CommandBuffer))
@@ -378,7 +378,7 @@ cmdSetCoarseSampleOrderNV :: forall io
                              -- 'CoarseSampleOrderCustomNV' structures, each of which specifies the
                              -- coverage sample order for a single combination of fragment area and
                              -- coverage sample count.
-                             (("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV))
+                             ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV)
                           -> io ()
 cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = liftIO . evalContT $ do
   let vkCmdSetCoarseSampleOrderNVPtr = pVkCmdSetCoarseSampleOrderNV (deviceCmds (commandBuffer :: CommandBuffer))

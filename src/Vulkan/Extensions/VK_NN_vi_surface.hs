@@ -138,7 +138,7 @@ createViSurfaceNN :: forall io
                   -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                      -- surface object when there is no more specific allocator available (see
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                     (("allocator" ::: Maybe AllocationCallbacks))
+                     ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (SurfaceKHR)
 createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateViSurfaceNNPtr = pVkCreateViSurfaceNN (instanceCmds (instance' :: Instance))

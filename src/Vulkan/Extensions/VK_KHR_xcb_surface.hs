@@ -138,7 +138,7 @@ createXcbSurfaceKHR :: forall io
                     -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                        -- surface object when there is no more specific allocator available (see
                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
-                       (("allocator" ::: Maybe AllocationCallbacks))
+                       ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (SurfaceKHR)
 createXcbSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateXcbSurfaceKHRPtr = pVkCreateXcbSurfaceKHR (instanceCmds (instance' :: Instance))
@@ -189,13 +189,13 @@ getPhysicalDeviceXcbPresentationSupportKHR :: forall io
                                               -- returned by
                                               -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
                                               -- for the given @physicalDevice@
-                                              (("queueFamilyIndex" ::: Word32))
+                                              ("queueFamilyIndex" ::: Word32)
                                            -> -- | @connection@ is a pointer to an @xcb_connection_t@ to the X server.
                                               --
                                               -- @connection@ /must/ be a valid pointer to an @xcb_connection_t@ value
                                               (Ptr Xcb_connection_t)
                                            -> -- | @visual_id@ is an X11 visual (@xcb_visualid_t@).
-                                              (("visual_id" ::: Xcb_visualid_t))
+                                              ("visual_id" ::: Xcb_visualid_t)
                                            -> io (Bool)
 getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id = liftIO $ do
   let vkGetPhysicalDeviceXcbPresentationSupportKHRPtr = pVkGetPhysicalDeviceXcbPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))

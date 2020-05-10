@@ -349,7 +349,7 @@ destroyAccelerationStructureKHR :: forall io
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
                                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
-                                   (("allocator" ::: Maybe AllocationCallbacks))
+                                   ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
 destroyAccelerationStructureKHR device accelerationStructure allocator = liftIO . evalContT $ do
   let vkDestroyAccelerationStructureKHRPtr = pVkDestroyAccelerationStructureKHR (deviceCmds (device :: Device))
@@ -444,7 +444,7 @@ bindAccelerationStructureMemoryKHR :: forall io
                                       --
                                       -- @pBindInfos@ /must/ be a valid pointer to an array of @bindInfoCount@
                                       -- valid 'BindAccelerationStructureMemoryInfoKHR' structures
-                                      (("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoKHR))
+                                      ("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoKHR)
                                    -> io ()
 bindAccelerationStructureMemoryKHR device bindInfos = liftIO . evalContT $ do
   let vkBindAccelerationStructureMemoryKHRPtr = pVkBindAccelerationStructureMemoryKHR (deviceCmds (device :: Device))
@@ -1116,7 +1116,7 @@ cmdWriteAccelerationStructuresPropertiesKHR :: forall io
                                                CommandBuffer
                                             -> -- | @pAccelerationStructures@ is a pointer to an array of existing
                                                -- previously built acceleration structures.
-                                               (("accelerationStructures" ::: Vector AccelerationStructureKHR))
+                                               ("accelerationStructures" ::: Vector AccelerationStructureKHR)
                                             -> -- | @queryType@ is a 'Vulkan.Core10.Enums.QueryType.QueryType' value
                                                -- specifying the type of queries managed by the pool.
                                                QueryType
@@ -1124,7 +1124,7 @@ cmdWriteAccelerationStructuresPropertiesKHR :: forall io
                                                QueryPool
                                             -> -- | @firstQuery@ is the first query index within the query pool that will
                                                -- contain the @accelerationStructureCount@ number of results.
-                                               (("firstQuery" ::: Word32))
+                                               ("firstQuery" ::: Word32)
                                             -> io ()
 cmdWriteAccelerationStructuresPropertiesKHR commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
   let vkCmdWriteAccelerationStructuresPropertiesKHRPtr = pVkCmdWriteAccelerationStructuresPropertiesKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1257,15 +1257,15 @@ writeAccelerationStructuresPropertiesKHR :: forall io
                                          => -- No documentation found for Nested "vkWriteAccelerationStructuresPropertiesKHR" "device"
                                             Device
                                          -> -- No documentation found for Nested "vkWriteAccelerationStructuresPropertiesKHR" "pAccelerationStructures"
-                                            (("accelerationStructures" ::: Vector AccelerationStructureKHR))
+                                            ("accelerationStructures" ::: Vector AccelerationStructureKHR)
                                          -> -- No documentation found for Nested "vkWriteAccelerationStructuresPropertiesKHR" "queryType"
                                             QueryType
                                          -> -- No documentation found for Nested "vkWriteAccelerationStructuresPropertiesKHR" "dataSize"
-                                            (("dataSize" ::: Word64))
+                                            ("dataSize" ::: Word64)
                                          -> -- No documentation found for Nested "vkWriteAccelerationStructuresPropertiesKHR" "pData"
-                                            (("data" ::: Ptr ()))
+                                            ("data" ::: Ptr ())
                                          -> -- No documentation found for Nested "vkWriteAccelerationStructuresPropertiesKHR" "stride"
-                                            (("stride" ::: Word64))
+                                            ("stride" ::: Word64)
                                          -> io ()
 writeAccelerationStructuresPropertiesKHR device accelerationStructures queryType dataSize data' stride = liftIO . evalContT $ do
   let vkWriteAccelerationStructuresPropertiesKHRPtr = pVkWriteAccelerationStructuresPropertiesKHR (deviceCmds (device :: Device))
@@ -1639,22 +1639,22 @@ cmdTraceRaysKHR :: forall io
                    CommandBuffer
                 -> -- | @pRaygenShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds the
                    -- shader binding table data for the ray generation shader stage.
-                   (("raygenShaderBindingTable" ::: StridedBufferRegionKHR))
+                   ("raygenShaderBindingTable" ::: StridedBufferRegionKHR)
                 -> -- | @pMissShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds the
                    -- shader binding table data for the miss shader stage.
-                   (("missShaderBindingTable" ::: StridedBufferRegionKHR))
+                   ("missShaderBindingTable" ::: StridedBufferRegionKHR)
                 -> -- | @pHitShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds the
                    -- shader binding table data for the hit shader stage.
-                   (("hitShaderBindingTable" ::: StridedBufferRegionKHR))
+                   ("hitShaderBindingTable" ::: StridedBufferRegionKHR)
                 -> -- | @pCallableShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
                    -- the shader binding table data for the callable shader stage.
-                   (("callableShaderBindingTable" ::: StridedBufferRegionKHR))
+                   ("callableShaderBindingTable" ::: StridedBufferRegionKHR)
                 -> -- | @width@ is the width of the ray trace query dimensions.
-                   (("width" ::: Word32))
+                   ("width" ::: Word32)
                 -> -- | @height@ is height of the ray trace query dimensions.
-                   (("height" ::: Word32))
+                   ("height" ::: Word32)
                 -> -- | @depth@ is depth of the ray trace query dimensions.
-                   (("depth" ::: Word32))
+                   ("depth" ::: Word32)
                 -> io ()
 cmdTraceRaysKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable width height depth = liftIO . evalContT $ do
   let vkCmdTraceRaysKHRPtr = pVkCmdTraceRaysKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1729,14 +1729,14 @@ getRayTracingShaderGroupHandlesKHR :: forall io
                                       -- from the 'RayTracingPipelineCreateInfoKHR'::@pGroups@ or
                                       -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@pGroups@
                                       -- array.
-                                      (("firstGroup" ::: Word32))
+                                      ("firstGroup" ::: Word32)
                                    -> -- | @groupCount@ is the number of shader handles to retrieve.
-                                      (("groupCount" ::: Word32))
+                                      ("groupCount" ::: Word32)
                                    -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
-                                      (("dataSize" ::: Word64))
+                                      ("dataSize" ::: Word64)
                                    -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
                                       -- be written.
-                                      (("data" ::: Ptr ()))
+                                      ("data" ::: Ptr ())
                                    -> io ()
 getRayTracingShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
   let vkGetRayTracingShaderGroupHandlesKHRPtr = pVkGetRayTracingShaderGroupHandlesKHR (deviceCmds (device :: Device))
@@ -1805,14 +1805,14 @@ getRayTracingCaptureReplayShaderGroupHandlesKHR :: forall io
                                                    Pipeline
                                                 -> -- | @firstGroup@ is the index of the first group to retrieve a handle for
                                                    -- from the 'RayTracingPipelineCreateInfoKHR'::@pGroups@ array.
-                                                   (("firstGroup" ::: Word32))
+                                                   ("firstGroup" ::: Word32)
                                                 -> -- | @groupCount@ is the number of shader handles to retrieve.
-                                                   (("groupCount" ::: Word32))
+                                                   ("groupCount" ::: Word32)
                                                 -> -- | @dataSize@ is the size in bytes of the buffer pointed to by @pData@.
-                                                   (("dataSize" ::: Word64))
+                                                   ("dataSize" ::: Word64)
                                                 -> -- | @pData@ is a pointer to a user-allocated buffer where the results will
                                                    -- be written.
-                                                   (("data" ::: Ptr ()))
+                                                   ("data" ::: Ptr ())
                                                 -> io ()
 getRayTracingCaptureReplayShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
   let vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr = pVkGetRayTracingCaptureReplayShaderGroupHandlesKHR (deviceCmds (device :: Device))
@@ -1926,11 +1926,11 @@ createRayTracingPipelinesKHR :: forall io
                                 PipelineCache
                              -> -- | @pCreateInfos@ is a pointer to an array of
                                 -- 'RayTracingPipelineCreateInfoKHR' structures.
-                                (("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoKHR)))
+                                ("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoKHR))
                              -> -- | @pAllocator@ controls host memory allocation as described in the
                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                 -- chapter.
-                                (("allocator" ::: Maybe AllocationCallbacks))
+                                ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesKHR device pipelineCache createInfos allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (deviceCmds (device :: Device))
@@ -2318,20 +2318,20 @@ cmdTraceRaysIndirectKHR :: forall io
                            CommandBuffer
                         -> -- | @pRaygenShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds the
                            -- shader binding table data for the ray generation shader stage.
-                           (("raygenShaderBindingTable" ::: StridedBufferRegionKHR))
+                           ("raygenShaderBindingTable" ::: StridedBufferRegionKHR)
                         -> -- | @pMissShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds the
                            -- shader binding table data for the miss shader stage.
-                           (("missShaderBindingTable" ::: StridedBufferRegionKHR))
+                           ("missShaderBindingTable" ::: StridedBufferRegionKHR)
                         -> -- | @pHitShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds the
                            -- shader binding table data for the hit shader stage.
-                           (("hitShaderBindingTable" ::: StridedBufferRegionKHR))
+                           ("hitShaderBindingTable" ::: StridedBufferRegionKHR)
                         -> -- | @pCallableShaderBindingTable@ is a 'StridedBufferRegionKHR' that holds
                            -- the shader binding table data for the callable shader stage.
-                           (("callableShaderBindingTable" ::: StridedBufferRegionKHR))
+                           ("callableShaderBindingTable" ::: StridedBufferRegionKHR)
                         -> -- | @buffer@ is the buffer containing the trace ray parameters.
                            Buffer
                         -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                           (("offset" ::: DeviceSize))
+                           ("offset" ::: DeviceSize)
                         -> io ()
 cmdTraceRaysIndirectKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable buffer offset = liftIO . evalContT $ do
   let vkCmdTraceRaysIndirectKHRPtr = pVkCmdTraceRaysIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2506,7 +2506,7 @@ createAccelerationStructureKHR :: forall io
                                -> -- | @pAllocator@ controls host memory allocation as described in the
                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
-                                  (("allocator" ::: Maybe AllocationCallbacks))
+                                  ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (AccelerationStructureKHR)
 createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT $ do
   let vkCreateAccelerationStructureKHRPtr = pVkCreateAccelerationStructureKHR (deviceCmds (device :: Device))
@@ -2706,14 +2706,14 @@ cmdBuildAccelerationStructureKHR :: forall io
                                  -> -- | @pInfos@ is an array of @infoCount@
                                     -- 'AccelerationStructureBuildGeometryInfoKHR' structures defining the
                                     -- geometry used to build each acceleration structure.
-                                    (("infos" ::: Vector (SomeStruct AccelerationStructureBuildGeometryInfoKHR)))
+                                    ("infos" ::: Vector (SomeStruct AccelerationStructureBuildGeometryInfoKHR))
                                  -> -- | @ppOffsetInfos@ is an array of @infoCount@ pointers to arrays of
                                     -- 'AccelerationStructureBuildOffsetInfoKHR' structures. Each
                                     -- @ppOffsetInfos@[i] is an array of @pInfos@[i].@geometryCount@
                                     -- 'AccelerationStructureBuildOffsetInfoKHR' structures defining dynamic
                                     -- offsets to the addresses where geometry data is stored, as defined by
                                     -- @pInfos@[i].
-                                    (("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR))
+                                    ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR)
                                  -> io ()
 cmdBuildAccelerationStructureKHR commandBuffer infos offsetInfos = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureKHRPtr = pVkCmdBuildAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2820,12 +2820,12 @@ cmdBuildAccelerationStructureIndirectKHR :: forall a io
                                             -- @pInfo->geometryCount@ 'AccelerationStructureBuildOffsetInfoKHR'
                                             -- structures defining dynamic offsets to the addresses where geometry data
                                             -- is stored, as defined by @pInfo@.
-                                            (("indirectBuffer" ::: Buffer))
+                                            ("indirectBuffer" ::: Buffer)
                                          -> -- | @indirectOffset@ is the byte offset into @indirectBuffer@ where offset
                                             -- parameters begin.
-                                            (("indirectOffset" ::: DeviceSize))
+                                            ("indirectOffset" ::: DeviceSize)
                                          -> -- No documentation found for Nested "vkCmdBuildAccelerationStructureIndirectKHR" "indirectStride"
-                                            (("indirectStride" ::: Word32))
+                                            ("indirectStride" ::: Word32)
                                          -> io ()
 cmdBuildAccelerationStructureIndirectKHR commandBuffer info indirectBuffer indirectOffset indirectStride = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructureIndirectKHRPtr = pVkCmdBuildAccelerationStructureIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2993,9 +2993,9 @@ buildAccelerationStructureKHR :: forall io
                               => -- No documentation found for Nested "vkBuildAccelerationStructureKHR" "device"
                                  Device
                               -> -- No documentation found for Nested "vkBuildAccelerationStructureKHR" "pInfos"
-                                 (("infos" ::: Vector (SomeStruct AccelerationStructureBuildGeometryInfoKHR)))
+                                 ("infos" ::: Vector (SomeStruct AccelerationStructureBuildGeometryInfoKHR))
                               -> -- No documentation found for Nested "vkBuildAccelerationStructureKHR" "ppOffsetInfos"
-                                 (("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR))
+                                 ("offsetInfos" ::: Vector AccelerationStructureBuildOffsetInfoKHR)
                               -> io (Result)
 buildAccelerationStructureKHR device infos offsetInfos = liftIO . evalContT $ do
   let vkBuildAccelerationStructureKHRPtr = pVkBuildAccelerationStructureKHR (deviceCmds (device :: Device))

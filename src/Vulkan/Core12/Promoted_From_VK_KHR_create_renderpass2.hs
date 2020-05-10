@@ -172,7 +172,7 @@ createRenderPass2 :: forall a io
                   -> -- | @pAllocator@ controls host memory allocation as described in the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
-                     (("allocator" ::: Maybe AllocationCallbacks))
+                     ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (RenderPass)
 createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
   let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (deviceCmds (device :: Device))

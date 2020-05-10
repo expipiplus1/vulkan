@@ -168,7 +168,7 @@ createDescriptorSetLayout :: forall a io
                           -> -- | @pAllocator@ controls host memory allocation as described in the
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
-                             (("allocator" ::: Maybe AllocationCallbacks))
+                             ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (DescriptorSetLayout)
 createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (deviceCmds (device :: Device))
@@ -252,7 +252,7 @@ destroyDescriptorSetLayout :: forall io
                            -> -- | @pAllocator@ controls host memory allocation as described in the
                               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                               -- chapter.
-                              (("allocator" ::: Maybe AllocationCallbacks))
+                              ("allocator" ::: Maybe AllocationCallbacks)
                            -> io ()
 destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorSetLayoutPtr = pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device))
@@ -326,7 +326,7 @@ createDescriptorPool :: forall a io
                      -> -- | @pAllocator@ controls host memory allocation as described in the
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
-                        (("allocator" ::: Maybe AllocationCallbacks))
+                        ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DescriptorPool)
 createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (deviceCmds (device :: Device))
@@ -418,7 +418,7 @@ destroyDescriptorPool :: forall io
                       -> -- | @pAllocator@ controls host memory allocation as described in the
                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
-                         (("allocator" ::: Maybe AllocationCallbacks))
+                         ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
 destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorPoolPtr = pVkDestroyDescriptorPool (deviceCmds (device :: Device))
@@ -713,7 +713,7 @@ freeDescriptorSets :: forall io
                       DescriptorPool
                    -> -- | @pDescriptorSets@ is a pointer to an array of handles to
                       -- 'Vulkan.Core10.Handles.DescriptorSet' objects.
-                      (("descriptorSets" ::: Vector DescriptorSet))
+                      ("descriptorSets" ::: Vector DescriptorSet)
                    -> io ()
 freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
   let vkFreeDescriptorSetsPtr = pVkFreeDescriptorSets (deviceCmds (device :: Device))
@@ -802,10 +802,10 @@ updateDescriptorSets :: forall io
                         Device
                      -> -- | @pDescriptorWrites@ is a pointer to an array of 'WriteDescriptorSet'
                         -- structures describing the descriptor sets to write to.
-                        (("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet)))
+                        ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
                      -> -- | @pDescriptorCopies@ is a pointer to an array of 'CopyDescriptorSet'
                         -- structures describing the descriptor sets to copy between.
-                        (("descriptorCopies" ::: Vector CopyDescriptorSet))
+                        ("descriptorCopies" ::: Vector CopyDescriptorSet)
                      -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
   let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (deviceCmds (device :: Device))

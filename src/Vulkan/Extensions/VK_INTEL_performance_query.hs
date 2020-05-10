@@ -173,7 +173,7 @@ initializePerformanceApiINTEL :: forall io
                                  --
                                  -- @pInitializeInfo@ /must/ be a valid pointer to a valid
                                  -- 'InitializePerformanceApiInfoINTEL' structure
-                                 (("initializeInfo" ::: InitializePerformanceApiInfoINTEL))
+                                 ("initializeInfo" ::: InitializePerformanceApiInfoINTEL)
                               -> io ()
 initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
   let vkInitializePerformanceApiINTELPtr = pVkInitializePerformanceApiINTEL (deviceCmds (device :: Device))

@@ -176,7 +176,7 @@ createSamplerYcbcrConversion :: forall a io
                              -> -- | @pAllocator@ controls host memory allocation as described in the
                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                 -- chapter.
-                                (("allocator" ::: Maybe AllocationCallbacks))
+                                ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (SamplerYcbcrConversion)
 createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device))
@@ -249,7 +249,7 @@ destroySamplerYcbcrConversion :: forall io
                               -> -- | @pAllocator@ controls host memory allocation as described in the
                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter.
-                                 (("allocator" ::: Maybe AllocationCallbacks))
+                                 ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
 destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
   let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device))

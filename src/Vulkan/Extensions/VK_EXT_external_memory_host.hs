@@ -115,7 +115,7 @@ getMemoryHostPointerPropertiesEXT :: forall io
                                   -> -- | @handleType@ is the type of the handle @pHostPointer@.
                                      ExternalMemoryHandleTypeFlagBits
                                   -> -- | @pHostPointer@ is the host pointer to import from.
-                                     (("hostPointer" ::: Ptr ()))
+                                     ("hostPointer" ::: Ptr ())
                                   -> io (MemoryHostPointerPropertiesEXT)
 getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalContT $ do
   let vkGetMemoryHostPointerPropertiesEXTPtr = pVkGetMemoryHostPointerPropertiesEXT (deviceCmds (device :: Device))

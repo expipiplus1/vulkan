@@ -258,7 +258,7 @@ bindBufferMemory :: forall io
                     -- be bound to the buffer. The number of bytes returned in the
                     -- 'MemoryRequirements'::@size@ member in @memory@, starting from
                     -- @memoryOffset@ bytes, will be bound to the specified buffer.
-                    (("memoryOffset" ::: DeviceSize))
+                    ("memoryOffset" ::: DeviceSize)
                  -> io ()
 bindBufferMemory device buffer memory memoryOffset = liftIO $ do
   let vkBindBufferMemoryPtr = pVkBindBufferMemory (deviceCmds (device :: Device))
@@ -496,7 +496,7 @@ bindImageMemory :: forall io
                    -- be bound to the image. The number of bytes returned in the
                    -- 'MemoryRequirements'::@size@ member in @memory@, starting from
                    -- @memoryOffset@ bytes, will be bound to the specified image.
-                   (("memoryOffset" ::: DeviceSize))
+                   ("memoryOffset" ::: DeviceSize)
                 -> io ()
 bindImageMemory device image memory memoryOffset = liftIO $ do
   let vkBindImageMemoryPtr = pVkBindImageMemory (deviceCmds (device :: Device))

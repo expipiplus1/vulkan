@@ -155,11 +155,11 @@ cmdSetExclusiveScissorNV :: forall io
                             CommandBuffer
                          -> -- | @firstExclusiveScissor@ is the index of the first exclusive scissor
                             -- rectangle whose state is updated by the command.
-                            (("firstExclusiveScissor" ::: Word32))
+                            ("firstExclusiveScissor" ::: Word32)
                          -> -- | @pExclusiveScissors@ is a pointer to an array of
                             -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining
                             -- exclusive scissor rectangles.
-                            (("exclusiveScissors" ::: Vector Rect2D))
+                            ("exclusiveScissors" ::: Vector Rect2D)
                          -> io ()
 cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
   let vkCmdSetExclusiveScissorNVPtr = pVkCmdSetExclusiveScissorNV (deviceCmds (commandBuffer :: CommandBuffer))

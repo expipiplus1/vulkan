@@ -443,10 +443,10 @@ cmdSetViewport :: forall io
                   CommandBuffer
                -> -- | @firstViewport@ is the index of the first viewport whose parameters are
                   -- updated by the command.
-                  (("firstViewport" ::: Word32))
+                  ("firstViewport" ::: Word32)
                -> -- | @pViewports@ is a pointer to an array of 'Viewport' structures
                   -- specifying viewport parameters.
-                  (("viewports" ::: Vector Viewport))
+                  ("viewports" ::: Vector Viewport)
                -> io ()
 cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
   let vkCmdSetViewportPtr = pVkCmdSetViewport (deviceCmds (commandBuffer :: CommandBuffer))
@@ -550,10 +550,10 @@ cmdSetScissor :: forall io
                  CommandBuffer
               -> -- | @firstScissor@ is the index of the first scissor whose state is updated
                  -- by the command.
-                 (("firstScissor" ::: Word32))
+                 ("firstScissor" ::: Word32)
               -> -- | @pScissors@ is a pointer to an array of 'Rect2D' structures defining
                  -- scissor rectangles.
-                 (("scissors" ::: Vector Rect2D))
+                 ("scissors" ::: Vector Rect2D)
               -> io ()
 cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
   let vkCmdSetScissorPtr = pVkCmdSetScissor (deviceCmds (commandBuffer :: CommandBuffer))
@@ -619,7 +619,7 @@ cmdSetLineWidth :: forall io
                    -- recorded.
                    CommandBuffer
                 -> -- | @lineWidth@ is the width of rasterized line segments.
-                   (("lineWidth" ::: Float))
+                   ("lineWidth" ::: Float)
                 -> io ()
 cmdSetLineWidth commandBuffer lineWidth = liftIO $ do
   let vkCmdSetLineWidthPtr = pVkCmdSetLineWidth (deviceCmds (commandBuffer :: CommandBuffer))
@@ -756,12 +756,12 @@ cmdSetDepthBias :: forall io
                    CommandBuffer
                 -> -- | @depthBiasConstantFactor@ is a scalar factor controlling the constant
                    -- depth value added to each fragment.
-                   (("depthBiasConstantFactor" ::: Float))
+                   ("depthBiasConstantFactor" ::: Float)
                 -> -- | @depthBiasClamp@ is the maximum (or minimum) depth bias of a fragment.
-                   (("depthBiasClamp" ::: Float))
+                   ("depthBiasClamp" ::: Float)
                 -> -- | @depthBiasSlopeFactor@ is a scalar factor applied to a fragment’s slope
                    -- in depth bias calculations.
-                   (("depthBiasSlopeFactor" ::: Float))
+                   ("depthBiasSlopeFactor" ::: Float)
                 -> io ()
 cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = liftIO $ do
   let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (deviceCmds (commandBuffer :: CommandBuffer))
@@ -822,7 +822,7 @@ cmdSetBlendConstants :: forall io
                         -- R, G, B, and A components of the blend constant color used in blending,
                         -- depending on the
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendfactors blend factor>.
-                        (("blendConstants" ::: (Float, Float, Float, Float)))
+                        ("blendConstants" ::: (Float, Float, Float, Float))
                      -> io ()
 cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
   let vkCmdSetBlendConstantsPtr = pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer))
@@ -904,9 +904,9 @@ cmdSetDepthBounds :: forall io
                      -- recorded.
                      CommandBuffer
                   -> -- | @minDepthBounds@ is the minimum depth bound.
-                     (("minDepthBounds" ::: Float))
+                     ("minDepthBounds" ::: Float)
                   -> -- | @maxDepthBounds@ is the maximum depth bound.
-                     (("maxDepthBounds" ::: Float))
+                     ("maxDepthBounds" ::: Float)
                   -> io ()
 cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = liftIO $ do
   let vkCmdSetDepthBoundsPtr = pVkCmdSetDepthBounds (deviceCmds (commandBuffer :: CommandBuffer))
@@ -980,9 +980,9 @@ cmdSetStencilCompareMask :: forall io
                          -> -- | @faceMask@ is a bitmask of
                             -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' specifying
                             -- the set of stencil state for which to update the compare mask.
-                            (("faceMask" ::: StencilFaceFlags))
+                            ("faceMask" ::: StencilFaceFlags)
                          -> -- | @compareMask@ is the new value to use as the stencil compare mask.
-                            (("compareMask" ::: Word32))
+                            ("compareMask" ::: Word32)
                          -> io ()
 cmdSetStencilCompareMask commandBuffer faceMask compareMask = liftIO $ do
   let vkCmdSetStencilCompareMaskPtr = pVkCmdSetStencilCompareMask (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1057,9 +1057,9 @@ cmdSetStencilWriteMask :: forall io
                           -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' specifying
                           -- the set of stencil state for which to update the write mask, as
                           -- described above for 'cmdSetStencilCompareMask'.
-                          (("faceMask" ::: StencilFaceFlags))
+                          ("faceMask" ::: StencilFaceFlags)
                        -> -- | @writeMask@ is the new value to use as the stencil write mask.
-                          (("writeMask" ::: Word32))
+                          ("writeMask" ::: Word32)
                        -> io ()
 cmdSetStencilWriteMask commandBuffer faceMask writeMask = liftIO $ do
   let vkCmdSetStencilWriteMaskPtr = pVkCmdSetStencilWriteMask (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1134,9 +1134,9 @@ cmdSetStencilReference :: forall io
                           -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' specifying
                           -- the set of stencil state for which to update the reference value, as
                           -- described above for 'cmdSetStencilCompareMask'.
-                          (("faceMask" ::: StencilFaceFlags))
+                          ("faceMask" ::: StencilFaceFlags)
                        -> -- | @reference@ is the new value to use as the stencil reference value.
-                          (("reference" ::: Word32))
+                          ("reference" ::: Word32)
                        -> io ()
 cmdSetStencilReference commandBuffer faceMask reference = liftIO $ do
   let vkCmdSetStencilReferencePtr = pVkCmdSetStencilReference (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1327,14 +1327,14 @@ cmdBindDescriptorSets :: forall io
                          -- program the bindings.
                          PipelineLayout
                       -> -- | @firstSet@ is the set number of the first descriptor set to be bound.
-                         (("firstSet" ::: Word32))
+                         ("firstSet" ::: Word32)
                       -> -- | @pDescriptorSets@ is a pointer to an array of handles to
                          -- 'Vulkan.Core10.Handles.DescriptorSet' objects describing the descriptor
                          -- sets to write to.
-                         (("descriptorSets" ::: Vector DescriptorSet))
+                         ("descriptorSets" ::: Vector DescriptorSet)
                       -> -- | @pDynamicOffsets@ is a pointer to an array of @uint32_t@ values
                          -- specifying dynamic offsets.
-                         (("dynamicOffsets" ::: Vector Word32))
+                         ("dynamicOffsets" ::: Vector Word32)
                       -> io ()
 cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = liftIO . evalContT $ do
   let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1432,7 +1432,7 @@ cmdBindIndexBuffer :: forall io
                       Buffer
                    -> -- | @offset@ is the starting offset in bytes within @buffer@ used in index
                       -- buffer address calculations.
-                      (("offset" ::: DeviceSize))
+                      ("offset" ::: DeviceSize)
                    -> -- | @indexType@ is a 'Vulkan.Core10.Enums.IndexType.IndexType' value
                       -- specifying whether indices are treated as 16 bits or 32 bits.
                       IndexType
@@ -1555,11 +1555,11 @@ cmdBindVertexBuffers :: forall io
                         CommandBuffer
                      -> -- | @firstBinding@ is the index of the first vertex input binding whose
                         -- state is updated by the command.
-                        (("firstBinding" ::: Word32))
+                        ("firstBinding" ::: Word32)
                      -> -- | @pBuffers@ is a pointer to an array of buffer handles.
-                        (("buffers" ::: Vector Buffer))
+                        ("buffers" ::: Vector Buffer)
                      -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
-                        (("offsets" ::: Vector DeviceSize))
+                        ("offsets" ::: Vector DeviceSize)
                      -> io ()
 cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalContT $ do
   let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (deviceCmds (commandBuffer :: CommandBuffer))
@@ -1832,13 +1832,13 @@ cmdDraw :: forall io
            -- recorded.
            CommandBuffer
         -> -- | @vertexCount@ is the number of vertices to draw.
-           (("vertexCount" ::: Word32))
+           ("vertexCount" ::: Word32)
         -> -- | @instanceCount@ is the number of instances to draw.
-           (("instanceCount" ::: Word32))
+           ("instanceCount" ::: Word32)
         -> -- | @firstVertex@ is the index of the first vertex to draw.
-           (("firstVertex" ::: Word32))
+           ("firstVertex" ::: Word32)
         -> -- | @firstInstance@ is the instance ID of the first instance to draw.
-           (("firstInstance" ::: Word32))
+           ("firstInstance" ::: Word32)
         -> io ()
 cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = liftIO $ do
   let vkCmdDrawPtr = pVkCmdDraw (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2126,16 +2126,16 @@ cmdDrawIndexed :: forall io
                   -- recorded.
                   CommandBuffer
                -> -- | @indexCount@ is the number of vertices to draw.
-                  (("indexCount" ::: Word32))
+                  ("indexCount" ::: Word32)
                -> -- | @instanceCount@ is the number of instances to draw.
-                  (("instanceCount" ::: Word32))
+                  ("instanceCount" ::: Word32)
                -> -- | @firstIndex@ is the base index within the index buffer.
-                  (("firstIndex" ::: Word32))
+                  ("firstIndex" ::: Word32)
                -> -- | @vertexOffset@ is the value added to the vertex index before indexing
                   -- into the vertex buffer.
-                  (("vertexOffset" ::: Int32))
+                  ("vertexOffset" ::: Int32)
                -> -- | @firstInstance@ is the instance ID of the first instance to draw.
-                  (("firstInstance" ::: Word32))
+                  ("firstInstance" ::: Word32)
                -> io ()
 cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = liftIO $ do
   let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2436,11 +2436,11 @@ cmdDrawIndirect :: forall io
                 -> -- | @buffer@ is the buffer containing draw parameters.
                    Buffer
                 -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                   (("offset" ::: DeviceSize))
+                   ("offset" ::: DeviceSize)
                 -> -- | @drawCount@ is the number of draws to execute, and /can/ be zero.
-                   (("drawCount" ::: Word32))
+                   ("drawCount" ::: Word32)
                 -> -- | @stride@ is the byte stride between successive sets of draw parameters.
-                   (("stride" ::: Word32))
+                   ("stride" ::: Word32)
                 -> io ()
 cmdDrawIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawIndirectPtr = pVkCmdDrawIndirect (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2747,11 +2747,11 @@ cmdDrawIndexedIndirect :: forall io
                        -> -- | @buffer@ is the buffer containing draw parameters.
                           Buffer
                        -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                          (("offset" ::: DeviceSize))
+                          ("offset" ::: DeviceSize)
                        -> -- | @drawCount@ is the number of draws to execute, and /can/ be zero.
-                          (("drawCount" ::: Word32))
+                          ("drawCount" ::: Word32)
                        -> -- | @stride@ is the byte stride between successive sets of draw parameters.
-                          (("stride" ::: Word32))
+                          ("stride" ::: Word32)
                        -> io ()
 cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (deviceCmds (commandBuffer :: CommandBuffer))
@@ -2974,13 +2974,13 @@ cmdDispatch :: forall io
                CommandBuffer
             -> -- | @groupCountX@ is the number of local workgroups to dispatch in the X
                -- dimension.
-               (("groupCountX" ::: Word32))
+               ("groupCountX" ::: Word32)
             -> -- | @groupCountY@ is the number of local workgroups to dispatch in the Y
                -- dimension.
-               (("groupCountY" ::: Word32))
+               ("groupCountY" ::: Word32)
             -> -- | @groupCountZ@ is the number of local workgroups to dispatch in the Z
                -- dimension.
-               (("groupCountZ" ::: Word32))
+               ("groupCountZ" ::: Word32)
             -> io ()
 cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
   let vkCmdDispatchPtr = pVkCmdDispatch (deviceCmds (commandBuffer :: CommandBuffer))
@@ -3209,7 +3209,7 @@ cmdDispatchIndirect :: forall io
                     -> -- | @buffer@ is the buffer containing dispatch parameters.
                        Buffer
                     -> -- | @offset@ is the byte offset into @buffer@ where parameters begin.
-                       (("offset" ::: DeviceSize))
+                       ("offset" ::: DeviceSize)
                     -> io ()
 cmdDispatchIndirect commandBuffer buffer offset = liftIO $ do
   let vkCmdDispatchIndirectPtr = pVkCmdDispatchIndirect (deviceCmds (commandBuffer :: CommandBuffer))
@@ -3333,12 +3333,12 @@ cmdCopyBuffer :: forall io
                  -- recorded.
                  CommandBuffer
               -> -- | @srcBuffer@ is the source buffer.
-                 (("srcBuffer" ::: Buffer))
+                 ("srcBuffer" ::: Buffer)
               -> -- | @dstBuffer@ is the destination buffer.
-                 (("dstBuffer" ::: Buffer))
+                 ("dstBuffer" ::: Buffer)
               -> -- | @pRegions@ is a pointer to an array of 'BufferCopy' structures
                  -- specifying the regions to copy.
-                 (("regions" ::: Vector BufferCopy))
+                 ("regions" ::: Vector BufferCopy)
               -> io ()
 cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ do
   let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (deviceCmds (commandBuffer :: CommandBuffer))
@@ -3643,17 +3643,17 @@ cmdCopyImage :: forall io
                 -- recorded.
                 CommandBuffer
              -> -- | @srcImage@ is the source image.
-                (("srcImage" ::: Image))
+                ("srcImage" ::: Image)
              -> -- | @srcImageLayout@ is the current layout of the source image subresource.
-                (("srcImageLayout" ::: ImageLayout))
+                ("srcImageLayout" ::: ImageLayout)
              -> -- | @dstImage@ is the destination image.
-                (("dstImage" ::: Image))
+                ("dstImage" ::: Image)
              -> -- | @dstImageLayout@ is the current layout of the destination image
                 -- subresource.
-                (("dstImageLayout" ::: ImageLayout))
+                ("dstImageLayout" ::: ImageLayout)
              -> -- | @pRegions@ is a pointer to an array of 'ImageCopy' structures specifying
                 -- the regions to copy.
-                (("regions" ::: Vector ImageCopy))
+                ("regions" ::: Vector ImageCopy)
              -> io ()
 cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdCopyImagePtr = pVkCmdCopyImage (deviceCmds (commandBuffer :: CommandBuffer))
@@ -3986,18 +3986,18 @@ cmdBlitImage :: forall io
                 -- recorded.
                 CommandBuffer
              -> -- | @srcImage@ is the source image.
-                (("srcImage" ::: Image))
+                ("srcImage" ::: Image)
              -> -- | @srcImageLayout@ is the layout of the source image subresources for the
                 -- blit.
-                (("srcImageLayout" ::: ImageLayout))
+                ("srcImageLayout" ::: ImageLayout)
              -> -- | @dstImage@ is the destination image.
-                (("dstImage" ::: Image))
+                ("dstImage" ::: Image)
              -> -- | @dstImageLayout@ is the layout of the destination image subresources for
                 -- the blit.
-                (("dstImageLayout" ::: ImageLayout))
+                ("dstImageLayout" ::: ImageLayout)
              -> -- | @pRegions@ is a pointer to an array of 'ImageBlit' structures specifying
                 -- the regions to blit.
-                (("regions" ::: Vector ImageBlit))
+                ("regions" ::: Vector ImageBlit)
              -> -- | @filter@ is a 'Vulkan.Core10.Enums.Filter.Filter' specifying the filter
                 -- to apply if the blits require scaling.
                 Filter
@@ -4181,15 +4181,15 @@ cmdCopyBufferToImage :: forall io
                         -- recorded.
                         CommandBuffer
                      -> -- | @srcBuffer@ is the source buffer.
-                        (("srcBuffer" ::: Buffer))
+                        ("srcBuffer" ::: Buffer)
                      -> -- | @dstImage@ is the destination image.
-                        (("dstImage" ::: Image))
+                        ("dstImage" ::: Image)
                      -> -- | @dstImageLayout@ is the layout of the destination image subresources for
                         -- the copy.
-                        (("dstImageLayout" ::: ImageLayout))
+                        ("dstImageLayout" ::: ImageLayout)
                      -> -- | @pRegions@ is a pointer to an array of 'BufferImageCopy' structures
                         -- specifying the regions to copy.
-                        (("regions" ::: Vector BufferImageCopy))
+                        ("regions" ::: Vector BufferImageCopy)
                      -> io ()
 cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (deviceCmds (commandBuffer :: CommandBuffer))
@@ -4370,15 +4370,15 @@ cmdCopyImageToBuffer :: forall io
                         -- recorded.
                         CommandBuffer
                      -> -- | @srcImage@ is the source image.
-                        (("srcImage" ::: Image))
+                        ("srcImage" ::: Image)
                      -> -- | @srcImageLayout@ is the layout of the source image subresources for the
                         -- copy.
-                        (("srcImageLayout" ::: ImageLayout))
+                        ("srcImageLayout" ::: ImageLayout)
                      -> -- | @dstBuffer@ is the destination buffer.
-                        (("dstBuffer" ::: Buffer))
+                        ("dstBuffer" ::: Buffer)
                      -> -- | @pRegions@ is a pointer to an array of 'BufferImageCopy' structures
                         -- specifying the regions to copy.
-                        (("regions" ::: Vector BufferImageCopy))
+                        ("regions" ::: Vector BufferImageCopy)
                      -> io ()
 cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = liftIO . evalContT $ do
   let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (deviceCmds (commandBuffer :: CommandBuffer))
@@ -4512,16 +4512,16 @@ cmdUpdateBuffer :: forall io
                    -- recorded.
                    CommandBuffer
                 -> -- | @dstBuffer@ is a handle to the buffer to be updated.
-                   (("dstBuffer" ::: Buffer))
+                   ("dstBuffer" ::: Buffer)
                 -> -- | @dstOffset@ is the byte offset into the buffer to start updating, and
                    -- /must/ be a multiple of 4.
-                   (("dstOffset" ::: DeviceSize))
+                   ("dstOffset" ::: DeviceSize)
                 -> -- | @dataSize@ is the number of bytes to update, and /must/ be a multiple of
                    -- 4.
-                   (("dataSize" ::: DeviceSize))
+                   ("dataSize" ::: DeviceSize)
                 -> -- | @pData@ is a pointer to the source data for the buffer update, and
                    -- /must/ be at least @dataSize@ bytes in size.
-                   (("data" ::: Ptr ()))
+                   ("data" ::: Ptr ())
                 -> io ()
 cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = liftIO $ do
   let vkCmdUpdateBufferPtr = pVkCmdUpdateBuffer (deviceCmds (commandBuffer :: CommandBuffer))
@@ -4627,10 +4627,10 @@ cmdFillBuffer :: forall io
                  -- recorded.
                  CommandBuffer
               -> -- | @dstBuffer@ is the buffer to be filled.
-                 (("dstBuffer" ::: Buffer))
+                 ("dstBuffer" ::: Buffer)
               -> -- | @dstOffset@ is the byte offset into the buffer at which to start
                  -- filling, and /must/ be a multiple of 4.
-                 (("dstOffset" ::: DeviceSize))
+                 ("dstOffset" ::: DeviceSize)
               -> -- | @size@ is the number of bytes to fill, and /must/ be either a multiple
                  -- of 4, or 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to fill the range from
                  -- @offset@ to the end of the buffer. If
@@ -4641,7 +4641,7 @@ cmdFillBuffer :: forall io
               -> -- | @data@ is the 4-byte word written repeatedly to the buffer to fill
                  -- @size@ bytes of data. The data word is written to memory according to
                  -- the host endianness.
-                 (("data" ::: Word32))
+                 ("data" ::: Word32)
               -> io ()
 cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = liftIO $ do
   let vkCmdFillBufferPtr = pVkCmdFillBuffer (deviceCmds (commandBuffer :: CommandBuffer))
@@ -4808,7 +4808,7 @@ cmdClearColorImage :: forall io
                       -- a range of mipmap levels, array layers, and aspects to be cleared, as
                       -- described in
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
-                      (("ranges" ::: Vector ImageSubresourceRange))
+                      ("ranges" ::: Vector ImageSubresourceRange)
                    -> io ()
 cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalContT $ do
   let vkCmdClearColorImagePtr = pVkCmdClearColorImage (deviceCmds (commandBuffer :: CommandBuffer))
@@ -5003,7 +5003,7 @@ cmdClearDepthStencilImage :: forall io
                              -- a range of mipmap levels, array layers, and aspects to be cleared, as
                              -- described in
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
-                             (("ranges" ::: Vector ImageSubresourceRange))
+                             ("ranges" ::: Vector ImageSubresourceRange)
                           -> io ()
 cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = liftIO . evalContT $ do
   let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (deviceCmds (commandBuffer :: CommandBuffer))
@@ -5162,10 +5162,10 @@ cmdClearAttachments :: forall io
                        -- attachment to be cleared in the current subpass is
                        -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the clear has no
                        -- effect on that attachment.
-                       (("attachments" ::: Vector ClearAttachment))
+                       ("attachments" ::: Vector ClearAttachment)
                     -> -- | @pRects@ is a pointer to an array of 'ClearRect' structures defining
                        -- regions within each selected attachment to clear.
-                       (("rects" ::: Vector ClearRect))
+                       ("rects" ::: Vector ClearRect)
                     -> io ()
 cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
   let vkCmdClearAttachmentsPtr = pVkCmdClearAttachments (deviceCmds (commandBuffer :: CommandBuffer))
@@ -5349,18 +5349,18 @@ cmdResolveImage :: forall io
                    -- recorded.
                    CommandBuffer
                 -> -- | @srcImage@ is the source image.
-                   (("srcImage" ::: Image))
+                   ("srcImage" ::: Image)
                 -> -- | @srcImageLayout@ is the layout of the source image subresources for the
                    -- resolve.
-                   (("srcImageLayout" ::: ImageLayout))
+                   ("srcImageLayout" ::: ImageLayout)
                 -> -- | @dstImage@ is the destination image.
-                   (("dstImage" ::: Image))
+                   ("dstImage" ::: Image)
                 -> -- | @dstImageLayout@ is the layout of the destination image subresources for
                    -- the resolve.
-                   (("dstImageLayout" ::: ImageLayout))
+                   ("dstImageLayout" ::: ImageLayout)
                 -> -- | @pRegions@ is a pointer to an array of 'ImageResolve' structures
                    -- specifying the regions to resolve.
-                   (("regions" ::: Vector ImageResolve))
+                   ("regions" ::: Vector ImageResolve)
                 -> io ()
 cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
   let vkCmdResolveImagePtr = pVkCmdResolveImage (deviceCmds (commandBuffer :: CommandBuffer))
@@ -5491,7 +5491,7 @@ cmdSetEvent :: forall io
             -> -- | @stageMask@ specifies the
                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
                -- used to determine when the @event@ is signaled.
-               (("stageMask" ::: PipelineStageFlags))
+               ("stageMask" ::: PipelineStageFlags)
             -> io ()
 cmdSetEvent commandBuffer event stageMask = liftIO $ do
   let vkCmdSetEventPtr = pVkCmdSetEvent (deviceCmds (commandBuffer :: CommandBuffer))
@@ -5625,7 +5625,7 @@ cmdResetEvent :: forall io
                  -- specifying the
                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
                  -- used to determine when the @event@ is unsignaled.
-                 (("stageMask" ::: PipelineStageFlags))
+                 ("stageMask" ::: PipelineStageFlags)
               -> io ()
 cmdResetEvent commandBuffer event stageMask = liftIO $ do
   let vkCmdResetEventPtr = pVkCmdResetEvent (deviceCmds (commandBuffer :: CommandBuffer))
@@ -5656,26 +5656,26 @@ cmdWaitEventsSafeOrUnsafe :: forall io
                              -- recorded.
                              CommandBuffer
                           -> -- | @pEvents@ is a pointer to an array of event object handles to wait on.
-                             (("events" ::: Vector Event))
+                             ("events" ::: Vector Event)
                           -> -- | @srcStageMask@ is a bitmask of
                              -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                              -- specifying the
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
-                             (("srcStageMask" ::: PipelineStageFlags))
+                             ("srcStageMask" ::: PipelineStageFlags)
                           -> -- | @dstStageMask@ is a bitmask of
                              -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                              -- specifying the
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
-                             (("dstStageMask" ::: PipelineStageFlags))
+                             ("dstStageMask" ::: PipelineStageFlags)
                           -> -- | @pMemoryBarriers@ is a pointer to an array of
                              -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
-                             (("memoryBarriers" ::: Vector MemoryBarrier))
+                             ("memoryBarriers" ::: Vector MemoryBarrier)
                           -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
                              -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
-                             (("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier))
+                             ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
                           -> -- | @pImageMemoryBarriers@ is a pointer to an array of
                              -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
-                             (("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier)))
+                             ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                           -> io ()
 cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
@@ -5963,26 +5963,26 @@ cmdWaitEvents :: forall io
                  -- recorded.
                  CommandBuffer
               -> -- | @pEvents@ is a pointer to an array of event object handles to wait on.
-                 (("events" ::: Vector Event))
+                 ("events" ::: Vector Event)
               -> -- | @srcStageMask@ is a bitmask of
                  -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                  -- specifying the
                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
-                 (("srcStageMask" ::: PipelineStageFlags))
+                 ("srcStageMask" ::: PipelineStageFlags)
               -> -- | @dstStageMask@ is a bitmask of
                  -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                  -- specifying the
                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
-                 (("dstStageMask" ::: PipelineStageFlags))
+                 ("dstStageMask" ::: PipelineStageFlags)
               -> -- | @pMemoryBarriers@ is a pointer to an array of
                  -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
-                 (("memoryBarriers" ::: Vector MemoryBarrier))
+                 ("memoryBarriers" ::: Vector MemoryBarrier)
               -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
                  -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
-                 (("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier))
+                 ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
               -> -- | @pImageMemoryBarriers@ is a pointer to an array of
                  -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
-                 (("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier)))
+                 ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
               -> io ()
 cmdWaitEvents = cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEventsUnsafe
 
@@ -5993,26 +5993,26 @@ cmdWaitEventsSafe :: forall io
                      -- recorded.
                      CommandBuffer
                   -> -- | @pEvents@ is a pointer to an array of event object handles to wait on.
-                     (("events" ::: Vector Event))
+                     ("events" ::: Vector Event)
                   -> -- | @srcStageMask@ is a bitmask of
                      -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                      -- specifying the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
-                     (("srcStageMask" ::: PipelineStageFlags))
+                     ("srcStageMask" ::: PipelineStageFlags)
                   -> -- | @dstStageMask@ is a bitmask of
                      -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                      -- specifying the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
-                     (("dstStageMask" ::: PipelineStageFlags))
+                     ("dstStageMask" ::: PipelineStageFlags)
                   -> -- | @pMemoryBarriers@ is a pointer to an array of
                      -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
-                     (("memoryBarriers" ::: Vector MemoryBarrier))
+                     ("memoryBarriers" ::: Vector MemoryBarrier)
                   -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
                      -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
-                     (("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier))
+                     ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
                   -> -- | @pImageMemoryBarriers@ is a pointer to an array of
                      -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
-                     (("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier)))
+                     ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                   -> io ()
 cmdWaitEventsSafe = cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEventsSafe
 
@@ -6322,25 +6322,25 @@ cmdPipelineBarrier :: forall io
                       -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                       -- specifying the
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
-                      (("srcStageMask" ::: PipelineStageFlags))
+                      ("srcStageMask" ::: PipelineStageFlags)
                    -> -- | @dstStageMask@ is a bitmask of
                       -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
                       -- specifying the
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>.
-                      (("dstStageMask" ::: PipelineStageFlags))
+                      ("dstStageMask" ::: PipelineStageFlags)
                    -> -- | @dependencyFlags@ is a bitmask of
                       -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits' specifying
                       -- how execution and memory dependencies are formed.
                       DependencyFlags
                    -> -- | @pMemoryBarriers@ is a pointer to an array of
                       -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
-                      (("memoryBarriers" ::: Vector MemoryBarrier))
+                      ("memoryBarriers" ::: Vector MemoryBarrier)
                    -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
                       -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
-                      (("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier))
+                      ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
                    -> -- | @pImageMemoryBarriers@ is a pointer to an array of
                       -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
-                      (("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier)))
+                      ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                    -> io ()
 cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer))
@@ -6532,7 +6532,7 @@ cmdBeginQuery :: forall io
                  QueryPool
               -> -- | @query@ is the query index within the query pool that will contain the
                  -- results.
-                 (("query" ::: Word32))
+                 ("query" ::: Word32)
               -> -- | @flags@ is a bitmask of
                  -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
                  -- specifying constraints on the types of queries that /can/ be performed.
@@ -6656,7 +6656,7 @@ cmdEndQuery :: forall io
                QueryPool
             -> -- | @query@ is the query index within the query pool where the result is
                -- stored.
-               (("query" ::: Word32))
+               ("query" ::: Word32)
             -> io ()
 cmdEndQuery commandBuffer queryPool query = liftIO $ do
   let vkCmdEndQueryPtr = pVkCmdEndQuery (deviceCmds (commandBuffer :: CommandBuffer))
@@ -6766,9 +6766,9 @@ cmdResetQueryPool :: forall io
                      -- reset.
                      QueryPool
                   -> -- | @firstQuery@ is the initial query index to reset.
-                     (("firstQuery" ::: Word32))
+                     ("firstQuery" ::: Word32)
                   -> -- | @queryCount@ is the number of queries to reset.
-                     (("queryCount" ::: Word32))
+                     ("queryCount" ::: Word32)
                   -> io ()
 cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = liftIO $ do
   let vkCmdResetQueryPoolPtr = pVkCmdResetQueryPool (deviceCmds (commandBuffer :: CommandBuffer))
@@ -6922,7 +6922,7 @@ cmdWriteTimestamp :: forall io
                      QueryPool
                   -> -- | @query@ is the query within the query pool that will contain the
                      -- timestamp.
-                     (("query" ::: Word32))
+                     ("query" ::: Word32)
                   -> io ()
 cmdWriteTimestamp commandBuffer pipelineStage queryPool query = liftIO $ do
   let vkCmdWriteTimestampPtr = pVkCmdWriteTimestamp (deviceCmds (commandBuffer :: CommandBuffer))
@@ -7120,20 +7120,20 @@ cmdCopyQueryPoolResults :: forall io
                            -- desired results.
                            QueryPool
                         -> -- | @firstQuery@ is the initial query index.
-                           (("firstQuery" ::: Word32))
+                           ("firstQuery" ::: Word32)
                         -> -- | @queryCount@ is the number of queries. @firstQuery@ and @queryCount@
                            -- together define a range of queries.
-                           (("queryCount" ::: Word32))
+                           ("queryCount" ::: Word32)
                         -> -- | @dstBuffer@ is a 'Vulkan.Core10.Handles.Buffer' object that will receive
                            -- the results of the copy command.
-                           (("dstBuffer" ::: Buffer))
+                           ("dstBuffer" ::: Buffer)
                         -> -- | @dstOffset@ is an offset into @dstBuffer@.
-                           (("dstOffset" ::: DeviceSize))
+                           ("dstOffset" ::: DeviceSize)
                         -> -- | @stride@ is the stride in bytes between results for individual queries
                            -- within @dstBuffer@. The required size of the backing memory for
                            -- @dstBuffer@ is determined as described above for
                            -- 'Vulkan.Core10.Query.getQueryPoolResults'.
-                           (("stride" ::: DeviceSize))
+                           ("stride" ::: DeviceSize)
                         -> -- | @flags@ is a bitmask of
                            -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits' specifying
                            -- how and when results are returned.
@@ -7251,13 +7251,13 @@ cmdPushConstants :: forall io
                     ShaderStageFlags
                  -> -- | @offset@ is the start offset of the push constant range to update, in
                     -- units of bytes.
-                    (("offset" ::: Word32))
+                    ("offset" ::: Word32)
                  -> -- | @size@ is the size of the push constant range to update, in units of
                     -- bytes.
-                    (("size" ::: Word32))
+                    ("size" ::: Word32)
                  -> -- | @pValues@ is a pointer to an array of @size@ bytes containing the new
                     -- push constant values.
-                    (("values" ::: Ptr ()))
+                    ("values" ::: Ptr ())
                  -> io ()
 cmdPushConstants commandBuffer layout stageFlags offset size values = liftIO $ do
   let vkCmdPushConstantsPtr = pVkCmdPushConstants (deviceCmds (commandBuffer :: CommandBuffer))
@@ -7855,7 +7855,7 @@ cmdExecuteCommands :: forall io
                    -> -- | @pCommandBuffers@ is a pointer to an array of @commandBufferCount@
                       -- secondary command buffer handles, which are recorded to execute in the
                       -- primary command buffer in the order they are listed in the array.
-                      (("commandBuffers" ::: Vector CommandBuffer))
+                      ("commandBuffers" ::: Vector CommandBuffer)
                    -> io ()
 cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
   let vkCmdExecuteCommandsPtr = pVkCmdExecuteCommands (deviceCmds (commandBuffer :: CommandBuffer))

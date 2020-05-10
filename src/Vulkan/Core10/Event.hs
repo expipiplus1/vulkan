@@ -111,7 +111,7 @@ createEvent :: forall io
             -> -- | @pAllocator@ controls host memory allocation as described in the
                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
-               (("allocator" ::: Maybe AllocationCallbacks))
+               ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Event)
 createEvent device createInfo allocator = liftIO . evalContT $ do
   let vkCreateEventPtr = pVkCreateEvent (deviceCmds (device :: Device))
@@ -194,7 +194,7 @@ destroyEvent :: forall io
              -> -- | @pAllocator@ controls host memory allocation as described in the
                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
-                (("allocator" ::: Maybe AllocationCallbacks))
+                ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
 destroyEvent device event allocator = liftIO . evalContT $ do
   let vkDestroyEventPtr = pVkDestroyEvent (deviceCmds (device :: Device))

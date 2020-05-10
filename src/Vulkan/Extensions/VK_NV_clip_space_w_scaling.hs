@@ -124,10 +124,10 @@ cmdSetViewportWScalingNV :: forall io
                             CommandBuffer
                          -> -- | @firstViewport@ is the index of the first viewport whose parameters are
                             -- updated by the command.
-                            (("firstViewport" ::: Word32))
+                            ("firstViewport" ::: Word32)
                          -> -- | @pViewportWScalings@ is a pointer to an array of 'ViewportWScalingNV'
                             -- structures specifying viewport parameters.
-                            (("viewportWScalings" ::: Vector ViewportWScalingNV))
+                            ("viewportWScalings" ::: Vector ViewportWScalingNV)
                          -> io ()
 cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO . evalContT $ do
   let vkCmdSetViewportWScalingNVPtr = pVkCmdSetViewportWScalingNV (deviceCmds (commandBuffer :: CommandBuffer))

@@ -224,7 +224,7 @@ allocateMemory :: forall a io
                -> -- | @pAllocator@ controls host memory allocation as described in the
                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                   -- chapter.
-                  (("allocator" ::: Maybe AllocationCallbacks))
+                  ("allocator" ::: Maybe AllocationCallbacks)
                -> io (DeviceMemory)
 allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   let vkAllocateMemoryPtr = pVkAllocateMemory (deviceCmds (device :: Device))
@@ -328,7 +328,7 @@ freeMemory :: forall io
            -> -- | @pAllocator@ controls host memory allocation as described in the
               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
               -- chapter.
-              (("allocator" ::: Maybe AllocationCallbacks))
+              ("allocator" ::: Maybe AllocationCallbacks)
            -> io ()
 freeMemory device memory allocator = liftIO . evalContT $ do
   let vkFreeMemoryPtr = pVkFreeMemory (deviceCmds (device :: Device))
@@ -463,7 +463,7 @@ mapMemory :: forall io
              DeviceMemory
           -> -- | @offset@ is a zero-based byte offset from the beginning of the memory
              -- object.
-             (("offset" ::: DeviceSize))
+             ("offset" ::: DeviceSize)
           -> -- | @size@ is the size of the memory range to map, or
              -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE' to map from @offset@ to the end
              -- of the allocation.
@@ -607,7 +607,7 @@ flushMappedMemoryRanges :: forall io
                            --
                            -- @pMemoryRanges@ /must/ be a valid pointer to an array of
                            -- @memoryRangeCount@ valid 'MappedMemoryRange' structures
-                           (("memoryRanges" ::: Vector MappedMemoryRange))
+                           ("memoryRanges" ::: Vector MappedMemoryRange)
                         -> io ()
 flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkFlushMappedMemoryRangesPtr = pVkFlushMappedMemoryRanges (deviceCmds (device :: Device))
@@ -677,7 +677,7 @@ invalidateMappedMemoryRanges :: forall io
                                 --
                                 -- @pMemoryRanges@ /must/ be a valid pointer to an array of
                                 -- @memoryRangeCount@ valid 'MappedMemoryRange' structures
-                                (("memoryRanges" ::: Vector MappedMemoryRange))
+                                ("memoryRanges" ::: Vector MappedMemoryRange)
                              -> io ()
 invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkInvalidateMappedMemoryRangesPtr = pVkInvalidateMappedMemoryRanges (deviceCmds (device :: Device))
