@@ -385,7 +385,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   --
   -- Get var names for the LHS
   --
-  let paramName = pretty . mkParamName . pName . mpParam
+  let paramName = pName . mpParam
       isArg p = case mpScheme p of
         ElidedLength{}    -> Nothing
         ElidedUnivalued _ -> Nothing
@@ -393,7 +393,9 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
         Returned   _      -> Nothing
         InOutCount _      -> Nothing
         _                 -> Just p
-      paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
+      paramNaughtyNames = toList (paramName <$> V.mapMaybe isArg mcParams)
+      paramNiceNames    = pretty . mkParamName <$> paramNaughtyNames
+      paramDocumentees  = Nested (cName mcCommand) <$> paramNaughtyNames
 
 
   let badNames = mempty
@@ -454,11 +456,13 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       tellImport 'liftIO
       pure $ "liftIO . evalContT $" <+> d
 
-  tDoc <- renderType . addMonadIO =<< constrainStructVariables commandType
+  constrainedType <- addMonadIO <$> constrainStructVariables commandType
+  tDocParts       <- renderInParts paramDocumentees constrainedType
   tellDocWithHaddock $ \getDoc -> vsep
     [ getDoc (TopLevel (cName mcCommand))
-    , pretty commandName <+> "::" <+> indent 0 tDoc
-    , pretty commandName <+> sep paramNames <+> "=" <+> rhs
+    , pretty commandName
+      <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+    , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
     ]
 
 pokesForGettingCount
