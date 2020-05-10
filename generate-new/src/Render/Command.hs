@@ -632,12 +632,13 @@ pokesForGettingResults params oldPokes oldPeeks countAddr countIndex vecIndices
         scheme <- case mpScheme of
           Returned s -> pure s
           _          -> throw "Vector without a return scheme"
-        addr  <- allocate lowered scheme
-        addr' <- castRef addr
-        peek  <-
+        addr                        <- allocate lowered scheme
+        addrWithForgottenExtensions <- forgetStructExtensions (pType mpParam)
+          =<< castRef addr
+        peek <-
           note "Unable to get peek for returned value"
             =<< peekStmtDirect usingSecondLen addr scheme
-        pure ((i, addr'), (i, Just peek))
+        pure ((i, addrWithForgottenExtensions), (i, Just peek))
     let newPokes = oldPokes V.// (countOverride : toList vecPokeOverrides)
         newPeeks =
           oldPeeks V.// ((countIndex, Nothing) : toList vecPeekOverrides)
@@ -903,7 +904,18 @@ getPoke valueRef MarshaledParam {..} = do
   -- If any extensible structs are passed to the command they are passed as
   -- `Ptr (SomeStruct StructName)`, coerce them to that type using
   -- `forgetExtensions`
-  forgottenPoke <- case pType mpParam of
+  forgottenPoke <- forgetStructExtensions (pType mpParam) poke
+
+  pure (forgottenPoke, peek)
+
+-- | If possible, wrap a value in `forgetExtensions`
+forgetStructExtensions
+  :: (HasErr r, HasSpecInfo r, HasRenderParams r, HasRenderElem r)
+  => CType
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+forgetStructExtensions ty poke = do
+  forgottenPoke <- case ty of
     Ptr _ (TypeName s) -> getStruct s >>= \case
       Just s | not (V.null (sExtendedBy s)) ->
         fmap Just . stmt Nothing Nothing $ do
@@ -912,8 +924,7 @@ getPoke valueRef MarshaledParam {..} = do
           pure . Pure InlineOnce . ValueDoc $ "forgetExtensions" <+> p
       _ -> pure Nothing
     _ -> pure Nothing
-
-  pure (fromMaybe poke forgottenPoke, peek)
+  pure $ fromMaybe poke forgottenPoke
 
 -- | Parameters of type foo[x] are passed as pointers
 lowerParamType :: Parameter -> Parameter
