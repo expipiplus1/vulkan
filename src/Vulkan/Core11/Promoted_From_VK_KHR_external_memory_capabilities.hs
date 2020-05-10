@@ -154,7 +154,7 @@ data ExternalMemoryProperties = ExternalMemoryProperties
     -- @handleType@ when creating an image compatible with external memory.
     compatibleHandleTypes :: ExternalMemoryHandleTypeFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExternalMemoryProperties
 
 instance ToCStruct ExternalMemoryProperties where
@@ -228,7 +228,7 @@ data PhysicalDeviceExternalImageFormatInfo = PhysicalDeviceExternalImageFormatIn
     -- value specifying the memory handle type that will be used with the
     -- memory associated with the image.
     handleType :: ExternalMemoryHandleTypeFlagBits }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceExternalImageFormatInfo
 
 instance ToCStruct PhysicalDeviceExternalImageFormatInfo where
@@ -347,7 +347,7 @@ data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
     -- value
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceExternalBufferInfo
 
 instance ToCStruct PhysicalDeviceExternalBufferInfo where

@@ -40,7 +40,7 @@ data PresentFrameTokenGGP = PresentFrameTokenGGP
     -- @frameToken@ /must/ be a valid
     -- 'Vulkan.Extensions.WSITypes.GgpFrameToken'
     frameToken :: GgpFrameToken }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PresentFrameTokenGGP
 
 instance ToCStruct PresentFrameTokenGGP where

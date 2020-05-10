@@ -458,7 +458,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     -- as a contiguous range.
     stride :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DescriptorUpdateTemplateEntry
 
 instance ToCStruct DescriptorUpdateTemplateEntry where

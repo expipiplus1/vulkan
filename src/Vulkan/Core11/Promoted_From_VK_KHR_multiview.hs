@@ -102,7 +102,7 @@ data PhysicalDeviceMultiviewFeatures = PhysicalDeviceMultiviewFeatures
   , -- No documentation found for Nested "VkPhysicalDeviceMultiviewFeatures" "multiviewTessellationShader"
     multiviewTessellationShader :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceMultiviewFeatures
 
 instance ToCStruct PhysicalDeviceMultiviewFeatures where
@@ -174,7 +174,7 @@ data PhysicalDeviceMultiviewProperties = PhysicalDeviceMultiviewProperties
     -- of a multiview render pass instance.
     maxMultiviewInstanceIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceMultiviewProperties
 
 instance ToCStruct PhysicalDeviceMultiviewProperties where

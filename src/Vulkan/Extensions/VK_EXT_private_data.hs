@@ -347,7 +347,7 @@ getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . eval
 data DevicePrivateDataCreateInfoEXT = DevicePrivateDataCreateInfoEXT
   { -- | @privateDataSlotRequestCount@ is the amount of slots to reserve.
     privateDataSlotRequestCount :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DevicePrivateDataCreateInfoEXT
 
 instance ToCStruct DevicePrivateDataCreateInfoEXT where
@@ -398,7 +398,7 @@ data PrivateDataSlotCreateInfoEXT = PrivateDataSlotCreateInfoEXT
     --
     -- @flags@ /must/ be @0@
     flags :: PrivateDataSlotCreateFlagsEXT }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PrivateDataSlotCreateInfoEXT
 
 instance ToCStruct PrivateDataSlotCreateInfoEXT where
@@ -461,7 +461,7 @@ data PhysicalDevicePrivateDataFeaturesEXT = PhysicalDevicePrivateDataFeaturesEXT
     -- data. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#private-data Private Data>.
     privateData :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePrivateDataFeaturesEXT
 
 instance ToCStruct PhysicalDevicePrivateDataFeaturesEXT where

@@ -279,7 +279,7 @@ data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
     -- @conversion@ /must/ be a valid
     -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
     conversion :: SamplerYcbcrConversion }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SamplerYcbcrConversionInfo
 
 instance ToCStruct SamplerYcbcrConversionInfo where
@@ -625,7 +625,7 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 data BindImagePlaneMemoryInfo = BindImagePlaneMemoryInfo
   { -- | @planeAspect@ is the aspect of the disjoint image plane to bind.
     planeAspect :: ImageAspectFlagBits }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BindImagePlaneMemoryInfo
 
 instance ToCStruct BindImagePlaneMemoryInfo where
@@ -703,7 +703,7 @@ instance Zero BindImagePlaneMemoryInfo where
 data ImagePlaneMemoryRequirementsInfo = ImagePlaneMemoryRequirementsInfo
   { -- | @planeAspect@ is the aspect corresponding to the image plane to query.
     planeAspect :: ImageAspectFlagBits }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImagePlaneMemoryRequirementsInfo
 
 instance ToCStruct ImagePlaneMemoryRequirementsInfo where
@@ -759,7 +759,7 @@ data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrCo
     -- Y′CBCR conversion is not supported, and samplers using sampler Y′CBCR
     -- conversion /must/ not be used.
     samplerYcbcrConversion :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSamplerYcbcrConversionFeatures
 
 instance ToCStruct PhysicalDeviceSamplerYcbcrConversionFeatures where
@@ -806,7 +806,7 @@ data SamplerYcbcrConversionImageFormatProperties = SamplerYcbcrConversionImageFo
   { -- | @combinedImageSamplerDescriptorCount@ is the number of combined image
     -- sampler descriptors that the implementation uses to access the format.
     combinedImageSamplerDescriptorCount :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SamplerYcbcrConversionImageFormatProperties
 
 instance ToCStruct SamplerYcbcrConversionImageFormatProperties where

@@ -70,7 +70,7 @@ data PhysicalDeviceShaderCoreProperties2AMD = PhysicalDeviceShaderCoreProperties
     -- number of compute units that have been enabled.
     activeComputeUnitCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderCoreProperties2AMD
 
 instance ToCStruct PhysicalDeviceShaderCoreProperties2AMD where

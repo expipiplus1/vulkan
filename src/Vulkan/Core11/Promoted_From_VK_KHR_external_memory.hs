@@ -60,7 +60,7 @@ data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
     --
     -- @handleTypes@ /must/ not be @0@
     handleTypes :: ExternalMemoryHandleTypeFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExternalMemoryImageCreateInfo
 
 instance ToCStruct ExternalMemoryImageCreateInfo where
@@ -121,7 +121,7 @@ data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExternalMemoryBufferCreateInfo
 
 instance ToCStruct ExternalMemoryBufferCreateInfo where
@@ -186,7 +186,7 @@ data ExportMemoryAllocateInfo = ExportMemoryAllocateInfo
     -- from the resulting allocation. The application /can/ request multiple
     -- handle types for the same allocation.
     handleTypes :: ExternalMemoryHandleTypeFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportMemoryAllocateInfo
 
 instance ToCStruct ExportMemoryAllocateInfo where

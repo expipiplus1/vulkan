@@ -1560,7 +1560,7 @@ data RayTracingShaderGroupCreateInfoNV = RayTracingShaderGroupCreateInfoNV
     -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_NV' otherwise.
     intersectionShader :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show RayTracingShaderGroupCreateInfoNV
 
 instance ToCStruct RayTracingShaderGroupCreateInfoNV where
@@ -1959,7 +1959,7 @@ data GeometryTrianglesNV = GeometryTrianglesNV
     -- transform information described above.
     transformOffset :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show GeometryTrianglesNV
 
 instance ToCStruct GeometryTrianglesNV where
@@ -2071,7 +2071,7 @@ data GeometryAABBNV = GeometryAABBNV
   , -- | @offset@ is the offset in bytes of the first AABB in @aabbData@.
     offset :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show GeometryAABBNV
 
 instance ToCStruct GeometryAABBNV where
@@ -2459,7 +2459,7 @@ data AccelerationStructureMemoryRequirementsInfoNV = AccelerationStructureMemory
     -- handle
     accelerationStructure :: AccelerationStructureNV
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AccelerationStructureMemoryRequirementsInfoNV
 
 instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV where
@@ -2542,7 +2542,7 @@ data PhysicalDeviceRayTracingPropertiesNV = PhysicalDeviceRayTracingPropertiesNV
     -- acceleration structure descriptors that are allowed in a descriptor set.
     maxDescriptorSetAccelerationStructures :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceRayTracingPropertiesNV
 
 instance ToCStruct PhysicalDeviceRayTracingPropertiesNV where

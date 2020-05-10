@@ -54,7 +54,7 @@ data PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = PhysicalDeviceMulti
     -- implementation supports per-view position values that differ in
     -- components other than the X component.
     perViewPositionAllComponents :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 
 instance ToCStruct PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where

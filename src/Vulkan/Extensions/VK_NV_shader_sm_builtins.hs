@@ -57,7 +57,7 @@ data PhysicalDeviceShaderSMBuiltinsPropertiesNV = PhysicalDeviceShaderSMBuiltins
     -- warps on an SM.
     shaderWarpsPerSM :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderSMBuiltinsPropertiesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsPropertiesNV where
@@ -124,7 +124,7 @@ data PhysicalDeviceShaderSMBuiltinsFeaturesNV = PhysicalDeviceShaderSMBuiltinsFe
   { -- | @shaderSMBuiltins@ indicates whether the implementation supports the
     -- SPIR-V @ShaderSMBuiltinsNV@ capability.
     shaderSMBuiltins :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderSMBuiltinsFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsFeaturesNV where

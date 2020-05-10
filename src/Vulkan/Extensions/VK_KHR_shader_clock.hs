@@ -54,7 +54,7 @@ data PhysicalDeviceShaderClockFeaturesKHR = PhysicalDeviceShaderClockFeaturesKHR
     -- 'Vulkan.Core10.Handles.Device' scoped clock reads.
     shaderDeviceClock :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderClockFeaturesKHR
 
 instance ToCStruct PhysicalDeviceShaderClockFeaturesKHR where

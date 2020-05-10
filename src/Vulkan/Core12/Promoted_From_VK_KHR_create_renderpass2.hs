@@ -1515,7 +1515,7 @@ data SubpassDependency2 = SubpassDependency2
     -- destination subpass depend on.
     viewOffset :: Int32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SubpassDependency2
 
 instance ToCStruct SubpassDependency2 where
@@ -1856,7 +1856,7 @@ data SubpassBeginInfo = SubpassBeginInfo
     -- @contents@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents' value
     contents :: SubpassContents }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SubpassBeginInfo
 
 instance ToCStruct SubpassBeginInfo where
@@ -1903,7 +1903,7 @@ instance Zero SubpassBeginInfo where
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.cmdNextSubpass2KHR'
 data SubpassEndInfo = SubpassEndInfo
   {}
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SubpassEndInfo
 
 instance ToCStruct SubpassEndInfo where

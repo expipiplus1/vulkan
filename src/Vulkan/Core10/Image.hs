@@ -402,7 +402,7 @@ data ImageSubresource = ImageSubresource
   , -- | @arrayLayer@ selects the array layer.
     arrayLayer :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageSubresource
 
 instance ToCStruct ImageSubresource where
@@ -1583,7 +1583,7 @@ data SubresourceLayout = SubresourceLayout
     -- image.
     depthPitch :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SubresourceLayout
 
 instance ToCStruct SubresourceLayout where

@@ -56,7 +56,7 @@ data PipelineCompilerControlCreateInfoAMD = PipelineCompilerControlCreateInfoAMD
     --
     -- @compilerControlFlags@ /must/ be @0@
     compilerControlFlags :: PipelineCompilerControlFlagsAMD }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineCompilerControlCreateInfoAMD
 
 instance ToCStruct PipelineCompilerControlCreateInfoAMD where

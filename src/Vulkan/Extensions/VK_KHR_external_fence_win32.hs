@@ -275,7 +275,7 @@ data ImportFenceWin32HandleInfoKHR = ImportFenceWin32HandleInfoKHR
     -- synchronization primitive to import, or @NULL@.
     name :: LPCWSTR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportFenceWin32HandleInfoKHR
 
 instance ToCStruct ImportFenceWin32HandleInfoKHR where
@@ -385,7 +385,7 @@ data ExportFenceWin32HandleInfoKHR = ExportFenceWin32HandleInfoKHR
     -- from the created fence.
     name :: LPCWSTR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportFenceWin32HandleInfoKHR
 
 instance ToCStruct ExportFenceWin32HandleInfoKHR where
@@ -489,7 +489,7 @@ data FenceGetWin32HandleInfoKHR = FenceGetWin32HandleInfoKHR
   , -- | @handleType@ is the type of handle requested.
     handleType :: ExternalFenceHandleTypeFlagBits
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show FenceGetWin32HandleInfoKHR
 
 instance ToCStruct FenceGetWin32HandleInfoKHR where

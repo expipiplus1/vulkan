@@ -244,7 +244,7 @@ data CalibratedTimestampInfoEXT = CalibratedTimestampInfoEXT
     --
     -- @timeDomain@ /must/ be a valid 'TimeDomainEXT' value
     timeDomain :: TimeDomainEXT }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show CalibratedTimestampInfoEXT
 
 instance ToCStruct CalibratedTimestampInfoEXT where

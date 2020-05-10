@@ -187,7 +187,7 @@ data QueueFamilyCheckpointPropertiesNV = QueueFamilyCheckpointPropertiesNV
   { -- | @checkpointExecutionStageMask@ is a mask indicating which pipeline
     -- stages the implementation can execute checkpoint markers in.
     checkpointExecutionStageMask :: PipelineStageFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show QueueFamilyCheckpointPropertiesNV
 
 instance ToCStruct QueueFamilyCheckpointPropertiesNV where

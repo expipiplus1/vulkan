@@ -204,7 +204,7 @@ data PhysicalDeviceExclusiveScissorFeaturesNV = PhysicalDeviceExclusiveScissorFe
   { -- | @exclusiveScissor@ indicates that the implementation supports the
     -- exclusive scissor test.
     exclusiveScissor :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceExclusiveScissorFeaturesNV
 
 instance ToCStruct PhysicalDeviceExclusiveScissorFeaturesNV where

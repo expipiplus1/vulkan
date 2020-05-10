@@ -404,7 +404,7 @@ data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
     --
     -- @fullScreenExclusive@ /must/ be a valid 'FullScreenExclusiveEXT' value
     fullScreenExclusive :: FullScreenExclusiveEXT }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SurfaceFullScreenExclusiveInfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveInfoEXT where
@@ -470,7 +470,7 @@ data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32Inf
     --
     -- @hmonitor@ /must/ be a valid 'Vulkan.Extensions.WSITypes.HMONITOR'
     hmonitor :: HMONITOR }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SurfaceFullScreenExclusiveWin32InfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveWin32InfoEXT where
@@ -530,7 +530,7 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
   { -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"
     fullScreenExclusiveSupported :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SurfaceCapabilitiesFullScreenExclusiveEXT
 
 instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT where

@@ -41,7 +41,7 @@ data PhysicalDeviceShaderAtomicInt64Features = PhysicalDeviceShaderAtomicInt64Fe
     -- 64-bit unsigned and signed integer atomic operations on shared memory.
     shaderSharedInt64Atomics :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderAtomicInt64Features
 
 instance ToCStruct PhysicalDeviceShaderAtomicInt64Features where

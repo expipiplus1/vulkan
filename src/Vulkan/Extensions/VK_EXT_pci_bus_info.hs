@@ -43,7 +43,7 @@ data PhysicalDevicePCIBusInfoPropertiesEXT = PhysicalDevicePCIBusInfoPropertiesE
   , -- | @pciFunction@ is the PCI device function identifier.
     pciFunction :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePCIBusInfoPropertiesEXT
 
 instance ToCStruct PhysicalDevicePCIBusInfoPropertiesEXT where

@@ -320,7 +320,7 @@ data ImportSemaphoreWin32HandleInfoKHR = ImportSemaphoreWin32HandleInfoKHR
     -- synchronization primitive to import, or @NULL@.
     name :: LPCWSTR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ImportSemaphoreWin32HandleInfoKHR where
@@ -442,7 +442,7 @@ data ExportSemaphoreWin32HandleInfoKHR = ExportSemaphoreWin32HandleInfoKHR
     -- from the created semaphore.
     name :: LPCWSTR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ExportSemaphoreWin32HandleInfoKHR where
@@ -695,7 +695,7 @@ data SemaphoreGetWin32HandleInfoKHR = SemaphoreGetWin32HandleInfoKHR
   , -- | @handleType@ is the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SemaphoreGetWin32HandleInfoKHR
 
 instance ToCStruct SemaphoreGetWin32HandleInfoKHR where

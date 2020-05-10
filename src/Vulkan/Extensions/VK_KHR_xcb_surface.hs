@@ -230,7 +230,7 @@ data XcbSurfaceCreateInfoKHR = XcbSurfaceCreateInfoKHR
     -- @window@ /must/ be a valid X11 @xcb_window_t@
     window :: Xcb_window_t
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show XcbSurfaceCreateInfoKHR
 
 instance ToCStruct XcbSurfaceCreateInfoKHR where

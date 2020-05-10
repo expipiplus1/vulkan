@@ -156,7 +156,7 @@ data ProtectedSubmitInfo = ProtectedSubmitInfo
     -- batch is unprotected. If the 'Vulkan.Core10.Queue.SubmitInfo'::@pNext@
     -- chain does not include this structure, the batch is unprotected.
     protectedSubmit :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ProtectedSubmitInfo
 
 instance ToCStruct ProtectedSubmitInfo where
@@ -210,7 +210,7 @@ instance Zero ProtectedSubmitInfo where
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
   { -- | @protectedMemory@ specifies whether protected memory is supported.
     protectedMemory :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceProtectedMemoryFeatures
 
 instance ToCStruct PhysicalDeviceProtectedMemoryFeatures where
@@ -269,7 +269,7 @@ data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProp
     -- breaking those rules will not result in process termination or device
     -- loss.
     protectedNoFault :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceProtectedMemoryProperties
 
 instance ToCStruct PhysicalDeviceProtectedMemoryProperties where
@@ -348,7 +348,7 @@ data DeviceQueueInfo2 = DeviceQueueInfo2
     -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
     queueIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceQueueInfo2
 
 instance ToCStruct DeviceQueueInfo2 where

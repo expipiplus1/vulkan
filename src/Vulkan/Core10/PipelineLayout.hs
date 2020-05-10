@@ -250,7 +250,7 @@ data PushConstantRange = PushConstantRange
     -- minus @offset@
     size :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PushConstantRange
 
 instance ToCStruct PushConstantRange where

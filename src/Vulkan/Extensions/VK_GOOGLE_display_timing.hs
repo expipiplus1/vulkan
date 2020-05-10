@@ -229,7 +229,7 @@ data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
   { -- | @refreshDuration@ is the number of nanoseconds from the start of one
     -- refresh cycle to the next.
     refreshDuration :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show RefreshCycleDurationGOOGLE
 
 instance ToCStruct RefreshCycleDurationGOOGLE where
@@ -316,7 +316,7 @@ data PastPresentationTimingGOOGLE = PastPresentationTimingGOOGLE
     -- presented at @earliestPresentTime@.
     presentMargin :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PastPresentationTimingGOOGLE
 
 instance ToCStruct PastPresentationTimingGOOGLE where
@@ -466,7 +466,7 @@ data PresentTimeGOOGLE = PresentTimeGOOGLE
     -- provide @presentID@, but does not need a specific @desiredPresentTime@.
     desiredPresentTime :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PresentTimeGOOGLE
 
 instance ToCStruct PresentTimeGOOGLE where

@@ -277,7 +277,7 @@ data ImportFenceFdInfoKHR = ImportFenceFdInfoKHR
   , -- | @fd@ is the external handle to import.
     fd :: Int32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportFenceFdInfoKHR
 
 instance ToCStruct ImportFenceFdInfoKHR where
@@ -379,7 +379,7 @@ data FenceGetFdInfoKHR = FenceGetFdInfoKHR
   , -- | @handleType@ is the type of handle requested.
     handleType :: ExternalFenceHandleTypeFlagBits
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show FenceGetFdInfoKHR
 
 instance ToCStruct FenceGetFdInfoKHR where

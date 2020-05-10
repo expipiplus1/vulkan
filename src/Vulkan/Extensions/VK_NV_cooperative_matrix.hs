@@ -200,7 +200,7 @@ data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrix
     -- @OpCooperativeMatrixStoreNV@ instructions.
     cooperativeMatrixRobustBufferAccess :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceCooperativeMatrixFeaturesNV
 
 instance ToCStruct PhysicalDeviceCooperativeMatrixFeaturesNV where
@@ -269,7 +269,7 @@ data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatr
     -- set if any of the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
     cooperativeMatrixSupportedStages :: ShaderStageFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceCooperativeMatrixPropertiesNV
 
 instance ToCStruct PhysicalDeviceCooperativeMatrixPropertiesNV where
@@ -351,7 +351,7 @@ data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV
     -- @scope@ /must/ be a valid 'ScopeNV' value
     scope :: ScopeNV
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show CooperativeMatrixPropertiesNV
 
 instance ToCStruct CooperativeMatrixPropertiesNV where

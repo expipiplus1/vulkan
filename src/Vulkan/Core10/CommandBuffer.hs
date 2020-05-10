@@ -558,7 +558,7 @@ data CommandBufferAllocateInfo = CommandBufferAllocateInfo
     -- @commandBufferCount@ /must/ be greater than @0@
     commandBufferCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show CommandBufferAllocateInfo
 
 instance ToCStruct CommandBufferAllocateInfo where

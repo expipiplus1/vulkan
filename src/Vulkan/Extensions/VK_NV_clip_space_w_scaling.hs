@@ -152,7 +152,7 @@ data ViewportWScalingNV = ViewportWScalingNV
   , -- No documentation found for Nested "VkViewportWScalingNV" "ycoeff"
     ycoeff :: Float
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ViewportWScalingNV
 
 instance ToCStruct ViewportWScalingNV where

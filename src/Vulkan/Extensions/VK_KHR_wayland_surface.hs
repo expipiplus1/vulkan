@@ -224,7 +224,7 @@ data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
   , -- | @surface@ /must/ point to a valid Wayland @wl_surface@
     surface :: Ptr Wl_surface
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show WaylandSurfaceCreateInfoKHR
 
 instance ToCStruct WaylandSurfaceCreateInfoKHR where

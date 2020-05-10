@@ -232,7 +232,7 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
   { -- | @buffer@ is the buffer to query.
     buffer :: Buffer }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BufferMemoryRequirementsInfo2
 
 instance ToCStruct BufferMemoryRequirementsInfo2 where
@@ -389,7 +389,7 @@ data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
     --
     -- @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
     image :: Image }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageSparseMemoryRequirementsInfo2
 
 instance ToCStruct ImageSparseMemoryRequirementsInfo2 where

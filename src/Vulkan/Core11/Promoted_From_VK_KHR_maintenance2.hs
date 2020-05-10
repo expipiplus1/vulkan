@@ -82,7 +82,7 @@ data InputAttachmentAspectReference = InputAttachmentAspectReference
     -- @aspectMask@ /must/ not be @0@
     aspectMask :: ImageAspectFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show InputAttachmentAspectReference
 
 instance ToCStruct InputAttachmentAspectReference where
@@ -208,7 +208,7 @@ data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperti
     -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior' value
     -- specifying the point clipping behavior supported by the implementation.
     pointClippingBehavior :: PointClippingBehavior }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePointClippingProperties
 
 instance ToCStruct PhysicalDevicePointClippingProperties where
@@ -269,7 +269,7 @@ data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
     --
     -- @usage@ /must/ not be @0@
     usage :: ImageUsageFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageViewUsageCreateInfo
 
 instance ToCStruct ImageViewUsageCreateInfo where
@@ -331,7 +331,7 @@ data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomai
     -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
     -- value
     domainOrigin :: TessellationDomainOrigin }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineTessellationDomainOriginStateCreateInfo
 
 instance ToCStruct PipelineTessellationDomainOriginStateCreateInfo where

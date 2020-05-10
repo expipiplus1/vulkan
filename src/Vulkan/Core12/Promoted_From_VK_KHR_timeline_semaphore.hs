@@ -320,7 +320,7 @@ data PhysicalDeviceTimelineSemaphoreFeatures = PhysicalDeviceTimelineSemaphoreFe
     -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' are
     -- supported.
     timelineSemaphore :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceTimelineSemaphoreFeatures
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreFeatures where
@@ -373,7 +373,7 @@ data PhysicalDeviceTimelineSemaphoreProperties = PhysicalDeviceTimelineSemaphore
     -- allowed by the implementation between the current value of a timeline
     -- semaphore and any pending signal or wait operations.
     maxTimelineSemaphoreValueDifference :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceTimelineSemaphoreProperties
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreProperties where
@@ -448,7 +448,7 @@ data SemaphoreTypeCreateInfo = SemaphoreTypeCreateInfo
     -- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'.
     initialValue :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SemaphoreTypeCreateInfo
 
 instance ToCStruct SemaphoreTypeCreateInfo where
@@ -733,7 +733,7 @@ data SemaphoreSignalInfo = SemaphoreSignalInfo
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
     value :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SemaphoreSignalInfo
 
 instance ToCStruct SemaphoreSignalInfo where

@@ -794,7 +794,7 @@ data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateI
     -- @performanceCountersSampling@ /must/ be a valid
     -- 'QueryPoolSamplingModeINTEL' value
     performanceCountersSampling :: QueryPoolSamplingModeINTEL }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show QueryPoolPerformanceQueryCreateInfoINTEL
 
 instance ToCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
@@ -841,7 +841,7 @@ data PerformanceMarkerInfoINTEL = PerformanceMarkerInfoINTEL
   { -- | @marker@ is the marker value that will be recorded into the opaque query
     -- results.
     marker :: Word64 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PerformanceMarkerInfoINTEL
 
 instance ToCStruct PerformanceMarkerInfoINTEL where
@@ -900,7 +900,7 @@ data PerformanceStreamMarkerInfoINTEL = PerformanceStreamMarkerInfoINTEL
   { -- | @marker@ is the marker value that will be recorded into the reports
     -- consumed by an external application.
     marker :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PerformanceStreamMarkerInfoINTEL
 
 instance ToCStruct PerformanceStreamMarkerInfoINTEL where
@@ -954,7 +954,7 @@ data PerformanceOverrideInfoINTEL = PerformanceOverrideInfoINTEL
   , -- | @parameter@ is a potential required parameter for the override.
     parameter :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PerformanceOverrideInfoINTEL
 
 instance ToCStruct PerformanceOverrideInfoINTEL where
@@ -1013,7 +1013,7 @@ data PerformanceConfigurationAcquireInfoINTEL = PerformanceConfigurationAcquireI
     --
     -- @type@ /must/ be a valid 'PerformanceConfigurationTypeINTEL' value
     type' :: PerformanceConfigurationTypeINTEL }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PerformanceConfigurationAcquireInfoINTEL
 
 instance ToCStruct PerformanceConfigurationAcquireInfoINTEL where

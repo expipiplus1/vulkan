@@ -74,7 +74,7 @@ data PhysicalDevicePipelineCreationCacheControlFeaturesEXT = PhysicalDevicePipel
     --
     --     -   'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
     pipelineCreationCacheControl :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePipelineCreationCacheControlFeaturesEXT
 
 instance ToCStruct PhysicalDevicePipelineCreationCacheControlFeaturesEXT where

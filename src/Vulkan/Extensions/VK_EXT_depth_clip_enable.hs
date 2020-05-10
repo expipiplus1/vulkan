@@ -76,7 +76,7 @@ data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFea
     -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
     -- is set to 'Vulkan.Core10.BaseType.FALSE'.
     depthClipEnable :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDepthClipEnableFeaturesEXT
 
 instance ToCStruct PhysicalDeviceDepthClipEnableFeaturesEXT where
@@ -131,7 +131,7 @@ data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDep
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>.
     depthClipEnable :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineRasterizationDepthClipStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationDepthClipStateCreateInfoEXT where

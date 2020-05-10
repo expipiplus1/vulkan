@@ -53,7 +53,7 @@ data PhysicalDeviceScalarBlockLayoutFeatures = PhysicalDeviceScalarBlockLayoutFe
     -- layout of resource blocks in shaders using
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-alignment-requirements scalar alignment>.
     scalarBlockLayout :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceScalarBlockLayoutFeatures
 
 instance ToCStruct PhysicalDeviceScalarBlockLayoutFeatures where

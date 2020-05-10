@@ -536,7 +536,7 @@ data MemoryAllocateFlagsInfo = MemoryAllocateFlagsInfo
     -- is set in @flags@.
     deviceMask :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryAllocateFlagsInfo
 
 instance ToCStruct MemoryAllocateFlagsInfo where
@@ -702,7 +702,7 @@ data DeviceGroupCommandBufferBeginInfo = DeviceGroupCommandBufferBeginInfo
     --
     -- @deviceMask@ /must/ not be zero
     deviceMask :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceGroupCommandBufferBeginInfo
 
 instance ToCStruct DeviceGroupCommandBufferBeginInfo where
@@ -895,7 +895,7 @@ data DeviceGroupBindSparseInfo = DeviceGroupBindSparseInfo
     -- memory the resource instance is bound to.
     memoryDeviceIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceGroupBindSparseInfo
 
 instance ToCStruct DeviceGroupBindSparseInfo where

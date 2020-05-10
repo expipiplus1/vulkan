@@ -45,7 +45,7 @@ data PhysicalDeviceCoherentMemoryFeaturesAMD = PhysicalDeviceCoherentMemoryFeatu
   { -- | @deviceCoherentMemory@ indicates that the implementation supports
     -- <VkMemoryPropertyFlagBits.html device coherent memory>.
     deviceCoherentMemory :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceCoherentMemoryFeaturesAMD
 
 instance ToCStruct PhysicalDeviceCoherentMemoryFeaturesAMD where

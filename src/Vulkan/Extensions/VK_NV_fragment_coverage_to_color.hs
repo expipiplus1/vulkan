@@ -100,7 +100,7 @@ data PipelineCoverageToColorStateCreateInfoNV = PipelineCoverageToColorStateCrea
     -- value is replaced.
     coverageToColorLocation :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineCoverageToColorStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageToColorStateCreateInfoNV where

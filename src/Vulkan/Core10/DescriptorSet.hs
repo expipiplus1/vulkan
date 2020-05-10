@@ -887,7 +887,7 @@ data DescriptorBufferInfo = DescriptorBufferInfo
     -- to the end of the buffer.
     range :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DescriptorBufferInfo
 
 instance ToCStruct DescriptorBufferInfo where
@@ -995,7 +995,7 @@ data DescriptorImageInfo = DescriptorImageInfo
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'.
     imageLayout :: ImageLayout
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DescriptorImageInfo
 
 instance ToCStruct DescriptorImageInfo where
@@ -1679,7 +1679,7 @@ data CopyDescriptorSet = CopyDescriptorSet
     -- the remaining number of bytes in those.
     descriptorCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show CopyDescriptorSet
 
 instance ToCStruct CopyDescriptorSet where
@@ -2082,7 +2082,7 @@ data DescriptorPoolSize = DescriptorPoolSize
     -- descriptors of this type.
     descriptorCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DescriptorPoolSize
 
 instance ToCStruct DescriptorPoolSize where

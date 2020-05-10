@@ -279,7 +279,7 @@ data ImportSemaphoreFdInfoKHR = ImportSemaphoreFdInfoKHR
   , -- | @fd@ is the external handle to import.
     fd :: Int32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImportSemaphoreFdInfoKHR
 
 instance ToCStruct ImportSemaphoreFdInfoKHR where
@@ -398,7 +398,7 @@ data SemaphoreGetFdInfoKHR = SemaphoreGetFdInfoKHR
   , -- | @handleType@ is the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SemaphoreGetFdInfoKHR
 
 instance ToCStruct SemaphoreGetFdInfoKHR where

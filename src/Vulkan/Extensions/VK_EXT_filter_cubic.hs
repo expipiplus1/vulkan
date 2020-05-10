@@ -59,7 +59,7 @@ data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFor
     -- @imageViewType@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
     imageViewType :: ImageViewType }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceImageViewImageFormatInfoEXT
 
 instance ToCStruct PhysicalDeviceImageViewImageFormatInfoEXT where
@@ -127,7 +127,7 @@ data FilterCubicImageViewImageFormatPropertiesEXT = FilterCubicImageViewImageFor
     -- is set by the implementation. User-specified value is ignored.
     filterCubicMinmax :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show FilterCubicImageViewImageFormatPropertiesEXT
 
 instance ToCStruct FilterCubicImageViewImageFormatPropertiesEXT where

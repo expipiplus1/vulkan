@@ -55,7 +55,7 @@ data ExportFenceCreateInfo = ExportFenceCreateInfo
     -- from the resulting fence. The application /can/ request multiple handle
     -- types for the same fence.
     handleTypes :: ExternalFenceHandleTypeFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportFenceCreateInfo
 
 instance ToCStruct ExportFenceCreateInfo where

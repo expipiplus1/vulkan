@@ -88,7 +88,7 @@ data PhysicalDeviceBlendOperationAdvancedFeaturesEXT = PhysicalDeviceBlendOperat
     -- dependencies are required to guarantee order between two advanced
     -- blending operations that occur on the same sample.
     advancedBlendCoherentOperations :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceBlendOperationAdvancedFeaturesEXT
 
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
@@ -177,7 +177,7 @@ data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOper
     -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'.
     advancedBlendAllOperations :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceBlendOperationAdvancedPropertiesEXT
 
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
@@ -281,7 +281,7 @@ data PipelineColorBlendAdvancedStateCreateInfoEXT = PipelineColorBlendAdvancedSt
     -- and destination sample’s coverage is correlated.
     blendOverlap :: BlendOverlapEXT
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineColorBlendAdvancedStateCreateInfoEXT
 
 instance ToCStruct PipelineColorBlendAdvancedStateCreateInfoEXT where

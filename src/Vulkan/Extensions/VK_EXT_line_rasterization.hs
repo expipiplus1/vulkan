@@ -182,7 +182,7 @@ data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizatio
     -- with 'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT' lines.
     stippledSmoothLines :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceLineRasterizationFeaturesEXT
 
 instance ToCStruct PhysicalDeviceLineRasterizationFeaturesEXT where
@@ -262,7 +262,7 @@ data PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizat
     -- in framebuffer coordinates xf and yf when rasterizing
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines line segments>.
     lineSubPixelPrecisionBits :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceLineRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceLineRasterizationPropertiesEXT where
@@ -369,7 +369,7 @@ data PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStat
     -- rasterization.
     lineStipplePattern :: Word16
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineRasterizationLineStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationLineStateCreateInfoEXT where

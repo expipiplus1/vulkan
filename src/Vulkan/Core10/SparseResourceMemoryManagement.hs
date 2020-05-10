@@ -663,7 +663,7 @@ data SparseMemoryBind = SparseMemoryBind
     -- specifying usage of the binding operation.
     flags :: SparseMemoryBindFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SparseMemoryBind
 
 instance ToCStruct SparseMemoryBind where

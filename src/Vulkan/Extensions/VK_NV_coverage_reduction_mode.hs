@@ -187,7 +187,7 @@ data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReduc
     -- coverage reduction modes. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
     coverageReductionMode :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceCoverageReductionModeFeaturesNV
 
 instance ToCStruct PhysicalDeviceCoverageReductionModeFeaturesNV where
@@ -264,7 +264,7 @@ data PipelineCoverageReductionStateCreateInfoNV = PipelineCoverageReductionState
     -- how the /color sample mask/ is generated from the coverage mask.
     coverageReductionMode :: CoverageReductionModeNV
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PipelineCoverageReductionStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageReductionStateCreateInfoNV where
@@ -330,7 +330,7 @@ data FramebufferMixedSamplesCombinationNV = FramebufferMixedSamplesCombinationNV
     -- combination does not have a color attachment.
     colorSamples :: SampleCountFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show FramebufferMixedSamplesCombinationNV
 
 instance ToCStruct FramebufferMixedSamplesCombinationNV where

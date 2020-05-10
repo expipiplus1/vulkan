@@ -1442,7 +1442,7 @@ data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
     -- value
     tiling :: ImageTiling
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceSparseImageFormatInfo2
 
 instance ToCStruct PhysicalDeviceSparseImageFormatInfo2 where

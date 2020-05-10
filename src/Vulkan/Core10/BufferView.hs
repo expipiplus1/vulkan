@@ -332,7 +332,7 @@ data BufferViewCreateInfo = BufferViewCreateInfo
     -- of @format@, the nearest smaller multiple is used.
     range :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BufferViewCreateInfo
 
 instance ToCStruct BufferViewCreateInfo where

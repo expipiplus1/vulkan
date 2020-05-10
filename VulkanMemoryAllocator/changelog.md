@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Eq instances for some simple structs, #94
 
 ## [0.3] - 2020-05-07
   - Move package from `Vulkan.VulkanMemoryAllocator` to just `VulkanMemoryAllocator`, #60

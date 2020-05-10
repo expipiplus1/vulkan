@@ -55,7 +55,7 @@ data ExportSemaphoreCreateInfo = ExportSemaphoreCreateInfo
     -- export from the resulting semaphore. The application /can/ request
     -- multiple handle types for the same semaphore.
     handleTypes :: ExternalSemaphoreHandleTypeFlags }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExportSemaphoreCreateInfo
 
 instance ToCStruct ExportSemaphoreCreateInfo where

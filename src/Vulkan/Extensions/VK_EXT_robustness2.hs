@@ -91,7 +91,7 @@ data PhysicalDeviceRobustness2FeaturesEXT = PhysicalDeviceRobustness2FeaturesEXT
   , -- No documentation found for Nested "VkPhysicalDeviceRobustness2FeaturesEXT" "nullDescriptor"
     nullDescriptor :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceRobustness2FeaturesEXT
 
 instance ToCStruct PhysicalDeviceRobustness2FeaturesEXT where
@@ -169,7 +169,7 @@ data PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2Propertie
     -- is enabled. This value is a power of two in the range [1, 256].
     robustUniformBufferAccessSizeAlignment :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceRobustness2PropertiesEXT
 
 instance ToCStruct PhysicalDeviceRobustness2PropertiesEXT where

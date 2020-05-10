@@ -2761,7 +2761,7 @@ data VulkanFunctions = VulkanFunctions
   , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetPhysicalDeviceMemoryProperties2KHR"
     vkGetPhysicalDeviceMemoryProperties2KHR :: PFN_vkGetPhysicalDeviceMemoryProperties2KHR
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show VulkanFunctions
 
 instance ToCStruct VulkanFunctions where
@@ -3128,7 +3128,7 @@ data AllocatorInfo = AllocatorInfo
     -- /VmaAllocatorCreateInfo::device/.
     device :: Ptr Device_T
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AllocatorInfo
 
 instance ToCStruct AllocatorInfo where
@@ -3194,7 +3194,7 @@ data StatInfo = StatInfo
   , 
     unusedRangeSizeMax :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show StatInfo
 
 instance ToCStruct StatInfo where
@@ -3383,7 +3383,7 @@ data Budget = Budget
     -- problems.
     budget :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show Budget
 
 instance ToCStruct Budget where
@@ -3917,7 +3917,7 @@ data PoolCreateInfo = PoolCreateInfo
     -- frame to become lost, set this value to 0.
     frameInUseCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PoolCreateInfo
 
 instance ToCStruct PoolCreateInfo where
@@ -3993,7 +3993,7 @@ data PoolStats = PoolStats
   , -- | Number of @VkDeviceMemory@ blocks allocated for this pool.
     blockCount :: Word64
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PoolStats
 
 instance ToCStruct PoolStats where
@@ -4355,7 +4355,7 @@ data DefragmentationPassMoveInfo = DefragmentationPassMoveInfo
   , 
     offset :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DefragmentationPassMoveInfo
 
 instance ToCStruct DefragmentationPassMoveInfo where
@@ -4405,7 +4405,7 @@ data DefragmentationPassInfo = DefragmentationPassInfo
   , 
     moves :: Ptr DefragmentationPassMoveInfo
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DefragmentationPassInfo
 
 instance ToCStruct DefragmentationPassInfo where
@@ -4460,7 +4460,7 @@ data DefragmentationInfo = DefragmentationInfo
     -- Default is @UINT32_MAX@, which means no limit.
     maxAllocationsToMove :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DefragmentationInfo
 
 instance ToCStruct DefragmentationInfo where
@@ -4511,7 +4511,7 @@ data DefragmentationStats = DefragmentationStats
     -- system.
     deviceMemoryBlocksFreed :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DefragmentationStats
 
 instance ToCStruct DefragmentationStats where

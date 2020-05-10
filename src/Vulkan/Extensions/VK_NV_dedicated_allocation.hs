@@ -65,7 +65,7 @@ data DedicatedAllocationImageCreateInfoNV = DedicatedAllocationImageCreateInfoNV
   { -- | @dedicatedAllocation@ specifies whether the image will have a dedicated
     -- allocation bound to it.
     dedicatedAllocation :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DedicatedAllocationImageCreateInfoNV
 
 instance ToCStruct DedicatedAllocationImageCreateInfoNV where
@@ -113,7 +113,7 @@ data DedicatedAllocationBufferCreateInfoNV = DedicatedAllocationBufferCreateInfo
   { -- | @dedicatedAllocation@ specifies whether the buffer will have a dedicated
     -- allocation bound to it.
     dedicatedAllocation :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DedicatedAllocationBufferCreateInfoNV
 
 instance ToCStruct DedicatedAllocationBufferCreateInfoNV where
@@ -217,7 +217,7 @@ data DedicatedAllocationMemoryAllocateInfoNV = DedicatedAllocationMemoryAllocate
     -- buffer which this memory will be bound to.
     buffer :: Buffer
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DedicatedAllocationMemoryAllocateInfoNV
 
 instance ToCStruct DedicatedAllocationMemoryAllocateInfoNV where

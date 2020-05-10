@@ -51,7 +51,7 @@ data Offset2D = Offset2D
   , -- | @y@ is the y offset.
     y :: Int32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show Offset2D
 
 instance ToCStruct Offset2D where
@@ -103,7 +103,7 @@ data Offset3D = Offset3D
   , -- | @z@ is the z offset.
     z :: Int32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show Offset3D
 
 instance ToCStruct Offset3D where
@@ -167,7 +167,7 @@ data Extent2D = Extent2D
   , -- | @height@ is the height of the extent.
     height :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show Extent2D
 
 instance ToCStruct Extent2D where
@@ -222,7 +222,7 @@ data Extent3D = Extent3D
   , -- | @depth@ is the depth of the extent.
     depth :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show Extent3D
 
 instance ToCStruct Extent3D where
@@ -307,7 +307,7 @@ data ImageSubresourceLayers = ImageSubresourceLayers
   , -- No documentation found for Nested "VkImageSubresourceLayers" "layerCount"
     layerCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageSubresourceLayers
 
 instance ToCStruct ImageSubresourceLayers where
@@ -484,7 +484,7 @@ data ImageSubresourceRange = ImageSubresourceRange
     -- @baseArrayLayer@) accessible to the view.
     layerCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageSubresourceRange
 
 instance ToCStruct ImageSubresourceRange where
@@ -554,7 +554,7 @@ data ClearDepthStencilValue = ClearDepthStencilValue
     -- LSBs.
     stencil :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ClearDepthStencilValue
 
 instance ToCStruct ClearDepthStencilValue where

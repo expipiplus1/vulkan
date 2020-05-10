@@ -88,7 +88,7 @@ data VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescript
     -- applied to all instances.
     divisor :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show VertexInputBindingDivisorDescriptionEXT
 
 instance ToCStruct VertexInputBindingDivisorDescriptionEXT where
@@ -203,7 +203,7 @@ data PhysicalDeviceVertexAttributeDivisorPropertiesEXT = PhysicalDeviceVertexAtt
     -- that will repeat the value of vertex attribute data when instanced
     -- rendering is enabled.
     maxVertexAttribDivisor :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceVertexAttributeDivisorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
@@ -265,7 +265,7 @@ data PhysicalDeviceVertexAttributeDivisorFeaturesEXT = PhysicalDeviceVertexAttri
     -- for 'VertexInputBindingDivisorDescriptionEXT'::@divisor@ is supported.
     vertexAttributeInstanceRateZeroDivisor :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceVertexAttributeDivisorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT where

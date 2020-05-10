@@ -79,7 +79,7 @@ data PhysicalDeviceVariablePointersFeatures = PhysicalDeviceVariablePointersFeat
   , -- No documentation found for Nested "VkPhysicalDeviceVariablePointersFeatures" "variablePointers"
     variablePointers :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceVariablePointersFeatures
 
 instance ToCStruct PhysicalDeviceVariablePointersFeatures where

@@ -120,7 +120,7 @@ data XYColorEXT = XYColorEXT
   , -- No documentation found for Nested "VkXYColorEXT" "y"
     y :: Float
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show XYColorEXT
 
 instance ToCStruct XYColorEXT where

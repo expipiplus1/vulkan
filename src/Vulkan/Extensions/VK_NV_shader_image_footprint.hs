@@ -55,7 +55,7 @@ data PhysicalDeviceShaderImageFootprintFeaturesNV = PhysicalDeviceShaderImageFoo
   { -- | @imageFootprint@ specifies whether the implementation supports the
     -- @ImageFootprintNV@ SPIR-V capability.
     imageFootprint :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderImageFootprintFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderImageFootprintFeaturesNV where

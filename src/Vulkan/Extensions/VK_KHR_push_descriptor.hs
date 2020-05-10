@@ -384,7 +384,7 @@ data PhysicalDevicePushDescriptorPropertiesKHR = PhysicalDevicePushDescriptorPro
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
     -- set.
     maxPushDescriptors :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevicePushDescriptorPropertiesKHR
 
 instance ToCStruct PhysicalDevicePushDescriptorPropertiesKHR where

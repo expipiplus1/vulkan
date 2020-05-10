@@ -66,7 +66,7 @@ data PhysicalDevice16BitStorageFeatures = PhysicalDevice16BitStorageFeatures
     -- @StorageInputOutput16@ capability.
     storageInputOutput16 :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDevice16BitStorageFeatures
 
 instance ToCStruct PhysicalDevice16BitStorageFeatures where

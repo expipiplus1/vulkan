@@ -58,7 +58,7 @@ data PhysicalDeviceShaderSubgroupExtendedTypesFeatures = PhysicalDeviceShaderSub
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
     -- the implementation supports the types.
     shaderSubgroupExtendedTypes :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceShaderSubgroupExtendedTypesFeatures
 
 instance ToCStruct PhysicalDeviceShaderSubgroupExtendedTypesFeatures where

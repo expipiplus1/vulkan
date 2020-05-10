@@ -161,7 +161,7 @@ data MetalSurfaceCreateInfoEXT = MetalSurfaceCreateInfoEXT
     -- object representing a renderable surface.
     layer :: Ptr CAMetalLayer
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MetalSurfaceCreateInfoEXT
 
 instance ToCStruct MetalSurfaceCreateInfoEXT where

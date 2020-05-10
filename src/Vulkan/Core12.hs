@@ -200,7 +200,7 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     -- supported.
     shaderDrawParameters :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceVulkan11Features
 
 instance ToCStruct PhysicalDeviceVulkan11Features where
@@ -949,7 +949,7 @@ data PhysicalDeviceVulkan12Features = PhysicalDeviceVulkan12Features
   , -- No documentation found for Nested "VkPhysicalDeviceVulkan12Features" "subgroupBroadcastDynamicId"
     subgroupBroadcastDynamicId :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceVulkan12Features
 
 instance ToCStruct PhysicalDeviceVulkan12Features where

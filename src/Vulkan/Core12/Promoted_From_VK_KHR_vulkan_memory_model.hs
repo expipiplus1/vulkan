@@ -51,7 +51,7 @@ data PhysicalDeviceVulkanMemoryModelFeatures = PhysicalDeviceVulkanMemoryModelFe
     -- with more than one element.
     vulkanMemoryModelAvailabilityVisibilityChains :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceVulkanMemoryModelFeatures
 
 instance ToCStruct PhysicalDeviceVulkanMemoryModelFeatures where

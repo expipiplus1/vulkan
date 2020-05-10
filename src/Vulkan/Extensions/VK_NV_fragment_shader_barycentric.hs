@@ -62,7 +62,7 @@ data PhysicalDeviceFragmentShaderBarycentricFeaturesNV = PhysicalDeviceFragmentS
     -- built-ins and supports the @PerVertexNV@ SPIR-V decoration on fragment
     -- shader input variables.
     fragmentShaderBarycentric :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceFragmentShaderBarycentricFeaturesNV
 
 instance ToCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV where

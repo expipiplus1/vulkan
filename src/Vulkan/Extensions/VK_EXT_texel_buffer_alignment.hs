@@ -61,7 +61,7 @@ data PhysicalDeviceTexelBufferAlignmentFeaturesEXT = PhysicalDeviceTexelBufferAl
     -- 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT' rather than
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
     texelBufferAlignment :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceTexelBufferAlignmentFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
@@ -147,7 +147,7 @@ data PhysicalDeviceTexelBufferAlignmentPropertiesEXT = PhysicalDeviceTexelBuffer
     -- texel alignment is sufficient for a uniform texel buffer of any format.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceTexelBufferAlignmentPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentPropertiesEXT where

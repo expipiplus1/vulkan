@@ -867,7 +867,7 @@ data PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = PhysicalDeviceDeviceGener
     -- functionality to generate commands on the device. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
     deviceGeneratedCommands :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsFeaturesNV where
@@ -939,7 +939,7 @@ data PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = PhysicalDeviceDeviceGen
     -- buffer in 'GeneratedCommandsInfoNV'.
     minIndirectCommandsBufferOffsetAlignment :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
@@ -1251,7 +1251,7 @@ instance Zero GraphicsPipelineShaderGroupsCreateInfoNV where
 data BindShaderGroupIndirectCommandNV = BindShaderGroupIndirectCommandNV
   { -- No documentation found for Nested "VkBindShaderGroupIndirectCommandNV" "groupIndex"
     groupIndex :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BindShaderGroupIndirectCommandNV
 
 instance ToCStruct BindShaderGroupIndirectCommandNV where
@@ -1322,7 +1322,7 @@ data BindIndexBufferIndirectCommandNV = BindIndexBufferIndirectCommandNV
     -- 'IndirectCommandsLayoutTokenNV'::@pIndexTypeValues@ arrays.
     indexType :: IndexType
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BindIndexBufferIndirectCommandNV
 
 instance ToCStruct BindIndexBufferIndirectCommandNV where
@@ -1392,7 +1392,7 @@ data BindVertexBufferIndirectCommandNV = BindVertexBufferIndirectCommandNV
     -- pipeline.
     stride :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BindVertexBufferIndirectCommandNV
 
 instance ToCStruct BindVertexBufferIndirectCommandNV where
@@ -1444,7 +1444,7 @@ data SetStateFlagsIndirectCommandNV = SetStateFlagsIndirectCommandNV
     --     'Vulkan.Core10.Enums.FrontFace.FRONT_FACE_CLOCKWISE', otherwise
     --     'Vulkan.Core10.Enums.FrontFace.FRONT_FACE_COUNTER_CLOCKWISE'
     data' :: Word32 }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show SetStateFlagsIndirectCommandNV
 
 instance ToCStruct SetStateFlagsIndirectCommandNV where
@@ -1506,7 +1506,7 @@ data IndirectCommandsStreamNV = IndirectCommandsStreamNV
   , -- | @offset@ specified an offset into @buffer@ where the arguments start.
     offset :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show IndirectCommandsStreamNV
 
 instance ToCStruct IndirectCommandsStreamNV where
@@ -2208,7 +2208,7 @@ data GeneratedCommandsMemoryRequirementsInfoNV = GeneratedCommandsMemoryRequirem
     -- memory in combination with the other state provided /can/ be used with.
     maxSequencesCount :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show GeneratedCommandsMemoryRequirementsInfoNV
 
 instance ToCStruct GeneratedCommandsMemoryRequirementsInfoNV where

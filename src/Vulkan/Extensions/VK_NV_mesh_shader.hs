@@ -912,7 +912,7 @@ data PhysicalDeviceMeshShaderFeaturesNV = PhysicalDeviceMeshShaderFeaturesNV
   , -- | @meshShader@ indicates whether the mesh shader stage is supported.
     meshShader :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceMeshShaderFeaturesNV
 
 instance ToCStruct PhysicalDeviceMeshShaderFeaturesNV where
@@ -1031,7 +1031,7 @@ data PhysicalDeviceMeshShaderPropertiesNV = PhysicalDeviceMeshShaderPropertiesNV
     -- than or equal to @maxMeshTotalMemorySize@.
     meshOutputPerPrimitiveGranularity :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceMeshShaderPropertiesNV
 
 instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
@@ -1163,7 +1163,7 @@ data DrawMeshTasksIndirectCommandNV = DrawMeshTasksIndirectCommandNV
   , -- | @firstTask@ is the X component of the first workgroup ID.
     firstTask :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DrawMeshTasksIndirectCommandNV
 
 instance ToCStruct DrawMeshTasksIndirectCommandNV where

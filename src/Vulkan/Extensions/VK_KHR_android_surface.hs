@@ -193,7 +193,7 @@ data AndroidSurfaceCreateInfoKHR = AndroidSurfaceCreateInfoKHR
     -- 'Vulkan.Extensions.WSITypes.ANativeWindow'
     window :: Ptr ANativeWindow
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AndroidSurfaceCreateInfoKHR
 
 instance ToCStruct AndroidSurfaceCreateInfoKHR where

@@ -89,7 +89,7 @@ data PhysicalDeviceDepthStencilResolveProperties = PhysicalDeviceDepthStencilRes
     -- @independentResolveNone@.
     independentResolve :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceDepthStencilResolveProperties
 
 instance ToCStruct PhysicalDeviceDepthStencilResolveProperties where

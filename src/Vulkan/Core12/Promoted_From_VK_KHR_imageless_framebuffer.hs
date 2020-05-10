@@ -76,7 +76,7 @@ data PhysicalDeviceImagelessFramebufferFeatures = PhysicalDeviceImagelessFramebu
     -- specifying the image view for attachments at render pass begin time via
     -- 'RenderPassAttachmentBeginInfo'.
     imagelessFramebuffer :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceImagelessFramebufferFeatures
 
 instance ToCStruct PhysicalDeviceImagelessFramebufferFeatures where

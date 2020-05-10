@@ -97,7 +97,7 @@ data MemoryBarrier = MemoryBarrier
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' values
     dstAccessMask :: AccessFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryBarrier
 
 instance ToCStruct MemoryBarrier where
@@ -274,7 +274,7 @@ data BufferMemoryBarrier = BufferMemoryBarrier
     -- from @offset@ to the end of the buffer.
     size :: DeviceSize
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BufferMemoryBarrier
 
 instance ToCStruct BufferMemoryBarrier where
@@ -749,7 +749,7 @@ data DrawIndirectCommand = DrawIndirectCommand
   , -- | @firstInstance@ is the instance ID of the first instance to draw.
     firstInstance :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DrawIndirectCommand
 
 instance ToCStruct DrawIndirectCommand where
@@ -834,7 +834,7 @@ data DrawIndexedIndirectCommand = DrawIndexedIndirectCommand
   , -- | @firstInstance@ is the instance ID of the first instance to draw.
     firstInstance :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DrawIndexedIndirectCommand
 
 instance ToCStruct DrawIndexedIndirectCommand where
@@ -912,7 +912,7 @@ data DispatchIndirectCommand = DispatchIndirectCommand
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
     z :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DispatchIndirectCommand
 
 instance ToCStruct DispatchIndirectCommand where

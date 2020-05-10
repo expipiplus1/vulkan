@@ -153,7 +153,7 @@ data HeadlessSurfaceCreateInfoEXT = HeadlessSurfaceCreateInfoEXT
     --
     -- @flags@ /must/ be @0@
     flags :: HeadlessSurfaceCreateFlagsEXT }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show HeadlessSurfaceCreateInfoEXT
 
 instance ToCStruct HeadlessSurfaceCreateInfoEXT where

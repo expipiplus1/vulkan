@@ -344,7 +344,7 @@ data CommandPoolCreateInfo = CommandPoolCreateInfo
     -- on queues from the same queue family.
     queueFamilyIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show CommandPoolCreateInfo
 
 instance ToCStruct CommandPoolCreateInfo where

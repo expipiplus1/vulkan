@@ -1856,7 +1856,7 @@ data ImageSwapchainCreateInfoKHR = ImageSwapchainCreateInfoKHR
   { -- | @swapchain@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a handle of a
     -- swapchain that the image will be bound to.
     swapchain :: SwapchainKHR }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ImageSwapchainCreateInfoKHR
 
 instance ToCStruct ImageSwapchainCreateInfoKHR where
@@ -1930,7 +1930,7 @@ data BindImageMemorySwapchainInfoKHR = BindImageMemorySwapchainInfoKHR
   , -- | @imageIndex@ is an image index within @swapchain@.
     imageIndex :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show BindImageMemorySwapchainInfoKHR
 
 instance ToCStruct BindImageMemorySwapchainInfoKHR where
@@ -2064,7 +2064,7 @@ data AcquireNextImageInfoKHR = AcquireNextImageInfoKHR
     -- will be ready to use when the semaphore or fence is signaled.
     deviceMask :: Word32
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show AcquireNextImageInfoKHR
 
 instance ToCStruct AcquireNextImageInfoKHR where
@@ -2267,7 +2267,7 @@ data DeviceGroupSwapchainCreateInfoKHR = DeviceGroupSwapchainCreateInfoKHR
     --
     -- @modes@ /must/ not be @0@
     modes :: DeviceGroupPresentModeFlagsKHR }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeviceGroupSwapchainCreateInfoKHR
 
 instance ToCStruct DeviceGroupSwapchainCreateInfoKHR where

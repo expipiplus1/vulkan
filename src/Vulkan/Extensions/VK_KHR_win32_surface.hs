@@ -223,7 +223,7 @@ data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
     -- @hwnd@ /must/ be a valid Win32 'Vulkan.Extensions.WSITypes.HWND'
     hwnd :: HWND
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show Win32SurfaceCreateInfoKHR
 
 instance ToCStruct Win32SurfaceCreateInfoKHR where

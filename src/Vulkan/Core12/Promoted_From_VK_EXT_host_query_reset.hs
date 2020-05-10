@@ -142,7 +142,7 @@ data PhysicalDeviceHostQueryResetFeatures = PhysicalDeviceHostQueryResetFeatures
   { -- | @hostQueryReset@ indicates that the implementation supports resetting
     -- queries from the host with 'resetQueryPool'.
     hostQueryReset :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceHostQueryResetFeatures
 
 instance ToCStruct PhysicalDeviceHostQueryResetFeatures where

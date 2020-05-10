@@ -501,7 +501,7 @@ data DeferredOperationInfoKHR = DeferredOperationInfoKHR
   { -- | @operationHandle@ is a handle to a tracking object to associate with the
     -- deferred operation.
     operationHandle :: DeferredOperationKHR }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show DeferredOperationInfoKHR
 
 instance ToCStruct DeferredOperationInfoKHR where

@@ -58,7 +58,7 @@ data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledIma
     -- See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
     cornerSampledImage :: Bool }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show PhysicalDeviceCornerSampledImageFeaturesNV
 
 instance ToCStruct PhysicalDeviceCornerSampledImageFeaturesNV where

@@ -138,7 +138,7 @@ data MemoryDedicatedRequirements = MemoryDedicatedRequirements
     -- required for this resource.
     requiresDedicatedAllocation :: Bool
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryDedicatedRequirements
 
 instance ToCStruct MemoryDedicatedRequirements where
@@ -287,7 +287,7 @@ data MemoryDedicatedAllocateInfo = MemoryDedicatedAllocateInfo
     -- buffer which this memory will be bound to.
     buffer :: Buffer
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show MemoryDedicatedAllocateInfo
 
 instance ToCStruct MemoryDedicatedAllocateInfo where

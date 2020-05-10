@@ -217,7 +217,7 @@ data ExternalSemaphoreProperties = ExternalSemaphoreProperties
     -- describing the features of @handleType@.
     externalSemaphoreFeatures :: ExternalSemaphoreFeatureFlags
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ExternalSemaphoreProperties
 
 instance ToCStruct ExternalSemaphoreProperties where

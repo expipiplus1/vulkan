@@ -91,7 +91,7 @@ data ViewportSwizzleNV = ViewportSwizzleNV
     -- @w@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
     w :: ViewportCoordinateSwizzleNV
   }
-  deriving (Typeable)
+  deriving (Typeable, Eq)
 deriving instance Show ViewportSwizzleNV
 
 instance ToCStruct ViewportSwizzleNV where
