@@ -95,7 +95,8 @@ renderTypeHighPrecSource = \case
   t          -> parens <$> renderTypeSource t
 
 neverBootTypes :: [Name]
-neverBootTypes = [typeName (TyConName ":::")]
+neverBootTypes =
+  [typeName (TyConName ":::"), typeName (TyConName "SomeStruct")]
 
 allTypeNames :: Type -> [Name]
 allTypeNames = childrenBi

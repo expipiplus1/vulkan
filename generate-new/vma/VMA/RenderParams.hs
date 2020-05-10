@@ -109,6 +109,7 @@ renderParams handles = r
             TyConName "SomeStruct"       -> vk "CStruct.Extends"
             TyConName "PokeChain"        -> vk "CStruct.Extends"
             TyConName "Extendss"         -> vk "CStruct.Extends"
+            TermName  "forgetExtensions" -> vk "CStruct.Extends"
             TyConName "VulkanException"  -> vk "Exception"
             ConName   "SUCCESS"          -> vk "Core10.Enums.Result"
             _                            -> Nothing

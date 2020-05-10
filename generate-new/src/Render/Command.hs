@@ -168,7 +168,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
         , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
         ]
     else do
-      ffiTy <- cToHsType
+      ffiTy <- cToHsTypeWrapped
         DoLower
         (Proto
           (cReturnType mcCommand)
@@ -741,7 +741,7 @@ getCCallDynamic c = do
         tellImport 'nullPtr
         tellImport 'castFunPtr
         tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
-        fTyDoc <- renderTypeHighPrec =<< cToHsTypeWithHoles
+        fTyDoc <- renderTypeHighPrec =<< cToHsTypeWrapped
           DoLower
           (C.Proto
             (cReturnType c)
@@ -837,7 +837,7 @@ renderForeignDecls c@Command {..} = do
              , indent 2 $ "::" <+> tyDoc
              ]
 
-  ffiTy <- cToHsType
+  ffiTy <- cToHsTypeWrapped
     DoLower
     (Proto cReturnType
            [ (Nothing, pType) | Parameter {..} <- toList cParameters ]
@@ -884,7 +884,7 @@ getPoke
   -- ^ (poke, peek if it's a returned value)
 getPoke valueRef MarshaledParam {..} = do
   RenderParams {..} <- input
-  case mpScheme of
+  (poke, peek)      <- case mpScheme of
     Returned s -> do
       (addrRef, peek) <- allocateAndPeek (lowerParamType mpParam) s
       -- TODO: implement ref casting
@@ -899,6 +899,21 @@ getPoke valueRef MarshaledParam {..} = do
         nameRef (unCName $ pName mpParam) r
         pure r
       Just valueRef -> getPokeDirect (lowerParamType mpParam) mpScheme valueRef
+
+  -- If any extensible structs are passed to the command they are passed as
+  -- `Ptr (SomeStruct StructName)`, coerce them to that type using
+  -- `forgetExtensions`
+  forgottenPoke <- case pType mpParam of
+    Ptr _ (TypeName s) -> getStruct s >>= \case
+      Just s | not (V.null (sExtendedBy s)) ->
+        fmap Just . stmt Nothing Nothing $ do
+          tellImport (TermName "forgetExtensions")
+          ValueDoc p <- use poke
+          pure . Pure InlineOnce . ValueDoc $ "forgetExtensions" <+> p
+      _ -> pure Nothing
+    _ -> pure Nothing
+
+  pure (fromMaybe poke forgottenPoke, peek)
 
 -- | Parameters of type foo[x] are passed as pointers
 lowerParamType :: Parameter -> Parameter

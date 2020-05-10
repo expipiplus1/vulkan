@@ -80,7 +80,7 @@ loader level handleType commands = do
   RenderParams {..} <- input
   memberDocs        <-
     forV commands $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
-      ty <- cToHsTypeQuantified DoLower $ commandType c
+      ty <- cToHsTypeWrapped DoLower $ commandType c
       let pTy = applyInsideForall (ConT ''FunPtr) ty
       tDoc <- renderTypeSource pTy
       let memberName = mkFuncPointerMemberName cName
@@ -171,7 +171,7 @@ writeInitDeviceCmds deviceCommands = do
     c@Command {..} <-
       maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
         =<< getCommand "vkGetDeviceProcAddr"
-    renderTypeHighPrecSource =<< cToHsTypeWithHoles DoLower (commandType c)
+    renderTypeHighPrecSource =<< cToHsTypeWrapped DoLower (commandType c)
   (binds, apps) <- initCmdsStmts "getDeviceProcAddr'" deviceCommands
   tellExport (ETerm n)
   let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
@@ -208,7 +208,7 @@ initCmdsStmts getProcAddr commands = do
           <>  "\"#)"
   apps <- forV commands $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
     fTyDoc <- renderTypeHighPrecSource
-      =<< cToHsTypeWithHoles DoLower (commandType c)
+      =<< cToHsTypeWrapped DoLower (commandType c)
     pure $ parens ("castFunPtr @_ @" <> fTyDoc <+> pretty (unCName cName))
   pure (toList binds, toList apps)
 
@@ -229,7 +229,7 @@ writeGetInstanceProcAddr = do
   c@Command {..}    <-
     maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
       =<< getCommand "vkGetInstanceProcAddr"
-  ty   <- cToHsTypeQuantified DoLower (commandType c)
+  ty   <- cToHsTypeWrapped DoLower (commandType c)
   tDoc <- renderTypeSource ty
   let n = mkFunName "vkGetInstanceProcAddr'"
   tellExport (ETerm n)
@@ -256,7 +256,7 @@ writeMkGetDeviceProcAddr = do
   c@Command {..}    <-
     maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
       =<< getCommand "vkGetDeviceProcAddr"
-  ty   <- cToHsTypeQuantified DoLower (commandType c)
+  ty   <- cToHsTypeWrapped DoLower (commandType c)
   tDoc <- renderTypeSource (ConT ''FunPtr :@ ty ~> ty)
   tellDoc [qqi|
     foreign import ccall
