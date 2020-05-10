@@ -181,16 +181,18 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
           commandNameSafe  = TermName (unName commandName <> "Safe")
           dynName          = pretty $ getDynName mcCommand
           dynNameSafe      = getDynName mcCommand <> "Safe"
-          dynNameUnsafe    = getDynName mcCommand <> "Unafe"
+          dynNameUnsafe    = getDynName mcCommand <> "Unsafe"
           dynamicBindType  = ConT ''FunPtr :@ ffiTy ~> ffiTy
-      tDocSafeOrUnsafe <- renderType (dynamicBindType ~> constrainedType)
+      tDocSafeOrUnsafe <- renderInParts (TopLevel "" : paramDocumentees)
+                                        (dynamicBindType ~> constrainedType)
 
       tellExport (ETerm commandName)
       tellExport (ETerm commandNameSafe)
 
-      tellDoc $ vsep
+      tellDocWithHaddock $ \getDoc -> vsep
         [ comment $ unName commandName <> " with selectable safeness"
-        , safeOrUnsafeName <+> indent 0 ("::" <+> tDocSafeOrUnsafe)
+        , safeOrUnsafeName
+          <+> indent 0 ("::" <+> renderWithComments getDoc tDocSafeOrUnsafe)
         , safeOrUnsafeName <+> dynName <+> sep paramNiceNames <+> "=" <+> rhs
         ]
 
@@ -824,11 +826,10 @@ renderForeignDecls c@Command {..} = do
         tellDoc
           .  vsep
           $  ["foreign import ccall"]
-          <> (bool
+          <> bool
                []
                ["#if !defined(SAFE_FOREIGN_CALLS)", indent 2 "unsafe", "#endif"]
                unsafe
-             )
           <> [ indent 2 $ maybe (dquotes "dynamic" <+>)
                                 ((<+>) . dquotes . pretty . unCName)
                                 ffiName
