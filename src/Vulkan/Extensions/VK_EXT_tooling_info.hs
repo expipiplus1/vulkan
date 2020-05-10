@@ -130,7 +130,12 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceToolPropertiesEXT'
-getPhysicalDeviceToolPropertiesEXT :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
+getPhysicalDeviceToolPropertiesEXT :: forall io
+                                    . (MonadIO io)
+                                   => -- | @physicalDevice@ is the handle to the physical device to query for
+                                      -- active tools.
+                                      PhysicalDevice
+                                   -> io (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
 getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceToolPropertiesEXTPtr = pVkGetPhysicalDeviceToolPropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceToolPropertiesEXTPtr /= nullFunPtr) $

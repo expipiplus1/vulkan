@@ -44,6 +44,7 @@ import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
@@ -87,6 +88,7 @@ import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -100,7 +102,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkAllocateMemory
-  :: FunPtr (Ptr Device_T -> Ptr (MemoryAllocateInfo a) -> Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result) -> Ptr Device_T -> Ptr (MemoryAllocateInfo a) -> Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct MemoryAllocateInfo) -> Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct MemoryAllocateInfo) -> Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result
 
 -- | vkAllocateMemory - Allocate device memory
 --
@@ -220,7 +222,7 @@ allocateMemory :: forall a io
                   -- describing parameters of the allocation. A successful returned
                   -- allocation /must/ use the requested parameters — no substitution is
                   -- permitted by the implementation.
-                  MemoryAllocateInfo a
+                  (MemoryAllocateInfo a)
                -> -- | @pAllocator@ controls host memory allocation as described in the
                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                   -- chapter.
@@ -236,7 +238,7 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPMemory <- ContT $ bracket (callocBytes @DeviceMemory 8) free
-  r <- lift $ vkAllocateMemory' (deviceHandle (device)) pAllocateInfo pAllocator (pPMemory)
+  r <- lift $ vkAllocateMemory' (deviceHandle (device)) (forgetExtensions pAllocateInfo) pAllocator (pPMemory)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemory <- lift $ peek @DeviceMemory pPMemory
   pure $ (pMemory)

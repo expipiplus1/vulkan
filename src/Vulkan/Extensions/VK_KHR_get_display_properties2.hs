@@ -141,7 +141,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'DisplayProperties2KHR', 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayProperties2KHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayProperties2KHR))
+getPhysicalDeviceDisplayProperties2KHR :: forall io
+                                        . (MonadIO io)
+                                       => -- | @physicalDevice@ is a physical device.
+                                          PhysicalDevice
+                                       -> io (Result, ("properties" ::: Vector DisplayProperties2KHR))
 getPhysicalDeviceDisplayProperties2KHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayProperties2KHRPtr = pVkGetPhysicalDeviceDisplayProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceDisplayProperties2KHRPtr /= nullFunPtr) $
@@ -207,7 +211,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'DisplayPlaneProperties2KHR', 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPlaneProperties2KHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPlaneProperties2KHR))
+getPhysicalDeviceDisplayPlaneProperties2KHR :: forall io
+                                             . (MonadIO io)
+                                            => -- | @physicalDevice@ is a physical device.
+                                               PhysicalDevice
+                                            -> io (Result, ("properties" ::: Vector DisplayPlaneProperties2KHR))
 getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr = pVkGetPhysicalDeviceDisplayPlaneProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr /= nullFunPtr) $
@@ -279,7 +287,13 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeProperties2KHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayModeProperties2KHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io (Result, ("properties" ::: Vector DisplayModeProperties2KHR))
+getDisplayModeProperties2KHR :: forall io
+                              . (MonadIO io)
+                             => -- | @physicalDevice@ is the physical device associated with @display@.
+                                PhysicalDevice
+                             -> -- | @display@ is the display to query.
+                                DisplayKHR
+                             -> io (Result, ("properties" ::: Vector DisplayModeProperties2KHR))
 getDisplayModeProperties2KHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModeProperties2KHRPtr = pVkGetDisplayModeProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetDisplayModeProperties2KHRPtr /= nullFunPtr) $

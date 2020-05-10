@@ -170,7 +170,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'PipelineExecutablePropertiesKHR',
 -- 'PipelineInfoKHR'
-getPipelineExecutablePropertiesKHR :: forall io . MonadIO io => Device -> PipelineInfoKHR -> io (Result, ("properties" ::: Vector PipelineExecutablePropertiesKHR))
+getPipelineExecutablePropertiesKHR :: forall io
+                                    . (MonadIO io)
+                                   => -- | @device@ is the device that created the pipeline.
+                                      Device
+                                   -> -- | @pPipelineInfo@ describes the pipeline being queried.
+                                      PipelineInfoKHR
+                                   -> io (Result, ("properties" ::: Vector PipelineExecutablePropertiesKHR))
 getPipelineExecutablePropertiesKHR device pipelineInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutablePropertiesKHRPtr = pVkGetPipelineExecutablePropertiesKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetPipelineExecutablePropertiesKHRPtr /= nullFunPtr) $
@@ -260,7 +266,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
 -- 'PipelineExecutableStatisticKHR'
-getPipelineExecutableStatisticsKHR :: forall io . MonadIO io => Device -> PipelineExecutableInfoKHR -> io (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
+getPipelineExecutableStatisticsKHR :: forall io
+                                    . (MonadIO io)
+                                   => -- | @device@ is the device that created the pipeline.
+                                      Device
+                                   -> -- | @pExecutableInfo@ describes the pipeline executable being queried.
+                                      PipelineExecutableInfoKHR
+                                   -> io (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
 getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutableStatisticsKHRPtr = pVkGetPipelineExecutableStatisticsKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetPipelineExecutableStatisticsKHRPtr /= nullFunPtr) $
@@ -359,7 +371,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'PipelineExecutableInfoKHR',
 -- 'PipelineExecutableInternalRepresentationKHR'
-getPipelineExecutableInternalRepresentationsKHR :: forall io . MonadIO io => Device -> PipelineExecutableInfoKHR -> io (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
+getPipelineExecutableInternalRepresentationsKHR :: forall io
+                                                 . (MonadIO io)
+                                                => -- | @device@ is the device that created the pipeline.
+                                                   Device
+                                                -> -- | @pExecutableInfo@ describes the pipeline executable being queried.
+                                                   PipelineExecutableInfoKHR
+                                                -> io (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
 getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutableInternalRepresentationsKHRPtr = pVkGetPipelineExecutableInternalRepresentationsKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetPipelineExecutableInternalRepresentationsKHRPtr /= nullFunPtr) $

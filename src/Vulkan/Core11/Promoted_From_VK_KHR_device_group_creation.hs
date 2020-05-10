@@ -129,7 +129,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Instance', 'PhysicalDeviceGroupProperties'
-enumeratePhysicalDeviceGroups :: forall io . MonadIO io => Instance -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
+enumeratePhysicalDeviceGroups :: forall io
+                               . (MonadIO io)
+                              => -- | @instance@ is a handle to a Vulkan instance previously created with
+                                 -- 'Vulkan.Core10.DeviceInitialization.createInstance'.
+                                 Instance
+                              -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
 enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceGroupsPtr = pVkEnumeratePhysicalDeviceGroups (instanceCmds (instance' :: Instance))
   lift $ unless (vkEnumeratePhysicalDeviceGroupsPtr /= nullFunPtr) $

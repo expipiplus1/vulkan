@@ -69,6 +69,7 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.BaseType (bool32ToBool)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.BaseType (Bool32)
 import Vulkan.Core10.Handles (Device)
@@ -93,6 +94,7 @@ import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
 import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Extensions.Handles (SwapchainKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
@@ -117,7 +119,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceSurfacePresentModes2EXT
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result
 
 -- | vkGetPhysicalDeviceSurfacePresentModes2EXT - Query supported
 -- presentation modes
@@ -166,7 +168,18 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
-getPhysicalDeviceSurfacePresentModes2EXT :: forall a io . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModes2EXT :: forall a io
+                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
+                                         => -- | @physicalDevice@ is the physical device that will be associated with the
+                                            -- swapchain to be created, as described for
+                                            -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                            PhysicalDevice
+                                         -> -- | @pSurfaceInfo@ is a pointer to a
+                                            -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+                                            -- structure describing the surface and other fixed parameters that would
+                                            -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                            (PhysicalDeviceSurfaceInfo2KHR a)
+                                         -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfacePresentModes2EXTPtr /= nullFunPtr) $
@@ -174,12 +187,13 @@ getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . e
   let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT vkGetPhysicalDeviceSurfacePresentModes2EXTPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
+  let x9 = forgetExtensions pSurfaceInfo
   pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' pSurfaceInfo (pPPresentModeCount) (nullPtr)
+  r <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (nullPtr)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPresentModeCount <- lift $ peek @Word32 pPPresentModeCount
   pPPresentModes <- ContT $ bracket (callocBytes @PresentModeKHR ((fromIntegral (pPresentModeCount)) * 4)) free
-  r' <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' pSurfaceInfo (pPPresentModeCount) (pPPresentModes)
+  r' <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (pPPresentModes)
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPresentModeCount' <- lift $ peek @Word32 pPPresentModeCount
   pPresentModes' <- lift $ generateM (fromIntegral (pPresentModeCount')) (\i -> peek @PresentModeKHR ((pPPresentModes `advancePtrBytes` (4 * (i)) :: Ptr PresentModeKHR)))
@@ -191,7 +205,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetDeviceGroupSurfacePresentModes2EXT
-  :: FunPtr (Ptr Device_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr DeviceGroupPresentModeFlagsKHR -> IO Result) -> Ptr Device_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr DeviceGroupPresentModeFlagsKHR -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr DeviceGroupPresentModeFlagsKHR -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr DeviceGroupPresentModeFlagsKHR -> IO Result
 
 -- | vkGetDeviceGroupSurfacePresentModes2EXT - Query device group present
 -- capabilities for a surface
@@ -236,7 +250,7 @@ getDeviceGroupSurfacePresentModes2EXT :: forall a io
                                          -- @pSurfaceInfo@ /must/ be a valid pointer to a valid
                                          -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
                                          -- structure
-                                         PhysicalDeviceSurfaceInfo2KHR a
+                                         (PhysicalDeviceSurfaceInfo2KHR a)
                                       -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device))
@@ -245,7 +259,7 @@ getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ 
   let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXTPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
-  r <- lift $ vkGetDeviceGroupSurfacePresentModes2EXT' (deviceHandle (device)) pSurfaceInfo (pPModes)
+  r <- lift $ vkGetDeviceGroupSurfacePresentModes2EXT' (deviceHandle (device)) (forgetExtensions pSurfaceInfo) (pPModes)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pModes <- lift $ peek @DeviceGroupPresentModeFlagsKHR pPModes
   pure $ (pModes)

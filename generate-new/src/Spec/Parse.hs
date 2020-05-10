@@ -743,6 +743,11 @@ parseCommands es =
     cParameters   <- fromList
       <$> traverseV parseParameter (manyChildren "param" n)
     let cIsDynamic = True
+        cCanBlock =
+          "wait"
+            `T.isInfixOf` T.toLower (unCName cName)
+            ||            "VK_TIMEOUT"
+            `V.elem`      cSuccessCodes
     pure Command { .. }
 
   parseParameter :: Node -> P Parameter

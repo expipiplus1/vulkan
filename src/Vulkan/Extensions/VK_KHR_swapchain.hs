@@ -4,10 +4,12 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                            , destroySwapchainKHR
                                            , getSwapchainImagesKHR
                                            , acquireNextImageKHR
+                                           , acquireNextImageKHRSafe
                                            , queuePresentKHR
                                            , getDeviceGroupPresentCapabilitiesKHR
                                            , getDeviceGroupSurfacePresentModesKHR
                                            , acquireNextImage2KHR
+                                           , acquireNextImage2KHRSafe
                                            , getPhysicalDevicePresentRectanglesKHR
                                            , SwapchainCreateInfoKHR(..)
                                            , PresentInfoKHR(..)
@@ -95,6 +97,7 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.BaseType (bool32ToBool)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
@@ -150,6 +153,7 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.Core10.Handles (Semaphore(..))
 import Vulkan.Core10.Enums.SharingMode (SharingMode)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
@@ -188,7 +192,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateSwapchainKHR
-  :: FunPtr (Ptr Device_T -> Ptr (SwapchainCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result) -> Ptr Device_T -> Ptr (SwapchainCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct SwapchainCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct SwapchainCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
 
 -- | vkCreateSwapchainKHR - Create a swapchain
 --
@@ -273,7 +277,7 @@ createSwapchainKHR :: forall a io
                       Device
                    -> -- | @pCreateInfo@ is a pointer to a 'SwapchainCreateInfoKHR' structure
                       -- specifying the parameters of the created swapchain.
-                      SwapchainCreateInfoKHR a
+                      (SwapchainCreateInfoKHR a)
                    -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                       -- swapchain object when there is no more specific allocator available (see
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
@@ -289,7 +293,7 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSwapchain <- ContT $ bracket (callocBytes @SwapchainKHR 8) free
-  r <- lift $ vkCreateSwapchainKHR' (deviceHandle (device)) pCreateInfo pAllocator (pPSwapchain)
+  r <- lift $ vkCreateSwapchainKHR' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSwapchain)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchain <- lift $ peek @SwapchainKHR pPSwapchain
   pure $ (pSwapchain)
@@ -465,7 +469,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainImagesKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result, ("swapchainImages" ::: Vector Image))
+getSwapchainImagesKHR :: forall io
+                       . (MonadIO io)
+                      => -- | @device@ is the device associated with @swapchain@.
+                         Device
+                      -> -- | @swapchain@ is the swapchain to query.
+                         SwapchainKHR
+                      -> io (Result, ("swapchainImages" ::: Vector Image))
 getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
   let vkGetSwapchainImagesKHRPtr = pVkGetSwapchainImagesKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetSwapchainImagesKHRPtr /= nullFunPtr) $
@@ -488,8 +498,43 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkAcquireNextImageKHR
+  "dynamic" mkVkAcquireNextImageKHRUnsafe
   :: FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result
+
+foreign import ccall
+  "dynamic" mkVkAcquireNextImageKHRSafe
+  :: FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result
+
+-- | acquireNextImageKHR with selectable safeness
+acquireNextImageKHRSafeOrUnsafe :: forall io
+                                 . (MonadIO io)
+                                => -- No documentation found for TopLevel ""
+                                   (FunPtr (Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result)
+                                -> -- | @device@ is the device associated with @swapchain@.
+                                   Device
+                                -> -- | @swapchain@ is the non-retired swapchain from which an image is being
+                                   -- acquired.
+                                   SwapchainKHR
+                                -> -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
+                                   -- image is available.
+                                   ("timeout" ::: Word64)
+                                -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
+                                   -- to signal.
+                                   Semaphore
+                                -> -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
+                                   -- signal.
+                                   Fence
+                                -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
+  let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (deviceCmds (device :: Device))
+  lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImageKHR is null" Nothing Nothing
+  let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR vkAcquireNextImageKHRPtr
+  pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkAcquireNextImageKHR' (deviceHandle (device)) (swapchain) (timeout) (semaphore) (fence) (pPImageIndex)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pImageIndex <- lift $ peek @Word32 pPImageIndex
+  pure $ (r, pImageIndex)
 
 -- | vkAcquireNextImageKHR - Retrieve the index of the next available
 -- presentable image
@@ -606,16 +651,27 @@ acquireNextImageKHR :: forall io
                        -- signal.
                        Fence
                     -> io (Result, ("imageIndex" ::: Word32))
-acquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
-  let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (deviceCmds (device :: Device))
-  lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImageKHR is null" Nothing Nothing
-  let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR vkAcquireNextImageKHRPtr
-  pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkAcquireNextImageKHR' (deviceHandle (device)) (swapchain) (timeout) (semaphore) (fence) (pPImageIndex)
-  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
-  pImageIndex <- lift $ peek @Word32 pPImageIndex
-  pure $ (r, pImageIndex)
+acquireNextImageKHR = acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHRUnsafe
+
+-- | A variant of 'acquireNextImageKHR' which makes a *safe* FFI call
+acquireNextImageKHRSafe :: forall io
+                         . (MonadIO io)
+                        => -- | @device@ is the device associated with @swapchain@.
+                           Device
+                        -> -- | @swapchain@ is the non-retired swapchain from which an image is being
+                           -- acquired.
+                           SwapchainKHR
+                        -> -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
+                           -- image is available.
+                           ("timeout" ::: Word64)
+                        -> -- | @semaphore@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore
+                           -- to signal.
+                           Semaphore
+                        -> -- | @fence@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
+                           -- signal.
+                           Fence
+                        -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImageKHRSafe = acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHRSafe
 
 
 foreign import ccall
@@ -623,7 +679,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkQueuePresentKHR
-  :: FunPtr (Ptr Queue_T -> Ptr (PresentInfoKHR a) -> IO Result) -> Ptr Queue_T -> Ptr (PresentInfoKHR a) -> IO Result
+  :: FunPtr (Ptr Queue_T -> Ptr (SomeStruct PresentInfoKHR) -> IO Result) -> Ptr Queue_T -> Ptr (SomeStruct PresentInfoKHR) -> IO Result
 
 -- | vkQueuePresentKHR - Queue an image for presentation
 --
@@ -777,7 +833,7 @@ queuePresentKHR :: forall a io
                    Queue
                 -> -- | @pPresentInfo@ is a pointer to a 'PresentInfoKHR' structure specifying
                    -- parameters of the presentation.
-                   PresentInfoKHR a
+                   (PresentInfoKHR a)
                 -> io (Result)
 queuePresentKHR queue presentInfo = liftIO . evalContT $ do
   let vkQueuePresentKHRPtr = pVkQueuePresentKHR (deviceCmds (queue :: Queue))
@@ -785,7 +841,7 @@ queuePresentKHR queue presentInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueuePresentKHR is null" Nothing Nothing
   let vkQueuePresentKHR' = mkVkQueuePresentKHR vkQueuePresentKHRPtr
   pPresentInfo <- ContT $ withCStruct (presentInfo)
-  r <- lift $ vkQueuePresentKHR' (queueHandle (queue)) pPresentInfo
+  r <- lift $ vkQueuePresentKHR' (queueHandle (queue)) (forgetExtensions pPresentInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -909,8 +965,35 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkAcquireNextImage2KHR
+  "dynamic" mkVkAcquireNextImage2KHRUnsafe
   :: FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result
+
+foreign import ccall
+  "dynamic" mkVkAcquireNextImage2KHRSafe
+  :: FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result
+
+-- | acquireNextImage2KHR with selectable safeness
+acquireNextImage2KHRSafeOrUnsafe :: forall io
+                                  . (MonadIO io)
+                                 => -- No documentation found for TopLevel ""
+                                    (FunPtr (Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result) -> Ptr Device_T -> Ptr AcquireNextImageInfoKHR -> Ptr Word32 -> IO Result)
+                                 -> -- | @device@ is the device associated with @swapchain@.
+                                    Device
+                                 -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
+                                    -- containing parameters of the acquire.
+                                    ("acquireInfo" ::: AcquireNextImageInfoKHR)
+                                 -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
+  let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
+  lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImage2KHR is null" Nothing Nothing
+  let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR vkAcquireNextImage2KHRPtr
+  pAcquireInfo <- ContT $ withCStruct (acquireInfo)
+  pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkAcquireNextImage2KHR' (deviceHandle (device)) pAcquireInfo (pPImageIndex)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pImageIndex <- lift $ peek @Word32 pPImageIndex
+  pure $ (r, pImageIndex)
 
 -- | vkAcquireNextImage2KHR - Retrieve the index of the next available
 -- presentable image
@@ -972,17 +1055,18 @@ acquireNextImage2KHR :: forall io
                         -- containing parameters of the acquire.
                         ("acquireInfo" ::: AcquireNextImageInfoKHR)
                      -> io (Result, ("imageIndex" ::: Word32))
-acquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
-  let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
-  lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImage2KHR is null" Nothing Nothing
-  let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR vkAcquireNextImage2KHRPtr
-  pAcquireInfo <- ContT $ withCStruct (acquireInfo)
-  pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ vkAcquireNextImage2KHR' (deviceHandle (device)) pAcquireInfo (pPImageIndex)
-  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
-  pImageIndex <- lift $ peek @Word32 pPImageIndex
-  pure $ (r, pImageIndex)
+acquireNextImage2KHR = acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHRUnsafe
+
+-- | A variant of 'acquireNextImage2KHR' which makes a *safe* FFI call
+acquireNextImage2KHRSafe :: forall io
+                          . (MonadIO io)
+                         => -- | @device@ is the device associated with @swapchain@.
+                            Device
+                         -> -- | @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
+                            -- containing parameters of the acquire.
+                            ("acquireInfo" ::: AcquireNextImageInfoKHR)
+                         -> io (Result, ("imageIndex" ::: Word32))
+acquireNextImage2KHRSafe = acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHRSafe
 
 
 foreign import ccall
@@ -1055,7 +1139,13 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDevicePresentRectanglesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("rects" ::: Vector Rect2D))
+getPhysicalDevicePresentRectanglesKHR :: forall io
+                                       . (MonadIO io)
+                                      => -- | @physicalDevice@ is the physical device.
+                                         PhysicalDevice
+                                      -> -- | @surface@ is the surface.
+                                         SurfaceKHR
+                                      -> io (Result, ("rects" ::: Vector Rect2D))
 getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDevicePresentRectanglesKHRPtr /= nullFunPtr) $

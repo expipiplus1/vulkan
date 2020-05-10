@@ -466,7 +466,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetAccelerationStructureMemoryRequirementsNV
-  :: FunPtr (Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoNV -> Ptr (MemoryRequirements2KHR a) -> IO ()) -> Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoNV -> Ptr (MemoryRequirements2KHR a) -> IO ()
+  :: FunPtr (Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoNV -> Ptr (SomeStruct MemoryRequirements2KHR) -> IO ()) -> Ptr Device_T -> Ptr AccelerationStructureMemoryRequirementsInfoNV -> Ptr (SomeStruct MemoryRequirements2KHR) -> IO ()
 
 -- | vkGetAccelerationStructureMemoryRequirementsNV - Get acceleration
 -- structure memory requirements
@@ -499,7 +499,7 @@ getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ 
   let vkGetAccelerationStructureMemoryRequirementsNV' = mkVkGetAccelerationStructureMemoryRequirementsNV vkGetAccelerationStructureMemoryRequirementsNVPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2KHR _))
-  lift $ vkGetAccelerationStructureMemoryRequirementsNV' (deviceHandle (device)) pInfo (pPMemoryRequirements)
+  lift $ vkGetAccelerationStructureMemoryRequirementsNV' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2KHR _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -1189,7 +1189,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateRayTracingPipelinesNV
-  :: FunPtr (Ptr Device_T -> PipelineCache -> Word32 -> Ptr (RayTracingPipelineCreateInfoNV a) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result) -> Ptr Device_T -> PipelineCache -> Word32 -> Ptr (RayTracingPipelineCreateInfoNV a) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
+  :: FunPtr (Ptr Device_T -> PipelineCache -> Word32 -> Ptr (SomeStruct RayTracingPipelineCreateInfoNV) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result) -> Ptr Device_T -> PipelineCache -> Word32 -> Ptr (SomeStruct RayTracingPipelineCreateInfoNV) -> Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
 
 -- | vkCreateRayTracingPipelinesNV - Creates a new ray tracing pipeline
 -- object
@@ -1286,7 +1286,7 @@ createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPipelines <- ContT $ bracket (callocBytes @Pipeline ((fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) * 8)) free
-  r <- lift $ vkCreateRayTracingPipelinesNV' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (pPCreateInfos) pAllocator (pPPipelines)
+  r <- lift $ vkCreateRayTracingPipelinesNV' (deviceHandle (device)) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPPipelines)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (r, pPipelines)

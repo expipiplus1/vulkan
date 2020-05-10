@@ -3,6 +3,8 @@
 ## WIP
   - Generate haddocks for command parameters, #92
   - Eq instances for some simple structs, #94
+  - Generate safe FFI versions of blocking functions (Those with "wait" in the
+    name or which can return "TIMEOUT"), #96
 
 ## [3.3] - 2020-05-07
   - Move package from `Graphics.Vulkan` to just `Vulkan`, #60

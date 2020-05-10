@@ -5,6 +5,7 @@ module Vulkan.Core10.Fence  ( createFence
                             , resetFences
                             , getFenceStatus
                             , waitForFences
+                            , waitForFencesSafe
                             , FenceCreateInfo(..)
                             ) where
 
@@ -40,6 +41,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.BaseType (Bool32)
@@ -69,6 +71,7 @@ import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -81,7 +84,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateFence
-  :: FunPtr (Ptr Device_T -> Ptr (FenceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result) -> Ptr Device_T -> Ptr (FenceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct FenceCreateInfo) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct FenceCreateInfo) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result
 
 -- | vkCreateFence - Create a new fence object
 --
@@ -122,7 +125,7 @@ createFence :: forall a io
                Device
             -> -- | @pCreateInfo@ is a pointer to a 'FenceCreateInfo' structure containing
                -- information about how the fence is to be created.
-               FenceCreateInfo a
+               (FenceCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
@@ -138,7 +141,7 @@ createFence device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ vkCreateFence' (deviceHandle (device)) pCreateInfo pAllocator (pPFence)
+  r <- lift $ vkCreateFence' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFence)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
@@ -389,8 +392,43 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkWaitForFences
+  "dynamic" mkVkWaitForFencesUnsafe
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
+
+foreign import ccall
+  "dynamic" mkVkWaitForFencesSafe
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
+
+-- | waitForFences with selectable safeness
+waitForFencesSafeOrUnsafe :: forall io
+                           . (MonadIO io)
+                          => -- No documentation found for TopLevel ""
+                             (FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result)
+                          -> -- | @device@ is the logical device that owns the fences.
+                             Device
+                          -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
+                             ("fences" ::: Vector Fence)
+                          -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
+                             -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
+                             -- the condition is that all fences in @pFences@ are signaled. Otherwise,
+                             -- the condition is that at least one fence in @pFences@ is signaled.
+                             ("waitAll" ::: Bool)
+                          -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
+                             -- adjusted to the closest value allowed by the implementation-dependent
+                             -- timeout accuracy, which /may/ be substantially longer than one
+                             -- nanosecond, and /may/ be longer than the requested period.
+                             ("timeout" ::: Word64)
+                          -> io (Result)
+waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = liftIO . evalContT $ do
+  let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
+  lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForFences is null" Nothing Nothing
+  let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
+  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
+  r <- lift $ vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pure $ (r)
 
 -- | vkWaitForFences - Wait for one or more fences to become signaled
 --
@@ -476,16 +514,27 @@ waitForFences :: forall io
                  -- nanosecond, and /may/ be longer than the requested period.
                  ("timeout" ::: Word64)
               -> io (Result)
-waitForFences device fences waitAll timeout = liftIO . evalContT $ do
-  let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
-  lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForFences is null" Nothing Nothing
-  let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
-  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
-  lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
-  r <- lift $ vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout)
-  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
-  pure $ (r)
+waitForFences = waitForFencesSafeOrUnsafe mkVkWaitForFencesUnsafe
+
+-- | A variant of 'waitForFences' which makes a *safe* FFI call
+waitForFencesSafe :: forall io
+                   . (MonadIO io)
+                  => -- | @device@ is the logical device that owns the fences.
+                     Device
+                  -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
+                     ("fences" ::: Vector Fence)
+                  -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
+                     -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
+                     -- the condition is that all fences in @pFences@ are signaled. Otherwise,
+                     -- the condition is that at least one fence in @pFences@ is signaled.
+                     ("waitAll" ::: Bool)
+                  -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
+                     -- adjusted to the closest value allowed by the implementation-dependent
+                     -- timeout accuracy, which /may/ be substantially longer than one
+                     -- nanosecond, and /may/ be longer than the requested period.
+                     ("timeout" ::: Word64)
+                  -> io (Result)
+waitForFencesSafe = waitForFencesSafeOrUnsafe mkVkWaitForFencesSafe
 
 
 -- | VkFenceCreateInfo - Structure specifying parameters of a newly created

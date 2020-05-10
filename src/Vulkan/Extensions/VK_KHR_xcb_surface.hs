@@ -193,7 +193,7 @@ getPhysicalDeviceXcbPresentationSupportKHR :: forall io
                                            -> -- | @connection@ is a pointer to an @xcb_connection_t@ to the X server.
                                               --
                                               -- @connection@ /must/ be a valid pointer to an @xcb_connection_t@ value
-                                              Ptr Xcb_connection_t
+                                              (Ptr Xcb_connection_t)
                                            -> -- | @visual_id@ is an X11 visual (@xcb_visualid_t@).
                                               ("visual_id" ::: Xcb_visualid_t)
                                            -> io (Bool)

@@ -377,7 +377,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
-getValidationCacheDataEXT :: forall io . MonadIO io => Device -> ValidationCacheEXT -> io (Result, ("data" ::: ByteString))
+getValidationCacheDataEXT :: forall io
+                           . (MonadIO io)
+                          => -- | @device@ is the logical device that owns the validation cache.
+                             Device
+                          -> -- | @validationCache@ is the validation cache to retrieve data from.
+                             ValidationCacheEXT
+                          -> io (Result, ("data" ::: ByteString))
 getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
   let vkGetValidationCacheDataEXTPtr = pVkGetValidationCacheDataEXT (deviceCmds (device :: Device))
   lift $ unless (vkGetValidationCacheDataEXTPtr /= nullFunPtr) $

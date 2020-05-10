@@ -356,7 +356,13 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
-getPipelineCacheData :: forall io . MonadIO io => Device -> PipelineCache -> io (Result, ("data" ::: ByteString))
+getPipelineCacheData :: forall io
+                      . (MonadIO io)
+                     => -- | @device@ is the logical device that owns the pipeline cache.
+                        Device
+                     -> -- | @pipelineCache@ is the pipeline cache to retrieve data from.
+                        PipelineCache
+                     -> io (Result, ("data" ::: ByteString))
 getPipelineCacheData device pipelineCache = liftIO . evalContT $ do
   let vkGetPipelineCacheDataPtr = pVkGetPipelineCacheData (deviceCmds (device :: Device))
   lift $ unless (vkGetPipelineCacheDataPtr /= nullFunPtr) $

@@ -288,6 +288,7 @@ unitCommands ds =
               _                           -> []
             cErrorCodes = fromList ["VK_ERROR_UNKNOWN"]
             cIsDynamic  = False
+            cCanBlock   = False
         (_, _, cReturnType) <- typeToCType ret
         cParameters         <- fmap fromList . forV params $ \case
           ParamDecl (VarDecl (VarName (Ident name _ _) _) _ ty) _ -> do

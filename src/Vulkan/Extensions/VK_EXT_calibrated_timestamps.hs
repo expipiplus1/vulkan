@@ -134,7 +134,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'TimeDomainEXT'
-getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("timeDomains" ::: Vector TimeDomainEXT))
+getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io
+                                              . (MonadIO io)
+                                             => -- | @physicalDevice@ is the physical device from which to query the set of
+                                                -- calibrateable time domains.
+                                                PhysicalDevice
+                                             -> io (Result, ("timeDomains" ::: Vector TimeDomainEXT))
 getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr = pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr /= nullFunPtr) $

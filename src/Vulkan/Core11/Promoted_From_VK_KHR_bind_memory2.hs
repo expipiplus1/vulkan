@@ -79,7 +79,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkBindBufferMemory2
-  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (BindBufferMemoryInfo a) -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (BindBufferMemoryInfo a) -> IO Result
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SomeStruct BindBufferMemoryInfo) -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (SomeStruct BindBufferMemoryInfo) -> IO Result
 
 -- | vkBindBufferMemory2 - Bind device memory to buffer objects
 --
@@ -125,7 +125,7 @@ bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 vkBindBufferMemory2Ptr
   pPBindInfos <- ContT $ allocaBytesAligned @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _))) (e) . ($ ())) (bindInfos)
-  r <- lift $ vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos)
+  r <- lift $ vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -134,7 +134,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkBindImageMemory2
-  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (BindImageMemoryInfo a) -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (BindImageMemoryInfo a) -> IO Result
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SomeStruct BindImageMemoryInfo) -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (SomeStruct BindImageMemoryInfo) -> IO Result
 
 -- | vkBindImageMemory2 - Bind device memory to image objects
 --
@@ -192,7 +192,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2' = mkVkBindImageMemory2 vkBindImageMemory2Ptr
   pPBindInfos <- ContT $ allocaBytesAligned @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _))) (e) . ($ ())) (bindInfos)
-  r <- lift $ vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos)
+  r <- lift $ vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

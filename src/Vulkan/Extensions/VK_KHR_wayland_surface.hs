@@ -191,7 +191,7 @@ getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                   -- compositor.
                                                   --
                                                   -- @display@ /must/ be a valid pointer to a @wl_display@ value
-                                                  Ptr Wl_display
+                                                  (Ptr Wl_display)
                                                -> io (Bool)
 getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
   let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))

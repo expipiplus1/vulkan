@@ -184,6 +184,7 @@ data Command = Command
   , cSuccessCodes :: Vector Text
   , cErrorCodes   :: Vector Text
   , cIsDynamic    :: Bool
+  , cCanBlock     :: Bool
   }
   deriving (Show, Eq)
 

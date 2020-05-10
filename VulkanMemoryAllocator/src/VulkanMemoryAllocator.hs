@@ -171,6 +171,7 @@ import Vulkan (PhysicalDeviceProperties)
 import Vulkan (PhysicalDevice_T)
 import Vulkan (Result)
 import Vulkan.CStruct.Utils (FixedArray)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -589,7 +590,7 @@ foreign import ccall
   unsafe
 #endif
   "vmaFindMemoryTypeIndexForBufferInfo" ffiVmaFindMemoryTypeIndexForBufferInfo
-  :: Allocator -> Ptr (BufferCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Word32 -> IO Result
+  :: Allocator -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCreateInfo -> Ptr Word32 -> IO Result
 
 -- | Helps to find memoryTypeIndex, given VkBufferCreateInfo and
 -- 'AllocationCreateInfo'.
@@ -611,7 +612,7 @@ findMemoryTypeIndexForBufferInfo :: forall a io
                                  => -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "allocator"
                                     Allocator
                                  -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pBufferCreateInfo"
-                                    BufferCreateInfo a
+                                    (BufferCreateInfo a)
                                  -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pAllocationCreateInfo"
                                     AllocationCreateInfo
                                  -> io (("memoryTypeIndex" ::: Word32))
@@ -619,7 +620,7 @@ findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ (ffiVmaFindMemoryTypeIndexForBufferInfo) (allocator) pBufferCreateInfo pAllocationCreateInfo (pPMemoryTypeIndex)
+  r <- lift $ (ffiVmaFindMemoryTypeIndexForBufferInfo) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -630,7 +631,7 @@ foreign import ccall
   unsafe
 #endif
   "vmaFindMemoryTypeIndexForImageInfo" ffiVmaFindMemoryTypeIndexForImageInfo
-  :: Allocator -> Ptr (ImageCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Word32 -> IO Result
+  :: Allocator -> Ptr (SomeStruct ImageCreateInfo) -> Ptr AllocationCreateInfo -> Ptr Word32 -> IO Result
 
 -- | Helps to find memoryTypeIndex, given VkImageCreateInfo and
 -- 'AllocationCreateInfo'.
@@ -652,7 +653,7 @@ findMemoryTypeIndexForImageInfo :: forall a io
                                 => -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "allocator"
                                    Allocator
                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pImageCreateInfo"
-                                   ImageCreateInfo a
+                                   (ImageCreateInfo a)
                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pAllocationCreateInfo"
                                    AllocationCreateInfo
                                 -> io (("memoryTypeIndex" ::: Word32))
@@ -660,7 +661,7 @@ findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo =
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ (ffiVmaFindMemoryTypeIndexForImageInfo) (allocator) pImageCreateInfo pAllocationCreateInfo (pPMemoryTypeIndex)
+  r <- lift $ (ffiVmaFindMemoryTypeIndexForImageInfo) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -2201,7 +2202,7 @@ foreign import ccall
   unsafe
 #endif
   "vmaCreateBuffer" ffiVmaCreateBuffer
-  :: Allocator -> Ptr (BufferCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Buffer -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
+  :: Allocator -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCreateInfo -> Ptr Buffer -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
 -- | __Parameters.__
 --
@@ -2245,7 +2246,7 @@ createBuffer :: forall a io
              => -- No documentation found for Nested "vmaCreateBuffer" "allocator"
                 Allocator
              -> -- No documentation found for Nested "vmaCreateBuffer" "pBufferCreateInfo"
-                BufferCreateInfo a
+                (BufferCreateInfo a)
              -> -- No documentation found for Nested "vmaCreateBuffer" "pAllocationCreateInfo"
                 AllocationCreateInfo
              -> io (Buffer, Allocation, AllocationInfo)
@@ -2255,7 +2256,7 @@ createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalCont
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ (ffiVmaCreateBuffer) (allocator) pBufferCreateInfo pAllocationCreateInfo (pPBuffer) (pPAllocation) (pPAllocationInfo)
+  r <- lift $ (ffiVmaCreateBuffer) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPBuffer) (pPAllocation) (pPAllocationInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pAllocation <- lift $ peek @Allocation pPAllocation
@@ -2311,7 +2312,7 @@ foreign import ccall
   unsafe
 #endif
   "vmaCreateImage" ffiVmaCreateImage
-  :: Allocator -> Ptr (ImageCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Image -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
+  :: Allocator -> Ptr (SomeStruct ImageCreateInfo) -> Ptr AllocationCreateInfo -> Ptr Image -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
 -- | Function similar to 'createBuffer'.
 createImage :: forall a io
@@ -2319,7 +2320,7 @@ createImage :: forall a io
             => -- No documentation found for Nested "vmaCreateImage" "allocator"
                Allocator
             -> -- No documentation found for Nested "vmaCreateImage" "pImageCreateInfo"
-               ImageCreateInfo a
+               (ImageCreateInfo a)
             -> -- No documentation found for Nested "vmaCreateImage" "pAllocationCreateInfo"
                AllocationCreateInfo
             -> io (Image, Allocation, AllocationInfo)
@@ -2329,7 +2330,7 @@ createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT 
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ (ffiVmaCreateImage) (allocator) pImageCreateInfo pAllocationCreateInfo (pPImage) (pPAllocation) (pPAllocationInfo)
+  r <- lift $ (ffiVmaCreateImage) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPImage) (pPAllocation) (pPAllocationInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pAllocation <- lift $ peek @Allocation pPAllocation

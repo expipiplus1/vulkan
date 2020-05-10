@@ -91,7 +91,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateSharedSwapchainsKHR
-  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SwapchainCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (SwapchainCreateInfoKHR a) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SomeStruct SwapchainCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result) -> Ptr Device_T -> Word32 -> Ptr (SomeStruct SwapchainCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
 
 -- | vkCreateSharedSwapchainsKHR - Create multiple swapchains that share
 -- presentable images
@@ -192,7 +192,7 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSwapchains <- ContT $ bracket (callocBytes @SwapchainKHR ((fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) * 8)) free
-  r <- lift $ vkCreateSharedSwapchainsKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (pPCreateInfos) pAllocator (pPSwapchains)
+  r <- lift $ vkCreateSharedSwapchainsKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPSwapchains)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchains <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @SwapchainKHR ((pPSwapchains `advancePtrBytes` (8 * (i)) :: Ptr SwapchainKHR)))
   pure $ (pSwapchains)

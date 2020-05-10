@@ -33,6 +33,7 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -51,6 +52,7 @@ import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (SemaphoreTypeCreateInfo)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -67,7 +69,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceExternalSemaphoreProperties
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceExternalSemaphoreInfo a) -> Ptr ExternalSemaphoreProperties -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceExternalSemaphoreInfo a) -> Ptr ExternalSemaphoreProperties -> IO ()
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceExternalSemaphoreInfo) -> Ptr ExternalSemaphoreProperties -> IO ()) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceExternalSemaphoreInfo) -> Ptr ExternalSemaphoreProperties -> IO ()
 
 -- | vkGetPhysicalDeviceExternalSemaphoreProperties - Function for querying
 -- external semaphore handle capabilities.
@@ -93,7 +95,7 @@ getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                                 --
                                                 -- @pExternalSemaphoreInfo@ /must/ be a valid pointer to a valid
                                                 -- 'PhysicalDeviceExternalSemaphoreInfo' structure
-                                                PhysicalDeviceExternalSemaphoreInfo a
+                                                (PhysicalDeviceExternalSemaphoreInfo a)
                                              -> io (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (instanceCmds (physicalDevice :: PhysicalDevice))
@@ -102,7 +104,7 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInf
   let vkGetPhysicalDeviceExternalSemaphoreProperties' = mkVkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphorePropertiesPtr
   pExternalSemaphoreInfo <- ContT $ withCStruct (externalSemaphoreInfo)
   pPExternalSemaphoreProperties <- ContT (withZeroCStruct @ExternalSemaphoreProperties)
-  lift $ vkGetPhysicalDeviceExternalSemaphoreProperties' (physicalDeviceHandle (physicalDevice)) pExternalSemaphoreInfo (pPExternalSemaphoreProperties)
+  lift $ vkGetPhysicalDeviceExternalSemaphoreProperties' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pExternalSemaphoreInfo) (pPExternalSemaphoreProperties)
   pExternalSemaphoreProperties <- lift $ peekCStruct @ExternalSemaphoreProperties pPExternalSemaphoreProperties
   pure $ (pExternalSemaphoreProperties)
 

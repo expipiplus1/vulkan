@@ -199,7 +199,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'PastPresentationTimingGOOGLE',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-getPastPresentationTimingGOOGLE :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
+getPastPresentationTimingGOOGLE :: forall io
+                                 . (MonadIO io)
+                                => -- | @device@ is the device associated with @swapchain@.
+                                   Device
+                                -> -- | @swapchain@ is the swapchain to obtain presentation timing information
+                                   -- duration for.
+                                   SwapchainKHR
+                                -> io (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
 getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
   let vkGetPastPresentationTimingGOOGLEPtr = pVkGetPastPresentationTimingGOOGLE (deviceCmds (device :: Device))
   lift $ unless (vkGetPastPresentationTimingGOOGLEPtr /= nullFunPtr) $

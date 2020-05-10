@@ -37,6 +37,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
@@ -66,6 +67,7 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SharingMode (SharingMode)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -78,7 +80,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateBuffer
-  :: FunPtr (Ptr Device_T -> Ptr (BufferCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result) -> Ptr Device_T -> Ptr (BufferCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result
 
 -- | vkCreateBuffer - Create a new buffer object
 --
@@ -130,7 +132,7 @@ createBuffer :: forall a io
                 Device
              -> -- | @pCreateInfo@ is a pointer to a 'BufferCreateInfo' structure containing
                 -- parameters affecting creation of the buffer.
-                BufferCreateInfo a
+                (BufferCreateInfo a)
              -> -- | @pAllocator@ controls host memory allocation as described in the
                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
@@ -146,7 +148,7 @@ createBuffer device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
-  r <- lift $ vkCreateBuffer' (deviceHandle (device)) pCreateInfo pAllocator (pPBuffer)
+  r <- lift $ vkCreateBuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPBuffer)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pure $ (pBuffer)

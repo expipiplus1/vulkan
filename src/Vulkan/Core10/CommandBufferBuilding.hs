@@ -32,6 +32,7 @@ module Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                             , cmdSetEvent
                                             , cmdResetEvent
                                             , cmdWaitEvents
+                                            , cmdWaitEventsSafe
                                             , cmdPipelineBarrier
                                             , cmdBeginQuery
                                             , cmdUseQuery
@@ -5639,8 +5640,58 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkCmdWaitEvents
-  :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()
+  "dynamic" mkVkCmdWaitEventsUnsafe
+  :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()
+
+foreign import ccall
+  "dynamic" mkVkCmdWaitEventsSafe
+  :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()
+
+-- | cmdWaitEvents with selectable safeness
+cmdWaitEventsSafeOrUnsafe :: forall io
+                           . (MonadIO io)
+                          => -- No documentation found for TopLevel ""
+                             (FunPtr (Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Ptr Event -> PipelineStageFlags -> PipelineStageFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ())
+                          -> -- | @commandBuffer@ is the command buffer into which the command is
+                             -- recorded.
+                             CommandBuffer
+                          -> -- | @pEvents@ is a pointer to an array of event object handles to wait on.
+                             ("events" ::: Vector Event)
+                          -> -- | @srcStageMask@ is a bitmask of
+                             -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                             -- specifying the
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
+                             ("srcStageMask" ::: PipelineStageFlags)
+                          -> -- | @dstStageMask@ is a bitmask of
+                             -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                             -- specifying the
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
+                             ("dstStageMask" ::: PipelineStageFlags)
+                          -> -- | @pMemoryBarriers@ is a pointer to an array of
+                             -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
+                             ("memoryBarriers" ::: Vector MemoryBarrier)
+                          -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
+                             -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
+                             ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
+                          -> -- | @pImageMemoryBarriers@ is a pointer to an array of
+                             -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
+                             ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
+                          -> io ()
+cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
+  let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
+  lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
+    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents is null" Nothing Nothing
+  let vkCmdWaitEvents' = mkVkCmdWaitEvents vkCmdWaitEventsPtr
+  pPEvents <- ContT $ allocaBytesAligned @Event ((Data.Vector.length (events)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
+  pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
+  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e) . ($ ())) (memoryBarriers)
+  pPBufferMemoryBarriers <- ContT $ allocaBytesAligned @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56) 8
+  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e) . ($ ())) (bufferMemoryBarriers)
+  pPImageMemoryBarriers <- ContT $ allocaBytesAligned @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72) 8
+  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
+  lift $ vkCmdWaitEvents' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (events)) :: Word32)) (pPEvents) (srcStageMask) (dstStageMask) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers))
+  pure $ ()
 
 -- | vkCmdWaitEvents - Wait for one or more events and insert a set of memory
 --
@@ -5933,21 +5984,37 @@ cmdWaitEvents :: forall io
                  -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
                  ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
               -> io ()
-cmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
-  let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
-  lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents is null" Nothing Nothing
-  let vkCmdWaitEvents' = mkVkCmdWaitEvents vkCmdWaitEventsPtr
-  pPEvents <- ContT $ allocaBytesAligned @Event ((Data.Vector.length (events)) * 8) 8
-  lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
-  pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e) . ($ ())) (memoryBarriers)
-  pPBufferMemoryBarriers <- ContT $ allocaBytesAligned @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e) . ($ ())) (bufferMemoryBarriers)
-  pPImageMemoryBarriers <- ContT $ allocaBytesAligned @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72) 8
-  Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
-  lift $ vkCmdWaitEvents' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (events)) :: Word32)) (pPEvents) (srcStageMask) (dstStageMask) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (pPImageMemoryBarriers)
-  pure $ ()
+cmdWaitEvents = cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEventsUnsafe
+
+-- | A variant of 'cmdWaitEvents' which makes a *safe* FFI call
+cmdWaitEventsSafe :: forall io
+                   . (MonadIO io)
+                  => -- | @commandBuffer@ is the command buffer into which the command is
+                     -- recorded.
+                     CommandBuffer
+                  -> -- | @pEvents@ is a pointer to an array of event object handles to wait on.
+                     ("events" ::: Vector Event)
+                  -> -- | @srcStageMask@ is a bitmask of
+                     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                     -- specifying the
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
+                     ("srcStageMask" ::: PipelineStageFlags)
+                  -> -- | @dstStageMask@ is a bitmask of
+                     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+                     -- specifying the
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
+                     ("dstStageMask" ::: PipelineStageFlags)
+                  -> -- | @pMemoryBarriers@ is a pointer to an array of
+                     -- 'Vulkan.Core10.OtherTypes.MemoryBarrier' structures.
+                     ("memoryBarriers" ::: Vector MemoryBarrier)
+                  -> -- | @pBufferMemoryBarriers@ is a pointer to an array of
+                     -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier' structures.
+                     ("bufferMemoryBarriers" ::: Vector BufferMemoryBarrier)
+                  -> -- | @pImageMemoryBarriers@ is a pointer to an array of
+                     -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
+                     ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
+                  -> io ()
+cmdWaitEventsSafe = cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEventsSafe
 
 
 foreign import ccall
@@ -5955,7 +6022,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdPipelineBarrier
-  :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags -> PipelineStageFlags -> DependencyFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()) -> Ptr CommandBuffer_T -> PipelineStageFlags -> PipelineStageFlags -> DependencyFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (ImageMemoryBarrier a) -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags -> PipelineStageFlags -> DependencyFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()) -> Ptr CommandBuffer_T -> PipelineStageFlags -> PipelineStageFlags -> DependencyFlags -> Word32 -> Ptr MemoryBarrier -> Word32 -> Ptr BufferMemoryBarrier -> Word32 -> Ptr (SomeStruct ImageMemoryBarrier) -> IO ()
 
 -- | vkCmdPipelineBarrier - Insert a memory dependency
 --
@@ -6286,7 +6353,7 @@ cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memor
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e) . ($ ())) (bufferMemoryBarriers)
   pPImageMemoryBarriers <- ContT $ allocaBytesAligned @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
-  lift $ vkCmdPipelineBarrier' (commandBufferHandle (commandBuffer)) (srcStageMask) (dstStageMask) (dependencyFlags) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (pPImageMemoryBarriers)
+  lift $ vkCmdPipelineBarrier' (commandBufferHandle (commandBuffer)) (srcStageMask) (dstStageMask) (dependencyFlags) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers))
   pure $ ()
 
 
@@ -7206,7 +7273,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdBeginRenderPass
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> SubpassContents -> IO ()) -> Ptr CommandBuffer_T -> Ptr (RenderPassBeginInfo a) -> SubpassContents -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct RenderPassBeginInfo) -> SubpassContents -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct RenderPassBeginInfo) -> SubpassContents -> IO ()
 
 -- | vkCmdBeginRenderPass - Begin a new render pass
 --
@@ -7382,7 +7449,7 @@ cmdBeginRenderPass :: forall a io
                    -> -- | @pRenderPassBegin@ is a pointer to a 'RenderPassBeginInfo' structure
                       -- specifying the render pass to begin an instance of, and the framebuffer
                       -- the instance uses.
-                      RenderPassBeginInfo a
+                      (RenderPassBeginInfo a)
                    -> -- | @contents@ is a 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
                       -- value specifying how the commands in the first subpass will be provided.
                       SubpassContents
@@ -7393,7 +7460,7 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass is null" Nothing Nothing
   let vkCmdBeginRenderPass' = mkVkCmdBeginRenderPass vkCmdBeginRenderPassPtr
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
-  lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) pRenderPassBegin (contents)
+  lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) (forgetExtensions pRenderPassBegin) (contents)
   pure $ ()
 
 -- | This function will call the supplied action between calls to

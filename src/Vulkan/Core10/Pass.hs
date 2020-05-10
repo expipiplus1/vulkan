@@ -50,6 +50,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
@@ -94,6 +95,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (RenderPassMu
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
 import Vulkan.CStruct (ToCStruct)
@@ -108,7 +110,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateFramebuffer
-  :: FunPtr (Ptr Device_T -> Ptr (FramebufferCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Framebuffer -> IO Result) -> Ptr Device_T -> Ptr (FramebufferCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Framebuffer -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct FramebufferCreateInfo) -> Ptr AllocationCallbacks -> Ptr Framebuffer -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct FramebufferCreateInfo) -> Ptr AllocationCallbacks -> Ptr Framebuffer -> IO Result
 
 -- | vkCreateFramebuffer - Create a new framebuffer object
 --
@@ -156,7 +158,7 @@ createFramebuffer :: forall a io
                      Device
                   -> -- | @pCreateInfo@ is a pointer to a 'FramebufferCreateInfo' structure
                      -- describing additional information about framebuffer creation.
-                     FramebufferCreateInfo a
+                     (FramebufferCreateInfo a)
                   -> -- | @pAllocator@ controls host memory allocation as described in the
                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
@@ -172,7 +174,7 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFramebuffer <- ContT $ bracket (callocBytes @Framebuffer 8) free
-  r <- lift $ vkCreateFramebuffer' (deviceHandle (device)) pCreateInfo pAllocator (pPFramebuffer)
+  r <- lift $ vkCreateFramebuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFramebuffer)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFramebuffer <- lift $ peek @Framebuffer pPFramebuffer
   pure $ (pFramebuffer)
@@ -264,7 +266,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateRenderPass
-  :: FunPtr (Ptr Device_T -> Ptr (RenderPassCreateInfo a) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result) -> Ptr Device_T -> Ptr (RenderPassCreateInfo a) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct RenderPassCreateInfo) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct RenderPassCreateInfo) -> Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
 
 -- | vkCreateRenderPass - Create a new render pass object
 --
@@ -305,7 +307,7 @@ createRenderPass :: forall a io
                     Device
                  -> -- | @pCreateInfo@ is a pointer to a 'RenderPassCreateInfo' structure
                     -- describing the parameters of the render pass.
-                    RenderPassCreateInfo a
+                    (RenderPassCreateInfo a)
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
@@ -321,7 +323,7 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPRenderPass <- ContT $ bracket (callocBytes @RenderPass 8) free
-  r <- lift $ vkCreateRenderPass' (deviceHandle (device)) pCreateInfo pAllocator (pPRenderPass)
+  r <- lift $ vkCreateRenderPass' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPRenderPass)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pRenderPass <- lift $ peek @RenderPass pPRenderPass
   pure $ (pRenderPass)

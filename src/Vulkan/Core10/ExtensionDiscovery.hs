@@ -129,7 +129,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'ExtensionProperties'
-enumerateInstanceExtensionProperties :: forall io . MonadIO io => ("layerName" ::: Maybe ByteString) -> io (Result, ("properties" ::: Vector ExtensionProperties))
+enumerateInstanceExtensionProperties :: forall io
+                                      . (MonadIO io)
+                                     => -- | @pLayerName@ is either @NULL@ or a pointer to a null-terminated UTF-8
+                                        -- string naming the layer to retrieve extensions from.
+                                        ("layerName" ::: Maybe ByteString)
+                                     -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateInstanceExtensionProperties layerName = liftIO . evalContT $ do
   vkEnumerateInstanceExtensionPropertiesPtr <- lift $ castFunPtr @_ @(("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr ExtensionProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceExtensionProperties"#)
   lift $ unless (vkEnumerateInstanceExtensionPropertiesPtr /= nullFunPtr) $
@@ -205,7 +210,14 @@ foreign import ccall
 -- = See Also
 --
 -- 'ExtensionProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
-enumerateDeviceExtensionProperties :: forall io . MonadIO io => PhysicalDevice -> ("layerName" ::: Maybe ByteString) -> io (Result, ("properties" ::: Vector ExtensionProperties))
+enumerateDeviceExtensionProperties :: forall io
+                                    . (MonadIO io)
+                                   => -- | @physicalDevice@ is the physical device that will be queried.
+                                      PhysicalDevice
+                                   -> -- | @pLayerName@ is either @NULL@ or a pointer to a null-terminated UTF-8
+                                      -- string naming the layer to retrieve extensions from.
+                                      ("layerName" ::: Maybe ByteString)
+                                   -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT $ do
   let vkEnumerateDeviceExtensionPropertiesPtr = pVkEnumerateDeviceExtensionProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkEnumerateDeviceExtensionPropertiesPtr /= nullFunPtr) $

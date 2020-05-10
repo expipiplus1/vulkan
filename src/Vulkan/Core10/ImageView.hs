@@ -34,6 +34,7 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
@@ -64,6 +65,7 @@ import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (SamplerYcbcrConversionInfo)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -76,7 +78,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateImageView
-  :: FunPtr (Ptr Device_T -> Ptr (ImageViewCreateInfo a) -> Ptr AllocationCallbacks -> Ptr ImageView -> IO Result) -> Ptr Device_T -> Ptr (ImageViewCreateInfo a) -> Ptr AllocationCallbacks -> Ptr ImageView -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct ImageViewCreateInfo) -> Ptr AllocationCallbacks -> Ptr ImageView -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct ImageViewCreateInfo) -> Ptr AllocationCallbacks -> Ptr ImageView -> IO Result
 
 -- | vkCreateImageView - Create an image view from an existing image
 --
@@ -117,7 +119,7 @@ createImageView :: forall a io
                    Device
                 -> -- | @pCreateInfo@ is a pointer to a 'ImageViewCreateInfo' structure
                    -- containing parameters to be used to create the image view.
-                   ImageViewCreateInfo a
+                   (ImageViewCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
@@ -133,7 +135,7 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPView <- ContT $ bracket (callocBytes @ImageView 8) free
-  r <- lift $ vkCreateImageView' (deviceHandle (device)) pCreateInfo pAllocator (pPView)
+  r <- lift $ vkCreateImageView' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPView)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pView <- lift $ peek @ImageView pPView
   pure $ (pView)

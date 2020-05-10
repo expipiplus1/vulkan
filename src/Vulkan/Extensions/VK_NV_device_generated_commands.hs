@@ -625,7 +625,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetGeneratedCommandsMemoryRequirementsNV
-  :: FunPtr (Ptr Device_T -> Ptr GeneratedCommandsMemoryRequirementsInfoNV -> Ptr (MemoryRequirements2 a) -> IO ()) -> Ptr Device_T -> Ptr GeneratedCommandsMemoryRequirementsInfoNV -> Ptr (MemoryRequirements2 a) -> IO ()
+  :: FunPtr (Ptr Device_T -> Ptr GeneratedCommandsMemoryRequirementsInfoNV -> Ptr (SomeStruct MemoryRequirements2) -> IO ()) -> Ptr Device_T -> Ptr GeneratedCommandsMemoryRequirementsInfoNV -> Ptr (SomeStruct MemoryRequirements2) -> IO ()
 
 -- | vkGetGeneratedCommandsMemoryRequirementsNV - Retrieve the buffer
 -- allocation requirements for generated commands
@@ -668,7 +668,7 @@ getGeneratedCommandsMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetGeneratedCommandsMemoryRequirementsNV' = mkVkGetGeneratedCommandsMemoryRequirementsNV vkGetGeneratedCommandsMemoryRequirementsNVPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ vkGetGeneratedCommandsMemoryRequirementsNV' (deviceHandle (device)) pInfo (pPMemoryRequirements)
+  lift $ vkGetGeneratedCommandsMemoryRequirementsNV' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 

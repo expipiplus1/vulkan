@@ -35,6 +35,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.BaseType (bool32ToBool)
 import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.BaseType (Bool32)
@@ -66,6 +67,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (SamplerCusto
 import Vulkan.Core10.Enums.SamplerMipmapMode (SamplerMipmapMode)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (SamplerReductionModeCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (SamplerYcbcrConversionInfo)
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -78,7 +80,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateSampler
-  :: FunPtr (Ptr Device_T -> Ptr (SamplerCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Sampler -> IO Result) -> Ptr Device_T -> Ptr (SamplerCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Sampler -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct SamplerCreateInfo) -> Ptr AllocationCallbacks -> Ptr Sampler -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct SamplerCreateInfo) -> Ptr AllocationCallbacks -> Ptr Sampler -> IO Result
 
 -- | vkCreateSampler - Create a new sampler object
 --
@@ -121,7 +123,7 @@ createSampler :: forall a io
                  Device
               -> -- | @pCreateInfo@ is a pointer to a 'SamplerCreateInfo' structure specifying
                  -- the state of the sampler object.
-                 SamplerCreateInfo a
+                 (SamplerCreateInfo a)
               -> -- | @pAllocator@ controls host memory allocation as described in the
                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                  -- chapter.
@@ -137,7 +139,7 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSampler <- ContT $ bracket (callocBytes @Sampler 8) free
-  r <- lift $ vkCreateSampler' (deviceHandle (device)) pCreateInfo pAllocator (pPSampler)
+  r <- lift $ vkCreateSampler' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSampler)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSampler <- lift $ peek @Sampler pPSampler
   pure $ (pSampler)

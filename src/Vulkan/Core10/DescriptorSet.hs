@@ -123,7 +123,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateDescriptorSetLayout
-  :: FunPtr (Ptr Device_T -> Ptr (DescriptorSetLayoutCreateInfo a) -> Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result) -> Ptr Device_T -> Ptr (DescriptorSetLayoutCreateInfo a) -> Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct DescriptorSetLayoutCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result
 
 -- | vkCreateDescriptorSetLayout - Create a new descriptor set layout
 --
@@ -164,7 +164,7 @@ createDescriptorSetLayout :: forall a io
                              Device
                           -> -- | @pCreateInfo@ is a pointer to a 'DescriptorSetLayoutCreateInfo'
                              -- structure specifying the state of the descriptor set layout object.
-                             DescriptorSetLayoutCreateInfo a
+                             (DescriptorSetLayoutCreateInfo a)
                           -> -- | @pAllocator@ controls host memory allocation as described in the
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
@@ -180,7 +180,7 @@ createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSetLayout <- ContT $ bracket (callocBytes @DescriptorSetLayout 8) free
-  r <- lift $ vkCreateDescriptorSetLayout' (deviceHandle (device)) pCreateInfo pAllocator (pPSetLayout)
+  r <- lift $ vkCreateDescriptorSetLayout' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSetLayout)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSetLayout <- lift $ peek @DescriptorSetLayout pPSetLayout
   pure $ (pSetLayout)
@@ -271,7 +271,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateDescriptorPool
-  :: FunPtr (Ptr Device_T -> Ptr (DescriptorPoolCreateInfo a) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result) -> Ptr Device_T -> Ptr (DescriptorPoolCreateInfo a) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct DescriptorPoolCreateInfo) -> Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result
 
 -- | vkCreateDescriptorPool - Creates a descriptor pool object
 --
@@ -322,7 +322,7 @@ createDescriptorPool :: forall a io
                         Device
                      -> -- | @pCreateInfo@ is a pointer to a 'DescriptorPoolCreateInfo' structure
                         -- specifying the state of the descriptor pool object.
-                        DescriptorPoolCreateInfo a
+                        (DescriptorPoolCreateInfo a)
                      -> -- | @pAllocator@ controls host memory allocation as described in the
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
@@ -338,7 +338,7 @@ createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDescriptorPool <- ContT $ bracket (callocBytes @DescriptorPool 8) free
-  r <- lift $ vkCreateDescriptorPool' (deviceHandle (device)) pCreateInfo pAllocator (pPDescriptorPool)
+  r <- lift $ vkCreateDescriptorPool' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPDescriptorPool)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDescriptorPool <- lift $ peek @DescriptorPool pPDescriptorPool
   pure $ (pDescriptorPool)
@@ -505,7 +505,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkAllocateDescriptorSets
-  :: FunPtr (Ptr Device_T -> Ptr (DescriptorSetAllocateInfo a) -> Ptr DescriptorSet -> IO Result) -> Ptr Device_T -> Ptr (DescriptorSetAllocateInfo a) -> Ptr DescriptorSet -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct DescriptorSetAllocateInfo) -> Ptr DescriptorSet -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct DescriptorSetAllocateInfo) -> Ptr DescriptorSet -> IO Result
 
 -- | vkAllocateDescriptorSets - Allocate one or more descriptor sets
 --
@@ -613,7 +613,7 @@ allocateDescriptorSets :: forall a io
                           Device
                        -> -- | @pAllocateInfo@ is a pointer to a 'DescriptorSetAllocateInfo' structure
                           -- describing parameters of the allocation.
-                          DescriptorSetAllocateInfo a
+                          (DescriptorSetAllocateInfo a)
                        -> io (("descriptorSets" ::: Vector DescriptorSet))
 allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (deviceCmds (device :: Device))
@@ -622,7 +622,7 @@ allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets vkAllocateDescriptorSetsPtr
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPDescriptorSets <- ContT $ bracket (callocBytes @DescriptorSet ((fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) * 8)) free
-  r <- lift $ vkAllocateDescriptorSets' (deviceHandle (device)) pAllocateInfo (pPDescriptorSets)
+  r <- lift $ vkAllocateDescriptorSets' (deviceHandle (device)) (forgetExtensions pAllocateInfo) (pPDescriptorSets)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDescriptorSets <- lift $ generateM (fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) (\i -> peek @DescriptorSet ((pPDescriptorSets `advancePtrBytes` (8 * (i)) :: Ptr DescriptorSet)))
   pure $ (pDescriptorSets)
@@ -731,7 +731,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkUpdateDescriptorSets
-  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (WriteDescriptorSet a) -> Word32 -> Ptr CopyDescriptorSet -> IO ()) -> Ptr Device_T -> Word32 -> Ptr (WriteDescriptorSet a) -> Word32 -> Ptr CopyDescriptorSet -> IO ()
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr (SomeStruct WriteDescriptorSet) -> Word32 -> Ptr CopyDescriptorSet -> IO ()) -> Ptr Device_T -> Word32 -> Ptr (SomeStruct WriteDescriptorSet) -> Word32 -> Ptr CopyDescriptorSet -> IO ()
 
 -- | vkUpdateDescriptorSets - Update the contents of a descriptor set object
 --
@@ -816,7 +816,7 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
   pPDescriptorCopies <- ContT $ allocaBytesAligned @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorCopies `plusPtr` (56 * (i)) :: Ptr CopyDescriptorSet) (e) . ($ ())) (descriptorCopies)
-  lift $ vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (pPDescriptorWrites) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies)
+  lift $ vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies)
   pure $ ()
 
 
