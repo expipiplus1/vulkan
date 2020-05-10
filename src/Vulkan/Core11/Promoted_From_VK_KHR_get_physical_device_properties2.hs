@@ -478,7 +478,7 @@ getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
   pQueueFamilyPropertyCount <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pPQueueFamilyProperties <- ContT $ bracket (callocBytes @(QueueFamilyProperties2 _) ((fromIntegral (pQueueFamilyPropertyCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPQueueFamilyProperties `advancePtrBytes` (i * 40) :: Ptr (QueueFamilyProperties2 _)) . ($ ())) [0..(fromIntegral (pQueueFamilyPropertyCount)) - 1]
-  lift $ vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) ((pPQueueFamilyProperties))
+  lift $ vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions ((pPQueueFamilyProperties)))
   pQueueFamilyPropertyCount' <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pQueueFamilyProperties' <- lift $ generateM (fromIntegral (pQueueFamilyPropertyCount')) (\i -> peekCStruct @(QueueFamilyProperties2 _) (((pPQueueFamilyProperties) `advancePtrBytes` (40 * (i)) :: Ptr (QueueFamilyProperties2 _))))
   pure $ (pQueueFamilyProperties')
