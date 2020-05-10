@@ -167,7 +167,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'SparseImageMemoryRequirements'
-getImageSparseMemoryRequirements :: forall io . MonadIO io => Device -> Image -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
+getImageSparseMemoryRequirements :: forall io
+                                  . (MonadIO io)
+                                 => -- | @device@ is the logical device that owns the image.
+                                    Device
+                                 -> -- | @image@ is the 'Vulkan.Core10.Handles.Image' object to get the memory
+                                    -- requirements for.
+                                    Image
+                                 -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
 getImageSparseMemoryRequirements device image = liftIO . evalContT $ do
   let vkGetImageSparseMemoryRequirementsPtr = pVkGetImageSparseMemoryRequirements (deviceCmds (device :: Device))
   lift $ unless (vkGetImageSparseMemoryRequirementsPtr /= nullFunPtr) $
@@ -268,7 +275,23 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'SparseImageFormatProperties'
-getPhysicalDeviceSparseImageFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ("samples" ::: SampleCountFlagBits) -> ImageUsageFlags -> ImageTiling -> io (("properties" ::: Vector SparseImageFormatProperties))
+getPhysicalDeviceSparseImageFormatProperties :: forall io
+                                              . (MonadIO io)
+                                             => -- | @physicalDevice@ is the physical device from which to query the sparse
+                                                -- image capabilities.
+                                                PhysicalDevice
+                                             -> -- | @format@ is the image format.
+                                                Format
+                                             -> -- | @type@ is the dimensionality of image.
+                                                ImageType
+                                             -> -- | @samples@ is the number of samples per texel as defined in
+                                                -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+                                                ("samples" ::: SampleCountFlagBits)
+                                             -> -- | @usage@ is a bitmask describing the intended usage of the image.
+                                                ImageUsageFlags
+                                             -> -- | @tiling@ is the tiling arrangement of the texel blocks in memory.
+                                                ImageTiling
+                                             -> io (("properties" ::: Vector SparseImageFormatProperties))
 getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSparseImageFormatPropertiesPtr = pVkGetPhysicalDeviceSparseImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSparseImageFormatPropertiesPtr /= nullFunPtr) $

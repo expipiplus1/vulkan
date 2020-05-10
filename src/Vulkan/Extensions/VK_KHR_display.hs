@@ -181,7 +181,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'DisplayPropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPropertiesKHR))
+getPhysicalDeviceDisplayPropertiesKHR :: forall io
+                                       . (MonadIO io)
+                                      => -- | @physicalDevice@ is a physical device.
+                                         PhysicalDevice
+                                      -> io (Result, ("properties" ::: Vector DisplayPropertiesKHR))
 getPhysicalDeviceDisplayPropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceDisplayPropertiesKHRPtr /= nullFunPtr) $
@@ -251,7 +255,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'DisplayPlanePropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
+getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io
+                                            . (MonadIO io)
+                                           => -- | @physicalDevice@ is a physical device.
+                                              PhysicalDevice
+                                           -> io (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
 getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr /= nullFunPtr) $
@@ -332,7 +340,14 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneSupportedDisplaysKHR :: forall io . MonadIO io => PhysicalDevice -> ("planeIndex" ::: Word32) -> io (Result, ("displays" ::: Vector DisplayKHR))
+getDisplayPlaneSupportedDisplaysKHR :: forall io
+                                     . (MonadIO io)
+                                    => -- | @physicalDevice@ is a physical device.
+                                       PhysicalDevice
+                                    -> -- | @planeIndex@ is the plane which the application wishes to use, and
+                                       -- /must/ be in the range [0, physical device plane count - 1].
+                                       ("planeIndex" ::: Word32)
+                                    -> io (Result, ("displays" ::: Vector DisplayKHR))
 getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneSupportedDisplaysKHRPtr = pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetDisplayPlaneSupportedDisplaysKHRPtr /= nullFunPtr) $
@@ -412,7 +427,13 @@ foreign import ccall
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayModePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
+getDisplayModePropertiesKHR :: forall io
+                             . (MonadIO io)
+                            => -- | @physicalDevice@ is the physical device associated with @display@.
+                               PhysicalDevice
+                            -> -- | @display@ is the display to query.
+                               DisplayKHR
+                            -> io (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
 getDisplayModePropertiesKHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModePropertiesKHRPtr = pVkGetDisplayModePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetDisplayModePropertiesKHRPtr /= nullFunPtr) $

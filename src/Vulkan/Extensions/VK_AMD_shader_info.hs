@@ -169,7 +169,18 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'ShaderInfoTypeAMD',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
-getShaderInfoAMD :: forall io . MonadIO io => Device -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> io (Result, ("info" ::: ByteString))
+getShaderInfoAMD :: forall io
+                  . (MonadIO io)
+                 => -- | @device@ is the device that created @pipeline@.
+                    Device
+                 -> -- | @pipeline@ is the target of the query.
+                    Pipeline
+                 -> -- | @shaderStage@ identifies the particular shader within the pipeline about
+                    -- which information is being queried.
+                    ShaderStageFlagBits
+                 -> -- | @infoType@ describes what kind of information is being queried.
+                    ShaderInfoTypeAMD
+                 -> io (Result, ("info" ::: ByteString))
 getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
   let vkGetShaderInfoAMDPtr = pVkGetShaderInfoAMD (deviceCmds (device :: Device))
   lift $ unless (vkGetShaderInfoAMDPtr /= nullFunPtr) $

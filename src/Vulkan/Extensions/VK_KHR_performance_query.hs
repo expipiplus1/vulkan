@@ -207,7 +207,15 @@ foreign import ccall
 --
 -- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
+enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io
+                                                               . (MonadIO io)
+                                                              => -- | @physicalDevice@ is the handle to the physical device whose queue family
+                                                                 -- performance query counter properties will be queried.
+                                                                 PhysicalDevice
+                                                              -> -- | @queueFamilyIndex@ is the index into the queue family of the physical
+                                                                 -- device we want to get properties for.
+                                                                 ("queueFamilyIndex" ::: Word32)
+                                                              -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr = pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr /= nullFunPtr) $

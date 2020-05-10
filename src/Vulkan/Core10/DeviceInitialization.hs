@@ -382,7 +382,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Instance', 'Vulkan.Core10.Handles.PhysicalDevice'
-enumeratePhysicalDevices :: forall io . MonadIO io => Instance -> io (Result, ("physicalDevices" ::: Vector PhysicalDevice))
+enumeratePhysicalDevices :: forall io
+                          . (MonadIO io)
+                         => -- | @instance@ is a handle to a Vulkan instance previously created with
+                            -- 'createInstance'.
+                            Instance
+                         -> io (Result, ("physicalDevices" ::: Vector PhysicalDevice))
 enumeratePhysicalDevices instance' = liftIO . evalContT $ do
   let cmds = instanceCmds (instance' :: Instance)
   let vkEnumeratePhysicalDevicesPtr = pVkEnumeratePhysicalDevices cmds
@@ -652,7 +657,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties'
-getPhysicalDeviceQueueFamilyProperties :: forall io . MonadIO io => PhysicalDevice -> io (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
+getPhysicalDeviceQueueFamilyProperties :: forall io
+                                        . (MonadIO io)
+                                       => -- | @physicalDevice@ is the handle to the physical device whose properties
+                                          -- will be queried.
+                                          PhysicalDevice
+                                       -> io (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
 getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyPropertiesPtr = pVkGetPhysicalDeviceQueueFamilyProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceQueueFamilyPropertiesPtr /= nullFunPtr) $

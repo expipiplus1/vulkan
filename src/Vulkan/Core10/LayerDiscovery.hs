@@ -116,7 +116,9 @@ foreign import ccall
 -- = See Also
 --
 -- 'LayerProperties'
-enumerateInstanceLayerProperties :: forall io . MonadIO io => io (Result, ("properties" ::: Vector LayerProperties))
+enumerateInstanceLayerProperties :: forall io
+                                  . (MonadIO io)
+                                 => io (Result, ("properties" ::: Vector LayerProperties))
 enumerateInstanceLayerProperties  = liftIO . evalContT $ do
   vkEnumerateInstanceLayerPropertiesPtr <- lift $ castFunPtr @_ @(("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr LayerProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceLayerProperties"#)
   lift $ unless (vkEnumerateInstanceLayerPropertiesPtr /= nullFunPtr) $
@@ -193,7 +195,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'LayerProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
-enumerateDeviceLayerProperties :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector LayerProperties))
+enumerateDeviceLayerProperties :: forall io
+                                . (MonadIO io)
+                               => -- No documentation found for Nested "vkEnumerateDeviceLayerProperties" "physicalDevice"
+                                  PhysicalDevice
+                               -> io (Result, ("properties" ::: Vector LayerProperties))
 enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
   let vkEnumerateDeviceLayerPropertiesPtr = pVkEnumerateDeviceLayerProperties (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkEnumerateDeviceLayerPropertiesPtr /= nullFunPtr) $

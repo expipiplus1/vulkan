@@ -166,7 +166,18 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
-getPhysicalDeviceSurfacePresentModes2EXT :: forall a io . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModes2EXT :: forall a io
+                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
+                                         => -- | @physicalDevice@ is the physical device that will be associated with the
+                                            -- swapchain to be created, as described for
+                                            -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                            PhysicalDevice
+                                         -> -- | @pSurfaceInfo@ is a pointer to a
+                                            -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+                                            -- structure describing the surface and other fixed parameters that would
+                                            -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                            PhysicalDeviceSurfaceInfo2KHR a
+                                         -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfacePresentModes2EXTPtr /= nullFunPtr) $

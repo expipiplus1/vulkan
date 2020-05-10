@@ -465,7 +465,13 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainImagesKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result, ("swapchainImages" ::: Vector Image))
+getSwapchainImagesKHR :: forall io
+                       . (MonadIO io)
+                      => -- | @device@ is the device associated with @swapchain@.
+                         Device
+                      -> -- | @swapchain@ is the swapchain to query.
+                         SwapchainKHR
+                      -> io (Result, ("swapchainImages" ::: Vector Image))
 getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
   let vkGetSwapchainImagesKHRPtr = pVkGetSwapchainImagesKHR (deviceCmds (device :: Device))
   lift $ unless (vkGetSwapchainImagesKHRPtr /= nullFunPtr) $
@@ -1055,7 +1061,13 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDevicePresentRectanglesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("rects" ::: Vector Rect2D))
+getPhysicalDevicePresentRectanglesKHR :: forall io
+                                       . (MonadIO io)
+                                      => -- | @physicalDevice@ is the physical device.
+                                         PhysicalDevice
+                                      -> -- | @surface@ is the surface.
+                                         SurfaceKHR
+                                      -> io (Result, ("rects" ::: Vector Rect2D))
 getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDevicePresentRectanglesKHRPtr /= nullFunPtr) $

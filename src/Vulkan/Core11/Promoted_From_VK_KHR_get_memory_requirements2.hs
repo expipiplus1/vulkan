@@ -187,7 +187,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Device', 'ImageSparseMemoryRequirementsInfo2',
 -- 'SparseImageMemoryRequirements2'
-getImageSparseMemoryRequirements2 :: forall io . MonadIO io => Device -> ImageSparseMemoryRequirementsInfo2 -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
+getImageSparseMemoryRequirements2 :: forall io
+                                   . (MonadIO io)
+                                  => -- | @device@ is the logical device that owns the image.
+                                     Device
+                                  -> -- | @pInfo@ is a pointer to a 'ImageSparseMemoryRequirementsInfo2' structure
+                                     -- containing parameters required for the memory requirements query.
+                                     ImageSparseMemoryRequirementsInfo2
+                                  -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
 getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageSparseMemoryRequirements2Ptr = pVkGetImageSparseMemoryRequirements2 (deviceCmds (device :: Device))
   lift $ unless (vkGetImageSparseMemoryRequirements2Ptr /= nullFunPtr) $

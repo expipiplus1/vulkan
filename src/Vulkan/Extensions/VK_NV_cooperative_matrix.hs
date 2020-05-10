@@ -147,7 +147,11 @@ foreign import ccall
 -- = See Also
 --
 -- 'CooperativeMatrixPropertiesNV', 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceCooperativeMatrixPropertiesNV :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector CooperativeMatrixPropertiesNV))
+getPhysicalDeviceCooperativeMatrixPropertiesNV :: forall io
+                                                . (MonadIO io)
+                                               => -- | @physicalDevice@ is the physical device.
+                                                  PhysicalDevice
+                                               -> io (Result, ("properties" ::: Vector CooperativeMatrixPropertiesNV))
 getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceCooperativeMatrixPropertiesNVPtr = pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceCooperativeMatrixPropertiesNVPtr /= nullFunPtr) $

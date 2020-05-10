@@ -459,7 +459,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties2'
-getPhysicalDeviceQueueFamilyProperties2 :: forall a io . (Extendss QueueFamilyProperties2 a, PokeChain a, PeekChain a, MonadIO io) => PhysicalDevice -> io (("queueFamilyProperties" ::: Vector (QueueFamilyProperties2 a)))
+getPhysicalDeviceQueueFamilyProperties2 :: forall a io
+                                         . (Extendss QueueFamilyProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                                        => -- | @physicalDevice@ is the handle to the physical device whose properties
+                                           -- will be queried.
+                                           PhysicalDevice
+                                        -> io (("queueFamilyProperties" ::: Vector (QueueFamilyProperties2 a)))
 getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties2Ptr = pVkGetPhysicalDeviceQueueFamilyProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceQueueFamilyProperties2Ptr /= nullFunPtr) $
@@ -555,7 +560,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceSparseImageFormatInfo2', 'SparseImageFormatProperties2'
-getPhysicalDeviceSparseImageFormatProperties2 :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceSparseImageFormatInfo2 -> io (("properties" ::: Vector SparseImageFormatProperties2))
+getPhysicalDeviceSparseImageFormatProperties2 :: forall io
+                                               . (MonadIO io)
+                                              => -- | @physicalDevice@ is the physical device from which to query the sparse
+                                                 -- image capabilities.
+                                                 PhysicalDevice
+                                              -> -- | @pFormatInfo@ is a pointer to a 'PhysicalDeviceSparseImageFormatInfo2'
+                                                 -- structure containing input parameters to the command.
+                                                 PhysicalDeviceSparseImageFormatInfo2
+                                              -> io (("properties" ::: Vector SparseImageFormatProperties2))
 getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSparseImageFormatProperties2Ptr = pVkGetPhysicalDeviceSparseImageFormatProperties2 (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSparseImageFormatProperties2Ptr /= nullFunPtr) $

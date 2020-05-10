@@ -156,7 +156,12 @@ foreign import ccall
 -- = See Also
 --
 -- 'CheckpointDataNV', 'Vulkan.Core10.Handles.Queue'
-getQueueCheckpointDataNV :: forall io . MonadIO io => Queue -> io (("checkpointData" ::: Vector CheckpointDataNV))
+getQueueCheckpointDataNV :: forall io
+                          . (MonadIO io)
+                         => -- | @queue@ is the 'Vulkan.Core10.Handles.Queue' object the caller would
+                            -- like to retrieve checkpoint data for
+                            Queue
+                         -> io (("checkpointData" ::: Vector CheckpointDataNV))
 getQueueCheckpointDataNV queue = liftIO . evalContT $ do
   let vkGetQueueCheckpointDataNVPtr = pVkGetQueueCheckpointDataNV (deviceCmds (queue :: Queue))
   lift $ unless (vkGetQueueCheckpointDataNVPtr /= nullFunPtr) $

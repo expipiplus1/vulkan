@@ -137,7 +137,12 @@ foreign import ccall
 --
 -- 'FramebufferMixedSamplesCombinationNV',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
+getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io
+                                                                 . (MonadIO io)
+                                                                => -- | @physicalDevice@ is the physical device from which to query the set of
+                                                                   -- combinations.
+                                                                   PhysicalDevice
+                                                                -> io (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
 getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr = pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr /= nullFunPtr) $

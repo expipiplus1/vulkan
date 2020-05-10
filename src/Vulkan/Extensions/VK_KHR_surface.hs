@@ -427,7 +427,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceFormatKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceFormatsKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
+getPhysicalDeviceSurfaceFormatsKHR :: forall io
+                                    . (MonadIO io)
+                                   => -- | @physicalDevice@ is the physical device that will be associated with the
+                                      -- swapchain to be created, as described for
+                                      -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                      PhysicalDevice
+                                   -> -- | @surface@ is the surface that will be associated with the swapchain.
+                                      SurfaceKHR
+                                   -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
 getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceFormatsKHRPtr = pVkGetPhysicalDeviceSurfaceFormatsKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfaceFormatsKHRPtr /= nullFunPtr) $
@@ -510,7 +518,15 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PresentModeKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfacePresentModesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModesKHR :: forall io
+                                         . (MonadIO io)
+                                        => -- | @physicalDevice@ is the physical device that will be associated with the
+                                           -- swapchain to be created, as described for
+                                           -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+                                           PhysicalDevice
+                                        -> -- | @surface@ is the surface that will be associated with the swapchain.
+                                           SurfaceKHR
+                                        -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModesKHRPtr = pVkGetPhysicalDeviceSurfacePresentModesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
   lift $ unless (vkGetPhysicalDeviceSurfacePresentModesKHRPtr /= nullFunPtr) $
