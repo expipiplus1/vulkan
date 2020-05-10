@@ -54,6 +54,7 @@ import           Render.Stmts.Alloc
 import           Render.Stmts.Poke
 import           Render.Stmts.Utils
 import           Render.Type
+import           Render.Utils
 import           Spec.Parse
 
 renderCommand
@@ -69,7 +70,7 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
   RenderParams {..} <- input
   let Command {..} = mcCommand
   genRe ("command " <> unCName mcName) $ do
-    renderForeignDecl mcCommand
+    renderForeignDecls mcCommand
 
     let siblingMap = Map.fromList
           [ (n, SiblingInfo (pretty . unCName $ n) (mpScheme p))
@@ -136,9 +137,102 @@ marshaledCommandCall
 marshaledCommandCall commandName m@MarshaledCommand {..} = do
   RenderParams {..} <- input
 
-  includeReturnType <- marshaledCommandShouldIncludeReturnValue m
+  rhs               <- commandRHS m
 
-  tellExport (ETerm commandName)
+  ----------------------------------------------------------------
+  -- The type of this command
+  ----------------------------------------------------------------
+  nts               <- marshaledCommandInputTypes m
+  r                 <- makeReturnType True m
+  let t         = foldr arrowUniqueVars r nts
+      paramName = pName . mpParam
+      isArg p = case mpScheme p of
+        ElidedLength{}    -> Nothing
+        ElidedUnivalued _ -> Nothing
+        ElidedVoid        -> Nothing
+        Returned _        -> Nothing
+        _                 -> Just p
+      paramNaughtyNames = toList (paramName <$> V.mapMaybe isArg mcParams)
+      paramNiceNames    = pretty . mkParamName <$> paramNaughtyNames
+      paramDocumentees  = Nested (cName mcCommand) <$> paramNaughtyNames
+  constrainedType <- addMonadIO <$> constrainStructVariables t
+  tDocParts       <- renderInParts paramDocumentees constrainedType
+
+  if not (cCanBlock mcCommand)
+    then do
+      tellExport (ETerm commandName)
+      tellDocWithHaddock $ \getDoc -> vsep
+        [ getDoc (TopLevel (cName mcCommand))
+        , pretty commandName
+          <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+        , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
+        ]
+    else do
+      ffiTy <- cToHsType
+        DoLower
+        (Proto
+          (cReturnType mcCommand)
+          [ (Nothing, pType)
+          | Parameter {..} <- toList (cParameters mcCommand)
+          ]
+        )
+
+      let safeOrUnsafeName = pretty commandName <> "SafeOrUnsafe"
+          commandNameSafe  = TermName (unName commandName <> "Safe")
+          dynName          = pretty $ getDynName mcCommand
+          dynNameSafe      = getDynName mcCommand <> "Safe"
+          dynNameUnsafe    = getDynName mcCommand <> "Unafe"
+          dynamicBindType  = ConT ''FunPtr :@ ffiTy ~> ffiTy
+      tDocSafeOrUnsafe <- renderType (dynamicBindType ~> constrainedType)
+
+      tellExport (ETerm commandName)
+      tellExport (ETerm commandNameSafe)
+
+      tellDoc $ vsep
+        [ comment $ unName commandName <> " with selectable safeness"
+        , safeOrUnsafeName <+> indent 0 ("::" <+> tDocSafeOrUnsafe)
+        , safeOrUnsafeName <+> dynName <+> sep paramNiceNames <+> "=" <+> rhs
+        ]
+
+      tellDocWithHaddock $ \getDoc -> vsep
+        [ getDoc (TopLevel (cName mcCommand))
+        , pretty commandName
+          <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+        , pretty commandName
+        <+> "="
+        <+> safeOrUnsafeName
+        <+> pretty dynNameUnsafe
+        ]
+
+      tellDocWithHaddock $ \getDoc -> vsep
+        [ comment
+        $  "A variant of '"
+        <> unName commandName
+        <> "' which makes a *safe* FFI call"
+        , pretty commandNameSafe
+          <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
+        , pretty commandNameSafe
+        <+> "="
+        <+> safeOrUnsafeName
+        <+> pretty dynNameSafe
+        ]
+
+--
+-- The RHS text of the command
+--
+commandRHS
+  :: ( HasErr r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasStmts r
+     , HasSiblingInfo Parameter r
+     , HasRenderedNames r
+     )
+  => MarshaledCommand
+  -> Sem r (Doc ())
+commandRHS m@MarshaledCommand {..} = do
+  RenderParams {..} <- input
 
   let badNames = mempty
   stmtsDoc <- renderStmts badNames $ do
@@ -165,6 +259,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
     (pokeRefs, peekRefs) <- V.unzip <$> V.zipWithM getPoke paramRefs mcParams
 
     -- Bind the result to _ if it can only return success
+    includeReturnType    <- marshaledCommandShouldIncludeReturnValue m
     let useEmptyBinder =
           not includeReturnType
             && null (cErrorCodes mcCommand)
@@ -190,7 +285,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       rets <- traverse use $ if includeReturnType then retRef : peeks else peeks
       pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
 
-  rhs <- case stmtsDoc of
+  case stmtsDoc of
     IOStmts d -> do
       tellImport 'liftIO
       pure $ "liftIO $" <+> d
@@ -199,31 +294,6 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       tellImport 'liftIO
       pure $ "liftIO . evalContT $" <+> d
 
-  ----------------------------------------------------------------
-  -- The type of this command
-  ----------------------------------------------------------------
-  nts <- marshaledCommandInputTypes m
-  r   <- makeReturnType True m
-  let t         = foldr arrowUniqueVars r nts
-      paramName = pName . mpParam
-      isArg p = case mpScheme p of
-        ElidedLength{}    -> Nothing
-        ElidedUnivalued _ -> Nothing
-        ElidedVoid        -> Nothing
-        Returned _        -> Nothing
-        _                 -> Just p
-      paramNaughtyNames = toList (paramName <$> V.mapMaybe isArg mcParams)
-      paramNiceNames    = pretty . mkParamName <$> paramNaughtyNames
-      paramDocumentees  = Nested (cName mcCommand) <$> paramNaughtyNames
-  constrainedType <- addMonadIO <$> constrainStructVariables t
-  tDocParts       <- renderInParts paramDocumentees constrainedType
-
-  tellDocWithHaddock $ \getDoc -> vsep
-    [ getDoc (TopLevel (cName mcCommand))
-    , pretty commandName
-      <+> indent 0 ("::" <> renderWithComments getDoc tDocParts)
-    , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
-    ]
 
 renderInParts
   :: (HasRenderElem r, HasRenderParams r)
@@ -738,8 +808,9 @@ commandHandle Command {..} = case cParameters V.!? 0 of
   Just p@Parameter {..} | TypeName t <- pType -> fmap (p, ) <$> getHandle t
   _ -> pure Nothing
 
-renderForeignDecl
-  :: ( HasErr r
+renderForeignDecls
+  :: forall r
+   . ( HasErr r
      , HasSpecInfo r
      , HasRenderElem r
      , HasRenderParams r
@@ -747,7 +818,24 @@ renderForeignDecl
      )
   => Command
   -> Sem r ()
-renderForeignDecl c@Command {..} = do
+renderForeignDecls c@Command {..} = do
+  let tellFFI :: Bool -> Maybe CName -> Text -> Doc () -> Sem r ()
+      tellFFI unsafe ffiName name tyDoc =
+        tellDoc
+          .  vsep
+          $  ["foreign import ccall"]
+          <> (bool
+               []
+               ["#if !defined(SAFE_FOREIGN_CALLS)", indent 2 "unsafe", "#endif"]
+               unsafe
+             )
+          <> [ indent 2 $ maybe (dquotes "dynamic" <+>)
+                                ((<+>) . dquotes . pretty . unCName)
+                                ffiName
+                                (pretty name)
+             , indent 2 $ "::" <+> tyDoc
+             ]
+
   ffiTy <- cToHsType
     DoLower
     (Proto cReturnType
@@ -759,27 +847,20 @@ renderForeignDecl c@Command {..} = do
           dynName         = getDynName c
       dynamicBindTypeDoc <- renderType dynamicBindType
       importConstructors dynamicBindType
-      tellDoc $ vsep
-        [ "foreign import ccall"
-        , "#if !defined(SAFE_FOREIGN_CALLS)"
-        , indent 2 "unsafe"
-        , "#endif"
-        , indent 2 "\"dynamic\"" <+> pretty dynName
-        , indent 2 ("::" <+> dynamicBindTypeDoc)
-        ]
+      if cCanBlock
+        then do
+          tellFFI True  Nothing (dynName <> "Unsafe") dynamicBindTypeDoc
+          tellFFI False Nothing (dynName <> "Safe")   dynamicBindTypeDoc
+        else tellFFI True Nothing dynName dynamicBindTypeDoc
     else do
       let staticName = getStaticName c
       staticBindTypeDoc <- renderType ffiTy
       importConstructors ffiTy
-      tellDoc $ vsep
-        [ "foreign import ccall"
-        , "#if !defined(SAFE_FOREIGN_CALLS)"
-        , indent 2 "unsafe"
-        , "#endif"
-        , indent 2 (dquotes (pretty (unCName cName)) <+> pretty staticName)
-        , indent 2 ("::" <+> staticBindTypeDoc)
-        ]
-
+      if cCanBlock
+        then do
+          tellFFI True  (Just cName) (staticName <> "Unsafe") staticBindTypeDoc
+          tellFFI False (Just cName) (staticName <> "Safe")   staticBindTypeDoc
+        else tellFFI True (Just cName) staticName staticBindTypeDoc
 
 ----------------------------------------------------------------
 -- Poking values
