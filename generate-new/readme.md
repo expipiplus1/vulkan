@@ -40,6 +40,11 @@ The docbook documentation will be in `docs/docbook`.
 
 # TODO
 
+- List instead of vector?
+  Most of the arrays passed to vulkan (in my code at least) are just a single
+  element. All of them are less than 5 or 6 elements I think. The marshaling
+  code doesn't need O(1) random access, perhaps lists would be more convenient.
+
 - pay attention to `noautovalidity`, At the moment this is ignored, but it's a
   hint that there's something slightly non-standard happening.
 
