@@ -1,5 +1,6 @@
 module Vulkan.Utils.Debug
   ( debugCallbackPtr
+  , debugCallbackFatalPtr
   , nameObject
   ) where
 
@@ -13,6 +14,9 @@ import           Vulkan.Extensions.VK_EXT_debug_utils
 -- stderr.
 foreign import ccall unsafe "DebugCallback.c &debugCallback"
   debugCallbackPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
+
+foreign import ccall unsafe "DebugCallback.c &debugCallbackFatal"
+  debugCallbackFatalPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
 
 -- | Assign a name to a handle using 'setDebugUtilsObjectNameEXT', note that
 -- the @VK_EXT_debug_utils@ extension must be enabled.
