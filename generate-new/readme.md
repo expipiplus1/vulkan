@@ -41,6 +41,9 @@ The docbook documentation will be in `docs/docbook`.
 
 # TODO
 
+- OpenXR bindings, the spec looks very similar to the vulkan spec:
+  https://github.com/KhronosGroup/OpenXR-Docs
+
 - List instead of vector?
   Most of the arrays passed to vulkan (in my code at least) are just a single
   element. All of them are less than 5 or 6 elements I think. The marshaling
@@ -48,6 +51,8 @@ The docbook documentation will be in `docs/docbook`.
 
 - pay attention to `noautovalidity`, At the moment this is ignored, but it's a
   hint that there's something slightly non-standard happening.
+  - Additionally anything which is `returnedonly=true` should never appear in a
+    negative position
 
 - Neaten zero writing, we write some unnecessary zero bytes already set by
   calloc.
