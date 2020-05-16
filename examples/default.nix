@@ -1,5 +1,5 @@
 { nixpkgsSrc ? builtins.fetchTarball
-  "https://github.com/NixOS/nixpkgs/archive/ab3adfe1c769c22b6629e59ea0ef88ec8ee4563f.tar.gz"
+  "https://github.com/NixOS/nixpkgs/archive/33dd04ea4afa2e7c1a84bdc48e8cf0bd9923e882.tar.gz"
 , pkgs ? import nixpkgsSrc { }, compiler ? "ghc882", hoogle ? true }:
 
 let
@@ -47,7 +47,6 @@ let
           #
           # Other packages
           #
-          bytes = self.bytes_0_17;
           sdl2 = overrideSrc super.sdl2 {
             src = pkgs.fetchFromGitHub {
               owner = "haskell-game";
@@ -56,7 +55,6 @@ let
               sha256 = "1qfjfrzc9yjg8ibgr0a7fly6fnd1f2yv731n7h1wjgz9vaa3q6wg";
             };
           };
-          inline-c = self.inline-c_0_9_0_0;
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = self.ghc.withPackages;
