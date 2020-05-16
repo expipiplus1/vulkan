@@ -9,7 +9,8 @@
   `doLoadDocs` to `False` in `vk/Main.hs`
 
 To generate the docs in Vulkan-Docs, note that this requires quite a recent
-nixpkgs with `he` and `escape-string-regexp`:
+nixpkgs with `he` and `escape-string-regexp` (One with
+https://github.com/NixOS/nixpkgs/pull/86773 merged):
 
 ```bash
 cd Vulkan-Docs
