@@ -15,6 +15,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -58,6 +59,9 @@ data PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = PhysicalDeviceSha
     -- supports the SPIR-V @DemoteToHelperInvocationEXT@ capability.
     shaderDemoteToHelperInvocation :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT where

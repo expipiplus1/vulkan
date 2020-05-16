@@ -34,6 +34,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -276,6 +277,9 @@ data ImportFenceWin32HandleInfoKHR = ImportFenceWin32HandleInfoKHR
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImportFenceWin32HandleInfoKHR)
+#endif
 deriving instance Show ImportFenceWin32HandleInfoKHR
 
 instance ToCStruct ImportFenceWin32HandleInfoKHR where
@@ -386,6 +390,9 @@ data ExportFenceWin32HandleInfoKHR = ExportFenceWin32HandleInfoKHR
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportFenceWin32HandleInfoKHR)
+#endif
 deriving instance Show ExportFenceWin32HandleInfoKHR
 
 instance ToCStruct ExportFenceWin32HandleInfoKHR where
@@ -490,6 +497,9 @@ data FenceGetWin32HandleInfoKHR = FenceGetWin32HandleInfoKHR
     handleType :: ExternalFenceHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FenceGetWin32HandleInfoKHR)
+#endif
 deriving instance Show FenceGetWin32HandleInfoKHR
 
 instance ToCStruct FenceGetWin32HandleInfoKHR where

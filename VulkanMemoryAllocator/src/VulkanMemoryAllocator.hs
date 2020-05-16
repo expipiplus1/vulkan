@@ -239,6 +239,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -2536,6 +2537,9 @@ data DeviceMemoryCallbacks = DeviceMemoryCallbacks
     userData :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceMemoryCallbacks)
+#endif
 deriving instance Show DeviceMemoryCallbacks
 
 instance ToCStruct DeviceMemoryCallbacks where
@@ -2763,6 +2767,9 @@ data VulkanFunctions = VulkanFunctions
     vkGetPhysicalDeviceMemoryProperties2KHR :: PFN_vkGetPhysicalDeviceMemoryProperties2KHR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VulkanFunctions)
+#endif
 deriving instance Show VulkanFunctions
 
 instance ToCStruct VulkanFunctions where
@@ -2896,6 +2903,9 @@ data RecordSettings = RecordSettings
     filePath :: ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RecordSettings)
+#endif
 deriving instance Show RecordSettings
 
 instance ToCStruct RecordSettings where
@@ -3030,6 +3040,9 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     vulkanApiVersion :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AllocatorCreateInfo)
+#endif
 deriving instance Show AllocatorCreateInfo
 
 instance ToCStruct AllocatorCreateInfo where
@@ -3130,6 +3143,9 @@ data AllocatorInfo = AllocatorInfo
     device :: Ptr Device_T
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AllocatorInfo)
+#endif
 deriving instance Show AllocatorInfo
 
 instance ToCStruct AllocatorInfo where
@@ -3196,6 +3212,9 @@ data StatInfo = StatInfo
     unusedRangeSizeMax :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (StatInfo)
+#endif
 deriving instance Show StatInfo
 
 instance ToCStruct StatInfo where
@@ -3300,6 +3319,9 @@ data Stats = Stats
     total :: StatInfo
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Stats)
+#endif
 deriving instance Show Stats
 
 instance ToCStruct Stats where
@@ -3385,6 +3407,9 @@ data Budget = Budget
     budget :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Budget)
+#endif
 deriving instance Show Budget
 
 instance ToCStruct Budget where
@@ -3743,6 +3768,9 @@ data AllocationCreateInfo = AllocationCreateInfo
     userData :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AllocationCreateInfo)
+#endif
 deriving instance Show AllocationCreateInfo
 
 instance ToCStruct AllocationCreateInfo where
@@ -3919,6 +3947,9 @@ data PoolCreateInfo = PoolCreateInfo
     frameInUseCount :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PoolCreateInfo)
+#endif
 deriving instance Show PoolCreateInfo
 
 instance ToCStruct PoolCreateInfo where
@@ -3995,6 +4026,9 @@ data PoolStats = PoolStats
     blockCount :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PoolStats)
+#endif
 deriving instance Show PoolStats
 
 instance ToCStruct PoolStats where
@@ -4121,6 +4155,9 @@ data AllocationInfo = AllocationInfo
     userData :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AllocationInfo)
+#endif
 deriving instance Show AllocationInfo
 
 instance ToCStruct AllocationInfo where
@@ -4279,6 +4316,9 @@ data DefragmentationInfo2 = DefragmentationInfo2
     commandBuffer :: Ptr CommandBuffer_T
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DefragmentationInfo2)
+#endif
 deriving instance Show DefragmentationInfo2
 
 instance ToCStruct DefragmentationInfo2 where
@@ -4357,6 +4397,9 @@ data DefragmentationPassMoveInfo = DefragmentationPassMoveInfo
     offset :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DefragmentationPassMoveInfo)
+#endif
 deriving instance Show DefragmentationPassMoveInfo
 
 instance ToCStruct DefragmentationPassMoveInfo where
@@ -4407,6 +4450,9 @@ data DefragmentationPassInfo = DefragmentationPassInfo
     moves :: Ptr DefragmentationPassMoveInfo
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DefragmentationPassInfo)
+#endif
 deriving instance Show DefragmentationPassInfo
 
 instance ToCStruct DefragmentationPassInfo where
@@ -4462,6 +4508,9 @@ data DefragmentationInfo = DefragmentationInfo
     maxAllocationsToMove :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DefragmentationInfo)
+#endif
 deriving instance Show DefragmentationInfo
 
 instance ToCStruct DefragmentationInfo where
@@ -4513,6 +4562,9 @@ data DefragmentationStats = DefragmentationStats
     deviceMemoryBlocksFreed :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DefragmentationStats)
+#endif
 deriving instance Show DefragmentationStats
 
 instance ToCStruct DefragmentationStats where

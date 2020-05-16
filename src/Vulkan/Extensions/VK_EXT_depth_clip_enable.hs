@@ -27,6 +27,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -77,6 +78,9 @@ data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFea
     -- is set to 'Vulkan.Core10.BaseType.FALSE'.
     depthClipEnable :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDepthClipEnableFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceDepthClipEnableFeaturesEXT
 
 instance ToCStruct PhysicalDeviceDepthClipEnableFeaturesEXT where
@@ -132,6 +136,9 @@ data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDep
     depthClipEnable :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineRasterizationDepthClipStateCreateInfoEXT)
+#endif
 deriving instance Show PipelineRasterizationDepthClipStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationDepthClipStateCreateInfoEXT where

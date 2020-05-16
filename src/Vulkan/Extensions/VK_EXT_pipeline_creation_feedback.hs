@@ -32,6 +32,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import Data.Word (Word32)
@@ -70,6 +71,9 @@ data PipelineCreationFeedbackEXT = PipelineCreationFeedbackEXT
     duration :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineCreationFeedbackEXT)
+#endif
 deriving instance Show PipelineCreationFeedbackEXT
 
 instance ToCStruct PipelineCreationFeedbackEXT where
@@ -192,6 +196,9 @@ data PipelineCreationFeedbackCreateInfoEXT = PipelineCreationFeedbackCreateInfoE
     pipelineStageCreationFeedbacks :: Ptr PipelineCreationFeedbackEXT
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineCreationFeedbackCreateInfoEXT)
+#endif
 deriving instance Show PipelineCreationFeedbackCreateInfoEXT
 
 instance ToCStruct PipelineCreationFeedbackCreateInfoEXT where

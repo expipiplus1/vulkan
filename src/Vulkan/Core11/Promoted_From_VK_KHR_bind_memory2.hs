@@ -26,6 +26,7 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -330,6 +331,9 @@ data BindBufferMemoryInfo (es :: [Type]) = BindBufferMemoryInfo
     memoryOffset :: DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindBufferMemoryInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (BindBufferMemoryInfo es)
 
 instance Extensible BindBufferMemoryInfo where
@@ -628,6 +632,9 @@ data BindImageMemoryInfo (es :: [Type]) = BindImageMemoryInfo
     memoryOffset :: DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindImageMemoryInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (BindImageMemoryInfo es)
 
 instance Extensible BindImageMemoryInfo where

@@ -8,6 +8,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
@@ -164,6 +165,9 @@ data AllocationCallbacks = AllocationCallbacks
     pfnInternalFree :: PFN_vkInternalFreeNotification
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AllocationCallbacks)
+#endif
 deriving instance Show AllocationCallbacks
 
 instance ToCStruct AllocationCallbacks where

@@ -167,6 +167,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -3179,6 +3180,9 @@ data RayTracingShaderGroupCreateInfoKHR = RayTracingShaderGroupCreateInfoKHR
     shaderGroupCaptureReplayHandle :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RayTracingShaderGroupCreateInfoKHR)
+#endif
 deriving instance Show RayTracingShaderGroupCreateInfoKHR
 
 instance ToCStruct RayTracingShaderGroupCreateInfoKHR where
@@ -3468,6 +3472,9 @@ data RayTracingPipelineCreateInfoKHR (es :: [Type]) = RayTracingPipelineCreateIn
     basePipelineIndex :: Int32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RayTracingPipelineCreateInfoKHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (RayTracingPipelineCreateInfoKHR es)
 
 instance Extensible RayTracingPipelineCreateInfoKHR where
@@ -3636,6 +3643,9 @@ data BindAccelerationStructureMemoryInfoKHR = BindAccelerationStructureMemoryInf
     deviceIndices :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindAccelerationStructureMemoryInfoKHR)
+#endif
 deriving instance Show BindAccelerationStructureMemoryInfoKHR
 
 instance ToCStruct BindAccelerationStructureMemoryInfoKHR where
@@ -3713,6 +3723,9 @@ data WriteDescriptorSetAccelerationStructureKHR = WriteDescriptorSetAcceleration
   { -- | @pAccelerationStructures@ are the acceleration structures to update.
     accelerationStructures :: Vector AccelerationStructureKHR }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (WriteDescriptorSetAccelerationStructureKHR)
+#endif
 deriving instance Show WriteDescriptorSetAccelerationStructureKHR
 
 instance ToCStruct WriteDescriptorSetAccelerationStructureKHR where
@@ -3787,6 +3800,9 @@ data AccelerationStructureMemoryRequirementsInfoKHR = AccelerationStructureMemor
     accelerationStructure :: AccelerationStructureKHR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureMemoryRequirementsInfoKHR)
+#endif
 deriving instance Show AccelerationStructureMemoryRequirementsInfoKHR
 
 instance ToCStruct AccelerationStructureMemoryRequirementsInfoKHR where
@@ -3925,6 +3941,9 @@ data PhysicalDeviceRayTracingFeaturesKHR = PhysicalDeviceRayTracingFeaturesKHR
     rayTracingPrimitiveCulling :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceRayTracingFeaturesKHR)
+#endif
 deriving instance Show PhysicalDeviceRayTracingFeaturesKHR
 
 instance ToCStruct PhysicalDeviceRayTracingFeaturesKHR where
@@ -4039,6 +4058,9 @@ data PhysicalDeviceRayTracingPropertiesKHR = PhysicalDeviceRayTracingPropertiesK
     shaderGroupHandleCaptureReplaySize :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceRayTracingPropertiesKHR)
+#endif
 deriving instance Show PhysicalDeviceRayTracingPropertiesKHR
 
 instance ToCStruct PhysicalDeviceRayTracingPropertiesKHR where
@@ -4136,6 +4158,9 @@ data StridedBufferRegionKHR = StridedBufferRegionKHR
     size :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (StridedBufferRegionKHR)
+#endif
 deriving instance Show StridedBufferRegionKHR
 
 instance ToCStruct StridedBufferRegionKHR where
@@ -4208,6 +4233,9 @@ data TraceRaysIndirectCommandKHR = TraceRaysIndirectCommandKHR
     depth :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (TraceRaysIndirectCommandKHR)
+#endif
 deriving instance Show TraceRaysIndirectCommandKHR
 
 instance ToCStruct TraceRaysIndirectCommandKHR where
@@ -4298,6 +4326,9 @@ data AccelerationStructureGeometryTrianglesDataKHR = AccelerationStructureGeomet
     transformData :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureGeometryTrianglesDataKHR)
+#endif
 deriving instance Show AccelerationStructureGeometryTrianglesDataKHR
 
 instance ToCStruct AccelerationStructureGeometryTrianglesDataKHR where
@@ -4359,6 +4390,9 @@ data AccelerationStructureGeometryAabbsDataKHR = AccelerationStructureGeometryAa
     stride :: DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureGeometryAabbsDataKHR)
+#endif
 deriving instance Show AccelerationStructureGeometryAabbsDataKHR
 
 instance ToCStruct AccelerationStructureGeometryAabbsDataKHR where
@@ -4419,6 +4453,9 @@ data AccelerationStructureGeometryInstancesDataKHR = AccelerationStructureGeomet
     data' :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureGeometryInstancesDataKHR)
+#endif
 deriving instance Show AccelerationStructureGeometryInstancesDataKHR
 
 instance ToCStruct AccelerationStructureGeometryInstancesDataKHR where
@@ -4493,6 +4530,9 @@ data AccelerationStructureGeometryKHR = AccelerationStructureGeometryKHR
     flags :: GeometryFlagsKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureGeometryKHR)
+#endif
 deriving instance Show AccelerationStructureGeometryKHR
 
 instance ToCStruct AccelerationStructureGeometryKHR where
@@ -4629,6 +4669,9 @@ data AccelerationStructureBuildGeometryInfoKHR (es :: [Type]) = AccelerationStru
     scratchData :: DeviceOrHostAddressKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureBuildGeometryInfoKHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (AccelerationStructureBuildGeometryInfoKHR es)
 
 instance Extensible AccelerationStructureBuildGeometryInfoKHR where
@@ -4774,6 +4817,9 @@ data AccelerationStructureBuildOffsetInfoKHR = AccelerationStructureBuildOffsetI
     transformOffset :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureBuildOffsetInfoKHR)
+#endif
 deriving instance Show AccelerationStructureBuildOffsetInfoKHR
 
 instance ToCStruct AccelerationStructureBuildOffsetInfoKHR where
@@ -4891,6 +4937,9 @@ data AccelerationStructureCreateGeometryTypeInfoKHR = AccelerationStructureCreat
     allowsTransforms :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureCreateGeometryTypeInfoKHR)
+#endif
 deriving instance Show AccelerationStructureCreateGeometryTypeInfoKHR
 
 instance ToCStruct AccelerationStructureCreateGeometryTypeInfoKHR where
@@ -5054,6 +5103,9 @@ data AccelerationStructureCreateInfoKHR = AccelerationStructureCreateInfoKHR
     deviceAddress :: DeviceAddress
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureCreateInfoKHR)
+#endif
 deriving instance Show AccelerationStructureCreateInfoKHR
 
 instance ToCStruct AccelerationStructureCreateInfoKHR where
@@ -5132,6 +5184,9 @@ data AabbPositionsKHR = AabbPositionsKHR
     maxZ :: Float
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AabbPositionsKHR)
+#endif
 deriving instance Show AabbPositionsKHR
 
 instance ToCStruct AabbPositionsKHR where
@@ -5192,6 +5247,9 @@ data TransformMatrixKHR = TransformMatrixKHR
   { -- | @matrix@ is a 3x4 row-major affine transformation matrix.
     matrix :: ((Float, Float, Float, Float), (Float, Float, Float, Float), (Float, Float, Float, Float)) }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (TransformMatrixKHR)
+#endif
 deriving instance Show TransformMatrixKHR
 
 instance ToCStruct TransformMatrixKHR where
@@ -5352,6 +5410,9 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
     accelerationStructureReference :: Word64
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureInstanceKHR)
+#endif
 deriving instance Show AccelerationStructureInstanceKHR
 
 instance ToCStruct AccelerationStructureInstanceKHR where
@@ -5412,6 +5473,9 @@ data AccelerationStructureDeviceAddressInfoKHR = AccelerationStructureDeviceAddr
     -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' handle
     accelerationStructure :: AccelerationStructureKHR }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureDeviceAddressInfoKHR)
+#endif
 deriving instance Show AccelerationStructureDeviceAddressInfoKHR
 
 instance ToCStruct AccelerationStructureDeviceAddressInfoKHR where
@@ -5463,6 +5527,9 @@ data AccelerationStructureVersionKHR = AccelerationStructureVersionKHR
     -- @uint8_t@ values
     versionData :: ByteString }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureVersionKHR)
+#endif
 deriving instance Show AccelerationStructureVersionKHR
 
 instance ToCStruct AccelerationStructureVersionKHR where
@@ -5546,6 +5613,9 @@ data CopyAccelerationStructureInfoKHR (es :: [Type]) = CopyAccelerationStructure
     mode :: CopyAccelerationStructureModeKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CopyAccelerationStructureInfoKHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (CopyAccelerationStructureInfoKHR es)
 
 instance Extensible CopyAccelerationStructureInfoKHR where
@@ -5645,6 +5715,9 @@ data CopyAccelerationStructureToMemoryInfoKHR (es :: [Type]) = CopyAccelerationS
     mode :: CopyAccelerationStructureModeKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CopyAccelerationStructureToMemoryInfoKHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (CopyAccelerationStructureToMemoryInfoKHR es)
 
 instance Extensible CopyAccelerationStructureToMemoryInfoKHR where
@@ -5734,6 +5807,9 @@ data CopyMemoryToAccelerationStructureInfoKHR (es :: [Type]) = CopyMemoryToAccel
     mode :: CopyAccelerationStructureModeKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CopyMemoryToAccelerationStructureInfoKHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (CopyMemoryToAccelerationStructureInfoKHR es)
 
 instance Extensible CopyMemoryToAccelerationStructureInfoKHR where
@@ -5809,6 +5885,9 @@ data RayTracingPipelineInterfaceCreateInfoKHR = RayTracingPipelineInterfaceCreat
     maxCallableSize :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RayTracingPipelineInterfaceCreateInfoKHR)
+#endif
 deriving instance Show RayTracingPipelineInterfaceCreateInfoKHR
 
 instance ToCStruct RayTracingPipelineInterfaceCreateInfoKHR where

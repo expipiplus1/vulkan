@@ -33,6 +33,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -405,6 +406,9 @@ data ImageSubresource = ImageSubresource
     arrayLayer :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSubresource)
+#endif
 deriving instance Show ImageSubresource
 
 instance ToCStruct ImageSubresource where
@@ -1383,6 +1387,9 @@ data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
     initialLayout :: ImageLayout
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (ImageCreateInfo es)
 
 instance Extensible ImageCreateInfo where
@@ -1586,6 +1593,9 @@ data SubresourceLayout = SubresourceLayout
     depthPitch :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubresourceLayout)
+#endif
 deriving instance Show SubresourceLayout
 
 instance ToCStruct SubresourceLayout where

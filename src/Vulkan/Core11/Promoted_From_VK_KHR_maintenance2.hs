@@ -25,6 +25,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -83,6 +84,9 @@ data InputAttachmentAspectReference = InputAttachmentAspectReference
     aspectMask :: ImageAspectFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (InputAttachmentAspectReference)
+#endif
 deriving instance Show InputAttachmentAspectReference
 
 instance ToCStruct InputAttachmentAspectReference where
@@ -147,6 +151,9 @@ data RenderPassInputAttachmentAspectCreateInfo = RenderPassInputAttachmentAspect
     -- @aspectReferenceCount@ valid 'InputAttachmentAspectReference' structures
     aspectReferences :: Vector InputAttachmentAspectReference }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassInputAttachmentAspectCreateInfo)
+#endif
 deriving instance Show RenderPassInputAttachmentAspectCreateInfo
 
 instance ToCStruct RenderPassInputAttachmentAspectCreateInfo where
@@ -209,6 +216,9 @@ data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperti
     -- specifying the point clipping behavior supported by the implementation.
     pointClippingBehavior :: PointClippingBehavior }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDevicePointClippingProperties)
+#endif
 deriving instance Show PhysicalDevicePointClippingProperties
 
 instance ToCStruct PhysicalDevicePointClippingProperties where
@@ -270,6 +280,9 @@ data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
     -- @usage@ /must/ not be @0@
     usage :: ImageUsageFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageViewUsageCreateInfo)
+#endif
 deriving instance Show ImageViewUsageCreateInfo
 
 instance ToCStruct ImageViewUsageCreateInfo where
@@ -332,6 +345,9 @@ data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomai
     -- value
     domainOrigin :: TessellationDomainOrigin }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineTessellationDomainOriginStateCreateInfo)
+#endif
 deriving instance Show PipelineTessellationDomainOriginStateCreateInfo
 
 instance ToCStruct PipelineTessellationDomainOriginStateCreateInfo where

@@ -16,6 +16,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits (ExternalMemoryHandleTypeFlags)
@@ -61,6 +62,9 @@ data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
     -- @handleTypes@ /must/ not be @0@
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalMemoryImageCreateInfo)
+#endif
 deriving instance Show ExternalMemoryImageCreateInfo
 
 instance ToCStruct ExternalMemoryImageCreateInfo where
@@ -122,6 +126,9 @@ data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalMemoryBufferCreateInfo)
+#endif
 deriving instance Show ExternalMemoryBufferCreateInfo
 
 instance ToCStruct ExternalMemoryBufferCreateInfo where
@@ -187,6 +194,9 @@ data ExportMemoryAllocateInfo = ExportMemoryAllocateInfo
     -- handle types for the same allocation.
     handleTypes :: ExternalMemoryHandleTypeFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportMemoryAllocateInfo)
+#endif
 deriving instance Show ExportMemoryAllocateInfo
 
 instance ToCStruct ExportMemoryAllocateInfo where

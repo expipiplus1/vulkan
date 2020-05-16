@@ -32,6 +32,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -185,6 +186,9 @@ data PhysicalDeviceGroupProperties = PhysicalDeviceGroupProperties
     subsetAllocation :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceGroupProperties)
+#endif
 deriving instance Show PhysicalDeviceGroupProperties
 
 instance ToCStruct PhysicalDeviceGroupProperties where
@@ -280,6 +284,9 @@ data DeviceGroupDeviceCreateInfo = DeviceGroupDeviceCreateInfo
     -- belonging to the same device group.
     physicalDevices :: Vector (Ptr PhysicalDevice_T) }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupDeviceCreateInfo)
+#endif
 deriving instance Show DeviceGroupDeviceCreateInfo
 
 instance ToCStruct DeviceGroupDeviceCreateInfo where

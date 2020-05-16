@@ -18,6 +18,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -90,6 +91,9 @@ data PhysicalDeviceDepthStencilResolveProperties = PhysicalDeviceDepthStencilRes
     independentResolve :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDepthStencilResolveProperties)
+#endif
 deriving instance Show PhysicalDeviceDepthStencilResolveProperties
 
 instance ToCStruct PhysicalDeviceDepthStencilResolveProperties where
@@ -243,6 +247,9 @@ data SubpassDescriptionDepthStencilResolve = SubpassDescriptionDepthStencilResol
     depthStencilResolveAttachment :: Maybe (SomeStruct AttachmentReference2)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassDescriptionDepthStencilResolve)
+#endif
 deriving instance Show SubpassDescriptionDepthStencilResolve
 
 instance ToCStruct SubpassDescriptionDepthStencilResolve where

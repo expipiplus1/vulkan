@@ -16,6 +16,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -62,6 +63,9 @@ data PhysicalDeviceTexelBufferAlignmentFeaturesEXT = PhysicalDeviceTexelBufferAl
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
     texelBufferAlignment :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceTexelBufferAlignmentFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceTexelBufferAlignmentFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
@@ -148,6 +152,9 @@ data PhysicalDeviceTexelBufferAlignmentPropertiesEXT = PhysicalDeviceTexelBuffer
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceTexelBufferAlignmentPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceTexelBufferAlignmentPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentPropertiesEXT where

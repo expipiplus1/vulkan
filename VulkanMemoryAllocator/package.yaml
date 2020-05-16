@@ -30,6 +30,8 @@ library:
       cxx-options: -DNDEBUG
     - condition: flag(vma-recording)
       cxx-options: -DVMA_RECORDING_ENABLED
+    - condition: flag(generic-instances)
+      cpp-options: -DGENERIC_INSTANCES
   ghc-options:
     - -Wall
     - -Wno-unticked-promoted-constructors
@@ -48,11 +50,20 @@ flags:
       make sure this flag is enabled.
     default: no
     manual: yes
+
+  generic-instances:
+    description:
+      Derive Generic instances for all structs. Disabled by default because of
+      code size and compile time impact.
+    default: no
+    manual: yes
+
   vma-ndebug:
     description:
       Compile VulkanMemoryAllocator with NDEBUG to disable assertions.
     default: no
     manual: yes
+
   vma-recording:
     description:
       Compile VulkanMemoryAllocator with VMA_RECORDING_ENABLED to enable
@@ -66,6 +77,7 @@ default-extensions:
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
+  - DeriveGeneric
   - DerivingStrategies
   - DuplicateRecordFields
   - FlexibleContexts

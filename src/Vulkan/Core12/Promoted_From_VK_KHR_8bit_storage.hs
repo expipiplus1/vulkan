@@ -11,6 +11,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -57,6 +58,9 @@ data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
     storagePushConstant8 :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDevice8BitStorageFeatures)
+#endif
 deriving instance Show PhysicalDevice8BitStorageFeatures
 
 instance ToCStruct PhysicalDevice8BitStorageFeatures where

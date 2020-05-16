@@ -30,6 +30,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
@@ -250,6 +251,9 @@ data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexing
     runtimeDescriptorArray :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDescriptorIndexingFeatures)
+#endif
 deriving instance Show PhysicalDeviceDescriptorIndexingFeatures
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingFeatures where
@@ -536,6 +540,9 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     maxDescriptorSetUpdateAfterBindInputAttachments :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDescriptorIndexingProperties)
+#endif
 deriving instance Show PhysicalDeviceDescriptorIndexingProperties
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingProperties where
@@ -798,6 +805,9 @@ data DescriptorSetLayoutBindingFlagsCreateInfo = DescriptorSetLayoutBindingFlags
     bindingFlags :: Vector DescriptorBindingFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorSetLayoutBindingFlagsCreateInfo)
+#endif
 deriving instance Show DescriptorSetLayoutBindingFlagsCreateInfo
 
 instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
@@ -891,6 +901,9 @@ data DescriptorSetVariableDescriptorCountAllocateInfo = DescriptorSetVariableDes
     -- allocated.
     descriptorCounts :: Vector Word32 }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorSetVariableDescriptorCountAllocateInfo)
+#endif
 deriving instance Show DescriptorSetVariableDescriptorCountAllocateInfo
 
 instance ToCStruct DescriptorSetVariableDescriptorCountAllocateInfo where
@@ -962,6 +975,9 @@ data DescriptorSetVariableDescriptorCountLayoutSupport = DescriptorSetVariableDe
     -- supported for the binding, if that binding is variable-sized.
     maxVariableDescriptorCount :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorSetVariableDescriptorCountLayoutSupport)
+#endif
 deriving instance Show DescriptorSetVariableDescriptorCountLayoutSupport
 
 instance ToCStruct DescriptorSetVariableDescriptorCountLayoutSupport where

@@ -14,6 +14,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -71,6 +72,9 @@ data PhysicalDeviceSeparateDepthStencilLayoutsFeatures = PhysicalDeviceSeparateD
     -- can be used.
     separateDepthStencilLayouts :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSeparateDepthStencilLayoutsFeatures)
+#endif
 deriving instance Show PhysicalDeviceSeparateDepthStencilLayoutsFeatures
 
 instance ToCStruct PhysicalDeviceSeparateDepthStencilLayoutsFeatures where
@@ -135,6 +139,9 @@ data AttachmentReferenceStencilLayout = AttachmentReferenceStencilLayout
     -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     stencilLayout :: ImageLayout }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AttachmentReferenceStencilLayout)
+#endif
 deriving instance Show AttachmentReferenceStencilLayout
 
 instance ToCStruct AttachmentReferenceStencilLayout where
@@ -219,6 +226,9 @@ data AttachmentDescriptionStencilLayout = AttachmentDescriptionStencilLayout
     stencilFinalLayout :: ImageLayout
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AttachmentDescriptionStencilLayout)
+#endif
 deriving instance Show AttachmentDescriptionStencilLayout
 
 instance ToCStruct AttachmentDescriptionStencilLayout where

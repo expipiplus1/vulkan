@@ -27,6 +27,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -432,6 +433,9 @@ data EventCreateInfo = EventCreateInfo
     -- @flags@ /must/ be @0@
     flags :: EventCreateFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (EventCreateInfo)
+#endif
 deriving instance Show EventCreateInfo
 
 instance ToCStruct EventCreateInfo where

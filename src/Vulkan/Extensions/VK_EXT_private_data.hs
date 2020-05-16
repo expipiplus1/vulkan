@@ -46,6 +46,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -348,6 +349,9 @@ data DevicePrivateDataCreateInfoEXT = DevicePrivateDataCreateInfoEXT
   { -- | @privateDataSlotRequestCount@ is the amount of slots to reserve.
     privateDataSlotRequestCount :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DevicePrivateDataCreateInfoEXT)
+#endif
 deriving instance Show DevicePrivateDataCreateInfoEXT
 
 instance ToCStruct DevicePrivateDataCreateInfoEXT where
@@ -399,6 +403,9 @@ data PrivateDataSlotCreateInfoEXT = PrivateDataSlotCreateInfoEXT
     -- @flags@ /must/ be @0@
     flags :: PrivateDataSlotCreateFlagsEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PrivateDataSlotCreateInfoEXT)
+#endif
 deriving instance Show PrivateDataSlotCreateInfoEXT
 
 instance ToCStruct PrivateDataSlotCreateInfoEXT where
@@ -462,6 +469,9 @@ data PhysicalDevicePrivateDataFeaturesEXT = PhysicalDevicePrivateDataFeaturesEXT
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#private-data Private Data>.
     privateData :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDevicePrivateDataFeaturesEXT)
+#endif
 deriving instance Show PhysicalDevicePrivateDataFeaturesEXT
 
 instance ToCStruct PhysicalDevicePrivateDataFeaturesEXT where

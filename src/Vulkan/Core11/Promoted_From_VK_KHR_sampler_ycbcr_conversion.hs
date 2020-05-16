@@ -45,6 +45,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -282,6 +283,9 @@ data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
     -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion' handle
     conversion :: SamplerYcbcrConversion }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SamplerYcbcrConversionInfo)
+#endif
 deriving instance Show SamplerYcbcrConversionInfo
 
 instance ToCStruct SamplerYcbcrConversionInfo where
@@ -514,6 +518,9 @@ data SamplerYcbcrConversionCreateInfo (es :: [Type]) = SamplerYcbcrConversionCre
     forceExplicitReconstruction :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SamplerYcbcrConversionCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (SamplerYcbcrConversionCreateInfo es)
 
 instance Extensible SamplerYcbcrConversionCreateInfo where
@@ -628,6 +635,9 @@ data BindImagePlaneMemoryInfo = BindImagePlaneMemoryInfo
   { -- | @planeAspect@ is the aspect of the disjoint image plane to bind.
     planeAspect :: ImageAspectFlagBits }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindImagePlaneMemoryInfo)
+#endif
 deriving instance Show BindImagePlaneMemoryInfo
 
 instance ToCStruct BindImagePlaneMemoryInfo where
@@ -706,6 +716,9 @@ data ImagePlaneMemoryRequirementsInfo = ImagePlaneMemoryRequirementsInfo
   { -- | @planeAspect@ is the aspect corresponding to the image plane to query.
     planeAspect :: ImageAspectFlagBits }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImagePlaneMemoryRequirementsInfo)
+#endif
 deriving instance Show ImagePlaneMemoryRequirementsInfo
 
 instance ToCStruct ImagePlaneMemoryRequirementsInfo where
@@ -762,6 +775,9 @@ data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrCo
     -- conversion /must/ not be used.
     samplerYcbcrConversion :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSamplerYcbcrConversionFeatures)
+#endif
 deriving instance Show PhysicalDeviceSamplerYcbcrConversionFeatures
 
 instance ToCStruct PhysicalDeviceSamplerYcbcrConversionFeatures where
@@ -809,6 +825,9 @@ data SamplerYcbcrConversionImageFormatProperties = SamplerYcbcrConversionImageFo
     -- sampler descriptors that the implementation uses to access the format.
     combinedImageSamplerDescriptorCount :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SamplerYcbcrConversionImageFormatProperties)
+#endif
 deriving instance Show SamplerYcbcrConversionImageFormatProperties
 
 instance ToCStruct SamplerYcbcrConversionImageFormatProperties where

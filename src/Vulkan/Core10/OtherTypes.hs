@@ -24,6 +24,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -98,6 +99,9 @@ data MemoryBarrier = MemoryBarrier
     dstAccessMask :: AccessFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryBarrier)
+#endif
 deriving instance Show MemoryBarrier
 
 instance ToCStruct MemoryBarrier where
@@ -275,6 +279,9 @@ data BufferMemoryBarrier = BufferMemoryBarrier
     size :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BufferMemoryBarrier)
+#endif
 deriving instance Show BufferMemoryBarrier
 
 instance ToCStruct BufferMemoryBarrier where
@@ -647,6 +654,9 @@ data ImageMemoryBarrier (es :: [Type]) = ImageMemoryBarrier
     subresourceRange :: ImageSubresourceRange
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageMemoryBarrier (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (ImageMemoryBarrier es)
 
 instance Extensible ImageMemoryBarrier where
@@ -750,6 +760,9 @@ data DrawIndirectCommand = DrawIndirectCommand
     firstInstance :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrawIndirectCommand)
+#endif
 deriving instance Show DrawIndirectCommand
 
 instance ToCStruct DrawIndirectCommand where
@@ -835,6 +848,9 @@ data DrawIndexedIndirectCommand = DrawIndexedIndirectCommand
     firstInstance :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrawIndexedIndirectCommand)
+#endif
 deriving instance Show DrawIndexedIndirectCommand
 
 instance ToCStruct DrawIndexedIndirectCommand where
@@ -913,6 +929,9 @@ data DispatchIndirectCommand = DispatchIndirectCommand
     z :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DispatchIndirectCommand)
+#endif
 deriving instance Show DispatchIndirectCommand
 
 instance ToCStruct DispatchIndirectCommand where

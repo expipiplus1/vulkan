@@ -16,6 +16,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -58,6 +59,9 @@ data PhysicalDeviceShaderSMBuiltinsPropertiesNV = PhysicalDeviceShaderSMBuiltins
     shaderWarpsPerSM :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShaderSMBuiltinsPropertiesNV)
+#endif
 deriving instance Show PhysicalDeviceShaderSMBuiltinsPropertiesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsPropertiesNV where
@@ -125,6 +129,9 @@ data PhysicalDeviceShaderSMBuiltinsFeaturesNV = PhysicalDeviceShaderSMBuiltinsFe
     -- SPIR-V @ShaderSMBuiltinsNV@ capability.
     shaderSMBuiltins :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceShaderSMBuiltinsFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsFeaturesNV where

@@ -39,6 +39,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -259,6 +260,9 @@ data DisplayPresentInfoKHR = DisplayPresentInfoKHR
     persistent :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPresentInfoKHR)
+#endif
 deriving instance Show DisplayPresentInfoKHR
 
 instance ToCStruct DisplayPresentInfoKHR where

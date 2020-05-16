@@ -17,6 +17,7 @@ import qualified Data.Vector (length)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -99,6 +100,9 @@ data BindBufferMemoryDeviceGroupInfo = BindBufferMemoryDeviceGroupInfo
   { -- No documentation found for Nested "VkBindBufferMemoryDeviceGroupInfo" "pDeviceIndices"
     deviceIndices :: Vector Word32 }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindBufferMemoryDeviceGroupInfo)
+#endif
 deriving instance Show BindBufferMemoryDeviceGroupInfo
 
 instance ToCStruct BindBufferMemoryDeviceGroupInfo where
@@ -258,6 +262,9 @@ data BindImageMemoryDeviceGroupInfo = BindImageMemoryDeviceGroupInfo
     splitInstanceBindRegions :: Vector Rect2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindImageMemoryDeviceGroupInfo)
+#endif
 deriving instance Show BindImageMemoryDeviceGroupInfo
 
 instance ToCStruct BindImageMemoryDeviceGroupInfo where

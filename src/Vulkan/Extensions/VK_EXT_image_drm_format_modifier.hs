@@ -31,6 +31,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -142,6 +143,9 @@ data DrmFormatModifierPropertiesListEXT = DrmFormatModifierPropertiesListEXT
     drmFormatModifierProperties :: Ptr DrmFormatModifierPropertiesEXT
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrmFormatModifierPropertiesListEXT)
+#endif
 deriving instance Show DrmFormatModifierPropertiesListEXT
 
 instance ToCStruct DrmFormatModifierPropertiesListEXT where
@@ -279,6 +283,9 @@ data DrmFormatModifierPropertiesEXT = DrmFormatModifierPropertiesEXT
     drmFormatModifierTilingFeatures :: FormatFeatureFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrmFormatModifierPropertiesEXT)
+#endif
 deriving instance Show DrmFormatModifierPropertiesEXT
 
 instance ToCStruct DrmFormatModifierPropertiesEXT where
@@ -376,6 +383,9 @@ data PhysicalDeviceImageDrmFormatModifierInfoEXT = PhysicalDeviceImageDrmFormatM
     queueFamilyIndices :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceImageDrmFormatModifierInfoEXT)
+#endif
 deriving instance Show PhysicalDeviceImageDrmFormatModifierInfoEXT
 
 instance ToCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT where
@@ -448,6 +458,9 @@ data ImageDrmFormatModifierListCreateInfoEXT = ImageDrmFormatModifierListCreateI
     -- modifiers/.
     drmFormatModifiers :: Vector Word64 }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageDrmFormatModifierListCreateInfoEXT)
+#endif
 deriving instance Show ImageDrmFormatModifierListCreateInfoEXT
 
 instance ToCStruct ImageDrmFormatModifierListCreateInfoEXT where
@@ -552,6 +565,9 @@ data ImageDrmFormatModifierExplicitCreateInfoEXT = ImageDrmFormatModifierExplici
     planeLayouts :: Vector SubresourceLayout
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageDrmFormatModifierExplicitCreateInfoEXT)
+#endif
 deriving instance Show ImageDrmFormatModifierExplicitCreateInfoEXT
 
 instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT where
@@ -617,6 +633,9 @@ data ImageDrmFormatModifierPropertiesEXT = ImageDrmFormatModifierPropertiesEXT
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
     drmFormatModifier :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageDrmFormatModifierPropertiesEXT)
+#endif
 deriving instance Show ImageDrmFormatModifierPropertiesEXT
 
 instance ToCStruct ImageDrmFormatModifierPropertiesEXT where

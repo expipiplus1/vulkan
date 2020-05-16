@@ -16,6 +16,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -75,6 +76,9 @@ data PhysicalDevicePipelineCreationCacheControlFeaturesEXT = PhysicalDevicePipel
     --     -   'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
     pipelineCreationCacheControl :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDevicePipelineCreationCacheControlFeaturesEXT)
+#endif
 deriving instance Show PhysicalDevicePipelineCreationCacheControlFeaturesEXT
 
 instance ToCStruct PhysicalDevicePipelineCreationCacheControlFeaturesEXT where

@@ -32,6 +32,7 @@ import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -66,6 +67,9 @@ data ValidationFlagsEXT = ValidationFlagsEXT
     -- @disabledValidationCheckCount@ valid 'ValidationCheckEXT' values
     disabledValidationChecks :: Vector ValidationCheckEXT }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ValidationFlagsEXT)
+#endif
 deriving instance Show ValidationFlagsEXT
 
 instance ToCStruct ValidationFlagsEXT where

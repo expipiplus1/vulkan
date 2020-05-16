@@ -6,6 +6,7 @@
   - Eq instances for some simple structs, #94
   - Generate safe FFI versions of blocking functions (Those with "wait" in the
     name or which can return "TIMEOUT"), #96
+  - Add cabal flag for enable deriving Generic for structs, #99
 
 ## [3.3] - 2020-05-07
   - Move package from `Graphics.Vulkan` to just `Vulkan`, #60

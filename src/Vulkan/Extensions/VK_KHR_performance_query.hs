@@ -93,6 +93,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -411,6 +412,9 @@ data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryF
     performanceCounterMultipleQueryPools :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDevicePerformanceQueryFeaturesKHR)
+#endif
 deriving instance Show PhysicalDevicePerformanceQueryFeaturesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryFeaturesKHR where
@@ -474,6 +478,9 @@ data PhysicalDevicePerformanceQueryPropertiesKHR = PhysicalDevicePerformanceQuer
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'.
     allowCommandBufferQueryCopies :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDevicePerformanceQueryPropertiesKHR)
+#endif
 deriving instance Show PhysicalDevicePerformanceQueryPropertiesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryPropertiesKHR where
@@ -535,6 +542,9 @@ data PerformanceCounterKHR = PerformanceCounterKHR
     uuid :: ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceCounterKHR)
+#endif
 deriving instance Show PerformanceCounterKHR
 
 instance ToCStruct PerformanceCounterKHR where
@@ -609,6 +619,9 @@ data PerformanceCounterDescriptionKHR = PerformanceCounterDescriptionKHR
     description :: ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceCounterDescriptionKHR)
+#endif
 deriving instance Show PerformanceCounterDescriptionKHR
 
 instance ToCStruct PerformanceCounterDescriptionKHR where
@@ -695,6 +708,9 @@ data QueryPoolPerformanceCreateInfoKHR = QueryPoolPerformanceCreateInfoKHR
     counterIndices :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (QueryPoolPerformanceCreateInfoKHR)
+#endif
 deriving instance Show QueryPoolPerformanceCreateInfoKHR
 
 instance ToCStruct QueryPoolPerformanceCreateInfoKHR where
@@ -758,6 +774,9 @@ data AcquireProfilingLockInfoKHR = AcquireProfilingLockInfoKHR
     timeout :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AcquireProfilingLockInfoKHR)
+#endif
 deriving instance Show AcquireProfilingLockInfoKHR
 
 instance ToCStruct AcquireProfilingLockInfoKHR where
@@ -817,6 +836,9 @@ data PerformanceQuerySubmitInfoKHR = PerformanceQuerySubmitInfoKHR
     -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
     counterPassIndex :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceQuerySubmitInfoKHR)
+#endif
 deriving instance Show PerformanceQuerySubmitInfoKHR
 
 instance ToCStruct PerformanceQuerySubmitInfoKHR where

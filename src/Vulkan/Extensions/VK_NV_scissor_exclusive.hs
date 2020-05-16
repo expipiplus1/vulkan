@@ -28,6 +28,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -205,6 +206,9 @@ data PhysicalDeviceExclusiveScissorFeaturesNV = PhysicalDeviceExclusiveScissorFe
     -- exclusive scissor test.
     exclusiveScissor :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceExclusiveScissorFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceExclusiveScissorFeaturesNV
 
 instance ToCStruct PhysicalDeviceExclusiveScissorFeaturesNV where
@@ -297,6 +301,9 @@ data PipelineViewportExclusiveScissorStateCreateInfoNV = PipelineViewportExclusi
     exclusiveScissors :: Vector Rect2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineViewportExclusiveScissorStateCreateInfoNV)
+#endif
 deriving instance Show PipelineViewportExclusiveScissorStateCreateInfoNV
 
 instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where

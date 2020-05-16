@@ -26,6 +26,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -52,6 +53,9 @@ data Offset2D = Offset2D
     y :: Int32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Offset2D)
+#endif
 deriving instance Show Offset2D
 
 instance ToCStruct Offset2D where
@@ -104,6 +108,9 @@ data Offset3D = Offset3D
     z :: Int32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Offset3D)
+#endif
 deriving instance Show Offset3D
 
 instance ToCStruct Offset3D where
@@ -168,6 +175,9 @@ data Extent2D = Extent2D
     height :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Extent2D)
+#endif
 deriving instance Show Extent2D
 
 instance ToCStruct Extent2D where
@@ -223,6 +233,9 @@ data Extent3D = Extent3D
     depth :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Extent3D)
+#endif
 deriving instance Show Extent3D
 
 instance ToCStruct Extent3D where
@@ -308,6 +321,9 @@ data ImageSubresourceLayers = ImageSubresourceLayers
     layerCount :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSubresourceLayers)
+#endif
 deriving instance Show ImageSubresourceLayers
 
 instance ToCStruct ImageSubresourceLayers where
@@ -485,6 +501,9 @@ data ImageSubresourceRange = ImageSubresourceRange
     layerCount :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSubresourceRange)
+#endif
 deriving instance Show ImageSubresourceRange
 
 instance ToCStruct ImageSubresourceRange where
@@ -555,6 +574,9 @@ data ClearDepthStencilValue = ClearDepthStencilValue
     stencil :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ClearDepthStencilValue)
+#endif
 deriving instance Show ClearDepthStencilValue
 
 instance ToCStruct ClearDepthStencilValue where

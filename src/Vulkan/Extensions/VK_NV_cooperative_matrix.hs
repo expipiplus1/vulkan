@@ -58,6 +58,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -205,6 +206,9 @@ data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrix
     cooperativeMatrixRobustBufferAccess :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceCooperativeMatrixFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceCooperativeMatrixFeaturesNV
 
 instance ToCStruct PhysicalDeviceCooperativeMatrixFeaturesNV where
@@ -274,6 +278,9 @@ data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatr
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
     cooperativeMatrixSupportedStages :: ShaderStageFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceCooperativeMatrixPropertiesNV)
+#endif
 deriving instance Show PhysicalDeviceCooperativeMatrixPropertiesNV
 
 instance ToCStruct PhysicalDeviceCooperativeMatrixPropertiesNV where
@@ -356,6 +363,9 @@ data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV
     scope :: ScopeNV
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CooperativeMatrixPropertiesNV)
+#endif
 deriving instance Show CooperativeMatrixPropertiesNV
 
 instance ToCStruct CooperativeMatrixPropertiesNV where

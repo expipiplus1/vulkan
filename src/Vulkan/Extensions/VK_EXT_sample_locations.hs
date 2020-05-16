@@ -37,6 +37,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -220,6 +221,9 @@ data SampleLocationEXT = SampleLocationEXT
     y :: Float
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SampleLocationEXT)
+#endif
 deriving instance Show SampleLocationEXT
 
 instance ToCStruct SampleLocationEXT where
@@ -317,6 +321,9 @@ data SampleLocationsInfoEXT = SampleLocationsInfoEXT
     sampleLocations :: Vector SampleLocationEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SampleLocationsInfoEXT)
+#endif
 deriving instance Show SampleLocationsInfoEXT
 
 instance ToCStruct SampleLocationsInfoEXT where
@@ -393,6 +400,9 @@ data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AttachmentSampleLocationsEXT)
+#endif
 deriving instance Show AttachmentSampleLocationsEXT
 
 instance ToCStruct AttachmentSampleLocationsEXT where
@@ -459,6 +469,9 @@ data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassSampleLocationsEXT)
+#endif
 deriving instance Show SubpassSampleLocationsEXT
 
 instance ToCStruct SubpassSampleLocationsEXT where
@@ -542,6 +555,9 @@ data RenderPassSampleLocationsBeginInfoEXT = RenderPassSampleLocationsBeginInfoE
     postSubpassSampleLocations :: Vector SubpassSampleLocationsEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassSampleLocationsBeginInfoEXT)
+#endif
 deriving instance Show RenderPassSampleLocationsBeginInfoEXT
 
 instance ToCStruct RenderPassSampleLocationsBeginInfoEXT where
@@ -614,6 +630,9 @@ data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCre
     sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineSampleLocationsStateCreateInfoEXT)
+#endif
 deriving instance Show PipelineSampleLocationsStateCreateInfoEXT
 
 instance ToCStruct PipelineSampleLocationsStateCreateInfoEXT where
@@ -692,6 +711,9 @@ data PhysicalDeviceSampleLocationsPropertiesEXT = PhysicalDeviceSampleLocationsP
     variableSampleLocations :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSampleLocationsPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceSampleLocationsPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
@@ -761,6 +783,9 @@ data MultisamplePropertiesEXT = MultisamplePropertiesEXT
     -- which sample locations /can/ vary.
     maxSampleLocationGridSize :: Extent2D }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MultisamplePropertiesEXT)
+#endif
 deriving instance Show MultisamplePropertiesEXT
 
 instance ToCStruct MultisamplePropertiesEXT where

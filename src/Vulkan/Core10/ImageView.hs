@@ -28,6 +28,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -262,6 +263,9 @@ data ComponentMapping = ComponentMapping
     a :: ComponentSwizzle
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ComponentMapping)
+#endif
 deriving instance Show ComponentMapping
 
 instance ToCStruct ComponentMapping where
@@ -907,6 +911,9 @@ data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
     subresourceRange :: ImageSubresourceRange
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageViewCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (ImageViewCreateInfo es)
 
 instance Extensible ImageViewCreateInfo where

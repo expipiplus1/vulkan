@@ -16,6 +16,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -98,6 +99,9 @@ data ImageViewASTCDecodeModeEXT = ImageViewASTCDecodeModeEXT
     -- formats.
     decodeMode :: Format }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageViewASTCDecodeModeEXT)
+#endif
 deriving instance Show ImageViewASTCDecodeModeEXT
 
 instance ToCStruct ImageViewASTCDecodeModeEXT where
@@ -162,6 +166,9 @@ data PhysicalDeviceASTCDecodeFeaturesEXT = PhysicalDeviceASTCDecodeFeaturesEXT
     -- precision.
     decodeModeSharedExponent :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceASTCDecodeFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceASTCDecodeFeaturesEXT
 
 instance ToCStruct PhysicalDeviceASTCDecodeFeaturesEXT where

@@ -23,6 +23,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
@@ -76,6 +77,9 @@ data PresentRegionsKHR = PresentRegionsKHR
     regions :: Vector PresentRegionKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PresentRegionsKHR)
+#endif
 deriving instance Show PresentRegionsKHR
 
 instance ToCStruct PresentRegionsKHR where
@@ -146,6 +150,9 @@ data PresentRegionKHR = PresentRegionKHR
     rectangles :: Vector RectLayerKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PresentRegionKHR)
+#endif
 deriving instance Show PresentRegionKHR
 
 instance ToCStruct PresentRegionKHR where
@@ -221,6 +228,9 @@ data RectLayerKHR = RectLayerKHR
     layer :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RectLayerKHR)
+#endif
 deriving instance Show RectLayerKHR
 
 instance ToCStruct RectLayerKHR where

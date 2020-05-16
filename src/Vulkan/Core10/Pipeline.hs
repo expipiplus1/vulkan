@@ -61,6 +61,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -531,6 +532,9 @@ data SpecializationMapEntry = SpecializationMapEntry
     size :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SpecializationMapEntry)
+#endif
 deriving instance Show SpecializationMapEntry
 
 instance ToCStruct SpecializationMapEntry where
@@ -605,6 +609,9 @@ data SpecializationInfo = SpecializationInfo
     data' :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SpecializationInfo)
+#endif
 deriving instance Show SpecializationInfo
 
 instance ToCStruct SpecializationInfo where
@@ -891,6 +898,9 @@ data PipelineShaderStageCreateInfo (es :: [Type]) = PipelineShaderStageCreateInf
     specializationInfo :: Maybe SpecializationInfo
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineShaderStageCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PipelineShaderStageCreateInfo es)
 
 instance Extensible PipelineShaderStageCreateInfo where
@@ -1089,6 +1099,9 @@ data ComputePipelineCreateInfo (es :: [Type]) = ComputePipelineCreateInfo
     basePipelineIndex :: Int32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ComputePipelineCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (ComputePipelineCreateInfo es)
 
 instance Extensible ComputePipelineCreateInfo where
@@ -1176,6 +1189,9 @@ data VertexInputBindingDescription = VertexInputBindingDescription
     inputRate :: VertexInputRate
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VertexInputBindingDescription)
+#endif
 deriving instance Show VertexInputBindingDescription
 
 instance ToCStruct VertexInputBindingDescription where
@@ -1255,6 +1271,9 @@ data VertexInputAttributeDescription = VertexInputAttributeDescription
     offset :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VertexInputAttributeDescription)
+#endif
 deriving instance Show VertexInputAttributeDescription
 
 instance ToCStruct VertexInputAttributeDescription where
@@ -1362,6 +1381,9 @@ data PipelineVertexInputStateCreateInfo (es :: [Type]) = PipelineVertexInputStat
     vertexAttributeDescriptions :: Vector VertexInputAttributeDescription
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineVertexInputStateCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PipelineVertexInputStateCreateInfo es)
 
 instance Extensible PipelineVertexInputStateCreateInfo where
@@ -1503,6 +1525,9 @@ data PipelineInputAssemblyStateCreateInfo = PipelineInputAssemblyStateCreateInfo
     primitiveRestartEnable :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineInputAssemblyStateCreateInfo)
+#endif
 deriving instance Show PipelineInputAssemblyStateCreateInfo
 
 instance ToCStruct PipelineInputAssemblyStateCreateInfo where
@@ -1581,6 +1606,9 @@ data PipelineTessellationStateCreateInfo (es :: [Type]) = PipelineTessellationSt
     patchControlPoints :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineTessellationStateCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PipelineTessellationStateCreateInfo es)
 
 instance Extensible PipelineTessellationStateCreateInfo where
@@ -1719,6 +1747,9 @@ data PipelineViewportStateCreateInfo (es :: [Type]) = PipelineViewportStateCreat
     scissors :: Vector Rect2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineViewportStateCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PipelineViewportStateCreateInfo es)
 
 instance Extensible PipelineViewportStateCreateInfo where
@@ -1915,6 +1946,9 @@ data PipelineRasterizationStateCreateInfo (es :: [Type]) = PipelineRasterization
     lineWidth :: Float
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineRasterizationStateCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PipelineRasterizationStateCreateInfo es)
 
 instance Extensible PipelineRasterizationStateCreateInfo where
@@ -2099,6 +2133,9 @@ data PipelineMultisampleStateCreateInfo (es :: [Type]) = PipelineMultisampleStat
     alphaToOneEnable :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineMultisampleStateCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PipelineMultisampleStateCreateInfo es)
 
 instance Extensible PipelineMultisampleStateCreateInfo where
@@ -2337,6 +2374,9 @@ data PipelineColorBlendAttachmentState = PipelineColorBlendAttachmentState
     colorWriteMask :: ColorComponentFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineColorBlendAttachmentState)
+#endif
 deriving instance Show PipelineColorBlendAttachmentState
 
 instance ToCStruct PipelineColorBlendAttachmentState where
@@ -2466,6 +2506,9 @@ data PipelineColorBlendStateCreateInfo (es :: [Type]) = PipelineColorBlendStateC
     blendConstants :: (Float, Float, Float, Float)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineColorBlendStateCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PipelineColorBlendStateCreateInfo es)
 
 instance Extensible PipelineColorBlendStateCreateInfo where
@@ -2582,6 +2625,9 @@ data PipelineDynamicStateCreateInfo = PipelineDynamicStateCreateInfo
     dynamicStates :: Vector DynamicState
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineDynamicStateCreateInfo)
+#endif
 deriving instance Show PipelineDynamicStateCreateInfo
 
 instance ToCStruct PipelineDynamicStateCreateInfo where
@@ -2667,6 +2713,9 @@ data StencilOpState = StencilOpState
     reference :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (StencilOpState)
+#endif
 deriving instance Show StencilOpState
 
 instance ToCStruct StencilOpState where
@@ -2790,6 +2839,9 @@ data PipelineDepthStencilStateCreateInfo = PipelineDepthStencilStateCreateInfo
     maxDepthBounds :: Float
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineDepthStencilStateCreateInfo)
+#endif
 deriving instance Show PipelineDepthStencilStateCreateInfo
 
 instance ToCStruct PipelineDepthStencilStateCreateInfo where
@@ -3415,6 +3467,9 @@ data GraphicsPipelineCreateInfo (es :: [Type]) = GraphicsPipelineCreateInfo
     basePipelineIndex :: Int32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GraphicsPipelineCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (GraphicsPipelineCreateInfo es)
 
 instance Extensible GraphicsPipelineCreateInfo where

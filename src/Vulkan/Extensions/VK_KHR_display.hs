@@ -69,6 +69,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -731,6 +732,9 @@ data DisplayPropertiesKHR = DisplayPropertiesKHR
     persistentContent :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPropertiesKHR)
+#endif
 deriving instance Show DisplayPropertiesKHR
 
 instance ToCStruct DisplayPropertiesKHR where
@@ -799,6 +803,9 @@ data DisplayPlanePropertiesKHR = DisplayPlanePropertiesKHR
     currentStackIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPlanePropertiesKHR)
+#endif
 deriving instance Show DisplayPlanePropertiesKHR
 
 instance ToCStruct DisplayPlanePropertiesKHR where
@@ -862,6 +869,9 @@ data DisplayModeParametersKHR = DisplayModeParametersKHR
     refreshRate :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayModeParametersKHR)
+#endif
 deriving instance Show DisplayModeParametersKHR
 
 instance ToCStruct DisplayModeParametersKHR where
@@ -908,6 +918,9 @@ data DisplayModePropertiesKHR = DisplayModePropertiesKHR
     parameters :: DisplayModeParametersKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayModePropertiesKHR)
+#endif
 deriving instance Show DisplayModePropertiesKHR
 
 instance ToCStruct DisplayModePropertiesKHR where
@@ -960,6 +973,9 @@ data DisplayModeCreateInfoKHR = DisplayModeCreateInfoKHR
     parameters :: DisplayModeParametersKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayModeCreateInfoKHR)
+#endif
 deriving instance Show DisplayModeCreateInfoKHR
 
 instance ToCStruct DisplayModeCreateInfoKHR where
@@ -1064,6 +1080,9 @@ data DisplayPlaneCapabilitiesKHR = DisplayPlaneCapabilitiesKHR
     maxDstExtent :: Extent2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPlaneCapabilitiesKHR)
+#endif
 deriving instance Show DisplayPlaneCapabilitiesKHR
 
 instance ToCStruct DisplayPlaneCapabilitiesKHR where
@@ -1212,6 +1231,9 @@ data DisplaySurfaceCreateInfoKHR = DisplaySurfaceCreateInfoKHR
     imageExtent :: Extent2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplaySurfaceCreateInfoKHR)
+#endif
 deriving instance Show DisplaySurfaceCreateInfoKHR
 
 instance ToCStruct DisplaySurfaceCreateInfoKHR where

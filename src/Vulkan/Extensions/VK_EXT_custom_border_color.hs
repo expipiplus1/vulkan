@@ -19,6 +19,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -84,6 +85,9 @@ data SamplerCustomBorderColorCreateInfoEXT = SamplerCustomBorderColorCreateInfoE
     format :: Format
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SamplerCustomBorderColorCreateInfoEXT)
+#endif
 deriving instance Show SamplerCustomBorderColorCreateInfoEXT
 
 instance ToCStruct SamplerCustomBorderColorCreateInfoEXT where
@@ -127,6 +131,9 @@ data PhysicalDeviceCustomBorderColorPropertiesEXT = PhysicalDeviceCustomBorderCo
     -- with custom border colors which /can/ simultaneously exist on a device.
     maxCustomBorderColorSamplers :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceCustomBorderColorPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceCustomBorderColorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorPropertiesEXT where
@@ -195,6 +202,9 @@ data PhysicalDeviceCustomBorderColorFeaturesEXT = PhysicalDeviceCustomBorderColo
     customBorderColorWithoutFormat :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceCustomBorderColorFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceCustomBorderColorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorFeaturesEXT where

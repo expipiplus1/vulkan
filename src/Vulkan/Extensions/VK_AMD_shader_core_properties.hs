@@ -15,6 +15,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -97,6 +98,9 @@ data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesA
     vgprAllocationGranularity :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShaderCorePropertiesAMD)
+#endif
 deriving instance Show PhysicalDeviceShaderCorePropertiesAMD
 
 instance ToCStruct PhysicalDeviceShaderCorePropertiesAMD where

@@ -140,6 +140,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -1561,6 +1562,9 @@ data RayTracingShaderGroupCreateInfoNV = RayTracingShaderGroupCreateInfoNV
     intersectionShader :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RayTracingShaderGroupCreateInfoNV)
+#endif
 deriving instance Show RayTracingShaderGroupCreateInfoNV
 
 instance ToCStruct RayTracingShaderGroupCreateInfoNV where
@@ -1772,6 +1776,9 @@ data RayTracingPipelineCreateInfoNV (es :: [Type]) = RayTracingPipelineCreateInf
     basePipelineIndex :: Int32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RayTracingPipelineCreateInfoNV (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (RayTracingPipelineCreateInfoNV es)
 
 instance Extensible RayTracingPipelineCreateInfoNV where
@@ -1960,6 +1967,9 @@ data GeometryTrianglesNV = GeometryTrianglesNV
     transformOffset :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GeometryTrianglesNV)
+#endif
 deriving instance Show GeometryTrianglesNV
 
 instance ToCStruct GeometryTrianglesNV where
@@ -2072,6 +2082,9 @@ data GeometryAABBNV = GeometryAABBNV
     offset :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GeometryAABBNV)
+#endif
 deriving instance Show GeometryAABBNV
 
 instance ToCStruct GeometryAABBNV where
@@ -2138,6 +2151,9 @@ data GeometryDataNV = GeometryDataNV
     aabbs :: GeometryAABBNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GeometryDataNV)
+#endif
 deriving instance Show GeometryDataNV
 
 instance ToCStruct GeometryDataNV where
@@ -2200,6 +2216,9 @@ data GeometryNV = GeometryNV
     flags :: GeometryFlagsKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GeometryNV)
+#endif
 deriving instance Show GeometryNV
 
 instance ToCStruct GeometryNV where
@@ -2318,6 +2337,9 @@ data AccelerationStructureInfoNV = AccelerationStructureInfoNV
     geometries :: Vector GeometryNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureInfoNV)
+#endif
 deriving instance Show AccelerationStructureInfoNV
 
 instance ToCStruct AccelerationStructureInfoNV where
@@ -2395,6 +2417,9 @@ data AccelerationStructureCreateInfoNV = AccelerationStructureCreateInfoNV
     info :: AccelerationStructureInfoNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureCreateInfoNV)
+#endif
 deriving instance Show AccelerationStructureCreateInfoNV
 
 instance ToCStruct AccelerationStructureCreateInfoNV where
@@ -2460,6 +2485,9 @@ data AccelerationStructureMemoryRequirementsInfoNV = AccelerationStructureMemory
     accelerationStructure :: AccelerationStructureNV
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AccelerationStructureMemoryRequirementsInfoNV)
+#endif
 deriving instance Show AccelerationStructureMemoryRequirementsInfoNV
 
 instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV where
@@ -2543,6 +2571,9 @@ data PhysicalDeviceRayTracingPropertiesNV = PhysicalDeviceRayTracingPropertiesNV
     maxDescriptorSetAccelerationStructures :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceRayTracingPropertiesNV)
+#endif
 deriving instance Show PhysicalDeviceRayTracingPropertiesNV
 
 instance ToCStruct PhysicalDeviceRayTracingPropertiesNV where

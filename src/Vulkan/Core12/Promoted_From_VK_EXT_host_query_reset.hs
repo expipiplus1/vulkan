@@ -17,6 +17,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -143,6 +144,9 @@ data PhysicalDeviceHostQueryResetFeatures = PhysicalDeviceHostQueryResetFeatures
     -- queries from the host with 'resetQueryPool'.
     hostQueryReset :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceHostQueryResetFeatures)
+#endif
 deriving instance Show PhysicalDeviceHostQueryResetFeatures
 
 instance ToCStruct PhysicalDeviceHostQueryResetFeatures where

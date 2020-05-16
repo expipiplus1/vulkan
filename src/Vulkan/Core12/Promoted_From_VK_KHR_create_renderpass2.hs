@@ -41,6 +41,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -787,6 +788,9 @@ data AttachmentDescription2 (es :: [Type]) = AttachmentDescription2
     finalLayout :: ImageLayout
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AttachmentDescription2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (AttachmentDescription2 es)
 
 instance Extensible AttachmentDescription2 where
@@ -996,6 +1000,9 @@ data AttachmentReference2 (es :: [Type]) = AttachmentReference2
     aspectMask :: ImageAspectFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AttachmentReference2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (AttachmentReference2 es)
 
 instance Extensible AttachmentReference2 where
@@ -1239,6 +1246,9 @@ data SubpassDescription2 (es :: [Type]) = SubpassDescription2
     preserveAttachments :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassDescription2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (SubpassDescription2 es)
 
 instance Extensible SubpassDescription2 where
@@ -1516,6 +1526,9 @@ data SubpassDependency2 = SubpassDependency2
     viewOffset :: Int32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassDependency2)
+#endif
 deriving instance Show SubpassDependency2
 
 instance ToCStruct SubpassDependency2 where
@@ -1752,6 +1765,9 @@ data RenderPassCreateInfo2 (es :: [Type]) = RenderPassCreateInfo2
     correlatedViewMasks :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassCreateInfo2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (RenderPassCreateInfo2 es)
 
 instance Extensible RenderPassCreateInfo2 where
@@ -1857,6 +1873,9 @@ data SubpassBeginInfo = SubpassBeginInfo
     -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents' value
     contents :: SubpassContents }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassBeginInfo)
+#endif
 deriving instance Show SubpassBeginInfo
 
 instance ToCStruct SubpassBeginInfo where
@@ -1904,6 +1923,9 @@ instance Zero SubpassBeginInfo where
 data SubpassEndInfo = SubpassEndInfo
   {}
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassEndInfo)
+#endif
 deriving instance Show SubpassEndInfo
 
 instance ToCStruct SubpassEndInfo where

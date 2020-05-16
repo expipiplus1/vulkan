@@ -27,6 +27,7 @@ import Foreign.C.Types (CFloat)
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -550,6 +551,9 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     unnormalizedCoordinates :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SamplerCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (SamplerCreateInfo es)
 
 instance Extensible SamplerCreateInfo where

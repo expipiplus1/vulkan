@@ -32,6 +32,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
@@ -79,6 +80,9 @@ data PhysicalDeviceDiagnosticsConfigFeaturesNV = PhysicalDeviceDiagnosticsConfig
     -- ability to configure diagnostic tools.
     diagnosticsConfig :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDiagnosticsConfigFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceDiagnosticsConfigFeaturesNV
 
 instance ToCStruct PhysicalDeviceDiagnosticsConfigFeaturesNV where
@@ -130,6 +134,9 @@ data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
     -- 'DeviceDiagnosticsConfigFlagBitsNV' values
     flags :: DeviceDiagnosticsConfigFlagsNV }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceDiagnosticsConfigCreateInfoNV)
+#endif
 deriving instance Show DeviceDiagnosticsConfigCreateInfoNV
 
 instance ToCStruct DeviceDiagnosticsConfigCreateInfoNV where

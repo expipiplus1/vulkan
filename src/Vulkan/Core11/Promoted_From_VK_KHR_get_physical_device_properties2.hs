@@ -41,6 +41,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -622,6 +623,9 @@ data PhysicalDeviceFeatures2 (es :: [Type]) = PhysicalDeviceFeatures2
     features :: PhysicalDeviceFeatures
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceFeatures2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PhysicalDeviceFeatures2 es)
 
 instance Extensible PhysicalDeviceFeatures2 where
@@ -803,6 +807,9 @@ data PhysicalDeviceProperties2 (es :: [Type]) = PhysicalDeviceProperties2
     properties :: PhysicalDeviceProperties
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceProperties2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PhysicalDeviceProperties2 es)
 
 instance Extensible PhysicalDeviceProperties2 where
@@ -913,6 +920,9 @@ data FormatProperties2 (es :: [Type]) = FormatProperties2
     formatProperties :: FormatProperties
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FormatProperties2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (FormatProperties2 es)
 
 instance Extensible FormatProperties2 where
@@ -1010,6 +1020,9 @@ data ImageFormatProperties2 (es :: [Type]) = ImageFormatProperties2
     imageFormatProperties :: ImageFormatProperties
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageFormatProperties2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (ImageFormatProperties2 es)
 
 instance Extensible ImageFormatProperties2 where
@@ -1155,6 +1168,9 @@ data PhysicalDeviceImageFormatInfo2 (es :: [Type]) = PhysicalDeviceImageFormatIn
     flags :: ImageCreateFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceImageFormatInfo2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PhysicalDeviceImageFormatInfo2 es)
 
 instance Extensible PhysicalDeviceImageFormatInfo2 where
@@ -1246,6 +1262,9 @@ data QueueFamilyProperties2 (es :: [Type]) = QueueFamilyProperties2
     queueFamilyProperties :: QueueFamilyProperties
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (QueueFamilyProperties2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (QueueFamilyProperties2 es)
 
 instance Extensible QueueFamilyProperties2 where
@@ -1318,6 +1337,9 @@ data PhysicalDeviceMemoryProperties2 (es :: [Type]) = PhysicalDeviceMemoryProper
     memoryProperties :: PhysicalDeviceMemoryProperties
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMemoryProperties2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PhysicalDeviceMemoryProperties2 es)
 
 instance Extensible PhysicalDeviceMemoryProperties2 where
@@ -1378,6 +1400,9 @@ data SparseImageFormatProperties2 = SparseImageFormatProperties2
     -- 'Vulkan.Core10.SparseResourceMemoryManagement.getPhysicalDeviceSparseImageFormatProperties'.
     properties :: SparseImageFormatProperties }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseImageFormatProperties2)
+#endif
 deriving instance Show SparseImageFormatProperties2
 
 instance ToCStruct SparseImageFormatProperties2 where
@@ -1458,6 +1483,9 @@ data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
     tiling :: ImageTiling
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSparseImageFormatInfo2)
+#endif
 deriving instance Show PhysicalDeviceSparseImageFormatInfo2
 
 instance ToCStruct PhysicalDeviceSparseImageFormatInfo2 where

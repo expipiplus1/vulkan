@@ -12,6 +12,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -139,6 +140,9 @@ data MemoryDedicatedRequirements = MemoryDedicatedRequirements
     requiresDedicatedAllocation :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryDedicatedRequirements)
+#endif
 deriving instance Show MemoryDedicatedRequirements
 
 instance ToCStruct MemoryDedicatedRequirements where
@@ -288,6 +292,9 @@ data MemoryDedicatedAllocateInfo = MemoryDedicatedAllocateInfo
     buffer :: Buffer
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryDedicatedAllocateInfo)
+#endif
 deriving instance Show MemoryDedicatedAllocateInfo
 
 instance ToCStruct MemoryDedicatedAllocateInfo where

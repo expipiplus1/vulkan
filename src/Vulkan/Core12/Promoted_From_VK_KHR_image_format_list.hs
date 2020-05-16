@@ -14,6 +14,7 @@ import qualified Data.Vector (length)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -72,6 +73,9 @@ data ImageFormatListCreateInfo = ImageFormatListCreateInfo
     -- used when creating views of this image.
     viewFormats :: Vector Format }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageFormatListCreateInfo)
+#endif
 deriving instance Show ImageFormatListCreateInfo
 
 instance ToCStruct ImageFormatListCreateInfo where

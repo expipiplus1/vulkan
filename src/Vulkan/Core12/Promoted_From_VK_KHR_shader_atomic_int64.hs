@@ -11,6 +11,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -42,6 +43,9 @@ data PhysicalDeviceShaderAtomicInt64Features = PhysicalDeviceShaderAtomicInt64Fe
     shaderSharedInt64Atomics :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShaderAtomicInt64Features)
+#endif
 deriving instance Show PhysicalDeviceShaderAtomicInt64Features
 
 instance ToCStruct PhysicalDeviceShaderAtomicInt64Features where

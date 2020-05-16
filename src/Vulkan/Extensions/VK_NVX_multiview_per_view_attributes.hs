@@ -15,6 +15,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -55,6 +56,9 @@ data PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = PhysicalDeviceMulti
     -- components other than the X component.
     perViewPositionAllComponents :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
+#endif
 deriving instance Show PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 
 instance ToCStruct PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where

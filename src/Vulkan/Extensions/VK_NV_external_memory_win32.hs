@@ -33,6 +33,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -165,6 +166,9 @@ data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
     handle :: HANDLE
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImportMemoryWin32HandleInfoNV)
+#endif
 deriving instance Show ImportMemoryWin32HandleInfoNV
 
 instance ToCStruct ImportMemoryWin32HandleInfoNV where
@@ -240,6 +244,9 @@ data ExportMemoryWin32HandleInfoNV = ExportMemoryWin32HandleInfoNV
     dwAccess :: DWORD
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportMemoryWin32HandleInfoNV)
+#endif
 deriving instance Show ExportMemoryWin32HandleInfoNV
 
 instance ToCStruct ExportMemoryWin32HandleInfoNV where

@@ -15,6 +15,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -57,6 +58,9 @@ data PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL = PhysicalDeviceShaderIn
     -- @ShaderIntegerFunctions2INTEL@ SPIR-V capability.
     shaderIntegerFunctions2 :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL)
+#endif
 deriving instance Show PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
 
 instance ToCStruct PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL where

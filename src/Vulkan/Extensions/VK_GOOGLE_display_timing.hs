@@ -36,6 +36,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -237,6 +238,9 @@ data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
     -- refresh cycle to the next.
     refreshDuration :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RefreshCycleDurationGOOGLE)
+#endif
 deriving instance Show RefreshCycleDurationGOOGLE
 
 instance ToCStruct RefreshCycleDurationGOOGLE where
@@ -324,6 +328,9 @@ data PastPresentationTimingGOOGLE = PastPresentationTimingGOOGLE
     presentMargin :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PastPresentationTimingGOOGLE)
+#endif
 deriving instance Show PastPresentationTimingGOOGLE
 
 instance ToCStruct PastPresentationTimingGOOGLE where
@@ -407,6 +414,9 @@ data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
     times :: Vector PresentTimeGOOGLE
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PresentTimesInfoGOOGLE)
+#endif
 deriving instance Show PresentTimesInfoGOOGLE
 
 instance ToCStruct PresentTimesInfoGOOGLE where
@@ -474,6 +484,9 @@ data PresentTimeGOOGLE = PresentTimeGOOGLE
     desiredPresentTime :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PresentTimeGOOGLE)
+#endif
 deriving instance Show PresentTimeGOOGLE
 
 instance ToCStruct PresentTimeGOOGLE where

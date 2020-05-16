@@ -38,6 +38,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -370,6 +371,9 @@ data PhysicalDeviceTimelineSemaphoreFeatures = PhysicalDeviceTimelineSemaphoreFe
     -- supported.
     timelineSemaphore :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceTimelineSemaphoreFeatures)
+#endif
 deriving instance Show PhysicalDeviceTimelineSemaphoreFeatures
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreFeatures where
@@ -423,6 +427,9 @@ data PhysicalDeviceTimelineSemaphoreProperties = PhysicalDeviceTimelineSemaphore
     -- semaphore and any pending signal or wait operations.
     maxTimelineSemaphoreValueDifference :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceTimelineSemaphoreProperties)
+#endif
 deriving instance Show PhysicalDeviceTimelineSemaphoreProperties
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreProperties where
@@ -498,6 +505,9 @@ data SemaphoreTypeCreateInfo = SemaphoreTypeCreateInfo
     initialValue :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SemaphoreTypeCreateInfo)
+#endif
 deriving instance Show SemaphoreTypeCreateInfo
 
 instance ToCStruct SemaphoreTypeCreateInfo where
@@ -585,6 +595,9 @@ data TimelineSemaphoreSubmitInfo = TimelineSemaphoreSubmitInfo
     signalSemaphoreValues :: Vector Word64
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (TimelineSemaphoreSubmitInfo)
+#endif
 deriving instance Show TimelineSemaphoreSubmitInfo
 
 instance ToCStruct TimelineSemaphoreSubmitInfo where
@@ -699,6 +712,9 @@ data SemaphoreWaitInfo = SemaphoreWaitInfo
     values :: Vector Word64
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SemaphoreWaitInfo)
+#endif
 deriving instance Show SemaphoreWaitInfo
 
 instance ToCStruct SemaphoreWaitInfo where
@@ -783,6 +799,9 @@ data SemaphoreSignalInfo = SemaphoreSignalInfo
     value :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SemaphoreSignalInfo)
+#endif
 deriving instance Show SemaphoreSignalInfo
 
 instance ToCStruct SemaphoreSignalInfo where

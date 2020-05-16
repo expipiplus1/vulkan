@@ -26,6 +26,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -202,6 +203,9 @@ data ImportMemoryHostPointerInfoEXT = ImportMemoryHostPointerInfoEXT
     hostPointer :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImportMemoryHostPointerInfoEXT)
+#endif
 deriving instance Show ImportMemoryHostPointerInfoEXT
 
 instance ToCStruct ImportMemoryHostPointerInfoEXT where
@@ -259,6 +263,9 @@ data MemoryHostPointerPropertiesEXT = MemoryHostPointerPropertiesEXT
     -- type which the specified host pointer /can/ be imported as.
     memoryTypeBits :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryHostPointerPropertiesEXT)
+#endif
 deriving instance Show MemoryHostPointerPropertiesEXT
 
 instance ToCStruct MemoryHostPointerPropertiesEXT where
@@ -321,6 +328,9 @@ data PhysicalDeviceExternalMemoryHostPropertiesEXT = PhysicalDeviceExternalMemor
     -- imported to a Vulkan memory object.
     minImportedHostPointerAlignment :: DeviceSize }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceExternalMemoryHostPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceExternalMemoryHostPropertiesEXT
 
 instance ToCStruct PhysicalDeviceExternalMemoryHostPropertiesEXT where

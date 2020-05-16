@@ -21,6 +21,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -77,6 +78,9 @@ data PhysicalDeviceImagelessFramebufferFeatures = PhysicalDeviceImagelessFramebu
     -- 'RenderPassAttachmentBeginInfo'.
     imagelessFramebuffer :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceImagelessFramebufferFeatures)
+#endif
 deriving instance Show PhysicalDeviceImagelessFramebufferFeatures
 
 instance ToCStruct PhysicalDeviceImagelessFramebufferFeatures where
@@ -134,6 +138,9 @@ data FramebufferAttachmentsCreateInfo = FramebufferAttachmentsCreateInfo
     -- instance.
     attachmentImageInfos :: Vector FramebufferAttachmentImageInfo }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FramebufferAttachmentsCreateInfo)
+#endif
 deriving instance Show FramebufferAttachmentsCreateInfo
 
 instance ToCStruct FramebufferAttachmentsCreateInfo where
@@ -227,6 +234,9 @@ data FramebufferAttachmentImageInfo = FramebufferAttachmentImageInfo
     viewFormats :: Vector Format
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FramebufferAttachmentImageInfo)
+#endif
 deriving instance Show FramebufferAttachmentImageInfo
 
 instance ToCStruct FramebufferAttachmentImageInfo where
@@ -311,6 +321,9 @@ data RenderPassAttachmentBeginInfo = RenderPassAttachmentBeginInfo
     -- the corresponding attachment in the render pass instance.
     attachments :: Vector ImageView }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassAttachmentBeginInfo)
+#endif
 deriving instance Show RenderPassAttachmentBeginInfo
 
 instance ToCStruct RenderPassAttachmentBeginInfo where

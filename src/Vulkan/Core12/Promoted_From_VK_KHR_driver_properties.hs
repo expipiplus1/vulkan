@@ -22,6 +22,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word8)
 import Data.ByteString (ByteString)
@@ -63,6 +64,9 @@ data ConformanceVersion = ConformanceVersion
     patch :: Word8
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ConformanceVersion)
+#endif
 deriving instance Show ConformanceVersion
 
 instance ToCStruct ConformanceVersion where
@@ -136,6 +140,9 @@ data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties
     conformanceVersion :: ConformanceVersion
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDriverProperties)
+#endif
 deriving instance Show PhysicalDeviceDriverProperties
 
 instance ToCStruct PhysicalDeviceDriverProperties where

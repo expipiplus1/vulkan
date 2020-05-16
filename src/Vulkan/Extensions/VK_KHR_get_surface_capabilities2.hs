@@ -40,6 +40,7 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -348,6 +349,9 @@ data PhysicalDeviceSurfaceInfo2KHR (es :: [Type]) = PhysicalDeviceSurfaceInfo2KH
     surface :: SurfaceKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSurfaceInfo2KHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PhysicalDeviceSurfaceInfo2KHR es)
 
 instance Extensible PhysicalDeviceSurfaceInfo2KHR where
@@ -425,6 +429,9 @@ data SurfaceCapabilities2KHR (es :: [Type]) = SurfaceCapabilities2KHR
     surfaceCapabilities :: SurfaceCapabilitiesKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SurfaceCapabilities2KHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (SurfaceCapabilities2KHR es)
 
 instance Extensible SurfaceCapabilities2KHR where
@@ -486,6 +493,9 @@ data SurfaceFormat2KHR = SurfaceFormat2KHR
     -- the specified surface.
     surfaceFormat :: SurfaceFormatKHR }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SurfaceFormat2KHR)
+#endif
 deriving instance Show SurfaceFormat2KHR
 
 instance ToCStruct SurfaceFormat2KHR where

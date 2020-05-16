@@ -44,6 +44,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -201,6 +202,9 @@ data PhysicalDeviceDiscardRectanglePropertiesEXT = PhysicalDeviceDiscardRectangl
     -- rectangles that /can/ be specified.
     maxDiscardRectangles :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDiscardRectanglePropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceDiscardRectanglePropertiesEXT
 
 instance ToCStruct PhysicalDeviceDiscardRectanglePropertiesEXT where
@@ -280,6 +284,9 @@ data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateC
     discardRectangles :: Vector Rect2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineDiscardRectangleStateCreateInfoEXT)
+#endif
 deriving instance Show PipelineDiscardRectangleStateCreateInfoEXT
 
 instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where

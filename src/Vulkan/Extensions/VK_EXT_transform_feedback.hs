@@ -46,6 +46,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -1166,6 +1167,9 @@ data PhysicalDeviceTransformFeedbackFeaturesEXT = PhysicalDeviceTransformFeedbac
     geometryStreams :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceTransformFeedbackFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceTransformFeedbackFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT where
@@ -1276,6 +1280,9 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     transformFeedbackDraw :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceTransformFeedbackPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceTransformFeedbackPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackPropertiesEXT where
@@ -1376,6 +1383,9 @@ data PipelineRasterizationStateStreamCreateInfoEXT = PipelineRasterizationStateS
     rasterizationStream :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineRasterizationStateStreamCreateInfoEXT)
+#endif
 deriving instance Show PipelineRasterizationStateStreamCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationStateStreamCreateInfoEXT where

@@ -64,6 +64,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -409,6 +410,9 @@ data ShadingRatePaletteNV = ShadingRatePaletteNV
     -- @shadingRatePaletteEntryCount@ valid 'ShadingRatePaletteEntryNV' values
     shadingRatePaletteEntries :: Vector ShadingRatePaletteEntryNV }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ShadingRatePaletteNV)
+#endif
 deriving instance Show ShadingRatePaletteNV
 
 instance ToCStruct ShadingRatePaletteNV where
@@ -494,6 +498,9 @@ data PipelineViewportShadingRateImageStateCreateInfoNV = PipelineViewportShading
     shadingRatePalettes :: Vector ShadingRatePaletteNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineViewportShadingRateImageStateCreateInfoNV)
+#endif
 deriving instance Show PipelineViewportShadingRateImageStateCreateInfoNV
 
 instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
@@ -583,6 +590,9 @@ data PhysicalDeviceShadingRateImageFeaturesNV = PhysicalDeviceShadingRateImageFe
     shadingRateCoarseSampleOrder :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShadingRateImageFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceShadingRateImageFeaturesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImageFeaturesNV where
@@ -660,6 +670,9 @@ data PhysicalDeviceShadingRateImagePropertiesNV = PhysicalDeviceShadingRateImage
     shadingRateMaxCoarseSamples :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShadingRateImagePropertiesNV)
+#endif
 deriving instance Show PhysicalDeviceShadingRateImagePropertiesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImagePropertiesNV where
@@ -723,6 +736,9 @@ data CoarseSampleLocationNV = CoarseSampleLocationNV
     sample :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CoarseSampleLocationNV)
+#endif
 deriving instance Show CoarseSampleLocationNV
 
 instance ToCStruct CoarseSampleLocationNV where
@@ -822,6 +838,9 @@ data CoarseSampleOrderCustomNV = CoarseSampleOrderCustomNV
     sampleLocations :: Vector CoarseSampleLocationNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CoarseSampleOrderCustomNV)
+#endif
 deriving instance Show CoarseSampleOrderCustomNV
 
 instance ToCStruct CoarseSampleOrderCustomNV where
@@ -915,6 +934,9 @@ data PipelineViewportCoarseSampleOrderStateCreateInfoNV = PipelineViewportCoarse
     customSampleOrders :: Vector CoarseSampleOrderCustomNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
+#endif
 deriving instance Show PipelineViewportCoarseSampleOrderStateCreateInfoNV
 
 instance ToCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV where

@@ -39,6 +39,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -321,6 +322,9 @@ data ImportSemaphoreWin32HandleInfoKHR = ImportSemaphoreWin32HandleInfoKHR
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImportSemaphoreWin32HandleInfoKHR)
+#endif
 deriving instance Show ImportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ImportSemaphoreWin32HandleInfoKHR where
@@ -443,6 +447,9 @@ data ExportSemaphoreWin32HandleInfoKHR = ExportSemaphoreWin32HandleInfoKHR
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportSemaphoreWin32HandleInfoKHR)
+#endif
 deriving instance Show ExportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ExportSemaphoreWin32HandleInfoKHR where
@@ -561,6 +568,9 @@ data D3D12FenceSubmitInfoKHR = D3D12FenceSubmitInfoKHR
     signalSemaphoreValues :: Vector Word64
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (D3D12FenceSubmitInfoKHR)
+#endif
 deriving instance Show D3D12FenceSubmitInfoKHR
 
 instance ToCStruct D3D12FenceSubmitInfoKHR where
@@ -696,6 +706,9 @@ data SemaphoreGetWin32HandleInfoKHR = SemaphoreGetWin32HandleInfoKHR
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SemaphoreGetWin32HandleInfoKHR)
+#endif
 deriving instance Show SemaphoreGetWin32HandleInfoKHR
 
 instance ToCStruct SemaphoreGetWin32HandleInfoKHR where

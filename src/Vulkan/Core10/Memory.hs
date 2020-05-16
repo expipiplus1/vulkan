@@ -36,6 +36,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -1082,6 +1083,9 @@ data MemoryAllocateInfo (es :: [Type]) = MemoryAllocateInfo
     memoryTypeIndex :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryAllocateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (MemoryAllocateInfo es)
 
 instance Extensible MemoryAllocateInfo where
@@ -1195,6 +1199,9 @@ data MappedMemoryRange = MappedMemoryRange
     size :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MappedMemoryRange)
+#endif
 deriving instance Show MappedMemoryRange
 
 instance ToCStruct MappedMemoryRange where

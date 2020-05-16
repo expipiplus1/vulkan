@@ -46,6 +46,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -389,6 +390,9 @@ data DisplayProperties2KHR = DisplayProperties2KHR
     -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR' structure.
     displayProperties :: DisplayPropertiesKHR }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayProperties2KHR)
+#endif
 deriving instance Show DisplayProperties2KHR
 
 instance ToCStruct DisplayProperties2KHR where
@@ -432,6 +436,9 @@ data DisplayPlaneProperties2KHR = DisplayPlaneProperties2KHR
     -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR' structure.
     displayPlaneProperties :: DisplayPlanePropertiesKHR }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPlaneProperties2KHR)
+#endif
 deriving instance Show DisplayPlaneProperties2KHR
 
 instance ToCStruct DisplayPlaneProperties2KHR where
@@ -475,6 +482,9 @@ data DisplayModeProperties2KHR = DisplayModeProperties2KHR
     -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR' structure.
     displayModeProperties :: DisplayModePropertiesKHR }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayModeProperties2KHR)
+#endif
 deriving instance Show DisplayModeProperties2KHR
 
 instance ToCStruct DisplayModeProperties2KHR where
@@ -546,6 +556,9 @@ data DisplayPlaneInfo2KHR = DisplayPlaneInfo2KHR
     planeIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPlaneInfo2KHR)
+#endif
 deriving instance Show DisplayPlaneInfo2KHR
 
 instance ToCStruct DisplayPlaneInfo2KHR where
@@ -600,6 +613,9 @@ data DisplayPlaneCapabilities2KHR = DisplayPlaneCapabilities2KHR
     -- structure.
     capabilities :: DisplayPlaneCapabilitiesKHR }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPlaneCapabilities2KHR)
+#endif
 deriving instance Show DisplayPlaneCapabilities2KHR
 
 instance ToCStruct DisplayPlaneCapabilities2KHR where

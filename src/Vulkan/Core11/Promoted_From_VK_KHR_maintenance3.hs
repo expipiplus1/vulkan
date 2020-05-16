@@ -23,6 +23,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -166,6 +167,9 @@ data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMaintenance3Properties)
+#endif
 deriving instance Show PhysicalDeviceMaintenance3Properties
 
 instance ToCStruct PhysicalDeviceMaintenance3Properties where
@@ -237,6 +241,9 @@ data DescriptorSetLayoutSupport (es :: [Type]) = DescriptorSetLayoutSupport
     supported :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorSetLayoutSupport (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (DescriptorSetLayoutSupport es)
 
 instance Extensible DescriptorSetLayoutSupport where

@@ -32,6 +32,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -311,6 +312,9 @@ data PhysicalDeviceBufferDeviceAddressFeatures = PhysicalDeviceBufferDeviceAddre
     bufferDeviceAddressMultiDevice :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceBufferDeviceAddressFeatures)
+#endif
 deriving instance Show PhysicalDeviceBufferDeviceAddressFeatures
 
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeatures where
@@ -388,6 +392,9 @@ data BufferDeviceAddressInfo = BufferDeviceAddressInfo
   { -- | @buffer@ specifies the buffer whose address is being queried.
     buffer :: Buffer }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BufferDeviceAddressInfo)
+#endif
 deriving instance Show BufferDeviceAddressInfo
 
 instance ToCStruct BufferDeviceAddressInfo where
@@ -471,6 +478,9 @@ data BufferOpaqueCaptureAddressCreateInfo = BufferOpaqueCaptureAddressCreateInfo
     -- buffer.
     opaqueCaptureAddress :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BufferOpaqueCaptureAddressCreateInfo)
+#endif
 deriving instance Show BufferOpaqueCaptureAddressCreateInfo
 
 instance ToCStruct BufferOpaqueCaptureAddressCreateInfo where
@@ -542,6 +552,9 @@ data MemoryOpaqueCaptureAddressAllocateInfo = MemoryOpaqueCaptureAddressAllocate
     -- memory allocation.
     opaqueCaptureAddress :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryOpaqueCaptureAddressAllocateInfo)
+#endif
 deriving instance Show MemoryOpaqueCaptureAddressAllocateInfo
 
 instance ToCStruct MemoryOpaqueCaptureAddressAllocateInfo where
@@ -596,6 +609,9 @@ data DeviceMemoryOpaqueCaptureAddressInfo = DeviceMemoryOpaqueCaptureAddressInfo
     -- @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceMemoryOpaqueCaptureAddressInfo)
+#endif
 deriving instance Show DeviceMemoryOpaqueCaptureAddressInfo
 
 instance ToCStruct DeviceMemoryOpaqueCaptureAddressInfo where

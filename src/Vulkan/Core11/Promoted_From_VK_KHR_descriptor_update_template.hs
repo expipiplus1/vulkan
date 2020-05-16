@@ -36,6 +36,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -459,6 +460,9 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     stride :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorUpdateTemplateEntry)
+#endif
 deriving instance Show DescriptorUpdateTemplateEntry
 
 instance ToCStruct DescriptorUpdateTemplateEntry where
@@ -613,6 +617,9 @@ data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
     set :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorUpdateTemplateCreateInfo)
+#endif
 deriving instance Show DescriptorUpdateTemplateCreateInfo
 
 instance ToCStruct DescriptorUpdateTemplateCreateInfo where

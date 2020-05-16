@@ -35,6 +35,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -147,6 +148,9 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     conservativeRasterizationPostDepthCoverage :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceConservativeRasterizationPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceConservativeRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT where
@@ -246,6 +250,9 @@ data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterization
     extraPrimitiveOverestimationSize :: Float
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineRasterizationConservativeStateCreateInfoEXT)
+#endif
 deriving instance Show PipelineRasterizationConservativeStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationConservativeStateCreateInfoEXT where

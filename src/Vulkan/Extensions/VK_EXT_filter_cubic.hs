@@ -18,6 +18,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -60,6 +61,9 @@ data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFor
     -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
     imageViewType :: ImageViewType }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceImageViewImageFormatInfoEXT)
+#endif
 deriving instance Show PhysicalDeviceImageViewImageFormatInfoEXT
 
 instance ToCStruct PhysicalDeviceImageViewImageFormatInfoEXT where
@@ -128,6 +132,9 @@ data FilterCubicImageViewImageFormatPropertiesEXT = FilterCubicImageViewImageFor
     filterCubicMinmax :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FilterCubicImageViewImageFormatPropertiesEXT)
+#endif
 deriving instance Show FilterCubicImageViewImageFormatPropertiesEXT
 
 instance ToCStruct FilterCubicImageViewImageFormatPropertiesEXT where

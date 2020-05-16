@@ -63,6 +63,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Word (Word64)
@@ -201,6 +202,9 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     shaderDrawParameters :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceVulkan11Features)
+#endif
 deriving instance Show PhysicalDeviceVulkan11Features
 
 instance ToCStruct PhysicalDeviceVulkan11Features where
@@ -382,6 +386,9 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceVulkan11Properties)
+#endif
 deriving instance Show PhysicalDeviceVulkan11Properties
 
 instance ToCStruct PhysicalDeviceVulkan11Properties where
@@ -950,6 +957,9 @@ data PhysicalDeviceVulkan12Features = PhysicalDeviceVulkan12Features
     subgroupBroadcastDynamicId :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceVulkan12Features)
+#endif
 deriving instance Show PhysicalDeviceVulkan12Features
 
 instance ToCStruct PhysicalDeviceVulkan12Features where
@@ -1502,6 +1512,9 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     framebufferIntegerColorSampleCounts :: SampleCountFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceVulkan12Properties)
+#endif
 deriving instance Show PhysicalDeviceVulkan12Properties
 
 instance ToCStruct PhysicalDeviceVulkan12Properties where
