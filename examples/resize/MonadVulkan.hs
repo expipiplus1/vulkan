@@ -5,14 +5,16 @@
 module MonadVulkan where
 
 import           AutoApply
-import           Control.Exception.Safe
+import           Control.Monad                  ( void )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class      ( lift )
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource
+import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
+import           Data.Word
 import           UnliftIO
 
-import           Data.Word
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
@@ -34,9 +36,6 @@ newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
                    , Applicative
                    , Monad
                    , MonadFail
-                   , MonadThrow
-                   , MonadCatch
-                   , MonadMask
                    , MonadIO
                    , MonadResource
                    )
@@ -44,16 +43,14 @@ newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
 instance MonadUnliftIO V where
   withRunInIO a = V $ withRunInIO (\r -> a (r . unV))
 
-newtype Cmd a = Cmd { _unCmd :: ReaderT CommandBuffer V a }
+newtype CmdT m a = CmdT { _unCmd :: ReaderT CommandBuffer m a }
   deriving newtype ( Functor
                    , Applicative
                    , Monad
                    , MonadFail
-                   , MonadThrow
-                   , MonadCatch
-                   , MonadMask
                    , MonadIO
                    , MonadResource
+                   , HasVulkan
                    )
 
 class HasVulkan m where
@@ -62,7 +59,6 @@ class HasVulkan m where
   getPhysicalDevice :: m PhysicalDevice
   getDevice :: m Device
   getAllocator :: m Allocator
-  getCommandPool :: m CommandPool
 
 instance HasVulkan V where
   getInstance       = V (asks ghInstance)
@@ -70,15 +66,13 @@ instance HasVulkan V where
   getPhysicalDevice = V (asks ghPhysicalDevice)
   getDevice         = V (asks ghDevice)
   getAllocator      = V (asks ghAllocator)
-  getCommandPool    = V (asks ghCommandPool)
 
-instance HasVulkan Cmd where
-  getInstance       = Cmd $ lift getInstance
-  getGraphicsQueue  = Cmd $ lift getGraphicsQueue
-  getPhysicalDevice = Cmd $ lift getPhysicalDevice
-  getDevice         = Cmd $ lift getDevice
-  getAllocator      = Cmd $ lift getAllocator
-  getCommandPool    = Cmd $ lift getCommandPool
+instance (Monad m, HasVulkan m) => HasVulkan (ReaderT r m) where
+  getInstance       = lift getInstance
+  getGraphicsQueue  = lift getGraphicsQueue
+  getPhysicalDevice = lift getPhysicalDevice
+  getDevice         = lift getDevice
+  getAllocator      = lift getAllocator
 
 getGraphicsQueueFamilyIndex :: V Word32
 getGraphicsQueueFamilyIndex = V (asks ghGraphicsQueueFamilyIndex)
@@ -86,17 +80,20 @@ getGraphicsQueueFamilyIndex = V (asks ghGraphicsQueueFamilyIndex)
 noAllocationCallbacks :: Maybe AllocationCallbacks
 noAllocationCallbacks = Nothing
 
-getCommandBuffer :: Cmd CommandBuffer
-getCommandBuffer = Cmd ask
+getCommandBuffer :: Monad m => CmdT m CommandBuffer
+getCommandBuffer = CmdT ask
+
+getCommandPool :: Int -> V CommandPool
+getCommandPool i = V (asks ((V.! i) . ghCommandPools))
 
 useCommandBuffer'
-  :: forall a r
-   . (Extendss CommandBufferBeginInfo a, PokeChain a)
+  :: forall a m r
+   . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO m)
   => CommandBuffer
   -> CommandBufferBeginInfo a
-  -> Cmd r
-  -> V r
-useCommandBuffer' commandBuffer beginInfo (Cmd a) =
+  -> CmdT m r
+  -> m r
+useCommandBuffer' commandBuffer beginInfo (CmdT a) =
   useCommandBuffer commandBuffer beginInfo (runReaderT a commandBuffer)
 
 runV
@@ -105,12 +102,22 @@ runV
   -> Device
   -> Queue
   -> Word32
-  -> CommandPool
+  -> Vector CommandPool
   -> Allocator
   -> V a
   -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghDevice ghGraphicsQueue ghGraphicsQueueFamilyIndex ghCommandPool ghAllocator
+runV ghInstance ghPhysicalDevice ghDevice ghGraphicsQueue ghGraphicsQueueFamilyIndex ghCommandPools ghAllocator
   = flip runReaderT GlobalHandles { .. } . unV
+
+-- Start an async thread which will be cancelled at the end of the ResourceT
+-- block
+spawn :: V a -> V (Async a)
+spawn a = do
+  aIO <- toIO a
+  snd <$> allocate (async aIO) uninterruptibleCancel
+
+spawn_ :: V () -> V ()
+spawn_ = void . spawn
 
 data GlobalHandles = GlobalHandles
   { ghInstance                 :: Instance
@@ -119,9 +126,8 @@ data GlobalHandles = GlobalHandles
   , ghAllocator                :: Allocator
   , ghGraphicsQueue            :: Queue
   , ghGraphicsQueueFamilyIndex :: Word32
-  , ghCommandPool              :: CommandPool
+  , ghCommandPools             :: Vector CommandPool
   }
-
 
 --
 -- Wrap a bunch of Vulkan commands so that they automatically pull global
@@ -173,4 +179,6 @@ autoapplyDecs
   , 'acquireNextImageKHR
   , 'withSemaphore
   , 'deviceWaitIdleSafe
+  , 'resetCommandPool
+  , 'allocateCommandBuffers
   ]

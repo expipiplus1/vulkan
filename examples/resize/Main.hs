@@ -1,34 +1,29 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedLists #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Main
   ( main
   )
 where
 
-import           Control.Exception              ( handle
-                                                , mask
+import           Control.Exception              ( handle )
+import           Control.Monad.Extra            ( unlessM
+                                                , when
                                                 )
-import           Control.Exception.Safe         ( catchJust
-                                                , displayException
-                                                , finally
-                                                , throwString
-                                                )
-import           Control.Monad.Extra            ( unlessM )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
 import qualified SDL
-import qualified SDL.Video.Vulkan              as SDL
 import           Say
-import           UnliftIO                       ( toIO )
-import           UnliftIO.Async                 ( async
-                                                , uninterruptibleCancel
+import           UnliftIO.Exception             ( displayException
+                                                , throwString
                                                 )
+import           UnliftIO.IORef
+import           UnliftIO.MVar
 
-import           Data.Foldable                  ( traverse_ )
-import           Data.IORef
+import           Data.Bool                      ( bool )
 import qualified Data.Vector                   as V
-import           Data.Word
+import           GHC.Clock                      ( getMonotonicTimeNSec )
 
 import           Vulkan.CStruct.Extends         ( SomeStruct(..) )
 import           Vulkan.Core10                 as Vk
@@ -44,23 +39,16 @@ import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
 
-import           Framebuffer
+import           Frame
 import           Init
 import           MonadVulkan
-import           Pipeline
 import           Swapchain
 import           Window
 
 ----------------------------------------------------------------
--- The program
---
--- Main does the one-time initialization at the start
+-- Main performs some one time initialization of the windowing system and
+-- Vulkan, then it loops generating frames
 ----------------------------------------------------------------
-
-prettyError :: IO () -> IO ()
-prettyError =
-  handle (\e@(VulkanException _) -> sayErrString (displayException e))
-
 main :: IO ()
 main = prettyError . runResourceT $ do
   -- Start SDL
@@ -80,8 +68,11 @@ main = prettyError . runResourceT $ do
   let commandPoolCreateInfo :: CommandPoolCreateInfo
       commandPoolCreateInfo =
         zero { queueFamilyIndex = graphicsQueueFamilyIndex }
-  (_, commandPool) <- withCommandPool dev commandPoolCreateInfo Nothing allocate
-  allocator        <- createVMA inst phys dev
+  commandPools <- V.replicateM
+    numConcurrentFrames
+    (snd <$> withCommandPool dev commandPoolCreateInfo Nothing allocate)
+
+  allocator <- createVMA inst phys dev
 
   sayErr $ "Using device: " <> devName
 
@@ -91,32 +82,19 @@ main = prettyError . runResourceT $ do
        dev
        graphicsQueue
        graphicsQueueFamilyIndex
-       commandPool
+       commandPools
        allocator
-    . (`finally` deviceWaitIdleSafe')
     $ do
-
-        frame <- initialFrame sdlWindow
-                              (Just surface)
-                              (Extent2D initWidth initHeight)
+        i <- initialFrame sdlWindow
+                          (Just surface)
+                          (Extent2D initWidth initHeight)
 
         SDL.showWindow sdlWindow
+        loopJust frame i
 
-        render frame
-
-data Frame = Frame
-  { fWindow                  :: SDL.Window
-    -- Vulkan items
-  , fSurface                 :: SurfaceKHR
-  , fSwapchain               :: SwapchainKHR
-  , fRenderPass              :: RenderPass
-  , fImageExtent             :: Extent2D
-  , fImageAvailableSemaphore :: Semaphore
-  , fRenderFinishedSemaphore :: Semaphore
-  , fPipeline                :: Pipeline
-  , fFramebuffers            :: Word32 -> Framebuffer
-  , fReleaseSwapchain        :: RefCounted
-  }
+prettyError :: IO () -> IO ()
+prettyError =
+  handle (\e@(VulkanException _) -> sayErrString (displayException e))
 
 initialFrame
   :: SDL.Window
@@ -140,8 +118,20 @@ initialFrame window surfaceM windowSize = do
 
   (_, imageAvailableSemaphore) <- withSemaphore' zero
   (_, renderFinishedSemaphore) <- withSemaphore' zero
+
+  currentPresented             <- newEmptyMVar
+  lastPresented                <- newMVar ()
+  secondLastPresented          <- newMVar ()
+  thirdLastPresented           <- newMVar ()
+
+  start                        <- liftIO getMonotonicTimeNSec
+
+  frameResources <- allocate createInternalState closeInternalState
+  fences                       <- newIORef mempty
+
   pure
-    (Frame window
+    (Frame 0
+           window
            surface
            swapchain
            renderPass
@@ -151,198 +141,125 @@ initialFrame window surfaceM windowSize = do
            pipeline
            ((framebuffers V.!) . fromIntegral)
            releaseSwapchain
+           currentPresented
+           lastPresented
+           secondLastPresented
+           thirdLastPresented
+           start
+           frameResources
+           fences
     )
 
-allocSwapchainResources
-  :: Extent2D
-  -> SwapchainKHR
-  -- ^ Previous swapchain, can be NULL_HANDLE
-  -> SurfaceKHR
-  -> V
-       ( SwapchainKHR
-       , Extent2D
-       , V.Vector Framebuffer
-       , Pipeline
-       , RenderPass
-       , RefCounted
-       )
-allocSwapchainResources windowSize oldSwapchain surface = do
-  (swapchainKey, swapchain, surfaceFormat, imageExtent) <- createSwapchain
-    oldSwapchain
-    windowSize
-    surface
+-- | Process a single frame, returning Nothing if we should exit.
+frame :: Frame -> V (Maybe Frame)
+frame f = shouldQuit >>= \case
+  True  -> pure Nothing
+  False -> do
+    -- Wait for the second previous frame to have finished presenting so the
+    -- CPU doesn't get too far ahead.
+    readMVar (fSecondLastPresented f)
 
-  (renderPassKey, renderPass) <- Pipeline.createRenderPass
-    (format (surfaceFormat :: SurfaceFormatKHR))
-  (pipelineKey  , pipeline       ) <- createPipeline imageExtent renderPass
+    f                 <- startFrame f
 
-  (_            , swapchainImages) <- getSwapchainImagesKHR' swapchain
-  (imageViewKeys, imageViews     ) <-
-    fmap V.unzip . V.forM swapchainImages $ \image ->
-      createImageView (format (surfaceFormat :: SurfaceFormatKHR)) image
+    -- Render this frame
+    needsNewSwapchain <- threwSwapchainError $ runFrame f draw
 
-  (framebufferKeys, framebuffers) <-
-    fmap V.unzip . V.forM imageViews $ \imageView ->
-      createFramebuffer renderPass imageView imageExtent
+    -- Advance the frame, recreating the swapchain if necessary
+    f' <- advanceFrame =<< bool pure recreateSwapchain needsNewSwapchain f
 
-  releaseSwapchain <- newRefCounted $ do
-    sayErr "Releasing swapchain resources"
-    traverse_ release framebufferKeys
-    traverse_ release imageViewKeys
-    release pipelineKey
-    release renderPassKey
-    release swapchainKey
+      -- Print out frame timing info
+    endTime           <- liftIO getMonotonicTimeNSec
+    let
+      frameTimeNSec       = realToFrac (endTime - fStartTime f) :: Double
+      targetHz            = 60
+      frameTimeBudgetMSec = recip targetHz * 1e3
+      frameTimeMSec       = frameTimeNSec / 1e6
+      frameBudgetPercent =
+        ceiling (100 * frameTimeMSec / frameTimeBudgetMSec) :: Int
+    when (frameBudgetPercent > 50) $ sayErrString
+      (show frameTimeMSec <> "ms \t" <> show frameBudgetPercent <> "%")
 
-  pure
-    ( swapchain
-    , imageExtent
-    , framebuffers
-    , pipeline
-    , renderPass
-    , releaseSwapchain
-    )
+    pure $ Just f'
 
-render :: Frame -> V ()
-render Frame {..} =
-  do
-      (SUCCESS, imageIndex) <- acquireNextImageKHR' fSwapchain
-                                                    0
-                                                    fImageAvailableSemaphore
-                                                    zero
+-- | Set the frame start time
+startFrame :: Frame -> V Frame
+startFrame f = do
+  start <- liftIO getMonotonicTimeNSec
+  pure f { fStartTime = start }
 
-      commandPool <- getCommandPool
-      let commandBufferAllocateInfo = zero
-            { commandPool        = commandPool
-            , level              = COMMAND_BUFFER_LEVEL_PRIMARY
-            , commandBufferCount = 1
-            }
-      (_, [commandBuffer]) <- withCommandBuffers' commandBufferAllocateInfo
+-- | Shuffle along previous frames's info and make per-frame resources
+advanceFrame :: Frame -> V Frame
+advanceFrame f = do
+  nextPresented <- newEmptyMVar
+  resources     <- allocate createInternalState closeInternalState
+  fences        <- newIORef mempty
+  pure f { fIndex               = succ (fIndex f)
+         , fCurrentPresented    = nextPresented
+         , fLastPresented       = fCurrentPresented f
+         , fSecondLastPresented = fLastPresented f
+         , fThirdLastPresented  = fSecondLastPresented f
+         , fResources           = resources
+         , fGPUWork             = fences
+         }
 
-      useCommandBuffer'
-          commandBuffer
-          zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
-        $ do
-            let renderPassBeginInfo = zero
-                  { renderPass  = fRenderPass
-                  , framebuffer = fFramebuffers imageIndex
-                  , renderArea  = Rect2D zero fImageExtent
-                  , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
-                  }
-            cmdUseRenderPass commandBuffer
-                             renderPassBeginInfo
-                             SUBPASS_CONTENTS_INLINE
-              $ do
-                  cmdBindPipeline commandBuffer
-                                  PIPELINE_BIND_POINT_GRAPHICS
-                                  fPipeline
-                  cmdDraw commandBuffer 3 1 0 0
+-- | Submit GPU commands for a frame
+draw :: F (Fence, ())
+draw = do
+  Frame {..}            <- askFrame
 
-      let submitInfo = zero
-            { waitSemaphores   = [fImageAvailableSemaphore]
-            , waitDstStageMask = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
-            , commandBuffers   = [commandBufferHandle commandBuffer]
-            , signalSemaphores = [fRenderFinishedSemaphore]
-            }
-      graphicsQueue           <- getGraphicsQueue
-      (fenceKey, renderFence) <- withFence' zero
-      queueSubmit graphicsQueue [SomeStruct submitInfo] renderFence
+  (SUCCESS, imageIndex) <- acquireNextImageKHR' fSwapchain
+                                                0
+                                                fImageAvailableSemaphore
+                                                zero
 
-      useRefCounted fReleaseSwapchain
-      waitAndRelease <- toIO $ do
-        waitForFencesSafe' [renderFence] True 1e9 >>= \case
-          TIMEOUT -> throwString "AAA"
-          _       -> pure ()
-        release fenceKey
-        releaseRefCounted fReleaseSwapchain
-      _ <- allocate (async waitAndRelease) uninterruptibleCancel
+  -- Make sure we don't destroy the swapchain until at least this frame has
+  -- finished GPU execution.
+  frameRefCount fReleaseSwapchain
 
-      let presentInfo = zero { waitSemaphores = [fRenderFinishedSemaphore]
-                             , swapchains     = [fSwapchain]
-                             , imageIndices   = [imageIndex]
-                             }
-      _ <- queuePresentKHR graphicsQueue presentInfo
+  commandPool <- frameCommandPool
+  let commandBufferAllocateInfo = zero { commandPool = commandPool
+                                       , level = COMMAND_BUFFER_LEVEL_PRIMARY
+                                       , commandBufferCount = 1
+                                       }
 
-      unlessM shouldQuit $ render Frame { .. }
-    `catchSwapchainError` \_ -> do
-                            SDL.V2 width height <- SDL.vkGetDrawableSize fWindow
-                            (swapchain, imageExtent, framebuffers, pipeline, renderPass, releaseSwapchain) <-
-                              allocSwapchainResources
-                                (Extent2D (fromIntegral width)
-                                          (fromIntegral height)
-                                )
-                                fSwapchain
-                                fSurface
+  -- The command buffer will be freed when the frame is retired
+  [commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
 
-                            releaseRefCounted fReleaseSwapchain
-                            render $ Frame fWindow
-                                           fSurface
-                                           swapchain
-                                           renderPass
-                                           imageExtent
-                                           fImageAvailableSemaphore
-                                           fRenderFinishedSemaphore
-                                           pipeline
-                                           ((framebuffers V.!) . fromIntegral)
-                                           releaseSwapchain
+  useCommandBuffer' commandBuffer
+                    zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
+    $ do
+        let renderPassBeginInfo = zero
+              { renderPass  = fRenderPass
+              , framebuffer = fFramebuffers imageIndex
+              , renderArea  = Rect2D zero fImageExtent
+              , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
+              }
+        cmdUseRenderPass commandBuffer
+                         renderPassBeginInfo
+                         SUBPASS_CONTENTS_INLINE
+          $ do
+              cmdBindPipeline commandBuffer
+                              PIPELINE_BIND_POINT_GRAPHICS
+                              fPipeline
+              cmdDraw commandBuffer 3 1 0 0
 
+  let submitInfo = zero
+        { waitSemaphores   = [fImageAvailableSemaphore]
+        , waitDstStageMask = [PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+        , commandBuffers   = [commandBufferHandle commandBuffer]
+        , signalSemaphores = [fRenderFinishedSemaphore]
+        }
+  graphicsQueue    <- getGraphicsQueue
+  (_, renderFence) <- withFence' zero
+  queueSubmitFrame graphicsQueue [SomeStruct submitInfo] renderFence
 
-catchSwapchainError :: V a -> (Result -> V a) -> V a
-catchSwapchainError = catchJust $ \case
-  VulkanException e@ERROR_OUT_OF_DATE_KHR  -> Just e
-  -- TODO handle this case
-  -- VulkanException e@ERROR_SURFACE_LOST_KHR -> Just e
-  VulkanException _                        -> Nothing
+  let presentInfo = zero { waitSemaphores = [fRenderFinishedSemaphore]
+                         , swapchains     = [fSwapchain]
+                         , imageIndices   = [imageIndex]
+                         }
+  _ <- queuePresentKHR graphicsQueue presentInfo
 
-
-----------------------------------------------------------------
--- Helpers
-----------------------------------------------------------------
-
--- | Create a pretty vanilla ImageView covering the whole image
-createImageView :: Format -> Image -> V (ReleaseKey, ImageView)
-createImageView format = \image ->
-  withImageView' imageViewCreateInfo { image = image }
- where
-  imageViewCreateInfo = zero
-    { viewType         = IMAGE_VIEW_TYPE_2D
-    , format           = format
-    , components       = zero { r = COMPONENT_SWIZZLE_IDENTITY
-                              , g = COMPONENT_SWIZZLE_IDENTITY
-                              , b = COMPONENT_SWIZZLE_IDENTITY
-                              , a = COMPONENT_SWIZZLE_IDENTITY
-                              }
-    , subresourceRange = zero { aspectMask     = IMAGE_ASPECT_COLOR_BIT
-                              , baseMipLevel   = 0
-                              , levelCount     = 1
-                              , baseArrayLayer = 0
-                              , layerCount     = 1
-                              }
-    }
-
-----------------------------------------------------------------
--- Ref counting helper
-----------------------------------------------------------------
-
--- A 'RefCounted' will perform the specified action when the count reaches 0
-data RefCounted = RefCounted
-  { rcCount  :: IORef Word
-  , rcAction :: IO ()
-  }
-
-newRefCounted :: MonadIO m => IO () -> m RefCounted
-newRefCounted rcAction = do
-  rcCount <- liftIO $ newIORef 1
-  pure RefCounted { .. }
-
-releaseRefCounted :: MonadIO m => RefCounted -> m ()
-releaseRefCounted RefCounted {..} = liftIO $ mask $ \_ ->
-  atomicModifyIORef' rcCount (\c -> (pred c, pred c)) >>= \case
-    0 -> rcAction
-    _ -> pure ()
-
-useRefCounted :: MonadIO m => RefCounted -> m ()
-useRefCounted RefCounted {..} =
-  liftIO $ atomicModifyIORef' rcCount (\c -> (succ c, ()))
+  pure (renderFence, ())
 
 ----------------------------------------------------------------
 -- SDL helpers
@@ -358,3 +275,23 @@ shouldQuit = maybe False isQuitEvent <$> SDL.pollEvent
       | code == SDL.KeycodeQ || code == SDL.KeycodeEscape
       -> True
     _ -> False
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+loopJust :: Monad m => (a -> m (Maybe a)) -> a -> m ()
+loopJust f x = f x >>= \case
+  Nothing -> pure ()
+  Just x' -> loopJust f x'
+
+-- | Print a string if something is slow
+_time :: MonadIO m => String -> m a -> m a
+_time n a = do
+  t1 <- liftIO getMonotonicTimeNSec
+  r  <- a
+  t2 <- liftIO getMonotonicTimeNSec
+  let d = t2 - t1
+      t = 3e6
+  when (d >= t) $ sayErrString (n <> ": " <> show (realToFrac d / 1e6 :: Float))
+  pure r

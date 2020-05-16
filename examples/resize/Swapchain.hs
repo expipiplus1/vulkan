@@ -1,18 +1,34 @@
 module Swapchain
-  where
+  ( createSwapchain
+  , threwSwapchainError
+  , recreateSwapchain
+  , allocSwapchainResources
+  ) where
 
-import           Control.Exception.Safe
 import           Control.Monad.Trans.Resource
+import           Data.Either                    ( isLeft )
+import           Data.Foldable                  ( traverse_ )
 import qualified Data.Vector                   as V
+import qualified SDL
+import qualified SDL.Video.Vulkan              as SDL
 import           Say
-import           Vulkan.Core10
+import           UnliftIO.Exception             ( throwString
+                                                , tryJust
+                                                )
+import           Vulkan.Core10           hiding ( createFramebuffer
+                                                , createImageView
+                                                )
+import           Vulkan.Exception
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
 
+import           Frame
+import           Framebuffer
 import           MonadVulkan
+import           Pipeline
 
--- Create a swapchain from an image
+-- | Create a swapchain from a surface
 createSwapchain
   :: SwapchainKHR
   -- ^ Old swapchain, can be NULL_HANDLE
@@ -68,3 +84,86 @@ createSwapchain oldSwapchain explicitSize surf = do
 
   (key, swapchain) <- withSwapchainKHR' swapchainCreateInfo
   pure (key, swapchain, surfaceFormat, imageExtent)
+
+
+----------------------------------------------------------------
+-- Utils for recreating a swapchain
+----------------------------------------------------------------
+
+-- | Catch an ERROR_OUT_OF_DATE_KHR exception and return 'True' if that happened
+threwSwapchainError :: V a -> V Bool
+threwSwapchainError = fmap isLeft . tryJust swapchainError
+ where
+  swapchainError = \case
+    VulkanException e@ERROR_OUT_OF_DATE_KHR -> Just e
+    -- TODO handle this case
+    -- VulkanException e@ERROR_SURFACE_LOST_KHR -> Just e
+    VulkanException _                       -> Nothing
+
+-- |
+recreateSwapchain :: Frame -> V Frame
+recreateSwapchain f@Frame {..} = do
+  SDL.V2 width height <- SDL.vkGetDrawableSize fWindow
+  (swapchain, imageExtent, framebuffers, pipeline, renderPass, releaseSwapchain) <-
+    allocSwapchainResources
+      (Extent2D (fromIntegral width) (fromIntegral height))
+      fSwapchain
+      fSurface
+
+  releaseRefCounted fReleaseSwapchain
+
+  pure f { fSwapchain        = swapchain
+         , fRenderPass       = renderPass
+         , fImageExtent      = imageExtent
+         , fPipeline         = pipeline
+         , fFramebuffers     = (framebuffers V.!) . fromIntegral
+         , fReleaseSwapchain = releaseSwapchain
+         }
+
+allocSwapchainResources
+  :: Extent2D
+  -> SwapchainKHR
+  -- ^ Previous swapchain, can be NULL_HANDLE
+  -> SurfaceKHR
+  -> V
+       ( SwapchainKHR
+       , Extent2D
+       , V.Vector Framebuffer
+       , Pipeline
+       , RenderPass
+       , RefCounted
+       )
+allocSwapchainResources windowSize oldSwapchain surface = do
+  (swapchainKey, swapchain, surfaceFormat, imageExtent) <- createSwapchain
+    oldSwapchain
+    windowSize
+    surface
+
+  (renderPassKey, renderPass) <- Pipeline.createRenderPass
+    (format (surfaceFormat :: SurfaceFormatKHR))
+  (pipelineKey  , pipeline       ) <- createPipeline imageExtent renderPass
+
+  (_            , swapchainImages) <- getSwapchainImagesKHR' swapchain
+  (imageViewKeys, imageViews     ) <-
+    fmap V.unzip . V.forM swapchainImages $ \image ->
+      createImageView (format (surfaceFormat :: SurfaceFormatKHR)) image
+
+  (framebufferKeys, framebuffers) <-
+    fmap V.unzip . V.forM imageViews $ \imageView ->
+      createFramebuffer renderPass imageView imageExtent
+
+  releaseSwapchain <- newRefCounted $ do
+    traverse_ release framebufferKeys
+    traverse_ release imageViewKeys
+    release pipelineKey
+    release renderPassKey
+    release swapchainKey
+
+  pure
+    ( swapchain
+    , imageExtent
+    , framebuffers
+    , pipeline
+    , renderPass
+    , releaseSwapchain
+    )

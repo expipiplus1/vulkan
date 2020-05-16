@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 391d0476037bac22cdef5bb01f1fbccdb5e29b1c3cbc80075c5f0910d88d577a
+-- hash: a1b0a12c6bef22a0bd95257cd342a04c81d5c30e84523336e54433edccb6f6bb
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -34,7 +34,7 @@ executable compute
   hs-source-dirs:
       compute
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
       JuicyPixels
     , VulkanMemoryAllocator
@@ -59,7 +59,7 @@ executable info
   hs-source-dirs:
       info
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
       base <4.15
     , bytestring
@@ -74,7 +74,7 @@ executable offscreen
   hs-source-dirs:
       offscreen
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
       JuicyPixels
     , VulkanMemoryAllocator
@@ -102,6 +102,7 @@ executable offscreen
 executable resize
   main-is: Main.hs
   other-modules:
+      Frame
       Framebuffer
       Init
       MonadVulkan
@@ -112,7 +113,7 @@ executable resize
   hs-source-dirs:
       resize
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
       VulkanMemoryAllocator
     , autoapply >=0.4
@@ -138,7 +139,7 @@ executable sdl-triangle
   hs-source-dirs:
       sdl-triangle
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
       base <4.15
     , bytestring
