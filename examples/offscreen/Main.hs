@@ -659,6 +659,7 @@ createInstance = do
                 []
           :&  ()
   (_, inst) <- withInstance' instanceCreateInfo
+  _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   pure inst
 
 createDevice
