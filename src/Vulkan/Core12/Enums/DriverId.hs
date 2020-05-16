@@ -11,6 +11,7 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_GOOGLE_SWIFTSHADER
                                               , DRIVER_ID_GGP_PROPRIETARY
                                               , DRIVER_ID_BROADCOM_PROPRIETARY
+                                              , DRIVER_ID_MESA_LLVMPIPE
                                               , ..
                                               )) where
 
@@ -77,6 +78,8 @@ pattern DRIVER_ID_GOOGLE_SWIFTSHADER = DriverId 10
 pattern DRIVER_ID_GGP_PROPRIETARY = DriverId 11
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_BROADCOM_PROPRIETARY"
 pattern DRIVER_ID_BROADCOM_PROPRIETARY = DriverId 12
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_LLVMPIPE"
+pattern DRIVER_ID_MESA_LLVMPIPE = DriverId 13
 {-# complete DRIVER_ID_AMD_PROPRIETARY,
              DRIVER_ID_AMD_OPEN_SOURCE,
              DRIVER_ID_MESA_RADV,
@@ -88,7 +91,8 @@ pattern DRIVER_ID_BROADCOM_PROPRIETARY = DriverId 12
              DRIVER_ID_ARM_PROPRIETARY,
              DRIVER_ID_GOOGLE_SWIFTSHADER,
              DRIVER_ID_GGP_PROPRIETARY,
-             DRIVER_ID_BROADCOM_PROPRIETARY :: DriverId #-}
+             DRIVER_ID_BROADCOM_PROPRIETARY,
+             DRIVER_ID_MESA_LLVMPIPE :: DriverId #-}
 
 instance Show DriverId where
   showsPrec p = \case
@@ -104,6 +108,7 @@ instance Show DriverId where
     DRIVER_ID_GOOGLE_SWIFTSHADER -> showString "DRIVER_ID_GOOGLE_SWIFTSHADER"
     DRIVER_ID_GGP_PROPRIETARY -> showString "DRIVER_ID_GGP_PROPRIETARY"
     DRIVER_ID_BROADCOM_PROPRIETARY -> showString "DRIVER_ID_BROADCOM_PROPRIETARY"
+    DRIVER_ID_MESA_LLVMPIPE -> showString "DRIVER_ID_MESA_LLVMPIPE"
     DriverId x -> showParen (p >= 11) (showString "DriverId " . showsPrec 11 x)
 
 instance Read DriverId where
@@ -118,7 +123,8 @@ instance Read DriverId where
                             , ("DRIVER_ID_ARM_PROPRIETARY", pure DRIVER_ID_ARM_PROPRIETARY)
                             , ("DRIVER_ID_GOOGLE_SWIFTSHADER", pure DRIVER_ID_GOOGLE_SWIFTSHADER)
                             , ("DRIVER_ID_GGP_PROPRIETARY", pure DRIVER_ID_GGP_PROPRIETARY)
-                            , ("DRIVER_ID_BROADCOM_PROPRIETARY", pure DRIVER_ID_BROADCOM_PROPRIETARY)]
+                            , ("DRIVER_ID_BROADCOM_PROPRIETARY", pure DRIVER_ID_BROADCOM_PROPRIETARY)
+                            , ("DRIVER_ID_MESA_LLVMPIPE", pure DRIVER_ID_MESA_LLVMPIPE)]
                      +++
                      prec 10 (do
                        expectP (Ident "DriverId")

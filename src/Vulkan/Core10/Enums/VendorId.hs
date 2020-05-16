@@ -3,6 +3,7 @@ module Vulkan.Core10.Enums.VendorId  (VendorId( VENDOR_ID_VIV
                                               , VENDOR_ID_VSI
                                               , VENDOR_ID_KAZAN
                                               , VENDOR_ID_CODEPLAY
+                                              , VENDOR_ID_MESA
                                               , ..
                                               )) where
 
@@ -50,10 +51,13 @@ pattern VENDOR_ID_VSI = VendorId 65538
 pattern VENDOR_ID_KAZAN = VendorId 65539
 -- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_CODEPLAY"
 pattern VENDOR_ID_CODEPLAY = VendorId 65540
+-- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_MESA"
+pattern VENDOR_ID_MESA = VendorId 65541
 {-# complete VENDOR_ID_VIV,
              VENDOR_ID_VSI,
              VENDOR_ID_KAZAN,
-             VENDOR_ID_CODEPLAY :: VendorId #-}
+             VENDOR_ID_CODEPLAY,
+             VENDOR_ID_MESA :: VendorId #-}
 
 instance Show VendorId where
   showsPrec p = \case
@@ -61,13 +65,15 @@ instance Show VendorId where
     VENDOR_ID_VSI -> showString "VENDOR_ID_VSI"
     VENDOR_ID_KAZAN -> showString "VENDOR_ID_KAZAN"
     VENDOR_ID_CODEPLAY -> showString "VENDOR_ID_CODEPLAY"
+    VENDOR_ID_MESA -> showString "VENDOR_ID_MESA"
     VendorId x -> showParen (p >= 11) (showString "VendorId " . showsPrec 11 x)
 
 instance Read VendorId where
   readPrec = parens (choose [("VENDOR_ID_VIV", pure VENDOR_ID_VIV)
                             , ("VENDOR_ID_VSI", pure VENDOR_ID_VSI)
                             , ("VENDOR_ID_KAZAN", pure VENDOR_ID_KAZAN)
-                            , ("VENDOR_ID_CODEPLAY", pure VENDOR_ID_CODEPLAY)]
+                            , ("VENDOR_ID_CODEPLAY", pure VENDOR_ID_CODEPLAY)
+                            , ("VENDOR_ID_MESA", pure VENDOR_ID_MESA)]
                      +++
                      prec 10 (do
                        expectP (Ident "VendorId")

@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Bump API version to 1.2.141
   - Generate haddocks for command parameters, #92
   - Eq instances for some simple structs, #94
   - Generate safe FFI versions of blocking functions (Those with "wait" in the
