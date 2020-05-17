@@ -22,6 +22,7 @@ executables:
     main: Main.hs
     source-dirs: sdl-triangle
     dependencies:
+      - async
       - base < 4.15
       - bytestring
       - extra
@@ -31,9 +32,9 @@ executables:
       - sdl2 >= 2.5.2.0
       - text
       - transformers
-      - vulkan-utils
       - vector
       - vulkan
+      - vulkan-utils
 
   offscreen:
     main: Main.hs
@@ -76,6 +77,27 @@ executables:
       - say
       - text
       - transformers
+      - vector
+      - vulkan
+      - vulkan-utils
+
+  resize:
+    main: Main.hs
+    source-dirs: resize
+    dependencies:
+      - VulkanMemoryAllocator
+      - autoapply >= 0.4
+      - base < 4.15
+      - bytestring
+      - extra
+      - linear
+      - resourcet >= 1.2.4
+      - safe-exceptions
+      - say
+      - sdl2 >= 2.5.2.0
+      - text
+      - transformers
+      - unliftio
       - vector
       - vulkan
       - vulkan-utils
@@ -125,3 +147,7 @@ default-extensions:
 
 ghc-options:
   - -Wall
+  - -threaded
+  - -O2
+  - -rtsopts
+  - -with-rtsopts=-N

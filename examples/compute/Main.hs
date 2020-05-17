@@ -41,6 +41,7 @@ import           Vulkan.Core10                 as Vk
                                                 , withImage
                                                 )
 import           Vulkan.Extensions.VK_EXT_debug_utils
+import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Utils.Debug
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
@@ -391,8 +392,9 @@ createInstance :: MonadResource m => m Instance
 createInstance = do
   availableExtensionNames <-
     fmap layerName . snd <$> enumerateInstanceLayerProperties
-  let requiredLayers     = []
-      requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME]
+  let requiredLayers = []
+      requiredExtensions =
+        [EXT_DEBUG_UTILS_EXTENSION_NAME, EXT_VALIDATION_FEATURES_EXTENSION_NAME]
   optionalLayers <-
     fmap (V.fromList . catMaybes)
     . sequence
@@ -409,8 +411,6 @@ createInstance = do
                             .|. DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
         , pfnUserCallback = debugCallbackPtr
         }
-      instanceCreateInfo
-        :: InstanceCreateInfo '[DebugUtilsMessengerCreateInfoEXT]
       instanceCreateInfo =
         zero
             { applicationInfo       = Just zero { applicationName = Nothing
@@ -420,8 +420,12 @@ createInstance = do
             , enabledExtensionNames = requiredExtensions
             }
           ::& debugMessengerCreateInfo
+          :&  ValidationFeaturesEXT
+                [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT]
+                []
           :&  ()
   (_, inst) <- withInstance' instanceCreateInfo
+  _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   pure inst
 
 createDevice

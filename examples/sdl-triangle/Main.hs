@@ -4,6 +4,9 @@
 
 module Main where
 
+import           Control.Concurrent.Async       ( wait
+                                                , withAsyncBound
+                                                )
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Extra
@@ -31,6 +34,7 @@ import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Core11
 import           Vulkan.Extensions.VK_EXT_debug_utils
+import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Utils.Debug
@@ -38,7 +42,7 @@ import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 
 main :: IO ()
-main = runManaged $ do
+main = (`withAsyncBound` wait) . runManaged $ do
   withSDL
 
   VulkanWindow {..} <- withVulkanWindow appName windowWidth windowHeight
@@ -68,7 +72,7 @@ main = runManaged $ do
 
 mainLoop :: IO () -> IO ()
 mainLoop draw = whileM $ do
-  quit <- maybe False isQuitEvent <$> SDL.pollEvent
+  quit <- Prelude.any isQuitEvent <$> SDL.pollEvents
   if quit
     then pure False
     else do
@@ -403,7 +407,10 @@ windowHeight = 1080
 windowInstanceCreateInfo
   :: MonadIO m
   => SDL.Window
-  -> m (InstanceCreateInfo '[DebugUtilsMessengerCreateInfoEXT])
+  -> m
+       ( InstanceCreateInfo
+           '[DebugUtilsMessengerCreateInfoEXT , ValidationFeaturesEXT]
+       )
 windowInstanceCreateInfo window = do
   windowExtensions <-
     liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
@@ -411,7 +418,10 @@ windowInstanceCreateInfo window = do
     fmap layerName . snd <$> enumerateInstanceLayerProperties
   let requiredLayers = []
       requiredExtensions =
-        V.fromList $ EXT_DEBUG_UTILS_EXTENSION_NAME : windowExtensions
+        V.fromList
+          $ EXT_DEBUG_UTILS_EXTENSION_NAME
+          : EXT_VALIDATION_FEATURES_EXTENSION_NAME
+          : windowExtensions
   optionalLayers <-
     fmap (V.fromList . catMaybes)
     . sequence
@@ -429,6 +439,7 @@ windowInstanceCreateInfo window = do
           , enabledExtensionNames = requiredExtensions
           }
     ::& debugUtilsMessengerCreateInfo
+    :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
     :&  ()
 
 createGraphicalDevice

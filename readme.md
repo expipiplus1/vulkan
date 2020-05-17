@@ -61,14 +61,17 @@ These bindings are intended to be imported qualified and do not feature the
 - The library is compiled with `-XStrict` so expect all record members to be
   strict (and unboxed when they're small)
 
-- Calls to Vulkan are marked as `unsafe` by default. This can be turned off by
-  setting the `safe-foreign-calls` flag. This is to reduce FFI overhead,
-  however it means that Vulkan functions are unable to safely call Haskell
-  code. See the [Haskell
-  wiki](https://wiki.haskell.org/Foreign_Function_Interface#Unsafe_calls) for
-  more information. This is important to consider if you want to write
-  allocation or debug callbacks in Haskell. It's also important to be aware
-  that the garbage collector will not run during these calls.
+- Calls to Vulkan are marked as `unsafe` by default to reduce FFI overhead.
+  - This can be changed by setting the `safe-foreign-calls` flag.
+  - It means that Vulkan functions are unable to safely call Haskell code. See
+    the [Haskell
+    wiki](https://wiki.haskell.org/Foreign_Function_Interface#Unsafe_calls) for
+    more information. This is important to consider if you want to write
+    allocation or debug callbacks in Haskell.
+  - It's also means that the garbage collector will not run while these calls
+    are in progress. For some blocking functions (those which can return
+    `VK_TIMEOUT` and those with `wait` in the name) a `safe` version is also
+    provided with the `Safe` suffix.
 
 - As encouraged by the Vulkan user guide, commands are linked dynamically (with
   the sole exception of `vkGetInstanceProcAddr`).
@@ -85,13 +88,13 @@ These bindings are intended to be imported qualified and do not feature the
   can do the following:
 
     ```haskell
-    > show COMPARE_OP_LESS
-    "COMPARE_OP_LESS"
+    > read @COMPARE_OP "COMPARE_OP_LESS"
+    COMPARE_OP_LESS
     ```
 
 - Make sure that all the functions you're going to use are not `nullPtr` in
-  `InstanceCmds` or `DeviceCmds` before calling them, this package doesn't
-  perform any checks. The `*Cmds` records can be found inside any dispatchable
+  `InstanceCmds` or `DeviceCmds` before calling them or the command will throw
+  an `IOException`. The `*Cmds` records can be found inside any dispatchable
   handle.
 
 ### Minor things
@@ -109,12 +112,11 @@ These bindings are intended to be imported qualified and do not feature the
 These bindings take advantage of the meta information present in the
 specification detailing the validity of structures and arguments.
 
-- If a structure or set of command parameters in the specification contains a
-  pointer to an array and an associated length, this is replaced with a
-  `Vector` in these bindings. When interfacing with Vulkan these bindings
-  automatically set the length of the vector. If the vector is optional but the
-  length is not then `Either Word32 (Vector a)` is used, use `Left n` to
-  specify that there are `n` elements which you are not providing.
+- `Vector` is used in place of pointers to arrays with associated length
+  members/parameters. When interfacing with Vulkan these bindings automatically
+  set the length member/parameter properly. If the vector is optional but the
+  length is not then the length member/parameter is preserved, but will be
+  inferred if the vector is present and the length is 0.
 
 - If a struct member or command parameters in the specification is a optional
   pointer (it may be null) this is replaced with a `Maybe` value.
@@ -158,7 +160,7 @@ prefixed with `with` (for `Create`/`Destroy` and `Allocate`/`Free` pairs) or
 `use` for (`Begin`/`End` pairs). If the command is used in command buffer
 building then it is additionally prefixed with `cmd`.
 
-These are higher order functions which take as their first argument a consumer
+These are higher order functions which take as their last argument a consumer
 for a pair of `create` and `destroy` commands.  Values which fit this hole
 include `Control.Exception.bracket`, `Control.Monad.Trans.Resource.allocate`
 and `(,)`.
@@ -185,9 +187,9 @@ destroyInstance
 withInstance
   :: forall a m r
    . (PokeChain a, MonadIO m)
-  => (m Instance -> (Instance -> m ()) -> r)
-  -> InstanceCreateInfo a
+  => InstanceCreateInfo a
   -> Maybe AllocationCallbacks
+  -> (m Instance -> (Instance -> m ()) -> r)
   -> r
 ```
 
@@ -197,7 +199,7 @@ Example usage:
 import Control.Monad.Trans.Resource (runResourceT, allocate)
 -- Create an instance and print its value
 main = runResourceT $ do
-  (instanceReleaseKey, inst) <- withInstance allocate zero Nothing
+  (instanceReleaseKey, inst) <- withInstance zero Nothing allocate
   liftIO $ print inst
 
 -- Begin a render pass, draw something and end the render pass
@@ -222,8 +224,8 @@ idiom in Vulkan which involves calling this function once with a null pointer
 to get the total number of queryable values, allocating space for querying that
 many values and they calling the function again to get the values. These
 bindings expose commands which automatically return all the results. As an
-example `enumeratePhysicalDevices` has the type `Instance -> IO (Result, Vector
-PhysicalDevice)`.
+example `enumeratePhysicalDevices` has the type `MonadIO m => Instance -> m
+(Result, Vector PhysicalDevice)`.
 
 ### Structure chains
 
@@ -241,6 +243,34 @@ the struct chain. This is also used for nested chains inside structs.
 
 Struct chains inside records are represented as nested tuples: `next ::
 (Something, (SomethingElse, (AThirdThing, ())))`
+
+There are two pattern synonyms exposed in `Vulkan.CStruct.Extends` which help
+in constructing and deconstructing struct chains.
+
+- `h ::& t` which appends the tail `t` to the struct `h`
+- `t :& ts` which constructs a struct extending tail comprising struct `t` and
+  structs `ts`. Note that you must terminate the list with `()`.
+
+For example, to create an instance with a `debugUtilsMessenger` and the
+validation layer's best practices output enabled:
+
+```haskell
+makeInst = do
+  let debugCreateInfo = _ :: DebugUtilsMessengerCreateInfoEXT
+      validationFeatures = ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
+      instanceCreateInfo = zero ::& debugCreateInfo :& validationFeatures :& ()
+  createInstance instanceCreateInfo Nothing
+```
+
+And to deconstruct a return value with a struct tail, for example to find out
+if a physical device supports Timeline Semaphores:
+
+```haskell
+hasTimelineSemaphores phys = do
+  _ ::& PhysicalDeviceTimelineSemaphoreFeatures hasTimelineSemaphores :& () <-
+    getPhysicalDeviceFeatures2 phys
+  pure hasTimelineSemaphores
+```
 
 ## Building
 
@@ -268,8 +298,8 @@ packages:
 
 ## Examples
 
-There exists a package to build some example programs in the `examples`
-directory.
+There exists a package to build some example programs in the
+[`examples`](./examples) directory.
 
 ## Current Status
 
