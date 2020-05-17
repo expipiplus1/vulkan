@@ -199,7 +199,7 @@ Example usage:
 import Control.Monad.Trans.Resource (runResourceT, allocate)
 -- Create an instance and print its value
 main = runResourceT $ do
-  (instanceReleaseKey, inst) <- withInstance allocate zero Nothing
+  (instanceReleaseKey, inst) <- withInstance zero Nothing allocate
   liftIO $ print inst
 
 -- Begin a render pass, draw something and end the render pass
