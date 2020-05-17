@@ -15,6 +15,8 @@ import           Vulkan.Extensions.VK_EXT_debug_utils
 foreign import ccall unsafe "DebugCallback.c &debugCallback"
   debugCallbackPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
 
+-- | A debug callback the same as 'debugCallbackPtr' except it will call
+-- @abort@ when @VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT@ is set.
 foreign import ccall unsafe "DebugCallback.c &debugCallbackFatal"
   debugCallbackFatalPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
 
