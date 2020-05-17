@@ -80,7 +80,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        stack-args: ['']
+        stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
 
     steps:
     - uses: actions/checkout@v2
