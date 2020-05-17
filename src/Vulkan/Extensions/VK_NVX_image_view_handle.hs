@@ -26,6 +26,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -209,6 +210,9 @@ data ImageViewHandleInfoNVX = ImageViewHandleInfoNVX
     sampler :: Sampler
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageViewHandleInfoNVX)
+#endif
 deriving instance Show ImageViewHandleInfoNVX
 
 instance ToCStruct ImageViewHandleInfoNVX where
@@ -268,6 +272,9 @@ data ImageViewAddressPropertiesNVX = ImageViewAddressPropertiesNVX
     size :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageViewAddressPropertiesNVX)
+#endif
 deriving instance Show ImageViewAddressPropertiesNVX
 
 instance ToCStruct ImageViewAddressPropertiesNVX where

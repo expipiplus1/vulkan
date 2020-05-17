@@ -13,6 +13,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits (ExternalFenceHandleTypeFlags)
@@ -56,6 +57,9 @@ data ExportFenceCreateInfo = ExportFenceCreateInfo
     -- types for the same fence.
     handleTypes :: ExternalFenceHandleTypeFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportFenceCreateInfo)
+#endif
 deriving instance Show ExportFenceCreateInfo
 
 instance ToCStruct ExportFenceCreateInfo where

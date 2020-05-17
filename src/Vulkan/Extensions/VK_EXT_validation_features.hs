@@ -43,6 +43,7 @@ import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -104,6 +105,9 @@ data ValidationFeaturesEXT = ValidationFeaturesEXT
     disabledValidationFeatures :: Vector ValidationFeatureDisableEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ValidationFeaturesEXT)
+#endif
 deriving instance Show ValidationFeaturesEXT
 
 instance ToCStruct ValidationFeaturesEXT where

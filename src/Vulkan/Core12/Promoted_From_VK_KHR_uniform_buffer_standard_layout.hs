@@ -11,6 +11,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -55,6 +56,9 @@ data PhysicalDeviceUniformBufferStandardLayoutFeatures = PhysicalDeviceUniformBu
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
     uniformBufferStandardLayout :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceUniformBufferStandardLayoutFeatures)
+#endif
 deriving instance Show PhysicalDeviceUniformBufferStandardLayoutFeatures
 
 instance ToCStruct PhysicalDeviceUniformBufferStandardLayoutFeatures where

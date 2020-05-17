@@ -52,6 +52,7 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
     let n = mkTyName msName
     ms <- V.mapMaybe id <$> traverseV (renderStructMember msName) msMembers
     tellImport ''Type
+    tellImport ''Generic
     showStub <- showInstanceStub tellImport msStruct
     let childVar = if hasChildren msStruct
           then " (" <> pretty structChainVar <+> ":: [Type])"
@@ -73,6 +74,9 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
         data {n}{childVar} = {mkConName msName msName}
           {braceList' (($ getDoc) <$> ms)}
           deriving {tupled derivedInstances}
+        #if defined(GENERIC_INSTANCES)
+        deriving instance Generic ({n}{childVar})
+        #endif
         {derivingDecl}
         |]
     memberMap <- sequenceV $ Map.fromList

@@ -15,6 +15,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -56,6 +57,9 @@ data PhysicalDeviceShaderImageFootprintFeaturesNV = PhysicalDeviceShaderImageFoo
     -- @ImageFootprintNV@ SPIR-V capability.
     imageFootprint :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceShaderImageFootprintFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceShaderImageFootprintFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderImageFootprintFeaturesNV where

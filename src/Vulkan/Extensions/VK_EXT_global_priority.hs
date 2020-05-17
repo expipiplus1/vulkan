@@ -30,6 +30,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -65,6 +66,9 @@ data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInf
     -- @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
     globalPriority :: QueueGlobalPriorityEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceQueueGlobalPriorityCreateInfoEXT)
+#endif
 deriving instance Show DeviceQueueGlobalPriorityCreateInfoEXT
 
 instance ToCStruct DeviceQueueGlobalPriorityCreateInfoEXT where

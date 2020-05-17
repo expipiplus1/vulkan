@@ -18,6 +18,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
@@ -50,6 +51,9 @@ data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalMemoryImageCreateInfoNV)
+#endif
 deriving instance Show ExternalMemoryImageCreateInfoNV
 
 instance ToCStruct ExternalMemoryImageCreateInfoNV where
@@ -105,6 +109,9 @@ data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportMemoryAllocateInfoNV)
+#endif
 deriving instance Show ExportMemoryAllocateInfoNV
 
 instance ToCStruct ExportMemoryAllocateInfoNV where

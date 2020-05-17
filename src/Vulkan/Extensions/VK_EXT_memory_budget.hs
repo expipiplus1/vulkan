@@ -21,6 +21,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
@@ -74,6 +75,9 @@ data PhysicalDeviceMemoryBudgetPropertiesEXT = PhysicalDeviceMemoryBudgetPropert
     heapUsage :: Vector DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMemoryBudgetPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceMemoryBudgetPropertiesEXT
 
 instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT where

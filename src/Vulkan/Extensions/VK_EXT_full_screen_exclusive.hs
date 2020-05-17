@@ -55,6 +55,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -419,6 +420,9 @@ data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
     -- @fullScreenExclusive@ /must/ be a valid 'FullScreenExclusiveEXT' value
     fullScreenExclusive :: FullScreenExclusiveEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SurfaceFullScreenExclusiveInfoEXT)
+#endif
 deriving instance Show SurfaceFullScreenExclusiveInfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveInfoEXT where
@@ -485,6 +489,9 @@ data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32Inf
     -- @hmonitor@ /must/ be a valid 'Vulkan.Extensions.WSITypes.HMONITOR'
     hmonitor :: HMONITOR }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SurfaceFullScreenExclusiveWin32InfoEXT)
+#endif
 deriving instance Show SurfaceFullScreenExclusiveWin32InfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveWin32InfoEXT where
@@ -545,6 +552,9 @@ data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenEx
   { -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"
     fullScreenExclusiveSupported :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SurfaceCapabilitiesFullScreenExclusiveEXT)
+#endif
 deriving instance Show SurfaceCapabilitiesFullScreenExclusiveEXT
 
 instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT where

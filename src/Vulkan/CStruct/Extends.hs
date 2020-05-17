@@ -32,6 +32,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
@@ -601,6 +602,9 @@ data BaseOutStructure = BaseOutStructure
     next :: Ptr BaseOutStructure
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BaseOutStructure)
+#endif
 deriving instance Show BaseOutStructure
 
 instance ToCStruct BaseOutStructure where
@@ -653,6 +657,9 @@ data BaseInStructure = BaseInStructure
     next :: Ptr BaseInStructure
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BaseInStructure)
+#endif
 deriving instance Show BaseInStructure
 
 instance ToCStruct BaseInStructure where

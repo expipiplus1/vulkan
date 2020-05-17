@@ -13,6 +13,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits (ExternalSemaphoreHandleTypeFlags)
@@ -56,6 +57,9 @@ data ExportSemaphoreCreateInfo = ExportSemaphoreCreateInfo
     -- multiple handle types for the same semaphore.
     handleTypes :: ExternalSemaphoreHandleTypeFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportSemaphoreCreateInfo)
+#endif
 deriving instance Show ExportSemaphoreCreateInfo
 
 instance ToCStruct ExportSemaphoreCreateInfo where

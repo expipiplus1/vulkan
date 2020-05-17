@@ -19,6 +19,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -87,6 +88,9 @@ data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensity
     fragmentDensityMapNonSubsampledImages :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceFragmentDensityMapFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceFragmentDensityMapFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT where
@@ -161,6 +165,9 @@ data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensi
     fragmentDensityInvocations :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceFragmentDensityMapPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceFragmentDensityMapPropertiesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT where
@@ -267,6 +274,9 @@ data RenderPassFragmentDensityMapCreateInfoEXT = RenderPassFragmentDensityMapCre
     -- the render pass.
     fragmentDensityMapAttachment :: AttachmentReference }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassFragmentDensityMapCreateInfoEXT)
+#endif
 deriving instance Show RenderPassFragmentDensityMapCreateInfoEXT
 
 instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT where

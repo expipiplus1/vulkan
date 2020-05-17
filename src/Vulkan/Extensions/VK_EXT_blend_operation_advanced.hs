@@ -31,6 +31,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -89,6 +90,9 @@ data PhysicalDeviceBlendOperationAdvancedFeaturesEXT = PhysicalDeviceBlendOperat
     -- blending operations that occur on the same sample.
     advancedBlendCoherentOperations :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceBlendOperationAdvancedFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceBlendOperationAdvancedFeaturesEXT
 
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
@@ -178,6 +182,9 @@ data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOper
     advancedBlendAllOperations :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceBlendOperationAdvancedPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceBlendOperationAdvancedPropertiesEXT
 
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
@@ -282,6 +289,9 @@ data PipelineColorBlendAdvancedStateCreateInfoEXT = PipelineColorBlendAdvancedSt
     blendOverlap :: BlendOverlapEXT
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineColorBlendAdvancedStateCreateInfoEXT)
+#endif
 deriving instance Show PipelineColorBlendAdvancedStateCreateInfoEXT
 
 instance ToCStruct PipelineColorBlendAdvancedStateCreateInfoEXT where

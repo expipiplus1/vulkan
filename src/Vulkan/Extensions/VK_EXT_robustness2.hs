@@ -16,6 +16,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -92,6 +93,9 @@ data PhysicalDeviceRobustness2FeaturesEXT = PhysicalDeviceRobustness2FeaturesEXT
     nullDescriptor :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceRobustness2FeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceRobustness2FeaturesEXT
 
 instance ToCStruct PhysicalDeviceRobustness2FeaturesEXT where
@@ -170,6 +174,9 @@ data PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2Propertie
     robustUniformBufferAccessSizeAlignment :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceRobustness2PropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceRobustness2PropertiesEXT
 
 instance ToCStruct PhysicalDeviceRobustness2PropertiesEXT where

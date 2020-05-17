@@ -30,6 +30,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -256,6 +257,9 @@ data ExtensionProperties = ExtensionProperties
     specVersion :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExtensionProperties)
+#endif
 deriving instance Show ExtensionProperties
 
 instance ToCStruct ExtensionProperties where

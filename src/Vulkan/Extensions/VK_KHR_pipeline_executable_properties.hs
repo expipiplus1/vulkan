@@ -61,6 +61,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -429,6 +430,9 @@ data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR = PhysicalDevicePipel
     -- with a compiled pipeline.
     pipelineExecutableInfo :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
+#endif
 deriving instance Show PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
 
 instance ToCStruct PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
@@ -478,6 +482,9 @@ data PipelineInfoKHR = PipelineInfoKHR
     -- @pipeline@ /must/ be a valid 'Vulkan.Core10.Handles.Pipeline' handle
     pipeline :: Pipeline }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineInfoKHR)
+#endif
 deriving instance Show PipelineInfoKHR
 
 instance ToCStruct PipelineInfoKHR where
@@ -556,6 +563,9 @@ data PipelineExecutablePropertiesKHR = PipelineExecutablePropertiesKHR
     subgroupSize :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineExecutablePropertiesKHR)
+#endif
 deriving instance Show PipelineExecutablePropertiesKHR
 
 instance ToCStruct PipelineExecutablePropertiesKHR where
@@ -628,6 +638,9 @@ data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
     executableIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineExecutableInfoKHR)
+#endif
 deriving instance Show PipelineExecutableInfoKHR
 
 instance ToCStruct PipelineExecutableInfoKHR where
@@ -694,6 +707,9 @@ data PipelineExecutableStatisticKHR = PipelineExecutableStatisticKHR
     value :: PipelineExecutableStatisticValueKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineExecutableStatisticKHR)
+#endif
 deriving instance Show PipelineExecutableStatisticKHR
 
 instance ToCStruct PipelineExecutableStatisticKHR where
@@ -781,6 +797,9 @@ data PipelineExecutableInternalRepresentationKHR = PipelineExecutableInternalRep
     data' :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineExecutableInternalRepresentationKHR)
+#endif
 deriving instance Show PipelineExecutableInternalRepresentationKHR
 
 instance ToCStruct PipelineExecutableInternalRepresentationKHR where

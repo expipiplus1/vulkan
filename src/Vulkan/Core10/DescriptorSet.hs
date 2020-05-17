@@ -47,6 +47,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -888,6 +889,9 @@ data DescriptorBufferInfo = DescriptorBufferInfo
     range :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorBufferInfo)
+#endif
 deriving instance Show DescriptorBufferInfo
 
 instance ToCStruct DescriptorBufferInfo where
@@ -996,6 +1000,9 @@ data DescriptorImageInfo = DescriptorImageInfo
     imageLayout :: ImageLayout
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorImageInfo)
+#endif
 deriving instance Show DescriptorImageInfo
 
 instance ToCStruct DescriptorImageInfo where
@@ -1443,6 +1450,9 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     texelBufferView :: Vector BufferView
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (WriteDescriptorSet (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (WriteDescriptorSet es)
 
 instance Extensible WriteDescriptorSet where
@@ -1680,6 +1690,9 @@ data CopyDescriptorSet = CopyDescriptorSet
     descriptorCount :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CopyDescriptorSet)
+#endif
 deriving instance Show CopyDescriptorSet
 
 instance ToCStruct CopyDescriptorSet where
@@ -1859,6 +1872,9 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
     immutableSamplers :: Vector Sampler
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorSetLayoutBinding)
+#endif
 deriving instance Show DescriptorSetLayoutBinding
 
 instance ToCStruct DescriptorSetLayoutBinding where
@@ -1991,6 +2007,9 @@ data DescriptorSetLayoutCreateInfo (es :: [Type]) = DescriptorSetLayoutCreateInf
     bindings :: Vector DescriptorSetLayoutBinding
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorSetLayoutCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (DescriptorSetLayoutCreateInfo es)
 
 instance Extensible DescriptorSetLayoutCreateInfo where
@@ -2083,6 +2102,9 @@ data DescriptorPoolSize = DescriptorPoolSize
     descriptorCount :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorPoolSize)
+#endif
 deriving instance Show DescriptorPoolSize
 
 instance ToCStruct DescriptorPoolSize where
@@ -2203,6 +2225,9 @@ data DescriptorPoolCreateInfo (es :: [Type]) = DescriptorPoolCreateInfo
     poolSizes :: Vector DescriptorPoolSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorPoolCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (DescriptorPoolCreateInfo es)
 
 instance Extensible DescriptorPoolCreateInfo where
@@ -2315,6 +2340,9 @@ data DescriptorSetAllocateInfo (es :: [Type]) = DescriptorSetAllocateInfo
     setLayouts :: Vector DescriptorSetLayout
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorSetAllocateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (DescriptorSetAllocateInfo es)
 
 instance Extensible DescriptorSetAllocateInfo where

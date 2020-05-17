@@ -43,6 +43,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -231,6 +232,9 @@ data XcbSurfaceCreateInfoKHR = XcbSurfaceCreateInfoKHR
     window :: Xcb_window_t
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (XcbSurfaceCreateInfoKHR)
+#endif
 deriving instance Show XcbSurfaceCreateInfoKHR
 
 instance ToCStruct XcbSurfaceCreateInfoKHR where

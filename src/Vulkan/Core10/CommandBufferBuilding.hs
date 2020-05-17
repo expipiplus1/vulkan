@@ -81,6 +81,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -7968,6 +7969,9 @@ data Viewport = Viewport
     maxDepth :: Float
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Viewport)
+#endif
 deriving instance Show Viewport
 
 instance ToCStruct Viewport where
@@ -8046,6 +8050,9 @@ data Rect2D = Rect2D
     extent :: Extent2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Rect2D)
+#endif
 deriving instance Show Rect2D
 
 instance ToCStruct Rect2D where
@@ -8093,6 +8100,9 @@ data ClearRect = ClearRect
     layerCount :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ClearRect)
+#endif
 deriving instance Show ClearRect
 
 instance ToCStruct ClearRect where
@@ -8145,6 +8155,9 @@ data BufferCopy = BufferCopy
     size :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BufferCopy)
+#endif
 deriving instance Show BufferCopy
 
 instance ToCStruct BufferCopy where
@@ -8413,6 +8426,9 @@ data ImageCopy = ImageCopy
     extent :: Extent3D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageCopy)
+#endif
 deriving instance Show ImageCopy
 
 instance ToCStruct ImageCopy where
@@ -8549,6 +8565,9 @@ data ImageBlit = ImageBlit
     dstOffsets :: (Offset3D, Offset3D)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageBlit)
+#endif
 deriving instance Show ImageBlit
 
 instance ToCStruct ImageBlit where
@@ -8806,6 +8825,9 @@ data BufferImageCopy = BufferImageCopy
     imageExtent :: Extent3D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BufferImageCopy)
+#endif
 deriving instance Show BufferImageCopy
 
 instance ToCStruct BufferImageCopy where
@@ -8941,6 +8963,9 @@ data ImageResolve = ImageResolve
     extent :: Extent3D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageResolve)
+#endif
 deriving instance Show ImageResolve
 
 instance ToCStruct ImageResolve where
@@ -9293,6 +9318,9 @@ data RenderPassBeginInfo (es :: [Type]) = RenderPassBeginInfo
     clearValues :: Vector ClearValue
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassBeginInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 instance Extensible RenderPassBeginInfo where
@@ -9407,6 +9435,9 @@ data ClearAttachment = ClearAttachment
     clearValue :: ClearValue
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ClearAttachment)
+#endif
 deriving instance Show ClearAttachment
 
 instance ToCStruct ClearAttachment where

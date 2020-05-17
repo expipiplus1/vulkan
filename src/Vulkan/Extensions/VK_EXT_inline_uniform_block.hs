@@ -18,6 +18,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -73,6 +74,9 @@ data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBl
     descriptorBindingInlineUniformBlockUpdateAfterBind :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceInlineUniformBlockFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceInlineUniformBlockFeaturesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT where
@@ -163,6 +167,9 @@ data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniform
     maxDescriptorSetUpdateAfterBindInlineUniformBlocks :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceInlineUniformBlockPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceInlineUniformBlockPropertiesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT where
@@ -236,6 +243,9 @@ data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBl
     data' :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (WriteDescriptorSetInlineUniformBlockEXT)
+#endif
 deriving instance Show WriteDescriptorSetInlineUniformBlockEXT
 
 instance ToCStruct WriteDescriptorSetInlineUniformBlockEXT where
@@ -288,6 +298,9 @@ data DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniform
     -- bindings to allocate.
     maxInlineUniformBlockBindings :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DescriptorPoolInlineUniformBlockCreateInfoEXT)
+#endif
 deriving instance Show DescriptorPoolInlineUniformBlockCreateInfoEXT
 
 instance ToCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT where

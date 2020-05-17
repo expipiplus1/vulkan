@@ -33,6 +33,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -242,6 +243,9 @@ data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
   { -- | @buffer@ is the buffer to query.
     buffer :: Buffer }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BufferMemoryRequirementsInfo2)
+#endif
 deriving instance Show BufferMemoryRequirementsInfo2
 
 instance ToCStruct BufferMemoryRequirementsInfo2 where
@@ -341,6 +345,9 @@ data ImageMemoryRequirementsInfo2 (es :: [Type]) = ImageMemoryRequirementsInfo2
     image :: Image
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageMemoryRequirementsInfo2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (ImageMemoryRequirementsInfo2 es)
 
 instance Extensible ImageMemoryRequirementsInfo2 where
@@ -399,6 +406,9 @@ data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
     -- @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
     image :: Image }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSparseMemoryRequirementsInfo2)
+#endif
 deriving instance Show ImageSparseMemoryRequirementsInfo2
 
 instance ToCStruct ImageSparseMemoryRequirementsInfo2 where
@@ -465,6 +475,9 @@ data MemoryRequirements2 (es :: [Type]) = MemoryRequirements2
     memoryRequirements :: MemoryRequirements
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryRequirements2 (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (MemoryRequirements2 es)
 
 instance Extensible MemoryRequirements2 where
@@ -523,6 +536,9 @@ data SparseImageMemoryRequirements2 = SparseImageMemoryRequirements2
     -- structure describing the memory requirements of the sparse image.
     memoryRequirements :: SparseImageMemoryRequirements }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseImageMemoryRequirements2)
+#endif
 deriving instance Show SparseImageMemoryRequirements2
 
 instance ToCStruct SparseImageMemoryRequirements2 where

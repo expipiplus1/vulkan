@@ -21,6 +21,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -529,6 +530,9 @@ data MemoryRequirements = MemoryRequirements
     memoryTypeBits :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryRequirements)
+#endif
 deriving instance Show MemoryRequirements
 
 instance ToCStruct MemoryRequirements where

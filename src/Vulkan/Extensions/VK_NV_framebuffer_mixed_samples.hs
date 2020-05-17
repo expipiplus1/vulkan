@@ -42,6 +42,7 @@ import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -152,6 +153,9 @@ data PipelineCoverageModulationStateCreateInfoNV = PipelineCoverageModulationSta
     coverageModulationTable :: Vector Float
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineCoverageModulationStateCreateInfoNV)
+#endif
 deriving instance Show PipelineCoverageModulationStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where

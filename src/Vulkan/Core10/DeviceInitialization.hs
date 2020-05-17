@@ -61,6 +61,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -1022,6 +1023,9 @@ data PhysicalDeviceProperties = PhysicalDeviceProperties
     sparseProperties :: PhysicalDeviceSparseProperties
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceProperties)
+#endif
 deriving instance Show PhysicalDeviceProperties
 
 instance ToCStruct PhysicalDeviceProperties where
@@ -1186,6 +1190,9 @@ data ApplicationInfo = ApplicationInfo
     apiVersion :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ApplicationInfo)
+#endif
 deriving instance Show ApplicationInfo
 
 instance ToCStruct ApplicationInfo where
@@ -1298,6 +1305,9 @@ data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
     enabledExtensionNames :: Vector ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (InstanceCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (InstanceCreateInfo es)
 
 instance Extensible InstanceCreateInfo where
@@ -1473,6 +1483,9 @@ data QueueFamilyProperties = QueueFamilyProperties
     minImageTransferGranularity :: Extent3D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (QueueFamilyProperties)
+#endif
 deriving instance Show QueueFamilyProperties
 
 instance ToCStruct QueueFamilyProperties where
@@ -1789,6 +1802,9 @@ data PhysicalDeviceMemoryProperties = PhysicalDeviceMemoryProperties
     memoryHeaps :: Vector MemoryHeap
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMemoryProperties)
+#endif
 deriving instance Show PhysicalDeviceMemoryProperties
 
 instance ToCStruct PhysicalDeviceMemoryProperties where
@@ -1850,6 +1866,9 @@ data MemoryType = MemoryType
     heapIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryType)
+#endif
 deriving instance Show MemoryType
 
 instance ToCStruct MemoryType where
@@ -1899,6 +1918,9 @@ data MemoryHeap = MemoryHeap
     flags :: MemoryHeapFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryHeap)
+#endif
 deriving instance Show MemoryHeap
 
 instance ToCStruct MemoryHeap where
@@ -1970,6 +1992,9 @@ data FormatProperties = FormatProperties
     bufferFeatures :: FormatFeatureFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FormatProperties)
+#endif
 deriving instance Show FormatProperties
 
 instance ToCStruct FormatProperties where
@@ -2117,6 +2142,9 @@ data ImageFormatProperties = ImageFormatProperties
     maxResourceSize :: DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageFormatProperties)
+#endif
 deriving instance Show ImageFormatProperties
 
 instance ToCStruct ImageFormatProperties where
@@ -3028,6 +3056,9 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     inheritedQueries :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceFeatures)
+#endif
 deriving instance Show PhysicalDeviceFeatures
 
 instance ToCStruct PhysicalDeviceFeatures where
@@ -3336,6 +3367,9 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     residencyNonResidentStrict :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSparseProperties)
+#endif
 deriving instance Show PhysicalDeviceSparseProperties
 
 instance ToCStruct PhysicalDeviceSparseProperties where
@@ -4170,6 +4204,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     nonCoherentAtomSize :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceLimits)
+#endif
 deriving instance Show PhysicalDeviceLimits
 
 instance ToCStruct PhysicalDeviceLimits where

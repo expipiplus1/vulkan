@@ -40,6 +40,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -164,6 +165,9 @@ data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
     imagePipeHandle :: Zx_handle_t
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImagePipeSurfaceCreateInfoFUCHSIA)
+#endif
 deriving instance Show ImagePipeSurfaceCreateInfoFUCHSIA
 
 instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA where

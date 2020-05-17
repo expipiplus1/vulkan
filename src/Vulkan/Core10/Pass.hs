@@ -41,6 +41,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -786,6 +787,9 @@ data AttachmentDescription = AttachmentDescription
     finalLayout :: ImageLayout
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AttachmentDescription)
+#endif
 deriving instance Show AttachmentDescription
 
 instance ToCStruct AttachmentDescription where
@@ -883,6 +887,9 @@ data AttachmentReference = AttachmentReference
     layout :: ImageLayout
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AttachmentReference)
+#endif
 deriving instance Show AttachmentReference
 
 instance ToCStruct AttachmentReference where
@@ -1212,6 +1219,9 @@ data SubpassDescription = SubpassDescription
     preserveAttachments :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassDescription)
+#endif
 deriving instance Show SubpassDescription
 
 instance ToCStruct SubpassDescription where
@@ -1533,6 +1543,9 @@ data SubpassDependency = SubpassDependency
     dependencyFlags :: DependencyFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SubpassDependency)
+#endif
 deriving instance Show SubpassDependency
 
 instance ToCStruct SubpassDependency where
@@ -1777,6 +1790,9 @@ data RenderPassCreateInfo (es :: [Type]) = RenderPassCreateInfo
     dependencies :: Vector SubpassDependency
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (RenderPassCreateInfo es)
 
 instance Extensible RenderPassCreateInfo where
@@ -2219,6 +2235,9 @@ data FramebufferCreateInfo (es :: [Type]) = FramebufferCreateInfo
     layers :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FramebufferCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (FramebufferCreateInfo es)
 
 instance Extensible FramebufferCreateInfo where

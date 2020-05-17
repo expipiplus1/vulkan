@@ -20,6 +20,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
@@ -94,6 +95,9 @@ data Win32KeyedMutexAcquireReleaseInfoNV = Win32KeyedMutexAcquireReleaseInfoNV
     releaseKeys :: Vector Word64
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Win32KeyedMutexAcquireReleaseInfoNV)
+#endif
 deriving instance Show Win32KeyedMutexAcquireReleaseInfoNV
 
 instance ToCStruct Win32KeyedMutexAcquireReleaseInfoNV where

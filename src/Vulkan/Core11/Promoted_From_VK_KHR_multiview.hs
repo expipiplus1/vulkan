@@ -20,6 +20,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
@@ -103,6 +104,9 @@ data PhysicalDeviceMultiviewFeatures = PhysicalDeviceMultiviewFeatures
     multiviewTessellationShader :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMultiviewFeatures)
+#endif
 deriving instance Show PhysicalDeviceMultiviewFeatures
 
 instance ToCStruct PhysicalDeviceMultiviewFeatures where
@@ -175,6 +179,9 @@ data PhysicalDeviceMultiviewProperties = PhysicalDeviceMultiviewProperties
     maxMultiviewInstanceIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMultiviewProperties)
+#endif
 deriving instance Show PhysicalDeviceMultiviewProperties
 
 instance ToCStruct PhysicalDeviceMultiviewProperties where
@@ -343,6 +350,9 @@ data RenderPassMultiviewCreateInfo = RenderPassMultiviewCreateInfo
     correlationMasks :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassMultiviewCreateInfo)
+#endif
 deriving instance Show RenderPassMultiviewCreateInfo
 
 instance ToCStruct RenderPassMultiviewCreateInfo where

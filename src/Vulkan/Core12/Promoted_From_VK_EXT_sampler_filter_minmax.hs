@@ -15,6 +15,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -85,6 +86,9 @@ data PhysicalDeviceSamplerFilterMinmaxProperties = PhysicalDeviceSamplerFilterMi
     filterMinmaxImageComponentMapping :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSamplerFilterMinmaxProperties)
+#endif
 deriving instance Show PhysicalDeviceSamplerFilterMinmaxProperties
 
 instance ToCStruct PhysicalDeviceSamplerFilterMinmaxProperties where
@@ -151,6 +155,9 @@ data SamplerReductionModeCreateInfo = SamplerReductionModeCreateInfo
     -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
     reductionMode :: SamplerReductionMode }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SamplerReductionModeCreateInfo)
+#endif
 deriving instance Show SamplerReductionModeCreateInfo
 
 instance ToCStruct SamplerReductionModeCreateInfo where

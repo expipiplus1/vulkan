@@ -40,6 +40,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -169,6 +170,9 @@ data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
     streamDescriptor :: GgpStreamDescriptor
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (StreamDescriptorSurfaceCreateInfoGGP)
+#endif
 deriving instance Show StreamDescriptorSurfaceCreateInfoGGP
 
 instance ToCStruct StreamDescriptorSurfaceCreateInfoGGP where

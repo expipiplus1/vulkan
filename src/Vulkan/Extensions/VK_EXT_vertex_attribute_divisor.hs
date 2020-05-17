@@ -23,6 +23,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -89,6 +90,9 @@ data VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescript
     divisor :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VertexInputBindingDivisorDescriptionEXT)
+#endif
 deriving instance Show VertexInputBindingDivisorDescriptionEXT
 
 instance ToCStruct VertexInputBindingDivisorDescriptionEXT where
@@ -142,6 +146,9 @@ data PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorSt
     -- structures
     vertexBindingDivisors :: Vector VertexInputBindingDivisorDescriptionEXT }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineVertexInputDivisorStateCreateInfoEXT)
+#endif
 deriving instance Show PipelineVertexInputDivisorStateCreateInfoEXT
 
 instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT where
@@ -204,6 +211,9 @@ data PhysicalDeviceVertexAttributeDivisorPropertiesEXT = PhysicalDeviceVertexAtt
     -- rendering is enabled.
     maxVertexAttribDivisor :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceVertexAttributeDivisorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
@@ -266,6 +276,9 @@ data PhysicalDeviceVertexAttributeDivisorFeaturesEXT = PhysicalDeviceVertexAttri
     vertexAttributeInstanceRateZeroDivisor :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceVertexAttributeDivisorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT where

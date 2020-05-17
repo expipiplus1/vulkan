@@ -29,6 +29,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -121,6 +122,9 @@ data XYColorEXT = XYColorEXT
     y :: Float
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (XYColorEXT)
+#endif
 deriving instance Show XYColorEXT
 
 instance ToCStruct XYColorEXT where
@@ -191,6 +195,9 @@ data HdrMetadataEXT = HdrMetadataEXT
     maxFrameAverageLightLevel :: Float
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (HdrMetadataEXT)
+#endif
 deriving instance Show HdrMetadataEXT
 
 instance ToCStruct HdrMetadataEXT where

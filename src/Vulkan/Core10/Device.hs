@@ -35,6 +35,7 @@ import Foreign.C.Types (CFloat)
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -429,6 +430,9 @@ data DeviceQueueCreateInfo (es :: [Type]) = DeviceQueueCreateInfo
     queuePriorities :: Vector Float
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceQueueCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (DeviceQueueCreateInfo es)
 
 instance Extensible DeviceQueueCreateInfo where
@@ -706,6 +710,9 @@ data DeviceCreateInfo (es :: [Type]) = DeviceCreateInfo
     enabledFeatures :: Maybe PhysicalDeviceFeatures
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (DeviceCreateInfo es)
 
 instance Extensible DeviceCreateInfo where

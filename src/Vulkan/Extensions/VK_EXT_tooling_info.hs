@@ -50,6 +50,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -181,6 +182,9 @@ data PhysicalDeviceToolPropertiesEXT = PhysicalDeviceToolPropertiesEXT
     layer :: ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceToolPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceToolPropertiesEXT
 
 instance ToCStruct PhysicalDeviceToolPropertiesEXT where

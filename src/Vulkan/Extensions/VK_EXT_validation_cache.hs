@@ -56,6 +56,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -526,6 +527,9 @@ data ValidationCacheCreateInfoEXT = ValidationCacheCreateInfoEXT
     initialData :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ValidationCacheCreateInfoEXT)
+#endif
 deriving instance Show ValidationCacheCreateInfoEXT
 
 instance ToCStruct ValidationCacheCreateInfoEXT where
@@ -585,6 +589,9 @@ data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreat
     -- 'Vulkan.Extensions.Handles.ValidationCacheEXT' handle
     validationCache :: ValidationCacheEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ShaderModuleValidationCacheCreateInfoEXT)
+#endif
 deriving instance Show ShaderModuleValidationCacheCreateInfoEXT
 
 instance ToCStruct ShaderModuleValidationCacheCreateInfoEXT where

@@ -39,6 +39,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -164,6 +165,9 @@ data MacOSSurfaceCreateInfoMVK = MacOSSurfaceCreateInfoMVK
     view :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MacOSSurfaceCreateInfoMVK)
+#endif
 deriving instance Show MacOSSurfaceCreateInfoMVK
 
 instance ToCStruct MacOSSurfaceCreateInfoMVK where

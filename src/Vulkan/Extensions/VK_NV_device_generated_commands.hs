@@ -82,6 +82,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -868,6 +869,9 @@ data PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = PhysicalDeviceDeviceGener
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
     deviceGeneratedCommands :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsFeaturesNV where
@@ -940,6 +944,9 @@ data PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = PhysicalDeviceDeviceGen
     minIndirectCommandsBufferOffsetAlignment :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceDeviceGeneratedCommandsPropertiesNV)
+#endif
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
@@ -1061,6 +1068,9 @@ data GraphicsShaderGroupCreateInfoNV = GraphicsShaderGroupCreateInfoNV
     tessellationState :: Maybe (SomeStruct PipelineTessellationStateCreateInfo)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GraphicsShaderGroupCreateInfoNV)
+#endif
 deriving instance Show GraphicsShaderGroupCreateInfoNV
 
 instance ToCStruct GraphicsShaderGroupCreateInfoNV where
@@ -1186,6 +1196,9 @@ data GraphicsPipelineShaderGroupsCreateInfoNV = GraphicsPipelineShaderGroupsCrea
     pipelines :: Vector Pipeline
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GraphicsPipelineShaderGroupsCreateInfoNV)
+#endif
 deriving instance Show GraphicsPipelineShaderGroupsCreateInfoNV
 
 instance ToCStruct GraphicsPipelineShaderGroupsCreateInfoNV where
@@ -1252,6 +1265,9 @@ data BindShaderGroupIndirectCommandNV = BindShaderGroupIndirectCommandNV
   { -- No documentation found for Nested "VkBindShaderGroupIndirectCommandNV" "groupIndex"
     groupIndex :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindShaderGroupIndirectCommandNV)
+#endif
 deriving instance Show BindShaderGroupIndirectCommandNV
 
 instance ToCStruct BindShaderGroupIndirectCommandNV where
@@ -1323,6 +1339,9 @@ data BindIndexBufferIndirectCommandNV = BindIndexBufferIndirectCommandNV
     indexType :: IndexType
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindIndexBufferIndirectCommandNV)
+#endif
 deriving instance Show BindIndexBufferIndirectCommandNV
 
 instance ToCStruct BindIndexBufferIndirectCommandNV where
@@ -1393,6 +1412,9 @@ data BindVertexBufferIndirectCommandNV = BindVertexBufferIndirectCommandNV
     stride :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindVertexBufferIndirectCommandNV)
+#endif
 deriving instance Show BindVertexBufferIndirectCommandNV
 
 instance ToCStruct BindVertexBufferIndirectCommandNV where
@@ -1445,6 +1467,9 @@ data SetStateFlagsIndirectCommandNV = SetStateFlagsIndirectCommandNV
     --     'Vulkan.Core10.Enums.FrontFace.FRONT_FACE_COUNTER_CLOCKWISE'
     data' :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SetStateFlagsIndirectCommandNV)
+#endif
 deriving instance Show SetStateFlagsIndirectCommandNV
 
 instance ToCStruct SetStateFlagsIndirectCommandNV where
@@ -1507,6 +1532,9 @@ data IndirectCommandsStreamNV = IndirectCommandsStreamNV
     offset :: DeviceSize
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (IndirectCommandsStreamNV)
+#endif
 deriving instance Show IndirectCommandsStreamNV
 
 instance ToCStruct IndirectCommandsStreamNV where
@@ -1661,6 +1689,9 @@ data IndirectCommandsLayoutTokenNV = IndirectCommandsLayoutTokenNV
     indexTypeValues :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (IndirectCommandsLayoutTokenNV)
+#endif
 deriving instance Show IndirectCommandsLayoutTokenNV
 
 instance ToCStruct IndirectCommandsLayoutTokenNV where
@@ -1851,6 +1882,9 @@ data IndirectCommandsLayoutCreateInfoNV = IndirectCommandsLayoutCreateInfoNV
     streamStrides :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (IndirectCommandsLayoutCreateInfoNV)
+#endif
 deriving instance Show IndirectCommandsLayoutCreateInfoNV
 
 instance ToCStruct IndirectCommandsLayoutCreateInfoNV where
@@ -2082,6 +2116,9 @@ data GeneratedCommandsInfoNV = GeneratedCommandsInfoNV
     sequencesIndexOffset :: DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GeneratedCommandsInfoNV)
+#endif
 deriving instance Show GeneratedCommandsInfoNV
 
 instance ToCStruct GeneratedCommandsInfoNV where
@@ -2209,6 +2246,9 @@ data GeneratedCommandsMemoryRequirementsInfoNV = GeneratedCommandsMemoryRequirem
     maxSequencesCount :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (GeneratedCommandsMemoryRequirementsInfoNV)
+#endif
 deriving instance Show GeneratedCommandsMemoryRequirementsInfoNV
 
 instance ToCStruct GeneratedCommandsMemoryRequirementsInfoNV where

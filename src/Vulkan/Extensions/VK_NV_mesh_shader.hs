@@ -26,6 +26,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -913,6 +914,9 @@ data PhysicalDeviceMeshShaderFeaturesNV = PhysicalDeviceMeshShaderFeaturesNV
     meshShader :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMeshShaderFeaturesNV)
+#endif
 deriving instance Show PhysicalDeviceMeshShaderFeaturesNV
 
 instance ToCStruct PhysicalDeviceMeshShaderFeaturesNV where
@@ -1032,6 +1036,9 @@ data PhysicalDeviceMeshShaderPropertiesNV = PhysicalDeviceMeshShaderPropertiesNV
     meshOutputPerPrimitiveGranularity :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMeshShaderPropertiesNV)
+#endif
 deriving instance Show PhysicalDeviceMeshShaderPropertiesNV
 
 instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV where
@@ -1164,6 +1171,9 @@ data DrawMeshTasksIndirectCommandNV = DrawMeshTasksIndirectCommandNV
     firstTask :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrawMeshTasksIndirectCommandNV)
+#endif
 deriving instance Show DrawMeshTasksIndirectCommandNV
 
 instance ToCStruct DrawMeshTasksIndirectCommandNV where

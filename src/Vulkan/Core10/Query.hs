@@ -29,6 +29,7 @@ import Foreign.C.Types (CSize)
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -521,6 +522,9 @@ data QueryPoolCreateInfo (es :: [Type]) = QueryPoolCreateInfo
     pipelineStatistics :: QueryPipelineStatisticFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (QueryPoolCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (QueryPoolCreateInfo es)
 
 instance Extensible QueryPoolCreateInfo where

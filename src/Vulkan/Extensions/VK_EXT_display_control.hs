@@ -57,6 +57,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -378,6 +379,9 @@ data DisplayPowerInfoEXT = DisplayPowerInfoEXT
     -- @powerState@ /must/ be a valid 'DisplayPowerStateEXT' value
     powerState :: DisplayPowerStateEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayPowerInfoEXT)
+#endif
 deriving instance Show DisplayPowerInfoEXT
 
 instance ToCStruct DisplayPowerInfoEXT where
@@ -424,6 +428,9 @@ data DeviceEventInfoEXT = DeviceEventInfoEXT
   { -- | @deviceEvent@ /must/ be a valid 'DeviceEventTypeEXT' value
     deviceEvent :: DeviceEventTypeEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceEventInfoEXT)
+#endif
 deriving instance Show DeviceEventInfoEXT
 
 instance ToCStruct DeviceEventInfoEXT where
@@ -474,6 +481,9 @@ data DisplayEventInfoEXT = DisplayEventInfoEXT
     -- @displayEvent@ /must/ be a valid 'DisplayEventTypeEXT' value
     displayEvent :: DisplayEventTypeEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DisplayEventInfoEXT)
+#endif
 deriving instance Show DisplayEventInfoEXT
 
 instance ToCStruct DisplayEventInfoEXT where
@@ -536,6 +546,9 @@ data SwapchainCounterCreateInfoEXT = SwapchainCounterCreateInfoEXT
     -- specifying surface counters to enable for the swapchain.
     surfaceCounters :: SurfaceCounterFlagsEXT }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SwapchainCounterCreateInfoEXT)
+#endif
 deriving instance Show SwapchainCounterCreateInfoEXT
 
 instance ToCStruct SwapchainCounterCreateInfoEXT where

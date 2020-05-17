@@ -17,6 +17,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -89,6 +90,9 @@ data PhysicalDeviceSubgroupSizeControlFeaturesEXT = PhysicalDeviceSubgroupSizeCo
     computeFullSubgroups :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSubgroupSizeControlFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceSubgroupSizeControlFeaturesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlFeaturesEXT where
@@ -179,6 +183,9 @@ data PhysicalDeviceSubgroupSizeControlPropertiesEXT = PhysicalDeviceSubgroupSize
     requiredSubgroupSizeStages :: ShaderStageFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceSubgroupSizeControlPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceSubgroupSizeControlPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlPropertiesEXT where
@@ -254,6 +261,9 @@ data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageR
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
     requiredSubgroupSize :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT)
+#endif
 deriving instance Show PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
 
 instance ToCStruct PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT where

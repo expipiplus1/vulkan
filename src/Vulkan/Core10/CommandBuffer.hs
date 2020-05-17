@@ -37,6 +37,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -559,6 +560,9 @@ data CommandBufferAllocateInfo = CommandBufferAllocateInfo
     commandBufferCount :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CommandBufferAllocateInfo)
+#endif
 deriving instance Show CommandBufferAllocateInfo
 
 instance ToCStruct CommandBufferAllocateInfo where
@@ -717,6 +721,9 @@ data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
     pipelineStatistics :: QueryPipelineStatisticFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CommandBufferInheritanceInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (CommandBufferInheritanceInfo es)
 
 instance Extensible CommandBufferInheritanceInfo where
@@ -831,6 +838,9 @@ data CommandBufferBeginInfo (es :: [Type]) = CommandBufferBeginInfo
     inheritanceInfo :: Maybe (SomeStruct CommandBufferInheritanceInfo)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CommandBufferBeginInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (CommandBufferBeginInfo es)
 
 instance Extensible CommandBufferBeginInfo where

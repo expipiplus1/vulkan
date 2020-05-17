@@ -34,6 +34,7 @@ import Foreign.C.Types (CSize)
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -310,6 +311,9 @@ data ShaderModuleCreateInfo (es :: [Type]) = ShaderModuleCreateInfo
     code :: ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ShaderModuleCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (ShaderModuleCreateInfo es)
 
 instance Extensible ShaderModuleCreateInfo where

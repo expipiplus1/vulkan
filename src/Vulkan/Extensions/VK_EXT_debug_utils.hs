@@ -83,6 +83,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -880,6 +881,9 @@ data DebugUtilsObjectNameInfoEXT = DebugUtilsObjectNameInfoEXT
     objectName :: Maybe ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugUtilsObjectNameInfoEXT)
+#endif
 deriving instance Show DebugUtilsObjectNameInfoEXT
 
 instance ToCStruct DebugUtilsObjectNameInfoEXT where
@@ -965,6 +969,9 @@ data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
     tag :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugUtilsObjectTagInfoEXT)
+#endif
 deriving instance Show DebugUtilsObjectTagInfoEXT
 
 instance ToCStruct DebugUtilsObjectTagInfoEXT where
@@ -1038,6 +1045,9 @@ data DebugUtilsLabelEXT = DebugUtilsLabelEXT
     color :: (Float, Float, Float, Float)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugUtilsLabelEXT)
+#endif
 deriving instance Show DebugUtilsLabelEXT
 
 instance ToCStruct DebugUtilsLabelEXT where
@@ -1164,6 +1174,9 @@ data DebugUtilsMessengerCreateInfoEXT = DebugUtilsMessengerCreateInfoEXT
     userData :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugUtilsMessengerCreateInfoEXT)
+#endif
 deriving instance Show DebugUtilsMessengerCreateInfoEXT
 
 instance ToCStruct DebugUtilsMessengerCreateInfoEXT where
@@ -1315,6 +1328,9 @@ data DebugUtilsMessengerCallbackDataEXT = DebugUtilsMessengerCallbackDataEXT
     objects :: Vector DebugUtilsObjectNameInfoEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugUtilsMessengerCallbackDataEXT)
+#endif
 deriving instance Show DebugUtilsMessengerCallbackDataEXT
 
 instance ToCStruct DebugUtilsMessengerCallbackDataEXT where

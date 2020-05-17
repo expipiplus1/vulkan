@@ -35,6 +35,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -265,6 +266,9 @@ data ImportMemoryWin32HandleInfoKHR = ImportMemoryWin32HandleInfoKHR
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImportMemoryWin32HandleInfoKHR)
+#endif
 deriving instance Show ImportMemoryWin32HandleInfoKHR
 
 instance ToCStruct ImportMemoryWin32HandleInfoKHR where
@@ -384,6 +388,9 @@ data ExportMemoryWin32HandleInfoKHR = ExportMemoryWin32HandleInfoKHR
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExportMemoryWin32HandleInfoKHR)
+#endif
 deriving instance Show ExportMemoryWin32HandleInfoKHR
 
 instance ToCStruct ExportMemoryWin32HandleInfoKHR where
@@ -439,6 +446,9 @@ data MemoryWin32HandlePropertiesKHR = MemoryWin32HandlePropertiesKHR
     -- type which the specified windows handle /can/ be imported as.
     memoryTypeBits :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryWin32HandlePropertiesKHR)
+#endif
 deriving instance Show MemoryWin32HandlePropertiesKHR
 
 instance ToCStruct MemoryWin32HandlePropertiesKHR where
@@ -524,6 +534,9 @@ data MemoryGetWin32HandleInfoKHR = MemoryGetWin32HandleInfoKHR
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryGetWin32HandleInfoKHR)
+#endif
 deriving instance Show MemoryGetWin32HandleInfoKHR
 
 instance ToCStruct MemoryGetWin32HandleInfoKHR where

@@ -31,6 +31,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -155,6 +156,9 @@ data ExternalMemoryProperties = ExternalMemoryProperties
     compatibleHandleTypes :: ExternalMemoryHandleTypeFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalMemoryProperties)
+#endif
 deriving instance Show ExternalMemoryProperties
 
 instance ToCStruct ExternalMemoryProperties where
@@ -229,6 +233,9 @@ data PhysicalDeviceExternalImageFormatInfo = PhysicalDeviceExternalImageFormatIn
     -- memory associated with the image.
     handleType :: ExternalMemoryHandleTypeFlagBits }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceExternalImageFormatInfo)
+#endif
 deriving instance Show PhysicalDeviceExternalImageFormatInfo
 
 instance ToCStruct PhysicalDeviceExternalImageFormatInfo where
@@ -277,6 +284,9 @@ data ExternalImageFormatProperties = ExternalImageFormatProperties
     -- with the specified image creation parameters.
     externalMemoryProperties :: ExternalMemoryProperties }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalImageFormatProperties)
+#endif
 deriving instance Show ExternalImageFormatProperties
 
 instance ToCStruct ExternalImageFormatProperties where
@@ -348,6 +358,9 @@ data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceExternalBufferInfo)
+#endif
 deriving instance Show PhysicalDeviceExternalBufferInfo
 
 instance ToCStruct PhysicalDeviceExternalBufferInfo where
@@ -406,6 +419,9 @@ data ExternalBufferProperties = ExternalBufferProperties
     -- with the specified buffer creation parameters.
     externalMemoryProperties :: ExternalMemoryProperties }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalBufferProperties)
+#endif
 deriving instance Show ExternalBufferProperties
 
 instance ToCStruct ExternalBufferProperties where
@@ -538,6 +554,9 @@ data PhysicalDeviceIDProperties = PhysicalDeviceIDProperties
     deviceLUIDValid :: Bool
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceIDProperties)
+#endif
 deriving instance Show PhysicalDeviceIDProperties
 
 instance ToCStruct PhysicalDeviceIDProperties where

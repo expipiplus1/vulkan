@@ -43,6 +43,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
@@ -92,6 +93,9 @@ data ViewportSwizzleNV = ViewportSwizzleNV
     w :: ViewportCoordinateSwizzleNV
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ViewportSwizzleNV)
+#endif
 deriving instance Show ViewportSwizzleNV
 
 instance ToCStruct ViewportSwizzleNV where
@@ -156,6 +160,9 @@ data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCrea
     viewportSwizzles :: Vector ViewportSwizzleNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineViewportSwizzleStateCreateInfoNV)
+#endif
 deriving instance Show PipelineViewportSwizzleStateCreateInfoNV
 
 instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV where

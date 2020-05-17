@@ -41,6 +41,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -281,6 +282,9 @@ data ConditionalRenderingBeginInfoEXT = ConditionalRenderingBeginInfoEXT
     flags :: ConditionalRenderingFlagsEXT
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ConditionalRenderingBeginInfoEXT)
+#endif
 deriving instance Show ConditionalRenderingBeginInfoEXT
 
 instance ToCStruct ConditionalRenderingBeginInfoEXT where
@@ -356,6 +360,9 @@ data CommandBufferInheritanceConditionalRenderingInfoEXT = CommandBufferInherita
     -- active.
     conditionalRenderingEnable :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CommandBufferInheritanceConditionalRenderingInfoEXT)
+#endif
 deriving instance Show CommandBufferInheritanceConditionalRenderingInfoEXT
 
 instance ToCStruct CommandBufferInheritanceConditionalRenderingInfoEXT where
@@ -420,6 +427,9 @@ data PhysicalDeviceConditionalRenderingFeaturesEXT = PhysicalDeviceConditionalRe
     inheritedConditionalRendering :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceConditionalRenderingFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceConditionalRenderingFeaturesEXT
 
 instance ToCStruct PhysicalDeviceConditionalRenderingFeaturesEXT where

@@ -37,6 +37,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -481,6 +482,9 @@ data SparseImageFormatProperties = SparseImageFormatProperties
     flags :: SparseImageFormatFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseImageFormatProperties)
+#endif
 deriving instance Show SparseImageFormatProperties
 
 instance ToCStruct SparseImageFormatProperties where
@@ -542,6 +546,9 @@ data SparseImageMemoryRequirements = SparseImageMemoryRequirements
     imageMipTailStride :: DeviceSize
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseImageMemoryRequirements)
+#endif
 deriving instance Show SparseImageMemoryRequirements
 
 instance ToCStruct SparseImageMemoryRequirements where
@@ -687,6 +694,9 @@ data SparseMemoryBind = SparseMemoryBind
     flags :: SparseMemoryBindFlags
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseMemoryBind)
+#endif
 deriving instance Show SparseMemoryBind
 
 instance ToCStruct SparseMemoryBind where
@@ -831,6 +841,9 @@ data SparseImageMemoryBind = SparseImageMemoryBind
     flags :: SparseMemoryBindFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseImageMemoryBind)
+#endif
 deriving instance Show SparseImageMemoryBind
 
 instance ToCStruct SparseImageMemoryBind where
@@ -893,6 +906,9 @@ data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
     binds :: Vector SparseMemoryBind
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseBufferMemoryBindInfo)
+#endif
 deriving instance Show SparseBufferMemoryBindInfo
 
 instance ToCStruct SparseBufferMemoryBindInfo where
@@ -957,6 +973,9 @@ data SparseImageOpaqueMemoryBindInfo = SparseImageOpaqueMemoryBindInfo
     binds :: Vector SparseMemoryBind
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseImageOpaqueMemoryBindInfo)
+#endif
 deriving instance Show SparseImageOpaqueMemoryBindInfo
 
 instance ToCStruct SparseImageOpaqueMemoryBindInfo where
@@ -1028,6 +1047,9 @@ data SparseImageMemoryBindInfo = SparseImageMemoryBindInfo
     binds :: Vector SparseImageMemoryBind
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SparseImageMemoryBindInfo)
+#endif
 deriving instance Show SparseImageMemoryBindInfo
 
 instance ToCStruct SparseImageMemoryBindInfo where
@@ -1190,6 +1212,9 @@ data BindSparseInfo (es :: [Type]) = BindSparseInfo
     signalSemaphores :: Vector Semaphore
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindSparseInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (BindSparseInfo es)
 
 instance Extensible BindSparseInfo where

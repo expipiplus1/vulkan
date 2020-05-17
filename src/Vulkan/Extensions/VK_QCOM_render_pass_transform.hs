@@ -20,6 +20,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -66,6 +67,9 @@ data RenderPassTransformBeginInfoQCOM = RenderPassTransformBeginInfoQCOM
     -- describing the transform to be applied to rasterization.
     transform :: SurfaceTransformFlagBitsKHR }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassTransformBeginInfoQCOM)
+#endif
 deriving instance Show RenderPassTransformBeginInfoQCOM
 
 instance ToCStruct RenderPassTransformBeginInfoQCOM where
@@ -136,6 +140,9 @@ data CommandBufferInheritanceRenderPassTransformInfoQCOM = CommandBufferInherita
     renderArea :: Rect2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CommandBufferInheritanceRenderPassTransformInfoQCOM)
+#endif
 deriving instance Show CommandBufferInheritanceRenderPassTransformInfoQCOM
 
 instance ToCStruct CommandBufferInheritanceRenderPassTransformInfoQCOM where

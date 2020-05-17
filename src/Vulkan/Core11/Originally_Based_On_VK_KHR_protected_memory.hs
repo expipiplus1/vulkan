@@ -37,6 +37,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -157,6 +158,9 @@ data ProtectedSubmitInfo = ProtectedSubmitInfo
     -- chain does not include this structure, the batch is unprotected.
     protectedSubmit :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ProtectedSubmitInfo)
+#endif
 deriving instance Show ProtectedSubmitInfo
 
 instance ToCStruct ProtectedSubmitInfo where
@@ -211,6 +215,9 @@ data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatur
   { -- | @protectedMemory@ specifies whether protected memory is supported.
     protectedMemory :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceProtectedMemoryFeatures)
+#endif
 deriving instance Show PhysicalDeviceProtectedMemoryFeatures
 
 instance ToCStruct PhysicalDeviceProtectedMemoryFeatures where
@@ -270,6 +277,9 @@ data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProp
     -- loss.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceProtectedMemoryProperties)
+#endif
 deriving instance Show PhysicalDeviceProtectedMemoryProperties
 
 instance ToCStruct PhysicalDeviceProtectedMemoryProperties where
@@ -349,6 +359,9 @@ data DeviceQueueInfo2 = DeviceQueueInfo2
     queueIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceQueueInfo2)
+#endif
 deriving instance Show DeviceQueueInfo2
 
 instance ToCStruct DeviceQueueInfo2 where

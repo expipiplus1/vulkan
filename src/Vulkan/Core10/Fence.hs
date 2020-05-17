@@ -31,6 +31,7 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -571,6 +572,9 @@ data FenceCreateInfo (es :: [Type]) = FenceCreateInfo
     flags :: FenceCreateFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (FenceCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (FenceCreateInfo es)
 
 instance Extensible FenceCreateInfo where

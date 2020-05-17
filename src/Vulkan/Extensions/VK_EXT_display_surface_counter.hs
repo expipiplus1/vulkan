@@ -43,6 +43,7 @@ import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -207,6 +208,9 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SurfaceCapabilities2EXT)
+#endif
 deriving instance Show SurfaceCapabilities2EXT
 
 instance ToCStruct SurfaceCapabilities2EXT where

@@ -49,6 +49,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -223,6 +224,9 @@ data ShaderResourceUsageAMD = ShaderResourceUsageAMD
     scratchMemUsageInBytes :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ShaderResourceUsageAMD)
+#endif
 deriving instance Show ShaderResourceUsageAMD
 
 instance ToCStruct ShaderResourceUsageAMD where
@@ -315,6 +319,9 @@ data ShaderStatisticsInfoAMD = ShaderStatisticsInfoAMD
     computeWorkGroupSize :: (Word32, Word32, Word32)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ShaderStatisticsInfoAMD)
+#endif
 deriving instance Show ShaderStatisticsInfoAMD
 
 instance ToCStruct ShaderStatisticsInfoAMD where

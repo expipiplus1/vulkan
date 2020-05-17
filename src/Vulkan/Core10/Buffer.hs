@@ -28,6 +28,7 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -392,6 +393,9 @@ data BufferCreateInfo (es :: [Type]) = BufferCreateInfo
     queueFamilyIndices :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BufferCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (BufferCreateInfo es)
 
 instance Extensible BufferCreateInfo where

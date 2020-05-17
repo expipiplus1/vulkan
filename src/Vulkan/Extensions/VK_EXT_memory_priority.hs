@@ -18,6 +18,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -61,6 +62,9 @@ data PhysicalDeviceMemoryPriorityFeaturesEXT = PhysicalDeviceMemoryPriorityFeatu
     -- 'MemoryPriorityAllocateInfoEXT'.
     memoryPriority :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceMemoryPriorityFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceMemoryPriorityFeaturesEXT
 
 instance ToCStruct PhysicalDeviceMemoryPriorityFeaturesEXT where
@@ -119,6 +123,9 @@ data MemoryPriorityAllocateInfoEXT = MemoryPriorityAllocateInfoEXT
     -- @priority@ /must/ be between @0@ and @1@, inclusive
     priority :: Float }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryPriorityAllocateInfoEXT)
+#endif
 deriving instance Show MemoryPriorityAllocateInfoEXT
 
 instance ToCStruct MemoryPriorityAllocateInfoEXT where

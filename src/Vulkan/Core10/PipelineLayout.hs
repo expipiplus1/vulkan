@@ -28,6 +28,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -251,6 +252,9 @@ data PushConstantRange = PushConstantRange
     size :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PushConstantRange)
+#endif
 deriving instance Show PushConstantRange
 
 instance ToCStruct PushConstantRange where
@@ -625,6 +629,9 @@ data PipelineLayoutCreateInfo = PipelineLayoutCreateInfo
     pushConstantRanges :: Vector PushConstantRange
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineLayoutCreateInfo)
+#endif
 deriving instance Show PipelineLayoutCreateInfo
 
 instance ToCStruct PipelineLayoutCreateInfo where

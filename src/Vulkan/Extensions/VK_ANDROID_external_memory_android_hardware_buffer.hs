@@ -37,6 +37,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -243,6 +244,9 @@ data ImportAndroidHardwareBufferInfoANDROID = ImportAndroidHardwareBufferInfoAND
   { -- | @buffer@ is the Android hardware buffer to import.
     buffer :: Ptr AHardwareBuffer }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImportAndroidHardwareBufferInfoANDROID)
+#endif
 deriving instance Show ImportAndroidHardwareBufferInfoANDROID
 
 instance ToCStruct ImportAndroidHardwareBufferInfoANDROID where
@@ -314,6 +318,9 @@ data AndroidHardwareBufferUsageANDROID = AndroidHardwareBufferUsageANDROID
     -- flags.
     androidHardwareBufferUsage :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AndroidHardwareBufferUsageANDROID)
+#endif
 deriving instance Show AndroidHardwareBufferUsageANDROID
 
 instance ToCStruct AndroidHardwareBufferUsageANDROID where
@@ -377,6 +384,9 @@ data AndroidHardwareBufferPropertiesANDROID (es :: [Type]) = AndroidHardwareBuff
     memoryTypeBits :: Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AndroidHardwareBufferPropertiesANDROID (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (AndroidHardwareBufferPropertiesANDROID es)
 
 instance Extensible AndroidHardwareBufferPropertiesANDROID where
@@ -460,6 +470,9 @@ data MemoryGetAndroidHardwareBufferInfoANDROID = MemoryGetAndroidHardwareBufferI
     -- will be exported.
     memory :: DeviceMemory }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryGetAndroidHardwareBufferInfoANDROID)
+#endif
 deriving instance Show MemoryGetAndroidHardwareBufferInfoANDROID
 
 instance ToCStruct MemoryGetAndroidHardwareBufferInfoANDROID where
@@ -621,6 +634,9 @@ data AndroidHardwareBufferFormatPropertiesANDROID = AndroidHardwareBufferFormatP
     suggestedYChromaOffset :: ChromaLocation
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AndroidHardwareBufferFormatPropertiesANDROID)
+#endif
 deriving instance Show AndroidHardwareBufferFormatPropertiesANDROID
 
 instance ToCStruct AndroidHardwareBufferFormatPropertiesANDROID where
@@ -701,6 +717,9 @@ data ExternalFormatANDROID = ExternalFormatANDROID
     -- 'getAndroidHardwareBufferPropertiesANDROID'
     externalFormat :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalFormatANDROID)
+#endif
 deriving instance Show ExternalFormatANDROID
 
 instance ToCStruct ExternalFormatANDROID where

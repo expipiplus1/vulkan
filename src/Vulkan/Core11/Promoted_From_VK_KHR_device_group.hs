@@ -40,6 +40,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -537,6 +538,9 @@ data MemoryAllocateFlagsInfo = MemoryAllocateFlagsInfo
     deviceMask :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryAllocateFlagsInfo)
+#endif
 deriving instance Show MemoryAllocateFlagsInfo
 
 instance ToCStruct MemoryAllocateFlagsInfo where
@@ -639,6 +643,9 @@ data DeviceGroupRenderPassBeginInfo = DeviceGroupRenderPassBeginInfo
     deviceRenderAreas :: Vector Rect2D
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupRenderPassBeginInfo)
+#endif
 deriving instance Show DeviceGroupRenderPassBeginInfo
 
 instance ToCStruct DeviceGroupRenderPassBeginInfo where
@@ -703,6 +710,9 @@ data DeviceGroupCommandBufferBeginInfo = DeviceGroupCommandBufferBeginInfo
     -- @deviceMask@ /must/ not be zero
     deviceMask :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupCommandBufferBeginInfo)
+#endif
 deriving instance Show DeviceGroupCommandBufferBeginInfo
 
 instance ToCStruct DeviceGroupCommandBufferBeginInfo where
@@ -801,6 +811,9 @@ data DeviceGroupSubmitInfo = DeviceGroupSubmitInfo
     signalSemaphoreDeviceIndices :: Vector Word32
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupSubmitInfo)
+#endif
 deriving instance Show DeviceGroupSubmitInfo
 
 instance ToCStruct DeviceGroupSubmitInfo where
@@ -896,6 +909,9 @@ data DeviceGroupBindSparseInfo = DeviceGroupBindSparseInfo
     memoryDeviceIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupBindSparseInfo)
+#endif
 deriving instance Show DeviceGroupBindSparseInfo
 
 instance ToCStruct DeviceGroupBindSparseInfo where

@@ -83,6 +83,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -694,6 +695,9 @@ data PerformanceValueINTEL = PerformanceValueINTEL
     data' :: PerformanceValueDataINTEL
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceValueINTEL)
+#endif
 deriving instance Show PerformanceValueINTEL
 
 instance ToCStruct PerformanceValueINTEL where
@@ -735,6 +739,9 @@ data InitializePerformanceApiInfoINTEL = InitializePerformanceApiInfoINTEL
   { -- | @pUserData@ is a pointer for application data.
     userData :: Ptr () }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (InitializePerformanceApiInfoINTEL)
+#endif
 deriving instance Show InitializePerformanceApiInfoINTEL
 
 instance ToCStruct InitializePerformanceApiInfoINTEL where
@@ -795,6 +802,9 @@ data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateI
     -- 'QueryPoolSamplingModeINTEL' value
     performanceCountersSampling :: QueryPoolSamplingModeINTEL }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (QueryPoolPerformanceQueryCreateInfoINTEL)
+#endif
 deriving instance Show QueryPoolPerformanceQueryCreateInfoINTEL
 
 instance ToCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
@@ -842,6 +852,9 @@ data PerformanceMarkerInfoINTEL = PerformanceMarkerInfoINTEL
     -- results.
     marker :: Word64 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceMarkerInfoINTEL)
+#endif
 deriving instance Show PerformanceMarkerInfoINTEL
 
 instance ToCStruct PerformanceMarkerInfoINTEL where
@@ -901,6 +914,9 @@ data PerformanceStreamMarkerInfoINTEL = PerformanceStreamMarkerInfoINTEL
     -- consumed by an external application.
     marker :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceStreamMarkerInfoINTEL)
+#endif
 deriving instance Show PerformanceStreamMarkerInfoINTEL
 
 instance ToCStruct PerformanceStreamMarkerInfoINTEL where
@@ -955,6 +971,9 @@ data PerformanceOverrideInfoINTEL = PerformanceOverrideInfoINTEL
     parameter :: Word64
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceOverrideInfoINTEL)
+#endif
 deriving instance Show PerformanceOverrideInfoINTEL
 
 instance ToCStruct PerformanceOverrideInfoINTEL where
@@ -1014,6 +1033,9 @@ data PerformanceConfigurationAcquireInfoINTEL = PerformanceConfigurationAcquireI
     -- @type@ /must/ be a valid 'PerformanceConfigurationTypeINTEL' value
     type' :: PerformanceConfigurationTypeINTEL }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PerformanceConfigurationAcquireInfoINTEL)
+#endif
 deriving instance Show PerformanceConfigurationAcquireInfoINTEL
 
 instance ToCStruct PerformanceConfigurationAcquireInfoINTEL where

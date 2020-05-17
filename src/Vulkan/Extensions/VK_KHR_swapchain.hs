@@ -83,6 +83,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -1548,6 +1549,9 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     oldSwapchain :: SwapchainKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SwapchainCreateInfoKHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 
 instance Extensible SwapchainCreateInfoKHR where
@@ -1765,6 +1769,9 @@ data PresentInfoKHR (es :: [Type]) = PresentInfoKHR
     results :: Ptr Result
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PresentInfoKHR (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (PresentInfoKHR es)
 
 instance Extensible PresentInfoKHR where
@@ -1877,6 +1884,9 @@ data DeviceGroupPresentCapabilitiesKHR = DeviceGroupPresentCapabilitiesKHR
     modes :: DeviceGroupPresentModeFlagsKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupPresentCapabilitiesKHR)
+#endif
 deriving instance Show DeviceGroupPresentCapabilitiesKHR
 
 instance ToCStruct DeviceGroupPresentCapabilitiesKHR where
@@ -1947,6 +1957,9 @@ data ImageSwapchainCreateInfoKHR = ImageSwapchainCreateInfoKHR
     -- swapchain that the image will be bound to.
     swapchain :: SwapchainKHR }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSwapchainCreateInfoKHR)
+#endif
 deriving instance Show ImageSwapchainCreateInfoKHR
 
 instance ToCStruct ImageSwapchainCreateInfoKHR where
@@ -2021,6 +2034,9 @@ data BindImageMemorySwapchainInfoKHR = BindImageMemorySwapchainInfoKHR
     imageIndex :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (BindImageMemorySwapchainInfoKHR)
+#endif
 deriving instance Show BindImageMemorySwapchainInfoKHR
 
 instance ToCStruct BindImageMemorySwapchainInfoKHR where
@@ -2155,6 +2171,9 @@ data AcquireNextImageInfoKHR = AcquireNextImageInfoKHR
     deviceMask :: Word32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (AcquireNextImageInfoKHR)
+#endif
 deriving instance Show AcquireNextImageInfoKHR
 
 instance ToCStruct AcquireNextImageInfoKHR where
@@ -2296,6 +2315,9 @@ data DeviceGroupPresentInfoKHR = DeviceGroupPresentInfoKHR
     mode :: DeviceGroupPresentModeFlagBitsKHR
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupPresentInfoKHR)
+#endif
 deriving instance Show DeviceGroupPresentInfoKHR
 
 instance ToCStruct DeviceGroupPresentInfoKHR where
@@ -2358,6 +2380,9 @@ data DeviceGroupSwapchainCreateInfoKHR = DeviceGroupSwapchainCreateInfoKHR
     -- @modes@ /must/ not be @0@
     modes :: DeviceGroupPresentModeFlagsKHR }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceGroupSwapchainCreateInfoKHR)
+#endif
 deriving instance Show DeviceGroupSwapchainCreateInfoKHR
 
 instance ToCStruct DeviceGroupSwapchainCreateInfoKHR where

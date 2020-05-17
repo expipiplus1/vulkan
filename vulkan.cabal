@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ada1339ea623211ed497fd1fefb1f801f9ae39ac29c1536b52e1fa722a096a82
+-- hash: b49b13b3b6bdbb88f84583b21d927c923f9a61df9162c568fe626c21af417f56
 
 name:           vulkan
 version:        3.3
@@ -23,6 +23,11 @@ extra-source-files:
 source-repository head
   type: git
   location: https://github.com/expipiplus1/vulkan
+
+flag generic-instances
+  description: Derive Generic instances for all structs. Disabled by default because of code size and compile time impact.
+  manual: True
+  default: False
 
 flag safe-foreign-calls
   description: Do not mark foreign imports as 'unsafe'. This means that callbacks from Vulkan to Haskell will work. If you are using these then make sure this flag is enabled.
@@ -457,7 +462,7 @@ library
       Vulkan.Zero
   hs-source-dirs:
       src
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DeriveGeneric DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   build-depends:
       base <4.15
@@ -472,4 +477,6 @@ library
         vulkan
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
+  if flag(generic-instances)
+    cpp-options: -DGENERIC_INSTANCES
   default-language: Haskell2010

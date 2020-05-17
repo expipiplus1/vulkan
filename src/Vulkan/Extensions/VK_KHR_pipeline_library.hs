@@ -18,6 +18,7 @@ import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -61,6 +62,9 @@ data PipelineLibraryCreateInfoKHR = PipelineLibraryCreateInfoKHR
     -- pipeline.
     libraries :: Vector Pipeline }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineLibraryCreateInfoKHR)
+#endif
 deriving instance Show PipelineLibraryCreateInfoKHR
 
 instance ToCStruct PipelineLibraryCreateInfoKHR where

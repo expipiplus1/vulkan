@@ -33,6 +33,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -243,6 +244,9 @@ data ImportMemoryFdInfoKHR = ImportMemoryFdInfoKHR
     fd :: Int32
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImportMemoryFdInfoKHR)
+#endif
 deriving instance Show ImportMemoryFdInfoKHR
 
 instance ToCStruct ImportMemoryFdInfoKHR where
@@ -293,6 +297,9 @@ data MemoryFdPropertiesKHR = MemoryFdPropertiesKHR
     -- type which the specified file descriptor /can/ be imported as.
     memoryTypeBits :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryFdPropertiesKHR)
+#endif
 deriving instance Show MemoryFdPropertiesKHR
 
 instance ToCStruct MemoryFdPropertiesKHR where
@@ -373,6 +380,9 @@ data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (MemoryGetFdInfoKHR)
+#endif
 deriving instance Show MemoryGetFdInfoKHR
 
 instance ToCStruct MemoryGetFdInfoKHR where

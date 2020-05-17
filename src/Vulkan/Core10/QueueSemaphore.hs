@@ -25,6 +25,7 @@ import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -245,6 +246,9 @@ data SemaphoreCreateInfo (es :: [Type]) = SemaphoreCreateInfo
     flags :: SemaphoreCreateFlags
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (SemaphoreCreateInfo (es :: [Type]))
+#endif
 deriving instance Show (Chain es) => Show (SemaphoreCreateInfo es)
 
 instance Extensible SemaphoreCreateInfo where

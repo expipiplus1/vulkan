@@ -2,6 +2,7 @@
 
 ## WIP
   - Eq instances for some simple structs, #94
+  - Add cabal flag for enable deriving Generic for structs, #99
 
 ## [0.3] - 2020-05-07
   - Move package from `Vulkan.VulkanMemoryAllocator` to just `VulkanMemoryAllocator`, #60

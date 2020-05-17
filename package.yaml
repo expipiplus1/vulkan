@@ -26,6 +26,8 @@ library:
         extra-libraries: vulkan
     - condition: flag(safe-foreign-calls)
       cpp-options: -DSAFE_FOREIGN_CALLS
+    - condition: flag(generic-instances)
+      cpp-options: -DGENERIC_INSTANCES
   ghc-options:
     - -Wall
     - -Wno-unticked-promoted-constructors
@@ -43,12 +45,20 @@ flags:
     default: no
     manual: yes
 
+  generic-instances:
+    description:
+      Derive Generic instances for all structs. Disabled by default because of
+      code size and compile time impact.
+    default: no
+    manual: yes
+
 default-extensions:
   - AllowAmbiguousTypes
   - CPP
   - DataKinds
   - DefaultSignatures
   - DeriveAnyClass
+  - DeriveGeneric
   - DerivingStrategies
   - DuplicateRecordFields
   - FlexibleContexts
@@ -76,4 +86,3 @@ default-extensions:
   - TypeSynonymInstances
   - UndecidableInstances
   - ViewPatterns
-

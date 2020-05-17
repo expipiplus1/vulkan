@@ -29,6 +29,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -193,6 +194,9 @@ data QueueFamilyCheckpointPropertiesNV = QueueFamilyCheckpointPropertiesNV
     -- stages the implementation can execute checkpoint markers in.
     checkpointExecutionStageMask :: PipelineStageFlags }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (QueueFamilyCheckpointPropertiesNV)
+#endif
 deriving instance Show QueueFamilyCheckpointPropertiesNV
 
 instance ToCStruct QueueFamilyCheckpointPropertiesNV where
@@ -249,6 +253,9 @@ data CheckpointDataNV = CheckpointDataNV
     checkpointMarker :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (CheckpointDataNV)
+#endif
 deriving instance Show CheckpointDataNV
 
 instance ToCStruct CheckpointDataNV where

@@ -39,6 +39,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -177,6 +178,9 @@ data ViSurfaceCreateInfoNN = ViSurfaceCreateInfoNN
     window :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ViSurfaceCreateInfoNN)
+#endif
 deriving instance Show ViSurfaceCreateInfoNN
 
 instance ToCStruct ViSurfaceCreateInfoNN where

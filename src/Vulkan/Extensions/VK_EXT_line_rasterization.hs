@@ -38,6 +38,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Data.Int (Int32)
@@ -183,6 +184,9 @@ data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizatio
     stippledSmoothLines :: Bool
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceLineRasterizationFeaturesEXT)
+#endif
 deriving instance Show PhysicalDeviceLineRasterizationFeaturesEXT
 
 instance ToCStruct PhysicalDeviceLineRasterizationFeaturesEXT where
@@ -263,6 +267,9 @@ data PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizat
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines line segments>.
     lineSubPixelPrecisionBits :: Word32 }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PhysicalDeviceLineRasterizationPropertiesEXT)
+#endif
 deriving instance Show PhysicalDeviceLineRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceLineRasterizationPropertiesEXT where
@@ -370,6 +377,9 @@ data PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStat
     lineStipplePattern :: Word16
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineRasterizationLineStateCreateInfoEXT)
+#endif
 deriving instance Show PipelineRasterizationLineStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationLineStateCreateInfoEXT where

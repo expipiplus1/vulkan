@@ -17,6 +17,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.BaseType (bool32ToBool)
@@ -66,6 +67,9 @@ data DedicatedAllocationImageCreateInfoNV = DedicatedAllocationImageCreateInfoNV
     -- allocation bound to it.
     dedicatedAllocation :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DedicatedAllocationImageCreateInfoNV)
+#endif
 deriving instance Show DedicatedAllocationImageCreateInfoNV
 
 instance ToCStruct DedicatedAllocationImageCreateInfoNV where
@@ -114,6 +118,9 @@ data DedicatedAllocationBufferCreateInfoNV = DedicatedAllocationBufferCreateInfo
     -- allocation bound to it.
     dedicatedAllocation :: Bool }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DedicatedAllocationBufferCreateInfoNV)
+#endif
 deriving instance Show DedicatedAllocationBufferCreateInfoNV
 
 instance ToCStruct DedicatedAllocationBufferCreateInfoNV where
@@ -218,6 +225,9 @@ data DedicatedAllocationMemoryAllocateInfoNV = DedicatedAllocationMemoryAllocate
     buffer :: Buffer
   }
   deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DedicatedAllocationMemoryAllocateInfoNV)
+#endif
 deriving instance Show DedicatedAllocationMemoryAllocateInfoNV
 
 instance ToCStruct DedicatedAllocationMemoryAllocateInfoNV where

@@ -39,6 +39,7 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -419,6 +420,9 @@ data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
     objectName :: ByteString
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugMarkerObjectNameInfoEXT)
+#endif
 deriving instance Show DebugMarkerObjectNameInfoEXT
 
 instance ToCStruct DebugMarkerObjectNameInfoEXT where
@@ -505,6 +509,9 @@ data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
     tag :: Ptr ()
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugMarkerObjectTagInfoEXT)
+#endif
 deriving instance Show DebugMarkerObjectTagInfoEXT
 
 instance ToCStruct DebugMarkerObjectTagInfoEXT where
@@ -577,6 +584,9 @@ data DebugMarkerMarkerInfoEXT = DebugMarkerMarkerInfoEXT
     color :: (Float, Float, Float, Float)
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DebugMarkerMarkerInfoEXT)
+#endif
 deriving instance Show DebugMarkerMarkerInfoEXT
 
 instance ToCStruct DebugMarkerMarkerInfoEXT where

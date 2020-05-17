@@ -45,6 +45,7 @@ import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
+import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
@@ -218,6 +219,9 @@ data ExternalImageFormatPropertiesNV = ExternalImageFormatPropertiesNV
     compatibleHandleTypes :: ExternalMemoryHandleTypeFlagsNV
   }
   deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ExternalImageFormatPropertiesNV)
+#endif
 deriving instance Show ExternalImageFormatPropertiesNV
 
 instance ToCStruct ExternalImageFormatPropertiesNV where
