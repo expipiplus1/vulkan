@@ -32,9 +32,9 @@ executables:
       - sdl2 >= 2.5.2.0
       - text
       - transformers
-      - vulkan-utils
       - vector
       - vulkan
+      - vulkan-utils
 
   offscreen:
     main: Main.hs
@@ -90,6 +90,7 @@ executables:
       - base < 4.15
       - bytestring
       - extra
+      - linear
       - resourcet >= 1.2.4
       - safe-exceptions
       - say

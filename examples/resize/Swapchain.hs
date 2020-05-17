@@ -5,8 +5,9 @@ module Swapchain
   , allocSwapchainResources
   ) where
 
-import           Control.Monad.Trans.Resource
 import           Control.Monad                  ( unless )
+import           Control.Monad.Trans.Resource
+import           Data.Bits
 import           Data.Either                    ( isLeft )
 import           Data.Foldable                  ( traverse_ )
 import qualified Data.Vector                   as V
@@ -38,7 +39,13 @@ createSwapchain
   -> SurfaceKHR
   -> V (ReleaseKey, SwapchainKHR, SurfaceFormatKHR, Extent2D)
 createSwapchain oldSwapchain explicitSize surf = do
-  surfaceCaps                <- getPhysicalDeviceSurfaceCapabilitiesKHR' surf
+  surfaceCaps <- getPhysicalDeviceSurfaceCapabilitiesKHR' surf
+
+  unless (supportedUsageFlags surfaceCaps .&&. IMAGE_USAGE_STORAGE_BIT)
+    $ throwString "Surface images do not support IMAGE_USAGE_STORAGE_BIT"
+  unless (supportedUsageFlags surfaceCaps .&&. IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+    $ throwString
+        "Surface images do not support IMAGE_USAGE_COLOR_ATTACHMENT_BIT"
 
   (_, availablePresentModes) <- getPhysicalDeviceSurfacePresentModesKHR' surf
   let desiredPresentModes =
@@ -74,7 +81,8 @@ createSwapchain oldSwapchain explicitSize surf = do
       , imageColorSpace  = colorSpace surfaceFormat
       , imageExtent      = imageExtent
       , imageArrayLayers = 1
-      , imageUsage       = IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+      , imageUsage       = IMAGE_USAGE_STORAGE_BIT
+                             .|. IMAGE_USAGE_COLOR_ATTACHMENT_BIT
       , imageSharingMode = SHARING_MODE_EXCLUSIVE
       , preTransform = currentTransform (surfaceCaps :: SurfaceCapabilitiesKHR)
       , compositeAlpha   = COMPOSITE_ALPHA_OPAQUE_BIT_KHR
@@ -105,7 +113,7 @@ threwSwapchainError = fmap isLeft . tryJust swapchainError
 recreateSwapchain :: Frame -> V Frame
 recreateSwapchain f@Frame {..} = do
   SDL.V2 width height <- SDL.vkGetDrawableSize fWindow
-  (swapchain, imageExtent, framebuffers, newFormat, releaseSwapchain) <-
+  (swapchain, imageExtent, framebuffers, imageViews, images, newFormat, releaseSwapchain) <-
     allocSwapchainResources
       (Extent2D (fromIntegral width) (fromIntegral height))
       fSwapchain
@@ -119,6 +127,8 @@ recreateSwapchain f@Frame {..} = do
   pure f { fSwapchain        = swapchain
          , fImageExtent      = imageExtent
          , fFramebuffers     = (framebuffers V.!) . fromIntegral
+         , fImages           = (images V.!) . fromIntegral
+         , fImageViews       = (imageViews V.!) . fromIntegral
          , fReleaseSwapchain = releaseSwapchain
          }
 
@@ -131,6 +141,8 @@ allocSwapchainResources
        ( SwapchainKHR
        , Extent2D
        , V.Vector Framebuffer
+       , V.Vector ImageView
+       , V.Vector Image
        , Format
        , RefCounted
        )
@@ -161,6 +173,16 @@ allocSwapchainResources windowSize oldSwapchain surface = do
     ( swapchain
     , imageExtent
     , framebuffers
+    , imageViews
+    , swapchainImages
     , format (surfaceFormat :: SurfaceFormatKHR)
     , releaseSwapchain
     )
+
+----------------------------------------------------------------
+-- Bit utils
+----------------------------------------------------------------
+
+infixl 4 .&&.
+(.&&.) :: Bits a => a -> a -> Bool
+x .&&. y = (/= zeroBits) (x .&. y)

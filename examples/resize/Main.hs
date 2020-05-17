@@ -13,17 +13,26 @@ import           Control.Monad.Extra            ( unlessM
                                                 )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
-import qualified SDL
-import           Say
-import           UnliftIO.Exception             ( displayException
-                                                , throwString
-                                                )
-import           UnliftIO.IORef
-import           UnliftIO.MVar
-
 import           Data.Bool                      ( bool )
 import qualified Data.Vector                   as V
 import           GHC.Clock                      ( getMonotonicTimeNSec )
+import           Linear.Affine                  ( Point(..) )
+import           Linear.Metric                  ( norm )
+import           Linear.V2                      ( V2(..) )
+import qualified SDL
+import           Say
+import           UnliftIO.Async                 ( wait
+                                                , withAsyncBound
+                                                )
+import           UnliftIO.Exception             ( displayException
+                                                , throwString
+                                                )
+import           UnliftIO.Foreign               ( allocaBytes
+                                                , plusPtr
+                                                , poke
+                                                )
+import           UnliftIO.IORef
+import           UnliftIO.MVar
 
 import           Vulkan.CStruct.Extends         ( SomeStruct(..) )
 import           Vulkan.Core10                 as Vk
@@ -41,6 +50,7 @@ import           Vulkan.Zero
 
 import           Frame
 import           Init
+import           Julia
 import           MonadVulkan
 import           Pipeline
 import           Swapchain
@@ -115,11 +125,12 @@ initialFrame window surfaceM windowSize = do
       (getPhysicalDeviceSurfaceSupportKHR phys graphicsQueueFamilyIndex surface)
     $ throwString "Device isn't able to present to the new surface"
 
-  (swapchain, imageExtent, framebuffers, swapchainFormat, releaseSwapchain) <-
+  (swapchain, imageExtent, framebuffers, imageViews, images, swapchainFormat, releaseSwapchain) <-
     allocSwapchainResources windowSize NULL_HANDLE surface
 
   renderPass <- snd <$> Pipeline.createRenderPass swapchainFormat
   pipeline                     <- snd <$> createPipeline renderPass
+  (juliaPipeline, juliaPipelineLayout, juliaDSets) <- juliaPipeline imageViews
 
   (_, imageAvailableSemaphore) <- withSemaphore' zero
   (_, renderFinishedSemaphore) <- withSemaphore' zero
@@ -145,6 +156,11 @@ initialFrame window surfaceM windowSize = do
            imageAvailableSemaphore
            renderFinishedSemaphore
            pipeline
+           juliaPipeline
+           juliaPipelineLayout
+           ((juliaDSets V.!) . fromIntegral)
+           ((images V.!) . fromIntegral)
+           ((imageViews V.!) . fromIntegral)
            ((framebuffers V.!) . fromIntegral)
            releaseSwapchain
            currentPresented
@@ -217,6 +233,15 @@ draw = do
                                                 0
                                                 fImageAvailableSemaphore
                                                 zero
+  let image = fImages imageIndex
+  let imageSubresourceRange = ImageSubresourceRange
+        { aspectMask     = IMAGE_ASPECT_COLOR_BIT
+        , baseMipLevel   = 0
+        , levelCount     = 1
+        , baseArrayLayer = 0
+        , layerCount     = 1
+        }
+  let Extent2D imageWidth imageHeight = fImageExtent
 
   -- Make sure we don't destroy the swapchain until at least this frame has
   -- finished GPU execution.
@@ -231,31 +256,112 @@ draw = do
   -- The command buffer will be freed when the frame is retired
   [commandBuffer] <- allocateCommandBuffers' commandBufferAllocateInfo
 
+  updateDescriptorSets'
+    [ SomeStruct zero
+        { dstSet          = fJuliaDescriptorSets imageIndex
+        , dstBinding      = 0
+        , descriptorType  = DESCRIPTOR_TYPE_STORAGE_IMAGE
+        , descriptorCount = 1
+        , imageInfo = [ DescriptorImageInfo { sampler = NULL_HANDLE
+                                            , imageView = fImageViews imageIndex
+                                            , imageLayout = IMAGE_LAYOUT_GENERAL
+                                            }
+                      ]
+        }
+    ]
+    []
+
+  let julia = True
   useCommandBuffer' commandBuffer
                     zero { flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT }
-    $ do
-        let renderPassBeginInfo = zero
-              { renderPass  = fRenderPass
-              , framebuffer = fFramebuffers imageIndex
-              , renderArea  = Rect2D zero fImageExtent
-              , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
-              }
-        cmdSetViewport'
-          0
-          [ Viewport { x        = 0
-                     , y        = 0
-                     , width    = realToFrac $ width (fImageExtent :: Extent2D)
-                     , height   = realToFrac $ height (fImageExtent :: Extent2D)
-                     , minDepth = 0
-                     , maxDepth = 1
-                     }
-          ]
-        cmdSetScissor'
-          0
-          [Rect2D { offset = Offset2D 0 0, extent = fImageExtent }]
-        cmdUseRenderPass' renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
-          cmdBindPipeline' PIPELINE_BIND_POINT_GRAPHICS fPipeline
-          cmdDraw' 3 1 0 0
+    $ if julia
+        then do
+          -- Transition image to general, to write from the compute shader
+          cmdPipelineBarrier
+            commandBuffer
+            PIPELINE_STAGE_TOP_OF_PIPE_BIT
+            PIPELINE_STAGE_COMPUTE_SHADER_BIT
+            zero
+            []
+            []
+            [ SomeStruct zero { srcAccessMask    = zero
+                              , dstAccessMask    = ACCESS_SHADER_WRITE_BIT
+                              , oldLayout        = IMAGE_LAYOUT_UNDEFINED
+                              , newLayout        = IMAGE_LAYOUT_GENERAL
+                              , image            = image
+                              , subresourceRange = imageSubresourceRange
+                              }
+            ]
+
+          cmdBindPipeline' PIPELINE_BIND_POINT_COMPUTE fJuliaPipeline
+
+          -- Get the mouse position in the window (in [-1..1]) and send it as a
+          -- push constant.
+          P m <- SDL.getAbsoluteMouseLocation
+          let m' :: V2 Float
+              m' = fmap realToFrac m
+                / fmap realToFrac (V2 imageWidth imageHeight)
+              c :: V2 Float
+              c = (m' * 2) - 1
+              r = 0.5 * (1 + sqrt (4 * norm c + 1))
+          allocaBytes (8 + 8 + 4) $ \p -> do
+            liftIO $ poke (p `plusPtr` 0) fImageExtent
+            liftIO $ poke (p `plusPtr` 8) c
+            liftIO $ poke (p `plusPtr` 16) r
+            cmdPushConstants' fJuliaPipelineLayout
+                              SHADER_STAGE_COMPUTE_BIT
+                              0
+                              (8 + 8 + 4)
+                              p
+          cmdBindDescriptorSets' PIPELINE_BIND_POINT_COMPUTE
+                                 fJuliaPipelineLayout
+                                 0
+                                 [fJuliaDescriptorSets imageIndex]
+                                 []
+          cmdDispatch'
+            ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)
+            ((imageWidth + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
+            1
+
+          -- Transition image back to present
+          cmdPipelineBarrier
+            commandBuffer
+            PIPELINE_STAGE_COMPUTE_SHADER_BIT
+            PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+            zero
+            []
+            []
+            [ SomeStruct zero { srcAccessMask    = ACCESS_SHADER_WRITE_BIT
+                              , dstAccessMask    = zero
+                              , oldLayout        = IMAGE_LAYOUT_GENERAL
+                              , newLayout        = IMAGE_LAYOUT_PRESENT_SRC_KHR
+                              , image            = image
+                              , subresourceRange = imageSubresourceRange
+                              }
+            ]
+        else do
+          let renderPassBeginInfo = zero
+                { renderPass  = fRenderPass
+                , framebuffer = fFramebuffers imageIndex
+                , renderArea  = Rect2D zero fImageExtent
+                , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
+                }
+          cmdSetViewport'
+            0
+            [ Viewport { x        = 0
+                       , y        = 0
+                       , width    = realToFrac imageWidth
+                       , height   = realToFrac imageHeight
+                       , minDepth = 0
+                       , maxDepth = 1
+                       }
+            ]
+          cmdSetScissor'
+            0
+            [Rect2D { offset = Offset2D 0 0, extent = fImageExtent }]
+          cmdUseRenderPass' renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
+            cmdBindPipeline' PIPELINE_BIND_POINT_GRAPHICS fPipeline
+            cmdDraw' 3 1 0 0
 
   let submitInfo = zero
         { waitSemaphores   = [fImageAvailableSemaphore]

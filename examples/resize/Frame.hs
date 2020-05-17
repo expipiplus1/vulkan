@@ -59,6 +59,11 @@ data Frame = Frame
   , fImageAvailableSemaphore :: Semaphore
   , fRenderFinishedSemaphore :: Semaphore
   , fPipeline                :: Pipeline
+  , fJuliaPipeline           :: Pipeline
+  , fJuliaPipelineLayout     :: PipelineLayout
+  , fJuliaDescriptorSets     :: Word32 -> DescriptorSet
+  , fImages                  :: Word32 -> Image
+  , fImageViews              :: Word32 -> ImageView
   , fFramebuffers            :: Word32 -> Framebuffer
   , fReleaseSwapchain        :: RefCounted
     -- Scheduling. TODO, abstract this

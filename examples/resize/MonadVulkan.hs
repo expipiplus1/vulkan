@@ -43,7 +43,7 @@ newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
 instance MonadUnliftIO V where
   withRunInIO a = V $ withRunInIO (\r -> a (r . unV))
 
-newtype CmdT m a = CmdT { _unCmd :: ReaderT CommandBuffer m a }
+newtype CmdT m a = CmdT { unCmdT :: ReaderT CommandBuffer m a }
   deriving newtype ( Functor
                    , Applicative
                    , Monad
@@ -52,6 +52,9 @@ newtype CmdT m a = CmdT { _unCmd :: ReaderT CommandBuffer m a }
                    , MonadResource
                    , HasVulkan
                    )
+
+instance MonadUnliftIO m => MonadUnliftIO (CmdT m) where
+  withRunInIO a = CmdT $ withRunInIO (\r -> a (r . unCmdT))
 
 class HasVulkan m where
   getInstance :: m Instance
@@ -185,4 +188,5 @@ autoapplyDecs
   , 'cmdSetScissor
   , 'cmdUseRenderPass
   , 'cmdDraw
+  , 'cmdPushConstants
   ]

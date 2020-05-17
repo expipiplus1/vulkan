@@ -14,6 +14,8 @@ A nice example of rendering into a window which can be resized. It's not a
 single file `triangle` like `sdl-triangle`, but rather builds a couple of nice
 abstractions to make the code a little nicer.
 
+It renders a Julia set according the mouse position in the window.
+
 The [`resourcet` package](https://hackage.haskell.org/package/resourcet) is
 used to ensure resources are deallocated.
 
