@@ -1,6 +1,9 @@
 name: Haskell CI
 
-on: [pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
 
 jobs:
   cabal:
