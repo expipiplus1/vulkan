@@ -181,4 +181,8 @@ autoapplyDecs
   , 'deviceWaitIdleSafe
   , 'resetCommandPool
   , 'allocateCommandBuffers
+  , 'cmdSetViewport
+  , 'cmdSetScissor
+  , 'cmdUseRenderPass
+  , 'cmdDraw
   ]

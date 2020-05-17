@@ -53,6 +53,7 @@ data Frame = Frame
     -- Vulkan items
   , fSurface                 :: SurfaceKHR
   , fSwapchain               :: SwapchainKHR
+  , fSwapchainFormat         :: Format
   , fRenderPass              :: RenderPass
   , fImageExtent             :: Extent2D
   , fImageAvailableSemaphore :: Semaphore

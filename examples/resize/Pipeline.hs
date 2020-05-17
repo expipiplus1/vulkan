@@ -23,8 +23,8 @@ import           Vulkan.Zero
 import           MonadVulkan
 
 -- Create the most vanilla rendering pipeline
-createPipeline :: Extent2D -> RenderPass -> V (ReleaseKey, Pipeline)
-createPipeline imageExtent renderPass = do
+createPipeline :: RenderPass -> V (ReleaseKey, Pipeline)
+createPipeline renderPass = do
   (shaderKeys, shaderStages  ) <- V.unzip <$> createShaders
   (layoutKey , pipelineLayout) <- withPipelineLayout' zero
   let
@@ -36,18 +36,8 @@ createPipeline imageExtent renderPass = do
                                { topology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
                                , primitiveRestartEnable = False
                                }
-      , viewportState      = Just . SomeStruct $ zero
-        { viewports =
-          [ Viewport { x        = 0
-                     , y        = 0
-                     , width    = realToFrac $ width (imageExtent :: Extent2D)
-                     , height   = realToFrac $ height (imageExtent :: Extent2D)
-                     , minDepth = 0
-                     , maxDepth = 1
-                     }
-          ]
-        , scissors  = [Rect2D { offset = Offset2D 0 0, extent = imageExtent }]
-        }
+      , viewportState      = Just
+        $ SomeStruct zero { viewportCount = 1, scissorCount = 1 }
       , rasterizationState = SomeStruct $ zero
                                { depthClampEnable        = False
                                , rasterizerDiscardEnable = False
@@ -76,7 +66,11 @@ createPipeline imageExtent renderPass = do
                                                      }
                                                  ]
                                }
-      , dynamicState       = Nothing
+      , dynamicState       = Just zero
+                               { dynamicStates = [ DYNAMIC_STATE_VIEWPORT
+                                                 , DYNAMIC_STATE_SCISSOR
+                                                 ]
+                               }
       , layout             = pipelineLayout
       , renderPass         = renderPass
       , subpass            = 0

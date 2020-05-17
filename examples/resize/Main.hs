@@ -42,6 +42,7 @@ import           Vulkan.Zero
 import           Frame
 import           Init
 import           MonadVulkan
+import           Pipeline
 import           Swapchain
 import           Window
 
@@ -112,9 +113,11 @@ initialFrame window surfaceM windowSize = do
       (getPhysicalDeviceSurfaceSupportKHR phys graphicsQueueFamilyIndex surface)
     $ throwString "Device isn't able to present to the new surface"
 
-
-  (swapchain, imageExtent, framebuffers, pipeline, renderPass, releaseSwapchain) <-
+  (swapchain, imageExtent, framebuffers, swapchainFormat, releaseSwapchain) <-
     allocSwapchainResources windowSize NULL_HANDLE surface
+
+  renderPass <- snd <$> Pipeline.createRenderPass swapchainFormat
+  pipeline                     <- snd <$> createPipeline renderPass
 
   (_, imageAvailableSemaphore) <- withSemaphore' zero
   (_, renderFinishedSemaphore) <- withSemaphore' zero
@@ -134,6 +137,7 @@ initialFrame window surfaceM windowSize = do
            window
            surface
            swapchain
+           swapchainFormat
            renderPass
            imageExtent
            imageAvailableSemaphore
@@ -234,14 +238,22 @@ draw = do
               , renderArea  = Rect2D zero fImageExtent
               , clearValues = [Color (Float32 (0.1, 0.1, 0.1, 1))]
               }
-        cmdUseRenderPass commandBuffer
-                         renderPassBeginInfo
-                         SUBPASS_CONTENTS_INLINE
-          $ do
-              cmdBindPipeline commandBuffer
-                              PIPELINE_BIND_POINT_GRAPHICS
-                              fPipeline
-              cmdDraw commandBuffer 3 1 0 0
+        cmdSetViewport'
+          0
+          [ Viewport { x        = 0
+                     , y        = 0
+                     , width    = realToFrac $ width (fImageExtent :: Extent2D)
+                     , height   = realToFrac $ height (fImageExtent :: Extent2D)
+                     , minDepth = 0
+                     , maxDepth = 1
+                     }
+          ]
+        cmdSetScissor'
+          0
+          [Rect2D { offset = Offset2D 0 0, extent = fImageExtent }]
+        cmdUseRenderPass' renderPassBeginInfo SUBPASS_CONTENTS_INLINE $ do
+          cmdBindPipeline' PIPELINE_BIND_POINT_GRAPHICS fPipeline
+          cmdDraw' 3 1 0 0
 
   let submitInfo = zero
         { waitSemaphores   = [fImageAvailableSemaphore]

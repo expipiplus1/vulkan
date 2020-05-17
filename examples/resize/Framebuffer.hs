@@ -13,7 +13,7 @@ import           Vulkan.Zero
 
 import           MonadVulkan
 
--- Create the most vanilla rendering pipeline
+-- | Create a framebuffer filling the whole image.
 createFramebuffer
   :: RenderPass -> ImageView -> Extent2D -> V (ReleaseKey, Framebuffer)
 createFramebuffer renderPass imageView imageSize = do

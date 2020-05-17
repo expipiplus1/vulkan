@@ -6,6 +6,7 @@ module Swapchain
   ) where
 
 import           Control.Monad.Trans.Resource
+import           Control.Monad                  ( unless )
 import           Data.Either                    ( isLeft )
 import           Data.Foldable                  ( traverse_ )
 import qualified Data.Vector                   as V
@@ -104,18 +105,19 @@ threwSwapchainError = fmap isLeft . tryJust swapchainError
 recreateSwapchain :: Frame -> V Frame
 recreateSwapchain f@Frame {..} = do
   SDL.V2 width height <- SDL.vkGetDrawableSize fWindow
-  (swapchain, imageExtent, framebuffers, pipeline, renderPass, releaseSwapchain) <-
+  (swapchain, imageExtent, framebuffers, newFormat, releaseSwapchain) <-
     allocSwapchainResources
       (Extent2D (fromIntegral width) (fromIntegral height))
       fSwapchain
       fSurface
 
+  unless (newFormat == fSwapchainFormat)
+    $ throwString "New swapchain has a different (unhandled) format"
+
   releaseRefCounted fReleaseSwapchain
 
   pure f { fSwapchain        = swapchain
-         , fRenderPass       = renderPass
          , fImageExtent      = imageExtent
-         , fPipeline         = pipeline
          , fFramebuffers     = (framebuffers V.!) . fromIntegral
          , fReleaseSwapchain = releaseSwapchain
          }
@@ -129,8 +131,7 @@ allocSwapchainResources
        ( SwapchainKHR
        , Extent2D
        , V.Vector Framebuffer
-       , Pipeline
-       , RenderPass
+       , Format
        , RefCounted
        )
 allocSwapchainResources windowSize oldSwapchain surface = do
@@ -141,8 +142,6 @@ allocSwapchainResources windowSize oldSwapchain surface = do
 
   (renderPassKey, renderPass) <- Pipeline.createRenderPass
     (format (surfaceFormat :: SurfaceFormatKHR))
-  (pipelineKey  , pipeline       ) <- createPipeline imageExtent renderPass
-
   (_            , swapchainImages) <- getSwapchainImagesKHR' swapchain
   (imageViewKeys, imageViews     ) <-
     fmap V.unzip . V.forM swapchainImages $ \image ->
@@ -155,7 +154,6 @@ allocSwapchainResources windowSize oldSwapchain surface = do
   releaseSwapchain <- newRefCounted $ do
     traverse_ release framebufferKeys
     traverse_ release imageViewKeys
-    release pipelineKey
     release renderPassKey
     release swapchainKey
 
@@ -163,7 +161,6 @@ allocSwapchainResources windowSize oldSwapchain surface = do
     ( swapchain
     , imageExtent
     , framebuffers
-    , pipeline
-    , renderPass
+    , format (surfaceFormat :: SurfaceFormatKHR)
     , releaseSwapchain
     )
