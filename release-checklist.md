@@ -7,7 +7,7 @@
 
 - Bump version on `vulkan` in `package.yaml`
 - Bump version on `VulkanMemoryAllocator`
-- Bump version of `vulkan` dependency
+- Bump version of `vulkan` dependency in `VulkanMemoryAllocator`
 - Run hpack in
   - `.`
   - `./VulkanMemoryAllocator`
@@ -20,7 +20,6 @@
 
 - Build documentation
   - `cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source"`
-  - Replace documentation in gh-pages branch
 - sdist
 - unpack sdist elsewhere
 - build sdl-triangle
@@ -30,7 +29,6 @@
 
 - Build documentation
   - `cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source" VulkanMemoryAllocator`
-  - Replace documentation in gh-pages branch
 - sdist
 - unpack sdist elsewhere
 - build
