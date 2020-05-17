@@ -7,6 +7,7 @@
   - Generate safe FFI versions of blocking functions (Those with "wait" in the
     name or which can return "TIMEOUT"), #96
   - Add cabal flag for enable deriving Generic for structs, #99
+  - Add `complete` pragmas for `::&` and `:&`
 
 ## [3.3] - 2020-05-07
   - Move package from `Graphics.Vulkan` to just `Vulkan`, #60

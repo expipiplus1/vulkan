@@ -159,6 +159,13 @@ classes Spec {..} = do
                     <>  ") and can't be safely peeked\") Nothing Nothing"
             _ -> throw "Multiple values for sType"
         _ -> throw $ "Unable to find sType member in " <> show sName
+  completeStructTailPragmas <-
+    fmap (V.mapMaybe id) . forV specStructs $ \Struct {..} -> if V.null sExtends
+      then pure Nothing
+      else Just <$> do
+        let n = mkTyName sName
+        tellSourceImport n
+        pure $ "{-# complete (::&) ::" <+> pretty n <+> "#-}"
   tellBoot $ do
     tellExport (EType (TyConName "Extendss"))
     tellExport (EType (TyConName "PeekChain"))
@@ -303,6 +310,7 @@ classes Spec {..} = do
     pattern a ::& es <- (\\a -> (a, getNext a) -> (a, es))
       where a ::& es = setNext a es
     infix 6 ::&
+    {vsep (toList completeStructTailPragmas)}
 
     -- | View the head and tail of a 'Chain', see '::&'
     --
@@ -310,6 +318,7 @@ classes Spec {..} = do
     pattern (:&) :: e -> Chain es -> Chain (e:es)
     pattern e :& es = (e, es)
     infixr 7 :&
+    \{-# complete (:&) #-}
 
     type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
       Extendss p '[]      = ()
