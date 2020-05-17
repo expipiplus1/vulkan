@@ -70,12 +70,6 @@ let
             rev = "26677886eced970d661a5a7356ba4fe221c0324c";
             sha256 = "1865yqnxzlrkmbag4xn47csgagmk968z4n633sk2c75d48icyzf9";
           }) { };
-          polysemy-plugin = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
-            owner = "polysemy-research";
-            repo = "polysemy";
-            rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
-            sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
-          } + "/polysemy-plugin")) { };
           polysemy = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
             owner = "polysemy-research";
             repo = "polysemy";
