@@ -1,5 +1,5 @@
 { nixpkgsSrc ? builtins.fetchTarball
-  "https://github.com/NixOS/nixpkgs/archive/ab3adfe1c769c22b6629e59ea0ef88ec8ee4563f.tar.gz"
+  "https://github.com/NixOS/nixpkgs/archive/33dd04ea4afa2e7c1a84bdc48e8cf0bd9923e882.tar.gz"
 , pkgs ? import nixpkgsSrc { }, compiler ? "ghc882"
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
 
@@ -40,7 +40,6 @@ let
               sha256 = "1qfjfrzc9yjg8ibgr0a7fly6fnd1f2yv731n7h1wjgz9vaa3q6wg";
             };
           };
-          bytes = self.bytes_0_17;
           th-desugar = self.callCabal2nix "" (pkgs.fetchFromGitHub {
             owner = "goldfirere";
             repo = "th-desugar";
@@ -59,7 +58,6 @@ let
           #
           algebraic-graphs = dontCheck super.algebraic-graphs;
           first-class-families = doJailbreak super.first-class-families;
-          inline-c = self.inline-c_0_9_0_0;
           dependent-sum = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
             owner = "obsidiansystems";
             repo = "dependent-sum";
@@ -72,12 +70,6 @@ let
             rev = "26677886eced970d661a5a7356ba4fe221c0324c";
             sha256 = "1865yqnxzlrkmbag4xn47csgagmk968z4n633sk2c75d48icyzf9";
           }) { };
-          polysemy-plugin = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
-            owner = "polysemy-research";
-            repo = "polysemy";
-            rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
-            sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
-          } + "/polysemy-plugin")) { };
           polysemy = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
             owner = "polysemy-research";
             repo = "polysemy";
