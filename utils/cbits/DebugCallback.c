@@ -16,12 +16,9 @@ debugCallbackFatal(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                    VkDebugUtilsMessageTypeFlagsEXT messageType,
                    const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
                    void *pUserData) {
-  int errorBitSet = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT & messageSeverity;
-  int isError = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT == errorBitSet;
+  debugCallback(messageSeverity, messageType, pCallbackData, pUserData);
 
-  fprintf(stderr, "Validation: %s\n", pCallbackData->pMessage);
-
-  if (isError) {
+  if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
     fprintf(stderr, "Aborting on validation error.\n");
     abort();
   }
