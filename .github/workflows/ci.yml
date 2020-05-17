@@ -3,7 +3,7 @@ name: Haskell CI
 on: [pull_request]
 
 jobs:
-  build:
+  cabal:
 
     runs-on: ${{ matrix.os }}
 
@@ -72,3 +72,66 @@ jobs:
     - name: Build vulkan-examples
       run: cabal build --enable-tests --enable-benchmarks vulkan-examples
       if: matrix.ghc != '8.6.5'
+
+  stack:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        stack-args: ['']
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-haskell@v1
+      with:
+        stack-version: 'latest'
+
+    - name: Cache stack global package db
+      id:   stack-global
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-global-${{ matrix.stack-args }}-${{ hashFiles('**.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-global-${{ matrix.stack-args }}
+          ${{ runner.os }}-stack-global
+
+    - name: Cache .stack-work
+      id: stack-work
+      uses: actions/cache@v1
+      with:
+        path: .stack-work
+        key: ${{ runner.os }}-stack-work-${{ matrix.stack-args }}-${{ hashFiles('**.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-work-${{ matrix.stack-args }}
+          ${{ runner.os }}-stack-work
+
+    - name: Install dependencies
+      run: stack build --test --bench --only-dependencies $ARGS
+      env:
+        ARGS: ${{ matrix.args }}
+
+    - name: Build
+      run: stack build $ARGS
+      env:
+        ARGS: ${{ matrix.args }}
+
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v8
+    - uses: cachix/cachix-action@v6
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+    - run: nix-build -A generate-new
+    - run: nix-build -A vulkan
+    - run: nix-build -A VulkanMemoryAllocator
+    - run: nix-build -A vulkan-utils
+    - run: nix-build -A vulkan-examples
