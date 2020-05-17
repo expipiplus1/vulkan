@@ -1,0 +1,429 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier">ExternalSemaphoreFeatureFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier">EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier">EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                                               </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                                               </span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlags"><span class="hs-identifier">ExternalSemaphoreFeatureFlags</span></a></span><span>
+</span><span id="line-7"></span><span>                                                             </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | VkExternalSemaphoreFeatureFlagBits - Bitfield describing features of an</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- external semaphore handle type</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- 'ExternalSemaphoreFeatureFlags'</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">newtype</span><span> </span><span id="ExternalSemaphoreFeatureFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-var">ExternalSemaphoreFeatureFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ExternalSemaphoreFeatureFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-var">ExternalSemaphoreFeatureFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680053307"><span id="local-6989586621680053309"><span class="annot"><span class="annottext">ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+(ExternalSemaphoreFeatureFlagBits
+ -&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool)
+-&gt; Eq ExternalSemaphoreFeatureFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+$c/= :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+== :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+$c== :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680053291"><span id="local-6989586621680053293"><span id="local-6989586621680053295"><span id="local-6989586621680053297"><span id="local-6989586621680053299"><span id="local-6989586621680053301"><span id="local-6989586621680053303"><span class="annot"><span class="annottext">Eq ExternalSemaphoreFeatureFlagBits
+Eq ExternalSemaphoreFeatureFlagBits =&gt;
+(ExternalSemaphoreFeatureFlagBits
+ -&gt; ExternalSemaphoreFeatureFlagBits -&gt; Ordering)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; Ord ExternalSemaphoreFeatureFlagBits
+ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Ordering
+ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+$cmin :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+max :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+$cmax :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+&gt;= :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+$c&gt;= :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+&gt; :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+$c&gt; :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+&lt;= :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+$c&lt;= :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+&lt; :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+$c&lt; :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Bool
+compare :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Ordering
+$ccompare :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; Ordering
+$cp1Ord :: Eq ExternalSemaphoreFeatureFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680053274"><span id="local-6989586621680053276"><span id="local-6989586621680053278"><span id="local-6989586621680053280"><span id="local-6989586621680053282"><span id="local-6989586621680053284"><span id="local-6989586621680053286"><span id="local-6989586621680053288"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits
+Ptr b -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; IO ExternalSemaphoreFeatureFlagBits
+Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits
+Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+ExternalSemaphoreFeatureFlagBits -&gt; Int
+(ExternalSemaphoreFeatureFlagBits -&gt; Int)
+-&gt; (ExternalSemaphoreFeatureFlagBits -&gt; Int)
+-&gt; (Ptr ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits)
+-&gt; (Ptr ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ())
+-&gt; (Ptr ExternalSemaphoreFeatureFlagBits
+    -&gt; IO ExternalSemaphoreFeatureFlagBits)
+-&gt; (Ptr ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ())
+-&gt; Storable ExternalSemaphoreFeatureFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits
+forall b. Ptr b -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+$cpoke :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+peek :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; IO ExternalSemaphoreFeatureFlagBits
+$cpeek :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; IO ExternalSemaphoreFeatureFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits
+pokeElemOff :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; IO ()
+peekElemOff :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits
+$cpeekElemOff :: Ptr ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; IO ExternalSemaphoreFeatureFlagBits
+alignment :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+$calignment :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+sizeOf :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+$csizeOf :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680053271"><span class="annot"><span class="annottext">ExternalSemaphoreFeatureFlagBits
+ExternalSemaphoreFeatureFlagBits
+-&gt; Zero ExternalSemaphoreFeatureFlagBits
+forall a. a -&gt; Zero a
+zero :: ExternalSemaphoreFeatureFlagBits
+$czero :: ExternalSemaphoreFeatureFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680053225"><span id="local-6989586621680053227"><span id="local-6989586621680053229"><span id="local-6989586621680053231"><span id="local-6989586621680053233"><span id="local-6989586621680053235"><span id="local-6989586621680053237"><span id="local-6989586621680053239"><span id="local-6989586621680053241"><span id="local-6989586621680053243"><span id="local-6989586621680053245"><span id="local-6989586621680053247"><span id="local-6989586621680053249"><span id="local-6989586621680053251"><span id="local-6989586621680053253"><span id="local-6989586621680053255"><span id="local-6989586621680053257"><span id="local-6989586621680053259"><span id="local-6989586621680053261"><span id="local-6989586621680053263"><span id="local-6989586621680053265"><span id="local-6989586621680053267"><span class="annot"><span class="annottext">Eq ExternalSemaphoreFeatureFlagBits
+ExternalSemaphoreFeatureFlagBits
+Eq ExternalSemaphoreFeatureFlagBits =&gt;
+(ExternalSemaphoreFeatureFlagBits
+ -&gt; ExternalSemaphoreFeatureFlagBits
+ -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; (Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits -&gt; Int -&gt; Bool)
+-&gt; (ExternalSemaphoreFeatureFlagBits -&gt; Maybe Int)
+-&gt; (ExternalSemaphoreFeatureFlagBits -&gt; Int)
+-&gt; (ExternalSemaphoreFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits
+    -&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits)
+-&gt; (ExternalSemaphoreFeatureFlagBits -&gt; Int)
+-&gt; Bits ExternalSemaphoreFeatureFlagBits
+Int -&gt; ExternalSemaphoreFeatureFlagBits
+ExternalSemaphoreFeatureFlagBits -&gt; Bool
+ExternalSemaphoreFeatureFlagBits -&gt; Int
+ExternalSemaphoreFeatureFlagBits -&gt; Maybe Int
+ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+ExternalSemaphoreFeatureFlagBits -&gt; Int -&gt; Bool
+ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+$cpopCount :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+rotateR :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$crotateR :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+rotateL :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$crotateL :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+unsafeShiftR :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$cunsafeShiftR :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+shiftR :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$cshiftR :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+unsafeShiftL :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$cunsafeShiftL :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+shiftL :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$cshiftL :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+isSigned :: ExternalSemaphoreFeatureFlagBits -&gt; Bool
+$cisSigned :: ExternalSemaphoreFeatureFlagBits -&gt; Bool
+bitSize :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+$cbitSize :: ExternalSemaphoreFeatureFlagBits -&gt; Int
+bitSizeMaybe :: ExternalSemaphoreFeatureFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: ExternalSemaphoreFeatureFlagBits -&gt; Maybe Int
+testBit :: ExternalSemaphoreFeatureFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: ExternalSemaphoreFeatureFlagBits -&gt; Int -&gt; Bool
+complementBit :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$ccomplementBit :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+clearBit :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$cclearBit :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+setBit :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$csetBit :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+bit :: Int -&gt; ExternalSemaphoreFeatureFlagBits
+$cbit :: Int -&gt; ExternalSemaphoreFeatureFlagBits
+zeroBits :: ExternalSemaphoreFeatureFlagBits
+$czeroBits :: ExternalSemaphoreFeatureFlagBits
+rotate :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$crotate :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+shift :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+$cshift :: ExternalSemaphoreFeatureFlagBits
+-&gt; Int -&gt; ExternalSemaphoreFeatureFlagBits
+complement :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+$ccomplement :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+xor :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+$cxor :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+.|. :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+$c.|. :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+.&amp;. :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+$c.&amp;. :: ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+-&gt; ExternalSemaphoreFeatureFlagBits
+$cp1Bits :: Eq ExternalSemaphoreFeatureFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT' specifies that handles of</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- this type /can/ be exported from Vulkan semaphore objects.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"><span id="%24mEXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"><span id="EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT :: ExternalSemaphoreFeatureFlagBits
+$mEXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT :: forall r.
+ExternalSemaphoreFeatureFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#%24bEXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreFeatureFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- | 'EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT' specifies that handles of</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- this type /can/ be imported as Vulkan semaphore objects.</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"><span id="%24mEXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"><span id="EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT :: ExternalSemaphoreFeatureFlagBits
+$mEXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT :: forall r.
+ExternalSemaphoreFeatureFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#%24bEXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreFeatureFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">type</span><span> </span><span id="ExternalSemaphoreFeatureFlags"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlags"><span class="hs-identifier hs-var">ExternalSemaphoreFeatureFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreFeatureFlagBits</span></a></span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680053215"><span id="local-6989586621680053217"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreFeatureFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span id="local-6989586621680053213"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ExternalSemaphoreFeatureFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680053211"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680053211"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier hs-type">EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT&quot;</span></span><span>
+</span><span id="line-45"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier hs-type">EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT&quot;</span></span><span>
+</span><span id="line-46"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreFeatureFlagBits</span></a></span><span> </span><span id="local-6989586621680053210"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680053210"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680053211"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalSemaphoreFeatureFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680053210"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680053202"><span id="local-6989586621680053205"><span id="local-6989586621680053207"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-type">ExternalSemaphoreFeatureFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>  </span><span id="local-6989586621680053200"><span class="annot"><span class="annottext">readPrec :: ReadPrec ExternalSemaphoreFeatureFlagBits
+</span><a href="#local-6989586621680053200"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec ExternalSemaphoreFeatureFlagBits
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec ExternalSemaphoreFeatureFlagBits)]
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreFeatureFlagBits
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreFeatureFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier hs-var">EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreFeatureFlagBits
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalSemaphoreFeatureFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier hs-var">EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-51"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec ExternalSemaphoreFeatureFlagBits
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-52"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-53"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalSemaphoreFeatureFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>                       </span><span id="local-6989586621680053199"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680053199"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-55"></span><span>                       </span><span class="annot"><span class="annottext">ExternalSemaphoreFeatureFlagBits
+-&gt; ReadPrec ExternalSemaphoreFeatureFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; ExternalSemaphoreFeatureFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.html#ExternalSemaphoreFeatureFlagBits"><span class="hs-identifier hs-var">ExternalSemaphoreFeatureFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680053199"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span>
+</span><span id="line-57"></span></pre></body></html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_AMD_display_native_hdr</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#setLocalDimmingAMD"><span class="hs-identifier">setLocalDimmingAMD</span></a></span><span>
+</span><span id="line-3"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span class="hs-identifier">AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span class="hs-identifier">AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION</span></a></span><span>
+</span><span id="line-7"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span class="hs-identifier">AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span class="hs-identifier">AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-9"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#SwapchainKHR"><span class="hs-identifier">SwapchainKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#ColorSpaceKHR"><span class="hs-identifier">ColorSpaceKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span>                                                    </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkSetLocalDimmingAMD%3ADeviceCmds"><span class="hs-identifier">pVkSetLocalDimmingAMD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier">Device_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html"><span class="hs-identifier">Vulkan.Extensions.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#SwapchainKHR"><span class="hs-identifier">SwapchainKHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html"><span class="hs-identifier">Vulkan.Extensions.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#SwapchainKHR"><span class="hs-identifier">SwapchainKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD"><span class="hs-identifier">STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD"><span class="hs-identifier">STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html"><span class="hs-identifier">Vulkan.Extensions.VK_KHR_surface</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#ColorSpaceKHR"><span class="hs-identifier">ColorSpaceKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html"><span class="hs-identifier">Vulkan.Extensions.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.Handles.html#SwapchainKHR"><span class="hs-identifier">SwapchainKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkSetLocalDimmingAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#mkVkSetLocalDimmingAMD"><span class="hs-identifier hs-var">mkVkSetLocalDimmingAMD</span></a></span></span><span>
+</span><span id="line-59"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#SwapchainKHR"><span class="hs-identifier hs-type">SwapchainKHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#SwapchainKHR"><span class="hs-identifier hs-type">SwapchainKHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- | vkSetLocalDimmingAMD - Set Local Dimming</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-64"></span><span class="hs-comment">--</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- -   @swapChain@ /must/ be a valid</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--     'Vulkan.Extensions.Handles.SwapchainKHR' handle</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- -   Both of @device@, and @swapChain@ /must/ have been created,</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--     allocated, or retrieved from the same</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.Instance'</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- -   It is only valid to call 'setLocalDimmingAMD' if</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--     supported</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.Device',</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- 'Vulkan.Extensions.Handles.SwapchainKHR'</span><span>
+</span><span id="line-84"></span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#setLocalDimmingAMD"><span class="hs-identifier hs-type">setLocalDimmingAMD</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680111186"><span class="annot"><a href="#local-6989586621680111186"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-85"></span><span>                    </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680111186"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>                   </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the device associated with @swapChain@.</span><span>
+</span><span id="line-87"></span><span>                      </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-88"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @swapChain@ handle to enable local dimming.</span><span>
+</span><span id="line-89"></span><span>                      </span><span class="annot"><a href="Vulkan.Extensions.Handles.html#SwapchainKHR"><span class="hs-identifier hs-type">SwapchainKHR</span></a></span><span>
+</span><span id="line-90"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @localDimmingEnable@ specifies whether local dimming is enabled for the</span><span>
+</span><span id="line-91"></span><span>                      </span><span class="hs-comment">-- swapchain.</span><span>
+</span><span id="line-92"></span><span>                      </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;localDimmingEnable&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>                   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680111186"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span id="setLocalDimmingAMD"><span class="annot"><span class="annottext">setLocalDimmingAMD :: Device -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool) -&gt; io ()
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#setLocalDimmingAMD"><span class="hs-identifier hs-var hs-var">setLocalDimmingAMD</span></a></span></span><span> </span><span id="local-6989586621680111185"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680111185"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680111184"><span class="annot"><span class="annottext">swapChain :: SwapchainKHR
+</span><a href="#local-6989586621680111184"><span class="hs-identifier hs-var">swapChain</span></a></span></span><span> </span><span id="local-6989586621680111183"><span class="annot"><span class="annottext">localDimmingEnable :: &quot;localDimmingEnable&quot; ::: Bool
+</span><a href="#local-6989586621680111183"><span class="hs-identifier hs-var">localDimmingEnable</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-95"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680111182"><span class="annot"><span class="annottext">vkSetLocalDimmingAMDPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+</span><a href="#local-6989586621680111182"><span class="hs-identifier hs-var hs-var">vkSetLocalDimmingAMDPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkSetLocalDimmingAMD%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkSetLocalDimmingAMD</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680111185"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span>  </span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool) -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *).
+Applicative f =&gt;
+(&quot;localDimmingEnable&quot; ::: Bool) -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+</span><a href="#local-6989586621680111182"><span class="hs-identifier hs-var">vkSetLocalDimmingAMDPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; &quot;localDimmingEnable&quot; ::: Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-97"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkSetLocalDimmingAMD is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680111177"><span class="annot"><span class="annottext">vkSetLocalDimmingAMD' :: Ptr Device_T
+-&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ()
+</span><a href="#local-6989586621680111177"><span class="hs-identifier hs-var hs-var">vkSetLocalDimmingAMD'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+-&gt; Ptr Device_T
+-&gt; SwapchainKHR
+-&gt; (&quot;localDimmingEnable&quot; ::: Bool32)
+-&gt; IO ()
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#mkVkSetLocalDimmingAMD"><span class="hs-identifier hs-var">mkVkSetLocalDimmingAMD</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ())
+</span><a href="#local-6989586621680111182"><span class="hs-identifier hs-var">vkSetLocalDimmingAMDPtr</span></a></span><span>
+</span><span id="line-99"></span><span>  </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; SwapchainKHR -&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ()
+</span><a href="#local-6989586621680111177"><span class="hs-identifier hs-var">vkSetLocalDimmingAMD'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680111185"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SwapchainKHR
+</span><a href="#local-6989586621680111184"><span class="hs-identifier hs-var">swapChain</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool) -&gt; &quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool
+</span><a href="#local-6989586621680111183"><span class="hs-identifier hs-var">localDimmingEnable</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span>  </span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(() -&gt; IO ()) -&gt; () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- | VkDisplayNativeHdrSurfaceCapabilitiesAMD - Structure describing display</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- native HDR specific capabilities of a surface</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- 'Vulkan.Core10.BaseType.Bool32',</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-112"></span><span class="hs-keyword">data</span><span> </span><span id="DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-var">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-var">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span></span><span>
+</span><span id="line-113"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @localDimmingSupport@ specifies whether the surface supports local</span><span>
+</span><span id="line-114"></span><span>    </span><span class="hs-comment">-- dimming. If this is 'Vulkan.Core10.BaseType.TRUE',</span><span>
+</span><span id="line-115"></span><span>    </span><span class="hs-comment">-- 'SwapchainDisplayNativeHdrCreateInfoAMD' /can/ be used to explicitly</span><span>
+</span><span id="line-116"></span><span>    </span><span class="hs-comment">-- enable or disable local dimming for the surface. Local dimming may also</span><span>
+</span><span id="line-117"></span><span>    </span><span class="hs-comment">-- be overriden by 'setLocalDimmingAMD' during the lifetime of the</span><span>
+</span><span id="line-118"></span><span>    </span><span class="hs-comment">-- swapchain.</span><span>
+</span><span id="line-119"></span><span>    </span><span id="%24sel%3AlocalDimmingSupport%3ADisplayNativeHdrSurfaceCapabilitiesAMD"><span class="annot"><span class="annottext">DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#%24sel%3AlocalDimmingSupport%3ADisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-var hs-var">localDimmingSupport</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-120"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680111170"><span id="local-6989586621680111172"><span class="annot"><span class="annottext">DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+(DisplayNativeHdrSurfaceCapabilitiesAMD
+ -&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+ -&gt; &quot;localDimmingEnable&quot; ::: Bool)
+-&gt; (DisplayNativeHdrSurfaceCapabilitiesAMD
+    -&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+    -&gt; &quot;localDimmingEnable&quot; ::: Bool)
+-&gt; Eq DisplayNativeHdrSurfaceCapabilitiesAMD
+forall a.
+(a -&gt; a -&gt; &quot;localDimmingEnable&quot; ::: Bool)
+-&gt; (a -&gt; a -&gt; &quot;localDimmingEnable&quot; ::: Bool) -&gt; Eq a
+/= :: DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+$c/= :: DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+== :: DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+$c== :: DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">DisplayNativeHdrSurfaceCapabilitiesAMD</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680111163"><span id="local-6989586621680111165"><span id="local-6989586621680111167"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-type">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span></span></span></span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680111158"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-type">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-127"></span><span>  </span><span id="local-6989586621680111153"><span class="annot"><span class="annottext">withCStruct :: DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; (Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680111151"><span class="annot"><span class="annottext">x :: DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111151"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680111150"><span class="annot"><span class="annottext">f :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b
+</span><a href="#local-6989586621680111150"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680111149"><span class="annot"><span class="annottext">p :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111149"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111149"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111151"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b
+</span><a href="#local-6989586621680111150"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111149"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-128"></span><span>  </span><span id="local-6989586621680111147"><span class="annot"><span class="annottext">pokeCStruct :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680111147"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680111146"><span class="annot"><span class="annottext">p :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111146"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680111145"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-type">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680111144"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680111144"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-129"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111146"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111146"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+-&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111146"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; Int -&gt; Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool) -&gt; &quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool
+</span><a href="#local-6989586621680111145"><span class="hs-identifier hs-var">localDimmingSupport</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680111144"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621680111143"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-134"></span><span>  </span><span id="local-6989586621680111141"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-135"></span><span>  </span><span id="local-6989586621680111139"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680111137"><span class="annot"><span class="annottext">p :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111137"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680111136"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680111136"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-136"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111137"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111137"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+-&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111137"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; Int -&gt; Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool) -&gt; &quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680111136"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-140"></span><span>
+</span><span id="line-141"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-type">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-142"></span><span>  </span><span id="local-6989586621680111132"><span class="annot"><span class="annottext">peekCStruct :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; IO DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680111130"><span class="annot"><span class="annottext">p :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111130"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-143"></span><span>    </span><span id="local-6989586621680111129"><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="#local-6989586621680111129"><span class="hs-identifier hs-var">localDimmingSupport</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+-&gt; IO (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111130"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; Int -&gt; Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span>    </span><span class="annot"><span class="annottext">DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; IO DisplayNativeHdrSurfaceCapabilitiesAMD
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(DisplayNativeHdrSurfaceCapabilitiesAMD
+ -&gt; IO DisplayNativeHdrSurfaceCapabilitiesAMD)
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; IO DisplayNativeHdrSurfaceCapabilitiesAMD
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool)
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-var">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span><span>
+</span><span id="line-145"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool32) -&gt; &quot;localDimmingEnable&quot; ::: Bool
+</span><a href="Vulkan.Core10.BaseType.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="#local-6989586621680111129"><span class="hs-identifier hs-var">localDimmingSupport</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span>
+</span><span id="line-147"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680111119"><span id="local-6989586621680111121"><span id="local-6989586621680111123"><span id="local-6989586621680111125"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-type">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-148"></span><span>  </span><span id="local-6989586621680111115"><span class="annot"><span class="annottext">sizeOf :: DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-149"></span><span>  </span><span id="local-6989586621680111113"><span class="annot"><span class="annottext">alignment :: DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-150"></span><span>  </span><span id="local-6989586621680111111"><span class="annot"><span class="annottext">peek :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; IO DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111111"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; IO DisplayNativeHdrSurfaceCapabilitiesAMD
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-151"></span><span>  </span><span id="local-6989586621680111110"><span class="annot"><span class="annottext">poke :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO ()
+</span><a href="#local-6989586621680111110"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680111109"><span class="annot"><span class="annottext">ptr :: Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111109"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680111108"><span class="annot"><span class="annottext">poked :: DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111108"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111109"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111108"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span>
+</span><span id="line-153"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-type">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-154"></span><span>  </span><span id="local-6989586621680111105"><span class="annot"><span class="annottext">zero :: DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="#local-6989586621680111105"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool)
+-&gt; DisplayNativeHdrSurfaceCapabilitiesAMD
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#DisplayNativeHdrSurfaceCapabilitiesAMD"><span class="hs-identifier hs-var">DisplayNativeHdrSurfaceCapabilitiesAMD</span></a></span><span>
+</span><span id="line-155"></span><span>           </span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-156"></span><span>
+</span><span id="line-157"></span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- | VkSwapchainDisplayNativeHdrCreateInfoAMD - Structure specifying display</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- native HDR parameters of a newly created swapchain object</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-162"></span><span class="hs-comment">--</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- If the @pNext@ chain of</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR' does not</span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- include this structure, the default value for @localDimmingEnable@ is</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- 'Vulkan.Core10.BaseType.TRUE', meaning local dimming is initially</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- enabled for the swapchain.</span><span>
+</span><span id="line-168"></span><span class="hs-comment">--</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-170"></span><span class="hs-comment">--</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- -   @sType@ /must/ be</span><span>
+</span><span id="line-172"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD'</span><span>
+</span><span id="line-173"></span><span class="hs-comment">--</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-175"></span><span class="hs-comment">--</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- -   It is only valid to set @localDimmingEnable@ to</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--     'Vulkan.Core10.BaseType.TRUE' if</span><span>
+</span><span id="line-178"></span><span class="hs-comment">--     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--     supported</span><span>
+</span><span id="line-180"></span><span class="hs-comment">--</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-182"></span><span class="hs-comment">--</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- 'Vulkan.Core10.BaseType.Bool32',</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-185"></span><span class="hs-keyword">data</span><span> </span><span id="SwapchainDisplayNativeHdrCreateInfoAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-var">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SwapchainDisplayNativeHdrCreateInfoAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-var">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span></span><span>
+</span><span id="line-186"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @localDimmingEnable@ specifies whether local dimming is enabled for the</span><span>
+</span><span id="line-187"></span><span>    </span><span class="hs-comment">-- swapchain.</span><span>
+</span><span id="line-188"></span><span>    </span><span id="%24sel%3AlocalDimmingEnable%3ASwapchainDisplayNativeHdrCreateInfoAMD"><span class="annot"><span class="annottext">SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#%24sel%3AlocalDimmingEnable%3ASwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-var hs-var">localDimmingEnable</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-189"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680111099"><span id="local-6989586621680111101"><span class="annot"><span class="annottext">SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+(SwapchainDisplayNativeHdrCreateInfoAMD
+ -&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+ -&gt; &quot;localDimmingEnable&quot; ::: Bool)
+-&gt; (SwapchainDisplayNativeHdrCreateInfoAMD
+    -&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+    -&gt; &quot;localDimmingEnable&quot; ::: Bool)
+-&gt; Eq SwapchainDisplayNativeHdrCreateInfoAMD
+forall a.
+(a -&gt; a -&gt; &quot;localDimmingEnable&quot; ::: Bool)
+-&gt; (a -&gt; a -&gt; &quot;localDimmingEnable&quot; ::: Bool) -&gt; Eq a
+/= :: SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+$c/= :: SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+== :: SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+$c== :: SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; &quot;localDimmingEnable&quot; ::: Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">SwapchainDisplayNativeHdrCreateInfoAMD</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680111093"><span id="local-6989586621680111095"><span id="local-6989586621680111097"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-type">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span></span></span></span><span>
+</span><span id="line-194"></span><span>
+</span><span id="line-195"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680111089"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-type">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-196"></span><span>  </span><span id="local-6989586621680111085"><span class="annot"><span class="annottext">withCStruct :: SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; (Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680111085"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680111084"><span class="annot"><span class="annottext">x :: SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111084"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680111083"><span class="annot"><span class="annottext">f :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b
+</span><a href="#local-6989586621680111083"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680111082"><span class="annot"><span class="annottext">p :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111082"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111082"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111084"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b
+</span><a href="#local-6989586621680111083"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111082"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-197"></span><span>  </span><span id="local-6989586621680111081"><span class="annot"><span class="annottext">pokeCStruct :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680111081"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680111080"><span class="annot"><span class="annottext">p :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111080"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680111079"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-type">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680111078"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680111078"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-198"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111080"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD"><span class="hs-identifier hs-var">STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-199"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111080"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-200"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+-&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111080"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; Int -&gt; Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool) -&gt; &quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool
+</span><a href="#local-6989586621680111079"><span class="hs-identifier hs-var">localDimmingEnable</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-201"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680111078"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-202"></span><span>  </span><span id="local-6989586621680111077"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680111077"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-203"></span><span>  </span><span id="local-6989586621680111076"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680111076"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-204"></span><span>  </span><span id="local-6989586621680111075"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680111075"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680111074"><span class="annot"><span class="annottext">p :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111074"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680111073"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680111073"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-205"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111074"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD"><span class="hs-identifier hs-var">STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-206"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111074"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-207"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+-&gt; (&quot;localDimmingEnable&quot; ::: Bool32) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111074"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; Int -&gt; Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool) -&gt; &quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680111073"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-209"></span><span>
+</span><span id="line-210"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-type">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-211"></span><span>  </span><span id="local-6989586621680111071"><span class="annot"><span class="annottext">peekCStruct :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; IO SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111071"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680111070"><span class="annot"><span class="annottext">p :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111070"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-212"></span><span>    </span><span id="local-6989586621680111069"><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="#local-6989586621680111069"><span class="hs-identifier hs-var">localDimmingEnable</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+-&gt; IO (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111070"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; Int -&gt; Ptr (&quot;localDimmingEnable&quot; ::: Bool32)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-213"></span><span>    </span><span class="annot"><span class="annottext">SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; IO SwapchainDisplayNativeHdrCreateInfoAMD
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(SwapchainDisplayNativeHdrCreateInfoAMD
+ -&gt; IO SwapchainDisplayNativeHdrCreateInfoAMD)
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; IO SwapchainDisplayNativeHdrCreateInfoAMD
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool)
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-var">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span><span>
+</span><span id="line-214"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool32) -&gt; &quot;localDimmingEnable&quot; ::: Bool
+</span><a href="Vulkan.Core10.BaseType.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool32
+</span><a href="#local-6989586621680111069"><span class="hs-identifier hs-var">localDimmingEnable</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-215"></span><span>
+</span><span id="line-216"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680111059"><span id="local-6989586621680111061"><span id="local-6989586621680111063"><span id="local-6989586621680111065"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-type">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-217"></span><span>  </span><span id="local-6989586621680111056"><span class="annot"><span class="annottext">sizeOf :: SwapchainDisplayNativeHdrCreateInfoAMD -&gt; Int
+</span><a href="#local-6989586621680111056"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SwapchainDisplayNativeHdrCreateInfoAMD
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-218"></span><span>  </span><span id="local-6989586621680111055"><span class="annot"><span class="annottext">alignment :: SwapchainDisplayNativeHdrCreateInfoAMD -&gt; Int
+</span><a href="#local-6989586621680111055"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">SwapchainDisplayNativeHdrCreateInfoAMD
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-219"></span><span>  </span><span id="local-6989586621680111054"><span class="annot"><span class="annottext">peek :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; IO SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111054"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; IO SwapchainDisplayNativeHdrCreateInfoAMD
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-220"></span><span>  </span><span id="local-6989586621680111053"><span class="annot"><span class="annottext">poke :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO ()
+</span><a href="#local-6989586621680111053"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680111052"><span class="annot"><span class="annottext">ptr :: Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111052"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680111051"><span class="annot"><span class="annottext">poked :: SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111051"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111052"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111051"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-221"></span><span>
+</span><span id="line-222"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-type">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-223"></span><span>  </span><span id="local-6989586621680111049"><span class="annot"><span class="annottext">zero :: SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="#local-6989586621680111049"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;localDimmingEnable&quot; ::: Bool)
+-&gt; SwapchainDisplayNativeHdrCreateInfoAMD
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#SwapchainDisplayNativeHdrCreateInfoAMD"><span class="hs-identifier hs-var">SwapchainDisplayNativeHdrCreateInfoAMD</span></a></span><span>
+</span><span id="line-224"></span><span>           </span><span class="annot"><span class="annottext">&quot;localDimmingEnable&quot; ::: Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-225"></span><span>
+</span><span id="line-226"></span><span>
+</span><span id="line-227"></span><span class="hs-keyword">type</span><span> </span><span id="AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span class="hs-identifier hs-var">AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-228"></span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION&quot;</span><span>
+</span><span id="line-230"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span class="hs-identifier hs-type">AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680111214"><span class="annot"><a href="#local-6989586621680111214"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680111214"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680111214"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-231"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bAMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span id="%24mAMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span id="AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span class="annot"><span class="annottext">$bAMD_DISPLAY_NATIVE_HDR_SPEC_VERSION :: a
+$mAMD_DISPLAY_NATIVE_HDR_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#%24bAMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-232"></span><span>
+</span><span id="line-233"></span><span>
+</span><span id="line-234"></span><span class="hs-keyword">type</span><span> </span><span id="AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span class="hs-identifier hs-var">AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_AMD_display_native_hdr&quot;</span></span><span>
+</span><span id="line-235"></span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-237"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span class="hs-identifier hs-type">AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680111210"><span class="annot"><a href="#local-6989586621680111210"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680111210"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680111210"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680111210"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-238"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bAMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span id="%24mAMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span id="AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span class="annot"><span class="annottext">$bAMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME :: a
+$mAMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_AMD_display_native_hdr.html#%24bAMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_AMD_display_native_hdr&quot;</span></span><span>
+</span><span id="line-239"></span><span>
+</span><span id="line-240"></span></pre></body></html>

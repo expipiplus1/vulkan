@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.ShaderModuleCreateFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier">ShaderModuleCreateFlagBits</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlags"><span class="hs-identifier">ShaderModuleCreateFlags</span></a></span><span>
+</span><span id="line-4"></span><span>                                                       </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-5"></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VkShaderModuleCreateFlagBits&quot;</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">newtype</span><span> </span><span id="ShaderModuleCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier hs-var">ShaderModuleCreateFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ShaderModuleCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier hs-var">ShaderModuleCreateFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-23"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680056728"><span id="local-6989586621680056730"><span class="annot"><span class="annottext">ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+(ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; Bool)
+-&gt; Eq ShaderModuleCreateFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+$c/= :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+== :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+$c== :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680056712"><span id="local-6989586621680056714"><span id="local-6989586621680056716"><span id="local-6989586621680056718"><span id="local-6989586621680056720"><span id="local-6989586621680056722"><span id="local-6989586621680056724"><span class="annot"><span class="annottext">Eq ShaderModuleCreateFlagBits
+Eq ShaderModuleCreateFlagBits =&gt;
+(ShaderModuleCreateFlagBits
+ -&gt; ShaderModuleCreateFlagBits -&gt; Ordering)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; Bool)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; Bool)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; Bool)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; Bool)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits)
+-&gt; Ord ShaderModuleCreateFlagBits
+ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; Ordering
+ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+$cmin :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+max :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+$cmax :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+&gt;= :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+$c&gt;= :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+&gt; :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+$c&gt; :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+&lt;= :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+$c&lt;= :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+&lt; :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+$c&lt; :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits -&gt; Bool
+compare :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; Ordering
+$ccompare :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; Ordering
+$cp1Ord :: Eq ShaderModuleCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680056695"><span id="local-6989586621680056697"><span id="local-6989586621680056699"><span id="local-6989586621680056701"><span id="local-6989586621680056703"><span id="local-6989586621680056705"><span id="local-6989586621680056707"><span id="local-6989586621680056709"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ShaderModuleCreateFlagBits
+Ptr b -&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+Ptr ShaderModuleCreateFlagBits -&gt; IO ShaderModuleCreateFlagBits
+Ptr ShaderModuleCreateFlagBits
+-&gt; Int -&gt; IO ShaderModuleCreateFlagBits
+Ptr ShaderModuleCreateFlagBits
+-&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+Ptr ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+ShaderModuleCreateFlagBits -&gt; Int
+(ShaderModuleCreateFlagBits -&gt; Int)
+-&gt; (ShaderModuleCreateFlagBits -&gt; Int)
+-&gt; (Ptr ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; IO ShaderModuleCreateFlagBits)
+-&gt; (Ptr ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ShaderModuleCreateFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ())
+-&gt; (Ptr ShaderModuleCreateFlagBits
+    -&gt; IO ShaderModuleCreateFlagBits)
+-&gt; (Ptr ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; IO ())
+-&gt; Storable ShaderModuleCreateFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO ShaderModuleCreateFlagBits
+forall b. Ptr b -&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+$cpoke :: Ptr ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+peek :: Ptr ShaderModuleCreateFlagBits -&gt; IO ShaderModuleCreateFlagBits
+$cpeek :: Ptr ShaderModuleCreateFlagBits -&gt; IO ShaderModuleCreateFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ShaderModuleCreateFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ShaderModuleCreateFlagBits
+pokeElemOff :: Ptr ShaderModuleCreateFlagBits
+-&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr ShaderModuleCreateFlagBits
+-&gt; Int -&gt; ShaderModuleCreateFlagBits -&gt; IO ()
+peekElemOff :: Ptr ShaderModuleCreateFlagBits
+-&gt; Int -&gt; IO ShaderModuleCreateFlagBits
+$cpeekElemOff :: Ptr ShaderModuleCreateFlagBits
+-&gt; Int -&gt; IO ShaderModuleCreateFlagBits
+alignment :: ShaderModuleCreateFlagBits -&gt; Int
+$calignment :: ShaderModuleCreateFlagBits -&gt; Int
+sizeOf :: ShaderModuleCreateFlagBits -&gt; Int
+$csizeOf :: ShaderModuleCreateFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680056692"><span class="annot"><span class="annottext">ShaderModuleCreateFlagBits
+ShaderModuleCreateFlagBits -&gt; Zero ShaderModuleCreateFlagBits
+forall a. a -&gt; Zero a
+zero :: ShaderModuleCreateFlagBits
+$czero :: ShaderModuleCreateFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680056646"><span id="local-6989586621680056648"><span id="local-6989586621680056650"><span id="local-6989586621680056652"><span id="local-6989586621680056654"><span id="local-6989586621680056656"><span id="local-6989586621680056658"><span id="local-6989586621680056660"><span id="local-6989586621680056662"><span id="local-6989586621680056664"><span id="local-6989586621680056666"><span id="local-6989586621680056668"><span id="local-6989586621680056670"><span id="local-6989586621680056672"><span id="local-6989586621680056674"><span id="local-6989586621680056676"><span id="local-6989586621680056678"><span id="local-6989586621680056680"><span id="local-6989586621680056682"><span id="local-6989586621680056684"><span id="local-6989586621680056686"><span id="local-6989586621680056688"><span class="annot"><span class="annottext">Eq ShaderModuleCreateFlagBits
+ShaderModuleCreateFlagBits
+Eq ShaderModuleCreateFlagBits =&gt;
+(ShaderModuleCreateFlagBits
+ -&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; ShaderModuleCreateFlagBits
+-&gt; (Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits -&gt; Int -&gt; Bool)
+-&gt; (ShaderModuleCreateFlagBits -&gt; Maybe Int)
+-&gt; (ShaderModuleCreateFlagBits -&gt; Int)
+-&gt; (ShaderModuleCreateFlagBits -&gt; Bool)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits
+    -&gt; Int -&gt; ShaderModuleCreateFlagBits)
+-&gt; (ShaderModuleCreateFlagBits -&gt; Int)
+-&gt; Bits ShaderModuleCreateFlagBits
+Int -&gt; ShaderModuleCreateFlagBits
+ShaderModuleCreateFlagBits -&gt; Bool
+ShaderModuleCreateFlagBits -&gt; Int
+ShaderModuleCreateFlagBits -&gt; Maybe Int
+ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+ShaderModuleCreateFlagBits -&gt; Int -&gt; Bool
+ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: ShaderModuleCreateFlagBits -&gt; Int
+$cpopCount :: ShaderModuleCreateFlagBits -&gt; Int
+rotateR :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$crotateR :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+rotateL :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$crotateL :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+unsafeShiftR :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$cunsafeShiftR :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+shiftR :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$cshiftR :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+unsafeShiftL :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$cunsafeShiftL :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+shiftL :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$cshiftL :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+isSigned :: ShaderModuleCreateFlagBits -&gt; Bool
+$cisSigned :: ShaderModuleCreateFlagBits -&gt; Bool
+bitSize :: ShaderModuleCreateFlagBits -&gt; Int
+$cbitSize :: ShaderModuleCreateFlagBits -&gt; Int
+bitSizeMaybe :: ShaderModuleCreateFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: ShaderModuleCreateFlagBits -&gt; Maybe Int
+testBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; Bool
+complementBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$ccomplementBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+clearBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$cclearBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+setBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$csetBit :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+bit :: Int -&gt; ShaderModuleCreateFlagBits
+$cbit :: Int -&gt; ShaderModuleCreateFlagBits
+zeroBits :: ShaderModuleCreateFlagBits
+$czeroBits :: ShaderModuleCreateFlagBits
+rotate :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$crotate :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+shift :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+$cshift :: ShaderModuleCreateFlagBits -&gt; Int -&gt; ShaderModuleCreateFlagBits
+complement :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+$ccomplement :: ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+xor :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+$cxor :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+.|. :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+$c.|. :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+.&amp;. :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+$c.&amp;. :: ShaderModuleCreateFlagBits
+-&gt; ShaderModuleCreateFlagBits -&gt; ShaderModuleCreateFlagBits
+$cp1Bits :: Eq ShaderModuleCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span class="hs-keyword">type</span><span> </span><span id="ShaderModuleCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlags"><span class="hs-identifier hs-var">ShaderModuleCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier hs-type">ShaderModuleCreateFlagBits</span></a></span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680056640"><span id="local-6989586621680056642"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier hs-type">ShaderModuleCreateFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-30"></span><span>  </span><span id="local-6989586621680056638"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ShaderModuleCreateFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680056636"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680056636"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-31"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier hs-type">ShaderModuleCreateFlagBits</span></a></span><span> </span><span id="local-6989586621680056635"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680056635"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680056636"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ShaderModuleCreateFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680056635"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680056627"><span id="local-6989586621680056630"><span id="local-6989586621680056632"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier hs-type">ShaderModuleCreateFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-34"></span><span>  </span><span id="local-6989586621680056625"><span class="annot"><span class="annottext">readPrec :: ReadPrec ShaderModuleCreateFlagBits
+</span><a href="#local-6989586621680056625"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec ShaderModuleCreateFlagBits
+-&gt; ReadPrec ShaderModuleCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec ShaderModuleCreateFlagBits)]
+-&gt; ReadPrec ShaderModuleCreateFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-35"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec ShaderModuleCreateFlagBits
+-&gt; ReadPrec ShaderModuleCreateFlagBits
+-&gt; ReadPrec ShaderModuleCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-36"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec ShaderModuleCreateFlagBits
+-&gt; ReadPrec ShaderModuleCreateFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-37"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ShaderModuleCreateFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span>                       </span><span id="local-6989586621680056624"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680056624"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-39"></span><span>                       </span><span class="annot"><span class="annottext">ShaderModuleCreateFlagBits -&gt; ReadPrec ShaderModuleCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; ShaderModuleCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.html#ShaderModuleCreateFlagBits"><span class="hs-identifier hs-var">ShaderModuleCreateFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680056624"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span></pre></body></html>

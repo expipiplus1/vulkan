@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Exception</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier">VulkanException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Exception.Type</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Exception</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-comment">-- | This exception is thrown from calls to marshalled Vulkan commands</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- which return a negative VkResult.</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">newtype</span><span> </span><span id="VulkanException"><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="VulkanException"><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="%24sel%3AvulkanExceptionResult%3AVulkanException"><span class="annot"><span class="annottext">VulkanException -&gt; Result
+</span><a href="Vulkan.Exception.html#%24sel%3AvulkanExceptionResult%3AVulkanException"><span class="hs-identifier hs-var hs-var">vulkanExceptionResult</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-10"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680031317"><span id="local-6989586621680031319"><span class="annot"><span class="annottext">VulkanException -&gt; VulkanException -&gt; Bool
+(VulkanException -&gt; VulkanException -&gt; Bool)
+-&gt; (VulkanException -&gt; VulkanException -&gt; Bool)
+-&gt; Eq VulkanException
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: VulkanException -&gt; VulkanException -&gt; Bool
+$c/= :: VulkanException -&gt; VulkanException -&gt; Bool
+== :: VulkanException -&gt; VulkanException -&gt; Bool
+$c== :: VulkanException -&gt; VulkanException -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680031301"><span id="local-6989586621680031303"><span id="local-6989586621680031305"><span id="local-6989586621680031307"><span id="local-6989586621680031309"><span id="local-6989586621680031311"><span id="local-6989586621680031313"><span class="annot"><span class="annottext">Eq VulkanException
+Eq VulkanException =&gt;
+(VulkanException -&gt; VulkanException -&gt; Ordering)
+-&gt; (VulkanException -&gt; VulkanException -&gt; Bool)
+-&gt; (VulkanException -&gt; VulkanException -&gt; Bool)
+-&gt; (VulkanException -&gt; VulkanException -&gt; Bool)
+-&gt; (VulkanException -&gt; VulkanException -&gt; Bool)
+-&gt; (VulkanException -&gt; VulkanException -&gt; VulkanException)
+-&gt; (VulkanException -&gt; VulkanException -&gt; VulkanException)
+-&gt; Ord VulkanException
+VulkanException -&gt; VulkanException -&gt; Bool
+VulkanException -&gt; VulkanException -&gt; Ordering
+VulkanException -&gt; VulkanException -&gt; VulkanException
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: VulkanException -&gt; VulkanException -&gt; VulkanException
+$cmin :: VulkanException -&gt; VulkanException -&gt; VulkanException
+max :: VulkanException -&gt; VulkanException -&gt; VulkanException
+$cmax :: VulkanException -&gt; VulkanException -&gt; VulkanException
+&gt;= :: VulkanException -&gt; VulkanException -&gt; Bool
+$c&gt;= :: VulkanException -&gt; VulkanException -&gt; Bool
+&gt; :: VulkanException -&gt; VulkanException -&gt; Bool
+$c&gt; :: VulkanException -&gt; VulkanException -&gt; Bool
+&lt;= :: VulkanException -&gt; VulkanException -&gt; Bool
+$c&lt;= :: VulkanException -&gt; VulkanException -&gt; Bool
+&lt; :: VulkanException -&gt; VulkanException -&gt; Bool
+$c&lt; :: VulkanException -&gt; VulkanException -&gt; Bool
+compare :: VulkanException -&gt; VulkanException -&gt; Ordering
+$ccompare :: VulkanException -&gt; VulkanException -&gt; Ordering
+$cp1Ord :: Eq VulkanException
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680031292"><span id="local-6989586621680031294"><span id="local-6989586621680031296"><span id="local-6989586621680031298"><span class="annot"><span class="annottext">ReadPrec [VulkanException]
+ReadPrec VulkanException
+Int -&gt; ReadS VulkanException
+ReadS [VulkanException]
+(Int -&gt; ReadS VulkanException)
+-&gt; ReadS [VulkanException]
+-&gt; ReadPrec VulkanException
+-&gt; ReadPrec [VulkanException]
+-&gt; Read VulkanException
+forall a.
+(Int -&gt; ReadS a)
+-&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
+readListPrec :: ReadPrec [VulkanException]
+$creadListPrec :: ReadPrec [VulkanException]
+readPrec :: ReadPrec VulkanException
+$creadPrec :: ReadPrec VulkanException
+readList :: ReadS [VulkanException]
+$creadList :: ReadS [VulkanException]
+readsPrec :: Int -&gt; ReadS VulkanException
+$creadsPrec :: Int -&gt; ReadS VulkanException
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680031285"><span id="local-6989586621680031287"><span id="local-6989586621680031289"><span class="annot"><span class="annottext">Int -&gt; VulkanException -&gt; ShowS
+[VulkanException] -&gt; ShowS
+VulkanException -&gt; String
+(Int -&gt; VulkanException -&gt; ShowS)
+-&gt; (VulkanException -&gt; String)
+-&gt; ([VulkanException] -&gt; ShowS)
+-&gt; Show VulkanException
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [VulkanException] -&gt; ShowS
+$cshowList :: [VulkanException] -&gt; ShowS
+show :: VulkanException -&gt; String
+$cshow :: VulkanException -&gt; String
+showsPrec :: Int -&gt; VulkanException -&gt; ShowS
+$cshowsPrec :: Int -&gt; VulkanException -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680031278"><span id="local-6989586621680031280"><span class="annot"><span class="hs-identifier hs-type">Exception</span></span><span> </span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-type">VulkanException</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-13"></span><span>  </span><span id="local-6989586621680031275"><span class="annot"><span class="annottext">displayException :: VulkanException -&gt; String
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">displayException</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-type">VulkanException</span></a></span><span> </span><span id="local-6989586621680031273"><span class="annot"><span class="annottext">r :: Result
+</span><a href="#local-6989586621680031273"><span class="hs-identifier hs-var">r</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Result -&gt; String
+forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680031273"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="hs-string">&quot;: &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-operator hs-var">++</span></span><span> </span><span class="annot"><span class="annottext">Result -&gt; String
+</span><a href="Vulkan.Exception.html#resultString"><span class="hs-identifier hs-var">resultString</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680031273"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span class="hs-comment">-- | A human understandable message for each VkResult</span><span>
+</span><span id="line-16"></span><span class="annot"><a href="Vulkan.Exception.html#resultString"><span class="hs-identifier hs-type">resultString</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-17"></span><span id="resultString"><span class="annot"><span class="annottext">resultString :: Result -&gt; String
+</span><a href="Vulkan.Exception.html#resultString"><span class="hs-identifier hs-var hs-var">resultString</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-18"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-type">SUCCESS</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;Command successfully completed&quot;</span></span><span>
+</span><span id="line-19"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#NOT_READY"><span class="hs-identifier hs-type">NOT_READY</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A fence or query has not yet completed&quot;</span></span><span>
+</span><span id="line-20"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#TIMEOUT"><span class="hs-identifier hs-type">TIMEOUT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A wait operation has not completed in the specified time&quot;</span></span><span>
+</span><span id="line-21"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#EVENT_SET"><span class="hs-identifier hs-type">EVENT_SET</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;An event is signaled&quot;</span></span><span>
+</span><span id="line-22"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#EVENT_RESET"><span class="hs-identifier hs-type">EVENT_RESET</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;An event is unsignaled&quot;</span></span><span>
+</span><span id="line-23"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#INCOMPLETE"><span class="hs-identifier hs-type">INCOMPLETE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A return array was too small for the result&quot;</span></span><span>
+</span><span id="line-24"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_HOST_MEMORY"><span class="hs-identifier hs-type">ERROR_OUT_OF_HOST_MEMORY</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A host memory allocation has failed&quot;</span></span><span>
+</span><span id="line-25"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DEVICE_MEMORY"><span class="hs-identifier hs-type">ERROR_OUT_OF_DEVICE_MEMORY</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A device memory allocation has failed&quot;</span></span><span>
+</span><span id="line-26"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INITIALIZATION_FAILED"><span class="hs-identifier hs-type">ERROR_INITIALIZATION_FAILED</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;Initialization of an object could not be completed for implementation-specific reasons&quot;</span></span><span>
+</span><span id="line-27"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_DEVICE_LOST"><span class="hs-identifier hs-type">ERROR_DEVICE_LOST</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;The logical or physical device has been lost&quot;</span></span><span>
+</span><span id="line-28"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_MEMORY_MAP_FAILED"><span class="hs-identifier hs-type">ERROR_MEMORY_MAP_FAILED</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;Mapping of a memory object has failed&quot;</span></span><span>
+</span><span id="line-29"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_LAYER_NOT_PRESENT"><span class="hs-identifier hs-type">ERROR_LAYER_NOT_PRESENT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A requested layer is not present or could not be loaded&quot;</span></span><span>
+</span><span id="line-30"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_EXTENSION_NOT_PRESENT"><span class="hs-identifier hs-type">ERROR_EXTENSION_NOT_PRESENT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A requested extension is not supported&quot;</span></span><span>
+</span><span id="line-31"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FEATURE_NOT_PRESENT"><span class="hs-identifier hs-type">ERROR_FEATURE_NOT_PRESENT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A requested feature is not supported&quot;</span></span><span>
+</span><span id="line-32"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DRIVER"><span class="hs-identifier hs-type">ERROR_INCOMPATIBLE_DRIVER</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;The requested version of Vulkan is not supported by the driver or is otherwise incompatible for implementation-specific reasons&quot;</span></span><span>
+</span><span id="line-33"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_TOO_MANY_OBJECTS"><span class="hs-identifier hs-type">ERROR_TOO_MANY_OBJECTS</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;Too many objects of the type have already been created&quot;</span></span><span>
+</span><span id="line-34"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FORMAT_NOT_SUPPORTED"><span class="hs-identifier hs-type">ERROR_FORMAT_NOT_SUPPORTED</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A requested format is not supported on this device&quot;</span></span><span>
+</span><span id="line-35"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTED_POOL"><span class="hs-identifier hs-type">ERROR_FRAGMENTED_POOL</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A pool allocation has failed due to fragmentation of the pool's memory&quot;</span></span><span>
+</span><span id="line-36"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_UNKNOWN"><span class="hs-identifier hs-type">ERROR_UNKNOWN</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;An unknown error has occurred; either the application has provided invalid input, or an implementation failure has occurred&quot;</span></span><span>
+</span><span id="line-37"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#PIPELINE_COMPILE_REQUIRED_EXT"><span class="hs-identifier hs-type">PIPELINE_COMPILE_REQUIRED_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A requested pipeline creation would have required compilation, but the application requested compilation to not be performed&quot;</span></span><span>
+</span><span id="line-38"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#OPERATION_NOT_DEFERRED_KHR"><span class="hs-identifier hs-type">OPERATION_NOT_DEFERRED_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A deferred operation was requested and no operations were deferred&quot;</span></span><span>
+</span><span id="line-39"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#OPERATION_DEFERRED_KHR"><span class="hs-identifier hs-type">OPERATION_DEFERRED_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A deferred operation was requested and at least some of the work was deferred&quot;</span></span><span>
+</span><span id="line-40"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#THREAD_DONE_KHR"><span class="hs-identifier hs-type">THREAD_DONE_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A deferred operation is not complete but there is no work remaining to assign to additional threads&quot;</span></span><span>
+</span><span id="line-41"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#THREAD_IDLE_KHR"><span class="hs-identifier hs-type">THREAD_IDLE_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A deferred operation is not complete but there is currently no work for this thread to do at the time of this call&quot;</span></span><span>
+</span><span id="line-42"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"><span class="hs-identifier hs-type">ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;An operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exlusive full-screen access&quot;</span></span><span>
+</span><span id="line-43"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_SHADER_NV"><span class="hs-identifier hs-type">ERROR_INVALID_SHADER_NV</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;One or more shaders failed to compile or link&quot;</span></span><span>
+</span><span id="line-44"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INCOMPATIBLE_DISPLAY_KHR"><span class="hs-identifier hs-type">ERROR_INCOMPATIBLE_DISPLAY_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an image&quot;</span></span><span>
+</span><span id="line-45"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_DATE_KHR"><span class="hs-identifier hs-type">ERROR_OUT_OF_DATE_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the swapchain will fail&quot;</span></span><span>
+</span><span id="line-46"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUBOPTIMAL_KHR"><span class="hs-identifier hs-type">SUBOPTIMAL_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A swapchain no longer matches the surface properties exactly, but can still be used to present to the surface successfully&quot;</span></span><span>
+</span><span id="line-47"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_NATIVE_WINDOW_IN_USE_KHR"><span class="hs-identifier hs-type">ERROR_NATIVE_WINDOW_IN_USE_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;The requested window is already in use by Vulkan or another API in a manner which prevents it from being used again&quot;</span></span><span>
+</span><span id="line-48"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_SURFACE_LOST_KHR"><span class="hs-identifier hs-type">ERROR_SURFACE_LOST_KHR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A surface is no longer available&quot;</span></span><span>
+</span><span id="line-49"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS"><span class="hs-identifier hs-type">ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A buffer creation or memory allocation failed because the requested address is not available&quot;</span></span><span>
+</span><span id="line-50"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_FRAGMENTATION"><span class="hs-identifier hs-type">ERROR_FRAGMENTATION</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A descriptor pool creation has failed due to fragmentation&quot;</span></span><span>
+</span><span id="line-51"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_INVALID_EXTERNAL_HANDLE"><span class="hs-identifier hs-type">ERROR_INVALID_EXTERNAL_HANDLE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;An external handle is not a valid handle of the specified type&quot;</span></span><span>
+</span><span id="line-52"></span><span>  </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#ERROR_OUT_OF_POOL_MEMORY"><span class="hs-identifier hs-type">ERROR_OUT_OF_POOL_MEMORY</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-string">&quot;A pool memory allocation has failed&quot;</span></span><span>
+</span><span id="line-53"></span><span>  </span><span id="local-6989586621680031235"><span class="annot"><span class="annottext">r :: Result
+</span><a href="#local-6989586621680031235"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Result -&gt; String
+forall a. Show a =&gt; a -&gt; String
+</span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680031235"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span></pre></body></html>

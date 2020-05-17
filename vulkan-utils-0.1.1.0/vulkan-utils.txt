@@ -14,6 +14,11 @@ module Vulkan.Utils.Debug
 --   to stderr.
 debugCallbackPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
 
+-- | A debug callback the same as <a>debugCallbackPtr</a> except it will
+--   call <tt>abort</tt> when
+--   <tt>VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT</tt> is set.
+debugCallbackFatalPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
+
 -- | Assign a name to a handle using <a>setDebugUtilsObjectNameEXT</a>,
 --   note that the <tt>VK_EXT_debug_utils</tt> extension must be enabled.
 nameObject :: (HasObjectType a, MonadIO m) => Device -> a -> ByteString -> m ()
@@ -27,4 +32,4 @@ tese :: QuasiQuoter
 vert :: QuasiQuoter
 
 -- | Compile a glsl shader to spir-v using glslangValidator
-compileShader :: Maybe Loc -> String -> String -> IO ByteString
+compileShader :: MonadIO m => Maybe Loc -> String -> String -> m ByteString

@@ -1,34 +1,40 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Utils.Debug</span><span>
 </span><span id="line-2"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Utils.Debug.html#debugCallbackPtr"><span class="hs-identifier">debugCallbackPtr</span></a></span><span>
-</span><span id="line-3"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Utils.Debug.html#nameObject"><span class="hs-identifier">nameObject</span></a></span><span>
-</span><span id="line-4"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-5"></span><span>
-</span><span id="line-6"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span>
-</span><span id="line-7"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.ByteString</span></span><span>
-</span><span id="line-8"></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Core10</span></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Extensions.VK_EXT_debug_utils</span></span><span>
-</span><span id="line-11"></span><span>
-</span><span id="line-12"></span><span class="hs-comment">-- | A debug callback which prints the message prefixed with &quot;Validation: &quot; to</span><span>
-</span><span id="line-13"></span><span class="hs-comment">-- stderr.</span><span>
-</span><span id="line-14"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DebugCallback.c &amp;debugCallback&quot;</span></span><span>
-</span><span id="line-15"></span><span>  </span><span id="debugCallbackPtr"><span class="annot"><a href="Vulkan.Utils.Debug.html#debugCallbackPtr"><span class="hs-identifier hs-var">debugCallbackPtr</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PFN_vkDebugUtilsMessengerCallbackEXT</span></span><span>
-</span><span id="line-16"></span><span>
-</span><span id="line-17"></span><span class="hs-comment">-- | Assign a name to a handle using 'setDebugUtilsObjectNameEXT', note that</span><span>
-</span><span id="line-18"></span><span class="hs-comment">-- the @VK_EXT_debug_utils@ extension must be enabled.</span><span>
-</span><span id="line-19"></span><span id="local-6989586621679126874"><span id="local-6989586621679126875"><span class="annot"><a href="Vulkan.Utils.Debug.html#nameObject"><span class="hs-identifier hs-type">nameObject</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HasObjectType</span></span><span> </span><span class="annot"><a href="#local-6989586621679126875"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679126874"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Device</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679126875"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679126874"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span></span><span>
-</span><span id="line-20"></span><span id="nameObject"><span class="annot"><span class="annottext">nameObject :: Device -&gt; a -&gt; ByteString -&gt; m ()
-</span><a href="Vulkan.Utils.Debug.html#nameObject"><span class="hs-identifier hs-var hs-var">nameObject</span></a></span></span><span> </span><span id="local-6989586621679126873"><span class="annot"><span class="annottext">device :: Device
-</span><a href="#local-6989586621679126873"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621679126872"><span class="annot"><span class="annottext">object :: a
-</span><a href="#local-6989586621679126872"><span class="hs-identifier hs-var">object</span></a></span></span><span> </span><span id="local-6989586621679126871"><span class="annot"><span class="annottext">name :: ByteString
-</span><a href="#local-6989586621679126871"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Device -&gt; DebugUtilsObjectNameInfoEXT -&gt; m ()
+</span><span id="line-3"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Utils.Debug.html#debugCallbackFatalPtr"><span class="hs-identifier">debugCallbackFatalPtr</span></a></span><span>
+</span><span id="line-4"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Utils.Debug.html#nameObject"><span class="hs-identifier">nameObject</span></a></span><span>
+</span><span id="line-5"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Data.ByteString</span></span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Core10</span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Vulkan.Extensions.VK_EXT_debug_utils</span></span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-comment">-- | A debug callback which prints the message prefixed with &quot;Validation: &quot; to</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- stderr.</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DebugCallback.c &amp;debugCallback&quot;</span></span><span>
+</span><span id="line-16"></span><span>  </span><span id="debugCallbackPtr"><span class="annot"><a href="Vulkan.Utils.Debug.html#debugCallbackPtr"><span class="hs-identifier hs-var">debugCallbackPtr</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PFN_vkDebugUtilsMessengerCallbackEXT</span></span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-comment">-- | A debug callback the same as 'debugCallbackPtr' except it will call</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- @abort@ when @VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT@ is set.</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DebugCallback.c &amp;debugCallbackFatal&quot;</span></span><span>
+</span><span id="line-21"></span><span>  </span><span id="debugCallbackFatalPtr"><span class="annot"><a href="Vulkan.Utils.Debug.html#debugCallbackFatalPtr"><span class="hs-identifier hs-var">debugCallbackFatalPtr</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">PFN_vkDebugUtilsMessengerCallbackEXT</span></span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- | Assign a name to a handle using 'setDebugUtilsObjectNameEXT', note that</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- the @VK_EXT_debug_utils@ extension must be enabled.</span><span>
+</span><span id="line-25"></span><span id="local-6989586621679127556"><span id="local-6989586621679127557"><span class="annot"><a href="Vulkan.Utils.Debug.html#nameObject"><span class="hs-identifier hs-type">nameObject</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">HasObjectType</span></span><span> </span><span class="annot"><a href="#local-6989586621679127557"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621679127556"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Device</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679127557"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679127556"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-26"></span><span id="nameObject"><span class="annot"><span class="annottext">nameObject :: Device -&gt; a -&gt; ByteString -&gt; m ()
+</span><a href="Vulkan.Utils.Debug.html#nameObject"><span class="hs-identifier hs-var hs-var">nameObject</span></a></span></span><span> </span><span id="local-6989586621679127555"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621679127555"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621679127554"><span class="annot"><span class="annottext">object :: a
+</span><a href="#local-6989586621679127554"><span class="hs-identifier hs-var">object</span></a></span></span><span> </span><span id="local-6989586621679127553"><span class="annot"><span class="annottext">name :: ByteString
+</span><a href="#local-6989586621679127553"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Device -&gt; DebugUtilsObjectNameInfoEXT -&gt; m ()
 forall (io :: * -&gt; *).
 MonadIO io =&gt;
 Device -&gt; DebugUtilsObjectNameInfoEXT -&gt; io ()
 </span><span class="hs-identifier hs-var">setDebugUtilsObjectNameEXT</span></span><span>
-</span><span id="line-21"></span><span>  </span><span class="annot"><span class="annottext">Device
-</span><a href="#local-6989586621679126873"><span class="hs-identifier hs-var">device</span></a></span><span>
-</span><span id="line-22"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ObjectType
+</span><span id="line-27"></span><span>  </span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621679127555"><span class="hs-identifier hs-var">device</span></a></span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ObjectType
  -&gt; Word64 -&gt; Maybe ByteString -&gt; DebugUtilsObjectNameInfoEXT)
 -&gt; (ObjectType, Word64)
 -&gt; Maybe ByteString
@@ -39,8 +45,8 @@ forall a b c. (a -&gt; b -&gt; c) -&gt; (a, b) -&gt; c
 </span><span class="hs-identifier hs-var">DebugUtilsObjectNameInfoEXT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; (ObjectType, Word64)
 forall a. HasObjectType a =&gt; a -&gt; (ObjectType, Word64)
 </span><span class="hs-identifier hs-var">objectTypeAndHandle</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679126872"><span class="hs-identifier hs-var">object</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString -&gt; Maybe ByteString
+</span><a href="#local-6989586621679127554"><span class="hs-identifier hs-var">object</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString -&gt; Maybe ByteString
 forall a. a -&gt; Maybe a
 </span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679126871"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-23"></span></pre></body></html>
+</span><a href="#local-6989586621679127553"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span></pre></body></html>

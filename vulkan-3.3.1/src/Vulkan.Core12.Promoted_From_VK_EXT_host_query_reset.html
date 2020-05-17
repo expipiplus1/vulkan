@@ -1,0 +1,431 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#resetQueryPool"><span class="hs-identifier">resetQueryPool</span></a></span><span>
+</span><span id="line-3"></span><span>                                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier">PhysicalDeviceHostQueryResetFeatures</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                            </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html"><span class="hs-identifier">Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkResetQueryPool%3ADeviceCmds"><span class="hs-identifier">pVkResetQueryPool</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier">Device_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#QueryPool"><span class="hs-identifier">QueryPool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#QueryPool"><span class="hs-identifier">QueryPool</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkResetQueryPool"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#mkVkResetQueryPool"><span class="hs-identifier hs-var">mkVkResetQueryPool</span></a></span></span><span>
+</span><span id="line-50"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#QueryPool"><span class="hs-identifier hs-type">QueryPool</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#QueryPool"><span class="hs-identifier hs-type">QueryPool</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- | vkResetQueryPool - Reset queries in a query pool</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- This command sets the status of query indices [@firstQuery@,</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- @firstQuery@ + @queryCount@ - 1] to unavailable.</span><span>
+</span><span id="line-58"></span><span class="hs-comment">--</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- If @queryPool@ is</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR' this</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- command sets the status of query indices [@firstQuery@, @firstQuery@ +</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- @queryCount@ - 1] to unavailable for each pass.</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- -   The</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset&gt;</span><span>
+</span><span id="line-68"></span><span class="hs-comment">--     feature /must/ be enabled</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- -   @firstQuery@ /must/ be less than the number of queries in</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--     @queryPool@</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--     equal to the number of queries in @queryPool@</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- -   Submitted commands that refer to the range specified by @firstQuery@</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--     and @queryCount@ in @queryPool@ /must/ have completed execution</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- -   The range of queries specified by @firstQuery@ and @queryCount@ in</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--     @queryPool@ /must/ not be in use by calls to</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--     'Vulkan.Core10.Query.getQueryPoolResults' or 'resetQueryPool' in</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--     other threads</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- -   @queryPool@ /must/ be a valid 'Vulkan.Core10.Handles.QueryPool'</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--     handle</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- -   @queryPool@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'</span><span>
+</span><span id="line-97"></span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#resetQueryPool"><span class="hs-identifier hs-type">resetQueryPool</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680092072"><span class="annot"><a href="#local-6989586621680092072"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-98"></span><span>                </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680092072"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span>               </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the query pool.</span><span>
+</span><span id="line-100"></span><span>                  </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-101"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @queryPool@ is the handle of the query pool managing the queries being</span><span>
+</span><span id="line-102"></span><span>                  </span><span class="hs-comment">-- reset.</span><span>
+</span><span id="line-103"></span><span>                  </span><span class="annot"><a href="Vulkan.Core10.Handles.html#QueryPool"><span class="hs-identifier hs-type">QueryPool</span></a></span><span>
+</span><span id="line-104"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @firstQuery@ is the initial query index to reset.</span><span>
+</span><span id="line-105"></span><span>                  </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;firstQuery&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @queryCount@ is the number of queries to reset.</span><span>
+</span><span id="line-107"></span><span>                  </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;queryCount&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-108"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680092072"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-109"></span><span id="resetQueryPool"><span class="annot"><span class="annottext">resetQueryPool :: Device
+-&gt; QueryPool
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; io ()
+</span><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#resetQueryPool"><span class="hs-identifier hs-var hs-var">resetQueryPool</span></a></span></span><span> </span><span id="local-6989586621680092071"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680092071"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680092070"><span class="annot"><span class="annottext">queryPool :: QueryPool
+</span><a href="#local-6989586621680092070"><span class="hs-identifier hs-var">queryPool</span></a></span></span><span> </span><span id="local-6989586621680092069"><span class="annot"><span class="annottext">firstQuery :: &quot;firstQuery&quot; ::: Word32
+</span><a href="#local-6989586621680092069"><span class="hs-identifier hs-var">firstQuery</span></a></span></span><span> </span><span id="local-6989586621680092068"><span class="annot"><span class="annottext">queryCount :: &quot;firstQuery&quot; ::: Word32
+</span><a href="#local-6989586621680092068"><span class="hs-identifier hs-var">queryCount</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-110"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680092067"><span class="annot"><span class="annottext">vkResetQueryPoolPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; QueryPool
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; IO ())
+</span><a href="#local-6989586621680092067"><span class="hs-identifier hs-var hs-var">vkResetQueryPoolPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; QueryPool
+      -&gt; (&quot;firstQuery&quot; ::: Word32)
+      -&gt; (&quot;firstQuery&quot; ::: Word32)
+      -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkResetQueryPool%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkResetQueryPool</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680092071"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; QueryPool
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; IO ())
+</span><a href="#local-6989586621680092067"><span class="hs-identifier hs-var">vkResetQueryPoolPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; QueryPool
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; IO ())
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; QueryPool
+      -&gt; (&quot;firstQuery&quot; ::: Word32)
+      -&gt; (&quot;firstQuery&quot; ::: Word32)
+      -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; QueryPool
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-112"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkResetQueryPool is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-113"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680092062"><span class="annot"><span class="annottext">vkResetQueryPool' :: Ptr Device_T
+-&gt; QueryPool
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; IO ()
+</span><a href="#local-6989586621680092062"><span class="hs-identifier hs-var hs-var">vkResetQueryPool'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; QueryPool
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; IO ())
+-&gt; Ptr Device_T
+-&gt; QueryPool
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; IO ()
+</span><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#mkVkResetQueryPool"><span class="hs-identifier hs-var">mkVkResetQueryPool</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; QueryPool
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; (&quot;firstQuery&quot; ::: Word32)
+   -&gt; IO ())
+</span><a href="#local-6989586621680092067"><span class="hs-identifier hs-var">vkResetQueryPoolPtr</span></a></span><span>
+</span><span id="line-114"></span><span>  </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; QueryPool
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; (&quot;firstQuery&quot; ::: Word32)
+-&gt; IO ()
+</span><a href="#local-6989586621680092062"><span class="hs-identifier hs-var">vkResetQueryPool'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680092071"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">QueryPool
+</span><a href="#local-6989586621680092070"><span class="hs-identifier hs-var">queryPool</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;firstQuery&quot; ::: Word32
+</span><a href="#local-6989586621680092069"><span class="hs-identifier hs-var">firstQuery</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;firstQuery&quot; ::: Word32
+</span><a href="#local-6989586621680092068"><span class="hs-identifier hs-var">queryCount</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-115"></span><span>  </span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(() -&gt; IO ()) -&gt; () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-116"></span><span>
+</span><span id="line-117"></span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- | VkPhysicalDeviceHostQueryResetFeatures - Structure describing whether</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- queries can be reset from the host</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceHostQueryResetFeatures' structure</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- describe the following features:</span><span>
+</span><span id="line-125"></span><span class="hs-comment">--</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-127"></span><span class="hs-comment">--</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- If the 'PhysicalDeviceHostQueryResetFeatures' structure is included in</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- the @pNext@ chain of</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- it is filled with values indicating whether the feature is supported.</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- 'PhysicalDeviceHostQueryResetFeatures' /can/ also be included in the</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- features.</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-137"></span><span class="hs-comment">--</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- 'Vulkan.Core10.BaseType.Bool32',</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-142"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceHostQueryResetFeatures"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-var">PhysicalDeviceHostQueryResetFeatures</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceHostQueryResetFeatures"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-var">PhysicalDeviceHostQueryResetFeatures</span></a></span></span><span>
+</span><span id="line-143"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @hostQueryReset@ indicates that the implementation supports resetting</span><span>
+</span><span id="line-144"></span><span>    </span><span class="hs-comment">-- queries from the host with 'resetQueryPool'.</span><span>
+</span><span id="line-145"></span><span>    </span><span id="%24sel%3AhostQueryReset%3APhysicalDeviceHostQueryResetFeatures"><span class="annot"><span class="annottext">PhysicalDeviceHostQueryResetFeatures -&gt; Bool
+</span><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#%24sel%3AhostQueryReset%3APhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-var hs-var">hostQueryReset</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-146"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680092055"><span id="local-6989586621680092057"><span class="annot"><span class="annottext">PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; Bool
+(PhysicalDeviceHostQueryResetFeatures
+ -&gt; PhysicalDeviceHostQueryResetFeatures -&gt; Bool)
+-&gt; (PhysicalDeviceHostQueryResetFeatures
+    -&gt; PhysicalDeviceHostQueryResetFeatures -&gt; Bool)
+-&gt; Eq PhysicalDeviceHostQueryResetFeatures
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; Bool
+$c/= :: PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; Bool
+== :: PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; Bool
+$c== :: PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceHostQueryResetFeatures</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680092048"><span id="local-6989586621680092050"><span id="local-6989586621680092052"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-type">PhysicalDeviceHostQueryResetFeatures</span></a></span></span></span></span><span>
+</span><span id="line-151"></span><span>
+</span><span id="line-152"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680092043"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-type">PhysicalDeviceHostQueryResetFeatures</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-153"></span><span>  </span><span id="local-6989586621680092038"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceHostQueryResetFeatures
+-&gt; (Ptr PhysicalDeviceHostQueryResetFeatures -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680092036"><span class="annot"><span class="annottext">x :: PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092036"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680092035"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceHostQueryResetFeatures -&gt; IO b
+</span><a href="#local-6989586621680092035"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceHostQueryResetFeatures -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceHostQueryResetFeatures -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceHostQueryResetFeatures -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680092034"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092034"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092034"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092036"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures -&gt; IO b
+</span><a href="#local-6989586621680092035"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092034"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span>  </span><span id="local-6989586621680092032"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680092032"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680092031"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092031"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680092030"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-type">PhysicalDeviceHostQueryResetFeatures</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680092029"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680092029"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092031"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-156"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092031"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092031"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680092030"><span class="hs-identifier hs-var">hostQueryReset</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-158"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680092029"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-159"></span><span>  </span><span id="local-6989586621680092028"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-160"></span><span>  </span><span id="local-6989586621680092026"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-161"></span><span>  </span><span id="local-6989586621680092024"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceHostQueryResetFeatures -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680092022"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092022"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680092021"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680092021"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-162"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092022"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092022"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092022"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.BaseType.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-165"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680092021"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-166"></span><span>
+</span><span id="line-167"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-type">PhysicalDeviceHostQueryResetFeatures</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-168"></span><span>  </span><span id="local-6989586621680092017"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; IO PhysicalDeviceHostQueryResetFeatures
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680092015"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092015"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-169"></span><span>    </span><span id="local-6989586621680092014"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680092014"><span class="hs-identifier hs-var">hostQueryReset</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680092015"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.BaseType.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-170"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceHostQueryResetFeatures
+-&gt; IO PhysicalDeviceHostQueryResetFeatures
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceHostQueryResetFeatures
+ -&gt; IO PhysicalDeviceHostQueryResetFeatures)
+-&gt; PhysicalDeviceHostQueryResetFeatures
+-&gt; IO PhysicalDeviceHostQueryResetFeatures
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceHostQueryResetFeatures
+</span><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-var">PhysicalDeviceHostQueryResetFeatures</span></a></span><span>
+</span><span id="line-171"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.BaseType.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680092014"><span class="hs-identifier hs-var">hostQueryReset</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-172"></span><span>
+</span><span id="line-173"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680092004"><span id="local-6989586621680092006"><span id="local-6989586621680092008"><span id="local-6989586621680092010"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-type">PhysicalDeviceHostQueryResetFeatures</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-174"></span><span>  </span><span id="local-6989586621680092000"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceHostQueryResetFeatures -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceHostQueryResetFeatures
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-175"></span><span>  </span><span id="local-6989586621680091998"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceHostQueryResetFeatures -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceHostQueryResetFeatures
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-176"></span><span>  </span><span id="local-6989586621680091996"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; IO PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680091996"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; IO PhysicalDeviceHostQueryResetFeatures
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-177"></span><span>  </span><span id="local-6989586621680091995"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; IO ()
+</span><a href="#local-6989586621680091995"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680091994"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680091994"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680091993"><span class="annot"><span class="annottext">poked :: PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680091993"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+-&gt; PhysicalDeviceHostQueryResetFeatures -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680091994"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680091993"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>
+</span><span id="line-179"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-type">PhysicalDeviceHostQueryResetFeatures</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-180"></span><span>  </span><span id="local-6989586621680091990"><span class="annot"><span class="annottext">zero :: PhysicalDeviceHostQueryResetFeatures
+</span><a href="#local-6989586621680091990"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceHostQueryResetFeatures
+</span><a href="Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.html#PhysicalDeviceHostQueryResetFeatures"><span class="hs-identifier hs-var">PhysicalDeviceHostQueryResetFeatures</span></a></span><span>
+</span><span id="line-181"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-182"></span><span>
+</span><span id="line-183"></span></pre></body></html>
