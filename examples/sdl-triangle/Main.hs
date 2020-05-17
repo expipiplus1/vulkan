@@ -4,6 +4,9 @@
 
 module Main where
 
+import           Control.Concurrent.Async       ( wait
+                                                , withAsyncBound
+                                                )
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Extra
@@ -31,15 +34,15 @@ import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
 import           Vulkan.Core11
 import           Vulkan.Extensions.VK_EXT_debug_utils
+import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
-import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Utils.Debug
 import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 
 main :: IO ()
-main = runManaged $ do
+main = (`withAsyncBound` wait) . runManaged $ do
   withSDL
 
   VulkanWindow {..} <- withVulkanWindow appName windowWidth windowHeight
@@ -69,7 +72,7 @@ main = runManaged $ do
 
 mainLoop :: IO () -> IO ()
 mainLoop draw = whileM $ do
-  quit <- maybe False isQuitEvent <$> SDL.pollEvent
+  quit <- Prelude.any isQuitEvent <$> SDL.pollEvents
   if quit
     then pure False
     else do

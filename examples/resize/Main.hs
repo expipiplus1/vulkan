@@ -49,9 +49,11 @@ import           Window
 ----------------------------------------------------------------
 -- Main performs some one time initialization of the windowing system and
 -- Vulkan, then it loops generating frames
+--
+-- It's bound to an OS thread so SDL.pumpEvents can work properly.
 ----------------------------------------------------------------
 main :: IO ()
-main = prettyError . runResourceT $ do
+main = (`withAsyncBound` wait) . prettyError . runResourceT $ do
   -- Start SDL
   _ <- allocate_ (SDL.initialize @[] [SDL.InitEvents]) SDL.quit
 
@@ -277,8 +279,10 @@ draw = do
 -- SDL helpers
 ----------------------------------------------------------------
 
+-- | Consumes all events in the queue and reports if any of them instruct the
+-- application to quit.
 shouldQuit :: MonadIO m => m Bool
-shouldQuit = maybe False isQuitEvent <$> SDL.pollEvent
+shouldQuit = any isQuitEvent <$> SDL.pollEvents
  where
   isQuitEvent :: SDL.Event -> Bool
   isQuitEvent = \case

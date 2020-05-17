@@ -22,6 +22,7 @@ executables:
     main: Main.hs
     source-dirs: sdl-triangle
     dependencies:
+      - async
       - base < 4.15
       - bytestring
       - extra

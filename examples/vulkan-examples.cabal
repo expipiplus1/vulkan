@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a1b0a12c6bef22a0bd95257cd342a04c81d5c30e84523336e54433edccb6f6bb
+-- hash: d9197a00c8025c9c5879ac9900e7bf9fd2e3e6fa4b73769e253e77085e6a0248
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -141,7 +141,8 @@ executable sdl-triangle
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
-      base <4.15
+      async
+    , base <4.15
     , bytestring
     , extra
     , managed
