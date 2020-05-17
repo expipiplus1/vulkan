@@ -1619,6 +1619,7 @@ infix 6 ::&
 pattern (:&) :: e -> Chain es -> Chain (e:es)
 pattern e :& es = (e, es)
 infixr 7 :&
+{-# complete (:&) #-}
 
 type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
   Extendss p '[]      = ()
