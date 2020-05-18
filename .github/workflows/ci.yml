@@ -128,6 +128,7 @@ jobs:
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
       run: |
+        stack exec -- pacman -Sy
         stack exec -- pacman -S mingw-w64-x86_64-vulkan mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2 mingw-w64-x86_64-glslang
 
     - name: Install dependencies
