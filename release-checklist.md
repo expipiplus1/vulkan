@@ -18,7 +18,9 @@
 
 ## vulkan
 
-- Build documentation
+- Build documentation (So doc building for VMA works correctly)
+  - `cabal haddock --haddock-option="--hyperlinked-source"`
+- Build documentation for Hackage
   - `cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source"`
 - sdist
 - unpack sdist elsewhere
