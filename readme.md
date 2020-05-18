@@ -298,6 +298,20 @@ packages:
 - `pkg-config` and `SDL2` to build the Haskell `sdl2` package.
 - `glslang` (for the `glslangValidator` binary, to build the shaders)
 
+### Building on Windows
+
+- Clone this repo
+- Install stack
+  - https://docs.haskellstack.org/en/stable/install_and_upgrade/#windows
+- Install the system dependencies via stack
+  - vulkan loader
+  - pkg-config
+  - SDL2
+  - glslang (for compiling shaders in the examples)
+  - `stack exec -- pacman -Sy` (Update the package list)
+  - `stack exec -- pacman -S mingw-w64-x86_64-vulkan mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2 mingw-w64-x86_64-glslang`
+- Run `stack build`
+
 ## Examples
 
 There exists a package to build some example programs in the

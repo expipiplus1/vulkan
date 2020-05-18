@@ -85,8 +85,9 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
+      fail-fast: false
 
     steps:
     - uses: actions/checkout@v2
@@ -116,13 +117,18 @@ jobs:
           ${{ runner.os }}-stack-work-${{ matrix.stack-args }}
           ${{ runner.os }}-stack-work
 
-    - name: Install system dependencies
+    - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-latest'
       run: |
         wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
         sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-bionic.list http://packages.lunarg.com/vulkan/lunarg-vulkan-bionic.list
         sudo apt-get update
         sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+
+    - name: Install system dependencies Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        stack exec -- pacman -S mingw-w64-x86_64-vulkan mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2 mingw-w64-x86_64-glslang
 
     - name: Install dependencies
       run: stack build --test --bench --only-dependencies $ARGS
