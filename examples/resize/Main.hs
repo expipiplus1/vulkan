@@ -227,12 +227,14 @@ advanceFrame f = do
 -- | Submit GPU commands for a frame
 draw :: F (Fence, ())
 draw = do
-  Frame {..}            <- askFrame
+  Frame {..} <- askFrame
 
-  (SUCCESS, imageIndex) <- acquireNextImageKHR' fSwapchain
-                                                0
-                                                fImageAvailableSemaphore
-                                                zero
+  imageIndex <-
+    acquireNextImageKHR' fSwapchain 1e9 fImageAvailableSemaphore zero >>= \case
+      (SUCCESS, imageIndex) -> pure imageIndex
+      (TIMEOUT, _) -> throwString "Couldn't acquire next image after 1 second"
+      _ -> throwString "Unexpected Result from acquireNextImageKHR"
+
   let image = fImages imageIndex
   let imageSubresourceRange = ImageSubresourceRange
         { aspectMask     = IMAGE_ASPECT_COLOR_BIT
