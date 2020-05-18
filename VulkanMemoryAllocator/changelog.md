@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.3.1] - 2020-05-18
   - Eq instances for some simple structs, #94
   - Add cabal flag for enable deriving Generic for structs, #99
 

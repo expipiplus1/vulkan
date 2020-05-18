@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [3.3.1] - 2020-05-18
   - Bump API version to 1.2.141
   - Generate haddocks for command parameters, #92
   - Eq instances for some simple structs, #94
