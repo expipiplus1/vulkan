@@ -86,7 +86,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
+        stack-args: ['--system-ghc --flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
       fail-fast: false
 
     steps:
