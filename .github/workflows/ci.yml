@@ -111,6 +111,14 @@ jobs:
           ${{ runner.os }}-stack-work-${{ matrix.stack-args }}
           ${{ runner.os }}-stack-work
 
+    - name: Install system dependencies
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
+        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-bionic.list http://packages.lunarg.com/vulkan/lunarg-vulkan-bionic.list
+        sudo apt-get update
+        sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+
     - name: Install dependencies
       run: stack build --test --bench --only-dependencies $ARGS
       env:
