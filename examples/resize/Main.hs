@@ -13,12 +13,13 @@ import           Control.Monad.Extra            ( unlessM
                                                 )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource
+import           Control.Lens.Getter
 import           Data.Bool                      ( bool )
 import qualified Data.Vector                   as V
 import           GHC.Clock                      ( getMonotonicTimeNSec )
 import           Linear.Affine                  ( Point(..) )
 import           Linear.Metric                  ( norm )
-import           Linear.V2                      ( V2(..) )
+import           Linear.V2
 import qualified SDL
 import           Say
 import           UnliftIO.Async                 ( wait
@@ -304,16 +305,22 @@ draw = do
               m' = fmap realToFrac m
                 / fmap realToFrac (V2 imageWidth imageHeight)
               c :: V2 Float
-              c = (m' * 2) - 1
-              r = 0.5 * (1 + sqrt (4 * norm c + 1))
-          allocaBytes (8 + 8 + 4) $ \p -> do
-            liftIO $ poke (p `plusPtr` 0) fImageExtent
-            liftIO $ poke (p `plusPtr` 8) c
-            liftIO $ poke (p `plusPtr` 16) r
+              c             = (m' * 2) - 1
+              r             = 0.5 * (1 + sqrt (4 * norm c + 1))
+              imageSizeF    = realToFrac <$> V2 imageWidth imageHeight
+              aspect = pure (recip (min (imageSizeF ^. _x) (imageSizeF ^. _y)))
+              frameScale    = aspect * 2 * pure r
+              frameOffset   = negate (imageSizeF * aspect) * pure r
+              constantBytes = 4 * (2 + 2 + 2 + 1)
+          allocaBytes constantBytes $ \p -> do
+            liftIO $ poke (p `plusPtr` 0) frameScale
+            liftIO $ poke (p `plusPtr` 8) frameOffset
+            liftIO $ poke (p `plusPtr` 16) c
+            liftIO $ poke (p `plusPtr` 24) r
             cmdPushConstants' fJuliaPipelineLayout
                               SHADER_STAGE_COMPUTE_BIT
                               0
-                              (8 + 8 + 4)
+                              constantBytes
                               p
           cmdBindDescriptorSets' PIPELINE_BIND_POINT_COMPUTE
                                  fJuliaPipelineLayout
@@ -322,7 +329,7 @@ draw = do
                                  []
           cmdDispatch'
             ((imageWidth + juliaWorkgroupX - 1) `quot` juliaWorkgroupX)
-            ((imageWidth + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
+            ((imageHeight + juliaWorkgroupY - 1) `quot` juliaWorkgroupY)
             1
 
           -- Transition image back to present

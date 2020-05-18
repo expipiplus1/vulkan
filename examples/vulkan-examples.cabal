@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d9197a00c8025c9c5879ac9900e7bf9fd2e3e6fa4b73769e253e77085e6a0248
+-- hash: 7d61dde898c1efcf5a7a09b41f254671dda9d67cdf5f1dfae0762c62ced016fd
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -121,6 +121,7 @@ executable resize
     , base <4.15
     , bytestring
     , extra
+    , lens
     , linear
     , resourcet >=1.2.4
     , safe-exceptions
