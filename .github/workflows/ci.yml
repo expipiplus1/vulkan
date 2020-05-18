@@ -97,6 +97,7 @@ jobs:
       with:
         stack-version: 'latest'
         enable-stack: true
+        ghc-version: '8.8.3'
 
     - name: Cache stack global package db
       id:   stack-global
