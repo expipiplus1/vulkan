@@ -90,6 +90,7 @@ executables:
       - base < 4.15
       - bytestring
       - extra
+      - lens
       - linear
       - resourcet >= 1.2.4
       - safe-exceptions

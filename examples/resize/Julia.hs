@@ -33,7 +33,7 @@ juliaPipeline imageViews = do
     { setLayouts         = [descriptorSetLayout]
     , pushConstantRanges = [ PushConstantRange SHADER_STAGE_COMPUTE_BIT
                                                0
-                                               ((2 + 2 + 1) * 4)
+                                               ((2 + 2 + 2 + 1) * 4)
                            ]
     }
   let pipelineCreateInfo :: ComputePipelineCreateInfo '[]
@@ -115,7 +115,8 @@ juliaShader = do
         layout (local_size_x = workgroup_x, local_size_y = workgroup_y, local_size_z = 1 ) in;
         layout(set = 0, binding = 0, rgba8) uniform writeonly image2D img;
         layout(push_constant) uniform Frame {
-          ivec2 size;
+          vec2 scale;
+          vec2 offset;
           vec2 c;
           float r;
         } frame;
@@ -187,10 +188,11 @@ juliaShader = do
 
         // Algorithm from https://en.wikipedia.org/wiki/Julia_set
         void main() {
-          const vec2 z = vec2(gl_GlobalInvocationID) / vec2(frame.size) * 2 * frame.r - frame.r;
           vec4 res = vec4(0);
           for(int i = 0; i < num_samples; ++i) {
-            res += julia(z + samples[i] * (1/vec2(frame.size)));
+            const vec2 pix = vec2(gl_GlobalInvocationID) + samples[i];
+            const vec2 z = vec2(pix) * frame.scale + frame.offset;
+            res += julia(z);
           }
           res /= vec4(float(num_samples));
           imageStore(img, ivec2(gl_GlobalInvocationID.xy), res);
