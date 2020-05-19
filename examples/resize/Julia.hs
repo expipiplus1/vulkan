@@ -118,7 +118,7 @@ juliaShader = do
           vec2 scale;
           vec2 offset;
           vec2 c;
-          float r;
+          float escapeRadius;
         } frame;
 
         // From https://iquilezles.org/www/articles/palettes/palettes.htm
@@ -141,22 +141,21 @@ juliaShader = do
           return mulC(z,z) + frame.c;
         }
 
-        vec4 julia (vec2 z) {
+        float julia (vec2 z) {
           uint iteration = 0;
-          const int max_iteration = 1000;
+          const int max_iteration = 200;
+          float smooth_ = exp(-length(z));
 
-          while (dot(z,z) < dot(frame.r,frame.r) && iteration < max_iteration) {
+          while (dot(z,z) < frame.escapeRadius && iteration < max_iteration) {
             z = f(z);
+            smooth_ += exp(-length(z));
             iteration++;
           }
 
-          vec4 res;
-          if (iteration == max_iteration) {
-            res = vec4(0,0,0,1);
-          } else {
-            res = vec4(color(pow(float(iteration) / float(max_iteration), 1)),1);
-          }
-          return res;
+          if (iteration == max_iteration)
+            return 0;
+          else
+            return smooth_ / float(max_iteration);
         }
 
         // const int num_samples = 16;
@@ -188,14 +187,14 @@ juliaShader = do
 
         // Algorithm from https://en.wikipedia.org/wiki/Julia_set
         void main() {
-          vec4 res = vec4(0);
+          vec3 res = vec3(0);
           for(int i = 0; i < num_samples; ++i) {
             const vec2 pix = vec2(gl_GlobalInvocationID) + samples[i];
             const vec2 z = vec2(pix) * frame.scale + frame.offset;
-            res += julia(z);
+            res += color(julia(z));
           }
-          res /= vec4(float(num_samples));
-          imageStore(img, ivec2(gl_GlobalInvocationID.xy), res);
+          res /= float(num_samples);
+          imageStore(img, ivec2(gl_GlobalInvocationID.xy), vec4(res, 1));
         }
       |]
   (releaseKey, compModule) <- withShaderModule' zero { code = compCode }
