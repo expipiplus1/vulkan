@@ -7,6 +7,7 @@ module Vulkan.CStruct.Extends  ( BaseOutStructure(..)
                                , Chain
                                , Extendss
                                , SomeStruct(..)
+                               , extendSomeStruct
                                , withSomeStruct
                                , withSomeCStruct
                                , peekSomeCStruct
@@ -1031,6 +1032,17 @@ instance Zero (a '[]) => Zero (SomeStruct a) where
 -- | Forget which extensions a pointed-to struct has by casting the pointer
 forgetExtensions :: Ptr (a es) -> Ptr (SomeStruct a)
 forgetExtensions = castPtr
+
+-- | Add an extension to the beginning of the struct chain
+--
+-- This can be used to optionally extend structs based on some condition (for
+-- example, an extension or layer being available)
+extendSomeStruct
+  :: (Extensible a, Extends a e, ToCStruct e, Show e)
+  => e
+  -> SomeStruct a
+  -> SomeStruct a
+extendSomeStruct e (SomeStruct a) = SomeStruct (setNext a (e, getNext a))
 
 -- | Consume a 'SomeStruct' value
 withSomeStruct
