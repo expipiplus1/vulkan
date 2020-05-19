@@ -298,6 +298,30 @@ packages:
 - `pkg-config` and `SDL2` to build the Haskell `sdl2` package.
 - `glslang` (for the `glslangValidator` binary, to build the shaders)
 
+### Building on Windows
+
+- Clone this repo
+- Install stack
+  - https://docs.haskellstack.org/en/stable/install_and_upgrade/#windows
+- Make sure your graphics driver has installed `vulkan-1.dll` in `C:/windows/system32`
+- Install the LunarG Vulkan SDK
+  - https://vulkan.lunarg.com/sdk/home#windows
+  - Remember the installation directory, use in place of `C:/VulkanSDK/1.2.135.0` below
+  - We will link against `vulkan-1.lib` from this installation
+  - We will use the `glslangValidator` from this installation, make sure it's
+    in your `PATH` or otherwise made available to `stack`
+- Install the system dependencies via stack
+  - pkg-config
+  - SDL2
+  - `stack exec -- pacman -S mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2`
+  - Note that the above command will also install mingw's `libvulkan-1.dll`,
+    I had trouble getting things to run with this dll, so make sure you're
+    linking to the windows SDK installed earlier instead.
+- Build the packages
+  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0 build`
+- Run an example program
+  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0 run resize`
+
 ## Examples
 
 There exists a package to build some example programs in the

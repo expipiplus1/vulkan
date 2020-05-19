@@ -103,6 +103,10 @@ executables:
       - vulkan
       - vulkan-utils
 
+when:
+  - condition: os(windows)
+    ghc-options: -optl-mconsole
+
 flags:
   renderdoc:
     description:
