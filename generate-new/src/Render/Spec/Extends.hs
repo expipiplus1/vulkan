@@ -90,6 +90,7 @@ classes Spec {..} = do
   tellExport (EType (TyConName "Chain"))
   tellExport (EType (TyConName "Extendss"))
   tellExport (EData (TyConName "SomeStruct"))
+  tellExport (ETerm (TermName "withSomeStruct"))
   tellExport (ETerm (TermName "withSomeCStruct"))
   tellExport (ETerm (TermName "peekSomeCStruct"))
   tellExport (ETerm (TermName "pokeSomeCStruct"))
@@ -194,28 +195,48 @@ classes Spec {..} = do
 
     deriving instance (forall es. Show (Chain es) => Show (a es)) => Show (SomeStruct a)
 
+    -- | The constraint is so on this instance to encourage type inference
     instance Zero (a '[]) => Zero (SomeStruct a) where
       zero = SomeStruct (zero :: a '[])
 
+    -- | Forget which extensions a pointed-to struct has by casting the pointer
     forgetExtensions :: Ptr (a es) -> Ptr (SomeStruct a)
     forgetExtensions = castPtr
 
+    -- | Consume a 'SomeStruct' value
+    withSomeStruct
+      :: forall a b
+       . SomeStruct a
+      -> (forall es . (Extendss a es, PokeChain es, Show (Chain es)) => a es -> b)
+      -> b
+    withSomeStruct (SomeStruct s) f = f s
+
+    -- | Write the C representation of some extended @a@ and use the pointer,
+    -- the pointer must not be returned from the continuation.
     withSomeCStruct
       :: forall a b
        . (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
       => SomeStruct a
       -> (forall es . (Extendss a es, PokeChain es) => Ptr (a es) -> IO b)
       -> IO b
-    withSomeCStruct (SomeStruct s) f = withCStruct s f
+    withSomeCStruct s f = withSomeStruct s (`withCStruct` f)
 
+    -- | Given some memory for the head of the chain, allocate and poke the
+    -- tail and run an action.
     pokeSomeCStruct
       :: (forall es . (Extendss a es, PokeChain es) => ToCStruct (a es))
       => Ptr (SomeStruct a)
+      -- ^ Pointer to some memory at least the size of the head of the struct
+      -- chain.
       -> SomeStruct a
+      -- ^ The struct to poke
       -> IO b
+      -- ^ Computation to run while the poked tail is valid
       -> IO b
     pokeSomeCStruct p (SomeStruct s) = pokeCStruct (castPtr p) s
 
+    -- | Given a pointer to a struct with an unknown chain, peek the struct and
+    -- its chain.
     peekSomeCStruct
       :: forall a
        . (Extensible a, forall es . (Extendss a es, PeekChain es) => FromCStruct (a es))
@@ -227,9 +248,7 @@ classes Spec {..} = do
       peekSomeChain @a pNext $ \\tail' -> SomeStruct (setNext head' tail')
 
     peekSomeChain
-      :: forall
-           a
-           b
+      :: forall a b
        . (Extensible a)
       => Ptr BaseOutStructure
       -> (  forall es
@@ -247,7 +266,6 @@ classes Spec {..} = do
                              (castPtr @BaseOutStructure @() p)
           $ \\head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
                                       (\\tail' -> c (head', tail'))
-
 
     peekChainHead
       :: forall a b
