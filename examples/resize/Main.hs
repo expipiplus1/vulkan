@@ -312,11 +312,12 @@ draw = do
               frameScale    = aspect * 2 * pure r
               frameOffset   = negate (imageSizeF * aspect) * pure r
               constantBytes = 4 * (2 + 2 + 2 + 1)
+              escapeRadius  = 12 :: Float
           allocaBytes constantBytes $ \p -> do
             liftIO $ poke (p `plusPtr` 0) frameScale
             liftIO $ poke (p `plusPtr` 8) frameOffset
             liftIO $ poke (p `plusPtr` 16) c
-            liftIO $ poke (p `plusPtr` 24) r
+            liftIO $ poke (p `plusPtr` 24) escapeRadius
             cmdPushConstants' fJuliaPipelineLayout
                               SHADER_STAGE_COMPUTE_BIT
                               0

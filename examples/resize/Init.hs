@@ -8,22 +8,26 @@ module Init
   , createVMA
   ) where
 
-import           Control.Exception.Safe
+import           Control.Monad                  ( guard )
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
 import           Control.Monad.Trans.Resource
-import           Control.Monad                  ( guard )
 import           Data.Bits
 import           Data.ByteString                ( ByteString )
 import           Data.Foldable
-import           Data.Functor                   ( ($>) )
+import           Data.List                      ( partition )
 import           Data.Maybe                     ( catMaybes )
+import           Data.Monoid                    ( Endo(..)
+                                                , appEndo
+                                                )
 import           Data.Ord                       ( comparing )
+import qualified Data.Text                     as T
 import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
 import           Data.Word
 import           Say
+import           UnliftIO.Exception
 
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
@@ -51,40 +55,62 @@ myApiVersion = API_VERSION_1_0
 ----------------------------------------------------------------
 
 -- | Create an instance with a debug messenger and validation
-createInstance :: MonadResource m => [ByteString] -> m Instance
-createInstance requestedExtensions = do
-  availableExtensionNames <-
-    fmap layerName . snd <$> enumerateInstanceLayerProperties
-  let requiredLayers = []
-      requiredExtensions =
-        V.fromList
-          $ EXT_DEBUG_UTILS_EXTENSION_NAME
-          : EXT_VALIDATION_FEATURES_EXTENSION_NAME
-          : requestedExtensions
-  optionalLayers <-
-    fmap (V.fromList . catMaybes)
-    . sequence
-    $ [ if n `elem` availableExtensionNames
-          then pure $ Just n
-          else sayErrString ("Unable to find layer " <> show n) $> Nothing
-      | n <- ["VK_LAYER_KHRONOS_validation"]
-      ]
+createInstance :: forall m . MonadResource m => [ByteString] -> m Instance
+createInstance extraExtensions = do
+  let partitionOptReq :: (Show a, Eq a) => Text -> [a] -> [a] -> [a] -> m [a]
+      partitionOptReq type' available optional required = do
+        let (optHave, optMissing) = partition (`elem` available) optional
+            (reqHave, reqMissing) = partition (`elem` available) required
+            tShow                 = T.pack . show
+        for_ optMissing
+          $ \n -> sayErr $ "Missing optional " <> type' <> ": " <> tShow n
+        case reqMissing of
+          []  -> pure ()
+          [x] -> sayErr $ "Missing required " <> type' <> ": " <> tShow x
+          xs  -> sayErr $ "Missing required " <> type' <> "s: " <> tShow xs
+        pure (reqHave <> optHave)
+
+  availableExtensions <-
+    toList
+    .   fmap extensionName
+    .   snd
+    <$> enumerateInstanceExtensionProperties Nothing
+  availableLayers <-
+    toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
+
+  extensions <- partitionOptReq
+    "extension"
+    availableExtensions
+    [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
+    (EXT_DEBUG_UTILS_EXTENSION_NAME : extraExtensions)
+  layers <- partitionOptReq "layer"
+                            availableLayers
+                            ["VK_LAYER_KHRONOS_validation"]
+                            []
+
   let instanceCreateInfo =
-        zero
-            { applicationInfo       = Just zero { applicationName = Nothing
-                                                , apiVersion      = myApiVersion
-                                                }
-            , enabledLayerNames     = requiredLayers <> optionalLayers
-            , enabledExtensionNames = requiredExtensions
-            }
-          ::& debugMessengerCreateInfo
-          :&  ValidationFeaturesEXT
-                [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT]
-                []
-          :&  ()
-  (_, inst) <- withInstance' instanceCreateInfo
+        let extend =
+              [ extendSomeStruct debugMessengerCreateInfo
+                | EXT_DEBUG_UTILS_EXTENSION_NAME `elem` extensions
+                ]
+                <> [ extendSomeStruct validationFeatures
+                   | EXT_VALIDATION_FEATURES_EXTENSION_NAME `elem` extensions
+                   ]
+            base = zero
+              { applicationInfo       = Just zero { applicationName = Nothing
+                                                  , apiVersion = myApiVersion
+                                                  }
+              , enabledLayerNames     = V.fromList layers
+              , enabledExtensionNames = V.fromList extensions
+              }
+        in  appEndo (foldMap @[] Endo extend) (SomeStruct base)
+  inst <- withSomeStruct instanceCreateInfo (fmap snd . withInstance')
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   pure inst
+
+validationFeatures :: ValidationFeaturesEXT
+validationFeatures =
+  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
 
 debugMessengerCreateInfo :: DebugUtilsMessengerCreateInfoEXT
 debugMessengerCreateInfo = zero

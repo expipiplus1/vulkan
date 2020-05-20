@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Add `withSomeStruct` helper
 
 ## [3.3.1] - 2020-05-18
   - Bump API version to 1.2.141
