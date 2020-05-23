@@ -14,7 +14,7 @@ jobs:
       matrix:
         ghc: ['8.10.1', '8.8.2', '8.6.5']
         cabal: ['3.0']
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macOS-latest]
       fail-fast: false
 
     steps:
@@ -41,7 +41,7 @@ jobs:
         path: dist-newstyle
         key: ${{ runner.os }}-${{ matrix.ghc }}-dist-newstyle
 
-    - name: Install system dependencies
+    - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-latest'
       run: |
         wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
@@ -49,14 +49,22 @@ jobs:
         sudo apt-get update
         sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
 
+    - name: Install system dependencies macOS
+      if: matrix.os == 'macOS-latest'
+      shell: bash
+      run: |
+        brew install pkg-config sdl2
+        brew tap apenngrace/homebrew-vulkan 
+        brew cask install vulkan-sdk
+
     - name: Remove examples for 8.6.5
       run: |
-        sed -i '/examples/d' cabal.project
+        sed -ibak '/examples/d' cabal.project
       if: matrix.ghc == '8.6.5'
 
     - name: Remove generator for all but 8.8.2
       run: |
-        sed -i '/generate-new/d' cabal.project
+        sed -ibak '/generate-new/d' cabal.project
       if: matrix.ghc != '8.8.2'
 
     - run: cabal update
@@ -85,7 +93,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macOS-latest]
         # Use windows with 8.10.2+ https://gitlab.haskell.org/ghc/ghc/issues/17926
         # os: [ubuntu-latest, windows-latest]
         stack-args: ['--system-ghc --flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
@@ -137,15 +145,23 @@ jobs:
       env:
         ARGS: ${{ matrix.args }}
 
+    - name: Install system dependencies macOS
+      if: matrix.os == 'macOS-latest'
+      shell: bash
+      run: |
+        brew install pkg-config sdl2
+        brew tap apenngrace/homebrew-vulkan 
+        brew cask install vulkan-sdk
+
     - name: Install dependencies
       run: stack build --test --bench --only-dependencies $ARGS
       env:
-        ARGS: ${{ matrix.args }}
+        ARGS: ${{ matrix.stack-args }}
 
     - name: Build
       run: stack build $ARGS
       env:
-        ARGS: ${{ matrix.args }}
+        ARGS: ${{ matrix.stack-args }}
 
   nix:
     runs-on: ubuntu-latest

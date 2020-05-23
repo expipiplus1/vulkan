@@ -39,6 +39,8 @@ library:
     - -Wno-unused-imports
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
+  cxx-options:
+    - -std=c++11
   verbatim:
     other-modules:
 
