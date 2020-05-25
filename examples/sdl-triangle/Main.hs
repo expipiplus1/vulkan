@@ -398,8 +398,8 @@ appName :: IsString a => a
 appName = "Haskell Vulkan triangle example"
 
 windowWidth, windowHeight :: Int
-windowWidth = 1920
-windowHeight = 1080
+windowWidth = 800
+windowHeight = 600
 
 -- | InstanceCreateInfo for an SDL window
 windowInstanceCreateInfo
