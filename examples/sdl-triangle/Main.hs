@@ -4,9 +4,6 @@
 
 module Main where
 
-import           Control.Concurrent.Async       ( wait
-                                                , withAsyncBound
-                                                )
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Extra
@@ -32,7 +29,6 @@ import           Say
 import           System.Exit
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
-import           Vulkan.Core11
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Extensions.VK_KHR_surface
@@ -42,7 +38,7 @@ import           Vulkan.Utils.ShaderQQ
 import           Vulkan.Zero
 
 main :: IO ()
-main = (`withAsyncBound` wait) . runManaged $ do
+main = runManaged $ do
   withSDL
 
   VulkanWindow {..} <- withVulkanWindow appName windowWidth windowHeight
@@ -61,13 +57,15 @@ main = (`withAsyncBound` wait) . runManaged $ do
   (imageAvailableSemaphore, renderFinishedSemaphore) <- createSemaphores
     vwDevice
   SDL.showWindow vwSdlWindow
-  liftIO . mainLoop $ drawFrame vwDevice
-                                vwSwapchain
-                                vwGraphicsQueue
-                                vwPresentQueue
-                                imageAvailableSemaphore
-                                renderFinishedSemaphore
-                                commandBuffers
+  liftIO
+    $ mainLoop
+    $ drawFrame vwDevice
+                vwSwapchain
+                vwGraphicsQueue
+                vwPresentQueue
+                imageAvailableSemaphore
+                renderFinishedSemaphore
+                commandBuffers
   deviceWaitIdle vwDevice
 
 mainLoop :: IO () -> IO ()
@@ -400,8 +398,8 @@ appName :: IsString a => a
 appName = "Haskell Vulkan triangle example"
 
 windowWidth, windowHeight :: Int
-windowWidth = 1920
-windowHeight = 1080
+windowWidth = 800
+windowHeight = 600
 
 -- | InstanceCreateInfo for an SDL window
 windowInstanceCreateInfo
@@ -433,7 +431,7 @@ windowInstanceCreateInfo window = do
   pure
     $   zero
           { applicationInfo       = Just zero { applicationName = Just appName
-                                              , apiVersion = API_VERSION_1_1
+                                              , apiVersion = API_VERSION_1_0
                                               }
           , enabledLayerNames     = requiredLayers <> optionalLayers
           , enabledExtensionNames = requiredExtensions
@@ -467,12 +465,8 @@ createGraphicalDevice inst surface = do
       , enabledExtensionNames = requiredDeviceExtensions
       }
   dev           <- withDevice physicalDevice deviceCreateInfo Nothing allocate
-  graphicsQueue <- getDeviceQueue2
-    dev
-    zero { queueFamilyIndex = graphicsQueueFamilyIndex }
-  presentQueue <- getDeviceQueue2
-    dev
-    zero { queueFamilyIndex = presentQueueFamilyIndex }
+  graphicsQueue <- getDeviceQueue dev graphicsQueueFamilyIndex 0
+  presentQueue  <- getDeviceQueue dev presentQueueFamilyIndex 0
   let
     swapchainCreateInfo :: SwapchainCreateInfoKHR '[]
     swapchainCreateInfo =
@@ -583,12 +577,11 @@ pickGraphicalPhysicalDevice inst surface _requiredExtensions desiredFormat = do
 
   getPresentQueueIndices :: MonadIO m => PhysicalDevice -> m (V.Vector Word32)
   getPresentQueueIndices dev = do
-    -- TODO: implement getNum...
-    numQueues <- V.length <$> getPhysicalDeviceQueueFamilyProperties2 @'[] dev
-    let queueIndices = V.generate (fromIntegral numQueues) fromIntegral
+    queueFamilyProperties <- getPhysicalDeviceQueueFamilyProperties dev
+    let isPresentQueue i = getPhysicalDeviceSurfaceSupportKHR dev i surface
     V.filterM
-      (\i -> (True ==) <$> getPhysicalDeviceSurfaceSupportKHR dev i surface)
-      queueIndices
+      isPresentQueue
+      (V.generate (V.length queueFamilyProperties) fromIntegral)
 
   getFormat :: MonadIO m => PhysicalDevice -> m SurfaceFormatKHR
   getFormat dev = do
