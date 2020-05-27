@@ -22,9 +22,6 @@ import           Linear.Metric                  ( norm )
 import           Linear.V2
 import qualified SDL
 import           Say
-import           UnliftIO.Async                 ( wait
-                                                , withAsyncBound
-                                                )
 import           UnliftIO.Exception             ( displayException
                                                 , throwString
                                                 )
@@ -64,7 +61,7 @@ import           Window
 -- It's bound to an OS thread so SDL.pumpEvents can work properly.
 ----------------------------------------------------------------
 main :: IO ()
-main = (`withAsyncBound` wait) . prettyError . runResourceT $ do
+main = prettyError . runResourceT $ do
   -- Start SDL
   _ <- allocate_ (SDL.initialize @[] [SDL.InitEvents]) SDL.quit
 
