@@ -150,6 +150,14 @@ renderParams handles = r
         , ("VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL"  , "valueBool")
         , ("VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL", "valueString")
         ]
+      , UnionDiscriminator
+        "VkAccelerationStructureGeometryDataKHR"
+        "VkGeometryTypeKHR"
+        "geometryType"
+        [ ("VK_GEOMETRY_TYPE_TRIANGLES_KHR", "triangles")
+        , ("VK_GEOMETRY_TYPE_AABBS_KHR"    , "aabbs")
+        , ("VK_GEOMETRY_TYPE_INSTANCES_KHR", "instances")
+        ]
       ]
     , successCodeType             = TypeName "VkResult"
     , isSuccessCodeReturned       = (/= "VK_SUCCESS")
