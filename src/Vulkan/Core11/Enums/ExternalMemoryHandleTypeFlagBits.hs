@@ -160,8 +160,9 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT = Externa
 -- invalid if the host memory is freed.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000080
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
--- specifies an 'Vulkan.Extensions.WSITypes.AHardwareBuffer' object defined
--- by the Android NDK. See
+-- specifies an
+-- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'
+-- object defined by the Android NDK. See
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 -- for more details of this handle type.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID = ExternalMemoryHandleTypeFlagBits 0x00000400

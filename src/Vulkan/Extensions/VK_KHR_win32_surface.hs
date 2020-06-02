@@ -7,9 +7,9 @@ module Vulkan.Extensions.VK_KHR_win32_surface  ( createWin32SurfaceKHR
                                                , pattern KHR_WIN32_SURFACE_SPEC_VERSION
                                                , KHR_WIN32_SURFACE_EXTENSION_NAME
                                                , pattern KHR_WIN32_SURFACE_EXTENSION_NAME
-                                               , SurfaceKHR(..)
                                                , HINSTANCE
                                                , HWND
+                                               , SurfaceKHR(..)
                                                ) where
 
 import Control.Exception.Base (bracket)
@@ -60,8 +60,6 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Extensions.WSITypes (HINSTANCE)
-import Vulkan.Extensions.WSITypes (HWND)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateWin32SurfaceKHR))
@@ -82,8 +80,6 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (HINSTANCE)
-import Vulkan.Extensions.WSITypes (HWND)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -212,16 +208,14 @@ data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
     --
     -- @flags@ /must/ be @0@
     flags :: Win32SurfaceCreateFlagsKHR
-  , -- | @hinstance@ is the Win32 'Vulkan.Extensions.WSITypes.HINSTANCE' for the
-    -- window to associate the surface with.
+  , -- | @hinstance@ is the Win32 'HINSTANCE' for the window to associate the
+    -- surface with.
     --
-    -- @hinstance@ /must/ be a valid Win32
-    -- 'Vulkan.Extensions.WSITypes.HINSTANCE'
+    -- @hinstance@ /must/ be a valid Win32 'HINSTANCE'
     hinstance :: HINSTANCE
-  , -- | @hwnd@ is the Win32 'Vulkan.Extensions.WSITypes.HWND' for the window to
-    -- associate the surface with.
+  , -- | @hwnd@ is the Win32 'HWND' for the window to associate the surface with.
     --
-    -- @hwnd@ /must/ be a valid Win32 'Vulkan.Extensions.WSITypes.HWND'
+    -- @hwnd@ /must/ be a valid Win32 'HWND'
     hwnd :: HWND
   }
   deriving (Typeable, Eq)
@@ -309,4 +303,10 @@ type KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface"
 -- No documentation found for TopLevel "VK_KHR_WIN32_SURFACE_EXTENSION_NAME"
 pattern KHR_WIN32_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface"
+
+
+type HINSTANCE = Ptr ()
+
+
+type HWND = Ptr ()
 

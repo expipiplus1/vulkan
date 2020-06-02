@@ -9,9 +9,9 @@ module Vulkan.Extensions.VK_KHR_external_memory_win32  ( getMemoryWin32HandleKHR
                                                        , pattern KHR_EXTERNAL_MEMORY_WIN32_SPEC_VERSION
                                                        , KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
                                                        , pattern KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
+                                                       , LPCWSTR
                                                        , HANDLE
                                                        , DWORD
-                                                       , LPCWSTR
                                                        , SECURITY_ATTRIBUTES
                                                        ) where
 
@@ -31,6 +31,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
+import Foreign.C.Types (CWchar)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
@@ -43,7 +44,7 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Extensions.WSITypes (DWORD)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryWin32HandleKHR))
@@ -54,11 +55,10 @@ import Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits (ExternalMemoryHandl
 import Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits (ExternalMemoryHandleTypeFlagBits(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Extensions.WSITypes (HANDLE)
-import Vulkan.Extensions.WSITypes (LPCWSTR)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (HANDLE)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
-import Vulkan.Extensions.WSITypes (SECURITY_ATTRIBUTES)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (SECURITY_ATTRIBUTES)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -69,10 +69,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMPORT_ME
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (DWORD)
-import Vulkan.Extensions.WSITypes (HANDLE)
-import Vulkan.Extensions.WSITypes (LPCWSTR)
-import Vulkan.Extensions.WSITypes (SECURITY_ATTRIBUTES)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (HANDLE)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (SECURITY_ATTRIBUTES)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -368,7 +367,8 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR'
 --
 -- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid 'Vulkan.Extensions.WSITypes.SECURITY_ATTRIBUTES'
+--     pointer to a valid
+--     'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
 --     value
 --
 -- = See Also
@@ -376,11 +376,11 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryWin32HandleInfoKHR = ExportMemoryWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
-    -- 'Vulkan.Extensions.WSITypes.SECURITY_ATTRIBUTES' structure specifying
-    -- security attributes of the handle.
+    -- 'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
+    -- structure specifying security attributes of the handle.
     attributes :: Ptr SECURITY_ATTRIBUTES
-  , -- | @dwAccess@ is a 'Vulkan.Extensions.WSITypes.DWORD' specifying access
-    -- rights of the handle.
+  , -- | @dwAccess@ is a 'Vulkan.Extensions.VK_NV_external_memory_win32.DWORD'
+    -- specifying access rights of the handle.
     dwAccess :: DWORD
   , -- | @name@ is a null-terminated UTF-16 string to associate with the
     -- underlying resource referenced by NT handles exported from the created
@@ -587,4 +587,7 @@ type KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_KHR_external_memory_win32"
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"
 pattern KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_KHR_external_memory_win32"
+
+
+type LPCWSTR = Ptr CWchar
 

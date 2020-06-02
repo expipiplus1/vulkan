@@ -7,10 +7,10 @@ module Vulkan.Extensions.VK_KHR_xlib_surface  ( createXlibSurfaceKHR
                                               , pattern KHR_XLIB_SURFACE_SPEC_VERSION
                                               , KHR_XLIB_SURFACE_EXTENSION_NAME
                                               , pattern KHR_XLIB_SURFACE_EXTENSION_NAME
-                                              , SurfaceKHR(..)
                                               , Display
                                               , VisualID
                                               , Window
+                                              , SurfaceKHR(..)
                                               ) where
 
 import Control.Exception.Base (bracket)
@@ -50,6 +50,7 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import Data.Word (Word32)
+import Data.Word (Word64)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -58,7 +59,6 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Bool32(..))
-import Vulkan.Extensions.WSITypes (Display)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -77,17 +77,12 @@ import Vulkan.Extensions.Handles (SurfaceKHR)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Extensions.WSITypes (VisualID)
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Extensions.WSITypes (Window)
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (Display)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.WSITypes (VisualID)
-import Vulkan.Extensions.WSITypes (Window)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -191,11 +186,9 @@ getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                                -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
                                                -- for the given @physicalDevice@
                                                ("queueFamilyIndex" ::: Word32)
-                                            -> -- | @dpy@ is a pointer to an Xlib 'Vulkan.Extensions.WSITypes.Display'
-                                               -- connection to the server.
+                                            -> -- | @dpy@ is a pointer to an Xlib 'Display' connection to the server.
                                                --
-                                               -- @dpy@ /must/ be a valid pointer to a
-                                               -- 'Vulkan.Extensions.WSITypes.Display' value
+                                               -- @dpy@ /must/ be a valid pointer to a 'Display' value
                                                ("dpy" ::: Ptr Display)
                                             -> -- No documentation found for Nested "vkGetPhysicalDeviceXlibPresentationSupportKHR" "visualID"
                                                VisualID
@@ -223,15 +216,13 @@ data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
     --
     -- @flags@ /must/ be @0@
     flags :: XlibSurfaceCreateFlagsKHR
-  , -- | @dpy@ is a pointer to an Xlib 'Vulkan.Extensions.WSITypes.Display'
-    -- connection to the X server.
+  , -- | @dpy@ is a pointer to an Xlib 'Display' connection to the X server.
     --
-    -- @dpy@ /must/ point to a valid Xlib 'Vulkan.Extensions.WSITypes.Display'
+    -- @dpy@ /must/ point to a valid Xlib 'Display'
     dpy :: Ptr Display
-  , -- | @window@ is an Xlib 'Vulkan.Extensions.WSITypes.Window' to associate the
-    -- surface with.
+  , -- | @window@ is an Xlib 'Window' to associate the surface with.
     --
-    -- @window@ /must/ be a valid Xlib 'Vulkan.Extensions.WSITypes.Window'
+    -- @window@ /must/ be a valid Xlib 'Window'
     window :: Window
   }
   deriving (Typeable, Eq)
@@ -310,4 +301,13 @@ type KHR_XLIB_SURFACE_EXTENSION_NAME = "VK_KHR_xlib_surface"
 -- No documentation found for TopLevel "VK_KHR_XLIB_SURFACE_EXTENSION_NAME"
 pattern KHR_XLIB_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern KHR_XLIB_SURFACE_EXTENSION_NAME = "VK_KHR_xlib_surface"
+
+
+type Display = Ptr ()
+
+
+type VisualID = Word64
+
+
+type Window = Word64
 

@@ -956,8 +956,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     the Android hardware buffer’s
---     'Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@ /must/ include
---     at least one of @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
+--     /must/ include at least one of
+--     @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
 --     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@
 --
 -- -   If the parameters define an import operation, the external handle is
@@ -985,7 +986,8 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android hardware
---     buffer’s 'Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
+--     buffer’s
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
 --     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
 --     /must/ have a complete mipmap chain
 --
@@ -994,9 +996,10 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android hardware
---     buffer’s 'Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@ does
---     not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
---     /must/ have exactly one mipmap level
+--     buffer’s
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
+--     does not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
+--     @image@ /must/ have exactly one mipmap level
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a

@@ -6,8 +6,8 @@ module Vulkan.Extensions.VK_KHR_android_surface  ( createAndroidSurfaceKHR
                                                  , pattern KHR_ANDROID_SURFACE_SPEC_VERSION
                                                  , KHR_ANDROID_SURFACE_EXTENSION_NAME
                                                  , pattern KHR_ANDROID_SURFACE_EXTENSION_NAME
-                                                 , SurfaceKHR(..)
                                                  , ANativeWindow
+                                                 , SurfaceKHR(..)
                                                  ) where
 
 import Control.Exception.Base (bracket)
@@ -50,7 +50,6 @@ import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
-import Vulkan.Extensions.WSITypes (ANativeWindow)
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
@@ -71,7 +70,6 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (ANativeWindow)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -87,11 +85,9 @@ foreign import ccall
 -- = Description
 --
 -- During the lifetime of a surface created using a particular
--- 'Vulkan.Extensions.WSITypes.ANativeWindow' handle any attempts to create
--- another surface for the same 'Vulkan.Extensions.WSITypes.ANativeWindow'
--- and any attempts to connect to the same
--- 'Vulkan.Extensions.WSITypes.ANativeWindow' through other platform
--- mechanisms will fail.
+-- 'ANativeWindow' handle any attempts to create another surface for the
+-- same 'ANativeWindow' and any attempts to connect to the same
+-- 'ANativeWindow' through other platform mechanisms will fail.
 --
 -- Note
 --
@@ -101,7 +97,7 @@ foreign import ccall
 -- @EGLSurface@ simultaneously.
 --
 -- If successful, 'createAndroidSurfaceKHR' increments the
--- 'Vulkan.Extensions.WSITypes.ANativeWindow'’s reference count, and
+-- 'ANativeWindow'’s reference count, and
 -- 'Vulkan.Extensions.VK_KHR_surface.destroySurfaceKHR' will decrement it.
 --
 -- On Android, when a swapchain’s @imageExtent@ does not match the
@@ -187,11 +183,10 @@ data AndroidSurfaceCreateInfoKHR = AndroidSurfaceCreateInfoKHR
     --
     -- @flags@ /must/ be @0@
     flags :: AndroidSurfaceCreateFlagsKHR
-  , -- | @window@ is a pointer to the 'Vulkan.Extensions.WSITypes.ANativeWindow'
-    -- to associate the surface with.
+  , -- | @window@ is a pointer to the 'ANativeWindow' to associate the surface
+    -- with.
     --
-    -- @window@ /must/ point to a valid Android
-    -- 'Vulkan.Extensions.WSITypes.ANativeWindow'
+    -- @window@ /must/ point to a valid Android 'ANativeWindow'
     window :: Ptr ANativeWindow
   }
   deriving (Typeable, Eq)
@@ -266,4 +261,7 @@ type KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
 -- No documentation found for TopLevel "VK_KHR_ANDROID_SURFACE_EXTENSION_NAME"
 pattern KHR_ANDROID_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
+
+
+data ANativeWindow
 

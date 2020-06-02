@@ -5,9 +5,9 @@ module Vulkan.Extensions.VK_EXT_acquire_xlib_display  ( acquireXlibDisplayEXT
                                                       , pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
                                                       , EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
                                                       , pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+                                                      , RROutput
                                                       , DisplayKHR(..)
                                                       , Display
-                                                      , RROutput
                                                       ) where
 
 import Control.Exception.Base (bracket)
@@ -27,9 +27,10 @@ import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
+import Data.Word (Word64)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
-import Vulkan.Extensions.WSITypes (Display)
+import Vulkan.Extensions.VK_KHR_xlib_surface (Display)
 import Vulkan.Extensions.Handles (DisplayKHR)
 import Vulkan.Extensions.Handles (DisplayKHR(..))
 import Vulkan.Dynamic (InstanceCmds(pVkAcquireXlibDisplayEXT))
@@ -37,14 +38,12 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetRandROutputDisplayEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
-import Vulkan.Extensions.WSITypes (RROutput)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (Display)
+import Vulkan.Extensions.VK_KHR_xlib_surface (Display)
 import Vulkan.Extensions.Handles (DisplayKHR(..))
-import Vulkan.Extensions.WSITypes (RROutput)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -97,7 +96,7 @@ acquireXlibDisplayEXT :: forall io
                       -> -- | @dpy@ A connection to the X11 server that currently owns @display@.
                          --
                          -- @dpy@ /must/ be a valid pointer to a
-                         -- 'Vulkan.Extensions.WSITypes.Display' value
+                         -- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
                          ("dpy" ::: Ptr Display)
                       -> -- | @display@ The display the caller wishes to control in Vulkan.
                          --
@@ -153,7 +152,7 @@ getRandROutputDisplayEXT :: forall io
                          -> -- | @dpy@ A connection to the X11 server from which @rrOutput@ was queried.
                             --
                             -- @dpy@ /must/ be a valid pointer to a
-                            -- 'Vulkan.Extensions.WSITypes.Display' value
+                            -- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display' value
                             ("dpy" ::: Ptr Display)
                          -> -- | @rrOutput@ An X11 RandR output ID.
                             RROutput
@@ -181,4 +180,7 @@ type EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_display"
 -- No documentation found for TopLevel "VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME"
 pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_display"
+
+
+type RROutput = Word64
 

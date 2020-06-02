@@ -6,8 +6,8 @@ module Vulkan.Extensions.VK_GGP_stream_descriptor_surface  ( createStreamDescrip
                                                            , pattern GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION
                                                            , GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
                                                            , pattern GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
-                                                           , SurfaceKHR(..)
                                                            , GgpStreamDescriptor
+                                                           , SurfaceKHR(..)
                                                            ) where
 
 import Control.Exception.Base (bracket)
@@ -46,6 +46,7 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
@@ -54,7 +55,6 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Extensions.WSITypes (GgpStreamDescriptor)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateStreamDescriptorSurfaceGGP))
@@ -71,7 +71,6 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (GgpStreamDescriptor)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -162,11 +161,10 @@ data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
     --
     -- @flags@ /must/ be @0@
     flags :: StreamDescriptorSurfaceCreateFlagsGGP
-  , -- | @streamDescriptor@ is a 'Vulkan.Extensions.WSITypes.GgpStreamDescriptor'
-    -- referring to the GGP stream descriptor to associate with the surface.
+  , -- | @streamDescriptor@ is a 'GgpStreamDescriptor' referring to the GGP
+    -- stream descriptor to associate with the surface.
     --
-    -- @streamDescriptor@ /must/ be a valid
-    -- 'Vulkan.Extensions.WSITypes.GgpStreamDescriptor'
+    -- @streamDescriptor@ /must/ be a valid 'GgpStreamDescriptor'
     streamDescriptor :: GgpStreamDescriptor
   }
   deriving (Typeable, Eq)
@@ -241,4 +239,7 @@ type GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME = "VK_GGP_stream_descriptor_su
 -- No documentation found for TopLevel "VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME"
 pattern GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME = "VK_GGP_stream_descriptor_surface"
+
+
+type GgpStreamDescriptor = Word32
 

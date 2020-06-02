@@ -205,7 +205,6 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
                           , module Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
-                          , module Vulkan.Extensions.WSITypes
                           ) where
 import Vulkan.Extensions.Handles
 import Vulkan.Extensions.VK_AMD_buffer_marker
@@ -413,5 +412,4 @@ import Vulkan.Extensions.VK_NV_win32_keyed_mutex
 import Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
 import Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Vulkan.Extensions.VK_QCOM_render_pass_transform
-import Vulkan.Extensions.WSITypes
 

@@ -47,7 +47,6 @@ import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct.Extends (forgetExtensions)
-import Vulkan.Extensions.WSITypes (AHardwareBuffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.ImageView (ComponentMapping)
@@ -86,7 +85,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (AHardwareBuffer)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -122,8 +120,7 @@ getAndroidHardwareBufferPropertiesANDROID :: forall a io
                                              -- one of the @AHARDWAREBUFFER_USAGE_GPU_@* flags in its
                                              -- @AHardwareBuffer_Desc@::@usage@
                                              --
-                                             -- @buffer@ /must/ be a valid pointer to a valid
-                                             -- 'Vulkan.Extensions.WSITypes.AHardwareBuffer' value
+                                             -- @buffer@ /must/ be a valid pointer to a valid 'AHardwareBuffer' value
                                              (Ptr AHardwareBuffer)
                                           -> io (AndroidHardwareBufferPropertiesANDROID a)
 getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
@@ -234,8 +231,7 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
 --
--- -   @buffer@ /must/ be a valid pointer to an
---     'Vulkan.Extensions.WSITypes.AHardwareBuffer' value
+-- -   @buffer@ /must/ be a valid pointer to an 'AHardwareBuffer' value
 --
 -- = See Also
 --
@@ -766,4 +762,7 @@ type ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME = "VK_ANDROI
 -- No documentation found for TopLevel "VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME"
 pattern ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME = "VK_ANDROID_external_memory_android_hardware_buffer"
+
+
+data AHardwareBuffer
 

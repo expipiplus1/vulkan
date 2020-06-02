@@ -16,13 +16,13 @@ module Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDeviceSurfac
                                                        , pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
                                                        , EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
                                                        , pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
+                                                       , HMONITOR
                                                        , SurfaceKHR(..)
                                                        , SwapchainKHR(..)
                                                        , PhysicalDeviceSurfaceInfo2KHR(..)
                                                        , PresentModeKHR(..)
                                                        , DeviceGroupPresentModeFlagBitsKHR(..)
                                                        , DeviceGroupPresentModeFlagsKHR
-                                                       , HMONITOR
                                                        ) where
 
 import Control.Exception.Base (bracket)
@@ -84,7 +84,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Extensions.WSITypes (HMONITOR)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfacePresentModes2EXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -110,7 +109,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_F
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagBitsKHR(..))
 import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
-import Vulkan.Extensions.WSITypes (HMONITOR)
 import Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR(..))
 import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
@@ -483,10 +481,10 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
-  { -- | @hmonitor@ is the Win32 'Vulkan.Extensions.WSITypes.HMONITOR' handle
-    -- identifying the display to create the surface with.
+  { -- | @hmonitor@ is the Win32 'HMONITOR' handle identifying the display to
+    -- create the surface with.
     --
-    -- @hmonitor@ /must/ be a valid 'Vulkan.Extensions.WSITypes.HMONITOR'
+    -- @hmonitor@ /must/ be a valid 'HMONITOR'
     hmonitor :: HMONITOR }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -656,4 +654,7 @@ type EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = "VK_EXT_full_screen_exclusive"
 -- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME"
 pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = "VK_EXT_full_screen_exclusive"
+
+
+type HMONITOR = Ptr ()
 

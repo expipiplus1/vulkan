@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bcc9c2c0ae54b890b61c540c1ab1125a3ffaec8b4c87c59760bfc1dbf07373f4
+-- hash: e74c5d7b6beececcc43f141ba72a64f4bff10e560769c463663befbc839e20af
 
 name:           vulkan
 version:        3.3.1
@@ -455,7 +455,6 @@ library
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
-      Vulkan.Extensions.WSITypes
       Vulkan.NamedType
       Vulkan.Version
       Vulkan.Zero

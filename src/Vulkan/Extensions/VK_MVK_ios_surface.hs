@@ -156,10 +156,10 @@ data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
     flags :: IOSSurfaceCreateFlagsMVK
   , -- | @pView@ is a reference to a @UIView@ object which will display this
     -- surface. This @UIView@ /must/ be backed by a @CALayer@ instance of type
-    -- 'Vulkan.Extensions.WSITypes.CAMetalLayer'.
+    -- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
     --
     -- @pView@ /must/ be a valid @UIView@ and /must/ be backed by a @CALayer@
-    -- instance of type 'Vulkan.Extensions.WSITypes.CAMetalLayer'
+    -- instance of type 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'
     view :: Ptr ()
   }
   deriving (Typeable)
