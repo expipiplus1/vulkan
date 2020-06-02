@@ -17,6 +17,7 @@ module Vulkan.Core10.Pipeline  ( ComputePipelineCreateInfo
                                , StencilOpState
                                , VertexInputAttributeDescription
                                , VertexInputBindingDescription
+                               , Viewport
                                ) where
 
 import Data.Kind (Type)
@@ -177,4 +178,12 @@ instance ToCStruct VertexInputBindingDescription
 instance Show VertexInputBindingDescription
 
 instance FromCStruct VertexInputBindingDescription
+
+
+data Viewport
+
+instance ToCStruct Viewport
+instance Show Viewport
+
+instance FromCStruct Viewport
 

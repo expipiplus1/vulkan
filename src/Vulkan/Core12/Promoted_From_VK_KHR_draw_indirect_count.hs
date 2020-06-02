@@ -21,7 +21,7 @@ import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawIndexedIndirectCount))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawIndirectCount))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -206,9 +206,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -316,7 +316,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndirectCount :: forall io
                       . (MonadIO io)
                      => -- | @commandBuffer@ is the command buffer into which the command is
@@ -531,9 +531,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -638,7 +638,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndexedIndirectCount :: forall io
                              . (MonadIO io)
                             => -- | @commandBuffer@ is the command buffer into which the command is

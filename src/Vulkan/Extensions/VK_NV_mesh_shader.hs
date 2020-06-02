@@ -34,11 +34,11 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (CommandBuffer)
@@ -47,7 +47,7 @@ import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawMeshTasksIndirectCountNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawMeshTasksIndirectNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawMeshTasksNV))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -236,9 +236,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -485,9 +485,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -560,7 +560,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawMeshTasksIndirectNV :: forall io
                             . (MonadIO io)
                            => -- | @commandBuffer@ is the command buffer into which the command is
@@ -768,9 +768,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -858,7 +858,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawMeshTasksIndirectCountNV :: forall io
                                  . (MonadIO io)
                                 => -- | @commandBuffer@ is the command buffer into which the command is
@@ -905,7 +905,7 @@ cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBuf
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMeshShaderFeaturesNV = PhysicalDeviceMeshShaderFeaturesNV
   { -- | @taskShader@ indicates whether the task shader stage is supported.

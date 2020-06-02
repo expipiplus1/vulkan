@@ -82,17 +82,17 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Extensions.Handles (DisplayKHR)
 import Vulkan.Extensions.Handles (DisplayKHR(..))
 import Vulkan.Extensions.Handles (DisplayModeKHR)
 import Vulkan.Extensions.Handles (DisplayModeKHR(..))
-import Vulkan.Core10.SharedTypes (Extent2D)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -105,7 +105,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetDisplayPlaneSupportedDisplaysKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayPlanePropertiesKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayPropertiesKHR))
 import Vulkan.Core10.Handles (Instance_T)
-import Vulkan.Core10.SharedTypes (Offset2D)
+import Vulkan.Core10.FundamentalTypes (Offset2D)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
@@ -695,9 +695,10 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Extensions.Handles.DisplayKHR',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayProperties2KHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagsKHR',
 -- 'getPhysicalDeviceDisplayPropertiesKHR'
 data DisplayPropertiesKHR = DisplayPropertiesKHR
@@ -721,9 +722,9 @@ data DisplayPropertiesKHR = DisplayPropertiesKHR
     -- describing which transforms are supported by this display.
     supportedTransforms :: SurfaceTransformFlagsKHR
   , -- | @planeReorderPossible@ tells whether the planes on this display /can/
-    -- have their z order changed. If this is 'Vulkan.Core10.BaseType.TRUE',
-    -- the application /can/ re-arrange the planes on this display in any order
-    -- relative to each other.
+    -- have their z order changed. If this is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', the application /can/ re-arrange
+    -- the planes on this display in any order relative to each other.
     planeReorderPossible :: Bool
   , -- | @persistentContent@ tells whether the display supports
     -- self-refresh\/internal buffering. If this is true, the application /can/
@@ -860,7 +861,7 @@ instance Zero DisplayPlanePropertiesKHR where
 -- = See Also
 --
 -- 'DisplayModeCreateInfoKHR', 'DisplayModePropertiesKHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D'
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D'
 data DisplayModeParametersKHR = DisplayModeParametersKHR
   { -- | @visibleRegion@ is the 2D extents of the visible region.
     visibleRegion :: Extent2D
@@ -1046,8 +1047,9 @@ instance Zero DisplayModeCreateInfoKHR where
 --
 -- 'DisplayPlaneAlphaFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneCapabilities2KHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D',
--- 'Vulkan.Core10.SharedTypes.Offset2D', 'getDisplayPlaneCapabilitiesKHR'
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Offset2D',
+-- 'getDisplayPlaneCapabilitiesKHR'
 data DisplayPlaneCapabilitiesKHR = DisplayPlaneCapabilitiesKHR
   { -- | @supportedAlpha@ is a bitmask of 'DisplayPlaneAlphaFlagBitsKHR'
     -- describing the supported alpha blending modes.
@@ -1160,8 +1162,8 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 -- -   If the @planeReorderPossible@ member of the 'DisplayPropertiesKHR'
 --     structure returned by 'getPhysicalDeviceDisplayPropertiesKHR' for
 --     the display corresponding to @displayMode@ is
---     'Vulkan.Core10.BaseType.TRUE' then @planeStackIndex@ /must/ be less
---     than the number of display planes supported by the device as
+--     'Vulkan.Core10.FundamentalTypes.TRUE' then @planeStackIndex@ /must/
+--     be less than the number of display planes supported by the device as
 --     determined by calling 'getPhysicalDeviceDisplayPlanePropertiesKHR';
 --     otherwise @planeStackIndex@ /must/ equal the @currentStackIndex@
 --     member of 'DisplayPlanePropertiesKHR' returned by
@@ -1201,7 +1203,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneAlphaFlagBitsKHR', 'DisplaySurfaceCreateFlagsKHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR',
 -- 'createDisplayPlaneSurfaceKHR'

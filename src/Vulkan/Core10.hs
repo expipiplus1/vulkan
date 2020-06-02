@@ -2,7 +2,6 @@
 module Vulkan.Core10  ( pattern API_VERSION_1_0
                       , module Vulkan.Core10.APIConstants
                       , module Vulkan.Core10.AllocationCallbacks
-                      , module Vulkan.Core10.BaseType
                       , module Vulkan.Core10.Buffer
                       , module Vulkan.Core10.BufferView
                       , module Vulkan.Core10.CommandBuffer
@@ -16,6 +15,7 @@ module Vulkan.Core10  ( pattern API_VERSION_1_0
                       , module Vulkan.Core10.ExtensionDiscovery
                       , module Vulkan.Core10.Fence
                       , module Vulkan.Core10.FuncPointers
+                      , module Vulkan.Core10.FundamentalTypes
                       , module Vulkan.Core10.Handles
                       , module Vulkan.Core10.Image
                       , module Vulkan.Core10.ImageView
@@ -32,12 +32,10 @@ module Vulkan.Core10  ( pattern API_VERSION_1_0
                       , module Vulkan.Core10.QueueSemaphore
                       , module Vulkan.Core10.Sampler
                       , module Vulkan.Core10.Shader
-                      , module Vulkan.Core10.SharedTypes
                       , module Vulkan.Core10.SparseResourceMemoryManagement
                       ) where
 import Vulkan.Core10.APIConstants
 import Vulkan.Core10.AllocationCallbacks
-import Vulkan.Core10.BaseType
 import Vulkan.Core10.Buffer
 import Vulkan.Core10.BufferView
 import Vulkan.Core10.CommandBuffer
@@ -51,6 +49,7 @@ import Vulkan.Core10.Event
 import Vulkan.Core10.ExtensionDiscovery
 import Vulkan.Core10.Fence
 import Vulkan.Core10.FuncPointers
+import Vulkan.Core10.FundamentalTypes
 import Vulkan.Core10.Handles
 import Vulkan.Core10.Image
 import Vulkan.Core10.ImageView
@@ -67,7 +66,6 @@ import Vulkan.Core10.Queue
 import Vulkan.Core10.QueueSemaphore
 import Vulkan.Core10.Sampler
 import Vulkan.Core10.Shader
-import Vulkan.Core10.SharedTypes
 import Vulkan.Core10.SparseResourceMemoryManagement
 import Data.Word (Word32)
 import Vulkan.Version (pattern MAKE_VERSION)

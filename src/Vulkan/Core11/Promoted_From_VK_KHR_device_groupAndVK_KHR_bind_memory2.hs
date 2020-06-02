@@ -26,7 +26,7 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -165,8 +165,8 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --     @pSplitInstanceBindRegions@.
 --
 -- -   @pSplitInstanceBindRegions@ is a pointer to an array of
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures describing
---     which regions of the image are attached to each instance of memory.
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures describing which
+--     regions of the image are attached to each instance of memory.
 --
 -- If @deviceIndexCount@ is greater than zero, then on device index i
 -- @image@ is attached to the instance of the memory on the physical device
@@ -249,11 +249,11 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 -- -   If @splitInstanceBindRegionCount@ is not @0@,
 --     @pSplitInstanceBindRegions@ /must/ be a valid pointer to an array of
 --     @splitInstanceBindRegionCount@
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
 -- = See Also
 --
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BindImageMemoryDeviceGroupInfo = BindImageMemoryDeviceGroupInfo
   { -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "pDeviceIndices"

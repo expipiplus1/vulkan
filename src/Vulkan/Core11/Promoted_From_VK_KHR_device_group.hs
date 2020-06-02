@@ -65,7 +65,7 @@ import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core11.Enums.MemoryAllocateFlagBits (MemoryAllocateFlags)
 import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlagBits(..))
 import Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -493,8 +493,8 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 -- consume memory on all physical devices even if the @deviceMask@ excludes
 -- some devices. If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.PhysicalDeviceGroupProperties'::@subsetAllocation@
--- is 'Vulkan.Core10.BaseType.TRUE', then memory is only consumed for the
--- devices in the device mask.
+-- is 'Vulkan.Core10.FundamentalTypes.TRUE', then memory is only consumed
+-- for the devices in the device mask.
 --
 -- Note
 --
@@ -628,18 +628,18 @@ instance Zero MemoryAllocateFlagsInfo where
 --
 -- -   If @deviceRenderAreaCount@ is not @0@, @pDeviceRenderAreas@ /must/
 --     be a valid pointer to an array of @deviceRenderAreaCount@
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
 -- = See Also
 --
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupRenderPassBeginInfo = DeviceGroupRenderPassBeginInfo
   { -- | @deviceMask@ is the device mask for the render pass instance.
     deviceMask :: Word32
   , -- | @pDeviceRenderAreas@ is a pointer to an array of
-    -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining the
-    -- render area for each physical device.
+    -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining the render
+    -- area for each physical device.
     deviceRenderAreas :: Vector Rect2D
   }
   deriving (Typeable)

@@ -41,10 +41,10 @@ import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -75,7 +75,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConservativeRasterizationPropertiesEXT
   { -- | @primitiveOverestimationSize@ is the size in pixels the generating
@@ -139,9 +139,10 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     -- implementation supports conservative rasterization with the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
     -- execution mode enabled. When supported the
-    -- 'Vulkan.Core10.BaseType.SampleMask' built-in input variable will reflect
-    -- the coverage after the early per-fragment depth and stencil tests are
-    -- applied even when conservative rasterization is enabled. Otherwise
+    -- 'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable will
+    -- reflect the coverage after the early per-fragment depth and stencil
+    -- tests are applied even when conservative rasterization is enabled.
+    -- Otherwise
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
     -- execution mode /must/ not be used when conservative rasterization is
     -- enabled.

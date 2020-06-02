@@ -20,7 +20,6 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -38,17 +37,17 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetExclusiveScissorNV))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -116,7 +115,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pExclusiveScissors@ /must/ be a valid pointer to an array of
---     @exclusiveScissorCount@ 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
+--     @exclusiveScissorCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D'
 --     structures
 --
 -- -   @commandBuffer@ /must/ be in the
@@ -148,7 +147,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetExclusiveScissorNV :: forall io
                           . (MonadIO io)
                          => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -158,8 +157,8 @@ cmdSetExclusiveScissorNV :: forall io
                             -- rectangle whose state is updated by the command.
                             ("firstExclusiveScissor" ::: Word32)
                          -> -- | @pExclusiveScissors@ is a pointer to an array of
-                            -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining
-                            -- exclusive scissor rectangles.
+                            -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining exclusive
+                            -- scissor rectangles.
                             ("exclusiveScissors" ::: Vector Rect2D)
                          -> io ()
 cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
@@ -199,7 +198,7 @@ cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors =
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExclusiveScissorFeaturesNV = PhysicalDeviceExclusiveScissorFeaturesNV
   { -- | @exclusiveScissor@ indicates that the implementation supports the
@@ -276,30 +275,22 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV'
 --     and @exclusiveScissorCount@ is not @0@, @pExclusiveScissors@ /must/
 --     be a valid pointer to an array of @exclusiveScissorCount@
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'
 --
--- -   If @exclusiveScissorCount@ is not @0@, and @pExclusiveScissors@ is
---     not @NULL@, @pExclusiveScissors@ /must/ be a valid pointer to an
---     array of @exclusiveScissorCount@
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
---
 -- = See Also
 --
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineViewportExclusiveScissorStateCreateInfoNV = PipelineViewportExclusiveScissorStateCreateInfoNV
-  { -- | @exclusiveScissorCount@ is the number of exclusive scissor rectangles.
-    exclusiveScissorCount :: Word32
-  , -- | @pExclusiveScissors@ is a pointer to an array of
-    -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining
-    -- exclusive scissor rectangles.
-    exclusiveScissors :: Vector Rect2D
-  }
+  { -- | @pExclusiveScissors@ is a pointer to an array of
+    -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining exclusive
+    -- scissor rectangles.
+    exclusiveScissors :: Vector Rect2D }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (PipelineViewportExclusiveScissorStateCreateInfoNV)
@@ -311,41 +302,31 @@ instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
   pokeCStruct p PipelineViewportExclusiveScissorStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    let pExclusiveScissorsLength = Data.Vector.length $ (exclusiveScissors)
-    exclusiveScissorCount'' <- lift $ if (exclusiveScissorCount) == 0
-      then pure $ fromIntegral pExclusiveScissorsLength
-      else do
-        unless (fromIntegral pExclusiveScissorsLength == (exclusiveScissorCount) || pExclusiveScissorsLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pExclusiveScissors must be empty or have 'exclusiveScissorCount' elements" Nothing Nothing
-        pure (exclusiveScissorCount)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (exclusiveScissorCount'')
-    pExclusiveScissors'' <- if Data.Vector.null (exclusiveScissors)
-      then pure nullPtr
-      else do
-        pPExclusiveScissors <- ContT $ allocaBytesAligned @Rect2D (((Data.Vector.length (exclusiveScissors))) * 16) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) ((exclusiveScissors))
-        pure $ pPExclusiveScissors
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) pExclusiveScissors''
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32))
+    pPExclusiveScissors' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (exclusiveScissors)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPExclusiveScissors')
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pPExclusiveScissors' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (mempty)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Rect2D))) (pPExclusiveScissors')
+    lift $ f
 
 instance FromCStruct PipelineViewportExclusiveScissorStateCreateInfoNV where
   peekCStruct p = do
     exclusiveScissorCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pExclusiveScissors <- peek @(Ptr Rect2D) ((p `plusPtr` 24 :: Ptr (Ptr Rect2D)))
-    let pExclusiveScissorsLength = if pExclusiveScissors == nullPtr then 0 else (fromIntegral exclusiveScissorCount)
-    pExclusiveScissors' <- generateM pExclusiveScissorsLength (\i -> peekCStruct @Rect2D ((pExclusiveScissors `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
+    pExclusiveScissors' <- generateM (fromIntegral exclusiveScissorCount) (\i -> peekCStruct @Rect2D ((pExclusiveScissors `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
     pure $ PipelineViewportExclusiveScissorStateCreateInfoNV
-             exclusiveScissorCount pExclusiveScissors'
+             pExclusiveScissors'
 
 instance Zero PipelineViewportExclusiveScissorStateCreateInfoNV where
   zero = PipelineViewportExclusiveScissorStateCreateInfoNV
-           zero
            mempty
 
 

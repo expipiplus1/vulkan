@@ -70,7 +70,7 @@ pattern DYNAMIC_STATE_LINE_WIDTH = DynamicState 2
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBias' before any draws
 -- are performed with @depthBiasEnable@ in
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' set to
--- 'Vulkan.Core10.BaseType.TRUE'.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 pattern DYNAMIC_STATE_DEPTH_BIAS = DynamicState 3
 -- | 'DYNAMIC_STATE_BLEND_CONSTANTS' specifies that the @blendConstants@
 -- state in 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo' will
@@ -78,8 +78,8 @@ pattern DYNAMIC_STATE_DEPTH_BIAS = DynamicState 3
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetBlendConstants' before any
 -- draws are performed with a pipeline state with
 -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState' member
--- @blendEnable@ set to 'Vulkan.Core10.BaseType.TRUE' and any of the blend
--- functions using a constant blend color.
+-- @blendEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE' and any of
+-- the blend functions using a constant blend color.
 pattern DYNAMIC_STATE_BLEND_CONSTANTS = DynamicState 4
 -- | 'DYNAMIC_STATE_DEPTH_BOUNDS' specifies that the @minDepthBounds@ and
 -- @maxDepthBounds@ states of
@@ -88,7 +88,7 @@ pattern DYNAMIC_STATE_BLEND_CONSTANTS = DynamicState 4
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBounds' before any draws
 -- are performed with a pipeline state with
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
--- @depthBoundsTestEnable@ set to 'Vulkan.Core10.BaseType.TRUE'.
+-- @depthBoundsTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'.
 pattern DYNAMIC_STATE_DEPTH_BOUNDS = DynamicState 5
 -- | 'DYNAMIC_STATE_STENCIL_COMPARE_MASK' specifies that the @compareMask@
 -- state in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'
@@ -97,7 +97,7 @@ pattern DYNAMIC_STATE_DEPTH_BOUNDS = DynamicState 5
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilCompareMask' before
 -- any draws are performed with a pipeline state with
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
--- @stencilTestEnable@ set to 'Vulkan.Core10.BaseType.TRUE'
+-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_COMPARE_MASK = DynamicState 6
 -- | 'DYNAMIC_STATE_STENCIL_WRITE_MASK' specifies that the @writeMask@ state
 -- in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' for both
@@ -105,7 +105,7 @@ pattern DYNAMIC_STATE_STENCIL_COMPARE_MASK = DynamicState 6
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilWriteMask' before any
 -- draws are performed with a pipeline state with
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
--- @stencilTestEnable@ set to 'Vulkan.Core10.BaseType.TRUE'
+-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 -- | 'DYNAMIC_STATE_STENCIL_REFERENCE' specifies that the @reference@ state
 -- in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' for both
@@ -113,7 +113,7 @@ pattern DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilReference' before any
 -- draws are performed with a pipeline state with
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
--- @stencilTestEnable@ set to 'Vulkan.Core10.BaseType.TRUE'
+-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
 -- | 'DYNAMIC_STATE_LINE_STIPPLE_EXT' specifies that the @lineStippleFactor@
 -- and @lineStipplePattern@ state in
@@ -122,7 +122,8 @@ pattern DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
 -- 'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'
 -- before any draws are performed with a pipeline state with
 -- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
--- member @stippledLineEnable@ set to 'Vulkan.Core10.BaseType.TRUE'.
+-- member @stippledLineEnable@ set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 pattern DYNAMIC_STATE_LINE_STIPPLE_EXT = DynamicState 1000259000
 -- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' specifies that the
 -- @pExclusiveScissors@ state in
@@ -175,7 +176,8 @@ pattern DYNAMIC_STATE_DISCARD_RECTANGLE_EXT = DynamicState 1000099000
 -- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
 -- before any draws are performed with a pipeline state with
 -- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
--- member @viewportScalingEnable@ set to 'Vulkan.Core10.BaseType.TRUE'
+-- member @viewportScalingEnable@ set to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_NV = DynamicState 1000087000
 {-# complete DYNAMIC_STATE_VIEWPORT,
              DYNAMIC_STATE_SCISSOR,

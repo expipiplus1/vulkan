@@ -35,7 +35,6 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
@@ -62,10 +61,10 @@ import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDiscardRectangleEXT))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -101,16 +100,16 @@ foreign import ccall
 --     'PhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@
 --
 -- -   The @x@ and @y@ member of @offset@ in each
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' element of
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
 --     @pDiscardRectangles@ /must/ be greater than or equal to @0@
 --
 -- -   Evaluation of (@offset.x@ + @extent.width@) in each
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' element of
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
 --
 -- -   Evaluation of (@offset.y@ + @extent.height@) in each
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' element of
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
 --
@@ -120,7 +119,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pDiscardRectangles@ /must/ be a valid pointer to an array of
---     @discardRectangleCount@ 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
+--     @discardRectangleCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D'
 --     structures
 --
 -- -   @commandBuffer@ /must/ be in the
@@ -152,7 +151,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D'
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetDiscardRectangleEXT :: forall io
                            . (MonadIO io)
                           => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -162,8 +161,8 @@ cmdSetDiscardRectangleEXT :: forall io
                              -- whose state is updated by the command.
                              ("firstDiscardRectangle" ::: Word32)
                           -> -- | @pDiscardRectangles@ is a pointer to an array of
-                             -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures specifying
-                             -- discard rectangles.
+                             -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures specifying discard
+                             -- rectangles.
                              ("discardRectangles" ::: Vector Rect2D)
                           -> io ()
 cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
@@ -261,7 +260,7 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 --
 -- 'DiscardRectangleModeEXT',
 -- 'PipelineDiscardRectangleStateCreateFlagsEXT',
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateCreateInfoEXT
   { -- | @flags@ is reserved for future use.
@@ -273,13 +272,8 @@ data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateC
     --
     -- @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
     discardRectangleMode :: DiscardRectangleModeEXT
-  , -- | @discardRectangleCount@ is the number of discard rectangles to use.
-    --
-    -- @discardRectangleCount@ /must/ be less than or equal to
-    -- 'PhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@
-    discardRectangleCount :: Word32
   , -- | @pDiscardRectangles@ is a pointer to an array of
-    -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining discard
+    -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining discard
     -- rectangles.
     discardRectangles :: Vector Rect2D
   }
@@ -296,29 +290,21 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDiscardRectangleStateCreateFlagsEXT)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (discardRectangleMode)
-    let pDiscardRectanglesLength = Data.Vector.length $ (discardRectangles)
-    discardRectangleCount'' <- lift $ if (discardRectangleCount) == 0
-      then pure $ fromIntegral pDiscardRectanglesLength
-      else do
-        unless (fromIntegral pDiscardRectanglesLength == (discardRectangleCount) || pDiscardRectanglesLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pDiscardRectangles must be empty or have 'discardRectangleCount' elements" Nothing Nothing
-        pure (discardRectangleCount)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (discardRectangleCount'')
-    pDiscardRectangles'' <- if Data.Vector.null (discardRectangles)
-      then pure nullPtr
-      else do
-        pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D (((Data.Vector.length (discardRectangles))) * 16) 4
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) ((discardRectangles))
-        pure $ pPDiscardRectangles
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) pDiscardRectangles''
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32))
+    pPDiscardRectangles' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (discardRectangles)
+    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) (pPDiscardRectangles')
     lift $ f
   cStructSize = 40
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (zero)
+    pPDiscardRectangles' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (mempty)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) (pPDiscardRectangles')
+    lift $ f
 
 instance FromCStruct PipelineDiscardRectangleStateCreateInfoEXT where
   peekCStruct p = do
@@ -326,14 +312,12 @@ instance FromCStruct PipelineDiscardRectangleStateCreateInfoEXT where
     discardRectangleMode <- peek @DiscardRectangleModeEXT ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT))
     discardRectangleCount <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pDiscardRectangles <- peek @(Ptr Rect2D) ((p `plusPtr` 32 :: Ptr (Ptr Rect2D)))
-    let pDiscardRectanglesLength = if pDiscardRectangles == nullPtr then 0 else (fromIntegral discardRectangleCount)
-    pDiscardRectangles' <- generateM pDiscardRectanglesLength (\i -> peekCStruct @Rect2D ((pDiscardRectangles `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
+    pDiscardRectangles' <- generateM (fromIntegral discardRectangleCount) (\i -> peekCStruct @Rect2D ((pDiscardRectangles `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
     pure $ PipelineDiscardRectangleStateCreateInfoEXT
-             flags discardRectangleMode discardRectangleCount pDiscardRectangles'
+             flags discardRectangleMode pDiscardRectangles'
 
 instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
   zero = PipelineDiscardRectangleStateCreateInfoEXT
-           zero
            zero
            zero
            mempty

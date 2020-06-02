@@ -29,7 +29,7 @@ import Data.Kind (Type)
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.APIConstants (MAX_MEMORY_HEAPS)
@@ -57,21 +57,22 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMemoryBudgetPropertiesEXT = PhysicalDeviceMemoryBudgetPropertiesEXT
   { -- | @heapBudget@ is an array of
     -- 'Vulkan.Core10.APIConstants.MAX_MEMORY_HEAPS'
-    -- 'Vulkan.Core10.BaseType.DeviceSize' values in which memory budgets are
-    -- returned, with one element for each memory heap. A heap’s budget is a
-    -- rough estimate of how much memory the process /can/ allocate from that
-    -- heap before allocations /may/ fail or cause performance degradation. The
-    -- budget includes any currently allocated device memory.
+    -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values in which memory
+    -- budgets are returned, with one element for each memory heap. A heap’s
+    -- budget is a rough estimate of how much memory the process /can/ allocate
+    -- from that heap before allocations /may/ fail or cause performance
+    -- degradation. The budget includes any currently allocated device memory.
     heapBudget :: Vector DeviceSize
   , -- | @heapUsage@ is an array of 'Vulkan.Core10.APIConstants.MAX_MEMORY_HEAPS'
-    -- 'Vulkan.Core10.BaseType.DeviceSize' values in which memory usages are
-    -- returned, with one element for each memory heap. A heap’s usage is an
-    -- estimate of how much memory the process is currently using in that heap.
+    -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values in which memory
+    -- usages are returned, with one element for each memory heap. A heap’s
+    -- usage is an estimate of how much memory the process is currently using
+    -- in that heap.
     heapUsage :: Vector DeviceSize
   }
   deriving (Typeable)

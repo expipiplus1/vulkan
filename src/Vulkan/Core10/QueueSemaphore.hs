@@ -3,6 +3,8 @@ module Vulkan.Core10.QueueSemaphore  ( createSemaphore
                                      , withSemaphore
                                      , destroySemaphore
                                      , SemaphoreCreateInfo(..)
+                                     , Semaphore(..)
+                                     , SemaphoreCreateFlags(..)
                                      ) where
 
 import Control.Exception.Base (bracket)
@@ -66,6 +68,8 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (Semaphore(..))
+import Vulkan.Core10.Enums.SemaphoreCreateFlags (SemaphoreCreateFlags(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

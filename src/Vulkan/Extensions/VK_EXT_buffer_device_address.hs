@@ -27,12 +27,12 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (getBufferDeviceAddress)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo)
-import Vulkan.Core10.BaseType (DeviceAddress)
+import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -105,7 +105,7 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressFeaturesEXT
   { -- | @bufferDeviceAddress@ indicates that the implementation supports
@@ -191,7 +191,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BufferDeviceAddressCreateInfoEXT = BufferDeviceAddressCreateInfoEXT
   { -- | @deviceAddress@ is the device address requested for the buffer.

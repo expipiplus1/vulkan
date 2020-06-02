@@ -1,6 +1,5 @@
 {-# language CPP #-}
 module Vulkan.Core10.Image  ( ImageCreateInfo
-                            , ImageSubresource
                             , SubresourceLayout
                             ) where
 
@@ -18,14 +17,6 @@ instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateIn
 instance Show (Chain es) => Show (ImageCreateInfo es)
 
 instance (Extendss ImageCreateInfo es, PeekChain es) => FromCStruct (ImageCreateInfo es)
-
-
-data ImageSubresource
-
-instance ToCStruct ImageSubresource
-instance Show ImageSubresource
-
-instance FromCStruct ImageSubresource
 
 
 data SubresourceLayout

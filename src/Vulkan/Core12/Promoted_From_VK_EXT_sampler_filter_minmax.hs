@@ -18,9 +18,9 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core12.Enums.SamplerReductionMode (SamplerReductionMode)
@@ -50,7 +50,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- it is filled with the implementation-dependent limits.
 --
 -- If @filterMinmaxSingleComponentFormats@ is
--- 'Vulkan.Core10.BaseType.TRUE', the following formats /must/ support the
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', the following formats /must/
+-- support the
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
 -- feature with 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', if
 -- they support
@@ -61,20 +62,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- supports min\/max filtering, and that min\/max filtering of the depth
 -- aspect is supported when depth compare is disabled in the sampler.
 --
--- If @filterMinmaxImageComponentMapping@ is 'Vulkan.Core10.BaseType.FALSE'
--- the component mapping of the image view used with min\/max filtering
--- /must/ have been created with the @r@ component set to
+-- If @filterMinmaxImageComponentMapping@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE' the component mapping of the
+-- image view used with min\/max filtering /must/ have been created with
+-- the @r@ component set to
 -- 'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'. Only
 -- the @r@ component of the sampled image value is defined and the other
 -- component values are undefined. If @filterMinmaxImageComponentMapping@
--- is 'Vulkan.Core10.BaseType.TRUE' this restriction does not apply and
--- image component mapping works as normal.
+-- is 'Vulkan.Core10.FundamentalTypes.TRUE' this restriction does not apply
+-- and image component mapping works as normal.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerFilterMinmaxProperties = PhysicalDeviceSamplerFilterMinmaxProperties
   { -- | @filterMinmaxSingleComponentFormats@ is a boolean value indicating

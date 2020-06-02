@@ -40,13 +40,13 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
-import Vulkan.Core10.BaseType (DeviceAddress)
+import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferDeviceAddress))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferOpaqueCaptureAddress))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceMemoryOpaqueCaptureAddress))
@@ -293,7 +293,7 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeatures = PhysicalDeviceBufferDeviceAddressFeatures
   { -- | @bufferDeviceAddress@ indicates that the implementation supports

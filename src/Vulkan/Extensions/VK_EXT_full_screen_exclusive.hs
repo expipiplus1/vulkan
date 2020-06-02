@@ -68,11 +68,11 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireFullScreenExclusiveModeEXT))
@@ -534,19 +534,20 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 -- This structure /can/ be included in the @pNext@ chain of
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 -- to determine support for exclusive full-screen access. If
--- @fullScreenExclusiveSupported@ is 'Vulkan.Core10.BaseType.FALSE', it
--- indicates that exclusive full-screen access is not obtainable for this
--- surface.
+-- @fullScreenExclusiveSupported@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE', it indicates that exclusive
+-- full-screen access is not obtainable for this surface.
 --
 -- Applications /must/ not attempt to create swapchains with
 -- 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' set if
--- @fullScreenExclusiveSupported@ is 'Vulkan.Core10.BaseType.FALSE'.
+-- @fullScreenExclusiveSupported@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
   { -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"

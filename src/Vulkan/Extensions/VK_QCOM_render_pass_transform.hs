@@ -26,7 +26,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagBitsKHR)
 import Vulkan.CStruct (ToCStruct)
@@ -121,7 +121,7 @@ instance Zero RenderPassTransformBeginInfoQCOM where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
 data CommandBufferInheritanceRenderPassTransformInfoQCOM = CommandBufferInheritanceRenderPassTransformInfoQCOM

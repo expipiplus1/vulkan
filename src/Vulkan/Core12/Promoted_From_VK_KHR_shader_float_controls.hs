@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls  ( PhysicalDeviceFloatControlsProperties(..)
                                                                  , StructureType(..)
+                                                                 , ShaderFloatControlsIndependence(..)
                                                                  ) where
 
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -14,9 +15,9 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core12.Enums.ShaderFloatControlsIndependence (ShaderFloatControlsIndependence)
@@ -25,6 +26,7 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES))
+import Vulkan.Core12.Enums.ShaderFloatControlsIndependence (ShaderFloatControlsIndependence(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDeviceFloatControlsProperties - Structure describing
 -- properties supported by VK_KHR_shader_float_controls
@@ -45,7 +47,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFloatControlsProperties = PhysicalDeviceFloatControlsProperties

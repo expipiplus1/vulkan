@@ -38,9 +38,9 @@ import GHC.Read (Read(readPrec))
 import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -73,19 +73,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBlendOperationAdvancedFeaturesEXT = PhysicalDeviceBlendOperationAdvancedFeaturesEXT
   { -- | @advancedBlendCoherentOperations@ specifies whether blending using
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>
     -- is guaranteed to execute atomically and in
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
-    -- If this is 'Vulkan.Core10.BaseType.TRUE',
+    -- If this is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT'
     -- is treated the same as
     -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_BIT',
     -- and advanced blending needs no additional synchronization over basic
-    -- blending. If this is 'Vulkan.Core10.BaseType.FALSE', then memory
+    -- blending. If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then memory
     -- dependencies are required to guarantee order between two advanced
     -- blending operations that occur on the same sample.
     advancedBlendCoherentOperations :: Bool }
@@ -147,7 +147,7 @@ instance Zero PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOperationAdvancedPropertiesEXT
   { -- | @advancedBlendMaxColorAttachments@ is one greater than the highest color
@@ -160,19 +160,19 @@ data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOper
     advancedBlendIndependentBlend :: Bool
   , -- | @advancedBlendNonPremultipliedSrcColor@ specifies whether the source
     -- color /can/ be treated as non-premultiplied. If this is
-    -- 'Vulkan.Core10.BaseType.FALSE', then
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then
     -- 'PipelineColorBlendAdvancedStateCreateInfoEXT'::@srcPremultiplied@
-    -- /must/ be 'Vulkan.Core10.BaseType.TRUE'.
+    -- /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'.
     advancedBlendNonPremultipliedSrcColor :: Bool
   , -- | @advancedBlendNonPremultipliedDstColor@ specifies whether the
     -- destination color /can/ be treated as non-premultiplied. If this is
-    -- 'Vulkan.Core10.BaseType.FALSE', then
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then
     -- 'PipelineColorBlendAdvancedStateCreateInfoEXT'::@dstPremultiplied@
-    -- /must/ be 'Vulkan.Core10.BaseType.TRUE'.
+    -- /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'.
     advancedBlendNonPremultipliedDstColor :: Bool
   , -- | @advancedBlendCorrelatedOverlap@ specifies whether the overlap mode
     -- /can/ be treated as correlated. If this is
-    -- 'Vulkan.Core10.BaseType.FALSE', then
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then
     -- 'PipelineColorBlendAdvancedStateCreateInfoEXT'::@blendOverlap@ /must/ be
     -- 'BLEND_OVERLAP_UNCORRELATED_EXT'.
     advancedBlendCorrelatedOverlap :: Bool
@@ -246,20 +246,20 @@ instance Zero PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
 --
 -- If this structure is not present, @srcPremultiplied@ and
 -- @dstPremultiplied@ are both considered to be
--- 'Vulkan.Core10.BaseType.TRUE', and @blendOverlap@ is considered to be
--- 'BLEND_OVERLAP_UNCORRELATED_EXT'.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', and @blendOverlap@ is considered
+-- to be 'BLEND_OVERLAP_UNCORRELATED_EXT'.
 --
 -- == Valid Usage
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedSrcColor non-premultiplied source color>
 --     property is not supported, @srcPremultiplied@ /must/ be
---     'Vulkan.Core10.BaseType.TRUE'
+--     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedDstColor non-premultiplied destination color>
 --     property is not supported, @dstPremultiplied@ /must/ be
---     'Vulkan.Core10.BaseType.TRUE'
+--     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendCorrelatedOverlap correlated overlap>
@@ -275,7 +275,7 @@ instance Zero PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
 --
 -- = See Also
 --
--- 'BlendOverlapEXT', 'Vulkan.Core10.BaseType.Bool32',
+-- 'BlendOverlapEXT', 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineColorBlendAdvancedStateCreateInfoEXT = PipelineColorBlendAdvancedStateCreateInfoEXT
   { -- | @srcPremultiplied@ specifies whether the source color of the blend

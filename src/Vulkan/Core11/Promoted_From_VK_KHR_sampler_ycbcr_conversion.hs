@@ -53,12 +53,12 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.ImageView (ComponentMapping)
@@ -327,14 +327,15 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- Note
 --
--- Setting @forceExplicitReconstruction@ to 'Vulkan.Core10.BaseType.TRUE'
--- /may/ have a performance penalty on implementations where explicit
--- reconstruction is not the default mode of operation.
+-- Setting @forceExplicitReconstruction@ to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' /may/ have a performance penalty
+-- on implementations where explicit reconstruction is not the default mode
+-- of operation.
 --
 -- If @format@ supports
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
 -- the @forceExplicitReconstruction@ value behaves as if it was set to
--- 'Vulkan.Core10.BaseType.TRUE'.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- If the @pNext@ chain includes a
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
@@ -421,7 +422,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
 --     @forceExplicitReconstruction@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
@@ -473,7 +474,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation',
 -- 'Vulkan.Core10.ImageView.ComponentMapping',
 -- 'Vulkan.Core10.Enums.Filter.Filter',
@@ -765,14 +766,14 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrConversionFeatures
   { -- | @samplerYcbcrConversion@ specifies whether the implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
-    -- If @samplerYcbcrConversion@ is 'Vulkan.Core10.BaseType.FALSE', sampler
-    -- Y′CBCR conversion is not supported, and samplers using sampler Y′CBCR
-    -- conversion /must/ not be used.
+    -- If @samplerYcbcrConversion@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- sampler Y′CBCR conversion is not supported, and samplers using sampler
+    -- Y′CBCR conversion /must/ not be used.
     samplerYcbcrConversion :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

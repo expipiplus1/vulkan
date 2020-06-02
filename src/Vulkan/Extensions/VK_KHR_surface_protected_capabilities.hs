@@ -18,9 +18,9 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -35,14 +35,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_P
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceProtectedCapabilitiesKHR = SurfaceProtectedCapabilitiesKHR
   { -- | @supportsProtected@ specifies whether a protected swapchain created from
     -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'::@surface@
     -- for a particular windowing system /can/ be displayed on screen or not.
-    -- If @supportsProtected@ is 'Vulkan.Core10.BaseType.TRUE', then creation
-    -- of swapchains with the
+    -- If @supportsProtected@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then
+    -- creation of swapchains with the
     -- 'Vulkan.Extensions.VK_KHR_swapchain.SWAPCHAIN_CREATE_PROTECTED_BIT_KHR'
     -- flag set /must/ be supported for @surface@.
     supportsProtected :: Bool }

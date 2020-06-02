@@ -4,6 +4,13 @@ module Vulkan.Core10.Query  ( createQueryPool
                             , destroyQueryPool
                             , getQueryPoolResults
                             , QueryPoolCreateInfo(..)
+                            , QueryPool(..)
+                            , QueryPoolCreateFlags(..)
+                            , QueryType(..)
+                            , QueryResultFlagBits(..)
+                            , QueryResultFlags
+                            , QueryPipelineStatisticFlagBits(..)
+                            , QueryPipelineStatisticFlags
                             ) where
 
 import Control.Exception.Base (bracket)
@@ -47,7 +54,7 @@ import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateQueryPool))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyQueryPool))
 import Vulkan.Dynamic (DeviceCmds(pVkGetQueryPoolResults))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -77,6 +84,13 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits (QueryPipelineStatisticFlagBits(..))
+import Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits (QueryPipelineStatisticFlags)
+import Vulkan.Core10.Handles (QueryPool(..))
+import Vulkan.Core10.Enums.QueryPoolCreateFlags (QueryPoolCreateFlags(..))
+import Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlagBits(..))
+import Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
+import Vulkan.Core10.Enums.QueryType (QueryType(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -413,7 +427,8 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.Handles.Device',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.QueryPool',
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
 getQueryPoolResults :: forall io

@@ -22,13 +22,13 @@ import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (withSomeCStruct)
 import Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (AttachmentReference2)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits)
@@ -56,7 +56,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDepthStencilResolveProperties = PhysicalDeviceDepthStencilResolveProperties
@@ -76,13 +76,13 @@ data PhysicalDeviceDepthStencilResolveProperties = PhysicalDeviceDepthStencilRes
     -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_AVERAGE_BIT'
     -- /must/ not be included in the set.
     supportedStencilResolveModes :: ResolveModeFlags
-  , -- | @independentResolveNone@ is 'Vulkan.Core10.BaseType.TRUE' if the
+  , -- | @independentResolveNone@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- implementation supports setting the depth and stencil resolve modes to
     -- different values when one of those modes is
     -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'. Otherwise
     -- the implementation only supports setting both modes to the same value.
     independentResolveNone :: Bool
-  , -- | @independentResolve@ is 'Vulkan.Core10.BaseType.TRUE' if the
+  , -- | @independentResolve@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- implementation supports all combinations of the supported depth and
     -- stencil resolve modes, including setting either depth or stencil resolve
     -- mode to 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'. An
@@ -194,18 +194,18 @@ instance Zero PhysicalDeviceDepthStencilResolveProperties where
 --     @pDepthStencilResolveAttachment@ has both depth and stencil
 --     components,
 --     'PhysicalDeviceDepthStencilResolveProperties'::@independentResolve@
---     is 'Vulkan.Core10.BaseType.FALSE', and
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', and
 --     'PhysicalDeviceDepthStencilResolveProperties'::@independentResolveNone@
---     is 'Vulkan.Core10.BaseType.FALSE', then the values of
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the values of
 --     @depthResolveMode@ and @stencilResolveMode@ /must/ be identical
 --
 -- -   If the 'Vulkan.Core10.Enums.Format.Format' of
 --     @pDepthStencilResolveAttachment@ has both depth and stencil
 --     components,
 --     'PhysicalDeviceDepthStencilResolveProperties'::@independentResolve@
---     is 'Vulkan.Core10.BaseType.FALSE' and
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE' and
 --     'PhysicalDeviceDepthStencilResolveProperties'::@independentResolveNone@
---     is 'Vulkan.Core10.BaseType.TRUE', then the values of
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE', then the values of
 --     @depthResolveMode@ and @stencilResolveMode@ /must/ be identical or
 --     one of them /must/ be
 --     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'

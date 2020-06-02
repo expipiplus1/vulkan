@@ -46,29 +46,39 @@ module Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                             , cmdNextSubpass
                                             , cmdEndRenderPass
                                             , cmdExecuteCommands
-                                            , Viewport(..)
-                                            , Rect2D(..)
                                             , ClearRect(..)
+                                            , ImageSubresourceLayers(..)
                                             , BufferCopy(..)
                                             , ImageCopy(..)
                                             , ImageBlit(..)
                                             , BufferImageCopy(..)
                                             , ImageResolve(..)
                                             , RenderPassBeginInfo(..)
+                                            , ClearDepthStencilValue(..)
                                             , ClearAttachment(..)
+                                            , ClearColorValue(..)
+                                            , ClearValue(..)
+                                            , IndexType(..)
+                                            , SubpassContents(..)
+                                            , StencilFaceFlagBits(..)
+                                            , StencilFaceFlags
                                             ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
+import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.Trans.Cont (runContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Foreign.C.Types (CFloat(..))
@@ -100,9 +110,6 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.OtherTypes (BufferMemoryBarrier)
 import Vulkan.CStruct.Extends (Chain)
-import Vulkan.Core10.SharedTypes (ClearColorValue)
-import Vulkan.Core10.SharedTypes (ClearDepthStencilValue)
-import Vulkan.Core10.SharedTypes (ClearValue)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
@@ -155,14 +162,13 @@ import Vulkan.Dynamic (DeviceCmds(pVkCmdUpdateBuffer))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdWaitEvents))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdWriteTimestamp))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupRenderPassBeginInfo)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Event)
 import Vulkan.Core10.Handles (Event(..))
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.SharedTypes (Extent2D)
-import Vulkan.Core10.SharedTypes (Extent3D)
+import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Enums.Filter (Filter)
 import Vulkan.Core10.Enums.Filter (Filter(..))
 import Vulkan.Core10.Handles (Framebuffer)
@@ -174,13 +180,11 @@ import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
 import Vulkan.Core10.OtherTypes (ImageMemoryBarrier)
-import Vulkan.Core10.SharedTypes (ImageSubresourceLayers)
-import Vulkan.Core10.SharedTypes (ImageSubresourceRange)
+import Vulkan.Core10.ImageView (ImageSubresourceRange)
 import Vulkan.Core10.Enums.IndexType (IndexType)
 import Vulkan.Core10.Enums.IndexType (IndexType(..))
 import Vulkan.Core10.OtherTypes (MemoryBarrier)
-import Vulkan.Core10.SharedTypes (Offset2D)
-import Vulkan.Core10.SharedTypes (Offset3D)
+import Vulkan.Core10.FundamentalTypes (Offset3D)
 import Vulkan.Core10.Handles (Pipeline)
 import Vulkan.Core10.Handles (Pipeline(..))
 import Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint)
@@ -198,6 +202,7 @@ import Vulkan.Core10.Handles (QueryPool)
 import Vulkan.Core10.Handles (QueryPool(..))
 import Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlagBits(..))
 import Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Handles (RenderPass)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (RenderPassAttachmentBeginInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
@@ -212,8 +217,13 @@ import Vulkan.Core10.Enums.SubpassContents (SubpassContents)
 import Vulkan.Core10.Enums.SubpassContents (SubpassContents(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Core10.Pipeline (Viewport)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO))
+import Vulkan.Core10.Enums.IndexType (IndexType(..))
+import Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlagBits(..))
+import Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlags)
+import Vulkan.Core10.Enums.SubpassContents (SubpassContents(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -272,11 +282,11 @@ foreign import ccall
 --
 -- -   If
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
---     is 'Vulkan.Core10.BaseType.FALSE', and @pipeline@ is a graphics
---     pipeline created with a
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', and @pipeline@ is a
+--     graphics pipeline created with a
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
 --     structure having its @sampleLocationsEnable@ member set to
---     'Vulkan.Core10.BaseType.TRUE' but without
+--     'Vulkan.Core10.FundamentalTypes.TRUE' but without
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
 --     enabled then the current render pass instance /must/ have been begun
 --     by specifying a
@@ -406,7 +416,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pViewports@ /must/ be a valid pointer to an array of
---     @viewportCount@ valid 'Viewport' structures
+--     @viewportCount@ valid 'Vulkan.Core10.Pipeline.Viewport' structures
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -436,7 +446,7 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.CommandBuffer', 'Viewport'
+-- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Pipeline.Viewport'
 cmdSetViewport :: forall io
                 . (MonadIO io)
                => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -445,8 +455,9 @@ cmdSetViewport :: forall io
                -> -- | @firstViewport@ is the index of the first viewport whose parameters are
                   -- updated by the command.
                   ("firstViewport" ::: Word32)
-               -> -- | @pViewports@ is a pointer to an array of 'Viewport' structures
-                  -- specifying viewport parameters.
+               -> -- | @pViewports@ is a pointer to an array of
+                  -- 'Vulkan.Core10.Pipeline.Viewport' structures specifying viewport
+                  -- parameters.
                   ("viewports" ::: Vector Viewport)
                -> io ()
 cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
@@ -513,7 +524,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pScissors@ /must/ be a valid pointer to an array of @scissorCount@
---     'Rect2D' structures
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -543,7 +554,8 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.CommandBuffer', 'Rect2D'
+-- 'Vulkan.Core10.Handles.CommandBuffer',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetScissor :: forall io
                . (MonadIO io)
               => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -552,8 +564,9 @@ cmdSetScissor :: forall io
               -> -- | @firstScissor@ is the index of the first scissor whose state is updated
                  -- by the command.
                  ("firstScissor" ::: Word32)
-              -> -- | @pScissors@ is a pointer to an array of 'Rect2D' structures defining
-                 -- scissor rectangles.
+              -> -- | @pScissors@ is a pointer to an array of
+                 -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining scissor
+                 -- rectangles.
                  ("scissors" ::: Vector Rect2D)
               -> io ()
 cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
@@ -642,8 +655,8 @@ foreign import ccall
 --
 -- = Description
 --
--- If @depthBiasEnable@ is 'Vulkan.Core10.BaseType.FALSE', no depth bias is
--- applied and the fragment’s depth values are unchanged.
+-- If @depthBiasEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE', no depth
+-- bias is applied and the fragment’s depth values are unchanged.
 --
 -- @depthBiasSlopeFactor@ scales the maximum depth slope of the polygon,
 -- and @depthBiasConstantFactor@ scales an implementation-dependent
@@ -1422,7 +1435,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType'
 cmdBindIndexBuffer :: forall io
                     . (MonadIO io)
@@ -1513,7 +1526,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.Buffer' handles
 --
 -- -   @pOffsets@ /must/ be a valid pointer to an array of @bindingCount@
---     'Vulkan.Core10.BaseType.DeviceSize' values
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize' values
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -1548,7 +1561,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBindVertexBuffers :: forall io
                       . (MonadIO io)
                      => -- | @commandBuffer@ is the command buffer into which the command is
@@ -1761,9 +1774,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -2049,9 +2062,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -2331,9 +2344,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -2428,7 +2441,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndirect :: forall io
                  . (MonadIO io)
                 => -- | @commandBuffer@ is the command buffer into which the command is
@@ -2637,9 +2650,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -2739,7 +2752,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndexedIndirect :: forall io
                         . (MonadIO io)
                        => -- | @commandBuffer@ is the command buffer into which the command is
@@ -3201,7 +3214,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDispatchIndirect :: forall io
                      . (MonadIO io)
                     => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -4506,7 +4519,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdUpdateBuffer :: forall io
                  . (MonadIO io)
                 => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -4621,7 +4634,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdFillBuffer :: forall io
                . (MonadIO io)
               => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -4693,32 +4706,31 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
--- -   The 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@aspectMask@
+-- -   The 'Vulkan.Core10.ImageView.ImageSubresourceRange'::@aspectMask@
 --     members of the elements of the @pRanges@ array /must/ each only
 --     include
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   The
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@baseMipLevel@
+-- -   The 'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
 --     members of the elements of the @pRanges@ array /must/ each be less
 --     than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   For each 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' element
---     of @pRanges@, if the @levelCount@ member is not
+-- -   For each 'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
+--     @pRanges@, if the @levelCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS', then
 --     @baseMipLevel@ + @levelCount@ /must/ be less than the @mipLevels@
 --     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
 --     created
 --
 -- -   The
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@baseArrayLayer@
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseArrayLayer@
 --     members of the elements of the @pRanges@ array /must/ each be less
 --     than the @arrayLayers@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   For each 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' element
---     of @pRanges@, if the @layerCount@ member is not
+-- -   For each 'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
+--     @pRanges@, if the @layerCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', then
 --     @baseArrayLayer@ + @layerCount@ /must/ be less than the
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
@@ -4742,11 +4754,11 @@ foreign import ccall
 -- -   @imageLayout@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
 --
--- -   @pColor@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.SharedTypes.ClearColorValue' union
+-- -   @pColor@ /must/ be a valid pointer to a valid 'ClearColorValue'
+--     union
 --
 -- -   @pRanges@ /must/ be a valid pointer to an array of @rangeCount@
---     valid 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures
+--     valid 'Vulkan.Core10.ImageView.ImageSubresourceRange' structures
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -4781,10 +4793,10 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.ClearColorValue',
--- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
+-- 'ClearColorValue', 'Vulkan.Core10.Handles.CommandBuffer',
+-- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'
+-- 'Vulkan.Core10.ImageView.ImageSubresourceRange'
 cmdClearColorImage :: forall io
                     . (MonadIO io)
                    => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -4798,15 +4810,14 @@ cmdClearColorImage :: forall io
                       -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
                       -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
                       ImageLayout
-                   -> -- | @pColor@ is a pointer to a 'Vulkan.Core10.SharedTypes.ClearColorValue'
-                      -- structure containing the values that the image subresource ranges will
-                      -- be cleared to (see
+                   -> -- | @pColor@ is a pointer to a 'ClearColorValue' structure containing the
+                      -- values that the image subresource ranges will be cleared to (see
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears-values>
                       -- below).
                       ClearColorValue
                    -> -- | @pRanges@ is a pointer to an array of
-                      -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures describing
-                      -- a range of mipmap levels, array layers, and aspects to be cleared, as
+                      -- 'Vulkan.Core10.ImageView.ImageSubresourceRange' structures describing a
+                      -- range of mipmap levels, array layers, and aspects to be cleared, as
                       -- described in
                       -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
                       ("ranges" ::: Vector ImageSubresourceRange)
@@ -4876,44 +4887,43 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
 --     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
--- -   The 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@aspectMask@
+-- -   The 'Vulkan.Core10.ImageView.ImageSubresourceRange'::@aspectMask@
 --     member of each element of the @pRanges@ array /must/ not include
 --     bits other than
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   If the @image@’s format does not have a stencil component, then the
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@aspectMask@
---     member of each element of the @pRanges@ array /must/ not include the
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@aspectMask@ member
+--     of each element of the @pRanges@ array /must/ not include the
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     bit
 --
 -- -   If the @image@’s format does not have a depth component, then the
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@aspectMask@
---     member of each element of the @pRanges@ array /must/ not include the
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@aspectMask@ member
+--     of each element of the @pRanges@ array /must/ not include the
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' bit
 --
--- -   The
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@baseMipLevel@
+-- -   The 'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseMipLevel@
 --     members of the elements of the @pRanges@ array /must/ each be less
 --     than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   For each 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' element
---     of @pRanges@, if the @levelCount@ member is not
+-- -   For each 'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
+--     @pRanges@, if the @levelCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS', then
 --     @baseMipLevel@ + @levelCount@ /must/ be less than the @mipLevels@
 --     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
 --     created
 --
 -- -   The
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange'::@baseArrayLayer@
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseArrayLayer@
 --     members of the elements of the @pRanges@ array /must/ each be less
 --     than the @arrayLayers@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   For each 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' element
---     of @pRanges@, if the @layerCount@ member is not
+-- -   For each 'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
+--     @pRanges@, if the @layerCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', then
 --     @baseArrayLayer@ + @layerCount@ /must/ be less than the
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
@@ -4938,10 +4948,10 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
 --
 -- -   @pDepthStencil@ /must/ be a valid pointer to a valid
---     'Vulkan.Core10.SharedTypes.ClearDepthStencilValue' structure
+--     'ClearDepthStencilValue' structure
 --
 -- -   @pRanges@ /must/ be a valid pointer to an array of @rangeCount@
---     valid 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures
+--     valid 'Vulkan.Core10.ImageView.ImageSubresourceRange' structures
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -4976,10 +4986,10 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.ClearDepthStencilValue',
--- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
+-- 'ClearDepthStencilValue', 'Vulkan.Core10.Handles.CommandBuffer',
+-- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange'
+-- 'Vulkan.Core10.ImageView.ImageSubresourceRange'
 cmdClearDepthStencilImage :: forall io
                            . (MonadIO io)
                           => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -4992,16 +5002,15 @@ cmdClearDepthStencilImage :: forall io
                              -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL' or
                              -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
                              ImageLayout
-                          -> -- | @pDepthStencil@ is a pointer to a
-                             -- 'Vulkan.Core10.SharedTypes.ClearDepthStencilValue' structure containing
-                             -- the values that the depth and stencil image subresource ranges will be
-                             -- cleared to (see
+                          -> -- | @pDepthStencil@ is a pointer to a 'ClearDepthStencilValue' structure
+                             -- containing the values that the depth and stencil image subresource
+                             -- ranges will be cleared to (see
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears-values>
                              -- below).
                              ClearDepthStencilValue
                           -> -- | @pRanges@ is a pointer to an array of
-                             -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structures describing
-                             -- a range of mipmap levels, array layers, and aspects to be cleared, as
+                             -- 'Vulkan.Core10.ImageView.ImageSubresourceRange' structures describing a
+                             -- range of mipmap levels, array layers, and aspects to be cleared, as
                              -- described in
                              -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>.
                              ("ranges" ::: Vector ImageSubresourceRange)
@@ -7045,7 +7054,7 @@ foreign import ccall
 -- -   If the @queryType@ used to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR'::@allowCommandBufferQueryCopies@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If the @queryType@ used to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
@@ -7110,7 +7119,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize', 'Vulkan.Core10.Handles.QueryPool',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core10.Handles.QueryPool',
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlags'
 cmdCopyQueryPoolResults :: forall io
                          . (MonadIO io)
@@ -7768,7 +7778,7 @@ foreign import ccall
 --     then each element of @pCommandBuffers@ /must/ have been recorded
 --     with
 --     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'::@occlusionQueryEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE'
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @commandBuffer@ has a
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_OCCLUSION' query
@@ -7869,218 +7879,6 @@ cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
   pure $ ()
 
 
--- | VkViewport - Structure specifying a viewport
---
--- = Description
---
--- The framebuffer depth coordinate @z@f /may/ be represented using either
--- a fixed-point or floating-point representation. However, a
--- floating-point representation /must/ be used if the depth\/stencil
--- attachment has a floating-point depth component. If an m-bit fixed-point
--- representation is used, we assume that it represents each value
--- \(\frac{k}{2^m - 1}\), where k ∈ { 0, 1, …​, 2m-1 }, as k (e.g. 1.0 is
--- represented in binary as a string of all ones).
---
--- The viewport parameters shown in the above equations are found from
--- these values as
---
--- -   ox = @x@ + @width@ \/ 2
---
--- -   oy = @y@ + @height@ \/ 2
---
--- -   oz = @minDepth@
---
--- -   px = @width@
---
--- -   py = @height@
---
--- -   pz = @maxDepth@ - @minDepth@.
---
--- If a render pass transform is enabled, the values (px,py) and (ox, oy)
--- defining the viewport are transformed as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>
--- before participating in the viewport transform.
---
--- The application /can/ specify a negative term for @height@, which has
--- the effect of negating the y coordinate in clip space before performing
--- the transform. When using a negative @height@, the application /should/
--- also adjust the @y@ value to point to the lower left corner of the
--- viewport instead of the upper left corner. Using the negative @height@
--- allows the application to avoid having to negate the y component of the
--- @Position@ output from the last vertex processing stage in shaders that
--- also target other graphics APIs.
---
--- The width and height of the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxViewportDimensions implementation-dependent maximum viewport dimensions>
--- /must/ be greater than or equal to the width and height of the largest
--- image which /can/ be created and attached to a framebuffer.
---
--- The floating-point viewport bounds are represented with an
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-viewportSubPixelBits implementation-dependent precision>.
---
--- == Valid Usage
---
--- -   @width@ /must/ be greater than @0.0@
---
--- -   @width@ /must/ be less than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewportDimensions@[0]
---
--- -   The absolute value of @height@ /must/ be less than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewportDimensions@[1]
---
--- -   @x@ /must/ be greater than or equal to @viewportBoundsRange@[0]
---
--- -   (@x@ + @width@) /must/ be less than or equal to
---     @viewportBoundsRange@[1]
---
--- -   @y@ /must/ be greater than or equal to @viewportBoundsRange@[0]
---
--- -   @y@ /must/ be less than or equal to @viewportBoundsRange@[1]
---
--- -   (@y@ + @height@) /must/ be greater than or equal to
---     @viewportBoundsRange@[0]
---
--- -   (@y@ + @height@) /must/ be less than or equal to
---     @viewportBoundsRange@[1]
---
--- -   Unless @VK_EXT_depth_range_unrestricted@ extension is enabled
---     @minDepth@ /must/ be between @0.0@ and @1.0@, inclusive
---
--- -   Unless @VK_EXT_depth_range_unrestricted@ extension is enabled
---     @maxDepth@ /must/ be between @0.0@ and @1.0@, inclusive
---
--- = See Also
---
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo',
--- 'cmdSetViewport'
-data Viewport = Viewport
-  { -- | @x@ and @y@ are the viewport’s upper left corner (x,y).
-    x :: Float
-  , -- No documentation found for Nested "VkViewport" "y"
-    y :: Float
-  , -- | @width@ and @height@ are the viewport’s width and height, respectively.
-    width :: Float
-  , -- No documentation found for Nested "VkViewport" "height"
-    height :: Float
-  , -- | @minDepth@ and @maxDepth@ are the depth range for the viewport. It is
-    -- valid for @minDepth@ to be greater than or equal to @maxDepth@.
-    minDepth :: Float
-  , -- No documentation found for Nested "VkViewport" "maxDepth"
-    maxDepth :: Float
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (Viewport)
-#endif
-deriving instance Show Viewport
-
-instance ToCStruct Viewport where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p Viewport{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
-    poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
-    poke ((p `plusPtr` 8 :: Ptr CFloat)) (CFloat (width))
-    poke ((p `plusPtr` 12 :: Ptr CFloat)) (CFloat (height))
-    poke ((p `plusPtr` 16 :: Ptr CFloat)) (CFloat (minDepth))
-    poke ((p `plusPtr` 20 :: Ptr CFloat)) (CFloat (maxDepth))
-    f
-  cStructSize = 24
-  cStructAlignment = 4
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (zero))
-    poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (zero))
-    poke ((p `plusPtr` 8 :: Ptr CFloat)) (CFloat (zero))
-    poke ((p `plusPtr` 12 :: Ptr CFloat)) (CFloat (zero))
-    poke ((p `plusPtr` 16 :: Ptr CFloat)) (CFloat (zero))
-    poke ((p `plusPtr` 20 :: Ptr CFloat)) (CFloat (zero))
-    f
-
-instance FromCStruct Viewport where
-  peekCStruct p = do
-    x <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
-    y <- peek @CFloat ((p `plusPtr` 4 :: Ptr CFloat))
-    width <- peek @CFloat ((p `plusPtr` 8 :: Ptr CFloat))
-    height <- peek @CFloat ((p `plusPtr` 12 :: Ptr CFloat))
-    minDepth <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
-    maxDepth <- peek @CFloat ((p `plusPtr` 20 :: Ptr CFloat))
-    pure $ Viewport
-             ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y) ((\(CFloat a) -> a) width) ((\(CFloat a) -> a) height) ((\(CFloat a) -> a) minDepth) ((\(CFloat a) -> a) maxDepth)
-
-instance Storable Viewport where
-  sizeOf ~_ = 24
-  alignment ~_ = 4
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero Viewport where
-  zero = Viewport
-           zero
-           zero
-           zero
-           zero
-           zero
-           zero
-
-
--- | VkRect2D - Structure specifying a two-dimensional subregion
---
--- = See Also
---
--- 'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo',
--- 'ClearRect',
--- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
--- 'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D',
--- 'Vulkan.Core10.SharedTypes.Offset2D',
--- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
--- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV',
--- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo',
--- 'RenderPassBeginInfo',
--- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT',
--- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV',
--- 'cmdSetScissor',
--- 'Vulkan.Extensions.VK_KHR_swapchain.getPhysicalDevicePresentRectanglesKHR'
-data Rect2D = Rect2D
-  { -- | @offset@ is a 'Vulkan.Core10.SharedTypes.Offset2D' specifying the
-    -- rectangle offset.
-    offset :: Offset2D
-  , -- | @extent@ is a 'Vulkan.Core10.SharedTypes.Extent2D' specifying the
-    -- rectangle extent.
-    extent :: Extent2D
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (Rect2D)
-#endif
-deriving instance Show Rect2D
-
-instance ToCStruct Rect2D where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p Rect2D{..} f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (offset) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (extent) . ($ ())
-    lift $ f
-  cStructSize = 16
-  cStructAlignment = 4
-  pokeZeroCStruct p f = evalContT $ do
-    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (zero) . ($ ())
-    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (zero) . ($ ())
-    lift $ f
-
-instance FromCStruct Rect2D where
-  peekCStruct p = do
-    offset <- peekCStruct @Offset2D ((p `plusPtr` 0 :: Ptr Offset2D))
-    extent <- peekCStruct @Extent2D ((p `plusPtr` 8 :: Ptr Extent2D))
-    pure $ Rect2D
-             offset extent
-
-instance Zero Rect2D where
-  zero = Rect2D
-           zero
-           zero
-
-
 -- | VkClearRect - Structure specifying a clear rectangle
 --
 -- = Description
@@ -8090,7 +7888,7 @@ instance Zero Rect2D where
 --
 -- = See Also
 --
--- 'Rect2D', 'cmdClearAttachments'
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D', 'cmdClearAttachments'
 data ClearRect = ClearRect
   { -- | @rect@ is the two-dimensional region to be cleared.
     rect :: Rect2D
@@ -8135,6 +7933,96 @@ instance Zero ClearRect where
            zero
 
 
+-- | VkImageSubresourceLayers - Structure specifying an image subresource
+-- layers
+--
+-- == Valid Usage
+--
+-- -   If @aspectMask@ contains
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT', it
+--     /must/ not contain either of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   @aspectMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
+--
+-- -   @aspectMask@ /must/ not include
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+--
+-- -   @layerCount@ /must/ be greater than 0
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @aspectMask@ /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
+--
+-- -   @aspectMask@ /must/ not be @0@
+--
+-- = See Also
+--
+-- 'BufferImageCopy',
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', 'ImageBlit',
+-- 'ImageCopy', 'ImageResolve'
+data ImageSubresourceLayers = ImageSubresourceLayers
+  { -- | @aspectMask@ is a combination of
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits', selecting
+    -- the color, depth and\/or stencil aspects to be copied.
+    aspectMask :: ImageAspectFlags
+  , -- | @mipLevel@ is the mipmap level to copy from.
+    mipLevel :: Word32
+  , -- | @baseArrayLayer@ and @layerCount@ are the starting layer and number of
+    -- layers to copy.
+    baseArrayLayer :: Word32
+  , -- No documentation found for Nested "VkImageSubresourceLayers" "layerCount"
+    layerCount :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSubresourceLayers)
+#endif
+deriving instance Show ImageSubresourceLayers
+
+instance ToCStruct ImageSubresourceLayers where
+  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ImageSubresourceLayers{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (mipLevel)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (baseArrayLayer)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (layerCount)
+    f
+  cStructSize = 16
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct ImageSubresourceLayers where
+  peekCStruct p = do
+    aspectMask <- peek @ImageAspectFlags ((p `plusPtr` 0 :: Ptr ImageAspectFlags))
+    mipLevel <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
+    baseArrayLayer <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    layerCount <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
+    pure $ ImageSubresourceLayers
+             aspectMask mipLevel baseArrayLayer layerCount
+
+instance Storable ImageSubresourceLayers where
+  sizeOf ~_ = 16
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ImageSubresourceLayers where
+  zero = ImageSubresourceLayers
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkBufferCopy - Structure specifying a buffer copy operation
 --
 -- == Valid Usage
@@ -8143,7 +8031,7 @@ instance Zero ClearRect where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize', 'cmdCopyBuffer'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'cmdCopyBuffer'
 data BufferCopy = BufferCopy
   { -- | @srcOffset@ is the starting offset in bytes from the start of
     -- @srcBuffer@.
@@ -8397,22 +8285,20 @@ instance Zero BufferCopy where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @srcSubresource@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structure
+-- -   @srcSubresource@ /must/ be a valid 'ImageSubresourceLayers'
+--     structure
 --
--- -   @dstSubresource@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structure
+-- -   @dstSubresource@ /must/ be a valid 'ImageSubresourceLayers'
+--     structure
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent3D',
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceLayers',
--- 'Vulkan.Core10.SharedTypes.Offset3D', 'cmdCopyImage'
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
+-- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdCopyImage'
 data ImageCopy = ImageCopy
-  { -- | @srcSubresource@ and @dstSubresource@ are
-    -- 'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structures specifying
-    -- the image subresources of the images used for the source and destination
-    -- image data, respectively.
+  { -- | @srcSubresource@ and @dstSubresource@ are 'ImageSubresourceLayers'
+    -- structures specifying the image subresources of the images used for the
+    -- source and destination image data, respectively.
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffset@ and @dstOffset@ select the initial @x@, @y@, and @z@ offsets
     -- in texels of the sub-regions of the source and destination image data.
@@ -8540,28 +8426,28 @@ instance Zero ImageCopy where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @srcSubresource@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structure
+-- -   @srcSubresource@ /must/ be a valid 'ImageSubresourceLayers'
+--     structure
 --
--- -   @dstSubresource@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structure
+-- -   @dstSubresource@ /must/ be a valid 'ImageSubresourceLayers'
+--     structure
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceLayers',
--- 'Vulkan.Core10.SharedTypes.Offset3D', 'cmdBlitImage'
+-- 'ImageSubresourceLayers', 'Vulkan.Core10.FundamentalTypes.Offset3D',
+-- 'cmdBlitImage'
 data ImageBlit = ImageBlit
   { -- | @srcSubresource@ is the subresource to blit from.
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffsets@ is a pointer to an array of two
-    -- 'Vulkan.Core10.SharedTypes.Offset3D' structures specifying the bounds of
-    -- the source region within @srcSubresource@.
+    -- 'Vulkan.Core10.FundamentalTypes.Offset3D' structures specifying the
+    -- bounds of the source region within @srcSubresource@.
     srcOffsets :: (Offset3D, Offset3D)
   , -- | @dstSubresource@ is the subresource to blit into.
     dstSubresource :: ImageSubresourceLayers
   , -- | @dstOffsets@ is a pointer to an array of two
-    -- 'Vulkan.Core10.SharedTypes.Offset3D' structures specifying the bounds of
-    -- the destination region within @dstSubresource@.
+    -- 'Vulkan.Core10.FundamentalTypes.Offset3D' structures specifying the
+    -- bounds of the destination region within @dstSubresource@.
     dstOffsets :: (Offset3D, Offset3D)
   }
   deriving (Typeable)
@@ -8790,15 +8676,14 @@ instance Zero ImageBlit where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @imageSubresource@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structure
+-- -   @imageSubresource@ /must/ be a valid 'ImageSubresourceLayers'
+--     structure
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
--- 'Vulkan.Core10.SharedTypes.Extent3D',
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceLayers',
--- 'Vulkan.Core10.SharedTypes.Offset3D', 'cmdCopyBufferToImage',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
+-- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdCopyBufferToImage',
 -- 'cmdCopyImageToBuffer'
 data BufferImageCopy = BufferImageCopy
   { -- | @bufferOffset@ is the offset in bytes from the start of the buffer
@@ -8812,8 +8697,7 @@ data BufferImageCopy = BufferImageCopy
     bufferRowLength :: Word32
   , -- No documentation found for Nested "VkBufferImageCopy" "bufferImageHeight"
     bufferImageHeight :: Word32
-  , -- | @imageSubresource@ is a
-    -- 'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' used to specify the
+  , -- | @imageSubresource@ is a 'ImageSubresourceLayers' used to specify the
     -- specific image subresources of the image used for the source or
     -- destination image data.
     imageSubresource :: ImageSubresourceLayers
@@ -8933,23 +8817,21 @@ instance Zero BufferImageCopy where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @srcSubresource@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structure
+-- -   @srcSubresource@ /must/ be a valid 'ImageSubresourceLayers'
+--     structure
 --
--- -   @dstSubresource@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structure
+-- -   @dstSubresource@ /must/ be a valid 'ImageSubresourceLayers'
+--     structure
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent3D',
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceLayers',
--- 'Vulkan.Core10.SharedTypes.Offset3D', 'cmdResolveImage'
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
+-- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdResolveImage'
 data ImageResolve = ImageResolve
-  { -- | @srcSubresource@ and @dstSubresource@ are
-    -- 'Vulkan.Core10.SharedTypes.ImageSubresourceLayers' structures specifying
-    -- the image subresources of the images used for the source and destination
-    -- image data, respectively. Resolve of depth\/stencil images is not
-    -- supported.
+  { -- | @srcSubresource@ and @dstSubresource@ are 'ImageSubresourceLayers'
+    -- structures specifying the image subresources of the images used for the
+    -- source and destination image data, respectively. Resolve of
+    -- depth\/stencil images is not supported.
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffset@ and @dstOffset@ select the initial @x@, @y@, and @z@ offsets
     -- in texels of the sub-regions of the source and destination image data.
@@ -9280,16 +9162,15 @@ instance Zero ImageResolve where
 --     handle
 --
 -- -   If @clearValueCount@ is not @0@, @pClearValues@ /must/ be a valid
---     pointer to an array of @clearValueCount@
---     'Vulkan.Core10.SharedTypes.ClearValue' unions
+--     pointer to an array of @clearValueCount@ 'ClearValue' unions
 --
 -- -   Both of @framebuffer@, and @renderPass@ /must/ have been created,
 --     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.ClearValue',
--- 'Vulkan.Core10.Handles.Framebuffer', 'Rect2D',
+-- 'ClearValue', 'Vulkan.Core10.Handles.Framebuffer',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Handles.RenderPass',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdBeginRenderPass',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.cmdBeginRenderPass2',
@@ -9306,8 +9187,8 @@ data RenderPassBeginInfo (es :: [Type]) = RenderPassBeginInfo
     -- instance, and is described in more detail below.
     renderArea :: Rect2D
   , -- | @pClearValues@ is a pointer to an array of @clearValueCount@
-    -- 'Vulkan.Core10.SharedTypes.ClearValue' structures that contains clear
-    -- values for each attachment, if the attachment uses a @loadOp@ value of
+    -- 'ClearValue' structures that contains clear values for each attachment,
+    -- if the attachment uses a @loadOp@ value of
     -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' or if
     -- the attachment has a depth\/stencil format and uses a @stencilLoadOp@
     -- value of
@@ -9372,6 +9253,66 @@ instance es ~ '[] => Zero (RenderPassBeginInfo es) where
            mempty
 
 
+-- | VkClearDepthStencilValue - Structure specifying a clear depth stencil
+-- value
+--
+-- == Valid Usage
+--
+-- -   Unless the @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @depth@ /must/ be between @0.0@ and @1.0@, inclusive
+--
+-- = See Also
+--
+-- 'ClearValue', 'cmdClearDepthStencilImage'
+data ClearDepthStencilValue = ClearDepthStencilValue
+  { -- | @depth@ is the clear value for the depth aspect of the depth\/stencil
+    -- attachment. It is a floating-point value which is automatically
+    -- converted to the attachment’s format.
+    depth :: Float
+  , -- | @stencil@ is the clear value for the stencil aspect of the
+    -- depth\/stencil attachment. It is a 32-bit integer value which is
+    -- converted to the attachment’s format by taking the appropriate number of
+    -- LSBs.
+    stencil :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ClearDepthStencilValue)
+#endif
+deriving instance Show ClearDepthStencilValue
+
+instance ToCStruct ClearDepthStencilValue where
+  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ClearDepthStencilValue{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (depth))
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (stencil)
+    f
+  cStructSize = 8
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct ClearDepthStencilValue where
+  peekCStruct p = do
+    depth <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
+    stencil <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
+    pure $ ClearDepthStencilValue
+             ((\(CFloat a) -> a) depth) stencil
+
+instance Storable ClearDepthStencilValue where
+  sizeOf ~_ = 8
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ClearDepthStencilValue where
+  zero = ClearDepthStencilValue
+           zero
+           zero
+
+
 -- | VkClearAttachment - Structure specifying a clear attachment
 --
 -- = Description
@@ -9403,8 +9344,7 @@ instance es ~ '[] => Zero (RenderPassBeginInfo es) where
 -- -   @aspectMask@ /must/ not include
 --     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
 --
--- -   @clearValue@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ClearValue' union
+-- -   @clearValue@ /must/ be a valid 'ClearValue' union
 --
 -- == Valid Usage (Implicit)
 --
@@ -9415,7 +9355,7 @@ instance es ~ '[] => Zero (RenderPassBeginInfo es) where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.ClearValue',
+-- 'ClearValue',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'cmdClearAttachments'
 data ClearAttachment = ClearAttachment
@@ -9460,4 +9400,67 @@ instance Zero ClearAttachment where
            zero
            zero
            zero
+
+
+data ClearColorValue
+  = Float32 ((Float, Float, Float, Float))
+  | Int32 ((Int32, Int32, Int32, Int32))
+  | Uint32 ((Word32, Word32, Word32, Word32))
+  deriving (Show)
+
+instance ToCStruct ClearColorValue where
+  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct :: Ptr ClearColorValue -> ClearColorValue -> IO a -> IO a
+  pokeCStruct p = (. const) . runContT .  \case
+    Float32 v -> lift $ do
+      let pFloat32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 CFloat) p)
+      case (v) of
+        (e0, e1, e2, e3) -> do
+          poke (pFloat32 :: Ptr CFloat) (CFloat (e0))
+          poke (pFloat32 `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
+          poke (pFloat32 `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
+          poke (pFloat32 `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
+    Int32 v -> lift $ do
+      let pInt32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 Int32) p)
+      case (v) of
+        (e0, e1, e2, e3) -> do
+          poke (pInt32 :: Ptr Int32) (e0)
+          poke (pInt32 `plusPtr` 4 :: Ptr Int32) (e1)
+          poke (pInt32 `plusPtr` 8 :: Ptr Int32) (e2)
+          poke (pInt32 `plusPtr` 12 :: Ptr Int32) (e3)
+    Uint32 v -> lift $ do
+      let pUint32 = lowerArrayPtr (castPtr @_ @(FixedArray 4 Word32) p)
+      case (v) of
+        (e0, e1, e2, e3) -> do
+          poke (pUint32 :: Ptr Word32) (e0)
+          poke (pUint32 `plusPtr` 4 :: Ptr Word32) (e1)
+          poke (pUint32 `plusPtr` 8 :: Ptr Word32) (e2)
+          poke (pUint32 `plusPtr` 12 :: Ptr Word32) (e3)
+  pokeZeroCStruct :: Ptr ClearColorValue -> IO b -> IO b
+  pokeZeroCStruct _ f = f
+  cStructSize = 16
+  cStructAlignment = 4
+
+instance Zero ClearColorValue where
+  zero = Float32 (zero, zero, zero, zero)
+
+
+data ClearValue
+  = Color ClearColorValue
+  | DepthStencil ClearDepthStencilValue
+  deriving (Show)
+
+instance ToCStruct ClearValue where
+  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct :: Ptr ClearValue -> ClearValue -> IO a -> IO a
+  pokeCStruct p = (. const) . runContT .  \case
+    Color v -> ContT $ pokeCStruct (castPtr @_ @ClearColorValue p) (v) . ($ ())
+    DepthStencil v -> ContT $ pokeCStruct (castPtr @_ @ClearDepthStencilValue p) (v) . ($ ())
+  pokeZeroCStruct :: Ptr ClearValue -> IO b -> IO b
+  pokeZeroCStruct _ f = f
+  cStructSize = 16
+  cStructAlignment = 4
+
+instance Zero ClearValue where
+  zero = Color zero
 

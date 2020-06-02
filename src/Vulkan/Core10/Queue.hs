@@ -6,6 +6,9 @@ module Vulkan.Core10.Queue  ( getDeviceQueue
                             , deviceWaitIdle
                             , deviceWaitIdleSafe
                             , SubmitInfo(..)
+                            , Queue(..)
+                            , PipelineStageFlagBits(..)
+                            , PipelineStageFlags
                             ) where
 
 import Control.Exception.Base (bracket)
@@ -86,6 +89,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_win32_keyed_mutex (Win32KeyedMutex
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBMIT_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(..))
+import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
+import Vulkan.Core10.Handles (Queue(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

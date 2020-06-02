@@ -4,6 +4,7 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , createComputePipelines
                                , withComputePipelines
                                , destroyPipeline
+                               , Viewport(..)
                                , SpecializationMapEntry(..)
                                , SpecializationInfo(..)
                                , PipelineShaderStageCreateInfo(..)
@@ -22,6 +23,38 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , StencilOpState(..)
                                , PipelineDepthStencilStateCreateInfo(..)
                                , GraphicsPipelineCreateInfo(..)
+                               , Pipeline(..)
+                               , PipelineLayoutCreateFlags(..)
+                               , PipelineDepthStencilStateCreateFlags(..)
+                               , PipelineDynamicStateCreateFlags(..)
+                               , PipelineColorBlendStateCreateFlags(..)
+                               , PipelineMultisampleStateCreateFlags(..)
+                               , PipelineRasterizationStateCreateFlags(..)
+                               , PipelineViewportStateCreateFlags(..)
+                               , PipelineTessellationStateCreateFlags(..)
+                               , PipelineInputAssemblyStateCreateFlags(..)
+                               , PipelineVertexInputStateCreateFlags(..)
+                               , PrimitiveTopology(..)
+                               , CompareOp(..)
+                               , PolygonMode(..)
+                               , CullModeFlagBits(..)
+                               , CullModeFlags
+                               , FrontFace(..)
+                               , BlendFactor(..)
+                               , BlendOp(..)
+                               , StencilOp(..)
+                               , LogicOp(..)
+                               , VertexInputRate(..)
+                               , DynamicState(..)
+                               , ShaderStageFlagBits(..)
+                               , ShaderStageFlags
+                               , PipelineCreateFlagBits(..)
+                               , PipelineCreateFlags
+                               , PipelineShaderStageCreateFlagBits(..)
+                               , PipelineShaderStageCreateFlags
+                               , ColorComponentFlagBits(..)
+                               , ColorComponentFlags
+                               , SampleMask
                                ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
@@ -74,8 +107,8 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
@@ -85,7 +118,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Enums.BlendFactor (BlendFactor)
 import Vulkan.Core10.Enums.BlendOp (BlendOp)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Enums.ColorComponentFlagBits (ColorComponentFlags)
 import Vulkan.Core10.Enums.CompareOp (CompareOp)
@@ -150,13 +183,13 @@ import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.PolygonMode (PolygonMode)
 import Vulkan.Core10.Enums.PrimitiveTopology (PrimitiveTopology)
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Handles (RenderPass)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits(SampleCountFlagBits))
-import Vulkan.Core10.BaseType (SampleMask)
+import Vulkan.Core10.FundamentalTypes (SampleMask)
 import Vulkan.Core10.Handles (ShaderModule)
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits)
 import Vulkan.CStruct.Extends (SomeStruct)
@@ -166,7 +199,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Core10.Enums.VertexInputRate (VertexInputRate)
-import Vulkan.Core10.CommandBufferBuilding (Viewport)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO))
@@ -182,6 +214,38 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.BlendFactor (BlendFactor(..))
+import Vulkan.Core10.Enums.BlendOp (BlendOp(..))
+import Vulkan.Core10.Enums.ColorComponentFlagBits (ColorComponentFlagBits(..))
+import Vulkan.Core10.Enums.ColorComponentFlagBits (ColorComponentFlags)
+import Vulkan.Core10.Enums.CompareOp (CompareOp(..))
+import Vulkan.Core10.Enums.CullModeFlagBits (CullModeFlagBits(..))
+import Vulkan.Core10.Enums.CullModeFlagBits (CullModeFlags)
+import Vulkan.Core10.Enums.DynamicState (DynamicState(..))
+import Vulkan.Core10.Enums.FrontFace (FrontFace(..))
+import Vulkan.Core10.Enums.LogicOp (LogicOp(..))
+import Vulkan.Core10.Handles (Pipeline(..))
+import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags (PipelineColorBlendStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(..))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags (PipelineDepthStencilStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags (PipelineDynamicStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags (PipelineInputAssemblyStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineLayoutCreateFlags (PipelineLayoutCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags (PipelineMultisampleStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags (PipelineRasterizationStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits (PipelineShaderStageCreateFlagBits(..))
+import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits (PipelineShaderStageCreateFlags)
+import Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags (PipelineTessellationStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineVertexInputStateCreateFlags (PipelineVertexInputStateCreateFlags(..))
+import Vulkan.Core10.Enums.PipelineViewportStateCreateFlags (PipelineViewportStateCreateFlags(..))
+import Vulkan.Core10.Enums.PolygonMode (PolygonMode(..))
+import Vulkan.Core10.Enums.PrimitiveTopology (PrimitiveTopology(..))
+import Vulkan.Core10.FundamentalTypes (SampleMask)
+import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(..))
+import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Vulkan.Core10.Enums.StencilOp (StencilOp(..))
+import Vulkan.Core10.Enums.VertexInputRate (VertexInputRate(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -503,6 +567,159 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
   pure $ ()
 
 
+-- | VkViewport - Structure specifying a viewport
+--
+-- = Description
+--
+-- The framebuffer depth coordinate @z@f /may/ be represented using either
+-- a fixed-point or floating-point representation. However, a
+-- floating-point representation /must/ be used if the depth\/stencil
+-- attachment has a floating-point depth component. If an m-bit fixed-point
+-- representation is used, we assume that it represents each value
+-- \(\frac{k}{2^m - 1}\), where k ∈ { 0, 1, …​, 2m-1 }, as k (e.g. 1.0 is
+-- represented in binary as a string of all ones).
+--
+-- The viewport parameters shown in the above equations are found from
+-- these values as
+--
+-- -   ox = @x@ + @width@ \/ 2
+--
+-- -   oy = @y@ + @height@ \/ 2
+--
+-- -   oz = @minDepth@
+--
+-- -   px = @width@
+--
+-- -   py = @height@
+--
+-- -   pz = @maxDepth@ - @minDepth@.
+--
+-- If a render pass transform is enabled, the values (px,py) and (ox, oy)
+-- defining the viewport are transformed as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>
+-- before participating in the viewport transform.
+--
+-- The application /can/ specify a negative term for @height@, which has
+-- the effect of negating the y coordinate in clip space before performing
+-- the transform. When using a negative @height@, the application /should/
+-- also adjust the @y@ value to point to the lower left corner of the
+-- viewport instead of the upper left corner. Using the negative @height@
+-- allows the application to avoid having to negate the y component of the
+-- @Position@ output from the last vertex processing stage in shaders that
+-- also target other graphics APIs.
+--
+-- The width and height of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxViewportDimensions implementation-dependent maximum viewport dimensions>
+-- /must/ be greater than or equal to the width and height of the largest
+-- image which /can/ be created and attached to a framebuffer.
+--
+-- The floating-point viewport bounds are represented with an
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-viewportSubPixelBits implementation-dependent precision>.
+--
+-- == Valid Usage
+--
+-- -   @width@ /must/ be greater than @0.0@
+--
+-- -   @width@ /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewportDimensions@[0]
+--
+-- -   The absolute value of @height@ /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewportDimensions@[1]
+--
+-- -   @x@ /must/ be greater than or equal to @viewportBoundsRange@[0]
+--
+-- -   (@x@ + @width@) /must/ be less than or equal to
+--     @viewportBoundsRange@[1]
+--
+-- -   @y@ /must/ be greater than or equal to @viewportBoundsRange@[0]
+--
+-- -   @y@ /must/ be less than or equal to @viewportBoundsRange@[1]
+--
+-- -   (@y@ + @height@) /must/ be greater than or equal to
+--     @viewportBoundsRange@[0]
+--
+-- -   (@y@ + @height@) /must/ be less than or equal to
+--     @viewportBoundsRange@[1]
+--
+-- -   Unless @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @minDepth@ /must/ be between @0.0@ and @1.0@, inclusive
+--
+-- -   Unless @VK_EXT_depth_range_unrestricted@ extension is enabled
+--     @maxDepth@ /must/ be between @0.0@ and @1.0@, inclusive
+--
+-- = See Also
+--
+-- 'PipelineViewportStateCreateInfo',
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport'
+data Viewport = Viewport
+  { -- | @x@ and @y@ are the viewport’s upper left corner (x,y).
+    x :: Float
+  , -- No documentation found for Nested "VkViewport" "y"
+    y :: Float
+  , -- | @width@ and @height@ are the viewport’s width and height, respectively.
+    width :: Float
+  , -- No documentation found for Nested "VkViewport" "height"
+    height :: Float
+  , -- | @minDepth@ and @maxDepth@ are the depth range for the viewport. It is
+    -- valid for @minDepth@ to be greater than or equal to @maxDepth@.
+    minDepth :: Float
+  , -- No documentation found for Nested "VkViewport" "maxDepth"
+    maxDepth :: Float
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Viewport)
+#endif
+deriving instance Show Viewport
+
+instance ToCStruct Viewport where
+  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p Viewport{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
+    poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
+    poke ((p `plusPtr` 8 :: Ptr CFloat)) (CFloat (width))
+    poke ((p `plusPtr` 12 :: Ptr CFloat)) (CFloat (height))
+    poke ((p `plusPtr` 16 :: Ptr CFloat)) (CFloat (minDepth))
+    poke ((p `plusPtr` 20 :: Ptr CFloat)) (CFloat (maxDepth))
+    f
+  cStructSize = 24
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 8 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 12 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 16 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 20 :: Ptr CFloat)) (CFloat (zero))
+    f
+
+instance FromCStruct Viewport where
+  peekCStruct p = do
+    x <- peek @CFloat ((p `plusPtr` 0 :: Ptr CFloat))
+    y <- peek @CFloat ((p `plusPtr` 4 :: Ptr CFloat))
+    width <- peek @CFloat ((p `plusPtr` 8 :: Ptr CFloat))
+    height <- peek @CFloat ((p `plusPtr` 12 :: Ptr CFloat))
+    minDepth <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
+    maxDepth <- peek @CFloat ((p `plusPtr` 20 :: Ptr CFloat))
+    pure $ Viewport
+             ((\(CFloat a) -> a) x) ((\(CFloat a) -> a) y) ((\(CFloat a) -> a) width) ((\(CFloat a) -> a) height) ((\(CFloat a) -> a) minDepth) ((\(CFloat a) -> a) maxDepth)
+
+instance Storable Viewport where
+  sizeOf ~_ = 24
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero Viewport where
+  zero = Viewport
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkSpecializationMapEntry - Structure specifying a specialization map
 -- entry
 --
@@ -516,7 +733,7 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
 -- -   For a @constantID@ specialization constant declared in a shader,
 --     @size@ /must/ match the byte size of the @constantID@. If the
 --     specialization constant is of type @boolean@, @size@ /must/ be the
---     byte size of 'Vulkan.Core10.BaseType.Bool32'
+--     byte size of 'Vulkan.Core10.FundamentalTypes.Bool32'
 --
 -- = See Also
 --
@@ -701,9 +918,9 @@ instance Zero SpecializationInfo where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxCombinedClipAndCullDistances@
 --
 -- -   If the identified entry point includes any variable in its interface
---     that is declared with the 'Vulkan.Core10.BaseType.SampleMask'
---     @BuiltIn@ decoration, that variable /must/ not have an array size
---     greater than
+--     that is declared with the
+--     'Vulkan.Core10.FundamentalTypes.SampleMask' @BuiltIn@ decoration,
+--     that variable /must/ not have an array size greater than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSampleMaskWords@
 --
 -- -   If @stage@ is
@@ -1469,7 +1686,8 @@ instance es ~ '[] => Zero (PipelineVertexInputStateCreateInfo es) where
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY'
 --     or
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST',
---     @primitiveRestartEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     @primitiveRestartEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
@@ -1499,7 +1717,7 @@ instance es ~ '[] => Zero (PipelineVertexInputStateCreateInfo es) where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'GraphicsPipelineCreateInfo',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags.PipelineInputAssemblyStateCreateFlags',
 -- 'Vulkan.Core10.Enums.PrimitiveTopology.PrimitiveTopology',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -1689,7 +1907,8 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 -- -   If the @viewportWScalingEnable@ member of a
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
 --     structure included in the @pNext@ chain is
---     'Vulkan.Core10.BaseType.TRUE', the @viewportCount@ member of the
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the @viewportCount@ member of
+--     the
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
 --     structure /must/ be equal to @viewportCount@
 --
@@ -1721,9 +1940,8 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 --
 -- 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.PipelineViewportStateCreateFlags',
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core10.CommandBufferBuilding.Viewport'
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType', 'Viewport'
 data PipelineViewportStateCreateInfo (es :: [Type]) = PipelineViewportStateCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
@@ -1731,17 +1949,16 @@ data PipelineViewportStateCreateInfo (es :: [Type]) = PipelineViewportStateCreat
     flags :: PipelineViewportStateCreateFlags
   , -- | @viewportCount@ is the number of viewports used by the pipeline.
     viewportCount :: Word32
-  , -- | @pViewports@ is a pointer to an array of
-    -- 'Vulkan.Core10.CommandBufferBuilding.Viewport' structures, defining the
-    -- viewport transforms. If the viewport state is dynamic, this member is
-    -- ignored.
+  , -- | @pViewports@ is a pointer to an array of 'Viewport' structures, defining
+    -- the viewport transforms. If the viewport state is dynamic, this member
+    -- is ignored.
     viewports :: Vector Viewport
   , -- | @scissorCount@ is the number of
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-scissor scissors>
     -- and /must/ match the number of viewports.
     scissorCount :: Word32
   , -- | @pScissors@ is a pointer to an array of
-    -- 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures defining the
+    -- 'Vulkan.Core10.FundamentalTypes.Rect2D' structures defining the
     -- rectangular bounds of the scissor for the corresponding viewport. If the
     -- scissor state is dynamic, this member is ignored.
     scissors :: Vector Rect2D
@@ -1855,7 +2072,7 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthClamp depth clamping>
 --     feature is not enabled, @depthClampEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fillModeNonSolid non-solid fill modes>
@@ -1898,7 +2115,7 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.CullModeFlagBits.CullModeFlags',
 -- 'Vulkan.Core10.Enums.FrontFace.FrontFace', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags.PipelineRasterizationStateCreateFlags',
@@ -2054,19 +2271,20 @@ instance es ~ '[] => Zero (PipelineRasterizationStateCreateInfo es) where
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sampleRateShading sample rate shading>
 --     feature is not enabled, @sampleShadingEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-alphaToOne alpha to one>
 --     feature is not enabled, @alphaToOneEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   @minSampleShading@ /must/ be in the range [0,1]
 --
 -- -   If the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and
 --     if the subpass has any color attachments and @rasterizationSamples@
 --     is greater than the number of color samples, then
---     @sampleShadingEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     @sampleShadingEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2093,14 +2311,14 @@ instance es ~ '[] => Zero (PipelineRasterizationStateCreateInfo es) where
 -- -   If @pSampleMask@ is not @NULL@, @pSampleMask@ /must/ be a valid
 --     pointer to an array of
 --     \(\lceil{\mathit{rasterizationSamples} \over 32}\rceil\)
---     'Vulkan.Core10.BaseType.SampleMask' values
+--     'Vulkan.Core10.FundamentalTypes.SampleMask' values
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'GraphicsPipelineCreateInfo',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags.PipelineMultisampleStateCreateFlags',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
--- 'Vulkan.Core10.BaseType.SampleMask',
+-- 'Vulkan.Core10.FundamentalTypes.SampleMask',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineMultisampleStateCreateInfo (es :: [Type]) = PipelineMultisampleStateCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
@@ -2115,10 +2333,10 @@ data PipelineMultisampleStateCreateInfo (es :: [Type]) = PipelineMultisampleStat
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-sampleshading Sample Shading>.
     sampleShadingEnable :: Bool
   , -- | @minSampleShading@ specifies a minimum fraction of sample shading if
-    -- @sampleShadingEnable@ is set to 'Vulkan.Core10.BaseType.TRUE'.
+    -- @sampleShadingEnable@ is set to 'Vulkan.Core10.FundamentalTypes.TRUE'.
     minSampleShading :: Float
-  , -- | @pSampleMask@ is an array of 'Vulkan.Core10.BaseType.SampleMask' values
-    -- used in the
+  , -- | @pSampleMask@ is an array of 'Vulkan.Core10.FundamentalTypes.SampleMask'
+    -- values used in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-samplemask sample mask test>.
     sampleMask :: Vector SampleMask
   , -- | @alphaToCoverageEnable@ controls whether a temporary coverage value is
@@ -2261,20 +2479,20 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --
 -- -   If
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
---     is 'Vulkan.Core10.BaseType.FALSE' and @colorBlendOp@ is an
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE' and @colorBlendOp@ is an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>,
 --     then @colorBlendOp@ /must/ be the same for all attachments
 --
 -- -   If
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
---     is 'Vulkan.Core10.BaseType.FALSE' and @alphaBlendOp@ is an
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE' and @alphaBlendOp@ is an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>,
 --     then @alphaBlendOp@ /must/ be the same for all attachments
 --
 -- -   If
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendAllOperations@
---     is 'Vulkan.Core10.BaseType.FALSE', then @colorBlendOp@ /must/ not be
---     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_ZERO_EXT',
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @colorBlendOp@
+--     /must/ not be 'Vulkan.Core10.Enums.BlendOp.BLEND_OP_ZERO_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_SRC_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_DST_EXT',
 --     'Vulkan.Core10.Enums.BlendOp.BLEND_OP_SRC_OVER_EXT',
@@ -2340,7 +2558,8 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.BlendFactor.BlendFactor',
--- 'Vulkan.Core10.Enums.BlendOp.BlendOp', 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.Enums.BlendOp.BlendOp',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlags',
 -- 'PipelineColorBlendStateCreateInfo'
 data PipelineColorBlendAttachmentState = PipelineColorBlendAttachmentState
@@ -2457,10 +2676,11 @@ instance Zero PipelineColorBlendAttachmentState where
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-logicOp logic operations>
 --     feature is not enabled, @logicOpEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @logicOpEnable@ is 'Vulkan.Core10.BaseType.TRUE', @logicOp@
---     /must/ be a valid 'Vulkan.Core10.Enums.LogicOp.LogicOp' value
+-- -   If @logicOpEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @logicOp@ /must/ be a valid 'Vulkan.Core10.Enums.LogicOp.LogicOp'
+--     value
 --
 -- == Valid Usage (Implicit)
 --
@@ -2481,7 +2701,7 @@ instance Zero PipelineColorBlendAttachmentState where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'GraphicsPipelineCreateInfo',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.LogicOp.LogicOp',
 -- 'PipelineColorBlendAttachmentState',
 -- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags.PipelineColorBlendStateCreateFlags',
@@ -2778,7 +2998,7 @@ instance Zero StencilOpState where
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthBounds depth bounds testing>
 --     feature is not enabled, @depthBoundsTestEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2798,7 +3018,7 @@ instance Zero StencilOpState where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp', 'GraphicsPipelineCreateInfo',
 -- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags.PipelineDepthStencilStateCreateFlags',
 -- 'StencilOpState', 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -2811,9 +3031,9 @@ data PipelineDepthStencilStateCreateInfo = PipelineDepthStencilStateCreateInfo
     depthTestEnable :: Bool
   , -- | @depthWriteEnable@ controls whether
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-depth-write depth writes>
-    -- are enabled when @depthTestEnable@ is 'Vulkan.Core10.BaseType.TRUE'.
-    -- Depth writes are always disabled when @depthTestEnable@ is
-    -- 'Vulkan.Core10.BaseType.FALSE'.
+    -- are enabled when @depthTestEnable@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE'. Depth writes are always disabled
+    -- when @depthTestEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     depthWriteEnable :: Bool
   , -- | @depthCompareOp@ is the comparison operator used in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-depth depth test>.
@@ -3038,7 +3258,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
 --     in the 'Vulkan.Core10.Pass.AttachmentReference' defined by
 --     @subpass@, the @depthWriteEnable@ member of @pDepthStencilState@
---     /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If rasterization is not disabled and @subpass@ uses a depth\/stencil
 --     attachment in @renderPass@ that has a layout of
@@ -3054,7 +3274,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     attachments, then for each color attachment in the subpass the
 --     @blendEnable@ member of the corresponding element of the
 --     @pAttachment@ member of @pColorBlendState@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE' if the attached image’s
+--     'Vulkan.Core10.FundamentalTypes.FALSE' if the attached image’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     does not contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'
@@ -3067,14 +3287,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT', the
 --     @pViewports@ member of @pViewportState@ /must/ be a valid pointer to
---     an array of @pViewportState->viewportCount@ valid
---     'Vulkan.Core10.CommandBufferBuilding.Viewport' structures
+--     an array of @pViewportState->viewportCount@ valid 'Viewport'
+--     structures
 --
 -- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR', the
 --     @pScissors@ member of @pViewportState@ /must/ be a valid pointer to
 --     an array of @pViewportState->scissorCount@
---     'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
 -- -   If the wide lines feature is not enabled, and no element of the
 --     @pDynamicStates@ member of @pDynamicState@ is
@@ -3082,21 +3302,21 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     @lineWidth@ member of @pRasterizationState@ /must/ be @1.0@
 --
 -- -   If the @rasterizerDiscardEnable@ member of @pRasterizationState@ is
---     'Vulkan.Core10.BaseType.FALSE', @pViewportState@ /must/ be a valid
---     pointer to a valid 'PipelineViewportStateCreateInfo' structure
+--     'Vulkan.Core10.FundamentalTypes.FALSE', @pViewportState@ /must/ be a
+--     valid pointer to a valid 'PipelineViewportStateCreateInfo' structure
 --
 -- -   If the @rasterizerDiscardEnable@ member of @pRasterizationState@ is
---     'Vulkan.Core10.BaseType.FALSE', @pMultisampleState@ /must/ be a
---     valid pointer to a valid 'PipelineMultisampleStateCreateInfo'
+--     'Vulkan.Core10.FundamentalTypes.FALSE', @pMultisampleState@ /must/
+--     be a valid pointer to a valid 'PipelineMultisampleStateCreateInfo'
 --     structure
 --
 -- -   If the @rasterizerDiscardEnable@ member of @pRasterizationState@ is
---     'Vulkan.Core10.BaseType.FALSE', and @subpass@ uses a depth\/stencil
---     attachment, @pDepthStencilState@ /must/ be a valid pointer to a
---     valid 'PipelineDepthStencilStateCreateInfo' structure
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and @subpass@ uses a
+--     depth\/stencil attachment, @pDepthStencilState@ /must/ be a valid
+--     pointer to a valid 'PipelineDepthStencilStateCreateInfo' structure
 --
 -- -   If the @rasterizerDiscardEnable@ member of @pRasterizationState@ is
---     'Vulkan.Core10.BaseType.FALSE', and @subpass@ uses color
+--     'Vulkan.Core10.FundamentalTypes.FALSE', and @subpass@ uses color
 --     attachments, @pColorBlendState@ /must/ be a valid pointer to a valid
 --     'PipelineColorBlendStateCreateInfo' structure
 --
@@ -3104,14 +3324,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS', and the
 --     @depthBiasEnable@ member of @pRasterizationState@ is
---     'Vulkan.Core10.BaseType.TRUE', the @depthBiasClamp@ member of
---     @pRasterizationState@ /must/ be @0.0@
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the @depthBiasClamp@ member
+--     of @pRasterizationState@ /must/ be @0.0@
 --
 -- -   If the @VK_EXT_depth_range_unrestricted@ extension is not enabled
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS', and
 --     the @depthBoundsTestEnable@ member of @pDepthStencilState@ is
---     'Vulkan.Core10.BaseType.TRUE', the @minDepthBounds@ and
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the @minDepthBounds@ and
 --     @maxDepthBounds@ members of @pDepthStencilState@ /must/ be between
 --     @0.0@ and @1.0@, inclusive
 --
@@ -3120,7 +3340,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and the @sampleLocationsEnable@ member of a
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
 --     structure included in the @pNext@ chain of @pMultisampleState@ is
---     'Vulkan.Core10.BaseType.TRUE',
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @sampleLocationsInfo.sampleLocationGridSize.width@ /must/ evenly
 --     divide
 --     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
@@ -3133,7 +3353,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and the @sampleLocationsEnable@ member of a
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
 --     structure included in the @pNext@ chain of @pMultisampleState@ is
---     'Vulkan.Core10.BaseType.TRUE',
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @sampleLocationsInfo.sampleLocationGridSize.height@ /must/ evenly
 --     divide
 --     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
@@ -3146,15 +3366,16 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and the @sampleLocationsEnable@ member of a
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
 --     structure included in the @pNext@ chain of @pMultisampleState@ is
---     'Vulkan.Core10.BaseType.TRUE',
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @sampleLocationsInfo.sampleLocationsPerPixel@ /must/ equal
 --     @rasterizationSamples@
 --
 -- -   If the @sampleLocationsEnable@ member of a
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
 --     structure included in the @pNext@ chain of @pMultisampleState@ is
---     'Vulkan.Core10.BaseType.TRUE', the fragment shader code /must/ not
---     statically use the extended instruction @InterpolateAtSample@
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the fragment shader code
+--     /must/ not statically use the extended instruction
+--     @InterpolateAtSample@
 --
 -- -   @layout@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency consistent>
@@ -3233,8 +3454,8 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     and the @viewportWScalingEnable@ member of a
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
 --     structure, included in the @pNext@ chain of @pViewportState@, is
---     'Vulkan.Core10.BaseType.TRUE', the @pViewportWScalings@ member of
---     the
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the @pViewportWScalings@
+--     member of the
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
 --     /must/ be a pointer to an array of
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'::@viewportCount@
@@ -3288,11 +3509,12 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT'
 --     and if rasterization is enabled, then the @alphaToCoverageEnable@,
 --     @alphaToOneEnable@, and @sampleShadingEnable@ members of
---     @pMultisampleState@ /must/ all be 'Vulkan.Core10.BaseType.FALSE'
+--     @pMultisampleState@ /must/ all be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If the @stippledLineEnable@ member of
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
---     is 'Vulkan.Core10.BaseType.TRUE' and no element of the
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE' and no element of the
 --     @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT',
 --     then the @lineStippleFactor@ member of

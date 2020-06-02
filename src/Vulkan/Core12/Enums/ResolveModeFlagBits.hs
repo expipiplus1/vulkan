@@ -22,7 +22,7 @@ import Data.Bits (Bits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- | VkResolveModeFlagBits - Bitmask indicating supported depth and stencil
 -- resolve modes

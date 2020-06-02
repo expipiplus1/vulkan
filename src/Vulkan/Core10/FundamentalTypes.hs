@@ -1,17 +1,26 @@
 {-# language CPP #-}
-module Vulkan.Core10.BaseType  ( boolToBool32
-                               , bool32ToBool
-                               , Bool32( FALSE
-                                       , TRUE
-                                       , ..
-                                       )
-                               , SampleMask
-                               , Flags
-                               , DeviceSize
-                               , DeviceAddress
-                               ) where
+module Vulkan.Core10.FundamentalTypes  ( boolToBool32
+                                       , bool32ToBool
+                                       , Offset2D(..)
+                                       , Offset3D(..)
+                                       , Extent2D(..)
+                                       , Extent3D(..)
+                                       , Rect2D(..)
+                                       , Bool32( FALSE
+                                               , TRUE
+                                               , ..
+                                               )
+                                       , SampleMask
+                                       , Flags
+                                       , DeviceSize
+                                       , DeviceAddress
+                                       , StructureType(..)
+                                       , Result(..)
+                                       ) where
 
 import Data.Bool (bool)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (plusPtr)
 import GHC.Read (choose)
 import GHC.Read (expectP)
 import GHC.Read (parens)
@@ -21,13 +30,30 @@ import GHC.Show (showsPrec)
 import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import GHC.Generics (Generic)
 import Data.Int (Int32)
+import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import Data.Word (Word32)
 import Data.Word (Word64)
 import Text.Read.Lex (Lexeme(Ident))
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (FromCStruct(..))
+import Vulkan.CStruct (ToCStruct)
+import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
+import Vulkan.Zero (Zero(..))
+import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.Core10.Enums.StructureType (StructureType(..))
 boolToBool32 :: Bool -> Bool32
 boolToBool32 = bool FALSE TRUE
 
@@ -35,6 +61,295 @@ bool32ToBool :: Bool32 -> Bool
 bool32ToBool = \case
   FALSE -> False
   TRUE  -> True
+
+
+-- | VkOffset2D - Structure specifying a two-dimensional offset
+--
+-- = See Also
+--
+-- 'Vulkan.Extensions.VK_KHR_display.DisplayPlaneCapabilitiesKHR',
+-- 'Rect2D', 'Vulkan.Extensions.VK_KHR_incremental_present.RectLayerKHR'
+data Offset2D = Offset2D
+  { -- | @x@ is the x offset.
+    x :: Int32
+  , -- | @y@ is the y offset.
+    y :: Int32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Offset2D)
+#endif
+deriving instance Show Offset2D
+
+instance ToCStruct Offset2D where
+  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p Offset2D{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Int32)) (x)
+    poke ((p `plusPtr` 4 :: Ptr Int32)) (y)
+    f
+  cStructSize = 8
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Int32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Int32)) (zero)
+    f
+
+instance FromCStruct Offset2D where
+  peekCStruct p = do
+    x <- peek @Int32 ((p `plusPtr` 0 :: Ptr Int32))
+    y <- peek @Int32 ((p `plusPtr` 4 :: Ptr Int32))
+    pure $ Offset2D
+             x y
+
+instance Storable Offset2D where
+  sizeOf ~_ = 8
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero Offset2D where
+  zero = Offset2D
+           zero
+           zero
+
+
+-- | VkOffset3D - Structure specifying a three-dimensional offset
+--
+-- = See Also
+--
+-- 'Vulkan.Core10.CommandBufferBuilding.BufferImageCopy',
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageBlit',
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageCopy',
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageResolve',
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind'
+data Offset3D = Offset3D
+  { -- | @x@ is the x offset.
+    x :: Int32
+  , -- | @y@ is the y offset.
+    y :: Int32
+  , -- | @z@ is the z offset.
+    z :: Int32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Offset3D)
+#endif
+deriving instance Show Offset3D
+
+instance ToCStruct Offset3D where
+  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p Offset3D{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Int32)) (x)
+    poke ((p `plusPtr` 4 :: Ptr Int32)) (y)
+    poke ((p `plusPtr` 8 :: Ptr Int32)) (z)
+    f
+  cStructSize = 12
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Int32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Int32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Int32)) (zero)
+    f
+
+instance FromCStruct Offset3D where
+  peekCStruct p = do
+    x <- peek @Int32 ((p `plusPtr` 0 :: Ptr Int32))
+    y <- peek @Int32 ((p `plusPtr` 4 :: Ptr Int32))
+    z <- peek @Int32 ((p `plusPtr` 8 :: Ptr Int32))
+    pure $ Offset3D
+             x y z
+
+instance Storable Offset3D where
+  sizeOf ~_ = 12
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero Offset3D where
+  zero = Offset3D
+           zero
+           zero
+           zero
+
+
+-- | VkExtent2D - Structure specifying a two-dimensional extent
+--
+-- = See Also
+--
+-- 'Vulkan.Extensions.VK_KHR_display.DisplayModeParametersKHR',
+-- 'Vulkan.Extensions.VK_KHR_display.DisplayPlaneCapabilitiesKHR',
+-- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
+-- 'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
+-- 'Vulkan.Extensions.VK_NV_shading_rate_image.PhysicalDeviceShadingRateImagePropertiesNV',
+-- 'Rect2D', 'Vulkan.Extensions.VK_KHR_incremental_present.RectLayerKHR',
+-- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCapabilities2EXT',
+-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR',
+-- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
+-- 'Vulkan.Core10.Pass.getRenderAreaGranularity'
+data Extent2D = Extent2D
+  { -- | @width@ is the width of the extent.
+    width :: Word32
+  , -- | @height@ is the height of the extent.
+    height :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Extent2D)
+#endif
+deriving instance Show Extent2D
+
+instance ToCStruct Extent2D where
+  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p Extent2D{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (width)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (height)
+    f
+  cStructSize = 8
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct Extent2D where
+  peekCStruct p = do
+    width <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
+    height <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
+    pure $ Extent2D
+             width height
+
+instance Storable Extent2D where
+  sizeOf ~_ = 8
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero Extent2D where
+  zero = Extent2D
+           zero
+           zero
+
+
+-- | VkExtent3D - Structure specifying a three-dimensional extent
+--
+-- = See Also
+--
+-- 'Vulkan.Core10.CommandBufferBuilding.BufferImageCopy',
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageCopy',
+-- 'Vulkan.Core10.Image.ImageCreateInfo',
+-- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
+-- 'Vulkan.Core10.CommandBufferBuilding.ImageResolve',
+-- 'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties',
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties',
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind'
+data Extent3D = Extent3D
+  { -- | @width@ is the width of the extent.
+    width :: Word32
+  , -- | @height@ is the height of the extent.
+    height :: Word32
+  , -- | @depth@ is the depth of the extent.
+    depth :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Extent3D)
+#endif
+deriving instance Show Extent3D
+
+instance ToCStruct Extent3D where
+  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p Extent3D{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (width)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (height)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (depth)
+    f
+  cStructSize = 12
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct Extent3D where
+  peekCStruct p = do
+    width <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
+    height <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
+    depth <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    pure $ Extent3D
+             width height depth
+
+instance Storable Extent3D where
+  sizeOf ~_ = 12
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero Extent3D where
+  zero = Extent3D
+           zero
+           zero
+           zero
+
+
+-- | VkRect2D - Structure specifying a two-dimensional subregion
+--
+-- = See Also
+--
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo',
+-- 'Vulkan.Core10.CommandBufferBuilding.ClearRect',
+-- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
+-- 'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
+-- 'Extent2D', 'Offset2D',
+-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV',
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo',
+-- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
+-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT',
+-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV',
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetScissor',
+-- 'Vulkan.Extensions.VK_KHR_swapchain.getPhysicalDevicePresentRectanglesKHR'
+data Rect2D = Rect2D
+  { -- | @offset@ is a 'Offset2D' specifying the rectangle offset.
+    offset :: Offset2D
+  , -- | @extent@ is a 'Extent2D' specifying the rectangle extent.
+    extent :: Extent2D
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (Rect2D)
+#endif
+deriving instance Show Rect2D
+
+instance ToCStruct Rect2D where
+  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p Rect2D{..} f = evalContT $ do
+    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (offset) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (extent) . ($ ())
+    lift $ f
+  cStructSize = 16
+  cStructAlignment = 4
+  pokeZeroCStruct p f = evalContT $ do
+    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Offset2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ f
+
+instance FromCStruct Rect2D where
+  peekCStruct p = do
+    offset <- peekCStruct @Offset2D ((p `plusPtr` 0 :: Ptr Offset2D))
+    extent <- peekCStruct @Extent2D ((p `plusPtr` 8 :: Ptr Extent2D))
+    pure $ Rect2D
+             offset extent
+
+instance Zero Rect2D where
+  zero = Rect2D
+           zero
+           zero
 
 
 -- | VkBool32 - Vulkan boolean type

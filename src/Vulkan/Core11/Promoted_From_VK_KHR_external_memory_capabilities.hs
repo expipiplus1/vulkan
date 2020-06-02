@@ -41,11 +41,11 @@ import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
 import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
 import Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits (ExternalMemoryFeatureFlags)
@@ -471,9 +471,9 @@ instance Zero ExternalBufferProperties where
 --     within a linked device adapter corresponding to the device.
 --
 -- -   @deviceLUIDValid@ is a boolean value that will be
---     'Vulkan.Core10.BaseType.TRUE' if @deviceLUID@ contains a valid LUID
---     and @deviceNodeMask@ contains a valid node mask, and
---     'Vulkan.Core10.BaseType.FALSE' if they do not.
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if @deviceLUID@ contains a
+--     valid LUID and @deviceNodeMask@ contains a valid node mask, and
+--     'Vulkan.Core10.FundamentalTypes.FALSE' if they do not.
 --
 -- @deviceUUID@ /must/ be immutable for a given device across instances,
 -- processes, driver APIs, driver versions, and system reboots.
@@ -494,18 +494,19 @@ instance Zero ExternalBufferProperties where
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility External fence handle types compatibility>
 --
--- If @deviceLUIDValid@ is 'Vulkan.Core10.BaseType.FALSE', the values of
--- @deviceLUID@ and @deviceNodeMask@ are undefined. If @deviceLUIDValid@ is
--- 'Vulkan.Core10.BaseType.TRUE' and Vulkan is running on the Windows
--- operating system, the contents of @deviceLUID@ /can/ be cast to an
--- @LUID@ object and /must/ be equal to the locally unique identifier of a
--- @IDXGIAdapter1@ object that corresponds to @physicalDevice@. If
--- @deviceLUIDValid@ is 'Vulkan.Core10.BaseType.TRUE', @deviceNodeMask@
--- /must/ contain exactly one bit. If Vulkan is running on an operating
--- system that supports the Direct3D 12 API and @physicalDevice@
--- corresponds to an individual device in a linked device adapter,
--- @deviceNodeMask@ identifies the Direct3D 12 node corresponding to
--- @physicalDevice@. Otherwise, @deviceNodeMask@ /must/ be @1@.
+-- If @deviceLUIDValid@ is 'Vulkan.Core10.FundamentalTypes.FALSE', the
+-- values of @deviceLUID@ and @deviceNodeMask@ are undefined. If
+-- @deviceLUIDValid@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and Vulkan is
+-- running on the Windows operating system, the contents of @deviceLUID@
+-- /can/ be cast to an @LUID@ object and /must/ be equal to the locally
+-- unique identifier of a @IDXGIAdapter1@ object that corresponds to
+-- @physicalDevice@. If @deviceLUIDValid@ is
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', @deviceNodeMask@ /must/ contain
+-- exactly one bit. If Vulkan is running on an operating system that
+-- supports the Direct3D 12 API and @physicalDevice@ corresponds to an
+-- individual device in a linked device adapter, @deviceNodeMask@
+-- identifies the Direct3D 12 node corresponding to @physicalDevice@.
+-- Otherwise, @deviceNodeMask@ /must/ be @1@.
 --
 -- Note
 --
@@ -539,7 +540,7 @@ instance Zero ExternalBufferProperties where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceIDProperties = PhysicalDeviceIDProperties
   { -- No documentation found for Nested "VkPhysicalDeviceIDProperties" "deviceUUID"

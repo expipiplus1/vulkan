@@ -24,10 +24,10 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.SharedTypes (ClearColorValue)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.CommandBufferBuilding (ClearColorValue)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -70,12 +70,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.ClearColorValue',
+-- 'Vulkan.Core10.CommandBufferBuilding.ClearColorValue',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerCustomBorderColorCreateInfoEXT = SamplerCustomBorderColorCreateInfoEXT
-  { -- | @customBorderColor@ is a 'Vulkan.Core10.SharedTypes.ClearColorValue'
-    -- representing the desired custom sampler border color.
+  { -- | @customBorderColor@ is a
+    -- 'Vulkan.Core10.CommandBufferBuilding.ClearColorValue' representing the
+    -- desired custom sampler border color.
     customBorderColor :: ClearColorValue
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' representing the
     -- format of the sampled image view(s). This field may be
@@ -180,7 +181,7 @@ instance Zero PhysicalDeviceCustomBorderColorPropertiesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCustomBorderColorFeaturesEXT = PhysicalDeviceCustomBorderColorFeaturesEXT
   { -- | @customBorderColors@ indicates that the implementation supports

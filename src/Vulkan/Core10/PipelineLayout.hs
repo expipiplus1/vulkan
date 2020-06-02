@@ -4,6 +4,7 @@ module Vulkan.Core10.PipelineLayout  ( createPipelineLayout
                                      , destroyPipelineLayout
                                      , PushConstantRange(..)
                                      , PipelineLayoutCreateInfo(..)
+                                     , PipelineLayout(..)
                                      ) where
 
 import Control.Exception.Base (bracket)
@@ -61,6 +62,7 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (PipelineLayout(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

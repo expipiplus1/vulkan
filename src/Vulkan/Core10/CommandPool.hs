@@ -4,6 +4,11 @@ module Vulkan.Core10.CommandPool  ( createCommandPool
                                   , destroyCommandPool
                                   , resetCommandPool
                                   , CommandPoolCreateInfo(..)
+                                  , CommandPool(..)
+                                  , CommandPoolCreateFlagBits(..)
+                                  , CommandPoolCreateFlags
+                                  , CommandPoolResetFlagBits(..)
+                                  , CommandPoolResetFlags
                                   ) where
 
 import Control.Exception.Base (bracket)
@@ -57,6 +62,11 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (CommandPool(..))
+import Vulkan.Core10.Enums.CommandPoolCreateFlagBits (CommandPoolCreateFlagBits(..))
+import Vulkan.Core10.Enums.CommandPoolCreateFlagBits (CommandPoolCreateFlags)
+import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..))
+import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

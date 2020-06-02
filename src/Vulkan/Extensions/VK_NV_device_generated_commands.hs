@@ -95,33 +95,33 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.CStruct.Extends (withSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
-import Vulkan.Core10.BaseType (DeviceAddress)
+import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBindPipelineShaderGroupNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdExecuteGeneratedCommandsNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdPreprocessGeneratedCommandsNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateIndirectCommandsLayoutNV))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyIndirectCommandsLayoutNV))
 import Vulkan.Dynamic (DeviceCmds(pVkGetGeneratedCommandsMemoryRequirementsNV))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extendss)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.IndexType (IndexType)
@@ -348,9 +348,9 @@ foreign import ccall
 -- -   [[VUID-{refpage}-sampleLocationsEnable-02689]] If the bound graphics
 --     pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -372,7 +372,7 @@ foreign import ccall
 --
 -- -   @commandBuffer@ /must/ not be a protected command buffer
 --
--- -   If @isPreprocessed@ is 'Vulkan.Core10.BaseType.TRUE' then
+-- -   If @isPreprocessed@ is 'Vulkan.Core10.FundamentalTypes.TRUE' then
 --     'cmdPreprocessGeneratedCommandsNV' /must/ have already been executed
 --     on the device, using the same @pGeneratedCommandsInfo@ content as
 --     well as the content of the input buffers it references (all except
@@ -426,16 +426,17 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'GeneratedCommandsInfoNV'
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.Handles.CommandBuffer', 'GeneratedCommandsInfoNV'
 cmdExecuteGeneratedCommandsNV :: forall io
                                . (MonadIO io)
                               => -- | @commandBuffer@ is the command buffer into which the command is
                                  -- recorded.
                                  CommandBuffer
                               -> -- | @isPreprocessed@ represents whether the input data has already been
-                                 -- preprocessed on the device. If it is 'Vulkan.Core10.BaseType.FALSE' this
-                                 -- command will implicitly trigger the preprocessing step, otherwise not.
+                                 -- preprocessed on the device. If it is
+                                 -- 'Vulkan.Core10.FundamentalTypes.FALSE' this command will implicitly
+                                 -- trigger the preprocessing step, otherwise not.
                                  ("isPreprocessed" ::: Bool)
                               -> -- | @pGeneratedCommandsInfo@ is a pointer to an instance of the
                                  -- 'GeneratedCommandsInfoNV' structure containing parameters affecting the
@@ -861,7 +862,7 @@ destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
   { -- | @deviceGeneratedCommands@ indicates whether the implementation supports
@@ -1321,7 +1322,7 @@ instance Zero BindShaderGroupIndirectCommandNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType'
 data BindIndexBufferIndirectCommandNV = BindIndexBufferIndirectCommandNV
   { -- | @bufferAddress@ specifies a physical address of the
@@ -1396,7 +1397,7 @@ instance Zero BindIndexBufferIndirectCommandNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceAddress'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress'
 data BindVertexBufferIndirectCommandNV = BindVertexBufferIndirectCommandNV
   { -- | @bufferAddress@ specifies a physical address of the
     -- 'Vulkan.Core10.Handles.Buffer' used as vertex input binding.
@@ -1521,8 +1522,8 @@ instance Zero SetStateFlagsIndirectCommandNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.BaseType.DeviceSize',
--- 'GeneratedCommandsInfoNV'
+-- 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'GeneratedCommandsInfoNV'
 data IndirectCommandsStreamNV = IndirectCommandsStreamNV
   { -- | @buffer@ specifies the 'Vulkan.Core10.Handles.Buffer' storing the
     -- functional arguments for each sequence. These arguments /can/ be written
@@ -1648,7 +1649,7 @@ instance Zero IndirectCommandsStreamNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType',
 -- 'IndirectCommandsLayoutCreateInfoNV', 'IndirectCommandsTokenTypeNV',
 -- 'IndirectStateFlagsNV', 'Vulkan.Core10.Handles.PipelineLayout',
@@ -2065,7 +2066,8 @@ instance Zero IndirectCommandsLayoutCreateInfoNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV',
 -- 'IndirectCommandsStreamNV', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
@@ -2093,8 +2095,8 @@ data GeneratedCommandsInfoNV = GeneratedCommandsInfoNV
   , -- | @preprocessBuffer@ is the 'Vulkan.Core10.Handles.Buffer' that is used
     -- for preprocessing the input data for execution. If this structure is
     -- used with 'cmdExecuteGeneratedCommandsNV' with its @isPreprocessed@ set
-    -- to 'Vulkan.Core10.BaseType.TRUE', then the preprocessing step is skipped
-    -- and data is only read from this buffer.
+    -- to 'Vulkan.Core10.FundamentalTypes.TRUE', then the preprocessing step is
+    -- skipped and data is only read from this buffer.
     preprocessBuffer :: Buffer
   , -- | @preprocessOffset@ is the byte offset into @preprocessBuffer@ where the
     -- preprocessed data is stored.
@@ -2308,7 +2310,7 @@ newtype IndirectCommandsLayoutUsageFlagBitsNV = IndirectCommandsLayoutUsageFlagB
 -- that the layout is always used with the manual preprocessing step
 -- through calling 'cmdPreprocessGeneratedCommandsNV' and executed by
 -- 'cmdExecuteGeneratedCommandsNV' with @isPreprocessed@ set to
--- 'Vulkan.Core10.BaseType.TRUE'.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 pattern INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV = IndirectCommandsLayoutUsageFlagBitsNV 0x00000001
 -- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV' specifies that
 -- the input data for the sequences is not implicitly indexed from

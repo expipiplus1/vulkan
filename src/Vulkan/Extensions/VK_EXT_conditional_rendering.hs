@@ -50,17 +50,17 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginConditionalRenderingEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndConditionalRenderingEXT))
-import Vulkan.Core10.BaseType (DeviceSize)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -268,7 +268,7 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'ConditionalRenderingFlagsEXT',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdBeginConditionalRenderingEXT'
 data ConditionalRenderingBeginInfoEXT = ConditionalRenderingBeginInfoEXT
@@ -332,14 +332,14 @@ instance Zero ConditionalRenderingBeginInfoEXT where
 -- = Description
 --
 -- If this structure is not present, the behavior is as if
--- @conditionalRenderingEnable@ is 'Vulkan.Core10.BaseType.FALSE'.
+-- @conditionalRenderingEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedConditionalRendering inherited conditional rendering>
 --     feature is not enabled, @conditionalRenderingEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -348,16 +348,16 @@ instance Zero ConditionalRenderingBeginInfoEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data CommandBufferInheritanceConditionalRenderingInfoEXT = CommandBufferInheritanceConditionalRenderingInfoEXT
   { -- | @conditionalRenderingEnable@ specifies whether the command buffer /can/
     -- be executed while conditional rendering is active in the primary command
-    -- buffer. If this is 'Vulkan.Core10.BaseType.TRUE', then this command
-    -- buffer /can/ be executed whether the primary command buffer has active
-    -- conditional rendering or not. If this is 'Vulkan.Core10.BaseType.FALSE',
-    -- then the primary command buffer /must/ not have conditional rendering
-    -- active.
+    -- buffer. If this is 'Vulkan.Core10.FundamentalTypes.TRUE', then this
+    -- command buffer /can/ be executed whether the primary command buffer has
+    -- active conditional rendering or not. If this is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then the primary command buffer
+    -- /must/ not have conditional rendering active.
     conditionalRenderingEnable :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -415,7 +415,7 @@ instance Zero CommandBufferInheritanceConditionalRenderingInfoEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceConditionalRenderingFeaturesEXT = PhysicalDeviceConditionalRenderingFeaturesEXT
   { -- | @conditionalRendering@ specifies whether conditional rendering is

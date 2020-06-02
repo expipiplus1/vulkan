@@ -32,10 +32,10 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.SharedTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Core10.SharedTypes (Offset2D)
+import Vulkan.Core10.FundamentalTypes (Offset2D)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -216,8 +216,8 @@ instance Zero PresentRegionKHR where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent2D',
--- 'Vulkan.Core10.SharedTypes.Offset2D', 'PresentRegionKHR'
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Offset2D', 'PresentRegionKHR'
 data RectLayerKHR = RectLayerKHR
   { -- | @offset@ is the origin of the rectangle, in pixels.
     offset :: Offset2D

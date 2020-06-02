@@ -56,7 +56,6 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -77,17 +76,17 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBindShadingRateImageNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetCoarseSampleOrderNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetViewportShadingRatePaletteNV))
-import Vulkan.Core10.SharedTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
@@ -450,8 +449,8 @@ instance Zero ShadingRatePaletteNV where
 -- = Description
 --
 -- If this structure is not present, @shadingRateImageEnable@ is considered
--- to be 'Vulkan.Core10.BaseType.FALSE', and the shading rate image and
--- palettes are not used.
+-- to be 'Vulkan.Core10.FundamentalTypes.FALSE', and the shading rate image
+-- and palettes are not used.
 --
 -- == Valid Usage
 --
@@ -462,8 +461,9 @@ instance Zero ShadingRatePaletteNV where
 -- -   @viewportCount@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
 --
--- -   If @shadingRateImageEnable@ is 'Vulkan.Core10.BaseType.TRUE',
---     @viewportCount@ /must/ be equal to the @viewportCount@ member of
+-- -   If @shadingRateImageEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @viewportCount@ /must/ be
+--     equal to the @viewportCount@ member of
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
 --
 -- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
@@ -476,21 +476,16 @@ instance Zero ShadingRatePaletteNV where
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV'
 --
--- -   If @viewportCount@ is not @0@, and @pShadingRatePalettes@ is not
---     @NULL@, @pShadingRatePalettes@ /must/ be a valid pointer to an array
---     of @viewportCount@ valid 'ShadingRatePaletteNV' structures
+-- -   @viewportCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'ShadingRatePaletteNV',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'ShadingRatePaletteNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineViewportShadingRateImageStateCreateInfoNV = PipelineViewportShadingRateImageStateCreateInfoNV
   { -- | @shadingRateImageEnable@ specifies whether shading rate image and
     -- palettes are used during rasterization.
     shadingRateImageEnable :: Bool
-  , -- | @viewportCount@ specifies the number of per-viewport palettes used to
-    -- translate values stored in shading rate images.
-    viewportCount :: Word32
   , -- | @pShadingRatePalettes@ is a pointer to an array of
     -- 'ShadingRatePaletteNV' structures defining the palette for each
     -- viewport. If the shading rate palette state is dynamic, this member is
@@ -509,43 +504,33 @@ instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shadingRateImageEnable))
-    let pShadingRatePalettesLength = Data.Vector.length $ (shadingRatePalettes)
-    viewportCount'' <- lift $ if (viewportCount) == 0
-      then pure $ fromIntegral pShadingRatePalettesLength
-      else do
-        unless (fromIntegral pShadingRatePalettesLength == (viewportCount) || pShadingRatePalettesLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pShadingRatePalettes must be empty or have 'viewportCount' elements" Nothing Nothing
-        pure (viewportCount)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (viewportCount'')
-    pShadingRatePalettes'' <- if Data.Vector.null (shadingRatePalettes)
-      then pure nullPtr
-      else do
-        pPShadingRatePalettes <- ContT $ allocaBytesAligned @ShadingRatePaletteNV (((Data.Vector.length (shadingRatePalettes))) * 16) 8
-        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) ((shadingRatePalettes))
-        pure $ pPShadingRatePalettes
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV))) pShadingRatePalettes''
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32))
+    pPShadingRatePalettes' <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes' `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV))) (pPShadingRatePalettes')
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    pPShadingRatePalettes' <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (mempty)) * 16) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes' `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV))) (pPShadingRatePalettes')
+    lift $ f
 
 instance FromCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
   peekCStruct p = do
     shadingRateImageEnable <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     viewportCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pShadingRatePalettes <- peek @(Ptr ShadingRatePaletteNV) ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV)))
-    let pShadingRatePalettesLength = if pShadingRatePalettes == nullPtr then 0 else (fromIntegral viewportCount)
-    pShadingRatePalettes' <- generateM pShadingRatePalettesLength (\i -> peekCStruct @ShadingRatePaletteNV ((pShadingRatePalettes `advancePtrBytes` (16 * (i)) :: Ptr ShadingRatePaletteNV)))
+    pShadingRatePalettes' <- generateM (fromIntegral viewportCount) (\i -> peekCStruct @ShadingRatePaletteNV ((pShadingRatePalettes `advancePtrBytes` (16 * (i)) :: Ptr ShadingRatePaletteNV)))
     pure $ PipelineViewportShadingRateImageStateCreateInfoNV
-             (bool32ToBool shadingRateImageEnable) viewportCount pShadingRatePalettes'
+             (bool32ToBool shadingRateImageEnable) pShadingRatePalettes'
 
 instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
   zero = PipelineViewportShadingRateImageStateCreateInfoNV
-           zero
            zero
            mempty
 
@@ -576,7 +561,7 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImageFeaturesNV = PhysicalDeviceShadingRateImageFeaturesNV
   { -- | @shadingRateImage@ indicates that the implementation supports the use of
@@ -653,7 +638,7 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImagePropertiesNV = PhysicalDeviceShadingRateImagePropertiesNV
   { -- | @shadingRateTexelSize@ indicates the width and height of the portion of

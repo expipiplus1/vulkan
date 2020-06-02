@@ -19,10 +19,10 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -54,7 +54,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentFeaturesEXT = PhysicalDeviceTexelBufferAlignmentFeaturesEXT
   { -- | @texelBufferAlignment@ indicates whether the implementation uses more
@@ -116,11 +116,12 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 -- it is filled with the implementation-dependent limits.
 --
 -- If the single texel alignment property is
--- 'Vulkan.Core10.BaseType.FALSE', then the buffer view’s offset /must/ be
--- aligned to the corresponding byte alignment value. If the single texel
--- alignment property is 'Vulkan.Core10.BaseType.TRUE', then the buffer
--- view’s offset /must/ be aligned to the lesser of the corresponding byte
--- alignment value or the size of a single texel, based on
+-- 'Vulkan.Core10.FundamentalTypes.FALSE', then the buffer view’s offset
+-- /must/ be aligned to the corresponding byte alignment value. If the
+-- single texel alignment property is
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', then the buffer view’s offset
+-- /must/ be aligned to the lesser of the corresponding byte alignment
+-- value or the size of a single texel, based on
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo'::@format@. If the size
 -- of a single texel is a multiple of three bytes, then the size of a
 -- single component of the format is used instead.
@@ -135,7 +136,8 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentPropertiesEXT = PhysicalDeviceTexelBufferAlignmentPropertiesEXT
   { -- | @storageTexelBufferOffsetAlignmentBytes@ is a byte alignment that is

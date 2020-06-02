@@ -10,6 +10,7 @@ module Vulkan.Core10.Memory  ( allocateMemory
                              , getDeviceMemoryCommitment
                              , MemoryAllocateInfo(..)
                              , MappedMemoryRange(..)
+                             , MemoryMapFlags(..)
                              ) where
 
 import Control.Exception.Base (bracket)
@@ -61,7 +62,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkMapMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkUnmapMemory))
 import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.Handles (DeviceMemory(..))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExportMemoryAllocateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExportMemoryAllocateInfoNV)
@@ -98,6 +99,7 @@ import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MAPPED_MEMORY_RANGE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -455,7 +457,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
 mapMemory :: forall io
            . (MonadIO io)
@@ -717,7 +719,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 getDeviceMemoryCommitment :: forall io
                            . (MonadIO io)
                           => -- | @device@ is the logical device that owns the memory.
@@ -1069,7 +1071,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'allocateMemory'
 data MemoryAllocateInfo (es :: [Type]) = MemoryAllocateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
@@ -1184,7 +1186,7 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'flushMappedMemoryRanges', 'invalidateMappedMemoryRanges'
 data MappedMemoryRange = MappedMemoryRange

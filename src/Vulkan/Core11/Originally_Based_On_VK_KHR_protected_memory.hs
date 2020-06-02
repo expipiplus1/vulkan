@@ -45,9 +45,9 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceQueue2))
@@ -126,14 +126,14 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 -- == Valid Usage
 --
 -- -   If the protected memory feature is not enabled, @protectedSubmit@
---     /must/ not be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ not be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   If @protectedSubmit@ is 'Vulkan.Core10.BaseType.TRUE', then each
---     element of the @pCommandBuffers@ array /must/ be a protected command
---     buffer
+-- -   If @protectedSubmit@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then
+--     each element of the @pCommandBuffers@ array /must/ be a protected
+--     command buffer
 --
--- -   If @protectedSubmit@ is 'Vulkan.Core10.BaseType.FALSE', then each
---     element of the @pCommandBuffers@ array /must/ be an unprotected
+-- -   If @protectedSubmit@ is 'Vulkan.Core10.FundamentalTypes.FALSE', then
+--     each element of the @pCommandBuffers@ array /must/ be an unprotected
 --     command buffer
 --
 -- -   If the 'Vulkan.Core10.Queue.SubmitInfo'::@pNext@ chain does not
@@ -148,14 +148,15 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ProtectedSubmitInfo = ProtectedSubmitInfo
   { -- | @protectedSubmit@ specifies whether the batch is protected. If
-    -- @protectedSubmit@ is 'Vulkan.Core10.BaseType.TRUE', the batch is
-    -- protected. If @protectedSubmit@ is 'Vulkan.Core10.BaseType.FALSE', the
-    -- batch is unprotected. If the 'Vulkan.Core10.Queue.SubmitInfo'::@pNext@
-    -- chain does not include this structure, the batch is unprotected.
+    -- @protectedSubmit@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the batch is
+    -- protected. If @protectedSubmit@ is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', the batch is unprotected. If the
+    -- 'Vulkan.Core10.Queue.SubmitInfo'::@pNext@ chain does not include this
+    -- structure, the batch is unprotected.
     protectedSubmit :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -209,7 +210,7 @@ instance Zero ProtectedSubmitInfo where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
   { -- | @protectedMemory@ specifies whether protected memory is supported.
@@ -267,14 +268,14 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProperties
   { -- | @protectedNoFault@ specifies the behavior of the implementation when
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is 'Vulkan.Core10.BaseType.TRUE',
-    -- breaking those rules will not result in process termination or device
-    -- loss.
+    -- are broken. If @protectedNoFault@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
+    -- result in process termination or device loss.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

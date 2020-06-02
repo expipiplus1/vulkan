@@ -56,7 +56,7 @@ import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetAndroidHardwareBufferPropertiesANDROID))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryAndroidHardwareBufferANDROID))
 import Vulkan.Core10.Handles (DeviceMemory)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -371,7 +371,7 @@ instance Zero AndroidHardwareBufferUsageANDROID where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAndroidHardwareBufferPropertiesANDROID'
 data AndroidHardwareBufferPropertiesANDROID (es :: [Type]) = AndroidHardwareBufferPropertiesANDROID

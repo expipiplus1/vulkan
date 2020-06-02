@@ -39,9 +39,9 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core12.Enums.DescriptorBindingFlagBits (DescriptorBindingFlags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -84,7 +84,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexingFeatures
   { -- | @shaderInputAttachmentArrayDynamicIndexing@ indicates whether arrays of
@@ -384,7 +384,7 @@ instance Zero PhysicalDeviceDescriptorIndexingFeatures where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexingProperties
   { -- | @maxUpdateAfterBindDescriptorsInAllPools@ is the maximum number of
@@ -397,38 +397,38 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     maxUpdateAfterBindDescriptorsInAllPools :: Word32
   , -- | @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether uniform buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of uniform buffers /may/ execute multiple times in order to access
-    -- all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of uniform buffers /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderUniformBufferArrayNonUniformIndexingNative :: Bool
   , -- | @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether sampler and image descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of samplers or images /may/ execute multiple times in order to
-    -- access all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of samplers or images /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderSampledImageArrayNonUniformIndexingNative :: Bool
   , -- | @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether storage buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of storage buffers /may/ execute multiple times in order to access
-    -- all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of storage buffers /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderStorageBufferArrayNonUniformIndexingNative :: Bool
   , -- | @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether storage image descriptors natively support nonuniform
-    -- indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a single
-    -- dynamic instance of an instruction that nonuniformly indexes an array of
-    -- storage images /may/ execute multiple times in order to access all the
-    -- descriptors.
+    -- indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then a
+    -- single dynamic instance of an instruction that nonuniformly indexes an
+    -- array of storage images /may/ execute multiple times in order to access
+    -- all the descriptors.
     shaderStorageImageArrayNonUniformIndexingNative :: Bool
   , -- | @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether input attachment descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of input attachments /may/ execute multiple times in order to
-    -- access all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of input attachments /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderInputAttachmentArrayNonUniformIndexingNative :: Bool
   , -- | @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
     -- whether
@@ -438,8 +438,8 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- @descriptorBindingStorageBufferUpdateAfterBind@,
     -- @descriptorBindingUniformTexelBufferUpdateAfterBind@, and\/or
     -- @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
-    -- 'Vulkan.Core10.BaseType.FALSE', then either @robustBufferAccess@ /must/
-    -- be disabled or all of these update-after-bind features /must/ be
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then either @robustBufferAccess@
+    -- /must/ be disabled or all of these update-after-bind features /must/ be
     -- disabled.
     robustBufferAccessUpdateAfterBind :: Bool
   , -- | @quadDivergentImplicitLod@ is a boolean value indicating whether
