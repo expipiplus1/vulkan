@@ -84,15 +84,22 @@ specSpecInfo Spec {..} siTypeSize = do
             , Require {..}   <- toList exRequires
             , c              <- toList rCommandNames
             ]
-      in  \n ->
-            if Set.member n disabledCommandNames then siIsCommand n else Nothing
-    siIsEnum           = mkLookup eName specEnums
-    typeParentRelation = edges
-      [ (t, sName)
-      | Struct {..} <- toList specStructs
-      , m           <- toList (smType <$> sMembers)
-      , t           <- getAllTypeNames m
-      ]
+      in  \n -> if Set.member n disabledCommandNames
+            then siIsCommand n
+            else Nothing
+    siIsEnum = mkLookup eName specEnums
+    typeParentRelation =
+      edges
+        $  [ (t, sName)
+           | Struct {..} <- toList specStructs
+           , m           <- toList (smType <$> sMembers)
+           , t           <- getAllTypeNames m
+           ]
+        <> [ (t, sName)
+           | Struct {..} <- toList specUnions
+           , m           <- toList (smType <$> sMembers)
+           , t           <- getAllTypeNames m
+           ]
     containsUnionMap = Map.fromListWith
       (<>)
       [ (t, [u])
@@ -100,10 +107,8 @@ specSpecInfo Spec {..} siTypeSize = do
       , t <- reachable (sName u) typeParentRelation
       ]
     siContainsUnion = fromMaybe mempty . (`Map.lookup` containsUnionMap)
-    aliasMap        = Map.fromList
-      [ (aName, aTarget)
-      | Alias {..} <- toList specAliases
-      ]
+    aliasMap =
+      Map.fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
     -- TODO: Handle alias cycles!
     resolveAlias :: CName -> CName
     resolveAlias n = maybe n resolveAlias (Map.lookup n aliasMap)
