@@ -62,12 +62,18 @@ renderUnion marshaled@MarshaledStruct {..} = context (unCName msName) $ do
       toCStructInstance marshaled
       zeroInstance marshaled
 
+      -- Check if this union contains any undiscriminated unions itself
+      let isDiscriminated u =
+            Spec.Parse.sName u `elem` (udUnionType <$> toList unionDiscriminators)
+      descendentUnions <- filter (not . isDiscriminated) <$> containsUnion msName
+
       case
           [ d
           | d@UnionDiscriminator {..} <- toList unionDiscriminators
           , udUnionType == msName
           ]
         of
+          _ | not (null descendentUnions) -> pure ()
           []  -> pure ()
           [d] -> peekUnionFunction d marshaled
           _ ->
