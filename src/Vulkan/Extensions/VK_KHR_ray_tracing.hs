@@ -51,7 +51,6 @@ module Vulkan.Extensions.VK_KHR_ray_tracing  ( destroyAccelerationStructureKHR
                                              , DeviceOrHostAddressKHR(..)
                                              , DeviceOrHostAddressConstKHR(..)
                                              , AccelerationStructureGeometryDataKHR(..)
-                                             , peekAccelerationStructureGeometryDataKHR
                                              , GeometryInstanceFlagBitsKHR( GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
                                                                           , GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
                                                                           , GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
@@ -6024,12 +6023,6 @@ instance ToCStruct AccelerationStructureGeometryDataKHR where
 
 instance Zero AccelerationStructureGeometryDataKHR where
   zero = Triangles zero
-
-peekAccelerationStructureGeometryDataKHR :: GeometryTypeKHR -> Ptr AccelerationStructureGeometryDataKHR -> IO AccelerationStructureGeometryDataKHR
-peekAccelerationStructureGeometryDataKHR tag p = case tag of
-  GEOMETRY_TYPE_TRIANGLES_KHR -> Triangles <$> (peekCStruct @AccelerationStructureGeometryTrianglesDataKHR (castPtr @_ @AccelerationStructureGeometryTrianglesDataKHR p))
-  GEOMETRY_TYPE_AABBS_KHR -> Aabbs <$> (peekCStruct @AccelerationStructureGeometryAabbsDataKHR (castPtr @_ @AccelerationStructureGeometryAabbsDataKHR p))
-  GEOMETRY_TYPE_INSTANCES_KHR -> Instances <$> (peekCStruct @AccelerationStructureGeometryInstancesDataKHR (castPtr @_ @AccelerationStructureGeometryInstancesDataKHR p))
 
 
 -- | VkGeometryInstanceFlagBitsKHR - Instance flag bits
