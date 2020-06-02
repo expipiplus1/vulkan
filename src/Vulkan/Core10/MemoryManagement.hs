@@ -4,6 +4,7 @@ module Vulkan.Core10.MemoryManagement  ( getBufferMemoryRequirements
                                        , getImageMemoryRequirements
                                        , bindImageMemory
                                        , MemoryRequirements(..)
+                                       , DeviceMemory(..)
                                        ) where
 
 import Control.Monad (unless)
@@ -40,7 +41,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetBufferMemoryRequirements))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageMemoryRequirements))
 import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.Handles (DeviceMemory(..))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -53,6 +54,7 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (DeviceMemory(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -172,8 +174,8 @@ foreign import ccall
 --
 -- -   If @buffer@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Vulkan.Core10.BaseType.TRUE', @memory@ /must/ have been
---     created with
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
+--     been created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to a buffer handle created with identical creation parameters
 --     to @buffer@ and @memoryOffset@ /must/ be zero
@@ -245,7 +247,7 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 bindBufferMemory :: forall io
                   . (MonadIO io)
                  => -- | @device@ is the logical device that owns the buffer and memory.
@@ -421,8 +423,8 @@ foreign import ccall
 --
 -- -   If @image@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Vulkan.Core10.BaseType.TRUE', @memory@ /must/ have been
---     created with
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
+--     been created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
 --     equal to an image handle created with identical creation parameters
 --     to @image@ and @memoryOffset@ /must/ be zero
@@ -483,7 +485,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize', 'Vulkan.Core10.Handles.Image'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core10.Handles.Image'
 bindImageMemory :: forall io
                  . (MonadIO io)
                 => -- | @device@ is the logical device that owns the image and memory.
@@ -512,7 +515,7 @@ bindImageMemory device image memory memoryOffset = liftIO $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2',
 -- 'getBufferMemoryRequirements', 'getImageMemoryRequirements'
 data MemoryRequirements = MemoryRequirements

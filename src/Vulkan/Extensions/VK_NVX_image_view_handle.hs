@@ -37,10 +37,10 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
-import Vulkan.Core10.BaseType (DeviceAddress)
+import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewAddressNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandleNVX))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -261,8 +261,8 @@ instance Zero ImageViewHandleInfoNVX where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceAddress',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageViewAddressNVX'
 data ImageViewAddressPropertiesNVX = ImageViewAddressPropertiesNVX

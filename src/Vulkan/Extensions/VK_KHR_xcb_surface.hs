@@ -7,10 +7,10 @@ module Vulkan.Extensions.VK_KHR_xcb_surface  ( createXcbSurfaceKHR
                                              , pattern KHR_XCB_SURFACE_SPEC_VERSION
                                              , KHR_XCB_SURFACE_EXTENSION_NAME
                                              , pattern KHR_XCB_SURFACE_EXTENSION_NAME
-                                             , SurfaceKHR(..)
                                              , Xcb_visualid_t
                                              , Xcb_window_t
                                              , Xcb_connection_t
+                                             , SurfaceKHR(..)
                                              ) where
 
 import Control.Exception.Base (bracket)
@@ -53,12 +53,12 @@ import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Bool32(..))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -77,17 +77,11 @@ import Vulkan.Extensions.Handles (SurfaceKHR(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Extensions.WSITypes (Xcb_connection_t)
-import Vulkan.Extensions.WSITypes (Xcb_visualid_t)
-import Vulkan.Extensions.WSITypes (Xcb_window_t)
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.WSITypes (Xcb_connection_t)
-import Vulkan.Extensions.WSITypes (Xcb_visualid_t)
-import Vulkan.Extensions.WSITypes (Xcb_window_t)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -307,4 +301,13 @@ type KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface"
 -- No documentation found for TopLevel "VK_KHR_XCB_SURFACE_EXTENSION_NAME"
 pattern KHR_XCB_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface"
+
+
+type Xcb_visualid_t = Word32
+
+
+type Xcb_window_t = Word32
+
+
+data Xcb_connection_t
 

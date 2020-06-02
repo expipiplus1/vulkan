@@ -19,6 +19,15 @@ module Vulkan.Core10.DescriptorSet  ( createDescriptorSetLayout
                                     , DescriptorPoolSize(..)
                                     , DescriptorPoolCreateInfo(..)
                                     , DescriptorSetAllocateInfo(..)
+                                    , DescriptorSet(..)
+                                    , DescriptorSetLayout(..)
+                                    , DescriptorPool(..)
+                                    , DescriptorPoolResetFlags(..)
+                                    , DescriptorType(..)
+                                    , DescriptorPoolCreateFlagBits(..)
+                                    , DescriptorPoolCreateFlags
+                                    , DescriptorSetLayoutCreateFlagBits(..)
+                                    , DescriptorSetLayoutCreateFlags
                                     ) where
 
 import Control.Exception.Base (bracket)
@@ -88,7 +97,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyDescriptorSetLayout))
 import Vulkan.Dynamic (DeviceCmds(pVkFreeDescriptorSets))
 import Vulkan.Dynamic (DeviceCmds(pVkResetDescriptorPool))
 import Vulkan.Dynamic (DeviceCmds(pVkUpdateDescriptorSets))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -119,6 +128,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTO
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (DescriptorPool(..))
+import Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits (DescriptorPoolCreateFlagBits(..))
+import Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits (DescriptorPoolCreateFlags)
+import Vulkan.Core10.Enums.DescriptorPoolResetFlags (DescriptorPoolResetFlags(..))
+import Vulkan.Core10.Handles (DescriptorSet(..))
+import Vulkan.Core10.Handles (DescriptorSetLayout(..))
+import Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits (DescriptorSetLayoutCreateFlagBits(..))
+import Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits (DescriptorSetLayoutCreateFlags)
+import Vulkan.Core10.Enums.DescriptorType (DescriptorType(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -873,8 +891,8 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.BaseType.DeviceSize',
--- 'WriteDescriptorSet'
+-- 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'WriteDescriptorSet'
 data DescriptorBufferInfo = DescriptorBufferInfo
   { -- | @buffer@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or the buffer
     -- resource.

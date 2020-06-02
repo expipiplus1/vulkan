@@ -49,7 +49,7 @@ import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkBindBufferMemory2))
 import Vulkan.Dynamic (DeviceCmds(pVkBindImageMemory2))
 import Vulkan.Core10.Handles (DeviceMemory)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -249,8 +249,8 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --
 -- -   If @buffer@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Vulkan.Core10.BaseType.TRUE', @memory@ /must/ have been
---     created with
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
+--     been created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to @buffer@ and @memoryOffset@ /must/ be zero
 --
@@ -312,7 +312,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindBufferMemory2',
 -- 'Vulkan.Extensions.VK_KHR_bind_memory2.bindBufferMemory2KHR'
 data BindBufferMemoryInfo (es :: [Type]) = BindBufferMemoryInfo
@@ -517,8 +517,8 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --
 -- -   If @image@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Vulkan.Core10.BaseType.TRUE', @memory@ /must/ have been
---     created with
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
+--     been created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
 --     equal to @image@ and @memoryOffset@ /must/ be zero
 --
@@ -613,7 +613,8 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize', 'Vulkan.Core10.Handles.Image',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindImageMemory2',
 -- 'Vulkan.Extensions.VK_KHR_bind_memory2.bindImageMemory2KHR'
 data BindImageMemoryInfo (es :: [Type]) = BindImageMemoryInfo

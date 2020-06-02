@@ -10,6 +10,7 @@ module Vulkan.Core10.Memory  ( allocateMemory
                              , getDeviceMemoryCommitment
                              , MemoryAllocateInfo(..)
                              , MappedMemoryRange(..)
+                             , MemoryMapFlags(..)
                              ) where
 
 import Control.Exception.Base (bracket)
@@ -61,7 +62,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkMapMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkUnmapMemory))
 import Vulkan.Core10.Handles (DeviceMemory)
 import Vulkan.Core10.Handles (DeviceMemory(..))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExportMemoryAllocateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExportMemoryAllocateInfoNV)
@@ -98,6 +99,7 @@ import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MAPPED_MEMORY_RANGE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -455,7 +457,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
 mapMemory :: forall io
            . (MonadIO io)
@@ -717,7 +719,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 getDeviceMemoryCommitment :: forall io
                            . (MonadIO io)
                           => -- | @device@ is the logical device that owns the memory.
@@ -954,8 +956,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     with @image@ that is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     the Android hardware buffer’s
---     'Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@ /must/ include
---     at least one of @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
+--     /must/ include at least one of
+--     @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
 --     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@
 --
 -- -   If the parameters define an import operation, the external handle is
@@ -983,7 +986,8 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android hardware
---     buffer’s 'Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
+--     buffer’s
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
 --     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
 --     /must/ have a complete mipmap chain
 --
@@ -992,9 +996,10 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android hardware
---     buffer’s 'Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@ does
---     not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
---     /must/ have exactly one mipmap level
+--     buffer’s
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
+--     does not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
+--     @image@ /must/ have exactly one mipmap level
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
@@ -1069,7 +1074,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'allocateMemory'
 data MemoryAllocateInfo (es :: [Type]) = MemoryAllocateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
@@ -1184,7 +1189,7 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'flushMappedMemoryRanges', 'invalidateMappedMemoryRanges'
 data MappedMemoryRange = MappedMemoryRange

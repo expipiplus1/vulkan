@@ -43,7 +43,7 @@ import Data.Bits (Bits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
 -- | VkFormatFeatureFlagBits - Bitmask specifying features supported by a
 -- buffer
@@ -192,8 +192,8 @@ import Vulkan.Zero (Zero)
 --     specifies that reconstruction /can/ be forcibly made explicit by
 --     setting
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
---     to 'Vulkan.Core10.BaseType.TRUE'. If the format being queried
---     supports
+--     to 'Vulkan.Core10.FundamentalTypes.TRUE'. If the format being
+--     queried supports
 --     'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
 --     it /must/ also support
 --     'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'.
@@ -349,7 +349,8 @@ pattern FORMAT_FEATURE_DISJOINT_BIT = FormatFeatureFlagBits 0x00400000
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
 -- specifies that reconstruction /can/ be forcibly made explicit by setting
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
--- to 'Vulkan.Core10.BaseType.TRUE'. If the format being queried supports
+-- to 'Vulkan.Core10.FundamentalTypes.TRUE'. If the format being queried
+-- supports
 -- 'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
 -- it /must/ also support
 -- 'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'.

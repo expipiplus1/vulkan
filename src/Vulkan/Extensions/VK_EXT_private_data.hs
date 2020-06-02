@@ -57,11 +57,11 @@ import Data.Word (Word64)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCreatePrivateDataSlotEXT))
@@ -69,7 +69,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyPrivateDataSlotEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPrivateDataEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkSetPrivateDataEXT))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ObjectType (ObjectType)
@@ -461,7 +461,7 @@ instance Zero PrivateDataSlotCreateInfoEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePrivateDataFeaturesEXT = PhysicalDevicePrivateDataFeaturesEXT
   { -- | @privateData@ indicates whether the implementation supports private

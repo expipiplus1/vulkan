@@ -174,8 +174,8 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
@@ -3506,8 +3506,8 @@ pattern MEMORY_USAGE_CPU_ONLY = MemoryUsage 2
 -- Writes may be write-combined.
 --
 -- Usage: Resources written frequently by host (dynamic), read by device.
--- E.g. textures, vertex buffers, uniform buffers updated every frame or
--- every draw call.
+-- E.g. textures (with LINEAR layout), vertex buffers, uniform buffers
+-- updated every frame or every draw call.
 pattern MEMORY_USAGE_CPU_TO_GPU = MemoryUsage 3
 -- | Memory mappable on host (guarantees to be @HOST_VISIBLE@) and cached. It
 -- is roughly equivalent of @D3D12_HEAP_TYPE_READBACK@.

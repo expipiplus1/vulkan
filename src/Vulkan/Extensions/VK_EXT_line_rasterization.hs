@@ -49,10 +49,10 @@ import Data.Word (Word16)
 import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
@@ -155,7 +155,7 @@ cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizationFeaturesEXT
   { -- | @rectangularLines@ indicates whether the implementation supports
@@ -172,7 +172,7 @@ data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizatio
     -- with 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' lines, or with
     -- 'LINE_RASTERIZATION_MODE_DEFAULT_EXT' lines if
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
-    -- is 'Vulkan.Core10.BaseType.TRUE'.
+    -- is 'Vulkan.Core10.FundamentalTypes.TRUE'.
     stippledRectangularLines :: Bool
   , -- | @stippledBresenhamLines@ indicates whether the implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
@@ -324,31 +324,31 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesEXT where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bresenhamLines smoothLines>
 --     feature /must/ be enabled
 --
--- -   If @stippledLineEnable@ is 'Vulkan.Core10.BaseType.TRUE' and
+-- -   If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT', then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled
 --
--- -   If @stippledLineEnable@ is 'Vulkan.Core10.BaseType.TRUE' and
+-- -   If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is 'LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
 --     feature /must/ be enabled
 --
--- -   If @stippledLineEnable@ is 'Vulkan.Core10.BaseType.TRUE' and
+-- -   If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT', then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
 --     feature /must/ be enabled
 --
--- -   If @stippledLineEnable@ is 'Vulkan.Core10.BaseType.TRUE' and
+-- -   If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is 'LINE_RASTERIZATION_MODE_DEFAULT_EXT',
 --     then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -360,7 +360,7 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'LineRasterizationModeEXT',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'LineRasterizationModeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStateCreateInfoEXT
   { -- | @lineRasterizationMode@ is a 'LineRasterizationModeEXT' value selecting
@@ -435,7 +435,7 @@ newtype LineRasterizationModeEXT = LineRasterizationModeEXT Int32
 -- | 'LINE_RASTERIZATION_MODE_DEFAULT_EXT' is equivalent to
 -- 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' if
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
--- is 'Vulkan.Core10.BaseType.TRUE', otherwise lines are drawn as
+-- is 'Vulkan.Core10.FundamentalTypes.TRUE', otherwise lines are drawn as
 -- non-@strictLines@ parallelograms. Both of these modes are defined in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
 pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT = LineRasterizationModeEXT 0

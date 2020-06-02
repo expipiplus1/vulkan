@@ -82,6 +82,13 @@ The docbook documentation will be in `docs/docbook`.
 
 - Don't peek the same value for every bitfield component
 
+- Use `selection` and `selector` attributes in the xml to generate the
+  `UnionDiscriminator` table automatically.
+
+- Replace `Aabbs` with `AABBs`
+
+- Elide union tag
+
 ## To check
 
 During development unfinished bits not to forget are listed here.

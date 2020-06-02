@@ -30,11 +30,11 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkSetLocalDimmingAMD))
@@ -79,7 +79,7 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.Device',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setLocalDimmingAMD :: forall io
                     . (MonadIO io)
@@ -107,11 +107,11 @@ setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DisplayNativeHdrSurfaceCapabilitiesAMD = DisplayNativeHdrSurfaceCapabilitiesAMD
   { -- | @localDimmingSupport@ specifies whether the surface supports local
-    -- dimming. If this is 'Vulkan.Core10.BaseType.TRUE',
+    -- dimming. If this is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- 'SwapchainDisplayNativeHdrCreateInfoAMD' /can/ be used to explicitly
     -- enable or disable local dimming for the surface. Local dimming may also
     -- be overriden by 'setLocalDimmingAMD' during the lifetime of the
@@ -163,8 +163,8 @@ instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
 -- If the @pNext@ chain of
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR' does not
 -- include this structure, the default value for @localDimmingEnable@ is
--- 'Vulkan.Core10.BaseType.TRUE', meaning local dimming is initially
--- enabled for the swapchain.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', meaning local dimming is
+-- initially enabled for the swapchain.
 --
 -- == Valid Usage (Implicit)
 --
@@ -174,13 +174,13 @@ instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
 -- == Valid Usage
 --
 -- -   It is only valid to set @localDimmingEnable@ to
---     'Vulkan.Core10.BaseType.TRUE' if
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if
 --     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
 --     supported
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SwapchainDisplayNativeHdrCreateInfoAMD = SwapchainDisplayNativeHdrCreateInfoAMD
   { -- | @localDimmingEnable@ specifies whether local dimming is enabled for the

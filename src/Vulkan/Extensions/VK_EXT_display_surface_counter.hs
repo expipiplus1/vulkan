@@ -54,8 +54,8 @@ import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagsKHR)
-import Vulkan.Core10.SharedTypes (Extent2D)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
@@ -171,7 +171,7 @@ pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = STRUCTURE_TYPE_SURFACE_CAPABI
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagsKHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'SurfaceCounterFlagsEXT',

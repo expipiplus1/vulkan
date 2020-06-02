@@ -5,6 +5,9 @@ module Vulkan.Core10.PipelineCache  ( createPipelineCache
                                     , getPipelineCacheData
                                     , mergePipelineCaches
                                     , PipelineCacheCreateInfo(..)
+                                    , PipelineCache(..)
+                                    , PipelineCacheCreateFlagBits(..)
+                                    , PipelineCacheCreateFlags
                                     ) where
 
 import Control.Exception.Base (bracket)
@@ -68,6 +71,9 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (PipelineCache(..))
+import Vulkan.Core10.Enums.PipelineCacheCreateFlagBits (PipelineCacheCreateFlagBits(..))
+import Vulkan.Core10.Enums.PipelineCacheCreateFlagBits (PipelineCacheCreateFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

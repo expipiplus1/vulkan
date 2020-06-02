@@ -3,9 +3,10 @@ module Vulkan.Core10.Image  ( createImage
                             , withImage
                             , destroyImage
                             , getImageSubresourceLayout
-                            , ImageSubresource(..)
                             , ImageCreateInfo(..)
                             , SubresourceLayout(..)
+                            , Image(..)
+                            , ImageLayout(..)
                             ) where
 
 import Control.Exception.Base (bracket)
@@ -53,12 +54,12 @@ import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateImage))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyImage))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSubresourceLayout))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.SharedTypes (Extent3D)
+import Vulkan.Core10.FundamentalTypes (Extent3D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExternalMemoryImageCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExternalMemoryImageCreateInfoNV)
@@ -67,13 +68,13 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
-import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (ImageDrmFormatModifierExplicitCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (ImageDrmFormatModifierListCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_image_format_list (ImageFormatListCreateInfo)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage (ImageStencilUsageCreateInfo)
+import Vulkan.Core10.SparseResourceMemoryManagement (ImageSubresource)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (ImageSwapchainCreateInfoKHR)
 import Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import Vulkan.Core10.Enums.ImageType (ImageType)
@@ -94,6 +95,8 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (Image(..))
+import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -347,7 +350,8 @@ foreign import ccall
 -- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
 --
 -- -   @pSubresource@ /must/ be a valid pointer to a valid
---     'ImageSubresource' structure
+--     'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource'
+--     structure
 --
 -- -   @pLayout@ /must/ be a valid pointer to a 'SubresourceLayout'
 --     structure
@@ -358,15 +362,17 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
--- 'ImageSubresource', 'SubresourceLayout'
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource',
+-- 'SubresourceLayout'
 getImageSubresourceLayout :: forall io
                            . (MonadIO io)
                           => -- | @device@ is the logical device that owns the image.
                              Device
                           -> -- | @image@ is the image whose layout is being queried.
                              Image
-                          -> -- | @pSubresource@ is a pointer to a 'ImageSubresource' structure selecting
-                             -- a specific image for the image subresource.
+                          -> -- | @pSubresource@ is a pointer to a
+                             -- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource'
+                             -- structure selecting a specific image for the image subresource.
                              ImageSubresource
                           -> io (SubresourceLayout)
 getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
@@ -379,72 +385,6 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
   lift $ vkGetImageSubresourceLayout' (deviceHandle (device)) (image) pSubresource (pPLayout)
   pLayout <- lift $ peekCStruct @SubresourceLayout pPLayout
   pure $ (pLayout)
-
-
--- | VkImageSubresource - Structure specifying an image subresource
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
--- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
--- 'getImageSubresourceLayout'
-data ImageSubresource = ImageSubresource
-  { -- | @aspectMask@ is a
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' selecting the
-    -- image /aspect/.
-    --
-    -- @aspectMask@ /must/ be a valid combination of
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
-    --
-    -- @aspectMask@ /must/ not be @0@
-    aspectMask :: ImageAspectFlags
-  , -- | @mipLevel@ selects the mipmap level.
-    mipLevel :: Word32
-  , -- | @arrayLayer@ selects the array layer.
-    arrayLayer :: Word32
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (ImageSubresource)
-#endif
-deriving instance Show ImageSubresource
-
-instance ToCStruct ImageSubresource where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ImageSubresource{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
-    poke ((p `plusPtr` 4 :: Ptr Word32)) (mipLevel)
-    poke ((p `plusPtr` 8 :: Ptr Word32)) (arrayLayer)
-    f
-  cStructSize = 12
-  cStructAlignment = 4
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (zero)
-    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
-    f
-
-instance FromCStruct ImageSubresource where
-  peekCStruct p = do
-    aspectMask <- peek @ImageAspectFlags ((p `plusPtr` 0 :: Ptr ImageAspectFlags))
-    mipLevel <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
-    arrayLayer <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
-    pure $ ImageSubresource
-             aspectMask mipLevel arrayLayer
-
-instance Storable ImageSubresource where
-  sizeOf ~_ = 12
-  alignment ~_ = 4
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero ImageSubresource where
-  zero = ImageSubresource
-           zero
-           zero
-           zero
 
 
 -- | VkImageCreateInfo - Structure specifying the parameters of a newly
@@ -1328,7 +1268,7 @@ instance Zero ImageSubresource where
 -- \<\/section>
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent3D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -1352,8 +1292,8 @@ data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' describing the format
     -- and type of the texel blocks that will be contained in the image.
     format :: Format
-  , -- | @extent@ is a 'Vulkan.Core10.SharedTypes.Extent3D' describing the number
-    -- of data elements in each dimension of the base level.
+  , -- | @extent@ is a 'Vulkan.Core10.FundamentalTypes.Extent3D' describing the
+    -- number of data elements in each dimension of the base level.
     extent :: Extent3D
   , -- | @mipLevels@ describes the number of levels of detail available for
     -- minified sampling of the image.
@@ -1524,8 +1464,9 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 --
 -- If the image has a /single-plane/ color format and its tiling is
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' , then the
--- @aspectMask@ member of 'ImageSubresource' /must/ be
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'.
+-- @aspectMask@ member of
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource' /must/
+-- be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'.
 --
 -- If the image has a depth\/stencil format and its tiling is
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' , then
@@ -1542,8 +1483,9 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- If the image has a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 -- and its tiling is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
--- , then the @aspectMask@ member of 'ImageSubresource' /must/ be
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+-- , then the @aspectMask@ member of
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource' /must/
+-- be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
 -- (for 3-plane formats only)
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
@@ -1555,9 +1497,10 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 --
 -- If the image’s tiling is
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
--- then the @aspectMask@ member of 'ImageSubresource' /must/ be one of
--- @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@, where the maximum allowed
--- plane index @i@ is defined by the
+-- then the @aspectMask@ member of
+-- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource' /must/
+-- be one of @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@, where the maximum
+-- allowed plane index @i@ is defined by the
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
 -- associated with the image’s 'ImageCreateInfo'::@format@ and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier modifier>.
@@ -1572,7 +1515,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
 -- 'getImageSubresourceLayout'
 data SubresourceLayout = SubresourceLayout

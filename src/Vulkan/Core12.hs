@@ -71,15 +71,15 @@ import Data.Word (Word8)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
 import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (ConformanceVersion)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core12.Enums.DriverId (DriverId)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -128,7 +128,7 @@ pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
   { -- | @storageBuffer16BitAccess@ specifies whether objects in the
@@ -193,9 +193,9 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     protectedMemory :: Bool
   , -- | @samplerYcbcrConversion@ specifies whether the implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
-    -- If @samplerYcbcrConversion@ is 'Vulkan.Core10.BaseType.FALSE', sampler
-    -- Y′CBCR conversion is not supported, and samplers using sampler Y′CBCR
-    -- conversion /must/ not be used.
+    -- If @samplerYcbcrConversion@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- sampler Y′CBCR conversion is not supported, and samplers using sampler
+    -- Y′CBCR conversion /must/ not be used.
     samplerYcbcrConversion :: Bool
   , -- | @shaderDrawParameters@ specifies whether shader draw parameters are
     -- supported.
@@ -302,7 +302,8 @@ instance Zero PhysicalDeviceVulkan11Features where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -324,9 +325,9 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- linked device adapter corresponding to the device.
     deviceNodeMask :: Word32
   , -- | @deviceLUIDValid@ is a boolean value that will be
-    -- 'Vulkan.Core10.BaseType.TRUE' if @deviceLUID@ contains a valid LUID and
-    -- @deviceNodeMask@ contains a valid node mask, and
-    -- 'Vulkan.Core10.BaseType.FALSE' if they do not.
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if @deviceLUID@ contains a valid
+    -- LUID and @deviceNodeMask@ contains a valid node mask, and
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if they do not.
     deviceLUIDValid :: Bool
   , -- | @subgroupSize@ is the default number of invocations in each subgroup.
     -- @subgroupSize@ is at least 1 if any of the physical device’s queues
@@ -369,9 +370,9 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     maxMultiviewInstanceIndex :: Word32
   , -- | @protectedNoFault@ specifies the behavior of the implementation when
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is 'Vulkan.Core10.BaseType.TRUE',
-    -- breaking those rules will not result in process termination or device
-    -- loss.
+    -- are broken. If @protectedNoFault@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
+    -- result in process termination or device loss.
     protectedNoFault :: Bool
   , -- | @maxPerSetDescriptors@ is a maximum number of descriptors (summed over
     -- all descriptor types) in a single descriptor set that is guaranteed to
@@ -837,12 +838,14 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     built-in decoration /must/ not be used on outputs in vertex or
 --     tessellation evaluation shaders.
 --
--- -   If @subgroupBroadcastDynamicId@ is 'Vulkan.Core10.BaseType.TRUE',
---     the “Id” operand of @OpGroupNonUniformBroadcast@ /can/ be
---     dynamically uniform within a subgroup, and the “Index” operand of
+-- -   If @subgroupBroadcastDynamicId@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', the “Id” operand of
+--     @OpGroupNonUniformBroadcast@ /can/ be dynamically uniform within a
+--     subgroup, and the “Index” operand of
 --     @OpGroupNonUniformQuadBroadcast@ /can/ be dynamically uniform within
---     the derivative group. If it is 'Vulkan.Core10.BaseType.FALSE', these
---     operands /must/ be constants.
+--     the derivative group. If it is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', these operands /must/ be
+--     constants.
 --
 -- If the 'PhysicalDeviceVulkan12Features' structure is included in the
 -- @pNext@ chain of
@@ -858,7 +861,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan12Features = PhysicalDeviceVulkan12Features
   { -- No documentation found for Nested "VkPhysicalDeviceVulkan12Features" "samplerMirrorClampToEdge"
@@ -1197,7 +1200,7 @@ instance Zero PhysicalDeviceVulkan12Features where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion',
 -- 'Vulkan.Core12.Enums.DriverId.DriverId',
 -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.ResolveModeFlags',
@@ -1324,38 +1327,38 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     maxUpdateAfterBindDescriptorsInAllPools :: Word32
   , -- | @shaderUniformBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether uniform buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of uniform buffers /may/ execute multiple times in order to access
-    -- all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of uniform buffers /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderUniformBufferArrayNonUniformIndexingNative :: Bool
   , -- | @shaderSampledImageArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether sampler and image descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of samplers or images /may/ execute multiple times in order to
-    -- access all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of samplers or images /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderSampledImageArrayNonUniformIndexingNative :: Bool
   , -- | @shaderStorageBufferArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether storage buffer descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of storage buffers /may/ execute multiple times in order to access
-    -- all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of storage buffers /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderStorageBufferArrayNonUniformIndexingNative :: Bool
   , -- | @shaderStorageImageArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether storage image descriptors natively support nonuniform
-    -- indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a single
-    -- dynamic instance of an instruction that nonuniformly indexes an array of
-    -- storage images /may/ execute multiple times in order to access all the
-    -- descriptors.
+    -- indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then a
+    -- single dynamic instance of an instruction that nonuniformly indexes an
+    -- array of storage images /may/ execute multiple times in order to access
+    -- all the descriptors.
     shaderStorageImageArrayNonUniformIndexingNative :: Bool
   , -- | @shaderInputAttachmentArrayNonUniformIndexingNative@ is a boolean value
     -- indicating whether input attachment descriptors natively support
-    -- nonuniform indexing. If this is 'Vulkan.Core10.BaseType.FALSE', then a
-    -- single dynamic instance of an instruction that nonuniformly indexes an
-    -- array of input attachments /may/ execute multiple times in order to
-    -- access all the descriptors.
+    -- nonuniform indexing. If this is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- then a single dynamic instance of an instruction that nonuniformly
+    -- indexes an array of input attachments /may/ execute multiple times in
+    -- order to access all the descriptors.
     shaderInputAttachmentArrayNonUniformIndexingNative :: Bool
   , -- | @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
     -- whether
@@ -1365,8 +1368,8 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- @descriptorBindingStorageBufferUpdateAfterBind@,
     -- @descriptorBindingUniformTexelBufferUpdateAfterBind@, and\/or
     -- @descriptorBindingStorageTexelBufferUpdateAfterBind@. If this is
-    -- 'Vulkan.Core10.BaseType.FALSE', then either @robustBufferAccess@ /must/
-    -- be disabled or all of these update-after-bind features /must/ be
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then either @robustBufferAccess@
+    -- /must/ be disabled or all of these update-after-bind features /must/ be
     -- disabled.
     robustBufferAccessUpdateAfterBind :: Bool
   , -- | @quadDivergentImplicitLod@ is a boolean value indicating whether
@@ -1481,13 +1484,13 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
     -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_AVERAGE_BIT'
     -- /must/ not be included in the set.
     supportedStencilResolveModes :: ResolveModeFlags
-  , -- | @independentResolveNone@ is 'Vulkan.Core10.BaseType.TRUE' if the
+  , -- | @independentResolveNone@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- implementation supports setting the depth and stencil resolve modes to
     -- different values when one of those modes is
     -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'. Otherwise
     -- the implementation only supports setting both modes to the same value.
     independentResolveNone :: Bool
-  , -- | @independentResolve@ is 'Vulkan.Core10.BaseType.TRUE' if the
+  , -- | @independentResolve@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- implementation supports all combinations of the supported depth and
     -- stencil resolve modes, including setting either depth or stencil resolve
     -- mode to 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE'. An

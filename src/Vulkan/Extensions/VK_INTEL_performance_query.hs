@@ -96,10 +96,10 @@ import Text.Read.Lex (Lexeme(Ident))
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
@@ -248,6 +248,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -320,6 +322,8 @@ foreign import ccall
 --     operations
 --
 -- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
@@ -400,6 +404,8 @@ foreign import ccall
 --     operations
 --
 -- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
@@ -678,6 +684,12 @@ pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_
 --
 -- == Valid Usage (Implicit)
 --
+-- -   @type@ /must/ be a valid 'PerformanceValueTypeINTEL' value
+--
+-- -   If @type@ is 'PERFORMANCE_VALUE_TYPE_STRING_INTEL', the
+--     @valueString@ member of @data@ /must/ be a null-terminated UTF-8
+--     string
+--
 -- = See Also
 --
 -- 'PerformanceValueDataINTEL', 'PerformanceValueTypeINTEL',
@@ -685,13 +697,9 @@ pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_
 data PerformanceValueINTEL = PerformanceValueINTEL
   { -- | @type@ is a 'PerformanceValueTypeINTEL' value specifying the type of the
     -- returned data.
-    --
-    -- @type@ /must/ be a valid 'PerformanceValueTypeINTEL' value
     type' :: PerformanceValueTypeINTEL
   , -- | @data@ is a 'PerformanceValueDataINTEL' union specifying the value of
     -- the returned data.
-    --
-    -- @data@ /must/ be a valid 'PerformanceValueDataINTEL' union
     data' :: PerformanceValueDataINTEL
   }
   deriving (Typeable)
@@ -957,7 +965,7 @@ instance Zero PerformanceStreamMarkerInfoINTEL where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'PerformanceOverrideTypeINTEL',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'PerformanceOverrideTypeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceOverrideINTEL'
 data PerformanceOverrideInfoINTEL = PerformanceOverrideInfoINTEL

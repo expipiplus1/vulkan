@@ -12,6 +12,23 @@ module Vulkan.Core10.Pass  ( createFramebuffer
                            , SubpassDependency(..)
                            , RenderPassCreateInfo(..)
                            , FramebufferCreateInfo(..)
+                           , Framebuffer(..)
+                           , RenderPass(..)
+                           , AttachmentLoadOp(..)
+                           , AttachmentStoreOp(..)
+                           , PipelineBindPoint(..)
+                           , RenderPassCreateFlagBits(..)
+                           , RenderPassCreateFlags
+                           , AccessFlagBits(..)
+                           , AccessFlags
+                           , AttachmentDescriptionFlagBits(..)
+                           , AttachmentDescriptionFlags
+                           , DependencyFlagBits(..)
+                           , DependencyFlags
+                           , SubpassDescriptionFlagBits(..)
+                           , SubpassDescriptionFlags
+                           , FramebufferCreateFlagBits(..)
+                           , FramebufferCreateFlags
                            ) where
 
 import Control.Exception.Base (bracket)
@@ -71,7 +88,7 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.SharedTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Handles (Framebuffer)
 import Vulkan.Core10.Handles (Framebuffer(..))
@@ -106,6 +123,23 @@ import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.AccessFlagBits (AccessFlagBits(..))
+import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
+import Vulkan.Core10.Enums.AttachmentDescriptionFlagBits (AttachmentDescriptionFlagBits(..))
+import Vulkan.Core10.Enums.AttachmentDescriptionFlagBits (AttachmentDescriptionFlags)
+import Vulkan.Core10.Enums.AttachmentLoadOp (AttachmentLoadOp(..))
+import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(..))
+import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlagBits(..))
+import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
+import Vulkan.Core10.Handles (Framebuffer(..))
+import Vulkan.Core10.Enums.FramebufferCreateFlagBits (FramebufferCreateFlagBits(..))
+import Vulkan.Core10.Enums.FramebufferCreateFlagBits (FramebufferCreateFlags)
+import Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint(..))
+import Vulkan.Core10.Handles (RenderPass(..))
+import Vulkan.Core10.Enums.RenderPassCreateFlagBits (RenderPassCreateFlagBits(..))
+import Vulkan.Core10.Enums.RenderPassCreateFlagBits (RenderPassCreateFlags)
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlagBits(..))
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -426,12 +460,12 @@ foreign import ccall
 -- The conditions leading to an optimal @renderArea@ are:
 --
 -- -   the @offset.x@ member in @renderArea@ is a multiple of the @width@
---     member of the returned 'Vulkan.Core10.SharedTypes.Extent2D' (the
---     horizontal granularity).
+--     member of the returned 'Vulkan.Core10.FundamentalTypes.Extent2D'
+--     (the horizontal granularity).
 --
 -- -   the @offset.y@ member in @renderArea@ is a multiple of the @height@
---     of the returned 'Vulkan.Core10.SharedTypes.Extent2D' (the vertical
---     granularity).
+--     of the returned 'Vulkan.Core10.FundamentalTypes.Extent2D' (the
+--     vertical granularity).
 --
 -- -   either the @offset.width@ member in @renderArea@ is a multiple of
 --     the horizontal granularity or @offset.x@+@offset.width@ is equal to
@@ -458,14 +492,15 @@ foreign import ccall
 --     handle
 --
 -- -   @pGranularity@ /must/ be a valid pointer to a
---     'Vulkan.Core10.SharedTypes.Extent2D' structure
+--     'Vulkan.Core10.FundamentalTypes.Extent2D' structure
 --
 -- -   @renderPass@ /must/ have been created, allocated, or retrieved from
 --     @device@
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.Handles.Device',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Handles.RenderPass'
 getRenderAreaGranularity :: forall io
                           . (MonadIO io)
@@ -1913,8 +1948,8 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' to define
 -- the number of samples used in rasterization; however, if
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures'::@variableMultisampleRate@
--- is 'Vulkan.Core10.BaseType.FALSE', then all pipelines to be bound with
--- the subpass /must/ have the same value for
+-- is 'Vulkan.Core10.FundamentalTypes.FALSE', then all pipelines to be
+-- bound with the subpass /must/ have the same value for
 -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
 --
 -- == Valid Usage

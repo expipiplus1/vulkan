@@ -1,5 +1,6 @@
 {-# language CPP #-}
 module Vulkan.Core10.ImageView  ( ComponentMapping
+                                , ImageSubresourceRange
                                 , ImageViewCreateInfo
                                 ) where
 
@@ -16,6 +17,14 @@ instance ToCStruct ComponentMapping
 instance Show ComponentMapping
 
 instance FromCStruct ComponentMapping
+
+
+data ImageSubresourceRange
+
+instance ToCStruct ImageSubresourceRange
+instance Show ImageSubresourceRange
+
+instance FromCStruct ImageSubresourceRange
 
 
 type role ImageViewCreateInfo nominal

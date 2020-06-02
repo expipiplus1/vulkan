@@ -55,7 +55,7 @@ import Data.Word (Word32)
 import Data.Word (Word64)
 import Vulkan.Core10.Enums.ObjectType (ObjectType)
 import Vulkan.Zero (Zero(..))
-import Vulkan.Core10.BaseType (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Enums.PipelineCacheHeaderVersion (PipelineCacheHeaderVersion(..))
 -- No documentation found for TopLevel "VK_LOD_CLAMP_NONE"
 pattern LOD_CLAMP_NONE :: Float

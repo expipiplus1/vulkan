@@ -183,8 +183,8 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
@@ -193,7 +193,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Extensions.Handles (AccelerationStructureKHR)
 import Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.CStruct.Extends (Chain)
@@ -203,7 +203,7 @@ import Vulkan.Core10.Handles (CommandBuffer_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_deferred_host_operations (DeferredOperationInfoKHR)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
-import Vulkan.Core10.BaseType (DeviceAddress)
+import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkBindAccelerationStructureMemoryKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkBuildAccelerationStructureKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBuildAccelerationStructureIndirectKHR))
@@ -227,12 +227,12 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetRayTracingCaptureReplayShaderGroupHandle
 import Vulkan.Dynamic (DeviceCmds(pVkGetRayTracingShaderGroupHandlesKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkWriteAccelerationStructuresPropertiesKHR))
 import Vulkan.Core10.Handles (DeviceMemory)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -264,7 +264,7 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
-import Vulkan.Core10.BaseType (Bool32(FALSE))
+import Vulkan.Core10.FundamentalTypes (Bool32(FALSE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR))
@@ -495,6 +495,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -705,6 +707,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -904,6 +908,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -1090,6 +1096,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -1180,20 +1188,22 @@ foreign import ccall
 -- -   If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR',
 --     then @stride@ /must/ be a multiple of the size of
---     'Vulkan.Core10.BaseType.DeviceSize'
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
 -- -   If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR',
---     then @data@ /must/ point to a 'Vulkan.Core10.BaseType.DeviceSize'
+--     then @data@ /must/ point to a
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
 -- -   If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR',
 --     then @stride@ /must/ be a multiple of the size of
---     'Vulkan.Core10.BaseType.DeviceSize'
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
 -- -   If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR',
---     then @data@ /must/ point to a 'Vulkan.Core10.BaseType.DeviceSize'
+--     then @data@ /must/ point to a
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
 -- -   @dataSize@ /must/ be greater than or equal to
 --     @accelerationStructureCount@*@stride@
@@ -1615,6 +1625,8 @@ foreign import ccall
 -- -   This command /must/ only be called outside of a render pass instance
 --
 -- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
@@ -2294,6 +2306,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -2311,7 +2325,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize', 'StridedBufferRegionKHR'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'StridedBufferRegionKHR'
 cmdTraceRaysIndirectKHR :: forall io
                          . (MonadIO io)
                         => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -2589,14 +2603,16 @@ foreign import ccall
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
 --     both 0 or both non-zero, and all other parameters are the same
 --
--- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
---     then objects that were previously active for that acceleration
---     structure /must/ not be made inactive as per
+-- -   For each @pInfos@[i], if @update@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
+--     previously active for that acceleration structure /must/ not be made
+--     inactive as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
---     then objects that were previously inactive for that acceleration
---     structure /must/ not be made active as per
+-- -   For each @pInfos@[i], if @update@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
+--     previously inactive for that acceleration structure /must/ not be
+--     made active as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
 -- -   Any acceleration structure instance in any top level build in this
@@ -2614,9 +2630,9 @@ foreign import ccall
 --     between memory bound to any top level, bottom level, or instance
 --     acceleration structure accessed by this command
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.FALSE', all addresses between
---     @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N - 1
---     /must/ be in the buffer device address range of the same buffer,
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.FALSE', all addresses
+--     between @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N
+--     - 1 /must/ be in the buffer device address range of the same buffer,
 --     where N is given by the @size@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
@@ -2626,9 +2642,9 @@ foreign import ccall
 --     'AccelerationStructureMemoryRequirementsInfoKHR'::@type@ set to
 --     'ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_KHR'
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', all addresses between
---     @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N - 1
---     /must/ be in the buffer device address range of the same buffer,
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', all addresses
+--     between @pInfos@[i].@scratchData@ and @pInfos@[i].@scratchData@ + N
+--     - 1 /must/ be in the buffer device address range of the same buffer,
 --     where N is given by the @size@ member of the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
 --     returned from a call to
@@ -2679,6 +2695,8 @@ foreign import ccall
 -- -   @infoCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
@@ -2789,6 +2807,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -2807,7 +2827,7 @@ foreign import ccall
 --
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBuildAccelerationStructureIndirectKHR :: forall a io
                                           . (Extendss AccelerationStructureBuildGeometryInfoKHR a, PokeChain a, MonadIO io)
                                          => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -2921,14 +2941,16 @@ foreign import ccall
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@ is
 --     both 0 or both non-zero, and all other parameters are the same
 --
--- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
---     then objects that were previously active for that acceleration
---     structure /must/ not be made inactive as per
+-- -   For each @pInfos@[i], if @update@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
+--     previously active for that acceleration structure /must/ not be made
+--     inactive as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
--- -   For each @pInfos@[i], if @update@ is 'Vulkan.Core10.BaseType.TRUE',
---     then objects that were previously inactive for that acceleration
---     structure /must/ not be made active as per
+-- -   For each @pInfos@[i], if @update@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then objects that were
+--     previously inactive for that acceleration structure /must/ not be
+--     made active as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims ???>
 --
 -- -   Any acceleration structure instance in any top level build in this
@@ -3118,15 +3140,15 @@ getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
 --
 -- -   If
 --     'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplayMixed@
---     is 'Vulkan.Core10.BaseType.FALSE' then
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE' then
 --     @pShaderGroupCaptureReplayHandle@ /must/ not be provided if it has
 --     not been provided on a previous call to ray tracing pipeline
 --     creation
 --
 -- -   If
 --     'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplayMixed@
---     is 'Vulkan.Core10.BaseType.FALSE' then the caller /must/ guarantee
---     that no ray tracing pipeline creation commands with
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE' then the caller /must/
+--     guarantee that no ray tracing pipeline creation commands with
 --     @pShaderGroupCaptureReplayHandle@ provided execute simultaneously
 --     with ray tracing pipeline creation commands without
 --     @pShaderGroupCaptureReplayHandle@ provided
@@ -3176,7 +3198,7 @@ data RayTracingShaderGroupCreateInfoKHR = RayTracingShaderGroupCreateInfoKHR
   , -- | @pShaderGroupCaptureReplayHandle@ is an optional pointer to replay
     -- information for this shader group. Ignored if
     -- 'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingShaderGroupHandleCaptureReplay@
-    -- is 'Vulkan.Core10.BaseType.FALSE'.
+    -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     shaderGroupCaptureReplayHandle :: Ptr ()
   }
   deriving (Typeable)
@@ -3622,7 +3644,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'bindAccelerationStructureMemoryKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.bindAccelerationStructureMemoryNV'
@@ -3866,9 +3888,9 @@ instance Zero AccelerationStructureMemoryRequirementsInfoKHR where
 -- -   @rayTracingShaderGroupHandleCaptureReplayMixed@ indicates whether
 --     the implementation supports reuse of shader group handles being
 --     arbitrarily mixed with creation of non-reused shader group handles.
---     If this is 'Vulkan.Core10.BaseType.FALSE', all reused shader group
---     handles /must/ be specified before any non-reused handles /may/ be
---     created.
+--     If this is 'Vulkan.Core10.FundamentalTypes.FALSE', all reused shader
+--     group handles /must/ be specified before any non-reused handles
+--     /may/ be created.
 --
 -- -   @rayTracingAccelerationStructureCaptureReplay@ indicates whether the
 --     implementation supports saving and reusing acceleration structure
@@ -3907,9 +3929,9 @@ instance Zero AccelerationStructureMemoryRequirementsInfoKHR where
 -- == Valid Usage
 --
 -- -   If @rayTracingShaderGroupHandleCaptureReplayMixed@ is
---     'Vulkan.Core10.BaseType.TRUE',
+--     'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @rayTracingShaderGroupHandleCaptureReplay@ /must/ also be
---     'Vulkan.Core10.BaseType.TRUE'
+--     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -3918,7 +3940,7 @@ instance Zero AccelerationStructureMemoryRequirementsInfoKHR where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingFeaturesKHR = PhysicalDeviceRayTracingFeaturesKHR
   { -- No documentation found for Nested "VkPhysicalDeviceRayTracingFeaturesKHR" "rayTracing"
@@ -4145,8 +4167,9 @@ instance Zero PhysicalDeviceRayTracingPropertiesKHR where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.BaseType.DeviceSize',
--- 'cmdTraceRaysIndirectKHR', 'cmdTraceRaysKHR'
+-- 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'cmdTraceRaysIndirectKHR',
+-- 'cmdTraceRaysKHR'
 data StridedBufferRegionKHR = StridedBufferRegionKHR
   { -- | @buffer@ is the buffer containing this region.
     buffer :: Buffer
@@ -4301,7 +4324,7 @@ instance Zero TraceRaysIndirectCommandKHR where
 -- = See Also
 --
 -- 'AccelerationStructureGeometryDataKHR', 'DeviceOrHostAddressConstKHR',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -4373,7 +4396,7 @@ instance Zero AccelerationStructureGeometryTrianglesDataKHR where
 -- = See Also
 --
 -- 'AccelerationStructureGeometryDataKHR', 'DeviceOrHostAddressConstKHR',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AccelerationStructureGeometryAabbsDataKHR = AccelerationStructureGeometryAabbsDataKHR
   { -- | @data@ is a device or host address to memory containing
@@ -4439,8 +4462,8 @@ instance Zero AccelerationStructureGeometryAabbsDataKHR where
 --
 -- = See Also
 --
--- 'AccelerationStructureGeometryDataKHR', 'Vulkan.Core10.BaseType.Bool32',
--- 'DeviceOrHostAddressConstKHR',
+-- 'AccelerationStructureGeometryDataKHR',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AccelerationStructureGeometryInstancesDataKHR = AccelerationStructureGeometryInstancesDataKHR
   { -- | @arrayOfPointers@ specifies whether @data@ is used as an array of
@@ -4448,8 +4471,8 @@ data AccelerationStructureGeometryInstancesDataKHR = AccelerationStructureGeomet
     arrayOfPointers :: Bool
   , -- | @data@ is either the address of an array of device or host addresses
     -- referencing individual 'AccelerationStructureInstanceKHR' structures if
-    -- @arrayOfPointers@ is 'Vulkan.Core10.BaseType.TRUE', or the address of an
-    -- array of 'AccelerationStructureInstanceKHR' structures.
+    -- @arrayOfPointers@ is 'Vulkan.Core10.FundamentalTypes.TRUE', or the
+    -- address of an array of 'AccelerationStructureInstanceKHR' structures.
     data' :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
@@ -4507,8 +4530,17 @@ instance Zero AccelerationStructureGeometryInstancesDataKHR where
 --
 -- -   @geometryType@ /must/ be a valid 'GeometryTypeKHR' value
 --
--- -   @geometry@ /must/ be a valid 'AccelerationStructureGeometryDataKHR'
---     union
+-- -   If @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', the @triangles@
+--     member of @geometry@ /must/ be a valid
+--     'AccelerationStructureGeometryTrianglesDataKHR' structure
+--
+-- -   If @geometryType@ is 'GEOMETRY_TYPE_AABBS_KHR', the @aabbs@ member
+--     of @geometry@ /must/ be a valid
+--     'AccelerationStructureGeometryAabbsDataKHR' structure
+--
+-- -   If @geometryType@ is 'GEOMETRY_TYPE_INSTANCES_KHR', the @instances@
+--     member of @geometry@ /must/ be a valid
+--     'AccelerationStructureGeometryInstancesDataKHR' structure
 --
 -- -   @flags@ /must/ be a valid combination of 'GeometryFlagBitsKHR'
 --     values
@@ -4578,11 +4610,11 @@ instance Zero AccelerationStructureGeometryKHR where
 --
 -- == Valid Usage
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE',
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @srcAccelerationStructure@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE',
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @srcAccelerationStructure@ /must/ have been built before with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
 --     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
@@ -4591,7 +4623,7 @@ instance Zero AccelerationStructureGeometryKHR where
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RAY_TRACING_BIT_KHR'
 --     usage flag
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', the
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
 --     @srcAccelerationStructure@ and @dstAccelerationStructure@ objects
 --     /must/ either be the same object or not have any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
@@ -4631,7 +4663,7 @@ instance Zero AccelerationStructureGeometryKHR where
 --
 -- 'AccelerationStructureGeometryKHR',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
--- 'AccelerationStructureTypeKHR', 'Vulkan.Core10.BaseType.Bool32',
+-- 'AccelerationStructureTypeKHR', 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'BuildAccelerationStructureFlagsKHR', 'DeviceOrHostAddressKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'buildAccelerationStructureKHR',
@@ -4651,18 +4683,18 @@ data AccelerationStructureBuildGeometryInfoKHR (es :: [Type]) = AccelerationStru
     update :: Bool
   , -- | @srcAccelerationStructure@ points to an existing acceleration structure
     -- that is to be used to update the @dst@ acceleration structure when
-    -- @update@ is 'Vulkan.Core10.BaseType.TRUE'.
+    -- @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE'.
     srcAccelerationStructure :: AccelerationStructureKHR
   , -- | @dstAccelerationStructure@ points to the target acceleration structure
     -- for the build.
     dstAccelerationStructure :: AccelerationStructureKHR
   , -- | @ppGeometries@ is either a pointer to an array of pointers to
     -- 'AccelerationStructureGeometryKHR' structures if
-    -- @geometryArrayOfPointers@ is 'Vulkan.Core10.BaseType.TRUE', or a pointer
-    -- to a pointer to an array of 'AccelerationStructureGeometryKHR'
-    -- structures if it is 'Vulkan.Core10.BaseType.FALSE'. Each element of the
-    -- array describes the data used to build each acceleration structure
-    -- geometry.
+    -- @geometryArrayOfPointers@ is 'Vulkan.Core10.FundamentalTypes.TRUE', or a
+    -- pointer to a pointer to an array of 'AccelerationStructureGeometryKHR'
+    -- structures if it is 'Vulkan.Core10.FundamentalTypes.FALSE'. Each element
+    -- of the array describes the data used to build each acceleration
+    -- structure geometry.
     geometries :: Vector AccelerationStructureGeometryKHR
   , -- | @scratchData@ is the device or host address to memory that will be used
     -- as scratch memory for the build.
@@ -4908,7 +4940,8 @@ instance Zero AccelerationStructureBuildOffsetInfoKHR where
 --
 -- = See Also
 --
--- 'AccelerationStructureCreateInfoKHR', 'Vulkan.Core10.BaseType.Bool32',
+-- 'AccelerationStructureCreateInfoKHR',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.Format.Format', 'GeometryTypeKHR',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -5054,7 +5087,7 @@ instance Zero AccelerationStructureCreateGeometryTypeInfoKHR where
 --
 -- -   If @deviceAddress@ is not @0@,
 --     'PhysicalDeviceRayTracingFeaturesKHR'::@rayTracingAccelerationStructureCaptureReplay@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -5076,8 +5109,8 @@ instance Zero AccelerationStructureCreateGeometryTypeInfoKHR where
 --
 -- 'AccelerationStructureCreateGeometryTypeInfoKHR',
 -- 'AccelerationStructureTypeKHR', 'BuildAccelerationStructureFlagsKHR',
--- 'Vulkan.Core10.BaseType.DeviceAddress',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAccelerationStructureKHR'
 data AccelerationStructureCreateInfoKHR = AccelerationStructureCreateInfoKHR
@@ -6104,7 +6137,8 @@ newtype BuildAccelerationStructureFlagBitsKHR = BuildAccelerationStructureFlagBi
 
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' indicates that the
 -- specified acceleration structure /can/ be updated with @update@ of
--- 'Vulkan.Core10.BaseType.TRUE' in 'cmdBuildAccelerationStructureKHR' or
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' in
+-- 'cmdBuildAccelerationStructureKHR' or
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV' .
 pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000001
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' indicates that

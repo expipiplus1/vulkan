@@ -33,7 +33,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
@@ -41,7 +41,7 @@ import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
-import Vulkan.Core10.SharedTypes (ImageSubresourceRange)
+import Vulkan.Core10.ImageView (ImageSubresourceRange)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -247,7 +247,8 @@ instance Zero MemoryBarrier where
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'
@@ -612,14 +613,14 @@ instance Zero BufferMemoryBarrier where
 -- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
 --
 -- -   @subresourceRange@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structure
+--     'Vulkan.Core10.ImageView.ImageSubresourceRange' structure
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange',
+-- 'Vulkan.Core10.ImageView.ImageSubresourceRange',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'

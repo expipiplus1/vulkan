@@ -101,7 +101,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
@@ -118,7 +118,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkQueueInsertDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkSetDebugUtilsObjectNameEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkSetDebugUtilsObjectTagEXT))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -427,6 +427,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -514,6 +516,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -570,6 +574,8 @@ foreign import ccall
 --     allocated from /must/ support graphics, or compute operations
 --
 -- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
@@ -1549,10 +1555,11 @@ type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT 
 --
 -- The callback /must/ not call 'destroyDebugUtilsMessengerEXT'.
 --
--- The callback returns a 'Vulkan.Core10.BaseType.Bool32', which is
+-- The callback returns a 'Vulkan.Core10.FundamentalTypes.Bool32', which is
 -- interpreted in a layer-specified manner. The application /should/ always
--- return 'Vulkan.Core10.BaseType.FALSE'. The 'Vulkan.Core10.BaseType.TRUE'
--- value is reserved for use in layer development.
+-- return 'Vulkan.Core10.FundamentalTypes.FALSE'. The
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' value is reserved for use in layer
+-- development.
 --
 -- = See Also
 --

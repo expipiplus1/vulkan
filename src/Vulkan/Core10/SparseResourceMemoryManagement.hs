@@ -4,12 +4,19 @@ module Vulkan.Core10.SparseResourceMemoryManagement  ( getImageSparseMemoryRequi
                                                      , queueBindSparse
                                                      , SparseImageFormatProperties(..)
                                                      , SparseImageMemoryRequirements(..)
+                                                     , ImageSubresource(..)
                                                      , SparseMemoryBind(..)
                                                      , SparseImageMemoryBind(..)
                                                      , SparseBufferMemoryBindInfo(..)
                                                      , SparseImageOpaqueMemoryBindInfo(..)
                                                      , SparseImageMemoryBindInfo(..)
                                                      , BindSparseInfo(..)
+                                                     , ImageAspectFlagBits(..)
+                                                     , ImageAspectFlags
+                                                     , SparseImageFormatFlagBits(..)
+                                                     , SparseImageFormatFlags
+                                                     , SparseMemoryBindFlagBits(..)
+                                                     , SparseMemoryBindFlags
                                                      ) where
 
 import Control.Exception.Base (bracket)
@@ -58,12 +65,12 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetImageSparseMemoryRequirements))
 import Vulkan.Dynamic (DeviceCmds(pVkQueueBindSparse))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupBindSparseInfo)
 import Vulkan.Core10.Handles (DeviceMemory)
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.SharedTypes (Extent3D)
+import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
 import Vulkan.Core10.Enums.Format (Format)
@@ -73,7 +80,6 @@ import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
-import Vulkan.Core10.Image (ImageSubresource)
 import Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import Vulkan.Core10.Enums.ImageTiling (ImageTiling(..))
 import Vulkan.Core10.Enums.ImageType (ImageType)
@@ -81,7 +87,7 @@ import Vulkan.Core10.Enums.ImageType (ImageType(..))
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(..))
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSparseImageFormatProperties))
-import Vulkan.Core10.SharedTypes (Offset3D)
+import Vulkan.Core10.FundamentalTypes (Offset3D)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
@@ -108,6 +114,12 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BIND_SPARSE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlagBits(..))
+import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
+import Vulkan.Core10.Enums.SparseImageFormatFlagBits (SparseImageFormatFlagBits(..))
+import Vulkan.Core10.Enums.SparseImageFormatFlagBits (SparseImageFormatFlags)
+import Vulkan.Core10.Enums.SparseMemoryBindFlagBits (SparseMemoryBindFlagBits(..))
+import Vulkan.Core10.Enums.SparseMemoryBindFlagBits (SparseMemoryBindFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -462,7 +474,7 @@ queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent3D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.Enums.SparseImageFormatFlagBits.SparseImageFormatFlags',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.SparseImageFormatProperties2',
@@ -520,7 +532,8 @@ instance Zero SparseImageFormatProperties where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize', 'SparseImageFormatProperties',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'SparseImageFormatProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.SparseImageMemoryRequirements2',
 -- 'getImageSparseMemoryRequirements'
 data SparseImageMemoryRequirements = SparseImageMemoryRequirements
@@ -584,6 +597,71 @@ instance Zero SparseImageMemoryRequirements where
   zero = SparseImageMemoryRequirements
            zero
            zero
+           zero
+           zero
+           zero
+
+
+-- | VkImageSubresource - Structure specifying an image subresource
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
+-- 'SparseImageMemoryBind', 'Vulkan.Core10.Image.getImageSubresourceLayout'
+data ImageSubresource = ImageSubresource
+  { -- | @aspectMask@ is a
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' selecting the
+    -- image /aspect/.
+    --
+    -- @aspectMask@ /must/ be a valid combination of
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
+    --
+    -- @aspectMask@ /must/ not be @0@
+    aspectMask :: ImageAspectFlags
+  , -- | @mipLevel@ selects the mipmap level.
+    mipLevel :: Word32
+  , -- | @arrayLayer@ selects the array layer.
+    arrayLayer :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSubresource)
+#endif
+deriving instance Show ImageSubresource
+
+instance ToCStruct ImageSubresource where
+  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ImageSubresource{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (mipLevel)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (arrayLayer)
+    f
+  cStructSize = 12
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct ImageSubresource where
+  peekCStruct p = do
+    aspectMask <- peek @ImageAspectFlags ((p `plusPtr` 0 :: Ptr ImageAspectFlags))
+    mipLevel <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
+    arrayLayer <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    pure $ ImageSubresource
+             aspectMask mipLevel arrayLayer
+
+instance Storable ImageSubresource where
+  sizeOf ~_ = 12
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ImageSubresource where
+  zero = ImageSubresource
            zero
            zero
            zero
@@ -671,8 +749,8 @@ instance Zero SparseImageMemoryRequirements where
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize', 'SparseBufferMemoryBindInfo',
--- 'SparseImageOpaqueMemoryBindInfo',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'SparseBufferMemoryBindInfo', 'SparseImageOpaqueMemoryBindInfo',
 -- 'Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SparseMemoryBindFlags'
 data SparseMemoryBind = SparseMemoryBind
   { -- | @resourceOffset@ is the offset into the resource.
@@ -796,8 +874,7 @@ instance Zero SparseMemoryBind where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @subresource@ /must/ be a valid
---     'Vulkan.Core10.Image.ImageSubresource' structure
+-- -   @subresource@ /must/ be a valid 'ImageSubresource' structure
 --
 -- -   If @memory@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
@@ -810,10 +887,9 @@ instance Zero SparseMemoryBind where
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.DeviceMemory',
--- 'Vulkan.Core10.BaseType.DeviceSize',
--- 'Vulkan.Core10.SharedTypes.Extent3D',
--- 'Vulkan.Core10.Image.ImageSubresource',
--- 'Vulkan.Core10.SharedTypes.Offset3D', 'SparseImageMemoryBindInfo',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresource',
+-- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'SparseImageMemoryBindInfo',
 -- 'Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SparseMemoryBindFlags'
 data SparseImageMemoryBind = SparseImageMemoryBind
   { -- | @subresource@ is the image /aspect/ and region of interest in the image.

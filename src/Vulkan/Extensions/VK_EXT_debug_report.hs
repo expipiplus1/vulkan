@@ -110,10 +110,10 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Extensions.Handles (DebugReportCallbackEXT)
 import Vulkan.Extensions.Handles (DebugReportCallbackEXT(..))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -802,10 +802,11 @@ type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeE
 --
 -- The callback /must/ not call 'destroyDebugReportCallbackEXT'.
 --
--- The callback returns a 'Vulkan.Core10.BaseType.Bool32', which is
+-- The callback returns a 'Vulkan.Core10.FundamentalTypes.Bool32', which is
 -- interpreted in a layer-specified manner. The application /should/ always
--- return 'Vulkan.Core10.BaseType.FALSE'. The 'Vulkan.Core10.BaseType.TRUE'
--- value is reserved for use in layer development.
+-- return 'Vulkan.Core10.FundamentalTypes.FALSE'. The
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' value is reserved for use in layer
+-- development.
 --
 -- @object@ /must/ be a Vulkan object or
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE'. If @objectType@ is not

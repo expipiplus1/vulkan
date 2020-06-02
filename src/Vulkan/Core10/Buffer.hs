@@ -3,6 +3,12 @@ module Vulkan.Core10.Buffer  ( createBuffer
                              , withBuffer
                              , destroyBuffer
                              , BufferCreateInfo(..)
+                             , Buffer(..)
+                             , SharingMode(..)
+                             , BufferUsageFlagBits(..)
+                             , BufferUsageFlags
+                             , BufferCreateFlagBits(..)
+                             , BufferCreateFlags
                              ) where
 
 import Control.Exception.Base (bracket)
@@ -53,7 +59,7 @@ import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateBuffer))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBuffer))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -76,6 +82,12 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (Buffer(..))
+import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlagBits(..))
+import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
+import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlagBits(..))
+import Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
+import Vulkan.Core10.Enums.SharingMode (SharingMode(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -309,8 +321,8 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'
 --     structure, and the @dedicatedAllocation@ member of the chained
---     structure is 'Vulkan.Core10.BaseType.TRUE', then @flags@ /must/ not
---     include
+--     structure is 'Vulkan.Core10.FundamentalTypes.TRUE', then @flags@
+--     /must/ not include
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
 --     or
@@ -367,7 +379,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createBuffer'
 data BufferCreateInfo (es :: [Type]) = BufferCreateInfo

@@ -107,6 +107,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                             , GeometryTypeKHR(..)
                                             , AccelerationStructureMemoryRequirementsTypeKHR(..)
                                             , RayTracingShaderGroupTypeKHR(..)
+                                            , MemoryRequirements2KHR
                                             , SHADER_UNUSED_KHR
                                             , pattern SHADER_UNUSED_KHR
                                             ) where
@@ -153,7 +154,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Extensions.VK_KHR_ray_tracing (bindAccelerationStructureMemoryKHR)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Extensions.VK_KHR_ray_tracing (cmdWriteAccelerationStructuresPropertiesKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (destroyAccelerationStructureKHR)
 import Vulkan.CStruct.Extends (forgetExtensions)
@@ -169,8 +170,8 @@ import Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureMemoryRequirem
 import Vulkan.Extensions.VK_KHR_ray_tracing (AccelerationStructureTypeKHR)
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Extensions.VK_KHR_ray_tracing (BindAccelerationStructureMemoryInfoKHR)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing (BuildAccelerationStructureFlagBitsKHR)
@@ -191,7 +192,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateAccelerationStructureNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateRayTracingPipelinesNV))
 import Vulkan.Dynamic (DeviceCmds(pVkGetAccelerationStructureHandleNV))
 import Vulkan.Dynamic (DeviceCmds(pVkGetAccelerationStructureMemoryRequirementsNV))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -205,7 +206,7 @@ import Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (GeometryTypeKHR)
 import Vulkan.Core10.Enums.IndexType (IndexType)
-import Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR)
+import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (Pipeline)
@@ -323,6 +324,7 @@ import Vulkan.Extensions.VK_KHR_ray_tracing (GeometryFlagsKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagBitsKHR(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing (GeometryInstanceFlagsKHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (GeometryTypeKHR(..))
+import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingShaderGroupTypeKHR(..))
 import Vulkan.Core10.APIConstants (SHADER_UNUSED_KHR)
 import Vulkan.Extensions.VK_KHR_ray_tracing (TransformMatrixKHR(..))
@@ -478,7 +480,7 @@ foreign import ccall
 --
 -- 'AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Vulkan.Core10.Handles.Device',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
+-- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
 getAccelerationStructureMemoryRequirementsNV :: forall a io
                                               . (Extendss MemoryRequirements2KHR a, PokeChain a, PeekChain a, MonadIO io)
                                              => -- | @device@ is the logical device on which the acceleration structure was
@@ -554,6 +556,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -620,16 +624,17 @@ foreign import ccall
 --     'AccelerationStructureInfoNV'::@pGeometries@ for @dst@ has greater
 --     than or equal to the number of vertices, indices, and AABBs
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', @src@ /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', @src@ /must/
+--     not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', @src@ /must/ have been
---     built before with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV'
---     set in 'AccelerationStructureInfoNV'::@flags@
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', @src@ /must/
+--     have been built before with
+--     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' set in
+--     'AccelerationStructureInfoNV'::@flags@
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.FALSE', the @size@ member of
---     the 'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
---     returned from a call to
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.FALSE', the @size@
+--     member of the 'Vulkan.Core10.MemoryManagement.MemoryRequirements'
+--     structure returned from a call to
 --     'getAccelerationStructureMemoryRequirementsNV' with
 --     'AccelerationStructureMemoryRequirementsInfoNV'::@accelerationStructure@
 --     set to @dst@ and
@@ -638,9 +643,9 @@ foreign import ccall
 --     /must/ be less than or equal to the size of @scratch@ minus
 --     @scratchOffset@
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', the @size@ member of
---     the 'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
---     returned from a call to
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the @size@
+--     member of the 'Vulkan.Core10.MemoryManagement.MemoryRequirements'
+--     structure returned from a call to
 --     'getAccelerationStructureMemoryRequirementsNV' with
 --     'AccelerationStructureMemoryRequirementsInfoNV'::@accelerationStructure@
 --     set to @dst@ and
@@ -656,16 +661,16 @@ foreign import ccall
 --     @instanceData@ /must/ have been created with
 --     'BUFFER_USAGE_RAY_TRACING_BIT_NV' usage flag
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', then objects that were
---     previously active /must/ not be made inactive as per
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then objects
+--     that were previously active /must/ not be made inactive as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims>
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', then objects that were
---     previously inactive /must/ not be made active as per
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then objects
+--     that were previously inactive /must/ not be made active as per
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims>
 --
--- -   If @update@ is 'Vulkan.Core10.BaseType.TRUE', the @src@ and @dst@
---     objects /must/ either be the same object or not have any
+-- -   If @update@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the @src@ and
+--     @dst@ objects /must/ either be the same object or not have any
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
 --
 -- == Valid Usage (Implicit)
@@ -704,6 +709,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -722,9 +729,9 @@ foreign import ccall
 --
 -- 'AccelerationStructureInfoNV',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBuildAccelerationStructureNV :: forall io
                                  . (MonadIO io)
                                 => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -1043,6 +1050,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -1060,7 +1069,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdTraceRaysNV :: forall io
                 . (MonadIO io)
                => -- | @commandBuffer@ is the command buffer into which the command will be
@@ -1932,7 +1941,8 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoNV es) where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.Format.Format', 'GeometryDataNV',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -2069,8 +2079,9 @@ instance Zero GeometryTrianglesNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.BaseType.DeviceSize',
--- 'GeometryDataNV', 'Vulkan.Core10.Enums.StructureType.StructureType'
+-- 'Vulkan.Core10.Handles.Buffer',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'GeometryDataNV',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data GeometryAABBNV = GeometryAABBNV
   { -- | @aabbData@ is the buffer containing axis-aligned bounding box data.
     aabbData :: Buffer
@@ -2310,7 +2321,8 @@ instance Zero GeometryNV where
 --
 -- -   @type@ /must/ be a valid 'AccelerationStructureTypeNV' value
 --
--- -   @flags@ /must/ be @0@
+-- -   @flags@ /must/ be a valid combination of
+--     'BuildAccelerationStructureFlagBitsNV' values
 --
 -- -   If @geometryCount@ is not @0@, @pGeometries@ /must/ be a valid
 --     pointer to an array of @geometryCount@ valid 'GeometryNV' structures
@@ -2404,7 +2416,8 @@ instance Zero AccelerationStructureInfoNV where
 --
 -- = See Also
 --
--- 'AccelerationStructureInfoNV', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'AccelerationStructureInfoNV',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAccelerationStructureNV'
 data AccelerationStructureCreateInfoNV = AccelerationStructureCreateInfoNV

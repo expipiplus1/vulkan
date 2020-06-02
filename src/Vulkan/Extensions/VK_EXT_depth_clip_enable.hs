@@ -32,10 +32,10 @@ import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -67,7 +67,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFeaturesEXT
   { -- | @depthClipEnable@ indicates that the implementation supports setting the
@@ -75,7 +75,7 @@ data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFea
     -- 'PipelineRasterizationDepthClipStateCreateInfoEXT' pipeline state.
     -- Otherwise depth clipping is only enabled when
     -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthClampEnable@
-    -- is set to 'Vulkan.Core10.BaseType.FALSE'.
+    -- is set to 'Vulkan.Core10.FundamentalTypes.FALSE'.
     depthClipEnable :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -122,7 +122,7 @@ instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'PipelineRasterizationDepthClipStateCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDepthClipStateCreateInfoEXT

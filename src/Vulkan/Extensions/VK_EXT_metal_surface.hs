@@ -6,8 +6,8 @@ module Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
                                                , pattern EXT_METAL_SURFACE_SPEC_VERSION
                                                , EXT_METAL_SURFACE_EXTENSION_NAME
                                                , pattern EXT_METAL_SURFACE_EXTENSION_NAME
-                                               , SurfaceKHR(..)
                                                , CAMetalLayer
+                                               , SurfaceKHR(..)
                                                ) where
 
 import Control.Exception.Base (bracket)
@@ -51,8 +51,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Extensions.WSITypes (CAMetalLayer)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -71,7 +70,6 @@ import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (CAMetalLayer)
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -158,8 +156,8 @@ data MetalSurfaceCreateInfoEXT = MetalSurfaceCreateInfoEXT
     --
     -- @flags@ /must/ be @0@
     flags :: MetalSurfaceCreateFlagsEXT
-  , -- | @pLayer@ is a reference to a 'Vulkan.Extensions.WSITypes.CAMetalLayer'
-    -- object representing a renderable surface.
+  , -- | @pLayer@ is a reference to a 'CAMetalLayer' object representing a
+    -- renderable surface.
     layer :: Ptr CAMetalLayer
   }
   deriving (Typeable, Eq)
@@ -234,4 +232,7 @@ type EXT_METAL_SURFACE_EXTENSION_NAME = "VK_EXT_metal_surface"
 -- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_EXTENSION_NAME"
 pattern EXT_METAL_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern EXT_METAL_SURFACE_EXTENSION_NAME = "VK_EXT_metal_surface"
+
+
+data CAMetalLayer
 

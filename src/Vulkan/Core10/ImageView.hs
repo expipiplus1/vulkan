@@ -3,7 +3,13 @@ module Vulkan.Core10.ImageView  ( createImageView
                                 , withImageView
                                 , destroyImageView
                                 , ComponentMapping(..)
+                                , ImageSubresourceRange(..)
                                 , ImageViewCreateInfo(..)
+                                , ImageView(..)
+                                , ImageViewType(..)
+                                , ComponentSwizzle(..)
+                                , ImageViewCreateFlagBits(..)
+                                , ImageViewCreateFlags
                                 ) where
 
 import Control.Exception.Base (bracket)
@@ -33,6 +39,7 @@ import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.CStruct.Extends (forgetExtensions)
@@ -52,7 +59,7 @@ import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Image)
-import Vulkan.Core10.SharedTypes (ImageSubresourceRange)
+import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
 import Vulkan.Core10.Handles (ImageView)
 import Vulkan.Core10.Handles (ImageView(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_astc_decode_mode (ImageViewASTCDecodeModeEXT)
@@ -74,6 +81,11 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.ComponentSwizzle (ComponentSwizzle(..))
+import Vulkan.Core10.Handles (ImageView(..))
+import Vulkan.Core10.Enums.ImageViewCreateFlagBits (ImageViewCreateFlagBits(..))
+import Vulkan.Core10.Enums.ImageViewCreateFlagBits (ImageViewCreateFlags)
+import Vulkan.Core10.Enums.ImageViewType (ImageViewType(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -302,6 +314,189 @@ instance Storable ComponentMapping where
 
 instance Zero ComponentMapping where
   zero = ComponentMapping
+           zero
+           zero
+           zero
+           zero
+
+
+-- | VkImageSubresourceRange - Structure specifying an image subresource
+-- range
+--
+-- = Description
+--
+-- The number of mipmap levels and array layers /must/ be a subset of the
+-- image subresources in the image. If an application wants to use all mip
+-- levels or layers in an image after the @baseMipLevel@ or
+-- @baseArrayLayer@, it /can/ set @levelCount@ and @layerCount@ to the
+-- special values 'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS' and
+-- 'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS' without knowing the
+-- exact number of mip levels or layers.
+--
+-- For cube and cube array image views, the layers of the image view
+-- starting at @baseArrayLayer@ correspond to faces in the order +X, -X,
+-- +Y, -Y, +Z, -Z. For cube arrays, each set of six sequential layers is a
+-- single cube, so the number of cube maps in a cube map array view is
+-- /@layerCount@ \/ 6/, and image array layer (@baseArrayLayer@ + i) is
+-- face index (i mod 6) of cube /i \/ 6/. If the number of layers in the
+-- view, whether set explicitly in @layerCount@ or implied by
+-- 'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', is not a multiple
+-- of 6, the last cube map in the array /must/ not be accessed.
+--
+-- @aspectMask@ /must/ be only
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT' if
+-- @format@ is a color, depth-only or stencil-only format, respectively,
+-- except if @format@ is a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+-- If using a depth\/stencil format with both depth and stencil components,
+-- @aspectMask@ /must/ include at least one of
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT', and
+-- /can/ include both.
+--
+-- When the 'ImageSubresourceRange' structure is used to select a subset of
+-- the slices of a 3D image’s mip level in order to create a 2D or 2D array
+-- image view of a 3D image created with
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT',
+-- @baseArrayLayer@ and @layerCount@ specify the first slice index and the
+-- number of slices to include in the created image view. Such an image
+-- view /can/ be used as a framebuffer attachment that refers only to the
+-- specified range of slices of the selected mip level. However, any layout
+-- transitions performed on such an attachment view during a render pass
+-- instance still apply to the entire subresource referenced which includes
+-- all the slices of the selected mip level.
+--
+-- When using an image view of a depth\/stencil image to populate a
+-- descriptor set (e.g. for sampling in the shader, or for use as an input
+-- attachment), the @aspectMask@ /must/ only include one bit and selects
+-- whether the image view is used for depth reads (i.e. using a
+-- floating-point sampler or input attachment in the shader) or stencil
+-- reads (i.e. using an unsigned integer sampler or input attachment in the
+-- shader). When an image view of a depth\/stencil image is used as a
+-- depth\/stencil framebuffer attachment, the @aspectMask@ is ignored and
+-- both depth and stencil image subresources are used.
+--
+-- The 'ComponentMapping' @components@ member describes a remapping from
+-- components of the image to components of the vector returned by shader
+-- image instructions. This remapping /must/ be identity for storage image
+-- descriptors, input attachment descriptors, framebuffer attachments, and
+-- any 'Vulkan.Core10.Handles.ImageView' used with a combined image sampler
+-- that enables
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
+--
+-- When creating a 'Vulkan.Core10.Handles.ImageView', if
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- is enabled in the sampler, the @aspectMask@ of a @subresourceRange@ used
+-- by the 'Vulkan.Core10.Handles.ImageView' /must/ be
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'.
+--
+-- When creating a 'Vulkan.Core10.Handles.ImageView', if sampler Y′CBCR
+-- conversion is not enabled in the sampler and the image @format@ is
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
+-- the image /must/ have been created with
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
+-- and the @aspectMask@ of the 'Vulkan.Core10.Handles.ImageView'’s
+-- @subresourceRange@ /must/ be
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' or
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
+--
+-- == Valid Usage
+--
+-- -   If @levelCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS', it /must/ be
+--     greater than @0@
+--
+-- -   If @layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', it /must/ be
+--     greater than @0@
+--
+-- -   If @aspectMask@ includes
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
+--     then it /must/ not include any of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--
+-- -   @aspectMask@ /must/ not include
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @aspectMask@ /must/ be a valid combination of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
+--
+-- -   @aspectMask@ /must/ not be @0@
+--
+-- = See Also
+--
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
+-- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier', 'ImageViewCreateInfo',
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage',
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdClearDepthStencilImage'
+data ImageSubresourceRange = ImageSubresourceRange
+  { -- | @aspectMask@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' specifying
+    -- which aspect(s) of the image are included in the view.
+    aspectMask :: ImageAspectFlags
+  , -- | @baseMipLevel@ is the first mipmap level accessible to the view.
+    baseMipLevel :: Word32
+  , -- | @levelCount@ is the number of mipmap levels (starting from
+    -- @baseMipLevel@) accessible to the view.
+    levelCount :: Word32
+  , -- | @baseArrayLayer@ is the first array layer accessible to the view.
+    baseArrayLayer :: Word32
+  , -- | @layerCount@ is the number of array layers (starting from
+    -- @baseArrayLayer@) accessible to the view.
+    layerCount :: Word32
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (ImageSubresourceRange)
+#endif
+deriving instance Show ImageSubresourceRange
+
+instance ToCStruct ImageSubresourceRange where
+  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ImageSubresourceRange{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (baseMipLevel)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (levelCount)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (baseArrayLayer)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (layerCount)
+    f
+  cStructSize = 20
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct ImageSubresourceRange where
+  peekCStruct p = do
+    aspectMask <- peek @ImageAspectFlags ((p `plusPtr` 0 :: Ptr ImageAspectFlags))
+    baseMipLevel <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
+    levelCount <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    baseArrayLayer <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
+    layerCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pure $ ImageSubresourceRange
+             aspectMask baseMipLevel levelCount baseArrayLayer layerCount
+
+instance Storable ImageSubresourceRange where
+  sizeOf ~_ = 20
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ImageSubresourceRange where
+  zero = ImageSubresourceRange
+           zero
            zero
            zero
            zero
@@ -874,14 +1069,13 @@ instance Zero ComponentMapping where
 --
 -- -   @components@ /must/ be a valid 'ComponentMapping' structure
 --
--- -   @subresourceRange@ /must/ be a valid
---     'Vulkan.Core10.SharedTypes.ImageSubresourceRange' structure
+-- -   @subresourceRange@ /must/ be a valid 'ImageSubresourceRange'
+--     structure
 --
 -- = See Also
 --
 -- 'ComponentMapping', 'Vulkan.Core10.Enums.Format.Format',
--- 'Vulkan.Core10.Handles.Image',
--- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange',
+-- 'Vulkan.Core10.Handles.Image', 'ImageSubresourceRange',
 -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlags',
 -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createImageView'
@@ -905,8 +1099,7 @@ data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
     -- components (or of depth or stencil components after they have been
     -- converted into color components).
     components :: ComponentMapping
-  , -- | @subresourceRange@ is a
-    -- 'Vulkan.Core10.SharedTypes.ImageSubresourceRange' selecting the set of
+  , -- | @subresourceRange@ is a 'ImageSubresourceRange' selecting the set of
     -- mipmap levels and array layers to be accessible to the view.
     subresourceRange :: ImageSubresourceRange
   }

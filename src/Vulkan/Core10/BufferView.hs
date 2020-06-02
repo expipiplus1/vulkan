@@ -3,6 +3,8 @@ module Vulkan.Core10.BufferView  ( createBufferView
                                  , withBufferView
                                  , destroyBufferView
                                  , BufferViewCreateInfo(..)
+                                 , BufferView(..)
+                                 , BufferViewCreateFlags(..)
                                  ) where
 
 import Control.Exception.Base (bracket)
@@ -41,7 +43,7 @@ import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateBufferView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBufferView))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
@@ -55,6 +57,8 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (BufferView(..))
+import Vulkan.Core10.Enums.BufferViewCreateFlags (BufferViewCreateFlags(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -273,7 +277,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@storageTexelBufferOffsetAlignmentBytes@
 --     or, if
 --     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@storageTexelBufferOffsetSingleTexelAlignment@
---     is 'Vulkan.Core10.BaseType.TRUE', the size of a texel of the
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE', the size of a texel of the
 --     requested @format@. If the size of a texel is a multiple of three
 --     bytes, then the size of a single component of @format@ is used
 --     instead
@@ -287,7 +291,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@uniformTexelBufferOffsetAlignmentBytes@
 --     or, if
 --     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@uniformTexelBufferOffsetSingleTexelAlignment@
---     is 'Vulkan.Core10.BaseType.TRUE', the size of a texel of the
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE', the size of a texel of the
 --     requested @format@. If the size of a texel is a multiple of three
 --     bytes, then the size of a single component of @format@ is used
 --     instead
@@ -309,7 +313,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.BufferViewCreateFlags.BufferViewCreateFlags',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createBufferView'
 data BufferViewCreateInfo = BufferViewCreateInfo

@@ -42,11 +42,11 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -162,7 +162,8 @@ enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'enumeratePhysicalDeviceGroups',
 -- 'Vulkan.Extensions.VK_KHR_device_group_creation.enumeratePhysicalDeviceGroupsKHR'
@@ -179,10 +180,10 @@ data PhysicalDeviceGroupProperties = PhysicalDeviceGroupProperties
     -- group support allocating device memory on a subset of devices, via the
     -- @deviceMask@ member of the
     -- 'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'.
-    -- If this is 'Vulkan.Core10.BaseType.FALSE', then all device memory
-    -- allocations are made across all physical devices in the group. If
+    -- If this is 'Vulkan.Core10.FundamentalTypes.FALSE', then all device
+    -- memory allocations are made across all physical devices in the group. If
     -- @physicalDeviceCount@ is @1@, then @subsetAllocation@ /must/ be
-    -- 'Vulkan.Core10.BaseType.FALSE'.
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE'.
     subsetAllocation :: Bool
   }
   deriving (Typeable)

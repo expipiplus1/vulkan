@@ -4,7 +4,6 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2  ( BufferMemo
                                                                     , ImageSparseMemoryRequirementsInfo2
                                                                     , MemoryRequirements2
                                                                     , SparseImageMemoryRequirements2
-                                                                    , MemoryRequirements2KHR
                                                                     ) where
 
 import Data.Kind (Type)
@@ -54,8 +53,4 @@ instance ToCStruct SparseImageMemoryRequirements2
 instance Show SparseImageMemoryRequirements2
 
 instance FromCStruct SparseImageMemoryRequirements2
-
-
--- No documentation found for TopLevel "VkMemoryRequirements2KHR"
-type MemoryRequirements2KHR = MemoryRequirements2
 

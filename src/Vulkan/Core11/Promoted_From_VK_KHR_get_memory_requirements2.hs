@@ -7,7 +7,6 @@ module Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2  ( getBufferM
                                                                     , ImageSparseMemoryRequirementsInfo2(..)
                                                                     , MemoryRequirements2(..)
                                                                     , SparseImageMemoryRequirements2(..)
-                                                                    , MemoryRequirements2KHR
                                                                     , StructureType(..)
                                                                     ) where
 
@@ -565,8 +564,4 @@ instance FromCStruct SparseImageMemoryRequirements2 where
 instance Zero SparseImageMemoryRequirements2 where
   zero = SparseImageMemoryRequirements2
            zero
-
-
--- No documentation found for TopLevel "VkMemoryRequirements2KHR"
-type MemoryRequirements2KHR = MemoryRequirements2
 

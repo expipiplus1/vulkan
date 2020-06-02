@@ -49,20 +49,20 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSharedSwapchainsKHR))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.CStruct.Extends (SomeStruct)
@@ -221,7 +221,7 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_display.getPhysicalDeviceDisplayPropertiesKHR'
 --     for the display the present operation targets then @persistent@
---     /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -230,8 +230,8 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DisplayPresentInfoKHR = DisplayPresentInfoKHR
   { -- | @srcRect@ is a rectangular region of pixels to present. It /must/ be a
@@ -250,12 +250,12 @@ data DisplayPresentInfoKHR = DisplayPresentInfoKHR
     -- rectangle are outside of the display’s visible region, pixels mapping
     -- only to those portions of the rectangle will be discarded.
     dstRect :: Rect2D
-  , -- | @persistent@: If this is 'Vulkan.Core10.BaseType.TRUE', the display
-    -- engine will enable buffered mode on displays that support it. This
-    -- allows the display engine to stop sending content to the display until a
-    -- new image is presented. The display will instead maintain a copy of the
-    -- last presented image. This allows less power to be used, but /may/
-    -- increase presentation latency. If 'DisplayPresentInfoKHR' is not
+  , -- | @persistent@: If this is 'Vulkan.Core10.FundamentalTypes.TRUE', the
+    -- display engine will enable buffered mode on displays that support it.
+    -- This allows the display engine to stop sending content to the display
+    -- until a new image is presented. The display will instead maintain a copy
+    -- of the last presented image. This allows less power to be used, but
+    -- /may/ increase presentation latency. If 'DisplayPresentInfoKHR' is not
     -- specified, persistent mode will not be used.
     persistent :: Bool
   }

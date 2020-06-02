@@ -96,13 +96,13 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR)
 import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagBitsKHR)
@@ -121,10 +121,10 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_display_swapchain (DisplayPresent
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.SharedTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.Core10.Handles (Fence)
 import Vulkan.Core10.Handles (Fence(..))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -148,7 +148,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PresentTimesIn
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
 import Vulkan.Core10.Handles (Queue_T)
-import Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (Semaphore)
@@ -1111,7 +1111,7 @@ foreign import ccall
 --
 -- -   If the value referenced by @pRectCount@ is not @0@, and @pRects@ is
 --     not @NULL@, @pRects@ /must/ be a valid pointer to an array of
---     @pRectCount@ 'Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
+--     @pRectCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
 -- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
 --     allocated, or retrieved from the same
@@ -1138,7 +1138,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
--- 'Vulkan.Core10.CommandBufferBuilding.Rect2D',
+-- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDevicePresentRectanglesKHR :: forall io
                                        . (MonadIO io)
@@ -1219,28 +1219,29 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     discard rendering operations that affect regions of the surface that
 --     are not visible.
 --
---     -   If set to 'Vulkan.Core10.BaseType.TRUE', the presentable images
---         associated with the swapchain /may/ not own all of their pixels.
---         Pixels in the presentable images that correspond to regions of
---         the target surface obscured by another window on the desktop, or
---         subject to some other clipping mechanism will have undefined
---         content when read back. Fragment shaders /may/ not execute for
---         these pixels, and thus any side effects they would have had will
---         not occur. 'Vulkan.Core10.BaseType.TRUE' value does not
---         guarantee any clipping will occur, but allows more optimal
---         presentation methods to be used on some platforms.
+--     -   If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the presentable
+--         images associated with the swapchain /may/ not own all of their
+--         pixels. Pixels in the presentable images that correspond to
+--         regions of the target surface obscured by another window on the
+--         desktop, or subject to some other clipping mechanism will have
+--         undefined content when read back. Fragment shaders /may/ not
+--         execute for these pixels, and thus any side effects they would
+--         have had will not occur. 'Vulkan.Core10.FundamentalTypes.TRUE'
+--         value does not guarantee any clipping will occur, but allows
+--         more optimal presentation methods to be used on some platforms.
 --
---     -   If set to 'Vulkan.Core10.BaseType.FALSE', presentable images
---         associated with the swapchain will own all of the pixels they
---         contain.
+--     -   If set to 'Vulkan.Core10.FundamentalTypes.FALSE', presentable
+--         images associated with the swapchain will own all of the pixels
+--         they contain.
 --
 -- Note
 --
--- Applications /should/ set this value to 'Vulkan.Core10.BaseType.TRUE' if
--- they do not expect to read back the content of presentable images before
--- presenting them or after reacquiring them, and if their fragment shaders
--- do not have any side effects that require them to run for all pixels in
--- the presentable image.
+-- Applications /should/ set this value to
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' if they do not expect to read back
+-- the content of presentable images before presenting them or after
+-- reacquiring them, and if their fragment shaders do not have any side
+-- effects that require them to run for all pixels in the presentable
+-- image.
 --
 -- -   @oldSwapchain@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or the
 --     existing non-retired swapchain currently associated with @surface@.
@@ -1415,7 +1416,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --
 -- -   If @flags@ contains 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR', then
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'::@supportsProtected@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE' in the
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE' in the
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
 --     structure returned by
 --     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
@@ -1490,10 +1491,10 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR',
--- 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR',

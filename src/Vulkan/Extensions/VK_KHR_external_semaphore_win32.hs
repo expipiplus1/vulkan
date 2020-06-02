@@ -50,7 +50,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Extensions.WSITypes (DWORD)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreWin32HandleKHR))
@@ -59,11 +59,11 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits (ExternalSemaphoreHandleTypeFlagBits)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Extensions.WSITypes (HANDLE)
-import Vulkan.Extensions.WSITypes (LPCWSTR)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (HANDLE)
+import Vulkan.Extensions.VK_KHR_external_memory_win32 (LPCWSTR)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
-import Vulkan.Extensions.WSITypes (SECURITY_ATTRIBUTES)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (SECURITY_ATTRIBUTES)
 import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.Core11.Enums.SemaphoreImportFlagBits (SemaphoreImportFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -76,10 +76,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXPORT_SE
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Extensions.WSITypes (DWORD)
-import Vulkan.Extensions.WSITypes (HANDLE)
-import Vulkan.Extensions.WSITypes (LPCWSTR)
-import Vulkan.Extensions.WSITypes (SECURITY_ATTRIBUTES)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (HANDLE)
+import Vulkan.Extensions.VK_KHR_external_memory_win32 (LPCWSTR)
+import Vulkan.Extensions.VK_NV_external_memory_win32 (SECURITY_ATTRIBUTES)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -427,7 +427,8 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR'
 --
 -- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid 'Vulkan.Extensions.WSITypes.SECURITY_ATTRIBUTES'
+--     pointer to a valid
+--     'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
 --     value
 --
 -- = See Also
@@ -435,11 +436,11 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportSemaphoreWin32HandleInfoKHR = ExportSemaphoreWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
-    -- 'Vulkan.Extensions.WSITypes.SECURITY_ATTRIBUTES' structure specifying
-    -- security attributes of the handle.
+    -- 'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
+    -- structure specifying security attributes of the handle.
     attributes :: Ptr SECURITY_ATTRIBUTES
-  , -- | @dwAccess@ is a 'Vulkan.Extensions.WSITypes.DWORD' specifying access
-    -- rights of the handle.
+  , -- | @dwAccess@ is a 'Vulkan.Extensions.VK_NV_external_memory_win32.DWORD'
+    -- specifying access rights of the handle.
     dwAccess :: DWORD
   , -- | @name@ is a null-terminated UTF-16 string to associate with the
     -- underlying synchronization primitive referenced by NT handles exported

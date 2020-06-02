@@ -16,13 +16,13 @@ module Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDeviceSurfac
                                                        , pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
                                                        , EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
                                                        , pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
+                                                       , HMONITOR
                                                        , SurfaceKHR(..)
                                                        , SwapchainKHR(..)
                                                        , PhysicalDeviceSurfaceInfo2KHR(..)
                                                        , PresentModeKHR(..)
                                                        , DeviceGroupPresentModeFlagBitsKHR(..)
                                                        , DeviceGroupPresentModeFlagsKHR
-                                                       , HMONITOR
                                                        ) where
 
 import Control.Exception.Base (bracket)
@@ -68,11 +68,11 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireFullScreenExclusiveModeEXT))
@@ -84,7 +84,6 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Extensions.WSITypes (HMONITOR)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfacePresentModes2EXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -110,7 +109,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_F
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagBitsKHR(..))
 import Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
-import Vulkan.Extensions.WSITypes (HMONITOR)
 import Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR(..))
 import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR(..))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
@@ -483,10 +481,10 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
-  { -- | @hmonitor@ is the Win32 'Vulkan.Extensions.WSITypes.HMONITOR' handle
-    -- identifying the display to create the surface with.
+  { -- | @hmonitor@ is the Win32 'HMONITOR' handle identifying the display to
+    -- create the surface with.
     --
-    -- @hmonitor@ /must/ be a valid 'Vulkan.Extensions.WSITypes.HMONITOR'
+    -- @hmonitor@ /must/ be a valid 'HMONITOR'
     hmonitor :: HMONITOR }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -534,19 +532,20 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 -- This structure /can/ be included in the @pNext@ chain of
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
 -- to determine support for exclusive full-screen access. If
--- @fullScreenExclusiveSupported@ is 'Vulkan.Core10.BaseType.FALSE', it
--- indicates that exclusive full-screen access is not obtainable for this
--- surface.
+-- @fullScreenExclusiveSupported@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE', it indicates that exclusive
+-- full-screen access is not obtainable for this surface.
 --
 -- Applications /must/ not attempt to create swapchains with
 -- 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' set if
--- @fullScreenExclusiveSupported@ is 'Vulkan.Core10.BaseType.FALSE'.
+-- @fullScreenExclusiveSupported@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
   { -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"
@@ -655,4 +654,7 @@ type EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = "VK_EXT_full_screen_exclusive"
 -- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME"
 pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = "VK_EXT_full_screen_exclusive"
+
+
+type HMONITOR = Ptr ()
 

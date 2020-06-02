@@ -50,7 +50,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -158,10 +158,10 @@ data MacOSSurfaceCreateInfoMVK = MacOSSurfaceCreateInfoMVK
     flags :: MacOSSurfaceCreateFlagsMVK
   , -- | @pView@ is a reference to a @NSView@ object which will display this
     -- surface. This @NSView@ /must/ be backed by a @CALayer@ instance of type
-    -- 'Vulkan.Extensions.WSITypes.CAMetalLayer'.
+    -- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
     --
     -- @pView@ /must/ be a valid @NSView@ and /must/ be backed by a @CALayer@
-    -- instance of type 'Vulkan.Extensions.WSITypes.CAMetalLayer'
+    -- instance of type 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'
     view :: Ptr ()
   }
   deriving (Typeable)

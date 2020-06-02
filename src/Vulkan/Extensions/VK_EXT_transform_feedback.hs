@@ -57,10 +57,10 @@ import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (CommandBuffer)
@@ -72,8 +72,8 @@ import Vulkan.Dynamic (DeviceCmds(pVkCmdBindTransformFeedbackBuffersEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdDrawIndirectByteCountEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndQueryIndexedEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndTransformFeedbackEXT))
-import Vulkan.Core10.BaseType (DeviceSize)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlagBits(..))
@@ -156,7 +156,7 @@ foreign import ccall
 --     valid 'Vulkan.Core10.Handles.Buffer' handles
 --
 -- -   @pOffsets@ /must/ be a valid pointer to an array of @bindingCount@
---     'Vulkan.Core10.BaseType.DeviceSize' values
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize' values
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -191,7 +191,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBindTransformFeedbackBuffersEXT :: forall io
                                     . (MonadIO io)
                                    => -- | @commandBuffer@ is the command buffer into which the command is
@@ -296,8 +296,8 @@ foreign import ccall
 --
 -- -   If @counterBufferCount@ is not @0@, and @pCounterBufferOffsets@ is
 --     not @NULL@, @pCounterBufferOffsets@ /must/ be a valid pointer to an
---     array of @counterBufferCount@ 'Vulkan.Core10.BaseType.DeviceSize'
---     values
+--     array of @counterBufferCount@
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize' values
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -333,7 +333,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBeginTransformFeedbackEXT :: forall io
                               . (MonadIO io)
                              => -- | @commandBuffer@ is the command buffer into which the command is
@@ -443,8 +443,8 @@ foreign import ccall
 --
 -- -   If @counterBufferCount@ is not @0@, and @pCounterBufferOffsets@ is
 --     not @NULL@, @pCounterBufferOffsets@ /must/ be a valid pointer to an
---     array of @counterBufferCount@ 'Vulkan.Core10.BaseType.DeviceSize'
---     values
+--     array of @counterBufferCount@
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize' values
 --
 -- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -480,7 +480,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdEndTransformFeedbackEXT :: forall io
                             . (MonadIO io)
                            => -- | @commandBuffer@ is the command buffer into which the command is
@@ -1020,9 +1020,9 @@ foreign import ccall
 --
 -- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to 'Vulkan.Core10.BaseType.TRUE' and the current subpass has a
---     depth\/stencil attachment, then that attachment /must/ have been
---     created with the
+--     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
+--     has a depth\/stencil attachment, then that attachment /must/ have
+--     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
@@ -1098,7 +1098,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize'
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndirectByteCountEXT :: forall io
                              . (MonadIO io)
                             => -- | @commandBuffer@ is the command buffer into which the command is
@@ -1155,7 +1155,7 @@ cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuf
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTransformFeedbackFeaturesEXT = PhysicalDeviceTransformFeedbackFeaturesEXT
   { -- | @transformFeedback@ indicates whether the implementation supports
@@ -1227,7 +1227,8 @@ instance Zero PhysicalDeviceTransformFeedbackFeaturesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedbackPropertiesEXT
   { -- | @maxTransformFeedbackStreams@ is the maximum number of vertex streams
@@ -1379,7 +1380,7 @@ data PipelineRasterizationStateStreamCreateInfoEXT = PipelineRasterizationStateS
     --
     -- @rasterizationStream@ /must/ be zero if
     -- 'PhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackRasterizationStreamSelect@
-    -- is 'Vulkan.Core10.BaseType.FALSE'
+    -- is 'Vulkan.Core10.FundamentalTypes.FALSE'
     rasterizationStream :: Word32
   }
   deriving (Typeable, Eq)

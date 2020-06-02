@@ -18,16 +18,15 @@ import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
 import Data.Kind (Type)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.Extensions.WSITypes (GgpFrameToken)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP))
-import Vulkan.Extensions.WSITypes (GgpFrameToken)
 -- | VkPresentFrameTokenGGP - The Google Games Platform frame token
 --
 -- == Valid Usage (Implicit)
@@ -38,8 +37,7 @@ import Vulkan.Extensions.WSITypes (GgpFrameToken)
 data PresentFrameTokenGGP = PresentFrameTokenGGP
   { -- | @frameToken@ is the Google Games Platform frame token.
     --
-    -- @frameToken@ /must/ be a valid
-    -- 'Vulkan.Extensions.WSITypes.GgpFrameToken'
+    -- @frameToken@ /must/ be a valid 'GgpFrameToken'
     frameToken :: GgpFrameToken }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -91,4 +89,7 @@ type GGP_FRAME_TOKEN_EXTENSION_NAME = "VK_GGP_frame_token"
 -- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_EXTENSION_NAME"
 pattern GGP_FRAME_TOKEN_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern GGP_FRAME_TOKEN_EXTENSION_NAME = "VK_GGP_frame_token"
+
+
+type GgpFrameToken = Word32
 

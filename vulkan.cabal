@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 48ce38532a89b6c6cdf6569e0ba1f5f1bf9b948fddc0511cef156c874a05cd2f
+-- hash: e74c5d7b6beececcc43f141ba72a64f4bff10e560769c463663befbc839e20af
 
 name:           vulkan
 version:        3.3.1
@@ -40,7 +40,6 @@ library
       Vulkan.Core10
       Vulkan.Core10.AllocationCallbacks
       Vulkan.Core10.APIConstants
-      Vulkan.Core10.BaseType
       Vulkan.Core10.Buffer
       Vulkan.Core10.BufferView
       Vulkan.Core10.CommandBuffer
@@ -149,6 +148,7 @@ library
       Vulkan.Core10.ExtensionDiscovery
       Vulkan.Core10.Fence
       Vulkan.Core10.FuncPointers
+      Vulkan.Core10.FundamentalTypes
       Vulkan.Core10.Handles
       Vulkan.Core10.Image
       Vulkan.Core10.ImageView
@@ -165,7 +165,6 @@ library
       Vulkan.Core10.QueueSemaphore
       Vulkan.Core10.Sampler
       Vulkan.Core10.Shader
-      Vulkan.Core10.SharedTypes
       Vulkan.Core10.SparseResourceMemoryManagement
       Vulkan.Core11
       Vulkan.Core11.DeviceInitialization
@@ -456,7 +455,6 @@ library
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
-      Vulkan.Extensions.WSITypes
       Vulkan.NamedType
       Vulkan.Version
       Vulkan.Zero

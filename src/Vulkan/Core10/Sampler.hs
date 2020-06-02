@@ -3,6 +3,13 @@ module Vulkan.Core10.Sampler  ( createSampler
                               , withSampler
                               , destroySampler
                               , SamplerCreateInfo(..)
+                              , Sampler(..)
+                              , BorderColor(..)
+                              , Filter(..)
+                              , SamplerMipmapMode(..)
+                              , SamplerAddressMode(..)
+                              , SamplerCreateFlagBits(..)
+                              , SamplerCreateFlags
                               ) where
 
 import Control.Exception.Base (bracket)
@@ -34,12 +41,12 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.BorderColor (BorderColor)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Enums.CompareOp (CompareOp)
@@ -76,6 +83,13 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Enums.BorderColor (BorderColor(..))
+import Vulkan.Core10.Enums.Filter (Filter(..))
+import Vulkan.Core10.Handles (Sampler(..))
+import Vulkan.Core10.Enums.SamplerAddressMode (SamplerAddressMode(..))
+import Vulkan.Core10.Enums.SamplerCreateFlagBits (SamplerCreateFlagBits(..))
+import Vulkan.Core10.Enums.SamplerCreateFlagBits (SamplerCreateFlags)
+import Vulkan.Core10.Enums.SamplerMipmapMode (SamplerMipmapMode(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -281,9 +295,9 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-samplerAnisotropy anisotropic sampling>
 --     feature is not enabled, @anisotropyEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @anisotropyEnable@ is 'Vulkan.Core10.BaseType.TRUE',
+-- -   If @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     @maxAnisotropy@ /must/ be between @1.0@ and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerAnisotropy@,
 --     inclusive
@@ -297,27 +311,32 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     @minFilter@ and @magFilter@ /must/ be equal to the sampler Y′CBCR
 --     conversion’s @chromaFilter@
 --
--- -   If @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE',
---     @minFilter@ and @magFilter@ /must/ be equal
+-- -   If @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @minFilter@ and @magFilter@
+--     /must/ be equal
 --
--- -   If @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE',
---     @mipmapMode@ /must/ be
+-- -   If @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @mipmapMode@ /must/ be
 --     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'
 --
--- -   If @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE',
---     @minLod@ and @maxLod@ /must/ be zero
+-- -   If @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @minLod@ and @maxLod@ /must/
+--     be zero
 --
--- -   If @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE',
---     @addressModeU@ and @addressModeV@ /must/ each be either
+-- -   If @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @addressModeU@ and
+--     @addressModeV@ /must/ each be either
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --     or
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'
 --
--- -   If @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE',
---     @anisotropyEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+-- -   If @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @anisotropyEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE',
---     @compareEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+-- -   If @unnormalizedCoordinates@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @compareEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If any of @addressModeU@, @addressModeV@ or @addressModeW@ are
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER',
@@ -329,8 +348,9 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     is enabled, @addressModeU@, @addressModeV@, and @addressModeW@
 --     /must/ be
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE',
---     @anisotropyEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE', and
---     @unnormalizedCoordinates@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     @anisotropyEnable@ /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE',
+--     and @unnormalizedCoordinates@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   The sampler reduction mode /must/ be set to
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
@@ -345,14 +365,15 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     @addressModeW@ /must/ not be
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
 --
--- -   If @compareEnable@ is 'Vulkan.Core10.BaseType.TRUE', @compareOp@
---     /must/ be a valid 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
+-- -   If @compareEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     @compareOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.CompareOp.CompareOp' value
 --
 -- -   If either @magFilter@ or @minFilter@ is
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT',
---     @anisotropyEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     @anisotropyEnable@ /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @compareEnable@ is 'Vulkan.Core10.BaseType.TRUE', the
+-- -   If @compareEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
 --     @reductionMode@ member of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     /must/ be
@@ -380,16 +401,18 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @anisotropyEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     then @anisotropyEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @compareEnable@ /must/ be 'Vulkan.Core10.BaseType.FALSE'
+--     then @compareEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @unnormalizedCoordinates@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If @borderColor@ is set to one of
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
@@ -446,7 +469,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.BorderColor.BorderColor',
 -- 'Vulkan.Core10.Enums.CompareOp.CompareOp',
 -- 'Vulkan.Core10.Enums.Filter.Filter',
@@ -492,19 +515,19 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
     -- section.
     mipLodBias :: Float
-  , -- | @anisotropyEnable@ is 'Vulkan.Core10.BaseType.TRUE' to enable
+  , -- | @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' to enable
     -- anisotropic filtering, as described in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-anisotropic-filtering Texel Anisotropic Filtering>
-    -- section, or 'Vulkan.Core10.BaseType.FALSE' otherwise.
+    -- section, or 'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
     anisotropyEnable :: Bool
   , -- | @maxAnisotropy@ is the anisotropy value clamp used by the sampler when
-    -- @anisotropyEnable@ is 'Vulkan.Core10.BaseType.TRUE'. If
-    -- @anisotropyEnable@ is 'Vulkan.Core10.BaseType.FALSE', @maxAnisotropy@ is
-    -- ignored.
+    -- @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE'. If
+    -- @anisotropyEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- @maxAnisotropy@ is ignored.
     maxAnisotropy :: Float
-  , -- | @compareEnable@ is 'Vulkan.Core10.BaseType.TRUE' to enable comparison
-    -- against a reference value during lookups, or
-    -- 'Vulkan.Core10.BaseType.FALSE' otherwise.
+  , -- | @compareEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' to enable
+    -- comparison against a reference value during lookups, or
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' otherwise.
     --
     -- -   Note: Some implementations will default to shader state if this
     --     member does not match.
@@ -527,13 +550,15 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     borderColor :: BorderColor
   , -- | @unnormalizedCoordinates@ controls whether to use unnormalized or
     -- normalized texel coordinates to address texels of the image. When set to
-    -- 'Vulkan.Core10.BaseType.TRUE', the range of the image coordinates used
-    -- to lookup the texel is in the range of zero to the image dimensions for
-    -- x, y and z. When set to 'Vulkan.Core10.BaseType.FALSE' the range of
-    -- image coordinates is zero to one.
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', the range of the image
+    -- coordinates used to lookup the texel is in the range of zero to the
+    -- image dimensions for x, y and z. When set to
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' the range of image coordinates is
+    -- zero to one.
     --
-    -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE', images
-    -- the sampler is used with in the shader have the following requirements:
+    -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+    -- images the sampler is used with in the shader have the following
+    -- requirements:
     --
     -- -   The @viewType@ /must/ be either
     --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D' or
@@ -541,9 +566,9 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     --
     -- -   The image view /must/ have a single layer and a single mip level.
     --
-    -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.BaseType.TRUE', image
-    -- built-in functions in the shader that use the sampler have the following
-    -- requirements:
+    -- When @unnormalizedCoordinates@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+    -- image built-in functions in the shader that use the sampler have the
+    -- following requirements:
     --
     -- -   The functions /must/ not use projection.
     --

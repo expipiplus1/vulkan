@@ -97,7 +97,7 @@ import {-# SOURCE #-} Vulkan.Core10.BufferView (BufferViewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_calibrated_timestamps (CalibratedTimestampInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints (CheckpointDataNV)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearAttachment)
-import {-# SOURCE #-} Vulkan.Core10.SharedTypes (ClearDepthStencilValue)
+import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearDepthStencilValue)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearRect)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (CoarseSampleLocationNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (CoarseSampleOrderCustomNV)
@@ -193,8 +193,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ExportMemor
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore (ExportSemaphoreCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (ExportSemaphoreWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.ExtensionDiscovery (ExtensionProperties)
-import {-# SOURCE #-} Vulkan.Core10.SharedTypes (Extent2D)
-import {-# SOURCE #-} Vulkan.Core10.SharedTypes (Extent3D)
+import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Extent2D)
+import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Extent3D)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (ExternalBufferProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities (ExternalFenceProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ExternalFormatANDROID)
@@ -245,9 +245,9 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversio
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageResolve)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageSparseMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage (ImageStencilUsageCreateInfo)
-import {-# SOURCE #-} Vulkan.Core10.Image (ImageSubresource)
-import {-# SOURCE #-} Vulkan.Core10.SharedTypes (ImageSubresourceLayers)
-import {-# SOURCE #-} Vulkan.Core10.SharedTypes (ImageSubresourceRange)
+import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (ImageSubresource)
+import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
+import {-# SOURCE #-} Vulkan.Core10.ImageView (ImageSubresourceRange)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (ImageSwapchainCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_astc_decode_mode (ImageViewASTCDecodeModeEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_image_view_handle (ImageViewAddressPropertiesNVX)
@@ -291,8 +291,8 @@ import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (MemoryType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
-import {-# SOURCE #-} Vulkan.Core10.SharedTypes (Offset2D)
-import {-# SOURCE #-} Vulkan.Core10.SharedTypes (Offset3D)
+import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Offset2D)
+import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Offset3D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PastPresentationTimingGOOGLE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_INTEL_performance_query (PerformanceConfigurationAcquireInfoINTEL)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PerformanceCounterDescriptionKHR)
@@ -488,7 +488,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (RayTracingPipelineCre
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingPipelineInterfaceCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (RayTracingShaderGroupCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (RayTracingShaderGroupCreateInfoNV)
-import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (Rect2D)
+import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Rect2D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (RectLayerKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (RefreshCycleDurationGOOGLE)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (RenderPassAttachmentBeginInfo)
@@ -572,7 +572,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pipeline (VertexInputAttributeDescription)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (VertexInputBindingDescription)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_attribute_divisor (VertexInputBindingDivisorDescriptionEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NN_vi_surface (ViSurfaceCreateInfoNN)
-import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (Viewport)
+import {-# SOURCE #-} Vulkan.Core10.Pipeline (Viewport)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_viewport_swizzle (ViewportSwizzleNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_clip_space_w_scaling (ViewportWScalingNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_wayland_surface (WaylandSurfaceCreateInfoKHR)
@@ -724,6 +724,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DescriptorSetLayoutCreateInfo DescriptorSetLayoutBindingFlagsCreateInfo = ()
   Extends DescriptorSetLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport = ()
   Extends DeviceCreateInfo PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = ()
+  Extends DeviceCreateInfo DevicePrivateDataCreateInfoEXT = ()
   Extends DeviceCreateInfo (PhysicalDeviceFeatures2 '[]) = ()
   Extends DeviceCreateInfo PhysicalDeviceVariablePointersFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceMultiviewFeatures = ()
@@ -1130,6 +1131,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV -> go @ExportMemoryWin32HandleInfoNV
   STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV -> go @Win32KeyedMutexAcquireReleaseInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV -> go @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
+  STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO_EXT -> go @DevicePrivateDataCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV -> go @PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
   STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV -> go @GraphicsPipelineShaderGroupsCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 -> go @(PhysicalDeviceFeatures2 '[])
@@ -1419,6 +1421,7 @@ infix 6 ::&
 {-# complete (::&) :: ExportMemoryWin32HandleInfoNV #-}
 {-# complete (::&) :: Win32KeyedMutexAcquireReleaseInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceDeviceGeneratedCommandsFeaturesNV #-}
+{-# complete (::&) :: DevicePrivateDataCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceDeviceGeneratedCommandsPropertiesNV #-}
 {-# complete (::&) :: GraphicsPipelineShaderGroupsCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceFeatures2 #-}

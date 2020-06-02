@@ -15,9 +15,9 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -35,8 +35,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- = Description
 --
 -- When the implementation sets @requiresDedicatedAllocation@ to
--- 'Vulkan.Core10.BaseType.TRUE', it /must/ also set
--- @prefersDedicatedAllocation@ to 'Vulkan.Core10.BaseType.TRUE'.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', it /must/ also set
+-- @prefersDedicatedAllocation@ to 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- If the 'MemoryDedicatedRequirements' structure is included in the
 -- @pNext@ chain of the
@@ -44,7 +44,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed as the @pMemoryRequirements@ parameter of a
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
 -- call, @requiresDedicatedAllocation@ /may/ be
--- 'Vulkan.Core10.BaseType.TRUE' under one of the following conditions:
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' under one of the following
+-- conditions:
 --
 -- -   The @pNext@ chain of 'Vulkan.Core10.Buffer.BufferCreateInfo' for the
 --     call to 'Vulkan.Core10.Buffer.createBuffer' used to create the
@@ -57,10 +58,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.externalMemoryFeatures@,
 --     the @requiresDedicatedAllocation@ field will be set to
---     'Vulkan.Core10.BaseType.TRUE'.
+--     'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- In all other cases, @requiresDedicatedAllocation@ /must/ be set to
--- 'Vulkan.Core10.BaseType.FALSE' by the implementation whenever a
+-- 'Vulkan.Core10.FundamentalTypes.FALSE' by the implementation whenever a
 -- 'MemoryDedicatedRequirements' structure is included in the @pNext@ chain
 -- of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
@@ -77,7 +78,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- was set in 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@ when
 -- @buffer@ was created then the implementation /must/ set both
 -- @prefersDedicatedAllocation@ and @requiresDedicatedAllocation@ to
--- 'Vulkan.Core10.BaseType.FALSE'.
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- If the 'MemoryDedicatedRequirements' structure is included in the
 -- @pNext@ chain of the
@@ -85,7 +86,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- structure passed as the @pMemoryRequirements@ parameter of a
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 -- call, @requiresDedicatedAllocation@ /may/ be
--- 'Vulkan.Core10.BaseType.TRUE' under one of the following conditions:
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' under one of the following
+-- conditions:
 --
 -- -   The @pNext@ chain of 'Vulkan.Core10.Image.ImageCreateInfo' for the
 --     call to 'Vulkan.Core10.Image.createImage' used to create the image
@@ -98,10 +100,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@,
 --     the @requiresDedicatedAllocation@ field will be set to
---     'Vulkan.Core10.BaseType.TRUE'.
+--     'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- In all other cases, @requiresDedicatedAllocation@ /must/ be set to
--- 'Vulkan.Core10.BaseType.FALSE' by the implementation whenever a
+-- 'Vulkan.Core10.FundamentalTypes.FALSE' by the implementation whenever a
 -- 'MemoryDedicatedRequirements' structure is included in the @pNext@ chain
 -- of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
@@ -118,7 +120,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- was set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when @image@
 -- was created then the implementation /must/ set both
 -- @prefersDedicatedAllocation@ and @requiresDedicatedAllocation@ to
--- 'Vulkan.Core10.BaseType.FALSE'.
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -127,7 +129,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryDedicatedRequirements = MemoryDedicatedRequirements
   { -- | @prefersDedicatedAllocation@ specifies that the implementation would

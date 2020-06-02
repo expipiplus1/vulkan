@@ -1,5 +1,6 @@
 {-# language CPP #-}
 module Vulkan.Core10.SparseResourceMemoryManagement  ( BindSparseInfo
+                                                     , ImageSubresource
                                                      , SparseBufferMemoryBindInfo
                                                      , SparseImageFormatProperties
                                                      , SparseImageMemoryBind
@@ -23,6 +24,14 @@ instance (Extendss BindSparseInfo es, PokeChain es) => ToCStruct (BindSparseInfo
 instance Show (Chain es) => Show (BindSparseInfo es)
 
 instance (Extendss BindSparseInfo es, PeekChain es) => FromCStruct (BindSparseInfo es)
+
+
+data ImageSubresource
+
+instance ToCStruct ImageSubresource
+instance Show ImageSubresource
+
+instance FromCStruct ImageSubresource
 
 
 data SparseBufferMemoryBindInfo

@@ -4,6 +4,10 @@ module Vulkan.Core10.Device  ( createDevice
                              , destroyDevice
                              , DeviceQueueCreateInfo(..)
                              , DeviceCreateInfo(..)
+                             , Device(..)
+                             , DeviceCreateFlags(..)
+                             , DeviceQueueCreateFlagBits(..)
+                             , DeviceQueueCreateFlags
                              ) where
 
 import Control.Exception.Base (bracket)
@@ -61,6 +65,7 @@ import Vulkan.Core10.Enums.DeviceCreateFlags (DeviceCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (DeviceDiagnosticsConfigCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (DeviceGroupDeviceCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_memory_overallocation_behavior (DeviceMemoryOverallocationCreateInfoAMD)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (DevicePrivateDataCreateInfoEXT)
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_global_priority (DeviceQueueGlobalPriorityCreateInfoEXT)
 import Vulkan.Core10.Handles (Device_T)
@@ -152,6 +157,10 @@ import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_CREATE_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Enums.DeviceCreateFlags (DeviceCreateFlags(..))
+import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlagBits(..))
+import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -546,26 +555,26 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     and the @pNext@ chain includes a
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@drawIndirectCount@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @ppEnabledExtensions@ contains
 --     @\"VK_KHR_sampler_mirror_clamp_to_edge\"@ and the @pNext@ chain
 --     includes a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure,
 --     then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@samplerMirrorClampToEdge@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @ppEnabledExtensions@ contains @\"VK_EXT_descriptor_indexing\"@
 --     and the @pNext@ chain includes a
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@descriptorIndexing@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @ppEnabledExtensions@ contains @\"VK_EXT_sampler_filter_minmax\"@
 --     and the @pNext@ chain includes a
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@samplerFilterMinmax@
---     /must/ be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @ppEnabledExtensions@ contains
 --     @\"VK_EXT_shader_viewport_index_layer\"@ and the @pNext@ chain
@@ -574,7 +583,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@shaderOutputViewportIndex@
 --     and
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@shaderOutputLayer@
---     /must/ both be 'Vulkan.Core10.BaseType.TRUE'
+--     /must/ both be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -587,6 +596,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_device_diagnostics_config.DeviceDiagnosticsConfigCreateInfoNV',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo',
 --     'Vulkan.Extensions.VK_AMD_memory_overallocation_behavior.DeviceMemoryOverallocationCreateInfoAMD',
+--     'Vulkan.Extensions.VK_EXT_private_data.DevicePrivateDataCreateInfoEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage.PhysicalDevice16BitStorageFeatures',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage.PhysicalDevice8BitStorageFeatures',
 --     'Vulkan.Extensions.VK_EXT_astc_decode_mode.PhysicalDeviceASTCDecodeFeaturesEXT',
@@ -653,7 +663,8 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_ycbcr_image_arrays.PhysicalDeviceYcbcrImageArraysFeaturesEXT'
 --
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+--     unique, with the exception of structures of type
+--     'Vulkan.Extensions.VK_EXT_private_data.DevicePrivateDataCreateInfoEXT'
 --
 -- -   @flags@ /must/ be @0@
 --
@@ -786,6 +797,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceMultiviewFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVariablePointersFeatures = Just f
     | Just Refl <- eqT @e @(PhysicalDeviceFeatures2 '[]) = Just f
+    | Just Refl <- eqT @e @DevicePrivateDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
     | otherwise = Nothing
 

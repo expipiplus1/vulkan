@@ -77,12 +77,12 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineExecutableInternalRepresentationsKHR))
@@ -422,7 +422,7 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePipelineExecutablePropertiesFeaturesKHR = PhysicalDevicePipelineExecutablePropertiesFeaturesKHR
   { -- | @pipelineExecutableInfo@ indicates that the implementation supports
@@ -764,14 +764,15 @@ instance Zero PipelineExecutableStatisticKHR where
 -- representation data, at most @dataSize@ bytes of data will be written to
 -- @pData@ and 'getPipelineExecutableInternalRepresentationsKHR' will
 -- return 'Vulkan.Core10.Enums.Result.INCOMPLETE'. If @isText@ is
--- 'Vulkan.Core10.BaseType.TRUE' and @pData@ is not @NULL@ and @dataSize@
--- is not zero, the last byte written to @pData@ will be a null character.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' and @pData@ is not @NULL@ and
+-- @dataSize@ is not zero, the last byte written to @pData@ will be a null
+-- character.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutableInternalRepresentationsKHR'
 data PipelineExecutableInternalRepresentationKHR = PipelineExecutableInternalRepresentationKHR
@@ -785,8 +786,9 @@ data PipelineExecutableInternalRepresentationKHR = PipelineExecutableInternalRep
     -- this internal representation.
     description :: ByteString
   , -- | @isText@ specifies whether the returned data is text or opaque data. If
-    -- @isText@ is 'Vulkan.Core10.BaseType.TRUE' then the data returned in
-    -- @pData@ is text and is guaranteed to be a null-terminated UTF-8 string.
+    -- @isText@ is 'Vulkan.Core10.FundamentalTypes.TRUE' then the data returned
+    -- in @pData@ is text and is guaranteed to be a null-terminated UTF-8
+    -- string.
     isText :: Bool
   , -- | @dataSize@ is an integer related to the size, in bytes, of the internal
     -- representation data, as described below.
@@ -894,9 +896,9 @@ newtype PipelineExecutableStatisticFormatKHR = PipelineExecutableStatisticFormat
 
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR' specifies that the
 -- statistic is returned as a 32-bit boolean value which /must/ be either
--- 'Vulkan.Core10.BaseType.TRUE' or 'Vulkan.Core10.BaseType.FALSE' and
--- /should/ be read from the @b32@ field of
--- 'PipelineExecutableStatisticValueKHR'.
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' or
+-- 'Vulkan.Core10.FundamentalTypes.FALSE' and /should/ be read from the
+-- @b32@ field of 'PipelineExecutableStatisticValueKHR'.
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR = PipelineExecutableStatisticFormatKHR 0
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR' specifies that the
 -- statistic is returned as a signed 64-bit integer and /should/ be read

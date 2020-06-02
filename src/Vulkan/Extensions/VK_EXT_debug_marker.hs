@@ -207,6 +207,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -285,6 +287,8 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
@@ -341,6 +345,8 @@ foreign import ccall
 --     allocated from /must/ support graphics, or compute operations
 --
 -- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from /must/ be externally synchronized

@@ -47,16 +47,16 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetSampleLocationsEXT))
-import Vulkan.Core10.SharedTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceMultisamplePropertiesEXT))
@@ -93,8 +93,8 @@ foreign import ccall
 --
 -- -   If
 --     'PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
---     is 'Vulkan.Core10.BaseType.FALSE' then the current render pass
---     /must/ have been begun by specifying a
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE' then the current render
+--     pass /must/ have been begun by specifying a
 --     'RenderPassSampleLocationsBeginInfoEXT' structure whose
 --     @pPostSubpassSampleLocations@ member contains an element with a
 --     @subpassIndex@ matching the current subpass index and the
@@ -303,7 +303,8 @@ instance Zero SampleLocationEXT where
 --
 -- = See Also
 --
--- 'AttachmentSampleLocationsEXT', 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'AttachmentSampleLocationsEXT',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'PipelineSampleLocationsStateCreateInfoEXT',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'SampleLocationEXT', 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -442,7 +443,7 @@ instance Zero AttachmentSampleLocationsEXT where
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 -- or if the subpass does not use a depth\/stencil attachment, and
 -- 'PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
--- is 'Vulkan.Core10.BaseType.TRUE' then the values specified in
+-- is 'Vulkan.Core10.FundamentalTypes.TRUE' then the values specified in
 -- @sampleLocationsInfo@ are ignored.
 --
 -- == Valid Usage (Implicit)
@@ -545,12 +546,12 @@ data RenderPassSampleLocationsBeginInfoEXT = RenderPassSampleLocationsBeginInfoE
     -- or to the final layout of the attachment in case the specified subpass
     -- is the last subpass using that attachment. In addition, if
     -- 'PhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
-    -- is 'Vulkan.Core10.BaseType.FALSE', each element of
+    -- is 'Vulkan.Core10.FundamentalTypes.FALSE', each element of
     -- @pPostSubpassSampleLocations@ /must/ specify the sample location state
     -- that matches the sample locations used by all pipelines that will be
     -- bound to a command buffer during the specified subpass. If
-    -- @variableSampleLocations@ is 'Vulkan.Core10.BaseType.TRUE', the sample
-    -- locations used for rasterization do not depend on
+    -- @variableSampleLocations@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
+    -- sample locations used for rasterization do not depend on
     -- @pPostSubpassSampleLocations@.
     postSubpassSampleLocations :: Vector SubpassSampleLocationsEXT
   }
@@ -611,18 +612,18 @@ instance Zero RenderPassSampleLocationsBeginInfoEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'SampleLocationsInfoEXT',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'SampleLocationsInfoEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCreateInfoEXT
   { -- | @sampleLocationsEnable@ controls whether custom sample locations are
-    -- used. If @sampleLocationsEnable@ is 'Vulkan.Core10.BaseType.FALSE', the
-    -- default sample locations are used and the values specified in
-    -- @sampleLocationsInfo@ are ignored.
+    -- used. If @sampleLocationsEnable@ is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', the default sample locations are
+    -- used and the values specified in @sampleLocationsInfo@ are ignored.
     sampleLocationsEnable :: Bool
   , -- | @sampleLocationsInfo@ is the sample locations to use during
     -- rasterization if @sampleLocationsEnable@ is
-    -- 'Vulkan.Core10.BaseType.TRUE' and the graphics pipeline is not created
-    -- with
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' and the graphics pipeline is not
+    -- created with
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'.
     --
     -- @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
@@ -684,7 +685,8 @@ instance Zero PipelineSampleLocationsStateCreateInfoEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSampleLocationsPropertiesEXT = PhysicalDeviceSampleLocationsPropertiesEXT
@@ -704,10 +706,10 @@ data PhysicalDeviceSampleLocationsPropertiesEXT = PhysicalDeviceSampleLocationsP
     sampleLocationSubPixelBits :: Word32
   , -- | @variableSampleLocations@ specifies whether the sample locations used by
     -- all pipelines that will be bound to a command buffer during a subpass
-    -- /must/ match. If set to 'Vulkan.Core10.BaseType.TRUE', the
+    -- /must/ match. If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the
     -- implementation supports variable sample locations in a subpass. If set
-    -- to 'Vulkan.Core10.BaseType.FALSE', then the sample locations /must/ stay
-    -- constant in each subpass.
+    -- to 'Vulkan.Core10.FundamentalTypes.FALSE', then the sample locations
+    -- /must/ stay constant in each subpass.
     variableSampleLocations :: Bool
   }
   deriving (Typeable)
@@ -775,7 +777,7 @@ instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceMultisamplePropertiesEXT'
 data MultisamplePropertiesEXT = MultisamplePropertiesEXT

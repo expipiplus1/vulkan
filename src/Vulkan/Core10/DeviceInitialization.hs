@@ -23,6 +23,43 @@ module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , PhysicalDeviceFeatures(..)
                                            , PhysicalDeviceSparseProperties(..)
                                            , PhysicalDeviceLimits(..)
+                                           , Instance(..)
+                                           , PhysicalDevice(..)
+                                           , AllocationCallbacks(..)
+                                           , InstanceCreateFlags(..)
+                                           , ImageType(..)
+                                           , ImageTiling(..)
+                                           , InternalAllocationType(..)
+                                           , SystemAllocationScope(..)
+                                           , PhysicalDeviceType(..)
+                                           , Format(..)
+                                           , StructureType(..)
+                                           , QueueFlagBits(..)
+                                           , QueueFlags
+                                           , MemoryPropertyFlagBits(..)
+                                           , MemoryPropertyFlags
+                                           , MemoryHeapFlagBits(..)
+                                           , MemoryHeapFlags
+                                           , ImageUsageFlagBits(..)
+                                           , ImageUsageFlags
+                                           , ImageCreateFlagBits(..)
+                                           , ImageCreateFlags
+                                           , FormatFeatureFlagBits(..)
+                                           , FormatFeatureFlags
+                                           , SampleCountFlagBits(..)
+                                           , SampleCountFlags
+                                           , FN_vkInternalAllocationNotification
+                                           , PFN_vkInternalAllocationNotification
+                                           , FN_vkInternalFreeNotification
+                                           , PFN_vkInternalFreeNotification
+                                           , FN_vkReallocationFunction
+                                           , PFN_vkReallocationFunction
+                                           , FN_vkAllocationFunction
+                                           , PFN_vkAllocationFunction
+                                           , FN_vkFreeFunction
+                                           , PFN_vkFreeFunction
+                                           , FN_vkVoidFunction
+                                           , PFN_vkVoidFunction
                                            ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
@@ -76,8 +113,8 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.Dynamic (getInstanceProcAddr')
 import Vulkan.Dynamic (initInstanceCmds)
@@ -87,19 +124,19 @@ import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_report (DebugReportCallbackCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsMessengerCreateInfoEXT)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceProcAddr))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
-import Vulkan.Core10.SharedTypes (Extent3D)
+import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.Format (Format(..))
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
@@ -160,6 +197,43 @@ import Vulkan.Core10.APIConstants (pattern MAX_MEMORY_TYPES)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_APPLICATION_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_INSTANCE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks(..))
+import Vulkan.Core10.FuncPointers (FN_vkAllocationFunction)
+import Vulkan.Core10.FuncPointers (FN_vkFreeFunction)
+import Vulkan.Core10.FuncPointers (FN_vkInternalAllocationNotification)
+import Vulkan.Core10.FuncPointers (FN_vkInternalFreeNotification)
+import Vulkan.Core10.FuncPointers (FN_vkReallocationFunction)
+import Vulkan.Core10.FuncPointers (FN_vkVoidFunction)
+import Vulkan.Core10.Enums.Format (Format(..))
+import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlagBits(..))
+import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
+import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(..))
+import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
+import Vulkan.Core10.Enums.ImageTiling (ImageTiling(..))
+import Vulkan.Core10.Enums.ImageType (ImageType(..))
+import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(..))
+import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
+import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Enums.InstanceCreateFlags (InstanceCreateFlags(..))
+import Vulkan.Core10.Enums.InternalAllocationType (InternalAllocationType(..))
+import Vulkan.Core10.Enums.MemoryHeapFlagBits (MemoryHeapFlagBits(..))
+import Vulkan.Core10.Enums.MemoryHeapFlagBits (MemoryHeapFlags)
+import Vulkan.Core10.Enums.MemoryPropertyFlagBits (MemoryPropertyFlagBits(..))
+import Vulkan.Core10.Enums.MemoryPropertyFlagBits (MemoryPropertyFlags)
+import Vulkan.Core10.FuncPointers (PFN_vkAllocationFunction)
+import Vulkan.Core10.FuncPointers (PFN_vkFreeFunction)
+import Vulkan.Core10.FuncPointers (PFN_vkInternalAllocationNotification)
+import Vulkan.Core10.FuncPointers (PFN_vkInternalFreeNotification)
+import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
+import Vulkan.Core10.FuncPointers (PFN_vkVoidFunction)
+import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Enums.PhysicalDeviceType (PhysicalDeviceType(..))
+import Vulkan.Core10.Enums.QueueFlagBits (QueueFlagBits(..))
+import Vulkan.Core10.Enums.QueueFlagBits (QueueFlags)
+import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits(..))
+import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlags)
+import Vulkan.Core10.Enums.StructureType (StructureType(..))
+import Vulkan.Core10.Enums.SystemAllocationScope (SystemAllocationScope(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -1406,33 +1480,33 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 --     and extent parameters of image transfer operations:
 --
 --     -   The @x@, @y@, and @z@ members of a
---         'Vulkan.Core10.SharedTypes.Offset3D' parameter /must/ always be
---         zero.
+--         'Vulkan.Core10.FundamentalTypes.Offset3D' parameter /must/
+--         always be zero.
 --
 --     -   The @width@, @height@, and @depth@ members of a
---         'Vulkan.Core10.SharedTypes.Extent3D' parameter /must/ always
---         match the width, height, and depth of the image subresource
---         corresponding to the parameter, respectively.
+--         'Vulkan.Core10.FundamentalTypes.Extent3D' parameter /must/
+--         always match the width, height, and depth of the image
+--         subresource corresponding to the parameter, respectively.
 --
 -- -   (Ax, Ay, Az) where Ax, Ay, and Az are all integer powers of two. In
 --     this case the following restrictions apply to all image transfer
 --     operations:
 --
---     -   @x@, @y@, and @z@ of a 'Vulkan.Core10.SharedTypes.Offset3D'
+--     -   @x@, @y@, and @z@ of a 'Vulkan.Core10.FundamentalTypes.Offset3D'
 --         parameter /must/ be integer multiples of Ax, Ay, and Az,
 --         respectively.
 --
---     -   @width@ of a 'Vulkan.Core10.SharedTypes.Extent3D' parameter
+--     -   @width@ of a 'Vulkan.Core10.FundamentalTypes.Extent3D' parameter
 --         /must/ be an integer multiple of Ax, or else @x@ + @width@
 --         /must/ equal the width of the image subresource corresponding to
 --         the parameter.
 --
---     -   @height@ of a 'Vulkan.Core10.SharedTypes.Extent3D' parameter
---         /must/ be an integer multiple of Ay, or else @y@ + @height@
---         /must/ equal the height of the image subresource corresponding
---         to the parameter.
+--     -   @height@ of a 'Vulkan.Core10.FundamentalTypes.Extent3D'
+--         parameter /must/ be an integer multiple of Ay, or else @y@ +
+--         @height@ /must/ equal the height of the image subresource
+--         corresponding to the parameter.
 --
---     -   @depth@ of a 'Vulkan.Core10.SharedTypes.Extent3D' parameter
+--     -   @depth@ of a 'Vulkan.Core10.FundamentalTypes.Extent3D' parameter
 --         /must/ be an integer multiple of Az, or else @z@ + @depth@
 --         /must/ equal the depth of the image subresource corresponding to
 --         the parameter.
@@ -1460,7 +1534,7 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.SharedTypes.Extent3D',
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2',
 -- 'Vulkan.Core10.Enums.QueueFlagBits.QueueFlags',
 -- 'getPhysicalDeviceQueueFamilyProperties'
@@ -1906,7 +1980,7 @@ instance Zero MemoryType where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.MemoryHeapFlagBits.MemoryHeapFlags',
 -- 'PhysicalDeviceMemoryProperties'
 data MemoryHeap = MemoryHeap
@@ -2123,8 +2197,8 @@ instance Zero FormatProperties where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
--- 'Vulkan.Core10.SharedTypes.Extent3D',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalImageFormatPropertiesNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
@@ -2194,7 +2268,7 @@ instance Zero ImageFormatProperties where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Device.DeviceCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 -- 'getPhysicalDeviceFeatures'
@@ -2425,7 +2499,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- and multisample interpolation are supported. If this feature is not
     -- enabled, the @sampleShadingEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' structure
-    -- /must/ be set to 'Vulkan.Core10.BaseType.FALSE' and the
+    -- /must/ be set to 'Vulkan.Core10.FundamentalTypes.FALSE' and the
     -- @minSampleShading@ member is ignored. This also specifies whether shader
     -- modules /can/ declare the @SampleRateShading@ capability.
     sampleRateShading :: Bool
@@ -2441,8 +2515,8 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | @logicOp@ specifies whether logic operations are supported. If this
     -- feature is not enabled, the @logicOpEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo' structure
-    -- /must/ be set to 'Vulkan.Core10.BaseType.FALSE', and the @logicOp@
-    -- member is ignored.
+    -- /must/ be set to 'Vulkan.Core10.FundamentalTypes.FALSE', and the
+    -- @logicOp@ member is ignored.
     logicOp :: Bool
   , -- | @multiDrawIndirect@ specifies whether multiple draw indirect is
     -- supported. If this feature is not enabled, the @drawCount@ parameter to
@@ -2466,9 +2540,9 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | @depthClamp@ specifies whether depth clamping is supported. If this
     -- feature is not enabled, the @depthClampEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' structure
-    -- /must/ be set to 'Vulkan.Core10.BaseType.FALSE'. Otherwise, setting
-    -- @depthClampEnable@ to 'Vulkan.Core10.BaseType.TRUE' will enable depth
-    -- clamping.
+    -- /must/ be set to 'Vulkan.Core10.FundamentalTypes.FALSE'. Otherwise,
+    -- setting @depthClampEnable@ to 'Vulkan.Core10.FundamentalTypes.TRUE' will
+    -- enable depth clamping.
     depthClamp :: Bool
   , -- | @depthBiasClamp@ specifies whether depth bias clamping is supported. If
     -- this feature is not enabled, the @depthBiasClamp@ member of the
@@ -2488,9 +2562,10 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | @depthBounds@ specifies whether depth bounds tests are supported. If
     -- this feature is not enabled, the @depthBoundsTestEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' structure
-    -- /must/ be set to 'Vulkan.Core10.BaseType.FALSE'. When
-    -- @depthBoundsTestEnable@ is set to 'Vulkan.Core10.BaseType.FALSE', the
-    -- @minDepthBounds@ and @maxDepthBounds@ members of the
+    -- /must/ be set to 'Vulkan.Core10.FundamentalTypes.FALSE'. When
+    -- @depthBoundsTestEnable@ is set to
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', the @minDepthBounds@ and
+    -- @maxDepthBounds@ members of the
     -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' structure
     -- are ignored.
     depthBounds :: Bool
@@ -2519,9 +2594,9 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- floating-point colors. If this feature is not enabled, then the
     -- @alphaToOneEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' structure
-    -- /must/ be set to 'Vulkan.Core10.BaseType.FALSE'. Otherwise setting
-    -- @alphaToOneEnable@ to 'Vulkan.Core10.BaseType.TRUE' will enable
-    -- alpha-to-one behavior.
+    -- /must/ be set to 'Vulkan.Core10.FundamentalTypes.FALSE'. Otherwise
+    -- setting @alphaToOneEnable@ to 'Vulkan.Core10.FundamentalTypes.TRUE' will
+    -- enable alpha-to-one behavior.
     alphaToOne :: Bool
   , -- | @multiViewport@ specifies whether more than one viewport is supported.
     -- If this feature is not enabled:
@@ -2550,7 +2625,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | @samplerAnisotropy@ specifies whether anisotropic filtering is
     -- supported. If this feature is not enabled, the @anisotropyEnable@ member
     -- of the 'Vulkan.Core10.Sampler.SamplerCreateInfo' structure /must/ be
-    -- 'Vulkan.Core10.BaseType.FALSE'.
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE'.
     samplerAnisotropy :: Bool
   , -- | @textureCompressionETC2@ specifies whether all of the ETC2 and EAC
     -- compressed texture formats are supported. If this feature is enabled,
@@ -3045,11 +3120,11 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>
     -- /must/ have the same value for
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
-    -- If set to 'Vulkan.Core10.BaseType.TRUE', the implementation supports
-    -- variable multisample rates in a subpass which uses no attachments. If
-    -- set to 'Vulkan.Core10.BaseType.FALSE', then all pipelines bound in such
-    -- a subpass /must/ have the same multisample rate. This has no effect in
-    -- situations where a subpass uses any attachments.
+    -- If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the implementation
+    -- supports variable multisample rates in a subpass which uses no
+    -- attachments. If set to 'Vulkan.Core10.FundamentalTypes.FALSE', then all
+    -- pipelines bound in such a subpass /must/ have the same multisample rate.
+    -- This has no effect in situations where a subpass uses any attachments.
     variableMultisampleRate :: Bool
   , -- | @inheritedQueries@ specifies whether a secondary command buffer /may/ be
     -- executed while a query is active.
@@ -3310,11 +3385,11 @@ instance Zero PhysicalDeviceFeatures where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'PhysicalDeviceProperties'
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'PhysicalDeviceProperties'
 data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
-  { -- | @residencyStandard2DBlockShape@ is 'Vulkan.Core10.BaseType.TRUE' if the
-    -- physical device will access all single-sample 2D sparse resources using
-    -- the standard sparse image block shapes (based on image format), as
+  { -- | @residencyStandard2DBlockShape@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
+    -- if the physical device will access all single-sample 2D sparse resources
+    -- using the standard sparse image block shapes (based on image format), as
     -- described in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
     -- table. If this property is not supported the value returned in the
@@ -3324,9 +3399,9 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- standard sparse image block dimensions listed in the table.
     residencyStandard2DBlockShape :: Bool
   , -- | @residencyStandard2DMultisampleBlockShape@ is
-    -- 'Vulkan.Core10.BaseType.TRUE' if the physical device will access all
-    -- multisample 2D sparse resources using the standard sparse image block
-    -- shapes (based on image format), as described in the
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the physical device will access
+    -- all multisample 2D sparse resources using the standard sparse image
+    -- block shapes (based on image format), as described in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory-sparseblockshapesmsaa Standard Sparse Image Block Shapes (MSAA)>
     -- table. If this property is not supported, the value returned in the
     -- @imageGranularity@ member of the
@@ -3334,9 +3409,10 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- structure for multisample 2D images is not /required/ to match the
     -- standard sparse image block dimensions listed in the table.
     residencyStandard2DMultisampleBlockShape :: Bool
-  , -- | @residencyStandard3DBlockShape@ is 'Vulkan.Core10.BaseType.TRUE' if the
-    -- physical device will access all 3D sparse resources using the standard
-    -- sparse image block shapes (based on image format), as described in the
+  , -- | @residencyStandard3DBlockShape@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
+    -- if the physical device will access all 3D sparse resources using the
+    -- standard sparse image block shapes (based on image format), as described
+    -- in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
     -- table. If this property is not supported, the value returned in the
     -- @imageGranularity@ member of the
@@ -3344,8 +3420,8 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- structure for 3D images is not /required/ to match the standard sparse
     -- image block dimensions listed in the table.
     residencyStandard3DBlockShape :: Bool
-  , -- | @residencyAlignedMipSize@ is 'Vulkan.Core10.BaseType.TRUE' if images
-    -- with mip level dimensions that are not integer multiples of the
+  , -- | @residencyAlignedMipSize@ is 'Vulkan.Core10.FundamentalTypes.TRUE' if
+    -- images with mip level dimensions that are not integer multiples of the
     -- corresponding dimensions of the sparse image block /may/ be placed in
     -- the mip tail. If this property is not reported, only mip levels with
     -- dimensions smaller than the @imageGranularity@ member of the
@@ -3361,8 +3437,8 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     residencyAlignedMipSize :: Bool
   , -- | @residencyNonResidentStrict@ specifies whether the physical device /can/
     -- consistently access non-resident regions of a resource. If this property
-    -- is 'Vulkan.Core10.BaseType.TRUE', access to non-resident regions of
-    -- resources will be guaranteed to return values as if the resource were
+    -- is 'Vulkan.Core10.FundamentalTypes.TRUE', access to non-resident regions
+    -- of resources will be guaranteed to return values as if the resource were
     -- populated with 0; writes to non-resident regions will be discarded.
     residencyNonResidentStrict :: Bool
   }
@@ -3438,8 +3514,8 @@ instance Zero PhysicalDeviceSparseProperties where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.BaseType.DeviceSize',
--- 'PhysicalDeviceProperties',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'PhysicalDeviceProperties',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags'
 data PhysicalDeviceLimits = PhysicalDeviceLimits
   { -- | @maxImageDimension1D@ is the maximum dimension (@width@) supported for
@@ -4108,12 +4184,12 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT'.
     storageImageSampleCounts :: SampleCountFlags
   , -- | @maxSampleMaskWords@ is the maximum number of array elements of a
-    -- variable decorated with the 'Vulkan.Core10.BaseType.SampleMask' built-in
-    -- decoration.
+    -- variable decorated with the 'Vulkan.Core10.FundamentalTypes.SampleMask'
+    -- built-in decoration.
     maxSampleMaskWords :: Word32
   , -- | @timestampComputeAndGraphics@ specifies support for timestamps on all
     -- graphics and compute queues. If this limit is set to
-    -- 'Vulkan.Core10.BaseType.TRUE', all queues that advertise the
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', all queues that advertise the
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' in the
     -- 'QueueFamilyProperties'::@queueFlags@ support
@@ -4170,17 +4246,18 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     lineWidthGranularity :: Float
   , -- | @strictLines@ specifies whether lines are rasterized according to the
     -- preferred method of rasterization. If set to
-    -- 'Vulkan.Core10.BaseType.FALSE', lines /may/ be rasterized under a
-    -- relaxed set of rules. If set to 'Vulkan.Core10.BaseType.TRUE', lines are
-    -- rasterized as per the strict definition. See
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', lines /may/ be rasterized under
+    -- a relaxed set of rules. If set to 'Vulkan.Core10.FundamentalTypes.TRUE',
+    -- lines are rasterized as per the strict definition. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
     strictLines :: Bool
   , -- | @standardSampleLocations@ specifies whether rasterization uses the
     -- standard sample locations as documented in
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling Multisampling>.
-    -- If set to 'Vulkan.Core10.BaseType.TRUE', the implementation uses the
-    -- documented sample locations. If set to 'Vulkan.Core10.BaseType.FALSE',
-    -- the implementation /may/ use different sample locations.
+    -- If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the implementation uses
+    -- the documented sample locations. If set to
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', the implementation /may/ use
+    -- different sample locations.
     standardSampleLocations :: Bool
   , -- | @optimalBufferCopyOffsetAlignment@ is the optimal buffer offset
     -- alignment in bytes for

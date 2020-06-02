@@ -7,6 +7,9 @@ module Vulkan.Core10.Fence  ( createFence
                             , waitForFences
                             , waitForFencesSafe
                             , FenceCreateInfo(..)
+                            , Fence(..)
+                            , FenceCreateFlagBits(..)
+                            , FenceCreateFlags
                             ) where
 
 import Control.Exception.Base (bracket)
@@ -41,12 +44,12 @@ import Data.Word (Word64)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
@@ -80,6 +83,9 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_FENCE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (Fence(..))
+import Vulkan.Core10.Enums.FenceCreateFlagBits (FenceCreateFlagBits(..))
+import Vulkan.Core10.Enums.FenceCreateFlagBits (FenceCreateFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -410,9 +416,10 @@ waitForFencesSafeOrUnsafe :: forall io
                           -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
                              ("fences" ::: Vector Fence)
                           -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
-                             -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
-                             -- the condition is that all fences in @pFences@ are signaled. Otherwise,
-                             -- the condition is that at least one fence in @pFences@ is signaled.
+                             -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+                             -- then the condition is that all fences in @pFences@ are signaled.
+                             -- Otherwise, the condition is that at least one fence in @pFences@ is
+                             -- signaled.
                              ("waitAll" ::: Bool)
                           -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
                              -- adjusted to the closest value allowed by the implementation-dependent
@@ -496,7 +503,7 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.Device',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.Fence'
 waitForFences :: forall io
                . (MonadIO io)
@@ -505,9 +512,10 @@ waitForFences :: forall io
               -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
                  ("fences" ::: Vector Fence)
               -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
-                 -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
-                 -- the condition is that all fences in @pFences@ are signaled. Otherwise,
-                 -- the condition is that at least one fence in @pFences@ is signaled.
+                 -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+                 -- then the condition is that all fences in @pFences@ are signaled.
+                 -- Otherwise, the condition is that at least one fence in @pFences@ is
+                 -- signaled.
                  ("waitAll" ::: Bool)
               -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
                  -- adjusted to the closest value allowed by the implementation-dependent
@@ -525,9 +533,10 @@ waitForFencesSafe :: forall io
                   -> -- | @pFences@ is a pointer to an array of @fenceCount@ fence handles.
                      ("fences" ::: Vector Fence)
                   -> -- | @waitAll@ is the condition that /must/ be satisfied to successfully
-                     -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.BaseType.TRUE', then
-                     -- the condition is that all fences in @pFences@ are signaled. Otherwise,
-                     -- the condition is that at least one fence in @pFences@ is signaled.
+                     -- unblock the wait. If @waitAll@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+                     -- then the condition is that all fences in @pFences@ are signaled.
+                     -- Otherwise, the condition is that at least one fence in @pFences@ is
+                     -- signaled.
                      ("waitAll" ::: Bool)
                   -> -- | @timeout@ is the timeout period in units of nanoseconds. @timeout@ is
                      -- adjusted to the closest value allowed by the implementation-dependent

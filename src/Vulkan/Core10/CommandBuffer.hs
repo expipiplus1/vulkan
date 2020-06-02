@@ -9,6 +9,14 @@ module Vulkan.Core10.CommandBuffer  ( allocateCommandBuffers
                                     , CommandBufferAllocateInfo(..)
                                     , CommandBufferInheritanceInfo(..)
                                     , CommandBufferBeginInfo(..)
+                                    , CommandBuffer(..)
+                                    , CommandBufferLevel(..)
+                                    , QueryControlFlagBits(..)
+                                    , QueryControlFlags
+                                    , CommandBufferUsageFlagBits(..)
+                                    , CommandBufferUsageFlags
+                                    , CommandBufferResetFlagBits(..)
+                                    , CommandBufferResetFlags
                                     ) where
 
 import Control.Exception.Base (bracket)
@@ -47,13 +55,13 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (withSomeCStruct)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
@@ -101,6 +109,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_B
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Enums.CommandBufferLevel (CommandBufferLevel(..))
+import Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlagBits(..))
+import Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
+import Vulkan.Core10.Enums.CommandBufferUsageFlagBits (CommandBufferUsageFlagBits(..))
+import Vulkan.Core10.Enums.CommandBufferUsageFlagBits (CommandBufferUsageFlags)
+import Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlagBits(..))
+import Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -293,9 +309,10 @@ foreign import ccall
 --
 -- -   If @commandBuffer@ is a secondary command buffer and either the
 --     @occlusionQueryEnable@ member of the @pInheritanceInfo@ member of
---     @pBeginInfo@ is 'Vulkan.Core10.BaseType.FALSE', or the precise
---     occlusion queries feature is not enabled, the @queryFlags@ member of
---     the @pInheritanceInfo@ member @pBeginInfo@ /must/ not contain
+--     @pBeginInfo@ is 'Vulkan.Core10.FundamentalTypes.FALSE', or the
+--     precise occlusion queries feature is not enabled, the @queryFlags@
+--     member of the @pInheritanceInfo@ member @pBeginInfo@ /must/ not
+--     contain
 --     'Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
 --
 -- -   If @commandBuffer@ is a primary command buffer, then
@@ -613,7 +630,7 @@ instance Zero CommandBufferAllocateInfo where
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is not enabled, @occlusionQueryEnable@ /must/ be
---     'Vulkan.Core10.BaseType.FALSE'
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
@@ -657,7 +674,7 @@ instance Zero CommandBufferAllocateInfo where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'CommandBufferBeginInfo',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32', 'CommandBufferBeginInfo',
 -- 'Vulkan.Core10.Handles.Framebuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlags',
@@ -694,11 +711,11 @@ data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
     framebuffer :: Framebuffer
   , -- | @occlusionQueryEnable@ specifies whether the command buffer /can/ be
     -- executed while an occlusion query is active in the primary command
-    -- buffer. If this is 'Vulkan.Core10.BaseType.TRUE', then this command
-    -- buffer /can/ be executed whether the primary command buffer has an
-    -- occlusion query active or not. If this is
-    -- 'Vulkan.Core10.BaseType.FALSE', then the primary command buffer /must/
-    -- not have an occlusion query active.
+    -- buffer. If this is 'Vulkan.Core10.FundamentalTypes.TRUE', then this
+    -- command buffer /can/ be executed whether the primary command buffer has
+    -- an occlusion query active or not. If this is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE', then the primary command buffer
+    -- /must/ not have an occlusion query active.
     occlusionQueryEnable :: Bool
   , -- | @queryFlags@ specifies the query flags that /can/ be used by an active
     -- occlusion query in the primary command buffer when this secondary

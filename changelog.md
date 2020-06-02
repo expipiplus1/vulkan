@@ -1,6 +1,9 @@
 # Change Log
 
 ## WIP
+  - Bump API version to 1.2.142
+    - The spec includes specific locations for types, so we use them
+    - BaseType -> FundamentalTypes
   - Add `withSomeStruct` helper
 
 ## [3.3.1] - 2020-05-18

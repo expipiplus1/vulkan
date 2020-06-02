@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Bump VMA version (nfc, just comments)
 
 ## [0.3.1] - 2020-05-18
   - Eq instances for some simple structs, #94

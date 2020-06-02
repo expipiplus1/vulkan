@@ -7,9 +7,9 @@ module Vulkan.Extensions.VK_KHR_wayland_surface  ( createWaylandSurfaceKHR
                                                  , pattern KHR_WAYLAND_SURFACE_SPEC_VERSION
                                                  , KHR_WAYLAND_SURFACE_EXTENSION_NAME
                                                  , pattern KHR_WAYLAND_SURFACE_EXTENSION_NAME
-                                                 , SurfaceKHR(..)
                                                  , Wl_display
                                                  , Wl_surface
+                                                 , SurfaceKHR(..)
                                                  ) where
 
 import Control.Exception.Base (bracket)
@@ -52,12 +52,12 @@ import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Bool32(..))
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -76,15 +76,11 @@ import Vulkan.Extensions.Handles (SurfaceKHR(..))
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
-import Vulkan.Extensions.WSITypes (Wl_display)
-import Vulkan.Extensions.WSITypes (Wl_surface)
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.WSITypes (Wl_display)
-import Vulkan.Extensions.WSITypes (Wl_surface)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -301,4 +297,10 @@ type KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
 -- No documentation found for TopLevel "VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME"
 pattern KHR_WAYLAND_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
+
+
+data Wl_display
+
+
+data Wl_surface
 

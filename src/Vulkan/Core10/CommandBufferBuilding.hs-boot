@@ -2,13 +2,14 @@
 module Vulkan.Core10.CommandBufferBuilding  ( BufferCopy
                                             , BufferImageCopy
                                             , ClearAttachment
+                                            , ClearDepthStencilValue
                                             , ClearRect
                                             , ImageBlit
                                             , ImageCopy
                                             , ImageResolve
-                                            , Rect2D
+                                            , ImageSubresourceLayers
                                             , RenderPassBeginInfo
-                                            , Viewport
+                                            , ClearColorValue
                                             ) where
 
 import Data.Kind (Type)
@@ -37,6 +38,14 @@ data ClearAttachment
 
 instance ToCStruct ClearAttachment
 instance Show ClearAttachment
+
+
+data ClearDepthStencilValue
+
+instance ToCStruct ClearDepthStencilValue
+instance Show ClearDepthStencilValue
+
+instance FromCStruct ClearDepthStencilValue
 
 
 data ClearRect
@@ -71,12 +80,12 @@ instance Show ImageResolve
 instance FromCStruct ImageResolve
 
 
-data Rect2D
+data ImageSubresourceLayers
 
-instance ToCStruct Rect2D
-instance Show Rect2D
+instance ToCStruct ImageSubresourceLayers
+instance Show ImageSubresourceLayers
 
-instance FromCStruct Rect2D
+instance FromCStruct ImageSubresourceLayers
 
 
 type role RenderPassBeginInfo nominal
@@ -86,10 +95,5 @@ instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPas
 instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 
-data Viewport
-
-instance ToCStruct Viewport
-instance Show Viewport
-
-instance FromCStruct Viewport
+data ClearColorValue
 

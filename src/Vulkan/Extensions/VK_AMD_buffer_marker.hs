@@ -24,7 +24,7 @@ import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdWriteBufferMarkerAMD))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(..))
 foreign import ccall
@@ -125,7 +125,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 cmdWriteBufferMarkerAMD :: forall io
                          . (MonadIO io)

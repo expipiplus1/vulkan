@@ -6,8 +6,8 @@ module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  ( createImagePipeSurfaceF
                                                        , pattern FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION
                                                        , FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
                                                        , pattern FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
-                                                       , SurfaceKHR(..)
                                                        , Zx_handle_t
+                                                       , SurfaceKHR(..)
                                                        ) where
 
 import Control.Exception.Base (bracket)
@@ -46,12 +46,13 @@ import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))
+import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Handles (Instance)
@@ -68,11 +69,9 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
-import Vulkan.Extensions.WSITypes (Zx_handle_t)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Extensions.Handles (SurfaceKHR(..))
-import Vulkan.Extensions.WSITypes (Zx_handle_t)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -236,4 +235,7 @@ type FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME = "VK_FUCHSIA_imagepipe_surface"
 -- No documentation found for TopLevel "VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME"
 pattern FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
 pattern FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME = "VK_FUCHSIA_imagepipe_surface"
+
+
+type Zx_handle_t = Word32
 

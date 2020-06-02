@@ -32,10 +32,10 @@ import GHC.Read (Read(readPrec))
 import Data.Word (Word32)
 import Text.Read.Lex (Lexeme(Ident))
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -49,7 +49,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
--- If @coverageToColorEnable@ is 'Vulkan.Core10.BaseType.TRUE', the
+-- If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage mask>
 -- replaces the first component of the color value corresponding to the
 -- fragment shader output location with @Location@ equal to
@@ -59,14 +59,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- attachment format has more bits than the coverage mask, the high bits of
 -- the sample coverage mask are filled with zeros.
 --
--- If @coverageToColorEnable@ is 'Vulkan.Core10.BaseType.FALSE', these
--- operations are skipped. If this structure is not present, it is as if
--- @coverageToColorEnable@ is 'Vulkan.Core10.BaseType.FALSE'.
+-- If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
+-- these operations are skipped. If this structure is not present, it is as
+-- if @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage
 --
--- -   If @coverageToColorEnable@ is 'Vulkan.Core10.BaseType.TRUE', then
---     the render pass subpass indicated by
+-- -   If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
+--     then the render pass subpass indicated by
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     and 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@subpass@
 --     /must/ have a color attachment at the location selected by
@@ -88,7 +88,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'PipelineCoverageToColorStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCoverageToColorStateCreateInfoNV = PipelineCoverageToColorStateCreateInfoNV

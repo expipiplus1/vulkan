@@ -10,6 +10,7 @@ module Vulkan.Extensions.VK_KHR_get_memory_requirements2  ( pattern STRUCTURE_TY
                                                           , BufferMemoryRequirementsInfo2KHR
                                                           , ImageMemoryRequirementsInfo2KHR
                                                           , ImageSparseMemoryRequirementsInfo2KHR
+                                                          , MemoryRequirements2KHR
                                                           , SparseImageMemoryRequirements2KHR
                                                           , KHR_GET_MEMORY_REQUIREMENTS_2_SPEC_VERSION
                                                           , pattern KHR_GET_MEMORY_REQUIREMENTS_2_SPEC_VERSION
@@ -24,6 +25,7 @@ import Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (getImageSpar
 import Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (BufferMemoryRequirementsInfo2)
 import Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageMemoryRequirementsInfo2)
 import Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageSparseMemoryRequirementsInfo2)
+import Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (MemoryRequirements2)
 import Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (SparseImageMemoryRequirements2)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2))
@@ -72,6 +74,10 @@ type ImageMemoryRequirementsInfo2KHR = ImageMemoryRequirementsInfo2
 
 -- No documentation found for TopLevel "VkImageSparseMemoryRequirementsInfo2KHR"
 type ImageSparseMemoryRequirementsInfo2KHR = ImageSparseMemoryRequirementsInfo2
+
+
+-- No documentation found for TopLevel "VkMemoryRequirements2KHR"
+type MemoryRequirements2KHR = MemoryRequirements2
 
 
 -- No documentation found for TopLevel "VkSparseImageMemoryRequirements2KHR"

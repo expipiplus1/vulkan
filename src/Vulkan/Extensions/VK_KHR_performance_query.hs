@@ -110,20 +110,20 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
 import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
 import Vulkan.NamedType ((:::))
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireProfilingLockKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkReleaseProfilingLockKHR))
 import Vulkan.Core10.Handles (Device_T)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Dynamic (InstanceCmds(pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR))
@@ -399,15 +399,15 @@ releaseProfilingLockKHR device = liftIO $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryFeaturesKHR
-  { -- | @performanceCounterQueryPools@ is 'Vulkan.Core10.BaseType.TRUE' if the
-    -- physical device supports performance counter query pools.
+  { -- | @performanceCounterQueryPools@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
+    -- if the physical device supports performance counter query pools.
     performanceCounterQueryPools :: Bool
   , -- | @performanceCounterMultipleQueryPools@ is
-    -- 'Vulkan.Core10.BaseType.TRUE'\` if the physical device supports using
-    -- multiple performance query pools in a primary command buffer and
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE'\` if the physical device supports
+    -- using multiple performance query pools in a primary command buffer and
     -- secondary command buffers executed within it.
     performanceCounterMultipleQueryPools :: Bool
   }
@@ -470,11 +470,11 @@ instance Zero PhysicalDevicePerformanceQueryFeaturesKHR where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryPropertiesKHR = PhysicalDevicePerformanceQueryPropertiesKHR
-  { -- | @allowCommandBufferQueryCopies@ is 'Vulkan.Core10.BaseType.TRUE' if the
-    -- performance query pools are allowed to be used with
+  { -- | @allowCommandBufferQueryCopies@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
+    -- if the performance query pools are allowed to be used with
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'.
     allowCommandBufferQueryCopies :: Bool }
   deriving (Typeable, Eq)

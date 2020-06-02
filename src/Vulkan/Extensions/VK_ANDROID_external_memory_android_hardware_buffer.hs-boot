@@ -5,6 +5,7 @@ module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( A
                                                                              , ExternalFormatANDROID
                                                                              , ImportAndroidHardwareBufferInfoANDROID
                                                                              , MemoryGetAndroidHardwareBufferInfoANDROID
+                                                                             , AHardwareBuffer
                                                                              ) where
 
 import Data.Kind (Type)
@@ -61,4 +62,7 @@ instance ToCStruct MemoryGetAndroidHardwareBufferInfoANDROID
 instance Show MemoryGetAndroidHardwareBufferInfoANDROID
 
 instance FromCStruct MemoryGetAndroidHardwareBufferInfoANDROID
+
+
+data AHardwareBuffer
 

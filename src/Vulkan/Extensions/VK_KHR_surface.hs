@@ -103,13 +103,13 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
-import Vulkan.Core10.BaseType (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
-import Vulkan.Core10.BaseType (Bool32)
-import Vulkan.Core10.BaseType (Bool32(..))
-import Vulkan.Core10.SharedTypes (Extent2D)
-import Vulkan.Core10.BaseType (Flags)
+import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32(..))
+import Vulkan.Core10.FundamentalTypes (Extent2D)
+import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -235,7 +235,7 @@ foreign import ccall
 --     handle
 --
 -- -   @pSupported@ /must/ be a valid pointer to a
---     'Vulkan.Core10.BaseType.Bool32' value
+--     'Vulkan.Core10.FundamentalTypes.Bool32' value
 --
 -- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
 --     allocated, or retrieved from the same
@@ -257,7 +257,8 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32', 'Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
+-- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceSupportKHR :: forall io
                                     . (MonadIO io)
@@ -566,7 +567,7 @@ getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = liftIO . evalCo
 --
 -- = See Also
 --
--- 'CompositeAlphaFlagsKHR', 'Vulkan.Core10.SharedTypes.Extent2D',
+-- 'CompositeAlphaFlagsKHR', 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR',
 -- 'SurfaceTransformFlagBitsKHR', 'SurfaceTransformFlagsKHR',

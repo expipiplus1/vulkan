@@ -31,17 +31,17 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.DescriptorSet (DescriptorSetLayoutCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (DescriptorSetVariableDescriptorCountLayoutSupport)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDescriptorSetLayoutSupport))
-import Vulkan.Core10.BaseType (DeviceSize)
+import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -79,7 +79,8 @@ foreign import ccall
 -- This command returns information about whether a descriptor set
 -- satisfies this limit. If the descriptor set layout satisfies the
 -- 'PhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
--- this command is guaranteed to return 'Vulkan.Core10.BaseType.TRUE' in
+-- this command is guaranteed to return
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' in
 -- 'DescriptorSetLayoutSupport'::@supported@. If the descriptor set layout
 -- exceeds the
 -- 'PhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
@@ -151,7 +152,7 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.DeviceSize',
+-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
   { -- | @maxPerSetDescriptors@ is a maximum number of descriptors (summed over
@@ -213,8 +214,9 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 --
 -- = Description
 --
--- @supported@ is set to 'Vulkan.Core10.BaseType.TRUE' if the descriptor
--- set /can/ be created, or else is set to 'Vulkan.Core10.BaseType.FALSE'.
+-- @supported@ is set to 'Vulkan.Core10.FundamentalTypes.TRUE' if the
+-- descriptor set /can/ be created, or else is set to
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -229,7 +231,7 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDescriptorSetLayoutSupport',
 -- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'

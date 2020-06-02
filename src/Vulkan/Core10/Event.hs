@@ -6,6 +6,8 @@ module Vulkan.Core10.Event  ( createEvent
                             , setEvent
                             , resetEvent
                             , EventCreateInfo(..)
+                            , Event(..)
+                            , EventCreateFlags(..)
                             ) where
 
 import Control.Exception.Base (bracket)
@@ -58,6 +60,8 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EVENT_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.Handles (Event(..))
+import Vulkan.Core10.Enums.EventCreateFlags (EventCreateFlags(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

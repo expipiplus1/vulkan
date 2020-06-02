@@ -20,9 +20,9 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
-import Vulkan.Core10.BaseType (bool32ToBool)
-import Vulkan.Core10.BaseType (boolToBool32)
-import Vulkan.Core10.BaseType (Bool32)
+import Vulkan.Core10.FundamentalTypes (bool32ToBool)
+import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -46,7 +46,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEDICATED
 --
 -- == Valid Usage
 --
--- -   If @dedicatedAllocation@ is 'Vulkan.Core10.BaseType.TRUE',
+-- -   If @dedicatedAllocation@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ /must/ not include
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
@@ -60,7 +60,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEDICATED
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DedicatedAllocationImageCreateInfoNV = DedicatedAllocationImageCreateInfoNV
   { -- | @dedicatedAllocation@ specifies whether the image will have a dedicated
@@ -111,7 +111,7 @@ instance Zero DedicatedAllocationImageCreateInfoNV where
 --
 -- = See Also
 --
--- 'Vulkan.Core10.BaseType.Bool32',
+-- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DedicatedAllocationBufferCreateInfoNV = DedicatedAllocationBufferCreateInfoNV
   { -- | @dedicatedAllocation@ specifies whether the buffer will have a dedicated
@@ -166,12 +166,12 @@ instance Zero DedicatedAllocationBufferCreateInfoNV where
 -- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
 --     image /must/ have been created with
 --     'DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@ equal
---     to 'Vulkan.Core10.BaseType.TRUE'
+--     to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
 --     buffer /must/ have been created with
 --     'DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@ equal
---     to 'Vulkan.Core10.BaseType.TRUE'
+--     to 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
