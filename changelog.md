@@ -5,6 +5,7 @@
     - The spec includes specific locations for types, so we use them
     - BaseType -> FundamentalTypes
   - Add `withSomeStruct` helper
+  - Add `FromCStruct` instance for `VkAccelerationStructureGeometryKHR`
 
 ## [3.3.1] - 2020-05-18
   - Bump API version to 1.2.141
