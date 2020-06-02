@@ -12,9 +12,9 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['8.10.1', '8.8.2', '8.6.5']
+        ghc: ['8.10.1', '8.8.3', '8.6.5']
         cabal: ['3.0']
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-20.04, macOS-latest]
         exclude:
           - ghc: 8.10.1
             os: macOS-latest
@@ -45,12 +45,8 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.ghc }}-dist-newstyle
 
     - name: Install system dependencies Linux
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-bionic.list http://packages.lunarg.com/vulkan/lunarg-vulkan-bionic.list
-        sudo apt-get update
-        sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+      if: matrix.os == 'ubuntu-20.04'
+      run: sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
@@ -65,10 +61,10 @@ jobs:
         sed -ibak '/examples/d' cabal.project
       if: matrix.ghc == '8.6.5'
 
-    - name: Remove generator for all but 8.8.2
+    - name: Remove generator for all but 8.8.3
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.8.2'
+      if: matrix.ghc != '8.8.3'
 
     - run: cabal update
 
@@ -96,9 +92,9 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-20.04, macOS-latest]
         # Use windows with 8.10.2+ https://gitlab.haskell.org/ghc/ghc/issues/17926
-        # os: [ubuntu-latest, windows-latest]
+        # os: [windows-latest]
         stack-args: ['--system-ghc --flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
       fail-fast: false
 
@@ -133,12 +129,8 @@ jobs:
           ${{ runner.os }}-stack-work
 
     - name: Install system dependencies Linux
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-bionic.list http://packages.lunarg.com/vulkan/lunarg-vulkan-bionic.list
-        sudo apt-get update
-        sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+      if: matrix.os == 'ubuntu-20.04'
+      run: sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
 
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
