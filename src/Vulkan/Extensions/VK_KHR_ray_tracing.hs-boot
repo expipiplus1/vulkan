@@ -109,8 +109,6 @@ data AccelerationStructureGeometryKHR
 instance ToCStruct AccelerationStructureGeometryKHR
 instance Show AccelerationStructureGeometryKHR
 
-instance FromCStruct AccelerationStructureGeometryKHR
-
 
 data AccelerationStructureGeometryTrianglesDataKHR
 

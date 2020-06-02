@@ -4586,14 +4586,6 @@ instance ToCStruct AccelerationStructureGeometryKHR where
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr AccelerationStructureGeometryDataKHR)) (zero) . ($ ())
     lift $ f
 
-instance FromCStruct AccelerationStructureGeometryKHR where
-  peekCStruct p = do
-    geometryType <- peek @GeometryTypeKHR ((p `plusPtr` 16 :: Ptr GeometryTypeKHR))
-    geometry <- peekAccelerationStructureGeometryDataKHR geometryType ((p `plusPtr` 24 :: Ptr AccelerationStructureGeometryDataKHR))
-    flags <- peek @GeometryFlagsKHR ((p `plusPtr` 88 :: Ptr GeometryFlagsKHR))
-    pure $ AccelerationStructureGeometryKHR
-             geometryType geometry flags
-
 instance Zero AccelerationStructureGeometryKHR where
   zero = AccelerationStructureGeometryKHR
            zero
