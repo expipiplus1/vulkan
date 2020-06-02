@@ -688,15 +688,8 @@ boolConversion = genRe "Bool conversion" $ do
 
 
 wsiTypes :: (HasErr r, HasRenderParams r) => [Sem r RenderElement]
-wsiTypes =
-  putInWSI <$> (snd <$> concat [win32, x11, xcb2, zircon, ggp]) <> concat
-    [win32', xcb1, wayland, metal, android]
- where
-  putInWSI = fmap $ \re -> re
-    { reExplicitModule = reExplicitModule re
-                           <|> Just (vulkanModule ["Extensions", "WSITypes"])
-    }
-
+wsiTypes = (snd <$> concat [win32, x11, xcb2, zircon, ggp])
+  <> concat [win32', xcb1, wayland, metal, android]
 
 namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
