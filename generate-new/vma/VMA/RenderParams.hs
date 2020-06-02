@@ -95,8 +95,8 @@ renderParams handles = r
       in  \case
             TermName  "advancePtrBytes"  -> vk "CStruct.Utils"
             TermName  "lowerArrayPtr"    -> vk "CStruct.Utils"
-            TermName  "boolToBool32"     -> vk "Core10.BaseType"
-            TermName  "bool32ToBool"     -> vk "Core10.BaseType"
+            TermName  "boolToBool32"     -> vk "Core10.FundamentalTypes"
+            TermName  "bool32ToBool"     -> vk "Core10.FundamentalTypes"
             TyConName "Zero"             -> vk "Zero"
             TyConName "ToCStruct"        -> vk "CStruct"
             TyConName "FromCStruct"      -> vk "CStruct"

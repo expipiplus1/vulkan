@@ -843,6 +843,9 @@ isForbidden n =
            , "VK_HEADER_VERSION"
            , "VK_HEADER_VERSION_COMPLETE"
            , "VK_NULL_HANDLE"
+           , "VK_DEFINE_HANDLE"
+           , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
+           , "VK_MAKE_VERSION"
            ]
     )
     ||             "VK_API_VERSION_"

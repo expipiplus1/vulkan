@@ -379,6 +379,10 @@ featureCommentMap :: Text -> Text
 featureCommentMap = \case
   "These types are part of the API and should always be defined, even when no enabled features require them."
     -> "OtherTypes"
+  "These types are part of the API, though not directly used in API commands or data structures"
+    -> "OtherTypes"
+  "Fundamental types used by many commands and structures" ->
+    "FundamentalTypes"
   t -> t
 
 ----------------------------------------------------------------

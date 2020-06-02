@@ -87,7 +87,6 @@ assignBespokeModules es = do
 bespokeModules :: HasRenderParams r => Sem r [(HName, ModName)]
 bespokeModules = do
   RenderParams {..} <- input
-  let core10Base n = (mkTyName n, vulkanModule ["Core10", "SharedTypes"])
   pure
     $  [ ( mkTyName "VkAllocationCallbacks"
          , vulkanModule ["Core10", "AllocationCallbacks"]
@@ -95,19 +94,7 @@ bespokeModules = do
        , (mkTyName "VkBaseInStructure" , vulkanModule ["CStruct", "Extends"])
        , (mkTyName "VkBaseOutStructure", vulkanModule ["CStruct", "Extends"])
        ]
-    <> (   core10Base
-       <$> [ "VkExtent2D"
-           , "VkExtent3D"
-           , "VkOffset2D"
-           , "VkOffset3D"
-           , "VkImageSubresourceLayers"
-           , "VkImageSubresourceRange"
-           , "VkClearValue"
-           , "VkClearColorValue"
-           , "VkClearDepthStencilValue"
-           ]
-       )
-    <> (   (, vulkanModule ["Core10", "BaseType"])
+    <> (   (, vulkanModule ["Core10", "FundamentalTypes"])
        <$> [ mkTyName "VkBool32"
            , TermName "boolToBool32"
            , TermName "bool32ToBool"
@@ -723,7 +710,7 @@ baseType
 baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   RenderParams {..} <- input
   let n' = mkTyName n
-  tellExplicitModule (vulkanModule ["Core10", "BaseType"])
+  tellExplicitModule (vulkanModule ["Core10", "FundamentalTypes"])
   tellExport (EType n')
   tDoc <- renderType (ConT t)
   tellDocWithHaddock $ \getDoc ->
