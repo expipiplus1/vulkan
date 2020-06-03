@@ -1,7 +1,10 @@
 # Change Log
 
 ## WIP
+
+## [0.3.2] - 2020-06-03
   - Bump VMA version (nfc, just comments)
+  - Compile with new `vulkan` version
 
 ## [0.3.1] - 2020-05-18
   - Eq instances for some simple structs, #94

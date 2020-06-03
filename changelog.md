@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [3.4] - 2020-06-03
   - Bump API version to 1.2.142
     - The spec includes specific locations for types, so we use them
     - BaseType -> FundamentalTypes
