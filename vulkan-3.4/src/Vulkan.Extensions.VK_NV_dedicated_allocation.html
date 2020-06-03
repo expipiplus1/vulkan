@@ -1,0 +1,697 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_NV_dedicated_allocation</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier">DedicatedAllocationImageCreateInfoNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier">DedicatedAllocationBufferCreateInfoNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier">DedicatedAllocationMemoryAllocateInfoNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier">NV_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                     </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier">NV_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span><span>
+</span><span id="line-7"></span><span>                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier">NV_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                     </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier">NV_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-9"></span><span>                                                     </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier">Buffer</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier">Image</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV"><span class="hs-identifier">STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV"><span class="hs-identifier">STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV"><span class="hs-identifier">STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- | VkDedicatedAllocationImageCreateInfoNV - Specify that an image is bound</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- to a dedicated memory resource</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- Using a dedicated allocation for color and depth\/stencil attachments or</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- other large images /may/ improve performance on some devices.</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- -   If @dedicatedAllocation@ is 'Vulkan.Core10.FundamentalTypes.TRUE',</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ /must/ not include</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--     or</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- -   @sType@ /must/ be</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV'</span><span>
+</span><span id="line-60"></span><span class="hs-comment">--</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-62"></span><span class="hs-comment">--</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">data</span><span> </span><span id="DedicatedAllocationImageCreateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationImageCreateInfoNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DedicatedAllocationImageCreateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationImageCreateInfoNV</span></a></span></span><span>
+</span><span id="line-66"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @dedicatedAllocation@ specifies whether the image will have a dedicated</span><span>
+</span><span id="line-67"></span><span>    </span><span class="hs-comment">-- allocation bound to it.</span><span>
+</span><span id="line-68"></span><span>    </span><span id="%24sel%3AdedicatedAllocation%3ADedicatedAllocationImageCreateInfoNV"><span class="annot"><span class="annottext">DedicatedAllocationImageCreateInfoNV -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#%24sel%3AdedicatedAllocation%3ADedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-var hs-var">dedicatedAllocation</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-69"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680079350"><span id="local-6989586621680079352"><span class="annot"><span class="annottext">DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; Bool
+(DedicatedAllocationImageCreateInfoNV
+ -&gt; DedicatedAllocationImageCreateInfoNV -&gt; Bool)
+-&gt; (DedicatedAllocationImageCreateInfoNV
+    -&gt; DedicatedAllocationImageCreateInfoNV -&gt; Bool)
+-&gt; Eq DedicatedAllocationImageCreateInfoNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; Bool
+$c/= :: DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; Bool
+== :: DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; Bool
+$c== :: DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">DedicatedAllocationImageCreateInfoNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680079343"><span id="local-6989586621680079345"><span id="local-6989586621680079347"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationImageCreateInfoNV</span></a></span></span></span></span><span>
+</span><span id="line-74"></span><span>
+</span><span id="line-75"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680079338"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationImageCreateInfoNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-76"></span><span>  </span><span id="local-6989586621680079333"><span class="annot"><span class="annottext">withCStruct :: DedicatedAllocationImageCreateInfoNV
+-&gt; (Ptr DedicatedAllocationImageCreateInfoNV -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680079331"><span class="annot"><span class="annottext">x :: DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079331"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680079330"><span class="annot"><span class="annottext">f :: Ptr DedicatedAllocationImageCreateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680079330"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr DedicatedAllocationImageCreateInfoNV -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr DedicatedAllocationImageCreateInfoNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr DedicatedAllocationImageCreateInfoNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680079329"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079329"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079329"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079331"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680079330"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079329"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>  </span><span id="local-6989586621680079327"><span class="annot"><span class="annottext">pokeCStruct :: Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680079327"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680079326"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079326"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680079325"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationImageCreateInfoNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680079324"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680079324"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-78"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079326"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079326"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079326"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680079325"><span class="hs-identifier hs-var">dedicatedAllocation</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680079324"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-82"></span><span>  </span><span id="local-6989586621680079323"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-83"></span><span>  </span><span id="local-6989586621680079321"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621680079319"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr DedicatedAllocationImageCreateInfoNV -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680079317"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079317"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680079316"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680079316"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-85"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079317"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079317"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079317"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680079316"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-89"></span><span>
+</span><span id="line-90"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationImageCreateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-91"></span><span>  </span><span id="local-6989586621680079312"><span class="annot"><span class="annottext">peekCStruct :: Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; IO DedicatedAllocationImageCreateInfoNV
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680079310"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079310"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-92"></span><span>    </span><span id="local-6989586621680079309"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680079309"><span class="hs-identifier hs-var">dedicatedAllocation</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079310"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>    </span><span class="annot"><span class="annottext">DedicatedAllocationImageCreateInfoNV
+-&gt; IO DedicatedAllocationImageCreateInfoNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(DedicatedAllocationImageCreateInfoNV
+ -&gt; IO DedicatedAllocationImageCreateInfoNV)
+-&gt; DedicatedAllocationImageCreateInfoNV
+-&gt; IO DedicatedAllocationImageCreateInfoNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; DedicatedAllocationImageCreateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationImageCreateInfoNV</span></a></span><span>
+</span><span id="line-94"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680079309"><span class="hs-identifier hs-var">dedicatedAllocation</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>
+</span><span id="line-96"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680079299"><span id="local-6989586621680079301"><span id="local-6989586621680079303"><span id="local-6989586621680079305"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationImageCreateInfoNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-97"></span><span>  </span><span id="local-6989586621680079295"><span class="annot"><span class="annottext">sizeOf :: DedicatedAllocationImageCreateInfoNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DedicatedAllocationImageCreateInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680079293"><span class="annot"><span class="annottext">alignment :: DedicatedAllocationImageCreateInfoNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DedicatedAllocationImageCreateInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621680079291"><span class="annot"><span class="annottext">peek :: Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; IO DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079291"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; IO DedicatedAllocationImageCreateInfoNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-100"></span><span>  </span><span id="local-6989586621680079290"><span class="annot"><span class="annottext">poke :: Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; IO ()
+</span><a href="#local-6989586621680079290"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680079289"><span class="annot"><span class="annottext">ptr :: Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079289"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680079288"><span class="annot"><span class="annottext">poked :: DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079288"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+-&gt; DedicatedAllocationImageCreateInfoNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079289"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079288"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationImageCreateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-103"></span><span>  </span><span id="local-6989586621680079285"><span class="annot"><span class="annottext">zero :: DedicatedAllocationImageCreateInfoNV
+</span><a href="#local-6989586621680079285"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; DedicatedAllocationImageCreateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationImageCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationImageCreateInfoNV</span></a></span><span>
+</span><span id="line-104"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-105"></span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- | VkDedicatedAllocationBufferCreateInfoNV - Specify that a buffer is bound</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- to a dedicated memory resource</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-116"></span><span class="hs-keyword">data</span><span> </span><span id="DedicatedAllocationBufferCreateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationBufferCreateInfoNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DedicatedAllocationBufferCreateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationBufferCreateInfoNV</span></a></span></span><span>
+</span><span id="line-117"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @dedicatedAllocation@ specifies whether the buffer will have a dedicated</span><span>
+</span><span id="line-118"></span><span>    </span><span class="hs-comment">-- allocation bound to it.</span><span>
+</span><span id="line-119"></span><span>    </span><span id="%24sel%3AdedicatedAllocation%3ADedicatedAllocationBufferCreateInfoNV"><span class="annot"><span class="annottext">DedicatedAllocationBufferCreateInfoNV -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#%24sel%3AdedicatedAllocation%3ADedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-var hs-var">dedicatedAllocation</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-120"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680079279"><span id="local-6989586621680079281"><span class="annot"><span class="annottext">DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; Bool
+(DedicatedAllocationBufferCreateInfoNV
+ -&gt; DedicatedAllocationBufferCreateInfoNV -&gt; Bool)
+-&gt; (DedicatedAllocationBufferCreateInfoNV
+    -&gt; DedicatedAllocationBufferCreateInfoNV -&gt; Bool)
+-&gt; Eq DedicatedAllocationBufferCreateInfoNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; Bool
+$c/= :: DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; Bool
+== :: DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; Bool
+$c== :: DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">DedicatedAllocationBufferCreateInfoNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680079273"><span id="local-6989586621680079275"><span id="local-6989586621680079277"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationBufferCreateInfoNV</span></a></span></span></span></span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680079269"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationBufferCreateInfoNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-127"></span><span>  </span><span id="local-6989586621680079265"><span class="annot"><span class="annottext">withCStruct :: DedicatedAllocationBufferCreateInfoNV
+-&gt; (Ptr DedicatedAllocationBufferCreateInfoNV -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680079265"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680079264"><span class="annot"><span class="annottext">x :: DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079264"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680079263"><span class="annot"><span class="annottext">f :: Ptr DedicatedAllocationBufferCreateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680079263"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr DedicatedAllocationBufferCreateInfoNV -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr DedicatedAllocationBufferCreateInfoNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr DedicatedAllocationBufferCreateInfoNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680079262"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079262"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079262"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079264"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680079263"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079262"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-128"></span><span>  </span><span id="local-6989586621680079261"><span class="annot"><span class="annottext">pokeCStruct :: Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680079261"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680079260"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079260"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680079259"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationBufferCreateInfoNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680079258"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680079258"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-129"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079260"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079260"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079260"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680079259"><span class="hs-identifier hs-var">dedicatedAllocation</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680079258"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621680079257"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680079257"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-134"></span><span>  </span><span id="local-6989586621680079256"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680079256"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-135"></span><span>  </span><span id="local-6989586621680079255"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr DedicatedAllocationBufferCreateInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680079255"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680079254"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079254"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680079253"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680079253"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-136"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079254"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079254"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079254"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680079253"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-140"></span><span>
+</span><span id="line-141"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationBufferCreateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-142"></span><span>  </span><span id="local-6989586621680079251"><span class="annot"><span class="annottext">peekCStruct :: Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; IO DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079251"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680079250"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079250"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-143"></span><span>    </span><span id="local-6989586621680079249"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680079249"><span class="hs-identifier hs-var">dedicatedAllocation</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079250"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span>    </span><span class="annot"><span class="annottext">DedicatedAllocationBufferCreateInfoNV
+-&gt; IO DedicatedAllocationBufferCreateInfoNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(DedicatedAllocationBufferCreateInfoNV
+ -&gt; IO DedicatedAllocationBufferCreateInfoNV)
+-&gt; DedicatedAllocationBufferCreateInfoNV
+-&gt; IO DedicatedAllocationBufferCreateInfoNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; DedicatedAllocationBufferCreateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationBufferCreateInfoNV</span></a></span><span>
+</span><span id="line-145"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680079249"><span class="hs-identifier hs-var">dedicatedAllocation</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span>
+</span><span id="line-147"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680079239"><span id="local-6989586621680079241"><span id="local-6989586621680079243"><span id="local-6989586621680079245"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationBufferCreateInfoNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-148"></span><span>  </span><span id="local-6989586621680079236"><span class="annot"><span class="annottext">sizeOf :: DedicatedAllocationBufferCreateInfoNV -&gt; Int
+</span><a href="#local-6989586621680079236"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DedicatedAllocationBufferCreateInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-149"></span><span>  </span><span id="local-6989586621680079235"><span class="annot"><span class="annottext">alignment :: DedicatedAllocationBufferCreateInfoNV -&gt; Int
+</span><a href="#local-6989586621680079235"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DedicatedAllocationBufferCreateInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-150"></span><span>  </span><span id="local-6989586621680079234"><span class="annot"><span class="annottext">peek :: Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; IO DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079234"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; IO DedicatedAllocationBufferCreateInfoNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-151"></span><span>  </span><span id="local-6989586621680079233"><span class="annot"><span class="annottext">poke :: Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; IO ()
+</span><a href="#local-6989586621680079233"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680079232"><span class="annot"><span class="annottext">ptr :: Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079232"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680079231"><span class="annot"><span class="annottext">poked :: DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079231"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+-&gt; DedicatedAllocationBufferCreateInfoNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079232"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079231"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span>
+</span><span id="line-153"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationBufferCreateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-154"></span><span>  </span><span id="local-6989586621680079229"><span class="annot"><span class="annottext">zero :: DedicatedAllocationBufferCreateInfoNV
+</span><a href="#local-6989586621680079229"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; DedicatedAllocationBufferCreateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationBufferCreateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationBufferCreateInfoNV</span></a></span><span>
+</span><span id="line-155"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-156"></span><span>
+</span><span id="line-157"></span><span>
+</span><span id="line-158"></span><span class="hs-comment">-- | VkDedicatedAllocationMemoryAllocateInfoNV - Specify a dedicated memory</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- allocation resource</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-162"></span><span class="hs-comment">--</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- -   At least one of @image@ and @buffer@ /must/ be</span><span>
+</span><span id="line-164"></span><span class="hs-comment">--     'Vulkan.Core10.APIConstants.NULL_HANDLE'</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the</span><span>
+</span><span id="line-167"></span><span class="hs-comment">--     image /must/ have been created with</span><span>
+</span><span id="line-168"></span><span class="hs-comment">--     'DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@ equal</span><span>
+</span><span id="line-169"></span><span class="hs-comment">--     to 'Vulkan.Core10.FundamentalTypes.TRUE'</span><span>
+</span><span id="line-170"></span><span class="hs-comment">--</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the</span><span>
+</span><span id="line-172"></span><span class="hs-comment">--     buffer /must/ have been created with</span><span>
+</span><span id="line-173"></span><span class="hs-comment">--     'DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@ equal</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--     to 'Vulkan.Core10.FundamentalTypes.TRUE'</span><span>
+</span><span id="line-175"></span><span class="hs-comment">--</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/</span><span>
+</span><span id="line-178"></span><span class="hs-comment">--     equal the</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the</span><span>
+</span><span id="line-180"></span><span class="hs-comment">--     image</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',</span><span>
+</span><span id="line-183"></span><span class="hs-comment">--     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/</span><span>
+</span><span id="line-184"></span><span class="hs-comment">--     equal the</span><span>
+</span><span id="line-185"></span><span class="hs-comment">--     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--     buffer</span><span>
+</span><span id="line-187"></span><span class="hs-comment">--</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and</span><span>
+</span><span id="line-189"></span><span class="hs-comment">--     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import</span><span>
+</span><span id="line-190"></span><span class="hs-comment">--     operation, the memory being imported /must/ also be a dedicated</span><span>
+</span><span id="line-191"></span><span class="hs-comment">--     image allocation and @image@ /must/ be identical to the image</span><span>
+</span><span id="line-192"></span><span class="hs-comment">--     associated with the imported memory</span><span>
+</span><span id="line-193"></span><span class="hs-comment">--</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and</span><span>
+</span><span id="line-195"></span><span class="hs-comment">--     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import</span><span>
+</span><span id="line-196"></span><span class="hs-comment">--     operation, the memory being imported /must/ also be a dedicated</span><span>
+</span><span id="line-197"></span><span class="hs-comment">--     buffer allocation and @buffer@ /must/ be identical to the buffer</span><span>
+</span><span id="line-198"></span><span class="hs-comment">--     associated with the imported memory</span><span>
+</span><span id="line-199"></span><span class="hs-comment">--</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-201"></span><span class="hs-comment">--</span><span>
+</span><span id="line-202"></span><span class="hs-comment">-- -   @sType@ /must/ be</span><span>
+</span><span id="line-203"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV'</span><span>
+</span><span id="line-204"></span><span class="hs-comment">--</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@</span><span>
+</span><span id="line-206"></span><span class="hs-comment">--     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle</span><span>
+</span><span id="line-207"></span><span class="hs-comment">--</span><span>
+</span><span id="line-208"></span><span class="hs-comment">-- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle</span><span>
+</span><span id="line-210"></span><span class="hs-comment">--</span><span>
+</span><span id="line-211"></span><span class="hs-comment">-- -   Both of @buffer@, and @image@ that are valid handles of non-ignored</span><span>
+</span><span id="line-212"></span><span class="hs-comment">--     parameters /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-213"></span><span class="hs-comment">--     the same 'Vulkan.Core10.Handles.Device'</span><span>
+</span><span id="line-214"></span><span class="hs-comment">--</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-216"></span><span class="hs-comment">--</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Image',</span><span>
+</span><span id="line-218"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-219"></span><span class="hs-keyword">data</span><span> </span><span id="DedicatedAllocationMemoryAllocateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationMemoryAllocateInfoNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DedicatedAllocationMemoryAllocateInfoNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationMemoryAllocateInfoNV</span></a></span></span><span>
+</span><span id="line-220"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @image@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a handle of an</span><span>
+</span><span id="line-221"></span><span>    </span><span class="hs-comment">-- image which this memory will be bound to.</span><span>
+</span><span id="line-222"></span><span>    </span><span id="%24sel%3Aimage%3ADedicatedAllocationMemoryAllocateInfoNV"><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV -&gt; Image
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#%24sel%3Aimage%3ADedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-var hs-var">image</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span>
+</span><span id="line-223"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @buffer@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a handle of a</span><span>
+</span><span id="line-224"></span><span>    </span><span class="hs-comment">-- buffer which this memory will be bound to.</span><span>
+</span><span id="line-225"></span><span>    </span><span id="%24sel%3Abuffer%3ADedicatedAllocationMemoryAllocateInfoNV"><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV -&gt; Buffer
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#%24sel%3Abuffer%3ADedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-var hs-var">buffer</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span>
+</span><span id="line-226"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-227"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680079222"><span id="local-6989586621680079224"><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; Bool
+(DedicatedAllocationMemoryAllocateInfoNV
+ -&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; Bool)
+-&gt; (DedicatedAllocationMemoryAllocateInfoNV
+    -&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; Bool)
+-&gt; Eq DedicatedAllocationMemoryAllocateInfoNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; Bool
+$c/= :: DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; Bool
+== :: DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; Bool
+$c== :: DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">DedicatedAllocationMemoryAllocateInfoNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680079216"><span id="local-6989586621680079218"><span id="local-6989586621680079220"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationMemoryAllocateInfoNV</span></a></span></span></span></span><span>
+</span><span id="line-232"></span><span>
+</span><span id="line-233"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680079212"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationMemoryAllocateInfoNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-234"></span><span>  </span><span id="local-6989586621680079208"><span class="annot"><span class="annottext">withCStruct :: DedicatedAllocationMemoryAllocateInfoNV
+-&gt; (Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680079208"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680079207"><span class="annot"><span class="annottext">x :: DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079207"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680079206"><span class="annot"><span class="annottext">f :: Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680079206"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680079205"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079205"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079205"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079207"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b
+</span><a href="#local-6989586621680079206"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079205"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-235"></span><span>  </span><span id="local-6989586621680079204"><span class="annot"><span class="annottext">pokeCStruct :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680079204"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680079203"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079203"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680079201"><span id="local-6989586621680079202"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationMemoryAllocateInfoNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680079200"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680079200"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-236"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079203"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-237"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079203"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-238"></span><span>    </span><span class="annot"><span class="annottext">Ptr Image -&gt; Image -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079203"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; Int -&gt; Ptr Image
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Image
+</span><a href="#local-6989586621680079202"><span class="hs-identifier hs-var">image</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-239"></span><span>    </span><span class="annot"><span class="annottext">Ptr Buffer -&gt; Buffer -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079203"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; Int -&gt; Ptr Buffer
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621680079201"><span class="hs-identifier hs-var">buffer</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-240"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680079200"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-241"></span><span>  </span><span id="local-6989586621680079199"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680079199"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-242"></span><span>  </span><span id="local-6989586621680079198"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680079198"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-243"></span><span>  </span><span id="local-6989586621680079197"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680079197"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680079196"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079196"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680079195"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680079195"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-244"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079196"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-245"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079196"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-246"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680079195"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-247"></span><span>
+</span><span id="line-248"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationMemoryAllocateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-249"></span><span>  </span><span id="local-6989586621680079193"><span class="annot"><span class="annottext">peekCStruct :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; IO DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079193"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680079192"><span class="annot"><span class="annottext">p :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079192"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-250"></span><span>    </span><span id="local-6989586621680079191"><span class="annot"><span class="annottext">Image
+</span><a href="#local-6989586621680079191"><span class="hs-identifier hs-var">image</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Image -&gt; IO Image
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079192"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; Int -&gt; Ptr Image
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-251"></span><span>    </span><span id="local-6989586621680079190"><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621680079190"><span class="hs-identifier hs-var">buffer</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Buffer -&gt; IO Buffer
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079192"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV -&gt; Int -&gt; Ptr Buffer
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-252"></span><span>    </span><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV
+-&gt; IO DedicatedAllocationMemoryAllocateInfoNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(DedicatedAllocationMemoryAllocateInfoNV
+ -&gt; IO DedicatedAllocationMemoryAllocateInfoNV)
+-&gt; DedicatedAllocationMemoryAllocateInfoNV
+-&gt; IO DedicatedAllocationMemoryAllocateInfoNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Image -&gt; Buffer -&gt; DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationMemoryAllocateInfoNV</span></a></span><span>
+</span><span id="line-253"></span><span>             </span><span class="annot"><span class="annottext">Image
+</span><a href="#local-6989586621680079191"><span class="hs-identifier hs-var">image</span></a></span><span> </span><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621680079190"><span class="hs-identifier hs-var">buffer</span></a></span><span>
+</span><span id="line-254"></span><span>
+</span><span id="line-255"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680079180"><span id="local-6989586621680079182"><span id="local-6989586621680079184"><span id="local-6989586621680079186"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationMemoryAllocateInfoNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-256"></span><span>  </span><span id="local-6989586621680079177"><span class="annot"><span class="annottext">sizeOf :: DedicatedAllocationMemoryAllocateInfoNV -&gt; Int
+</span><a href="#local-6989586621680079177"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-257"></span><span>  </span><span id="local-6989586621680079176"><span class="annot"><span class="annottext">alignment :: DedicatedAllocationMemoryAllocateInfoNV -&gt; Int
+</span><a href="#local-6989586621680079176"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-258"></span><span>  </span><span id="local-6989586621680079175"><span class="annot"><span class="annottext">peek :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; IO DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079175"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; IO DedicatedAllocationMemoryAllocateInfoNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-259"></span><span>  </span><span id="local-6989586621680079174"><span class="annot"><span class="annottext">poke :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; IO ()
+</span><a href="#local-6989586621680079174"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680079173"><span class="annot"><span class="annottext">ptr :: Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079173"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680079172"><span class="annot"><span class="annottext">poked :: DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079172"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+-&gt; DedicatedAllocationMemoryAllocateInfoNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079173"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079172"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-260"></span><span>
+</span><span id="line-261"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-type">DedicatedAllocationMemoryAllocateInfoNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-262"></span><span>  </span><span id="local-6989586621680079170"><span class="annot"><span class="annottext">zero :: DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="#local-6989586621680079170"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Image -&gt; Buffer -&gt; DedicatedAllocationMemoryAllocateInfoNV
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#DedicatedAllocationMemoryAllocateInfoNV"><span class="hs-identifier hs-var">DedicatedAllocationMemoryAllocateInfoNV</span></a></span><span>
+</span><span id="line-263"></span><span>           </span><span class="annot"><span class="annottext">Image
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-264"></span><span>           </span><span class="annot"><span class="annottext">Buffer
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-265"></span><span>
+</span><span id="line-266"></span><span>
+</span><span id="line-267"></span><span class="hs-keyword">type</span><span> </span><span id="NV_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier hs-var">NV_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-268"></span><span>
+</span><span id="line-269"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_DEDICATED_ALLOCATION_SPEC_VERSION&quot;</span><span>
+</span><span id="line-270"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier hs-type">NV_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680079376"><span class="annot"><a href="#local-6989586621680079376"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680079376"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680079376"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-271"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_DEDICATED_ALLOCATION_SPEC_VERSION"><span id="%24mNV_DEDICATED_ALLOCATION_SPEC_VERSION"><span id="NV_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="annot"><span class="annottext">$bNV_DEDICATED_ALLOCATION_SPEC_VERSION :: a
+$mNV_DEDICATED_ALLOCATION_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#%24bNV_DEDICATED_ALLOCATION_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">NV_DEDICATED_ALLOCATION_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-272"></span><span>
+</span><span id="line-273"></span><span>
+</span><span id="line-274"></span><span class="hs-keyword">type</span><span> </span><span id="NV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier hs-var">NV_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_dedicated_allocation&quot;</span></span><span>
+</span><span id="line-275"></span><span>
+</span><span id="line-276"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-277"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#NV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier hs-type">NV_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680079372"><span class="annot"><a href="#local-6989586621680079372"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680079372"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680079372"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680079372"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-278"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span id="%24mNV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span id="NV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="annot"><span class="annottext">$bNV_DEDICATED_ALLOCATION_EXTENSION_NAME :: a
+$mNV_DEDICATED_ALLOCATION_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_dedicated_allocation.html#%24bNV_DEDICATED_ALLOCATION_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">NV_DEDICATED_ALLOCATION_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_dedicated_allocation&quot;</span></span><span>
+</span><span id="line-279"></span><span>
+</span><span id="line-280"></span></pre></body></html>

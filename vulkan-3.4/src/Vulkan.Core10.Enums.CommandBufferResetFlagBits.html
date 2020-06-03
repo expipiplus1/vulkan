@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.CommandBufferResetFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier">CommandBufferResetFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier">COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                   </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-4"></span><span>                                                                                   </span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlags"><span class="hs-identifier">CommandBufferResetFlags</span></a></span><span>
+</span><span id="line-6"></span><span>                                                       </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- | VkCommandBufferResetFlagBits - Bitmask controlling behavior of a command</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- buffer reset</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'CommandBufferResetFlags'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="CommandBufferResetFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-var">CommandBufferResetFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CommandBufferResetFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-var">CommandBufferResetFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680069651"><span id="local-6989586621680069653"><span class="annot"><span class="annottext">CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+(CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; Bool)
+-&gt; Eq CommandBufferResetFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+$c/= :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+== :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+$c== :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069635"><span id="local-6989586621680069637"><span id="local-6989586621680069639"><span id="local-6989586621680069641"><span id="local-6989586621680069643"><span id="local-6989586621680069645"><span id="local-6989586621680069647"><span class="annot"><span class="annottext">Eq CommandBufferResetFlagBits
+Eq CommandBufferResetFlagBits =&gt;
+(CommandBufferResetFlagBits
+ -&gt; CommandBufferResetFlagBits -&gt; Ordering)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; Bool)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; Bool)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; Bool)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; Bool)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits)
+-&gt; Ord CommandBufferResetFlagBits
+CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; Ordering
+CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+$cmin :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+max :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+$cmax :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+&gt;= :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+$c&gt;= :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+&gt; :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+$c&gt; :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+&lt;= :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+$c&lt;= :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+&lt; :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+$c&lt; :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits -&gt; Bool
+compare :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; Ordering
+$ccompare :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; Ordering
+$cp1Ord :: Eq CommandBufferResetFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069618"><span id="local-6989586621680069620"><span id="local-6989586621680069622"><span id="local-6989586621680069624"><span id="local-6989586621680069626"><span id="local-6989586621680069628"><span id="local-6989586621680069630"><span id="local-6989586621680069632"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO CommandBufferResetFlagBits
+Ptr b -&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ()
+Ptr CommandBufferResetFlagBits -&gt; IO CommandBufferResetFlagBits
+Ptr CommandBufferResetFlagBits
+-&gt; Int -&gt; IO CommandBufferResetFlagBits
+Ptr CommandBufferResetFlagBits
+-&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ()
+Ptr CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; IO ()
+CommandBufferResetFlagBits -&gt; Int
+(CommandBufferResetFlagBits -&gt; Int)
+-&gt; (CommandBufferResetFlagBits -&gt; Int)
+-&gt; (Ptr CommandBufferResetFlagBits
+    -&gt; Int -&gt; IO CommandBufferResetFlagBits)
+-&gt; (Ptr CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO CommandBufferResetFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ())
+-&gt; (Ptr CommandBufferResetFlagBits
+    -&gt; IO CommandBufferResetFlagBits)
+-&gt; (Ptr CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; IO ())
+-&gt; Storable CommandBufferResetFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO CommandBufferResetFlagBits
+forall b. Ptr b -&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; IO ()
+$cpoke :: Ptr CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; IO ()
+peek :: Ptr CommandBufferResetFlagBits -&gt; IO CommandBufferResetFlagBits
+$cpeek :: Ptr CommandBufferResetFlagBits -&gt; IO CommandBufferResetFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO CommandBufferResetFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO CommandBufferResetFlagBits
+pokeElemOff :: Ptr CommandBufferResetFlagBits
+-&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr CommandBufferResetFlagBits
+-&gt; Int -&gt; CommandBufferResetFlagBits -&gt; IO ()
+peekElemOff :: Ptr CommandBufferResetFlagBits
+-&gt; Int -&gt; IO CommandBufferResetFlagBits
+$cpeekElemOff :: Ptr CommandBufferResetFlagBits
+-&gt; Int -&gt; IO CommandBufferResetFlagBits
+alignment :: CommandBufferResetFlagBits -&gt; Int
+$calignment :: CommandBufferResetFlagBits -&gt; Int
+sizeOf :: CommandBufferResetFlagBits -&gt; Int
+$csizeOf :: CommandBufferResetFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069615"><span class="annot"><span class="annottext">CommandBufferResetFlagBits
+CommandBufferResetFlagBits -&gt; Zero CommandBufferResetFlagBits
+forall a. a -&gt; Zero a
+zero :: CommandBufferResetFlagBits
+$czero :: CommandBufferResetFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069569"><span id="local-6989586621680069571"><span id="local-6989586621680069573"><span id="local-6989586621680069575"><span id="local-6989586621680069577"><span id="local-6989586621680069579"><span id="local-6989586621680069581"><span id="local-6989586621680069583"><span id="local-6989586621680069585"><span id="local-6989586621680069587"><span id="local-6989586621680069589"><span id="local-6989586621680069591"><span id="local-6989586621680069593"><span id="local-6989586621680069595"><span id="local-6989586621680069597"><span id="local-6989586621680069599"><span id="local-6989586621680069601"><span id="local-6989586621680069603"><span id="local-6989586621680069605"><span id="local-6989586621680069607"><span id="local-6989586621680069609"><span id="local-6989586621680069611"><span class="annot"><span class="annottext">Eq CommandBufferResetFlagBits
+CommandBufferResetFlagBits
+Eq CommandBufferResetFlagBits =&gt;
+(CommandBufferResetFlagBits
+ -&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; CommandBufferResetFlagBits
+-&gt; (Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits -&gt; Int -&gt; Bool)
+-&gt; (CommandBufferResetFlagBits -&gt; Maybe Int)
+-&gt; (CommandBufferResetFlagBits -&gt; Int)
+-&gt; (CommandBufferResetFlagBits -&gt; Bool)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits
+    -&gt; Int -&gt; CommandBufferResetFlagBits)
+-&gt; (CommandBufferResetFlagBits -&gt; Int)
+-&gt; Bits CommandBufferResetFlagBits
+Int -&gt; CommandBufferResetFlagBits
+CommandBufferResetFlagBits -&gt; Bool
+CommandBufferResetFlagBits -&gt; Int
+CommandBufferResetFlagBits -&gt; Maybe Int
+CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+CommandBufferResetFlagBits -&gt; Int -&gt; Bool
+CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: CommandBufferResetFlagBits -&gt; Int
+$cpopCount :: CommandBufferResetFlagBits -&gt; Int
+rotateR :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$crotateR :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+rotateL :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$crotateL :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+unsafeShiftR :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$cunsafeShiftR :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+shiftR :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$cshiftR :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+unsafeShiftL :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$cunsafeShiftL :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+shiftL :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$cshiftL :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+isSigned :: CommandBufferResetFlagBits -&gt; Bool
+$cisSigned :: CommandBufferResetFlagBits -&gt; Bool
+bitSize :: CommandBufferResetFlagBits -&gt; Int
+$cbitSize :: CommandBufferResetFlagBits -&gt; Int
+bitSizeMaybe :: CommandBufferResetFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: CommandBufferResetFlagBits -&gt; Maybe Int
+testBit :: CommandBufferResetFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: CommandBufferResetFlagBits -&gt; Int -&gt; Bool
+complementBit :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$ccomplementBit :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+clearBit :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$cclearBit :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+setBit :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$csetBit :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+bit :: Int -&gt; CommandBufferResetFlagBits
+$cbit :: Int -&gt; CommandBufferResetFlagBits
+zeroBits :: CommandBufferResetFlagBits
+$czeroBits :: CommandBufferResetFlagBits
+rotate :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$crotate :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+shift :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+$cshift :: CommandBufferResetFlagBits -&gt; Int -&gt; CommandBufferResetFlagBits
+complement :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+$ccomplement :: CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+xor :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+$cxor :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+.|. :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+$c.|. :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+.&amp;. :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+$c.&amp;. :: CommandBufferResetFlagBits
+-&gt; CommandBufferResetFlagBits -&gt; CommandBufferResetFlagBits
+$cp1Bits :: Eq CommandBufferResetFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT' specifies that most or all</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- memory resources currently owned by the command buffer /should/ be</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- returned to the parent command pool. If this flag is not set, then the</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- command buffer /may/ hold onto memory resources and reuse them when</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- recording commands. @commandBuffer@ is moved to the</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state&gt;.</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"><span id="%24mCOMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"><span id="COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"><span class="annot"><span class="annottext">$bCOMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT :: CommandBufferResetFlagBits
+$mCOMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT :: forall r.
+CommandBufferResetFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#%24bCOMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier hs-var hs-var hs-var">COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-type">CommandBufferResetFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">type</span><span> </span><span id="CommandBufferResetFlags"><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlags"><span class="hs-identifier hs-var">CommandBufferResetFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-type">CommandBufferResetFlagBits</span></a></span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680069561"><span id="local-6989586621680069563"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-type">CommandBufferResetFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span id="local-6989586621680069559"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; CommandBufferResetFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680069557"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680069557"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier hs-type">COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT&quot;</span></span><span>
+</span><span id="line-45"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-type">CommandBufferResetFlagBits</span></a></span><span> </span><span id="local-6989586621680069556"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680069556"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680069557"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CommandBufferResetFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680069556"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680069548"><span id="local-6989586621680069551"><span id="local-6989586621680069553"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-type">CommandBufferResetFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621680069546"><span class="annot"><span class="annottext">readPrec :: ReadPrec CommandBufferResetFlagBits
+</span><a href="#local-6989586621680069546"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec CommandBufferResetFlagBits
+-&gt; ReadPrec CommandBufferResetFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec CommandBufferResetFlagBits)]
+-&gt; ReadPrec CommandBufferResetFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CommandBufferResetFlagBits -&gt; ReadPrec CommandBufferResetFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CommandBufferResetFlagBits
+</span><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier hs-var">COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-49"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec CommandBufferResetFlagBits
+-&gt; ReadPrec CommandBufferResetFlagBits
+-&gt; ReadPrec CommandBufferResetFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-50"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec CommandBufferResetFlagBits
+-&gt; ReadPrec CommandBufferResetFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-51"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CommandBufferResetFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>                       </span><span id="local-6989586621680069545"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680069545"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-53"></span><span>                       </span><span class="annot"><span class="annottext">CommandBufferResetFlagBits -&gt; ReadPrec CommandBufferResetFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; CommandBufferResetFlagBits
+</span><a href="Vulkan.Core10.Enums.CommandBufferResetFlagBits.html#CommandBufferResetFlagBits"><span class="hs-identifier hs-var">CommandBufferResetFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680069545"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span></pre></body></html>

@@ -1,0 +1,1288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.MemoryManagement</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#getBufferMemoryRequirements"><span class="hs-identifier">getBufferMemoryRequirements</span></a></span><span>
+</span><span id="line-3"></span><span>                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#bindBufferMemory"><span class="hs-identifier">bindBufferMemory</span></a></span><span>
+</span><span id="line-4"></span><span>                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#getImageMemoryRequirements"><span class="hs-identifier">getImageMemoryRequirements</span></a></span><span>
+</span><span id="line-5"></span><span>                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#bindImageMemory"><span class="hs-identifier">bindImageMemory</span></a></span><span>
+</span><span id="line-6"></span><span>                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier">MemoryRequirements</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span>                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier">DeviceMemory</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span>                                       </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier">Buffer</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier">Buffer</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkBindBufferMemory%3ADeviceCmds"><span class="hs-identifier">pVkBindBufferMemory</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkBindImageMemory%3ADeviceCmds"><span class="hs-identifier">pVkBindImageMemory</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetBufferMemoryRequirements%3ADeviceCmds"><span class="hs-identifier">pVkGetBufferMemoryRequirements</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetImageMemoryRequirements%3ADeviceCmds"><span class="hs-identifier">pVkGetImageMemoryRequirements</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier">DeviceMemory</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier">DeviceMemory</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier">DeviceSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier">Device_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier">Image</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier">Image</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Exception.html"><span class="hs-identifier">Vulkan.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier">VulkanException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier">DeviceMemory</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetBufferMemoryRequirements"><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#mkVkGetBufferMemoryRequirements"><span class="hs-identifier hs-var">mkVkGetBufferMemoryRequirements</span></a></span></span><span>
+</span><span id="line-63"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- | vkGetBufferMemoryRequirements - Returns the memory requirements for</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- specified Vulkan object</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-69"></span><span class="hs-comment">--</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- -   If @buffer@ was created with the</span><span>
+</span><span id="line-71"></span><span class="hs-comment">--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--     external memory handle type, then @buffer@ /must/ be bound to memory</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- -   @pMemoryRequirements@ /must/ be a valid pointer to a</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--     'MemoryRequirements' structure</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- -   @buffer@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- 'MemoryRequirements'</span><span>
+</span><span id="line-90"></span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#getBufferMemoryRequirements"><span class="hs-identifier hs-type">getBufferMemoryRequirements</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680116526"><span class="annot"><a href="#local-6989586621680116526"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-91"></span><span>                             </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680116526"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span>                            </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the buffer.</span><span>
+</span><span id="line-93"></span><span>                               </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-94"></span><span>                            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @buffer@ is the buffer to query.</span><span>
+</span><span id="line-95"></span><span>                               </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span>
+</span><span id="line-96"></span><span>                            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680116526"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span id="getBufferMemoryRequirements"><span class="annot"><span class="annottext">getBufferMemoryRequirements :: Device -&gt; Buffer -&gt; io MemoryRequirements
+</span><a href="Vulkan.Core10.MemoryManagement.html#getBufferMemoryRequirements"><span class="hs-identifier hs-var hs-var">getBufferMemoryRequirements</span></a></span></span><span> </span><span id="local-6989586621680116525"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680116525"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680116524"><span class="annot"><span class="annottext">buffer :: Buffer
+</span><a href="#local-6989586621680116524"><span class="hs-identifier hs-var">buffer</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO MemoryRequirements -&gt; io MemoryRequirements
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO MemoryRequirements -&gt; io MemoryRequirements)
+-&gt; (ContT MemoryRequirements IO MemoryRequirements
+    -&gt; IO MemoryRequirements)
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+-&gt; io MemoryRequirements
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT MemoryRequirements IO MemoryRequirements
+-&gt; IO MemoryRequirements
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT MemoryRequirements IO MemoryRequirements
+ -&gt; io MemoryRequirements)
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+-&gt; io MemoryRequirements
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116522"><span class="annot"><span class="annottext">vkGetBufferMemoryRequirementsPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+</span><a href="#local-6989586621680116522"><span class="hs-identifier hs-var hs-var">vkGetBufferMemoryRequirementsPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Buffer
+      -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+      -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetBufferMemoryRequirements%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkGetBufferMemoryRequirements</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116525"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT MemoryRequirements IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT MemoryRequirements IO ())
+-&gt; IO () -&gt; ContT MemoryRequirements IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+</span><a href="#local-6989586621680116522"><span class="hs-identifier hs-var">vkGetBufferMemoryRequirementsPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Buffer
+      -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+      -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-100"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetBufferMemoryRequirements is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-101"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116517"><span class="annot"><span class="annottext">vkGetBufferMemoryRequirements' :: Ptr Device_T
+-&gt; Buffer
+-&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO ()
+</span><a href="#local-6989586621680116517"><span class="hs-identifier hs-var hs-var">vkGetBufferMemoryRequirements'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+-&gt; Ptr Device_T
+-&gt; Buffer
+-&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO ()
+</span><a href="Vulkan.Core10.MemoryManagement.html#mkVkGetBufferMemoryRequirements"><span class="hs-identifier hs-var">mkVkGetBufferMemoryRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+</span><a href="#local-6989586621680116522"><span class="hs-identifier hs-var">vkGetBufferMemoryRequirementsPtr</span></a></span><span>
+</span><span id="line-102"></span><span>  </span><span id="local-6989586621680116516"><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116516"><span class="hs-identifier hs-var">pPMemoryRequirements</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+  -&gt; IO MemoryRequirements)
+ -&gt; IO MemoryRequirements)
+-&gt; ContT
+     MemoryRequirements
+     IO
+     (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b.
+ToCStruct MemoryRequirements =&gt;
+((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b)
+-&gt; IO b
+forall a b. ToCStruct a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withZeroCStruct"><span class="hs-identifier hs-var">withZeroCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-103"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT MemoryRequirements IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT MemoryRequirements IO ())
+-&gt; IO () -&gt; ContT MemoryRequirements IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; Buffer
+-&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO ()
+</span><a href="#local-6989586621680116517"><span class="hs-identifier hs-var">vkGetBufferMemoryRequirements'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116525"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621680116524"><span class="hs-identifier hs-var">buffer</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116516"><span class="hs-identifier hs-var">pPMemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-104"></span><span>  </span><span id="local-6989586621680116512"><span class="annot"><span class="annottext">MemoryRequirements
+</span><a href="#local-6989586621680116512"><span class="hs-identifier hs-var">pMemoryRequirements</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO MemoryRequirements
+ -&gt; ContT MemoryRequirements IO MemoryRequirements)
+-&gt; IO MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO MemoryRequirements
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116516"><span class="hs-identifier hs-var">pPMemoryRequirements</span></a></span><span>
+</span><span id="line-105"></span><span>  </span><span class="annot"><span class="annottext">MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(MemoryRequirements
+ -&gt; ContT MemoryRequirements IO MemoryRequirements)
+-&gt; MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">MemoryRequirements
+</span><a href="#local-6989586621680116512"><span class="hs-identifier hs-var">pMemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span>
+</span><span id="line-108"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkBindBufferMemory"><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#mkVkBindBufferMemory"><span class="hs-identifier hs-var">mkVkBindBufferMemory</span></a></span></span><span>
+</span><span id="line-113"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- | vkBindBufferMemory - Bind device memory to a buffer object</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- 'bindBufferMemory' is equivalent to passing the same parameters through</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo'</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- to 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.bindBufferMemory2'.</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- -   @buffer@ /must/ not already be backed by a memory object</span><span>
+</span><span id="line-126"></span><span class="hs-comment">--</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- -   @buffer@ /must/ not have been created with any sparse memory binding</span><span>
+</span><span id="line-128"></span><span class="hs-comment">--     flags</span><span>
+</span><span id="line-129"></span><span class="hs-comment">--</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- -   @memoryOffset@ /must/ be less than the size of @memory@</span><span>
+</span><span id="line-131"></span><span class="hs-comment">--</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- -   @memory@ /must/ have been allocated using one of the memory types</span><span>
+</span><span id="line-133"></span><span class="hs-comment">--     allowed in the @memoryTypeBits@ member of the 'MemoryRequirements'</span><span>
+</span><span id="line-134"></span><span class="hs-comment">--     structure returned from a call to 'getBufferMemoryRequirements' with</span><span>
+</span><span id="line-135"></span><span class="hs-comment">--     @buffer@</span><span>
+</span><span id="line-136"></span><span class="hs-comment">--</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--     member of the 'MemoryRequirements' structure returned from a call to</span><span>
+</span><span id="line-139"></span><span class="hs-comment">--     'getBufferMemoryRequirements' with @buffer@</span><span>
+</span><span id="line-140"></span><span class="hs-comment">--</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- -   The @size@ member of the 'MemoryRequirements' structure returned</span><span>
+</span><span id="line-142"></span><span class="hs-comment">--     from a call to 'getBufferMemoryRequirements' with @buffer@ /must/ be</span><span>
+</span><span id="line-143"></span><span class="hs-comment">--     less than or equal to the size of @memory@ minus @memoryOffset@</span><span>
+</span><span id="line-144"></span><span class="hs-comment">--</span><span>
+</span><span id="line-145"></span><span class="hs-comment">-- -   If @buffer@ requires a dedicated allocation(as reported by</span><span>
+</span><span id="line-146"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'</span><span>
+</span><span id="line-147"></span><span class="hs-comment">--     in</span><span>
+</span><span id="line-148"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation</span><span>
+</span><span id="line-149"></span><span class="hs-comment">--     for @buffer@), @memory@ /must/ have been created with</span><span>
+</span><span id="line-150"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@</span><span>
+</span><span id="line-151"></span><span class="hs-comment">--     equal to @buffer@</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- -   If the 'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when</span><span>
+</span><span id="line-154"></span><span class="hs-comment">--     @memory@ was allocated included a</span><span>
+</span><span id="line-155"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'</span><span>
+</span><span id="line-156"></span><span class="hs-comment">--     structure in its @pNext@ chain, and</span><span>
+</span><span id="line-157"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then @buffer@</span><span>
+</span><span id="line-159"></span><span class="hs-comment">--     /must/ equal</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,</span><span>
+</span><span id="line-161"></span><span class="hs-comment">--     and @memoryOffset@ /must/ be zero</span><span>
+</span><span id="line-162"></span><span class="hs-comment">--</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- -   If buffer was created with the</span><span>
+</span><span id="line-164"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--     bit set, the buffer /must/ be bound to a memory object allocated</span><span>
+</span><span id="line-166"></span><span class="hs-comment">--     with a memory type that reports</span><span>
+</span><span id="line-167"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'</span><span>
+</span><span id="line-168"></span><span class="hs-comment">--</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- -   If buffer was created with the</span><span>
+</span><span id="line-170"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'</span><span>
+</span><span id="line-171"></span><span class="hs-comment">--     bit not set, the buffer /must/ not be bound to a memory object</span><span>
+</span><span id="line-172"></span><span class="hs-comment">--     created with a memory type that reports</span><span>
+</span><span id="line-173"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- -   If @buffer@ was created with</span><span>
+</span><span id="line-176"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have</span><span>
+</span><span id="line-178"></span><span class="hs-comment">--     been created with</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@</span><span>
+</span><span id="line-180"></span><span class="hs-comment">--     equal to a buffer handle created with identical creation parameters</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--     to @buffer@ and @memoryOffset@ /must/ be zero</span><span>
+</span><span id="line-182"></span><span class="hs-comment">--</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- -   If the value of</span><span>
+</span><span id="line-184"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@</span><span>
+</span><span id="line-185"></span><span class="hs-comment">--     used to allocate @memory@ is not @0@, it /must/ include at least one</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--     of the handles set in</span><span>
+</span><span id="line-187"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@</span><span>
+</span><span id="line-188"></span><span class="hs-comment">--     when @buffer@ was created</span><span>
+</span><span id="line-189"></span><span class="hs-comment">--</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- -   If @memory@ was created by a memory import operation, that is not</span><span>
+</span><span id="line-191"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'</span><span>
+</span><span id="line-192"></span><span class="hs-comment">--     with a non-@NULL@ @buffer@ value, the external handle type of the</span><span>
+</span><span id="line-193"></span><span class="hs-comment">--     imported memory /must/ also have been set in</span><span>
+</span><span id="line-194"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@</span><span>
+</span><span id="line-195"></span><span class="hs-comment">--     when @buffer@ was created</span><span>
+</span><span id="line-196"></span><span class="hs-comment">--</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- -   If @memory@ was created with the</span><span>
+</span><span id="line-198"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'</span><span>
+</span><span id="line-199"></span><span class="hs-comment">--     memory import operation with a non-@NULL@ @buffer@ value,</span><span>
+</span><span id="line-200"></span><span class="hs-comment">--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'</span><span>
+</span><span id="line-201"></span><span class="hs-comment">--     /must/ also have been set in</span><span>
+</span><span id="line-202"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@</span><span>
+</span><span id="line-203"></span><span class="hs-comment">--     when @buffer@ was created</span><span>
+</span><span id="line-204"></span><span class="hs-comment">--</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- -   If the</span><span>
+</span><span id="line-206"></span><span class="hs-comment">--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddress@</span><span>
+</span><span id="line-207"></span><span class="hs-comment">--     feature is enabled and @buffer@ was created with the</span><span>
+</span><span id="line-208"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'</span><span>
+</span><span id="line-209"></span><span class="hs-comment">--     bit set, @memory@ /must/ have been allocated with the</span><span>
+</span><span id="line-210"></span><span class="hs-comment">--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'</span><span>
+</span><span id="line-211"></span><span class="hs-comment">--     bit set</span><span>
+</span><span id="line-212"></span><span class="hs-comment">--</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-214"></span><span class="hs-comment">--</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-216"></span><span class="hs-comment">--</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle</span><span>
+</span><span id="line-218"></span><span class="hs-comment">--</span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'</span><span>
+</span><span id="line-220"></span><span class="hs-comment">--     handle</span><span>
+</span><span id="line-221"></span><span class="hs-comment">--</span><span>
+</span><span id="line-222"></span><span class="hs-comment">-- -   @buffer@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-223"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-224"></span><span class="hs-comment">--</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- -   @memory@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-226"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-227"></span><span class="hs-comment">--</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-229"></span><span class="hs-comment">--</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- -   Host access to @buffer@ /must/ be externally synchronized</span><span>
+</span><span id="line-231"></span><span class="hs-comment">--</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-233"></span><span class="hs-comment">--</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-235"></span><span class="hs-comment">--</span><span>
+</span><span id="line-236"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-237"></span><span class="hs-comment">--</span><span>
+</span><span id="line-238"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-239"></span><span class="hs-comment">--</span><span>
+</span><span id="line-240"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-241"></span><span class="hs-comment">--</span><span>
+</span><span id="line-242"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'</span><span>
+</span><span id="line-243"></span><span class="hs-comment">--</span><span>
+</span><span id="line-244"></span><span class="hs-comment">--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'</span><span>
+</span><span id="line-245"></span><span class="hs-comment">--</span><span>
+</span><span id="line-246"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-247"></span><span class="hs-comment">--</span><span>
+</span><span id="line-248"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',</span><span>
+</span><span id="line-249"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.DeviceMemory',</span><span>
+</span><span id="line-250"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize'</span><span>
+</span><span id="line-251"></span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#bindBufferMemory"><span class="hs-identifier hs-type">bindBufferMemory</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680116509"><span class="annot"><a href="#local-6989586621680116509"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-252"></span><span>                  </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680116509"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-253"></span><span>                 </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the buffer and memory.</span><span>
+</span><span id="line-254"></span><span>                    </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-255"></span><span>                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @buffer@ is the buffer to be attached to memory.</span><span>
+</span><span id="line-256"></span><span>                    </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span>
+</span><span id="line-257"></span><span>                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @memory@ is a 'Vulkan.Core10.Handles.DeviceMemory' object describing the</span><span>
+</span><span id="line-258"></span><span>                    </span><span class="hs-comment">-- device memory to attach.</span><span>
+</span><span id="line-259"></span><span>                    </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span>
+</span><span id="line-260"></span><span>                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @memoryOffset@ is the start offset of the region of @memory@ which is to</span><span>
+</span><span id="line-261"></span><span>                    </span><span class="hs-comment">-- be bound to the buffer. The number of bytes returned in the</span><span>
+</span><span id="line-262"></span><span>                    </span><span class="hs-comment">-- 'MemoryRequirements'::@size@ member in @memory@, starting from</span><span>
+</span><span id="line-263"></span><span>                    </span><span class="hs-comment">-- @memoryOffset@ bytes, will be bound to the specified buffer.</span><span>
+</span><span id="line-264"></span><span>                    </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;memoryOffset&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-265"></span><span>                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680116509"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-266"></span><span id="bindBufferMemory"><span class="annot"><span class="annottext">bindBufferMemory :: Device
+-&gt; Buffer
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; io ()
+</span><a href="Vulkan.Core10.MemoryManagement.html#bindBufferMemory"><span class="hs-identifier hs-var hs-var">bindBufferMemory</span></a></span></span><span> </span><span id="local-6989586621680116508"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680116508"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680116507"><span class="annot"><span class="annottext">buffer :: Buffer
+</span><a href="#local-6989586621680116507"><span class="hs-identifier hs-var">buffer</span></a></span></span><span> </span><span id="local-6989586621680116506"><span class="annot"><span class="annottext">memory :: DeviceMemory
+</span><a href="#local-6989586621680116506"><span class="hs-identifier hs-var">memory</span></a></span></span><span> </span><span id="local-6989586621680116505"><span class="annot"><span class="annottext">memoryOffset :: &quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116505"><span class="hs-identifier hs-var">memoryOffset</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-267"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116504"><span class="annot"><span class="annottext">vkBindBufferMemoryPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680116504"><span class="hs-identifier hs-var hs-var">vkBindBufferMemoryPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Buffer
+      -&gt; DeviceMemory
+      -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+      -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkBindBufferMemory%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkBindBufferMemory</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116508"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-268"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680116504"><span class="hs-identifier hs-var">vkBindBufferMemoryPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Buffer
+      -&gt; DeviceMemory
+      -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-269"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkBindBufferMemory is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-270"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116503"><span class="annot"><span class="annottext">vkBindBufferMemory' :: Ptr Device_T
+-&gt; Buffer
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO Result
+</span><a href="#local-6989586621680116503"><span class="hs-identifier hs-var hs-var">vkBindBufferMemory'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+-&gt; Ptr Device_T
+-&gt; Buffer
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO Result
+</span><a href="Vulkan.Core10.MemoryManagement.html#mkVkBindBufferMemory"><span class="hs-identifier hs-var">mkVkBindBufferMemory</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Buffer
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680116504"><span class="hs-identifier hs-var">vkBindBufferMemoryPtr</span></a></span><span>
+</span><span id="line-271"></span><span>  </span><span id="local-6989586621680116502"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680116502"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; Buffer
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO Result
+</span><a href="#local-6989586621680116503"><span class="hs-identifier hs-var">vkBindBufferMemory'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116508"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621680116507"><span class="hs-identifier hs-var">buffer</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceMemory
+</span><a href="#local-6989586621680116506"><span class="hs-identifier hs-var">memory</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116505"><span class="hs-identifier hs-var">memoryOffset</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-272"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680116502"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680116502"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-273"></span><span>
+</span><span id="line-274"></span><span>
+</span><span id="line-275"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetImageMemoryRequirements"><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#mkVkGetImageMemoryRequirements"><span class="hs-identifier hs-var">mkVkGetImageMemoryRequirements</span></a></span></span><span>
+</span><span id="line-280"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-281"></span><span>
+</span><span id="line-282"></span><span class="hs-comment">-- | vkGetImageMemoryRequirements - Returns the memory requirements for</span><span>
+</span><span id="line-283"></span><span class="hs-comment">-- specified Vulkan object</span><span>
+</span><span id="line-284"></span><span class="hs-comment">--</span><span>
+</span><span id="line-285"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-286"></span><span class="hs-comment">--</span><span>
+</span><span id="line-287"></span><span class="hs-comment">-- -   @image@ /must/ not have been created with the</span><span>
+</span><span id="line-288"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'</span><span>
+</span><span id="line-289"></span><span class="hs-comment">--     flag set</span><span>
+</span><span id="line-290"></span><span class="hs-comment">--</span><span>
+</span><span id="line-291"></span><span class="hs-comment">-- -   If @image@ was created with the</span><span>
+</span><span id="line-292"></span><span class="hs-comment">--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'</span><span>
+</span><span id="line-293"></span><span class="hs-comment">--     external memory handle type, then @image@ /must/ be bound to memory</span><span>
+</span><span id="line-294"></span><span class="hs-comment">--</span><span>
+</span><span id="line-295"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-296"></span><span class="hs-comment">--</span><span>
+</span><span id="line-297"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-298"></span><span class="hs-comment">--</span><span>
+</span><span id="line-299"></span><span class="hs-comment">-- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle</span><span>
+</span><span id="line-300"></span><span class="hs-comment">--</span><span>
+</span><span id="line-301"></span><span class="hs-comment">-- -   @pMemoryRequirements@ /must/ be a valid pointer to a</span><span>
+</span><span id="line-302"></span><span class="hs-comment">--     'MemoryRequirements' structure</span><span>
+</span><span id="line-303"></span><span class="hs-comment">--</span><span>
+</span><span id="line-304"></span><span class="hs-comment">-- -   @image@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-305"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-306"></span><span class="hs-comment">--</span><span>
+</span><span id="line-307"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-308"></span><span class="hs-comment">--</span><span>
+</span><span id="line-309"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- 'MemoryRequirements'</span><span>
+</span><span id="line-311"></span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#getImageMemoryRequirements"><span class="hs-identifier hs-type">getImageMemoryRequirements</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680116498"><span class="annot"><a href="#local-6989586621680116498"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-312"></span><span>                            </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680116498"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-313"></span><span>                           </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the image.</span><span>
+</span><span id="line-314"></span><span>                              </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-315"></span><span>                           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @image@ is the image to query.</span><span>
+</span><span id="line-316"></span><span>                              </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span>
+</span><span id="line-317"></span><span>                           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680116498"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-318"></span><span id="getImageMemoryRequirements"><span class="annot"><span class="annottext">getImageMemoryRequirements :: Device -&gt; Image -&gt; io MemoryRequirements
+</span><a href="Vulkan.Core10.MemoryManagement.html#getImageMemoryRequirements"><span class="hs-identifier hs-var hs-var">getImageMemoryRequirements</span></a></span></span><span> </span><span id="local-6989586621680116497"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680116497"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680116496"><span class="annot"><span class="annottext">image :: Image
+</span><a href="#local-6989586621680116496"><span class="hs-identifier hs-var">image</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO MemoryRequirements -&gt; io MemoryRequirements
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO MemoryRequirements -&gt; io MemoryRequirements)
+-&gt; (ContT MemoryRequirements IO MemoryRequirements
+    -&gt; IO MemoryRequirements)
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+-&gt; io MemoryRequirements
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT MemoryRequirements IO MemoryRequirements
+-&gt; IO MemoryRequirements
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT MemoryRequirements IO MemoryRequirements
+ -&gt; io MemoryRequirements)
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+-&gt; io MemoryRequirements
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-319"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116495"><span class="annot"><span class="annottext">vkGetImageMemoryRequirementsPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+</span><a href="#local-6989586621680116495"><span class="hs-identifier hs-var hs-var">vkGetImageMemoryRequirementsPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Image
+      -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+      -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetImageMemoryRequirements%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkGetImageMemoryRequirements</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116497"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-320"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT MemoryRequirements IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT MemoryRequirements IO ())
+-&gt; IO () -&gt; ContT MemoryRequirements IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+</span><a href="#local-6989586621680116495"><span class="hs-identifier hs-var">vkGetImageMemoryRequirementsPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Image
+      -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+      -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-321"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetImageMemoryRequirements is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-322"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116494"><span class="annot"><span class="annottext">vkGetImageMemoryRequirements' :: Ptr Device_T
+-&gt; Image
+-&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO ()
+</span><a href="#local-6989586621680116494"><span class="hs-identifier hs-var hs-var">vkGetImageMemoryRequirements'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+-&gt; Ptr Device_T
+-&gt; Image
+-&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO ()
+</span><a href="Vulkan.Core10.MemoryManagement.html#mkVkGetImageMemoryRequirements"><span class="hs-identifier hs-var">mkVkGetImageMemoryRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+   -&gt; IO ())
+</span><a href="#local-6989586621680116495"><span class="hs-identifier hs-var">vkGetImageMemoryRequirementsPtr</span></a></span><span>
+</span><span id="line-323"></span><span>  </span><span id="local-6989586621680116493"><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116493"><span class="hs-identifier hs-var">pPMemoryRequirements</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+  -&gt; IO MemoryRequirements)
+ -&gt; IO MemoryRequirements)
+-&gt; ContT
+     MemoryRequirements
+     IO
+     (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b.
+ToCStruct MemoryRequirements =&gt;
+((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b)
+-&gt; IO b
+forall a b. ToCStruct a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withZeroCStruct"><span class="hs-identifier hs-var">withZeroCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-324"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT MemoryRequirements IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT MemoryRequirements IO ())
+-&gt; IO () -&gt; ContT MemoryRequirements IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; Image
+-&gt; (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO ()
+</span><a href="#local-6989586621680116494"><span class="hs-identifier hs-var">vkGetImageMemoryRequirements'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116497"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Image
+</span><a href="#local-6989586621680116496"><span class="hs-identifier hs-var">image</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116493"><span class="hs-identifier hs-var">pPMemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-325"></span><span>  </span><span id="local-6989586621680116492"><span class="annot"><span class="annottext">MemoryRequirements
+</span><a href="#local-6989586621680116492"><span class="hs-identifier hs-var">pMemoryRequirements</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO MemoryRequirements
+ -&gt; ContT MemoryRequirements IO MemoryRequirements)
+-&gt; IO MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO MemoryRequirements
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116493"><span class="hs-identifier hs-var">pPMemoryRequirements</span></a></span><span>
+</span><span id="line-326"></span><span>  </span><span class="annot"><span class="annottext">MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(MemoryRequirements
+ -&gt; ContT MemoryRequirements IO MemoryRequirements)
+-&gt; MemoryRequirements
+-&gt; ContT MemoryRequirements IO MemoryRequirements
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">MemoryRequirements
+</span><a href="#local-6989586621680116492"><span class="hs-identifier hs-var">pMemoryRequirements</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-327"></span><span>
+</span><span id="line-328"></span><span>
+</span><span id="line-329"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkBindImageMemory"><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#mkVkBindImageMemory"><span class="hs-identifier hs-var">mkVkBindImageMemory</span></a></span></span><span>
+</span><span id="line-334"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-335"></span><span>
+</span><span id="line-336"></span><span class="hs-comment">-- | vkBindImageMemory - Bind device memory to an image object</span><span>
+</span><span id="line-337"></span><span class="hs-comment">--</span><span>
+</span><span id="line-338"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-339"></span><span class="hs-comment">--</span><span>
+</span><span id="line-340"></span><span class="hs-comment">-- 'bindImageMemory' is equivalent to passing the same parameters through</span><span>
+</span><span id="line-341"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo' to</span><span>
+</span><span id="line-342"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.bindImageMemory2'.</span><span>
+</span><span id="line-343"></span><span class="hs-comment">--</span><span>
+</span><span id="line-344"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-345"></span><span class="hs-comment">--</span><span>
+</span><span id="line-346"></span><span class="hs-comment">-- -   @image@ /must/ not have been created with the</span><span>
+</span><span id="line-347"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'</span><span>
+</span><span id="line-348"></span><span class="hs-comment">--     set</span><span>
+</span><span id="line-349"></span><span class="hs-comment">--</span><span>
+</span><span id="line-350"></span><span class="hs-comment">-- -   @image@ /must/ not already be backed by a memory object</span><span>
+</span><span id="line-351"></span><span class="hs-comment">--</span><span>
+</span><span id="line-352"></span><span class="hs-comment">-- -   @image@ /must/ not have been created with any sparse memory binding</span><span>
+</span><span id="line-353"></span><span class="hs-comment">--     flags</span><span>
+</span><span id="line-354"></span><span class="hs-comment">--</span><span>
+</span><span id="line-355"></span><span class="hs-comment">-- -   @memoryOffset@ /must/ be less than the size of @memory@</span><span>
+</span><span id="line-356"></span><span class="hs-comment">--</span><span>
+</span><span id="line-357"></span><span class="hs-comment">-- -   @memory@ /must/ have been allocated using one of the memory types</span><span>
+</span><span id="line-358"></span><span class="hs-comment">--     allowed in the @memoryTypeBits@ member of the 'MemoryRequirements'</span><span>
+</span><span id="line-359"></span><span class="hs-comment">--     structure returned from a call to 'getImageMemoryRequirements' with</span><span>
+</span><span id="line-360"></span><span class="hs-comment">--     @image@</span><span>
+</span><span id="line-361"></span><span class="hs-comment">--</span><span>
+</span><span id="line-362"></span><span class="hs-comment">-- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@</span><span>
+</span><span id="line-363"></span><span class="hs-comment">--     member of the 'MemoryRequirements' structure returned from a call to</span><span>
+</span><span id="line-364"></span><span class="hs-comment">--     'getImageMemoryRequirements' with @image@</span><span>
+</span><span id="line-365"></span><span class="hs-comment">--</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- -   The difference of the size of @memory@ and @memoryOffset@ /must/ be</span><span>
+</span><span id="line-367"></span><span class="hs-comment">--     greater than or equal to the @size@ member of the</span><span>
+</span><span id="line-368"></span><span class="hs-comment">--     'MemoryRequirements' structure returned from a call to</span><span>
+</span><span id="line-369"></span><span class="hs-comment">--     'getImageMemoryRequirements' with the same @image@</span><span>
+</span><span id="line-370"></span><span class="hs-comment">--</span><span>
+</span><span id="line-371"></span><span class="hs-comment">-- -   If @image@ requires a dedicated allocation (as reported by</span><span>
+</span><span id="line-372"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'</span><span>
+</span><span id="line-373"></span><span class="hs-comment">--     in</span><span>
+</span><span id="line-374"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation</span><span>
+</span><span id="line-375"></span><span class="hs-comment">--     for @image@), @memory@ /must/ have been created with</span><span>
+</span><span id="line-376"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@</span><span>
+</span><span id="line-377"></span><span class="hs-comment">--     equal to @image@</span><span>
+</span><span id="line-378"></span><span class="hs-comment">--</span><span>
+</span><span id="line-379"></span><span class="hs-comment">-- -   If the</span><span>
+</span><span id="line-380"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing&gt;</span><span>
+</span><span id="line-381"></span><span class="hs-comment">--     feature is not enabled, and the</span><span>
+</span><span id="line-382"></span><span class="hs-comment">--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was</span><span>
+</span><span id="line-383"></span><span class="hs-comment">--     allocated included a</span><span>
+</span><span id="line-384"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'</span><span>
+</span><span id="line-385"></span><span class="hs-comment">--     structure in its @pNext@ chain, and</span><span>
+</span><span id="line-386"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@</span><span>
+</span><span id="line-387"></span><span class="hs-comment">--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then @image@</span><span>
+</span><span id="line-388"></span><span class="hs-comment">--     /must/ equal</span><span>
+</span><span id="line-389"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@</span><span>
+</span><span id="line-390"></span><span class="hs-comment">--     and @memoryOffset@ /must/ be zero</span><span>
+</span><span id="line-391"></span><span class="hs-comment">--</span><span>
+</span><span id="line-392"></span><span class="hs-comment">-- -   If the</span><span>
+</span><span id="line-393"></span><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing&gt;</span><span>
+</span><span id="line-394"></span><span class="hs-comment">--     feature is enabled, and the</span><span>
+</span><span id="line-395"></span><span class="hs-comment">--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was</span><span>
+</span><span id="line-396"></span><span class="hs-comment">--     allocated included a</span><span>
+</span><span id="line-397"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'</span><span>
+</span><span id="line-398"></span><span class="hs-comment">--     structure in its @pNext@ chain, and</span><span>
+</span><span id="line-399"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@</span><span>
+</span><span id="line-400"></span><span class="hs-comment">--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then</span><span>
+</span><span id="line-401"></span><span class="hs-comment">--     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to</span><span>
+</span><span id="line-402"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@</span><span>
+</span><span id="line-403"></span><span class="hs-comment">--     or an image that was created using the same parameters in</span><span>
+</span><span id="line-404"></span><span class="hs-comment">--     'Vulkan.Core10.Image.ImageCreateInfo', with the exception that</span><span>
+</span><span id="line-405"></span><span class="hs-comment">--     @extent@ and @arrayLayers@ /may/ differ subject to the following</span><span>
+</span><span id="line-406"></span><span class="hs-comment">--     restrictions: every dimension in the @extent@ parameter of the image</span><span>
+</span><span id="line-407"></span><span class="hs-comment">--     being bound /must/ be equal to or smaller than the original image</span><span>
+</span><span id="line-408"></span><span class="hs-comment">--     for which the allocation was created; and the @arrayLayers@</span><span>
+</span><span id="line-409"></span><span class="hs-comment">--     parameter of the image being bound /must/ be equal to or smaller</span><span>
+</span><span id="line-410"></span><span class="hs-comment">--     than the original image for which the allocation was created</span><span>
+</span><span id="line-411"></span><span class="hs-comment">--</span><span>
+</span><span id="line-412"></span><span class="hs-comment">-- -   If image was created with the</span><span>
+</span><span id="line-413"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'</span><span>
+</span><span id="line-414"></span><span class="hs-comment">--     bit set, the image /must/ be bound to a memory object allocated with</span><span>
+</span><span id="line-415"></span><span class="hs-comment">--     a memory type that reports</span><span>
+</span><span id="line-416"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'</span><span>
+</span><span id="line-417"></span><span class="hs-comment">--</span><span>
+</span><span id="line-418"></span><span class="hs-comment">-- -   If image was created with the</span><span>
+</span><span id="line-419"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'</span><span>
+</span><span id="line-420"></span><span class="hs-comment">--     bit not set, the image /must/ not be bound to a memory object</span><span>
+</span><span id="line-421"></span><span class="hs-comment">--     created with a memory type that reports</span><span>
+</span><span id="line-422"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'</span><span>
+</span><span id="line-423"></span><span class="hs-comment">--</span><span>
+</span><span id="line-424"></span><span class="hs-comment">-- -   If @image@ was created with</span><span>
+</span><span id="line-425"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@</span><span>
+</span><span id="line-426"></span><span class="hs-comment">--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have</span><span>
+</span><span id="line-427"></span><span class="hs-comment">--     been created with</span><span>
+</span><span id="line-428"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@</span><span>
+</span><span id="line-429"></span><span class="hs-comment">--     equal to an image handle created with identical creation parameters</span><span>
+</span><span id="line-430"></span><span class="hs-comment">--     to @image@ and @memoryOffset@ /must/ be zero</span><span>
+</span><span id="line-431"></span><span class="hs-comment">--</span><span>
+</span><span id="line-432"></span><span class="hs-comment">-- -   If the value of</span><span>
+</span><span id="line-433"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@</span><span>
+</span><span id="line-434"></span><span class="hs-comment">--     used to allocate @memory@ is not @0@, it /must/ include at least one</span><span>
+</span><span id="line-435"></span><span class="hs-comment">--     of the handles set in</span><span>
+</span><span id="line-436"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@</span><span>
+</span><span id="line-437"></span><span class="hs-comment">--     when @image@ was created</span><span>
+</span><span id="line-438"></span><span class="hs-comment">--</span><span>
+</span><span id="line-439"></span><span class="hs-comment">-- -   If @memory@ was created by a memory import operation, that is not</span><span>
+</span><span id="line-440"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'</span><span>
+</span><span id="line-441"></span><span class="hs-comment">--     with a non-@NULL@ @buffer@ value, the external handle type of the</span><span>
+</span><span id="line-442"></span><span class="hs-comment">--     imported memory /must/ also have been set in</span><span>
+</span><span id="line-443"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@</span><span>
+</span><span id="line-444"></span><span class="hs-comment">--     when @image@ was created</span><span>
+</span><span id="line-445"></span><span class="hs-comment">--</span><span>
+</span><span id="line-446"></span><span class="hs-comment">-- -   If @memory@ was created with the</span><span>
+</span><span id="line-447"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'</span><span>
+</span><span id="line-448"></span><span class="hs-comment">--     memory import operation with a non-@NULL@ @buffer@ value,</span><span>
+</span><span id="line-449"></span><span class="hs-comment">--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'</span><span>
+</span><span id="line-450"></span><span class="hs-comment">--     /must/ also have been set in</span><span>
+</span><span id="line-451"></span><span class="hs-comment">--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@</span><span>
+</span><span id="line-452"></span><span class="hs-comment">--     when @image@ was created</span><span>
+</span><span id="line-453"></span><span class="hs-comment">--</span><span>
+</span><span id="line-454"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-455"></span><span class="hs-comment">--</span><span>
+</span><span id="line-456"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-457"></span><span class="hs-comment">--</span><span>
+</span><span id="line-458"></span><span class="hs-comment">-- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle</span><span>
+</span><span id="line-459"></span><span class="hs-comment">--</span><span>
+</span><span id="line-460"></span><span class="hs-comment">-- -   @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'</span><span>
+</span><span id="line-461"></span><span class="hs-comment">--     handle</span><span>
+</span><span id="line-462"></span><span class="hs-comment">--</span><span>
+</span><span id="line-463"></span><span class="hs-comment">-- -   @image@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-464"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-465"></span><span class="hs-comment">--</span><span>
+</span><span id="line-466"></span><span class="hs-comment">-- -   @memory@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-467"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-468"></span><span class="hs-comment">--</span><span>
+</span><span id="line-469"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-470"></span><span class="hs-comment">--</span><span>
+</span><span id="line-471"></span><span class="hs-comment">-- -   Host access to @image@ /must/ be externally synchronized</span><span>
+</span><span id="line-472"></span><span class="hs-comment">--</span><span>
+</span><span id="line-473"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-474"></span><span class="hs-comment">--</span><span>
+</span><span id="line-475"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-476"></span><span class="hs-comment">--</span><span>
+</span><span id="line-477"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-478"></span><span class="hs-comment">--</span><span>
+</span><span id="line-479"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-480"></span><span class="hs-comment">--</span><span>
+</span><span id="line-481"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-482"></span><span class="hs-comment">--</span><span>
+</span><span id="line-483"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'</span><span>
+</span><span id="line-484"></span><span class="hs-comment">--</span><span>
+</span><span id="line-485"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-486"></span><span class="hs-comment">--</span><span>
+</span><span id="line-487"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',</span><span>
+</span><span id="line-488"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',</span><span>
+</span><span id="line-489"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Image'</span><span>
+</span><span id="line-490"></span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#bindImageMemory"><span class="hs-identifier hs-type">bindImageMemory</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680116490"><span class="annot"><a href="#local-6989586621680116490"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-491"></span><span>                 </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680116490"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-492"></span><span>                </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the image and memory.</span><span>
+</span><span id="line-493"></span><span>                   </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-494"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @image@ is the image.</span><span>
+</span><span id="line-495"></span><span>                   </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Image"><span class="hs-identifier hs-type">Image</span></a></span><span>
+</span><span id="line-496"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object describing</span><span>
+</span><span id="line-497"></span><span>                   </span><span class="hs-comment">-- the device memory to attach.</span><span>
+</span><span id="line-498"></span><span>                   </span><span class="annot"><a href="Vulkan.Core10.Handles.html#DeviceMemory"><span class="hs-identifier hs-type">DeviceMemory</span></a></span><span>
+</span><span id="line-499"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @memoryOffset@ is the start offset of the region of @memory@ which is to</span><span>
+</span><span id="line-500"></span><span>                   </span><span class="hs-comment">-- be bound to the image. The number of bytes returned in the</span><span>
+</span><span id="line-501"></span><span>                   </span><span class="hs-comment">-- 'MemoryRequirements'::@size@ member in @memory@, starting from</span><span>
+</span><span id="line-502"></span><span>                   </span><span class="hs-comment">-- @memoryOffset@ bytes, will be bound to the specified image.</span><span>
+</span><span id="line-503"></span><span>                   </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;memoryOffset&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-504"></span><span>                </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680116490"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-505"></span><span id="bindImageMemory"><span class="annot"><span class="annottext">bindImageMemory :: Device
+-&gt; Image
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; io ()
+</span><a href="Vulkan.Core10.MemoryManagement.html#bindImageMemory"><span class="hs-identifier hs-var hs-var">bindImageMemory</span></a></span></span><span> </span><span id="local-6989586621680116489"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680116489"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680116488"><span class="annot"><span class="annottext">image :: Image
+</span><a href="#local-6989586621680116488"><span class="hs-identifier hs-var">image</span></a></span></span><span> </span><span id="local-6989586621680116487"><span class="annot"><span class="annottext">memory :: DeviceMemory
+</span><a href="#local-6989586621680116487"><span class="hs-identifier hs-var">memory</span></a></span></span><span> </span><span id="local-6989586621680116486"><span class="annot"><span class="annottext">memoryOffset :: &quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116486"><span class="hs-identifier hs-var">memoryOffset</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-506"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116485"><span class="annot"><span class="annottext">vkBindImageMemoryPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680116485"><span class="hs-identifier hs-var hs-var">vkBindImageMemoryPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Image
+      -&gt; DeviceMemory
+      -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+      -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkBindImageMemory%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkBindImageMemory</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116489"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-507"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680116485"><span class="hs-identifier hs-var">vkBindImageMemoryPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Image
+      -&gt; DeviceMemory
+      -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-508"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkBindImageMemory is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-509"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680116484"><span class="annot"><span class="annottext">vkBindImageMemory' :: Ptr Device_T
+-&gt; Image
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO Result
+</span><a href="#local-6989586621680116484"><span class="hs-identifier hs-var hs-var">vkBindImageMemory'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+-&gt; Ptr Device_T
+-&gt; Image
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO Result
+</span><a href="Vulkan.Core10.MemoryManagement.html#mkVkBindImageMemory"><span class="hs-identifier hs-var">mkVkBindImageMemory</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Image
+   -&gt; DeviceMemory
+   -&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680116485"><span class="hs-identifier hs-var">vkBindImageMemoryPtr</span></a></span><span>
+</span><span id="line-510"></span><span>  </span><span id="local-6989586621680116483"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680116483"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; Image
+-&gt; DeviceMemory
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO Result
+</span><a href="#local-6989586621680116484"><span class="hs-identifier hs-var">vkBindImageMemory'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680116489"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Image
+</span><a href="#local-6989586621680116488"><span class="hs-identifier hs-var">image</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceMemory
+</span><a href="#local-6989586621680116487"><span class="hs-identifier hs-var">memory</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116486"><span class="hs-identifier hs-var">memoryOffset</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-511"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680116483"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680116483"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-512"></span><span>
+</span><span id="line-513"></span><span>
+</span><span id="line-514"></span><span class="hs-comment">-- | VkMemoryRequirements - Structure specifying memory requirements</span><span>
+</span><span id="line-515"></span><span class="hs-comment">--</span><span>
+</span><span id="line-516"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-517"></span><span class="hs-comment">--</span><span>
+</span><span id="line-518"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',</span><span>
+</span><span id="line-519"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2',</span><span>
+</span><span id="line-520"></span><span class="hs-comment">-- 'getBufferMemoryRequirements', 'getImageMemoryRequirements'</span><span>
+</span><span id="line-521"></span><span class="hs-keyword">data</span><span> </span><span id="MemoryRequirements"><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-var">MemoryRequirements</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MemoryRequirements"><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-var">MemoryRequirements</span></a></span></span><span>
+</span><span id="line-522"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @size@ is the size, in bytes, of the memory allocation /required/ for</span><span>
+</span><span id="line-523"></span><span>    </span><span class="hs-comment">-- the resource.</span><span>
+</span><span id="line-524"></span><span>    </span><span id="%24sel%3Asize%3AMemoryRequirements"><span class="annot"><span class="annottext">MemoryRequirements -&gt; &quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="Vulkan.Core10.MemoryManagement.html#%24sel%3Asize%3AMemoryRequirements"><span class="hs-identifier hs-var hs-var">size</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span>
+</span><span id="line-525"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @alignment@ is the alignment, in bytes, of the offset within the</span><span>
+</span><span id="line-526"></span><span>    </span><span class="hs-comment">-- allocation /required/ for the resource.</span><span>
+</span><span id="line-527"></span><span>    </span><span id="%24sel%3Aalignment%3AMemoryRequirements"><span class="annot"><span class="annottext">MemoryRequirements -&gt; &quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="Vulkan.Core10.MemoryManagement.html#%24sel%3Aalignment%3AMemoryRequirements"><span class="hs-identifier hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span>
+</span><span id="line-528"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @memoryTypeBits@ is a bitmask and contains one bit set for every</span><span>
+</span><span id="line-529"></span><span>    </span><span class="hs-comment">-- supported memory type for the resource. Bit @i@ is set if and only if</span><span>
+</span><span id="line-530"></span><span>    </span><span class="hs-comment">-- the memory type @i@ in the</span><span>
+</span><span id="line-531"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'</span><span>
+</span><span id="line-532"></span><span>    </span><span class="hs-comment">-- structure for the physical device is supported for the resource.</span><span>
+</span><span id="line-533"></span><span>    </span><span id="%24sel%3AmemoryTypeBits%3AMemoryRequirements"><span class="annot"><span class="annottext">MemoryRequirements -&gt; Word32
+</span><a href="Vulkan.Core10.MemoryManagement.html#%24sel%3AmemoryTypeBits%3AMemoryRequirements"><span class="hs-identifier hs-var hs-var">memoryTypeBits</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-534"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-535"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680116475"><span id="local-6989586621680116477"><span class="annot"><span class="annottext">MemoryRequirements -&gt; MemoryRequirements -&gt; Bool
+(MemoryRequirements -&gt; MemoryRequirements -&gt; Bool)
+-&gt; (MemoryRequirements -&gt; MemoryRequirements -&gt; Bool)
+-&gt; Eq MemoryRequirements
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: MemoryRequirements -&gt; MemoryRequirements -&gt; Bool
+$c/= :: MemoryRequirements -&gt; MemoryRequirements -&gt; Bool
+== :: MemoryRequirements -&gt; MemoryRequirements -&gt; Bool
+$c== :: MemoryRequirements -&gt; MemoryRequirements -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">MemoryRequirements</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680116468"><span id="local-6989586621680116470"><span id="local-6989586621680116472"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span></span></span></span><span>
+</span><span id="line-540"></span><span>
+</span><span id="line-541"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680116463"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-542"></span><span>  </span><span id="local-6989586621680116458"><span class="annot"><span class="annottext">withCStruct :: MemoryRequirements
+-&gt; ((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b)
+-&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680116456"><span class="annot"><span class="annottext">x :: MemoryRequirements
+</span><a href="#local-6989586621680116456"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680116455"><span class="annot"><span class="annottext">f :: (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b
+</span><a href="#local-6989586621680116455"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; ((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">(((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b)
+ -&gt; IO b)
+-&gt; ((&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680116454"><span class="annot"><span class="annottext">p :: &quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116454"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; MemoryRequirements -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116454"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">MemoryRequirements
+</span><a href="#local-6989586621680116456"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b
+</span><a href="#local-6989586621680116455"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116454"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-543"></span><span>  </span><span id="local-6989586621680116452"><span class="annot"><span class="annottext">pokeCStruct :: (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; MemoryRequirements -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680116452"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680116451"><span class="annot"><span class="annottext">p :: &quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116451"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680116448"><span id="local-6989586621680116449"><span id="local-6989586621680116450"><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span><span> </span><span id="local-6989586621680116447"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680116447"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-544"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116451"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116450"><span class="hs-identifier hs-var">size</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-545"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116451"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116449"><span class="hs-identifier hs-var">alignment</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-546"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116451"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680116448"><span class="hs-identifier hs-var">memoryTypeBits</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-547"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680116447"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-548"></span><span>  </span><span id="local-6989586621680116446"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-549"></span><span>  </span><span id="local-6989586621680116444"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-550"></span><span>  </span><span id="local-6989586621680116442"><span class="annot"><span class="annottext">pokeZeroCStruct :: (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements) -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680116440"><span class="annot"><span class="annottext">p :: &quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116440"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680116439"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680116439"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-551"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116440"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-552"></span><span>    </span><span class="annot"><span class="annottext">Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize) -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116440"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-553"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116440"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-554"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680116439"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-555"></span><span>
+</span><span id="line-556"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-557"></span><span>  </span><span id="local-6989586621680116435"><span class="annot"><span class="annottext">peekCStruct :: (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO MemoryRequirements
+</span><a href="#local-6989586621680116435"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680116434"><span class="annot"><span class="annottext">p :: &quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116434"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-558"></span><span>    </span><span id="local-6989586621680116433"><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116433"><span class="hs-identifier hs-var">size</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116434"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-559"></span><span>    </span><span id="local-6989586621680116432"><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116432"><span class="hs-identifier hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; IO (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116434"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr (&quot;memoryOffset&quot; ::: DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-560"></span><span>    </span><span id="local-6989586621680116431"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680116431"><span class="hs-identifier hs-var">memoryTypeBits</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116434"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-561"></span><span>    </span><span class="annot"><span class="annottext">MemoryRequirements -&gt; IO MemoryRequirements
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(MemoryRequirements -&gt; IO MemoryRequirements)
+-&gt; MemoryRequirements -&gt; IO MemoryRequirements
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize) -&gt; Word32 -&gt; MemoryRequirements
+</span><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-var">MemoryRequirements</span></a></span><span>
+</span><span id="line-562"></span><span>             </span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116433"><span class="hs-identifier hs-var">size</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+</span><a href="#local-6989586621680116432"><span class="hs-identifier hs-var">alignment</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680116431"><span class="hs-identifier hs-var">memoryTypeBits</span></a></span><span>
+</span><span id="line-563"></span><span>
+</span><span id="line-564"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680116421"><span id="local-6989586621680116423"><span id="local-6989586621680116425"><span id="local-6989586621680116427"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-565"></span><span>  </span><span id="local-6989586621680116417"><span class="annot"><span class="annottext">sizeOf :: MemoryRequirements -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">MemoryRequirements
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-566"></span><span>  </span><span id="local-6989586621680116415"><span class="annot"><span class="annottext">alignment :: MemoryRequirements -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">MemoryRequirements
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-567"></span><span>  </span><span id="local-6989586621680116413"><span class="annot"><span class="annottext">peek :: (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO MemoryRequirements
+</span><a href="#local-6989586621680116413"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; IO MemoryRequirements
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-568"></span><span>  </span><span id="local-6989586621680116412"><span class="annot"><span class="annottext">poke :: (&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; MemoryRequirements -&gt; IO ()
+</span><a href="#local-6989586621680116412"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680116411"><span class="annot"><span class="annottext">ptr :: &quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116411"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680116410"><span class="annot"><span class="annottext">poked :: MemoryRequirements
+</span><a href="#local-6989586621680116410"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements)
+-&gt; MemoryRequirements -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pMemoryRequirements&quot; ::: Ptr MemoryRequirements
+</span><a href="#local-6989586621680116411"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">MemoryRequirements
+</span><a href="#local-6989586621680116410"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-569"></span><span>
+</span><span id="line-570"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-type">MemoryRequirements</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-571"></span><span>  </span><span id="local-6989586621680116407"><span class="annot"><span class="annottext">zero :: MemoryRequirements
+</span><a href="#local-6989586621680116407"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;memoryOffset&quot; ::: DeviceSize)
+-&gt; (&quot;memoryOffset&quot; ::: DeviceSize) -&gt; Word32 -&gt; MemoryRequirements
+</span><a href="Vulkan.Core10.MemoryManagement.html#MemoryRequirements"><span class="hs-identifier hs-var">MemoryRequirements</span></a></span><span>
+</span><span id="line-572"></span><span>           </span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-573"></span><span>           </span><span class="annot"><span class="annottext">&quot;memoryOffset&quot; ::: DeviceSize
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-574"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-575"></span><span>
+</span><span id="line-576"></span></pre></body></html>
