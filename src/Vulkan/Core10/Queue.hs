@@ -168,12 +168,6 @@ foreign import ccall
 --
 -- = Description
 --
--- Note
---
--- Submission can be a high overhead operation, and applications /should/
--- attempt to batch work together into as few calls to 'queueSubmit' as
--- possible.
---
 -- 'queueSubmit' is a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission command>,
 -- with each batch defined by an element of @pSubmits@. Batches begin
@@ -710,7 +704,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'queueSubmit'
 data SubmitInfo (es :: [Type]) = SubmitInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @pWaitSemaphores@ is a pointer to an array of
     -- 'Vulkan.Core10.Handles.Semaphore' handles upon which to wait before the

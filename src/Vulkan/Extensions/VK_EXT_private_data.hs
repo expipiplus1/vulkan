@@ -177,6 +177,35 @@ foreign import ccall
 
 -- | vkDestroyPrivateDataSlotEXT - Destroy a private data slot
 --
+-- == Valid Usage
+--
+-- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+--     provided when @privateDataSlot@ was created, a compatible set of
+--     callbacks /must/ be provided here
+--
+-- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+--     provided when @privateDataSlot@ was created, @pAllocator@ /must/ be
+--     @NULL@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   If @privateDataSlot@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @privateDataSlot@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.PrivateDataSlotEXT' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+--
+-- -   If @privateDataSlot@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @privateDataSlot@ /must/ be externally synchronized
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',

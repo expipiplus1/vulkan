@@ -201,7 +201,16 @@ instance Zero MetalSurfaceCreateInfoEXT where
            zero
 
 
--- No documentation found for TopLevel "VkMetalSurfaceCreateFlagsEXT"
+-- | VkMetalSurfaceCreateFlagsEXT - Reserved for future use
+--
+-- = Description
+--
+-- 'MetalSurfaceCreateFlagsEXT' is a bitmask type for setting a mask, but
+-- is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'MetalSurfaceCreateInfoEXT'
 newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

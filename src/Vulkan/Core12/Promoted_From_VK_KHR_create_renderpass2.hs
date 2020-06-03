@@ -749,7 +749,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data AttachmentDescription2 (es :: [Type]) = AttachmentDescription2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.AttachmentDescriptionFlagBits'
@@ -984,7 +984,7 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 -- 'SubpassDescription2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
 data AttachmentReference2 (es :: [Type]) = AttachmentReference2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @attachment@ is either an integer value identifying an attachment at the
     -- corresponding index in
@@ -1210,7 +1210,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlags'
 data SubpassDescription2 (es :: [Type]) = SubpassDescription2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlagBits'
@@ -1745,7 +1745,7 @@ instance Zero SubpassDependency2 where
 -- 'SubpassDescription2', 'createRenderPass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.createRenderPass2KHR'
 data RenderPassCreateInfo2 (es :: [Type]) = RenderPassCreateInfo2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: RenderPassCreateFlags

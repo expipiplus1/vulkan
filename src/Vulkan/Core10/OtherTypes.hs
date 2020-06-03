@@ -381,42 +381,9 @@ instance Zero BufferMemoryBarrier where
 -- for the specified image subresource range, and the first access scope
 -- includes no access, as if @srcAccessMask@ was @0@.
 --
--- If @oldLayout@ is not equal to @newLayout@, then the memory barrier
--- defines an
+-- @oldLayout@ and @newLayout@ define an
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>
 -- for the specified image subresource range.
---
--- Layout transitions that are performed via image memory barriers execute
--- in their entirety in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-order submission order>,
--- relative to other image layout transitions submitted to the same queue,
--- including those performed by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass render passes>.
--- In effect there is an implicit execution dependency from each such
--- layout transition to all layout transitions previously submitted to the
--- same queue.
---
--- The image layout of each image subresource of a depth\/stencil image
--- created with
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
--- is dependent on the last sample locations used to render to the image
--- subresource as a depth\/stencil attachment, thus when the @image@ member
--- of a 'ImageMemoryBarrier' is an image created with this flag the
--- application /can/ include a
--- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT'
--- structure in the @pNext@ chain of 'ImageMemoryBarrier' to specify the
--- sample locations to use during the image layout transition.
---
--- If the
--- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT'
--- structure included in the @pNext@ chain of 'ImageMemoryBarrier' does not
--- match the sample location state last used to render to the image
--- subresource range specified by @subresourceRange@ or if no
--- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT'
--- structure is included in the @pNext@ chain of 'ImageMemoryBarrier', then
--- the contents of the given image subresource range becomes undefined as
--- if @oldLayout@ would equal
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'.
 --
 -- If @image@ has a multi-planar format and the image is /disjoint/, then
 -- including
@@ -428,57 +395,6 @@ instance Zero BufferMemoryBarrier where
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
 --
 -- == Valid Usage
---
--- -   @oldLayout@ /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or the
---     current layout of the image subresources affected by the barrier
---
--- -   @newLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
---
--- -   If @image@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at least
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   If @image@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', and one
---     of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', the other /must/
---     be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or a special
---     queue family reserved for external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
---
--- -   If @image@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE' and
---     @srcQueueFamilyIndex@ is
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED',
---     @dstQueueFamilyIndex@ /must/ also be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   If @image@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE' and
---     @srcQueueFamilyIndex@ is not
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it /must/ be a
---     valid queue family or a special queue family reserved for external
---     memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
---
--- -   If @image@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE' and
---     @dstQueueFamilyIndex@ is not
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it /must/ be a
---     valid queue family or a special queue family reserved for external
---     memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
---
--- -   If @image@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', at least one of
---     them /must/ be the same as the family of the queue that will execute
---     this barrier
 --
 -- -   @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
 --     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
@@ -500,25 +416,164 @@ instance Zero BufferMemoryBarrier where
 --     /must/ be less than or equal to the @arrayLayers@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   If @image@ has a depth\/stencil format with both depth and stencil
---     and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include either or both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+-- -   If @image@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   If @image@ has a depth\/stencil format with both depth and stencil
---     and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is not enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+--     set
 --
--- -   If @image@ has a color format and either the format is single-plane
---     or the image is not disjoint then the @aspectMask@ member of
---     @subresourceRange@ /must/ only include
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
+--
+-- -   
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     @oldLayout@ /must/ be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or the
+--     current layout of the image subresources affected by the barrier
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     @newLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL_KHR'
+--     then @image@ /must/ have been created with at least one of
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT', or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL_KHR'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL_KHR'
+--     then @image@ /must/ have been created with at least one of
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT', or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL_KHR'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
+--
+-- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
+--     then @image@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     set
+--
+-- -   If @image@ has a single-plane color format or is not /disjoint/,
+--     then the @aspectMask@ member of @subresourceRange@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   If @image@ has a multi-planar format and the image is /disjoint/,
@@ -535,63 +590,46 @@ instance Zero BufferMemoryBarrier where
 --     @aspectMask@ member of @subresourceRange@ /must/ not include
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
---     set
+-- -   If @image@ has a depth\/stencil format with both depth and stencil
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include either or both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
---     set
+-- -   If @image@ has a depth\/stencil format with both depth and stencil
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is not enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
---     set
+-- -   If @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
+--     least one /must/ not be a special queue family reserved for external
+--     memory ownership transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
 --
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
---     set
+-- -   If @image@ was created with a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
+--     queue family values reserved for external memory transfers, the
+--     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
---     set
+-- -   If @image@ was created with a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ both be valid
+--     queue families, or one of the special queue family values reserved
+--     for external memory transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
 --
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' or
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
---     set
---
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
---     set
---
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     set
---
--- -   If @image@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   If either @oldLayout@ or @newLayout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
---     then @image@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
---     set
+-- -   If @image@ was created with a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at least
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- == Valid Usage (Implicit)
 --
@@ -625,7 +663,7 @@ instance Zero BufferMemoryBarrier where
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'
 data ImageMemoryBarrier (es :: [Type]) = ImageMemoryBarrier
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @srcAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a

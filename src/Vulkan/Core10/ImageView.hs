@@ -1080,7 +1080,7 @@ instance Zero ImageSubresourceRange where
 -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createImageView'
 data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits'

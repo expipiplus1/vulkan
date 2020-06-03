@@ -230,7 +230,16 @@ instance Zero AndroidSurfaceCreateInfoKHR where
            zero
 
 
--- No documentation found for TopLevel "VkAndroidSurfaceCreateFlagsKHR"
+-- | VkAndroidSurfaceCreateFlagsKHR - Reserved for future use
+--
+-- = Description
+--
+-- 'AndroidSurfaceCreateFlagsKHR' is a bitmask type for setting a mask, but
+-- is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'AndroidSurfaceCreateInfoKHR'
 newtype AndroidSurfaceCreateFlagsKHR = AndroidSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

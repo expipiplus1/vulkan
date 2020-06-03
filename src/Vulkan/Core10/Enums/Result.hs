@@ -59,7 +59,7 @@ import Vulkan.Zero (Zero)
 --
 -- = Description
 --
--- If a command returns a run time error, unless otherwise specified any
+-- If a command returns a runtime error, unless otherwise specified any
 -- output parameters will have undefined contents, except that if the
 -- output parameter is a structure with @sType@ and @pNext@ fields, those
 -- fields will be unmodified. Any structures chained from @pNext@ will also
@@ -85,9 +85,9 @@ import Vulkan.Zero (Zero)
 -- issue, and the implementor should be contacted for support.
 --
 -- Performance-critical commands generally do not have return codes. If a
--- run time error occurs in such commands, the implementation will defer
+-- runtime error occurs in such commands, the implementation will defer
 -- reporting the error until a specified point. For commands that record
--- into command buffers (@vkCmd*@) run time errors are reported by
+-- into command buffers (@vkCmd*@) runtime errors are reported by
 -- 'Vulkan.Core10.CommandBuffer.endCommandBuffer'.
 --
 -- = See Also

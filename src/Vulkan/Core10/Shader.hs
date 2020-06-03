@@ -307,7 +307,7 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.ShaderModuleCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createShaderModule'
 data ShaderModuleCreateInfo (es :: [Type]) = ShaderModuleCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: ShaderModuleCreateFlags

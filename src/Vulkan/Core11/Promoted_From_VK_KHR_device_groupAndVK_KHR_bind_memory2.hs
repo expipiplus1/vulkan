@@ -53,7 +53,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- -   @sType@ is the type of this structure.
 --
--- -   @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   @deviceIndexCount@ is the number of elements in @pDeviceIndices@.
 --
@@ -155,7 +156,8 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --
 -- -   @sType@ is the type of this structure.
 --
--- -   @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   @deviceIndexCount@ is the number of elements in @pDeviceIndices@.
 --

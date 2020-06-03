@@ -1506,7 +1506,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 -- 'Vulkan.Extensions.VK_KHR_display_swapchain.createSharedSwapchainsKHR',
 -- 'createSwapchainKHR'
 data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of 'SwapchainCreateFlagBitsKHR' indicating
     -- parameters of the swapchain creation.
@@ -1744,7 +1744,7 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR', 'queuePresentKHR'
 data PresentInfoKHR (es :: [Type]) = PresentInfoKHR
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @pWaitSemaphores@ is @NULL@ or a pointer to an array of
     -- 'Vulkan.Core10.Handles.Semaphore' objects with @waitSemaphoreCount@

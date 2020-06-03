@@ -235,11 +235,13 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
 
 -- | VkCheckpointDataNV - return structure for command buffer checkpoint data
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- Note that the stages at which a checkpoint marker /can/ be executed are
+-- The stages at which a checkpoint marker /can/ be executed are
 -- implementation-defined and /can/ be queried by calling
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'.
+--
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

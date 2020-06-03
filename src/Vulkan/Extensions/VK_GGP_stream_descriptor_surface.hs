@@ -208,7 +208,16 @@ instance Zero StreamDescriptorSurfaceCreateInfoGGP where
            zero
 
 
--- No documentation found for TopLevel "VkStreamDescriptorSurfaceCreateFlagsGGP"
+-- | VkStreamDescriptorSurfaceCreateFlagsGGP - Reserved for future use
+--
+-- = Description
+--
+-- 'StreamDescriptorSurfaceCreateFlagsGGP' is a bitmask type for setting a
+-- mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'StreamDescriptorSurfaceCreateInfoGGP'
 newtype StreamDescriptorSurfaceCreateFlagsGGP = StreamDescriptorSurfaceCreateFlagsGGP Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

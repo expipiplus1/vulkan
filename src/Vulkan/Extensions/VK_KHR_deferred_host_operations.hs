@@ -222,19 +222,35 @@ foreign import ccall
 -- intended to be used to better schedule work onto available threads.
 -- Applications /can/ join any number of threads to the deferred operation
 -- and expect it to eventually complete, though excessive joins /may/
--- return 'Vulkan.Core10.Enums.Result.THREAD_IDLE_KHR' immediately,
+-- return 'Vulkan.Core10.Enums.Result.THREAD_DONE_KHR' immediately,
 -- performing no useful work.
 --
--- If the deferred operation is currently joined to any threads, the value
--- returned by this command /may/ immediately be out of date.
+-- If @operation@ is complete, 'getDeferredOperationMaxConcurrencyKHR'
+-- returns zero.
 --
--- Implementations /must/ not return zero.
+-- If @operation@ is currently joined to any threads, the value returned by
+-- this command /may/ immediately be out of date.
+--
+-- If @operation@ is pending, implementations /must/ not return zero unless
+-- at least one thread is currently executing 'deferredOperationJoinKHR' on
+-- @operation@. If there are such threads, the implementation /should/
+-- return an estimate of the number of additional threads which it could
+-- profitably use.
 --
 -- Implementations /may/ return 232-1 to indicate that the maximum
 -- concurrency is unknown and cannot be easily derived. Implementations
 -- /may/ return values larger than the maximum concurrency available on the
 -- host CPU. In these situations, an application /should/ clamp the return
 -- value rather than oversubscribing the machine.
+--
+-- Note
+--
+-- The recommended usage pattern for applications is to query this value
+-- once, after deferral, and schedule no more than the specified number of
+-- threads to join the operation. Each time a joined thread receives
+-- 'Vulkan.Core10.Enums.Result.THREAD_IDLE_KHR', the application should
+-- schedule an additional join at some point in the future, but is not
+-- required to do so.
 --
 -- == Valid Usage (Implicit)
 --
@@ -279,10 +295,16 @@ foreign import ccall
 -- = Description
 --
 -- If the deferred operation is pending, 'getDeferredOperationResultKHR'
--- returns 'Vulkan.Core10.Enums.Result.NOT_READY'. Otherwise, it returns
--- the result of the deferred operation. This value /must/ be one of the
--- 'Vulkan.Core10.Enums.Result.Result' values which could have been
--- returned by the original command if the operation had not been deferred.
+-- returns 'Vulkan.Core10.Enums.Result.NOT_READY'.
+--
+-- If no command has been deferred on @operation@,
+-- 'getDeferredOperationResultKHR' returns
+-- 'Vulkan.Core10.Enums.Result.SUCCESS'.
+--
+-- Otherwise, it returns the result of the previous deferred operation.
+-- This value /must/ be one of the 'Vulkan.Core10.Enums.Result.Result'
+-- values which could have been returned by the original command if the
+-- operation had not been deferred.
 --
 -- == Return Codes
 --

@@ -596,6 +596,8 @@ foreign import ccall
 -- | invalid non-@NULL@   | *1                                                                      | undefined             |
 -- | instance             |                                                                         |                       |
 -- +----------------------+-------------------------------------------------------------------------+-----------------------+
+-- | @NULL@               | 'getInstanceProcAddr'                                                   | fp4                   |
+-- +----------------------+-------------------------------------------------------------------------+-----------------------+
 -- | @NULL@               | 'Vulkan.Core11.DeviceInitialization.enumerateInstanceVersion'           | fp                    |
 -- +----------------------+-------------------------------------------------------------------------+-----------------------+
 -- | @NULL@               | 'Vulkan.Core10.ExtensionDiscovery.enumerateInstanceExtensionProperties' | fp                    |
@@ -631,6 +633,10 @@ foreign import ccall
 -- [3]
 --     An “available device extension” is a device extension supported by
 --     any physical device enumerated by @instance@.
+--
+-- [4]
+--     Starting with Vulkan 1.2, 'getInstanceProcAddr' can resolve itself
+--     with a @NULL@ instance pointer.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1355,7 +1361,7 @@ instance Zero ApplicationInfo where
 -- 'Vulkan.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createInstance'
 data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: InstanceCreateFlags

@@ -350,8 +350,11 @@ instance Zero SamplerYcbcrConversionInfo where
 -- == Valid Usage
 --
 -- -   If an external format conversion is being created, @format@ /must/
---     be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', otherwise it
---     /must/ not be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--     be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
+-- -   If an external format conversion is not being created, @format@
+--     /must/ represent unsigned normalized values (i.e. the format must be
+--     a @UNORM@ format)
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
@@ -485,7 +488,7 @@ instance Zero SamplerYcbcrConversionInfo where
 -- 'createSamplerYcbcrConversion',
 -- 'Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversionKHR'
 data SamplerYcbcrConversionCreateInfo (es :: [Type]) = SamplerYcbcrConversionCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @format@ is the format of the image from which color information will be
     -- retrieved.

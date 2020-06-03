@@ -95,7 +95,7 @@ foreign import ccall
 --
 -- 'getPhysicalDeviceSurfaceCapabilities2EXT' behaves similarly to
 -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
--- with the ability to return extended information by adding extension
+-- with the ability to return extended information by adding extending
 -- structures to the @pNext@ chain of its @pSurfaceCapabilities@ parameter.
 --
 -- == Valid Usage (Implicit)

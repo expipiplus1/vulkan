@@ -1807,7 +1807,7 @@ instance Zero SubpassDependency where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'SubpassDependency',
 -- 'SubpassDescription', 'createRenderPass'
 data RenderPassCreateInfo (es :: [Type]) = RenderPassCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RenderPassCreateFlagBits'
@@ -2242,7 +2242,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.RenderPass',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createFramebuffer'
 data FramebufferCreateInfo (es :: [Type]) = FramebufferCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FramebufferCreateFlagBits'

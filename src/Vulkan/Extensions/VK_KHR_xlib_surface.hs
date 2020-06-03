@@ -270,7 +270,16 @@ instance Zero XlibSurfaceCreateInfoKHR where
            zero
 
 
--- No documentation found for TopLevel "VkXlibSurfaceCreateFlagsKHR"
+-- | VkXlibSurfaceCreateFlagsKHR - Reserved for future use
+--
+-- = Description
+--
+-- 'XlibSurfaceCreateFlagsKHR' is a bitmask type for setting a mask, but is
+-- currently reserved for future use.
+--
+-- = See Also
+--
+-- 'XlibSurfaceCreateInfoKHR'
 newtype XlibSurfaceCreateFlagsKHR = XlibSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

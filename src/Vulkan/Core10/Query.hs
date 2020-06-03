@@ -520,7 +520,7 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 -- 'Vulkan.Core10.Enums.QueryType.QueryType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createQueryPool'
 data QueryPoolCreateInfo (es :: [Type]) = QueryPoolCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: QueryPoolCreateFlags
