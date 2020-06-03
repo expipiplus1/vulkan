@@ -53,7 +53,7 @@ main =
     getDocumentation <- if doLoadDocs
       then liftIO $ loadAllDocumentation allExtensionNames
                                          "./Vulkan-Docs"
-                                         "./Vulkan-Docs/man"
+                                         "./Vulkan-Docs/gen/refpage"
       else pure (const Nothing)
 
 
