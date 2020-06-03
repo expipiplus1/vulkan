@@ -266,7 +266,16 @@ instance Zero WaylandSurfaceCreateInfoKHR where
            zero
 
 
--- No documentation found for TopLevel "VkWaylandSurfaceCreateFlagsKHR"
+-- | VkWaylandSurfaceCreateFlagsKHR - Reserved for future use
+--
+-- = Description
+--
+-- 'WaylandSurfaceCreateFlagsKHR' is a bitmask type for setting a mask, but
+-- is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'WaylandSurfaceCreateInfoKHR'
 newtype WaylandSurfaceCreateFlagsKHR = WaylandSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

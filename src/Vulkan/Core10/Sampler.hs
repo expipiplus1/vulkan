@@ -478,7 +478,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.SamplerMipmapMode.SamplerMipmapMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSampler'
 data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits'

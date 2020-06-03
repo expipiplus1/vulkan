@@ -421,7 +421,7 @@ destroyDevice device allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceQueueCreateInfo (es :: [Type]) = DeviceQueueCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask indicating behavior of the queue.
     flags :: DeviceQueueCreateFlags
@@ -693,7 +693,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createDevice'
 data DeviceCreateInfo (es :: [Type]) = DeviceCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: DeviceCreateFlags

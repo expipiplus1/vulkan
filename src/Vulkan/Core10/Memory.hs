@@ -958,7 +958,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     the Android hardware buffer’s
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
 --     /must/ include at least one of
---     @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
+--     @AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER@ or
 --     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@
 --
 -- -   If the parameters define an import operation, the external handle is
@@ -1077,7 +1077,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'allocateMemory'
 data MemoryAllocateInfo (es :: [Type]) = MemoryAllocateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @allocationSize@ is the size of the allocation in bytes
     allocationSize :: DeviceSize

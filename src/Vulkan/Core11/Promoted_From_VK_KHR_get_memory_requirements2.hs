@@ -338,7 +338,7 @@ instance Zero BufferMemoryRequirementsInfo2 where
 -- 'getImageMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
 data ImageMemoryRequirementsInfo2 (es :: [Type]) = ImageMemoryRequirementsInfo2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @image@ is the image to query.
     image :: Image
@@ -466,7 +466,7 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 -- 'getImageMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
 data MemoryRequirements2 (es :: [Type]) = MemoryRequirements2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @memoryRequirements@ is a
     -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements' structure describing

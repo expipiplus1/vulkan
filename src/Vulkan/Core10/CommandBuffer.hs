@@ -681,7 +681,7 @@ instance Zero CommandBufferAllocateInfo where
 -- 'Vulkan.Core10.Handles.RenderPass',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @renderPass@ is a 'Vulkan.Core10.Handles.RenderPass' object defining
     -- which render passes the 'Vulkan.Core10.Handles.CommandBuffer' will be
@@ -843,7 +843,7 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 -- 'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.CommandBufferUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'beginCommandBuffer'
 data CommandBufferBeginInfo (es :: [Type]) = CommandBufferBeginInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.CommandBufferUsageFlagBits'

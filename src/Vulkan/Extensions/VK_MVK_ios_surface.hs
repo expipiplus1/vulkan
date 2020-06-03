@@ -203,7 +203,16 @@ instance Zero IOSSurfaceCreateInfoMVK where
            zero
 
 
--- No documentation found for TopLevel "VkIOSSurfaceCreateFlagsMVK"
+-- | VkIOSSurfaceCreateFlagsMVK - Reserved for future use
+--
+-- = Description
+--
+-- 'IOSSurfaceCreateFlagsMVK' is a bitmask type for setting a mask, but is
+-- currently reserved for future use.
+--
+-- = See Also
+--
+-- 'IOSSurfaceCreateInfoMVK'
 newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

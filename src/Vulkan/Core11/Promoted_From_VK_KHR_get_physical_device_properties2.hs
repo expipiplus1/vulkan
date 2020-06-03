@@ -541,7 +541,7 @@ foreign import ccall
 --
 -- 'getPhysicalDeviceSparseImageFormatProperties2' behaves identically to
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.getPhysicalDeviceSparseImageFormatProperties',
--- with the ability to return extended information by adding extension
+-- with the ability to return extended information by adding extending
 -- structures to the @pNext@ chain of its @pProperties@ parameter.
 --
 -- == Valid Usage (Implicit)
@@ -615,7 +615,7 @@ getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO
 -- 'getPhysicalDeviceFeatures2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2KHR'
 data PhysicalDeviceFeatures2 (es :: [Type]) = PhysicalDeviceFeatures2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @features@ is a
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceFeatures' structure
@@ -797,7 +797,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 -- 'getPhysicalDeviceProperties2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2KHR'
 data PhysicalDeviceProperties2 (es :: [Type]) = PhysicalDeviceProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @properties@ is a
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties' structure
@@ -912,7 +912,7 @@ instance es ~ '[] => Zero (PhysicalDeviceProperties2 es) where
 -- 'getPhysicalDeviceFormatProperties2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2KHR'
 data FormatProperties2 (es :: [Type]) = FormatProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @formatProperties@ is a
     -- 'Vulkan.Core10.DeviceInitialization.FormatProperties' structure
@@ -1009,8 +1009,8 @@ instance es ~ '[] => Zero (FormatProperties2 es) where
 -- 'getPhysicalDeviceImageFormatProperties2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2KHR'
 data ImageFormatProperties2 (es :: [Type]) = ImageFormatProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure. The
-    -- @pNext@ chain of 'ImageFormatProperties2' is used to allow the
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    -- The @pNext@ chain of 'ImageFormatProperties2' is used to allow the
     -- specification of additional capabilities to be returned from
     -- 'getPhysicalDeviceImageFormatProperties2'.
     next :: Chain es
@@ -1139,8 +1139,8 @@ instance es ~ '[] => Zero (ImageFormatProperties2 es) where
 -- 'getPhysicalDeviceImageFormatProperties2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2KHR'
 data PhysicalDeviceImageFormatInfo2 (es :: [Type]) = PhysicalDeviceImageFormatInfo2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure. The
-    -- @pNext@ chain of 'PhysicalDeviceImageFormatInfo2' is used to provide
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    -- The @pNext@ chain of 'PhysicalDeviceImageFormatInfo2' is used to provide
     -- additional image parameters to
     -- 'getPhysicalDeviceImageFormatProperties2'.
     next :: Chain es
@@ -1253,7 +1253,7 @@ instance es ~ '[] => Zero (PhysicalDeviceImageFormatInfo2 es) where
 -- 'getPhysicalDeviceQueueFamilyProperties2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2KHR'
 data QueueFamilyProperties2 (es :: [Type]) = QueueFamilyProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @queueFamilyProperties@ is a
     -- 'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties' structure
@@ -1328,7 +1328,7 @@ instance es ~ '[] => Zero (QueueFamilyProperties2 es) where
 -- 'getPhysicalDeviceMemoryProperties2',
 -- 'Vulkan.Extensions.VK_KHR_get_physical_device_properties2.getPhysicalDeviceMemoryProperties2KHR'
 data PhysicalDeviceMemoryProperties2 (es :: [Type]) = PhysicalDeviceMemoryProperties2
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @memoryProperties@ is a
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'

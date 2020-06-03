@@ -316,7 +316,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindBufferMemory2',
 -- 'Vulkan.Extensions.VK_KHR_bind_memory2.bindBufferMemory2KHR'
 data BindBufferMemoryInfo (es :: [Type]) = BindBufferMemoryInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @buffer@ is the buffer to be attached to memory.
     buffer :: Buffer
@@ -618,7 +618,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindImageMemory2',
 -- 'Vulkan.Extensions.VK_KHR_bind_memory2.bindImageMemory2KHR'
 data BindImageMemoryInfo (es :: [Type]) = BindImageMemoryInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @image@ is the image to be attached to memory.
     image :: Image

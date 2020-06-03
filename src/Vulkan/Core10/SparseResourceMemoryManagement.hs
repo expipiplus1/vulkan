@@ -1263,7 +1263,7 @@ instance Zero SparseImageMemoryBindInfo where
 -- 'SparseImageMemoryBindInfo', 'SparseImageOpaqueMemoryBindInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'queueBindSparse'
 data BindSparseInfo (es :: [Type]) = BindSparseInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @pWaitSemaphores@ is a pointer to an array of semaphores upon which to
     -- wait on before the sparse binding operations for this batch begin

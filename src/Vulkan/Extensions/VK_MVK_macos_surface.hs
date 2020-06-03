@@ -205,7 +205,16 @@ instance Zero MacOSSurfaceCreateInfoMVK where
            zero
 
 
--- No documentation found for TopLevel "VkMacOSSurfaceCreateFlagsMVK"
+-- | VkMacOSSurfaceCreateFlagsMVK - Reserved for future use
+--
+-- = Description
+--
+-- 'MacOSSurfaceCreateFlagsMVK' is a bitmask type for setting a mask, but
+-- is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'MacOSSurfaceCreateInfoMVK'
 newtype MacOSSurfaceCreateFlagsMVK = MacOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

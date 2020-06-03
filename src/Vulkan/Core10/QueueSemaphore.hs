@@ -244,7 +244,7 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.SemaphoreCreateFlags.SemaphoreCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSemaphore'
 data SemaphoreCreateInfo (es :: [Type]) = SemaphoreCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: SemaphoreCreateFlags

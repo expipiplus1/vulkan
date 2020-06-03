@@ -191,7 +191,16 @@ instance Zero HeadlessSurfaceCreateInfoEXT where
            zero
 
 
--- No documentation found for TopLevel "VkHeadlessSurfaceCreateFlagsEXT"
+-- | VkHeadlessSurfaceCreateFlagsEXT - Reserved for future use
+--
+-- = Description
+--
+-- 'HeadlessSurfaceCreateFlagsEXT' is a bitmask type for setting a mask,
+-- but is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'HeadlessSurfaceCreateInfoEXT'
 newtype HeadlessSurfaceCreateFlagsEXT = HeadlessSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

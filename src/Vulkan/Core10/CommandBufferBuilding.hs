@@ -4135,6 +4135,17 @@ foreign import ccall
 -- -   @dstImage@ /must/ not have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
+-- -   If the queue family used to create the
+--     'Vulkan.Core10.Handles.CommandPool' which @commandBuffer@ was
+--     allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of @pRegions@ /must/ be a
+--     multiple of @4@
+--
+-- -   If @dstImage@ has a depth\/stencil format, the @bufferOffset@ member
+--     of any element of @pRegions@ /must/ be a multiple of @4@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -4323,6 +4334,17 @@ foreign import ccall
 --
 -- -   @srcImage@ /must/ not have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   If the queue family used to create the
+--     'Vulkan.Core10.Handles.CommandPool' which @commandBuffer@ was
+--     allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of @pRegions@ /must/ be a
+--     multiple of @4@
+--
+-- -   If @srcImage@ has a depth\/stencil format, the @bufferOffset@ member
+--     of any element of @pRegions@ /must/ be a multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --
@@ -5500,7 +5522,8 @@ cmdSetEvent :: forall io
                Event
             -> -- | @stageMask@ specifies the
                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
-               -- used to determine when the @event@ is signaled.
+               -- used to determine the first
+               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>.
                ("stageMask" ::: PipelineStageFlags)
             -> io ()
 cmdSetEvent commandBuffer event stageMask = liftIO $ do
@@ -5783,6 +5806,52 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- == Valid Usage
 --
+-- -   The @srcAccessMask@ member of each element of @pMemoryBarriers@
+--     /must/ only include access flags that are supported by one or more
+--     of the pipeline stages in @srcStageMask@, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
+-- -   The @dstAccessMask@ member of each element of @pMemoryBarriers@
+--     /must/ only include access flags that are supported by one or more
+--     of the pipeline stages in @dstStageMask@, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
+-- -   For any element of @pBufferMemoryBarriers@, if its
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members are equal,
+--     or if its @srcQueueFamilyIndex@ is the queue family index that was
+--     used to create the command pool that @commandBuffer@ was allocated
+--     from, then its @srcAccessMask@ member /must/ only contain access
+--     flags that are supported by one or more of the pipeline stages in
+--     @srcStageMask@, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
+-- -   For any element of @pBufferMemoryBarriers@, if its
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members are equal,
+--     or if its @dstQueueFamilyIndex@ is the queue family index that was
+--     used to create the command pool that @commandBuffer@ was allocated
+--     from, then its @dstAccessMask@ member /must/ only contain access
+--     flags that are supported by one or more of the pipeline stages in
+--     @dstStageMask@, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
+-- -   For any element of @pImageMemoryBarriers@, if its
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members are equal,
+--     or if its @srcQueueFamilyIndex@ is the queue family index that was
+--     used to create the command pool that @commandBuffer@ was allocated
+--     from, then its @srcAccessMask@ member /must/ only contain access
+--     flags that are supported by one or more of the pipeline stages in
+--     @srcStageMask@, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
+-- -   For any element of @pImageMemoryBarriers@, if its
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members are equal,
+--     or if its @dstQueueFamilyIndex@ is the queue family index that was
+--     used to create the command pool that @commandBuffer@ was allocated
+--     from, then its @dstAccessMask@ member /must/ only contain access
+--     flags that are supported by one or more of the pipeline stages in
+--     @dstStageMask@, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
 -- -   @srcStageMask@ /must/ be the bitwise OR of the @stageMask@ parameter
 --     used in previous calls to 'cmdSetEvent' with any of the members of
 --     @pEvents@ and
@@ -5827,18 +5896,6 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
--- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ or
---     @pImageMemoryBarriers@ /must/ not have any access flag included in
---     its @srcAccessMask@ member if that bit is not supported by any of
---     the pipeline stages in @srcStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
---
--- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ or
---     @pImageMemoryBarriers@ /must/ not have any access flag included in
---     its @dstAccessMask@ member if that bit is not supported by any of
---     the pipeline stages in @dstStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
---
 -- -   The @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any
 --     element of @pBufferMemoryBarriers@ or @pImageMemoryBarriers@ /must/
 --     be equal
@@ -5865,38 +5922,6 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
---
--- -   The @srcAccessMask@ member of each element of @pMemoryBarriers@
---     /must/ only include access flags that are supported by one or more
---     of the pipeline stages in @srcStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
---
--- -   The @dstAccessMask@ member of each element of @pMemoryBarriers@
---     /must/ only include access flags that are supported by one or more
---     of the pipeline stages in @dstStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
---
--- -   The @srcAccessMask@ member of each element of
---     @pBufferMemoryBarriers@ /must/ only include access flags that are
---     supported by one or more of the pipeline stages in @srcStageMask@,
---     as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
---
--- -   The @dstAccessMask@ member of each element of
---     @pBufferMemoryBarriers@ /must/ only include access flags that are
---     supported by one or more of the pipeline stages in @dstStageMask@,
---     as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
---
--- -   The @srcAccessMask@ member of each element of @pImageMemoryBarriers@
---     /must/ only include access flags that are supported by one or more
---     of the pipeline stages in @srcStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
---
--- -   The @dstAccessMask@ member of any element of @pImageMemoryBarriers@
---     /must/ only include access flags that are supported by one or more
---     of the pipeline stages in @dstStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
 -- == Valid Usage (Implicit)
 --
@@ -6103,81 +6128,59 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
---     or
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
---     or
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
---
 -- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
 --     render pass /must/ have been created with at least one
 --     'Vulkan.Core10.Pass.SubpassDependency' instance in
 --     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pDependencies@ that
---     expresses a dependency from the current subpass to itself, and for
---     which @srcStageMask@ contains a subset of the bit values in
---     'Vulkan.Core10.Pass.SubpassDependency'::@srcStageMask@,
---     @dstStageMask@ contains a subset of the bit values in
---     'Vulkan.Core10.Pass.SubpassDependency'::@dstStageMask@,
---     @dependencyFlags@ is equal to
---     'Vulkan.Core10.Pass.SubpassDependency'::@dependencyFlags@,
---     @srcAccessMask@ member of each element of @pMemoryBarriers@ and
---     @pImageMemoryBarriers@ contains a subset of the bit values in
---     'Vulkan.Core10.Pass.SubpassDependency'::@srcAccessMask@, and
---     @dstAccessMask@ member of each element of @pMemoryBarriers@ and
---     @pImageMemoryBarriers@ contains a subset of the bit values in
---     'Vulkan.Core10.Pass.SubpassDependency'::@dstAccessMask@
+--     expresses a dependency from the current subpass to itself, with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scopes>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scopes>
+--     that are all supersets of the scopes defined in this command
 --
--- -   If 'cmdPipelineBarrier' is called within a render pass instance,
---     @bufferMemoryBarrierCount@ /must/ be @0@
+-- -   If 'cmdPipelineBarrier' is called within a render pass instance, it
+--     /must/ not include any buffer memory barriers
 --
 -- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     @image@ member of any element of @pImageMemoryBarriers@ /must/ be
---     equal to one of the elements of @pAttachments@ that the current
---     @framebuffer@ was created with, that is also referred to by one of
---     the elements of the @pColorAttachments@, @pResolveAttachments@ or
---     @pDepthStencilAttachment@ members of the
---     'Vulkan.Core10.Pass.SubpassDescription' instance or by the
---     @pDepthStencilResolveAttachment@ member of the
---     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
---     structure that the current subpass was created with
+--     @image@ member of any image memory barrier included in this command
+--     /must/ be an attachment used in the current subpass both as an input
+--     attachment, and as either a color or depth\/stencil attachment
 --
 -- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     @oldLayout@ and @newLayout@ members of any element of
---     @pImageMemoryBarriers@ /must/ be equal to the @layout@ member of an
---     element of the @pColorAttachments@, @pResolveAttachments@ or
---     @pDepthStencilAttachment@ members of the
---     'Vulkan.Core10.Pass.SubpassDescription' instance or by the
---     @pDepthStencilResolveAttachment@ member of the
---     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
---     structure that the current subpass was created with, that refers to
---     the same @image@
+--     @oldLayout@ and @newLayout@ members of any image memory barrier
+--     included in this command /must/ be equal
 --
 -- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     @oldLayout@ and @newLayout@ members of an element of
---     @pImageMemoryBarriers@ /must/ be equal
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any image
+--     memory barrier included in this command /must/ be equal
 --
--- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any
---     element of @pImageMemoryBarriers@ /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+-- -   If 'cmdPipelineBarrier' is called outside of a render pass instance,
+--     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
+--     /must/ not be included in the dependency flags
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   Any pipeline stage included in @srcStageMask@ or @dstStageMask@
 --     /must/ be supported by the capabilities of the queue family
@@ -6186,10 +6189,6 @@ foreign import ccall
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
---
--- -   If 'cmdPipelineBarrier' is called outside of a render pass instance,
---     @dependencyFlags@ /must/ not include
---     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -6812,19 +6811,6 @@ foreign import ccall
 -- at any specific stage of the pipeline, it /may/ instead do so at any
 -- logically later stage.
 --
--- 'cmdCopyQueryPoolResults' /can/ then be called to copy the timestamp
--- value from the query pool into buffer memory, with ordering and
--- synchronization behavior equivalent to how other queries operate.
--- Timestamp values /can/ also be retrieved from the query pool using
--- 'Vulkan.Core10.Query.getQueryPoolResults'. As with other queries, the
--- query /must/ be reset using 'cmdResetQueryPool' or
--- 'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.resetQueryPool'
--- before requesting the timestamp value be written to it.
---
--- While 'cmdWriteTimestamp' /can/ be called inside or outside of a render
--- pass instance, 'cmdCopyQueryPoolResults' /must/ only be called outside
--- of a render pass instance.
---
 -- Timestamps /may/ only be meaningfully compared if they are written by
 -- commands submitted to the same queue.
 --
@@ -6856,6 +6842,50 @@ foreign import ccall
 -- queries to determine the total execution time.
 --
 -- == Valid Usage
+--
+-- -   @pipelineStage@ /must/ be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported valid stage>
+--     for the queue family that was used to create the command pool that
+--     @commandBuffer@ was allocated from
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   @queryPool@ /must/ have been created with a @queryType@ of
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP'
@@ -8576,8 +8606,6 @@ instance Zero ImageBlit where
 --     @imageSubresource@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes>
 --
--- -   @bufferOffset@ /must/ be a multiple of @4@
---
 -- -   @bufferRowLength@ /must/ be @0@, or greater than or equal to the
 --     @width@ member of @imageExtent@
 --
@@ -9176,7 +9204,7 @@ instance Zero ImageResolve where
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.cmdBeginRenderPass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.cmdBeginRenderPass2KHR'
 data RenderPassBeginInfo (es :: [Type]) = RenderPassBeginInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @renderPass@ is the render pass to begin an instance of.
     renderPass :: RenderPass

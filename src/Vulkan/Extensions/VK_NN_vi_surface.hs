@@ -218,7 +218,16 @@ instance Zero ViSurfaceCreateInfoNN where
            zero
 
 
--- No documentation found for TopLevel "VkViSurfaceCreateFlagsNN"
+-- | VkViSurfaceCreateFlagsNN - Reserved for future use
+--
+-- = Description
+--
+-- 'ViSurfaceCreateFlagsNN' is a bitmask type for setting a mask, but is
+-- currently reserved for future use.
+--
+-- = See Also
+--
+-- 'ViSurfaceCreateInfoNN'
 newtype ViSurfaceCreateFlagsNN = ViSurfaceCreateFlagsNN Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

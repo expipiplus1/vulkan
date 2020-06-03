@@ -1694,8 +1694,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than the
---     number of shader groups in @pipeline@
+-- -   @firstGroup@ /must/ be less than the number of shader groups in
+--     @pipeline@
+--
+-- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than or
+--     equal to the number of shader groups in @pipeline@
 --
 -- -   @dataSize@ /must/ be at least
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleSize@ ×
@@ -1772,8 +1775,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than the
---     number of shader groups in @pipeline@
+-- -   @firstGroup@ /must/ be less than the number of shader groups in
+--     @pipeline@
+--
+-- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than or
+--     equal to the number of shader groups in @pipeline@
 --
 -- -   @dataSize@ /must/ be at least
 --     'PhysicalDeviceRayTracingPropertiesKHR'::@shaderGroupHandleCaptureReplaySize@
@@ -3456,7 +3462,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createRayTracingPipelinesKHR'
 data RayTracingPipelineCreateInfoKHR (es :: [Type]) = RayTracingPipelineCreateInfoKHR
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
@@ -4670,7 +4676,7 @@ instance Zero AccelerationStructureGeometryKHR where
 -- 'cmdBuildAccelerationStructureIndirectKHR',
 -- 'cmdBuildAccelerationStructureKHR'
 data AccelerationStructureBuildGeometryInfoKHR (es :: [Type]) = AccelerationStructureBuildGeometryInfoKHR
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @type@ is a 'AccelerationStructureTypeKHR' value specifying the type of
     -- acceleration structure being built.

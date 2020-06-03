@@ -236,7 +236,7 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 -- 'getDescriptorSetLayoutSupport',
 -- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'
 data DescriptorSetLayoutSupport (es :: [Type]) = DescriptorSetLayoutSupport
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @supported@ specifies whether the descriptor set layout /can/ be
     -- created.

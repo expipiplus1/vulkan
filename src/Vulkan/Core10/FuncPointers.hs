@@ -108,7 +108,7 @@ type FN_vkAllocationFunction = ("pUserData" ::: Ptr ()) -> CSize -> ("alignment"
 --
 -- If @pfnAllocation@ returns @NULL@, and if the implementation is unable
 -- to continue correct processing of the current command without the
--- requested allocation, it /must/ treat this as a run-time error, and
+-- requested allocation, it /must/ treat this as a runtime error, and
 -- generate 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' at the
 -- appropriate time for the command in which the condition was detected, as
 -- described in

@@ -14,9 +14,7 @@ https://github.com/NixOS/nixpkgs/pull/86773 merged):
 
 ```bash
 cd Vulkan-Docs
-# Generating all the reference pages (which we need) is a side effect of
-# building man/apispec.txt, generated builds their dependencies.
-nix-shell -p python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp --run "./makeAllExts man/apispec.txt generated"
+nix-shell -p python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp --run "./makeAllExts refpages generated"
 ```
 
 ## The `vma` generator

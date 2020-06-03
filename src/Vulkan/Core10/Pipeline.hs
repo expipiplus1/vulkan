@@ -1092,7 +1092,7 @@ instance Zero SpecializationInfo where
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits',
 -- 'SpecializationInfo', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineShaderStageCreateInfo (es :: [Type]) = PipelineShaderStageCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PipelineShaderStageCreateFlagBits'
@@ -1297,7 +1297,7 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createComputePipelines'
 data ComputePipelineCreateInfo (es :: [Type]) = ComputePipelineCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
@@ -1586,7 +1586,7 @@ instance Zero VertexInputAttributeDescription where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'VertexInputAttributeDescription', 'VertexInputBindingDescription'
 data PipelineVertexInputStateCreateInfo (es :: [Type]) = PipelineVertexInputStateCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: PipelineVertexInputStateCreateFlags
@@ -1816,7 +1816,7 @@ instance Zero PipelineInputAssemblyStateCreateInfo where
 -- 'Vulkan.Core10.Enums.PipelineTessellationStateCreateFlags.PipelineTessellationStateCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineTessellationStateCreateInfo (es :: [Type]) = PipelineTessellationStateCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: PipelineTessellationStateCreateFlags
@@ -1943,7 +1943,7 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'Viewport'
 data PipelineViewportStateCreateInfo (es :: [Type]) = PipelineViewportStateCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: PipelineViewportStateCreateFlags
@@ -2122,7 +2122,7 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 -- 'Vulkan.Core10.Enums.PolygonMode.PolygonMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateCreateInfo (es :: [Type]) = PipelineRasterizationStateCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: PipelineRasterizationStateCreateFlags
@@ -2321,7 +2321,7 @@ instance es ~ '[] => Zero (PipelineRasterizationStateCreateInfo es) where
 -- 'Vulkan.Core10.FundamentalTypes.SampleMask',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineMultisampleStateCreateInfo (es :: [Type]) = PipelineMultisampleStateCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: PipelineMultisampleStateCreateFlags
@@ -2707,7 +2707,7 @@ instance Zero PipelineColorBlendAttachmentState where
 -- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags.PipelineColorBlendStateCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineColorBlendStateCreateInfo (es :: [Type]) = PipelineColorBlendStateCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is reserved for future use.
     flags :: PipelineColorBlendStateCreateFlags
@@ -3463,6 +3463,33 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.ViewportWScalingNV'
 --     structures
 --
+-- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV',
+--     and if @pViewportState->pNext@ chain includes a
+--     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
+--     structure, and if its @exclusiveScissorCount@ member is not @0@,
+--     then its @pExclusiveScissors@ member /must/ be a valid pointer to an
+--     array of @exclusiveScissorCount@
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
+--
+-- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV',
+--     and if @pViewportState->pNext@ chain includes a
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV'
+--     structure, then its @pShadingRatePalettes@ member /must/ be a valid
+--     pointer to an array of @viewportCount@ valid
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.ShadingRatePaletteNV'
+--     structures
+--
+-- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT',
+--     and if @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'
+--     structure, and if its @discardRectangleCount@ member is not @0@,
+--     then its @pDiscardRectangles@ member /must/ be a valid pointer to an
+--     array of @discardRectangleCount@
+--     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
+--
 -- -   If @pStages@ includes a vertex shader stage, @pVertexInputState@
 --     /must/ be a valid pointer to a valid
 --     'PipelineVertexInputStateCreateInfo' structure
@@ -3617,7 +3644,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createGraphicsPipelines'
 data GraphicsPipelineCreateInfo (es :: [Type]) = GraphicsPipelineCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'

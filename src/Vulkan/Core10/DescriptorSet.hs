@@ -1422,7 +1422,7 @@ instance Zero DescriptorImageInfo where
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
 -- 'updateDescriptorSets'
 data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @dstSet@ is the destination descriptor set to update.
     dstSet :: DescriptorSet
@@ -2014,7 +2014,7 @@ instance Zero DescriptorSetLayoutBinding where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport',
 -- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'
 data DescriptorSetLayoutCreateInfo (es :: [Type]) = DescriptorSetLayoutCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits'
@@ -2228,7 +2228,7 @@ instance Zero DescriptorPoolSize where
 -- 'DescriptorPoolSize', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDescriptorPool'
 data DescriptorPoolCreateInfo (es :: [Type]) = DescriptorPoolCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits'
@@ -2348,7 +2348,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'allocateDescriptorSets'
 data DescriptorSetAllocateInfo (es :: [Type]) = DescriptorSetAllocateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @descriptorPool@ is the pool which the sets will be allocated from.
     descriptorPool :: DescriptorPool

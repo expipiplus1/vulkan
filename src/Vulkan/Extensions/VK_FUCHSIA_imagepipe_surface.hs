@@ -204,7 +204,16 @@ instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
            zero
 
 
--- No documentation found for TopLevel "VkImagePipeSurfaceCreateFlagsFUCHSIA"
+-- | VkImagePipeSurfaceCreateFlagsFUCHSIA - Reserved for future use
+--
+-- = Description
+--
+-- 'ImagePipeSurfaceCreateFlagsFUCHSIA' is a bitmask type for setting a
+-- mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'ImagePipeSurfaceCreateInfoFUCHSIA'
 newtype ImagePipeSurfaceCreateFlagsFUCHSIA = ImagePipeSurfaceCreateFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

@@ -371,7 +371,7 @@ instance Zero AndroidHardwareBufferUsageANDROID where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAndroidHardwareBufferPropertiesANDROID'
 data AndroidHardwareBufferPropertiesANDROID (es :: [Type]) = AndroidHardwareBufferPropertiesANDROID
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @allocationSize@ is the size of the external memory
     allocationSize :: DeviceSize

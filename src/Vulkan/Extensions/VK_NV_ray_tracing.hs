@@ -1757,7 +1757,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createRayTracingPipelinesNV'
 data RayTracingPipelineCreateInfoNV (es :: [Type]) = RayTracingPipelineCreateInfoNV
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
@@ -2296,9 +2296,6 @@ instance Zero GeometryNV where
 -- -   If @type@ is 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV' then the
 --     @geometryType@ member of each geometry in @pGeometries@ /must/ be
 --     the same
---
--- -   @flags@ /must/ be a valid combination of
---     'BuildAccelerationStructureFlagBitsNV' values
 --
 -- -   If @flags@ has the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV' bit set,

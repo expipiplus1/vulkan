@@ -223,16 +223,25 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     @format@
 --
 -- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
---     @range@ divided by the texel block size of @format@, multiplied by
---     the number of texels per texel block for that format (as defined in
---     the
+--     the number of texel buffer elements given by (⌊@range@ \/ (texel
+--     block size)⌋ × (texels per block)) where texel block size and texels
+--     per block are as defined in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
---     table), /must/ be less than or equal to
+--     table for @format@, /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
 -- -   If @range@ is not equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE',
 --     the sum of @offset@ and @range@ /must/ be less than or equal to the
 --     size of @buffer@
+--
+-- -   If @range@ is equal to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
+--     number of texel buffer elements given by (⌊(size - @offset@) \/
+--     (texel block size)⌋ × (texels per block)) where size is the size of
+--     @buffer@, and texel block size and texels per block are as defined
+--     in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     table for @format@, /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
 -- -   @buffer@ /must/ have been created with a @usage@ value containing at
 --     least one of

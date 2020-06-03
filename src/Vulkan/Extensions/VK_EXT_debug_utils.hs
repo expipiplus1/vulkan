@@ -1413,7 +1413,16 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
            mempty
 
 
--- No documentation found for TopLevel "VkDebugUtilsMessengerCreateFlagsEXT"
+-- | VkDebugUtilsMessengerCreateFlagsEXT - Reserved for future use
+--
+-- = Description
+--
+-- 'DebugUtilsMessengerCreateFlagsEXT' is a bitmask type for setting a
+-- mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'DebugUtilsMessengerCreateInfoEXT'
 newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
@@ -1432,7 +1441,16 @@ instance Read DebugUtilsMessengerCreateFlagsEXT where
                        pure (DebugUtilsMessengerCreateFlagsEXT v)))
 
 
--- No documentation found for TopLevel "VkDebugUtilsMessengerCallbackDataFlagsEXT"
+-- | VkDebugUtilsMessengerCallbackDataFlagsEXT - Reserved for future use
+--
+-- = Description
+--
+-- 'DebugUtilsMessengerCallbackDataFlagsEXT' is a bitmask type for setting
+-- a mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'DebugUtilsMessengerCallbackDataEXT'
 newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDataFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 

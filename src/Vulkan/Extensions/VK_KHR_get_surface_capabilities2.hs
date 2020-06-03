@@ -343,7 +343,7 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
 -- 'getPhysicalDeviceSurfaceFormats2KHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT'
 data PhysicalDeviceSurfaceInfo2KHR (es :: [Type]) = PhysicalDeviceSurfaceInfo2KHR
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @surface@ is the surface that will be associated with the swapchain.
     surface :: SurfaceKHR
@@ -421,7 +421,7 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR',
 -- 'getPhysicalDeviceSurfaceCapabilities2KHR'
 data SurfaceCapabilities2KHR (es :: [Type]) = SurfaceCapabilities2KHR
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @surfaceCapabilities@ is a
     -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure

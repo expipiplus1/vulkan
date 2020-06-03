@@ -383,7 +383,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createBuffer'
 data BufferCreateInfo (es :: [Type]) = BufferCreateInfo
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
