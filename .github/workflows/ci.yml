@@ -86,6 +86,11 @@ jobs:
       run: cabal build --enable-tests --enable-benchmarks vulkan-examples
       if: matrix.ghc != '8.6.5'
 
+    - name: Build documentation
+      run: |
+        cabal haddock
+        cabal haddock VulkanMemoryAllocator
+
   stack:
 
     runs-on: ${{ matrix.os }}
@@ -155,6 +160,11 @@ jobs:
 
     - name: Build
       run: stack build $ARGS
+      env:
+        ARGS: ${{ matrix.stack-args }}
+
+    - name: Build documentation
+      run: stack haddock $ARGS
       env:
         ARGS: ${{ matrix.stack-args }}
 
