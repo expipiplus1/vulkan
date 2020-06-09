@@ -273,7 +273,7 @@ instance Zero SampleLocationEXT where
 -- @sampleLocationsPerPixel@ number of sample locations for each pixel in
 -- the grid of the size specified in @sampleLocationGridSize@. The sample
 -- location for sample i at the pixel grid location (x,y) is taken from
--- @pSampleLocations@[(x + y * @sampleLocationGridSize.width@) *
+-- @pSampleLocations@[(x + y × @sampleLocationGridSize.width@) ×
 -- @sampleLocationsPerPixel@ + i].
 --
 -- If the render pass has a fragment density map, the implementation will

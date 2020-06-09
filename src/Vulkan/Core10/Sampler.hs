@@ -421,6 +421,12 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
 --     /must/ be present in the @pNext@ chain
 --
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-customBorderColors customBorderColors>
+--     feature is not enabled, @borderColor@ /must/ not be set to
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
+--
 -- -   The maximum number of samplers with custom border colors which /can/
 --     be simultaneously created on a device is implementation-dependent
 --     and specified by the

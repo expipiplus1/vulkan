@@ -828,12 +828,12 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- -   If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.width@ /must/ be less than or equal to
---     \(\lceil{\frac{maxFramebufferWidth}{minFragmentDensityTexelSize_{width}}}\rceil\)
+--     \(\left\lceil{\frac{maxFramebufferWidth}{minFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
 -- -   If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.height@ /must/ be less than or equal to
---     \(\lceil{\frac{maxFramebufferHeight}{minFragmentDensityTexelSize_{height}}}\rceil\)
+--     \(\left\lceil{\frac{maxFramebufferHeight}{minFragmentDensityTexelSize_{height}}}\right\rceil\)
 --
 -- -   If @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',

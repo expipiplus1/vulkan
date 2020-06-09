@@ -65,11 +65,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- If @filterMinmaxImageComponentMapping@ is
 -- 'Vulkan.Core10.FundamentalTypes.FALSE' the component mapping of the
 -- image view used with min\/max filtering /must/ have been created with
--- the @r@ component set to
--- 'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'. Only
--- the @r@ component of the sampled image value is defined and the other
--- component values are undefined. If @filterMinmaxImageComponentMapping@
--- is 'Vulkan.Core10.FundamentalTypes.TRUE' this restriction does not apply
+-- the @r@ component set to the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
+-- Only the @r@ component of the sampled image value is defined and the
+-- other component values are undefined. If
+-- @filterMinmaxImageComponentMapping@ is
+-- 'Vulkan.Core10.FundamentalTypes.TRUE' this restriction does not apply
 -- and image component mapping works as normal.
 --
 -- == Valid Usage (Implicit)

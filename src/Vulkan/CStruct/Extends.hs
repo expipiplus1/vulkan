@@ -725,6 +725,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DescriptorSetLayoutSupport DescriptorSetVariableDescriptorCountLayoutSupport = ()
   Extends DeviceCreateInfo PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = ()
   Extends DeviceCreateInfo DevicePrivateDataCreateInfoEXT = ()
+  Extends DeviceCreateInfo PhysicalDevicePrivateDataFeaturesEXT = ()
   Extends DeviceCreateInfo (PhysicalDeviceFeatures2 '[]) = ()
   Extends DeviceCreateInfo PhysicalDeviceVariablePointersFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceMultiviewFeatures = ()
@@ -840,6 +841,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends MemoryRequirements2 MemoryDedicatedRequirements = ()
   Extends PhysicalDeviceExternalSemaphoreInfo SemaphoreTypeCreateInfo = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePrivateDataFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVariablePointersFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMultiviewFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevice16BitStorageFeatures = ()
@@ -1132,6 +1134,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV -> go @Win32KeyedMutexAcquireReleaseInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV -> go @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
   STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO_EXT -> go @DevicePrivateDataCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT -> go @PhysicalDevicePrivateDataFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV -> go @PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
   STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV -> go @GraphicsPipelineShaderGroupsCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 -> go @(PhysicalDeviceFeatures2 '[])
@@ -1422,6 +1425,7 @@ infix 6 ::&
 {-# complete (::&) :: Win32KeyedMutexAcquireReleaseInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceDeviceGeneratedCommandsFeaturesNV #-}
 {-# complete (::&) :: DevicePrivateDataCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDevicePrivateDataFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceDeviceGeneratedCommandsPropertiesNV #-}
 {-# complete (::&) :: GraphicsPipelineShaderGroupsCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceFeatures2 #-}

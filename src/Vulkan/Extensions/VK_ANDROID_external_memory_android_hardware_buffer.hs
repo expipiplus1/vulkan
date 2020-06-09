@@ -566,8 +566,8 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
 -- with that format. If @format@ is
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', all members of
--- @samplerYcbcrConversionComponents@ /must/ be
--- 'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'.
+-- @samplerYcbcrConversionComponents@ /must/ be the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
 --
 -- Implementations /may/ not always be able to determine the color model,
 -- numerical range, or chroma offsets of the image contents, so the values

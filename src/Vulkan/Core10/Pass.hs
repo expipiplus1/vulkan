@@ -2044,14 +2044,14 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     an element of @pAttachments@ that is referenced by
 --     @fragmentDensityMapAttachment@ /must/ have a width at least as large
 --     as
---     \(\lceil{\frac{width}{maxFragmentDensityTexelSize_{width}}}\rceil\)
+--     \(\left\lceil{\frac{width}{maxFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
 -- -   If @flags@ does not include
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     an element of @pAttachments@ that is referenced by
 --     @fragmentDensityMapAttachment@ /must/ have a height at least as
 --     large as
---     \(\lceil{\frac{height}{maxFragmentDensityTexelSize_{height}}}\rceil\)
+--     \(\left\lceil{\frac{height}{maxFragmentDensityTexelSize_{height}}}\right\rceil\)
 --
 -- -   If @flags@ does not include
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
@@ -2138,7 +2138,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     structure included in the @pNext@ chain that is referenced by
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'::@fragmentDensityMapAttachment@
 --     in @renderPass@ /must/ be greater than or equal to
---     \(\lceil{\frac{width}{maxFragmentDensityTexelSize_{width}}}\rceil\)
+--     \(\left\lceil{\frac{width}{maxFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
@@ -2148,7 +2148,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     structure included in the @pNext@ chain that is referenced by
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'::@fragmentDensityMapAttachment@
 --     in @renderPass@ /must/ be greater than or equal to
---     \(\lceil{\frac{height}{maxFragmentDensityTexelSize_{height}}}\rceil\)
+--     \(\left\lceil{\frac{height}{maxFragmentDensityTexelSize_{height}}}\right\rceil\)
 --
 -- -   If multiview is enabled for @renderPass@, and @flags@ includes
 --     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
