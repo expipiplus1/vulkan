@@ -81,6 +81,12 @@ packages:
   ./
 ```
 
+### macOS
+
+Jonathan Merritt has made an excellent video detailing how to set up everything 
+necessary for running the examples on macOS 
+[here](https://www.youtube.com/watch?v=BaBt-CNBfd0).
+
 ### Building with Nix while not on NixOS
 
 Vulkan and OpenGL programs have some trouble running on non-NixOS OSs when
