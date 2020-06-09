@@ -298,6 +298,10 @@ packages:
 - `pkg-config` and `SDL2` to build the Haskell `sdl2` package.
 - `glslang` (for the `glslangValidator` binary, to build the shaders)
 
+Jonathan Merritt has made an excellent video detailing how to set up everything 
+necessary for running the examples on macOS 
+[here](https://www.youtube.com/watch?v=BaBt-CNBfd0).
+
 ### Building on Windows
 
 - Clone this repo
