@@ -188,52 +188,33 @@ instance Zero MemoryBarrier where
 --     @size@ /must/ be less than or equal to than the size of @buffer@
 --     minus @offset@
 --
+-- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   If @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
+--     least one /must/ not be a special queue family reserved for external
+--     memory ownership transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
+--
+-- -   If @buffer@ was created with a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
+--     queue family values reserved for external memory transfers, the
+--     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--
+-- -   If @buffer@ was created with a sharing mode of
+--     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal,
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ both be valid
+--     queue families, or one of the special queue family values reserved
+--     for external memory transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
+--
 -- -   If @buffer@ was created with a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at least
 --     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ be
 --     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   If @buffer@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', and one
---     of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', the other /must/
---     be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED' or a special
---     queue family reserved for external memory ownership transfers, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
---
--- -   If @buffer@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE' and
---     @srcQueueFamilyIndex@ is
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED',
---     @dstQueueFamilyIndex@ /must/ also be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
---
--- -   If @buffer@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE' and
---     @srcQueueFamilyIndex@ is not
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it /must/ be a
---     valid queue family or a special queue family reserved for external
---     memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
---
--- -   If @buffer@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE' and
---     @dstQueueFamilyIndex@ is not
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it /must/ be a
---     valid queue family or a special queue family reserved for external
---     memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>
---
--- -   If @buffer@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE', and
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', at least one of
---     them /must/ be the same as the family of the queue that will execute
---     this barrier
---
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- == Valid Usage (Implicit)
 --
@@ -438,8 +419,6 @@ instance Zero BufferMemoryBarrier where
 --     then @image@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --     set
---
--- -   
 --
 -- -   If @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
@@ -860,7 +839,7 @@ instance Zero DrawIndirectCommand where
 --     binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input>
 --
--- -   (@indexSize@ * (@firstIndex@ + @indexCount@) + @offset@) /must/ be
+-- -   (@indexSize@ × (@firstIndex@ + @indexCount@) + @offset@) /must/ be
 --     less than or equal to the size of the bound index buffer, with
 --     @indexSize@ being based on the type specified by @indexType@, where
 --     the index buffer, @indexType@, and @offset@ are specified via

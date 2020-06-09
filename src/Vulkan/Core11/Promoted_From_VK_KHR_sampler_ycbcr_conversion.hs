@@ -378,30 +378,29 @@ instance Zero SamplerYcbcrConversionInfo where
 --     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'
 --
 -- -   If the format has a @_422@ or @_420@ suffix, then @components.g@
---     /must/ be
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'
+--     /must/ be the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   If the format has a @_422@ or @_420@ suffix, then @components.a@
---     /must/ be
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY',
+--     /must/ be the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>,
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ONE', or
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ZERO'
 --
 -- -   If the format has a @_422@ or @_420@ suffix, then @components.r@
---     /must/ be
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY' or
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_B'
+--     /must/ be the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     or 'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_B'
 --
 -- -   If the format has a @_422@ or @_420@ suffix, then @components.b@
---     /must/ be
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY' or
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_R'
+--     /must/ be the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     or 'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_R'
 --
 -- -   If the format has a @_422@ or @_420@ suffix, and if either
---     @components.r@ or @components.b@ is
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY',
---     both values /must/ be
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'
+--     @components.r@ or @components.b@ is the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>,
+--     both values /must/ be the identity swizzle
 --
 -- -   If @ycbcrModel@ is not
 --     'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY',

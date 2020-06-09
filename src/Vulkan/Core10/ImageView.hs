@@ -378,14 +378,6 @@ instance Zero ComponentMapping where
 -- depth\/stencil framebuffer attachment, the @aspectMask@ is ignored and
 -- both depth and stencil image subresources are used.
 --
--- The 'ComponentMapping' @components@ member describes a remapping from
--- components of the image to components of the vector returned by shader
--- image instructions. This remapping /must/ be identity for storage image
--- descriptors, input attachment descriptors, framebuffer attachments, and
--- any 'Vulkan.Core10.Handles.ImageView' used with a combined image sampler
--- that enables
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
---
 -- When creating a 'Vulkan.Core10.Handles.ImageView', if
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- is enabled in the sampler, the @aspectMask@ of a @subresourceRange@ used
@@ -571,6 +563,14 @@ instance Zero ImageSubresourceRange where
 -- In this case the resulting image view’s texel dimensions equal the
 -- dimensions of the selected mip level divided by the compressed texel
 -- block size and rounded up.
+--
+-- The 'ComponentMapping' @components@ member describes a remapping from
+-- components of the image to components of the vector returned by shader
+-- image instructions. This remapping /must/ be the identity swizzle for
+-- storage image descriptors, input attachment descriptors, framebuffer
+-- attachments, and any 'Vulkan.Core10.Handles.ImageView' used with a
+-- combined image sampler that enables
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
 --
 -- If the image view is to be used with a sampler which supports
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -893,10 +893,29 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure was included in the @pNext@ chain of the
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure used when creating
---     @image@ and the @viewFormatCount@ field of
---     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--     @image@ and
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
 --     is not zero then @format@ /must/ be one of the formats in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
+--
+-- -   If a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--     structure was included in the @pNext@ chain of the
+--     'Vulkan.Core10.Image.ImageCreateInfo' structure used when creating
+--     @image@ and
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
+--     is not zero then all of the formats in
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
+--     /must/ be compatible with the @format@ as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
+--
+-- -   If @flags@ dose not contain
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
+--     and the @pNext@ chain include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--     structure then
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
+--     /must/ be @0@ or @1@
 --
 -- -   If @image@ was created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
@@ -924,8 +943,8 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a @conversion@ value other than
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', all members of
---     @components@ /must/ have the value
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'
+--     @components@ /must/ have the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   If @image@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
@@ -947,8 +966,8 @@ instance Zero ImageSubresourceRange where
 --
 -- -   If @image@ has an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
---     all members of @components@ /must/ be
---     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'
+--     all members of @components@ /must/ be the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   If @image@ was created with @usage@ containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',

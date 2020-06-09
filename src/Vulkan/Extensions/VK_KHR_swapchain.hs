@@ -1414,6 +1414,23 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     structure with a @viewFormatCount@ greater than zero and
 --     @pViewFormats@ /must/ have an element equal to @imageFormat@
 --
+-- -   If a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--     structure was included in the @pNext@ chain and
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
+--     is not zero then all of the formats in
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
+--     /must/ be compatible with the @format@ as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
+--
+-- -   If @flags@ dose not contain
+--     'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' and the @pNext@ chain
+--     include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--     structure then
+--     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
+--     /must/ be @0@ or @1@
+--
 -- -   If @flags@ contains 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR', then
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'::@supportsProtected@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE' in the

@@ -1225,11 +1225,11 @@ pattern FORMAT_G16_B16_R16_3PLANE_444_UNORM = Format 1000156033
 -- in the word in bytes 2..3. The horizontal dimensions of the BR plane is
 -- halved relative to the image dimensions, and each R and B value is
 -- shared with the G components for which
--- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
--- plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
+-- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. Images in this format /must/ be defined with a width that
 -- is a multiple of two.
@@ -1240,11 +1240,11 @@ pattern FORMAT_G16_B16R16_2PLANE_422_UNORM = Format 1000156032
 -- 16-bit R component in each 16-bit word of plane 2. The horizontal
 -- dimension of the R and B plane is halved relative to the image
 -- dimensions, and each R and B value is shared with the G components for
--- which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of
--- each plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane,
+-- which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
@@ -1258,10 +1258,11 @@ pattern FORMAT_G16_B16_R16_3PLANE_422_UNORM = Format 1000156031
 -- in the word in bytes 2..3. The horizontal and vertical dimensions of the
 -- BR plane is halved relative to the image dimensions, and each R and B
 -- value is shared with the G components for which
--- \(\lfloor i_G \times 0.5 \rfloor =
--- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
--- location of each plane when this image is in linear layout can be
--- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
@@ -1274,12 +1275,13 @@ pattern FORMAT_G16_B16R16_2PLANE_420_UNORM = Format 1000156030
 -- 16-bit R component in each 16-bit word of plane 2. The horizontal and
 -- vertical dimensions of the R and B planes are halved relative to the
 -- image dimensions, and each R and B component is shared with the G
--- components for which \(\lfloor i_G \times 0.5
--- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
--- = j_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane,
+-- components for which \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
@@ -1338,11 +1340,11 @@ pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = Format 1000156026
 -- word in bytes 2..3, the bottom 4 bits of each word unused. The
 -- horizontal dimensions of the BR plane is halved relative to the image
 -- dimensions, and each R and B value is shared with the G components for
--- which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of
--- each plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
+-- which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. Images in this format /must/ be defined with a width that
 -- is a multiple of two.
@@ -1355,11 +1357,11 @@ pattern FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = Format 1000156025
 -- bottom 4 bits of each word unused. The horizontal dimension of the R and
 -- B plane is halved relative to the image dimensions, and each R and B
 -- value is shared with the G components for which
--- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
--- plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane,
+-- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
@@ -1374,10 +1376,11 @@ pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = Format 1000156024
 -- word in bytes 2..3, the bottom 4 bits of each word unused. The
 -- horizontal and vertical dimensions of the BR plane is halved relative to
 -- the image dimensions, and each R and B value is shared with the G
--- components for which \(\lfloor i_G \times 0.5 \rfloor =
--- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
--- location of each plane when this image is in linear layout can be
--- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- components for which \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
@@ -1392,12 +1395,13 @@ pattern FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = Format 1000156023
 -- bottom 4 bits of each word unused. The horizontal and vertical
 -- dimensions of the R and B planes are halved relative to the image
 -- dimensions, and each R and B component is shared with the G components
--- for which \(\lfloor i_G \times 0.5
--- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
--- = j_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane,
+-- for which \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
@@ -1478,11 +1482,11 @@ pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = Format 1000156016
 -- word in bytes 2..3, the bottom 6 bits of each word unused. The
 -- horizontal dimensions of the BR plane is halved relative to the image
 -- dimensions, and each R and B value is shared with the G components for
--- which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of
--- each plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
+-- which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. Images in this format /must/ be defined with a width that
 -- is a multiple of two.
@@ -1495,11 +1499,11 @@ pattern FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = Format 1000156015
 -- bottom 6 bits of each word unused. The horizontal dimension of the R and
 -- B plane is halved relative to the image dimensions, and each R and B
 -- value is shared with the G components for which
--- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
--- plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane,
+-- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
@@ -1514,10 +1518,11 @@ pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = Format 1000156014
 -- word in bytes 2..3, the bottom 6 bits of each word unused. The
 -- horizontal and vertical dimensions of the BR plane is halved relative to
 -- the image dimensions, and each R and B value is shared with the G
--- components for which \(\lfloor i_G \times 0.5 \rfloor =
--- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
--- location of each plane when this image is in linear layout can be
--- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- components for which \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
@@ -1532,12 +1537,13 @@ pattern FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = Format 1000156013
 -- bottom 6 bits of each word unused. The horizontal and vertical
 -- dimensions of the R and B planes are halved relative to the image
 -- dimensions, and each R and B component is shared with the G components
--- for which \(\lfloor i_G \times 0.5
--- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
--- = j_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane,
+-- for which \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
@@ -1614,11 +1620,11 @@ pattern FORMAT_G8_B8_R8_3PLANE_444_UNORM = Format 1000156006
 -- byte 0 and an 8-bit R component in byte 1. The horizontal dimensions of
 -- the BR plane is halved relative to the image dimensions, and each R and
 -- B value is shared with the G components for which
--- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
--- plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
+-- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. Images in this format /must/ be defined with a width that
 -- is a multiple of two.
@@ -1628,11 +1634,11 @@ pattern FORMAT_G8_B8R8_2PLANE_422_UNORM = Format 1000156005
 -- B component in plane 1, and an 8-bit R component in plane 2. The
 -- horizontal dimension of the R and B plane is halved relative to the
 -- image dimensions, and each R and B value is shared with the G components
--- for which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location
--- of each plane when this image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane,
+-- for which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
+-- i_R\). The location of each plane when this image is in linear layout
+-- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+-- for the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for
@@ -1645,10 +1651,11 @@ pattern FORMAT_G8_B8_R8_3PLANE_422_UNORM = Format 1000156004
 -- byte 0 and an 8-bit R component in byte 1. The horizontal and vertical
 -- dimensions of the BR plane is halved relative to the image dimensions,
 -- and each R and B value is shared with the G components for which
--- \(\lfloor i_G \times 0.5 \rfloor =
--- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
--- location of each plane when this image is in linear layout can be
--- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
 -- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
@@ -1660,12 +1667,13 @@ pattern FORMAT_G8_B8R8_2PLANE_420_UNORM = Format 1000156003
 -- B component in plane 1, and an 8-bit R component in plane 2. The
 -- horizontal and vertical dimensions of the R and B planes are halved
 -- relative to the image dimensions, and each R and B component is shared
--- with the G components for which \(\lfloor i_G \times 0.5
--- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
--- = j_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane,
+-- with the G components for which \(\left\lfloor i_G \times 0.5
+-- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
+-- \right\rfloor = j_B = j_R\). The location of each plane when this image
+-- is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the B plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT' for

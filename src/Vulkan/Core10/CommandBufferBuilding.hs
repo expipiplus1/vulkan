@@ -1881,7 +1881,7 @@ foreign import ccall
 -- 'cmdBindIndexBuffer'::@indexType@ parameter with which the buffer was
 -- bound.
 --
--- The first vertex index is at an offset of @firstIndex@ * @indexSize@ +
+-- The first vertex index is at an offset of @firstIndex@ × @indexSize@ +
 -- @offset@ within the bound index buffer, where @offset@ is the offset
 -- specified by 'cmdBindIndexBuffer' and @indexSize@ is the byte size of
 -- the type specified by @indexType@. Subsequent index values are retrieved
@@ -2094,7 +2094,7 @@ foreign import ccall
 --     binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
--- -   (@indexSize@ * (@firstIndex@ + @indexCount@) + @offset@) /must/ be
+-- -   (@indexSize@ × (@firstIndex@ + @indexCount@) + @offset@) /must/ be
 --     less than or equal to the size of the bound index buffer, with
 --     @indexSize@ being based on the type specified by @indexType@, where
 --     the index buffer, @indexType@, and @offset@ are specified via
@@ -3724,17 +3724,17 @@ foreign import ccall
 -- -   The scale is determined from the source and destination regions, and
 --     applied to the offset coordinates:
 --
---     -   scale_u = (xsrc1 - xsrc0) \/ (xdst1 - xdst0)
+--     -   scaleu = (xsrc1 - xsrc0) \/ (xdst1 - xdst0)
 --
---     -   scale_v = (ysrc1 - ysrc0) \/ (ydst1 - ydst0)
+--     -   scalev = (ysrc1 - ysrc0) \/ (ydst1 - ydst0)
 --
---     -   scale_w = (zsrc1 - zsrc0) \/ (zdst1 - zdst0)
+--     -   scalew = (zsrc1 - zsrc0) \/ (zdst1 - zdst0)
 --
---     -   uscaled = uoffset * scaleu
+--     -   uscaled = uoffset × scaleu
 --
---     -   vscaled = voffset * scalev
+--     -   vscaled = voffset × scalev
 --
---     -   wscaled = woffset * scalew
+--     -   wscaled = woffset × scalew
 --
 -- -   Finally the source offset is added to the scaled coordinates, to
 --     determine the final unnormalized coordinates used to sample from
@@ -5439,9 +5439,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @stageMask@ /must/ not include
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
---
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
@@ -5454,8 +5451,20 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
--- -   @commandBuffer@’s current device mask /must/ include exactly one
---     physical device
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -5466,6 +5475,25 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Any pipeline stage included in @stageMask@ /must/ be supported by
+--     the capabilities of the queue family specified by the
+--     @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
+--     used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   @stageMask@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
+--
+-- -   @commandBuffer@’s current device mask /must/ include exactly one
+--     physical device
 --
 -- == Valid Usage (Implicit)
 --
@@ -5569,9 +5597,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @stageMask@ /must/ not include
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
---
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
@@ -5584,11 +5609,20 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
--- -   When this command executes, @event@ /must/ not be waited on by a
---     'cmdWaitEvents' command that is currently executing
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
 --
--- -   @commandBuffer@’s current device mask /must/ include exactly one
---     physical device
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -5599,6 +5633,28 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @stageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Any pipeline stage included in @stageMask@ /must/ be supported by
+--     the capabilities of the queue family specified by the
+--     @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
+--     used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   @stageMask@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
+--
+-- -   When this command executes, @event@ /must/ not be waited on by a
+--     'cmdWaitEvents' command that is currently executing
+--
+-- -   @commandBuffer@’s current device mask /must/ include exactly one
+--     physical device
 --
 -- == Valid Usage (Implicit)
 --
@@ -5806,6 +5862,106 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- == Valid Usage
 --
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Any pipeline stage included in @srcStageMask@ /must/ be supported by
+--     the capabilities of the queue family specified by the
+--     @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
+--     used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Any pipeline stage included in @dstStageMask@ /must/ be supported by
+--     the capabilities of the queue family specified by the
+--     @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
+--     used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
 -- -   The @srcAccessMask@ member of each element of @pMemoryBarriers@
 --     /must/ only include access flags that are supported by one or more
 --     of the pipeline stages in @srcStageMask@, as specified in the
@@ -5859,42 +6015,10 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     if any of the members of @pEvents@ was set using
 --     'Vulkan.Core10.Event.setEvent'
 --
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
---     or
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
---     or
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
---
 -- -   If @pEvents@ includes one or more events that will be signaled by
 --     'Vulkan.Core10.Event.setEvent' after @commandBuffer@ has been
 --     submitted to a queue, then 'cmdWaitEvents' /must/ not be called
 --     inside a render pass instance
---
--- -   Any pipeline stage included in @srcStageMask@ or @dstStageMask@
---     /must/ be supported by the capabilities of the queue family
---     specified by the @queueFamilyIndex@ member of the
---     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
---     used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   The @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any
 --     element of @pBufferMemoryBarriers@ or @pImageMemoryBarriers@ /must/
@@ -5902,26 +6026,6 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
 --     physical device
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
 -- == Valid Usage (Implicit)
 --
@@ -6128,44 +6232,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     render pass /must/ have been created with at least one
---     'Vulkan.Core10.Pass.SubpassDependency' instance in
---     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pDependencies@ that
---     expresses a dependency from the current subpass to itself, with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scopes>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scopes>
---     that are all supersets of the scopes defined in this command
---
--- -   If 'cmdPipelineBarrier' is called within a render pass instance, it
---     /must/ not include any buffer memory barriers
---
--- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     @image@ member of any image memory barrier included in this command
---     /must/ be an attachment used in the current subpass both as an input
---     attachment, and as either a color or depth\/stencil attachment
---
--- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     @oldLayout@ and @newLayout@ members of any image memory barrier
---     included in this command /must/ be equal
---
--- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
---     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any image
---     memory barrier included in this command /must/ be equal
---
--- -   If 'cmdPipelineBarrier' is called outside of a render pass instance,
---     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
---     /must/ not be included in the dependency flags
---
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
@@ -6176,29 +6245,69 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
---     or
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
 --
--- -   Any pipeline stage included in @srcStageMask@ or @dstStageMask@
---     /must/ be supported by the capabilities of the queue family
---     specified by the @queueFamilyIndex@ member of the
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Any pipeline stage included in @srcStageMask@ /must/ be supported by
+--     the capabilities of the queue family specified by the
+--     @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
@@ -6209,6 +6318,19 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   Any pipeline stage included in @dstStageMask@ /must/ be supported by
+--     the capabilities of the queue family specified by the
+--     @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
+--     used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   The @srcAccessMask@ member of each element of @pMemoryBarriers@
 --     /must/ only include access flags that are supported by one or more
@@ -6255,6 +6377,36 @@ foreign import ccall
 --     flags that are supported by one or more of the pipeline stages in
 --     @dstStageMask@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--
+-- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
+--     render pass /must/ have been created with at least one
+--     'Vulkan.Core10.Pass.SubpassDependency' instance in
+--     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pDependencies@ that
+--     expresses a dependency from the current subpass to itself, with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scopes>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scopes>
+--     that are all supersets of the scopes defined in this command
+--
+-- -   If 'cmdPipelineBarrier' is called within a render pass instance, it
+--     /must/ not include any buffer memory barriers
+--
+-- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
+--     @image@ member of any image memory barrier included in this command
+--     /must/ be an attachment used in the current subpass both as an input
+--     attachment, and as either a color or depth\/stencil attachment
+--
+-- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
+--     @oldLayout@ and @newLayout@ members of any image memory barrier
+--     included in this command /must/ be equal
+--
+-- -   If 'cmdPipelineBarrier' is called within a render pass instance, the
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any image
+--     memory barrier included in this command /must/ be equal
+--
+-- -   If 'cmdPipelineBarrier' is called outside of a render pass instance,
+--     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
+--     /must/ not be included in the dependency flags
 --
 -- == Valid Usage (Implicit)
 --
