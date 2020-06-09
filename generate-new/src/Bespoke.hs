@@ -98,6 +98,7 @@ bespokeModules = do
        <$> [ mkTyName "VkBool32"
            , TermName "boolToBool32"
            , TermName "bool32ToBool"
+           , mkTyName "VkObjectType"
            ]
        )
 

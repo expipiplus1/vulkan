@@ -238,19 +238,14 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   let constantModule = vulkanModule ["Core10", "APIConstants"]
   forV_ rsAPIConstants $ \(i, _) -> export constantModule i
 
+
   ----------------------------------------------------------------
-  -- Explicit Enums, Handles and FuncPointers for each feature
+  -- Explicit Handle and FuncPointers for each feature
   ----------------------------------------------------------------
 
   forFeaturesAndExtensions $ \prefix _ isFeature ReqDeps {..} _ -> do
     let reachable =
           Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
-    ----------------------------------------------------------------
-    -- Reachable Enums
-    ----------------------------------------------------------------
-    when isFeature
-      $ exportReachable True (prefix <> ".Enums") allEnums reachable
-
     ----------------------------------------------------------------
     -- Reachable Handles
     ----------------------------------------------------------------
@@ -275,6 +270,22 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
             `Set.difference` allCoreExports
             )
       in  forV_ noCore $ export modname
+
+
+  ----------------------------------------------------------------
+  -- Explicit Enums for each feature
+  --
+  -- (If they were not exported explicitly)
+  ----------------------------------------------------------------
+
+  forFeaturesAndExtensions $ \prefix _ isFeature ReqDeps {..} _ -> do
+    let reachable =
+          Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
+    ----------------------------------------------------------------
+    -- Reachable Enums
+    ----------------------------------------------------------------
+    when isFeature
+      $ exportReachable True (prefix <> ".Enums") allEnums reachable
 
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if they're not already assigned
