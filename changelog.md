@@ -2,6 +2,8 @@
 
 ## WIP
   - Bump API version to 1.2.143
+  - Bump API version to 1.2.144
+    - Only documentation and version number changes
 
 ## [3.4] - 2020-06-03
   - Bump API version to 1.2.142
