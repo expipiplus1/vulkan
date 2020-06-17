@@ -99,6 +99,12 @@ foreign import ccall
 
 -- | vkCreateSampler - Create a new sampler object
 --
+-- == Valid Usage
+--
+-- -   There /must/ be less than
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerAllocationCount@
+--     VkSampler objects currently created on the device.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
@@ -305,8 +311,8 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     is enabled and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-sampler-ycbcr-conversion-format-features sampler Y′CBCR conversion’s features>
---     do not support
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT',
 --     @minFilter@ and @magFilter@ /must/ be equal to the sampler Y′CBCR
 --     conversion’s @chromaFilter@

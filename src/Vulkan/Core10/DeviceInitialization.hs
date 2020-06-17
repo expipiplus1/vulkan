@@ -2925,7 +2925,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- be created with @samples@ equal to
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'. This also
     -- specifies whether shader modules /can/ declare the
-    -- @StorageImageMultisample@ capability.
+    -- @StorageImageMultisample@ and @ImageMSArray@ capabilities.
     shaderStorageImageMultisample :: Bool
   , -- | @shaderStorageImageReadWithoutFormat@ specifies whether storage images
     -- require a format qualifier to be specified when reading from storage

@@ -1105,25 +1105,33 @@ instance Zero AttachmentReference where
 --     sample count
 --
 -- -   All attachments in @pInputAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have formats
---     whose features contain at least one of
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain at least
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   All attachments in @pColorAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have formats
---     whose features contain
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   All attachments in @pResolveAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have formats
---     whose features contain
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   If @pDepthStencilAttachment@ is not @NULL@ and the attachment is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it /must/ have a
---     format whose features contain
+--     image format whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If the @VK_AMD_mixed_attachment_samples@ extension is enabled, and

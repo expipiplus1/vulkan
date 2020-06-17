@@ -3252,6 +3252,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   If @commandBuffer@ is an unprotected command buffer, then
+--     @srcBuffer@ /must/ not be a protected buffer
+--
+-- -   If @commandBuffer@ is an unprotected command buffer, then
+--     @dstBuffer@ /must/ not be a protected buffer
+--
+-- -   If @commandBuffer@ is a protected command buffer, then @dstBuffer@
+--     /must/ not be an unprotected buffer
+--
 -- -   The @srcOffset@ member of each element of @pRegions@ /must/ be less
 --     than the size of @srcBuffer@
 --
@@ -3281,15 +3290,6 @@ foreign import ccall
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   If @commandBuffer@ is an unprotected command buffer, then
---     @srcBuffer@ /must/ not be a protected buffer
---
--- -   If @commandBuffer@ is an unprotected command buffer, then
---     @dstBuffer@ /must/ not be a protected buffer
---
--- -   If @commandBuffer@ is a protected command buffer, then @dstBuffer@
---     /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -3490,6 +3490,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
+--     /must/ not be a protected image
+--
+-- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
+--     /must/ not be a protected image
+--
+-- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
+--     /must/ not be an unprotected image
+--
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
 --     in memory
@@ -3553,15 +3562,6 @@ foreign import ccall
 --     for the plane being copied
 --
 -- -   The sample count of @srcImage@ and @dstImage@ /must/ match
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
---     /must/ not be an unprotected image
 --
 -- -   The @srcSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -3810,6 +3810,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
+--     /must/ not be a protected image
+--
+-- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
+--     /must/ not be a protected image
+--
+-- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
+--     /must/ not be an unprotected image
+--
 -- -   The source region specified by each element of @pRegions@ /must/ be
 --     a region that is contained within @srcImage@
 --
@@ -3826,7 +3835,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
 -- -   @srcImage@ /must/ not use a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
 --
 -- -   @srcImage@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
@@ -3850,7 +3859,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
 -- -   @dstImage@ /must/ not use a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
 --
 -- -   @dstImage@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
@@ -3905,15 +3914,6 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', @srcImage@
 --     /must/ have a 'Vulkan.Core10.Enums.ImageType.ImageType' of
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
---     /must/ not be an unprotected image
 --
 -- -   The @srcSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -4060,6 +4060,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   If @commandBuffer@ is an unprotected command buffer, then
+--     @srcBuffer@ /must/ not be a protected buffer
+--
+-- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
+--     /must/ not be a protected image
+--
+-- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
+--     /must/ not be an unprotected image
+--
 -- -   @srcBuffer@ /must/ be large enough to contain all buffer locations
 --     that are accessed according to
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
@@ -4107,15 +4116,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
---
--- -   If @commandBuffer@ is an unprotected command buffer, then
---     @srcBuffer@ /must/ not be a protected buffer
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
---     /must/ not be an unprotected image
 --
 -- -   The @imageSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -4260,6 +4260,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
+--     /must/ not be a protected image
+--
+-- -   If @commandBuffer@ is an unprotected command buffer, then
+--     @dstBuffer@ /must/ not be a protected buffer
+--
+-- -   If @commandBuffer@ is a protected command buffer, then @dstBuffer@
+--     /must/ not be an unprotected buffer
+--
 -- -   The image region specified by each element of @pRegions@ /must/ be a
 --     region that is contained within @srcImage@ if the @srcImage@’s
 --     'Vulkan.Core10.Enums.Format.Format' is not a
@@ -4307,15 +4316,6 @@ foreign import ccall
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is an unprotected command buffer, then
---     @dstBuffer@ /must/ not be a protected buffer
---
--- -   If @commandBuffer@ is a protected command buffer, then @dstBuffer@
---     /must/ not be an unprotected buffer
 --
 -- -   The @imageSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -5233,7 +5233,8 @@ foreign import ccall
 -- @srcOffset@ and @dstOffset@ select the initial @x@, @y@, and @z@ offsets
 -- in texels of the sub-regions of the source and destination image data.
 -- @extent@ is the size in texels of the source image to resolve in
--- @width@, @height@ and @depth@.
+-- @width@, @height@ and @depth@. Each element of @pRegions@ /must/ be a
+-- region that is contained within its corresponding image.
 --
 -- Resolves are done layer by layer starting with @baseArrayLayer@ member
 -- of @srcSubresource@ for the source and @dstSubresource@ for the
@@ -5241,11 +5242,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The source region specified by each element of @pRegions@ /must/ be
---     a region that is contained within @srcImage@
+-- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
+--     /must/ not be a protected image
 --
--- -   The destination region specified by each element of @pRegions@
---     /must/ be a region that is contained within @dstImage@
+-- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
+--     /must/ not be a protected image
+--
+-- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
+--     /must/ not be an unprotected image
 --
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
@@ -5289,15 +5293,6 @@ foreign import ccall
 --
 -- -   @srcImage@ and @dstImage@ /must/ have been created with the same
 --     image format
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @srcImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is an unprotected command buffer, then @dstImage@
---     /must/ not be a protected image
---
--- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
---     /must/ not be an unprotected image
 --
 -- -   The @srcSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -7592,6 +7587,36 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
 --     set
 --
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pInputAttachments@ of any element
+--     of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     containing at least
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pColorAttachments@ of any element
+--     of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     containing
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pResolveAttachments@ of any
+--     element of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     containing
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pDepthStencilAttachment@ of any
+--     element of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     containing
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -8756,7 +8781,7 @@ instance Zero ImageBlit where
 --     then @bufferOffset@ /must/ be a multiple of the element size of the
 --     compatible format for the format and the @aspectMask@ of the
 --     @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
 --
 -- -   @bufferRowLength@ /must/ be @0@, or greater than or equal to the
 --     @width@ member of @imageExtent@
