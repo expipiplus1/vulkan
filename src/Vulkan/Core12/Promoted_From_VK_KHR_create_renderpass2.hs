@@ -326,6 +326,36 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
 --     set
 --
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pInputAttachments@ of any element
+--     of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     contain at least
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pColorAttachments@ of any element
+--     of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pResolveAttachments@ of any
+--     element of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--
+-- -   Each element of the @pAttachments@ of @framebuffer@ that is
+--     referenced by any element of the @pDepthStencilAttachment@ of any
+--     element of @pSubpasses@ of @renderPass@ /must/ have
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features image view format features>
+--     contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -1104,25 +1134,33 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     sample count
 --
 -- -   All attachments in @pInputAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have formats
---     whose features contain at least one of
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain at least
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   All attachments in @pColorAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have formats
---     whose features contain
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   All attachments in @pResolveAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have formats
---     whose features contain
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   If @pDepthStencilAttachment@ is not @NULL@ and the attachment is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it /must/ have a
---     format whose features contain
+--     image format whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If the @VK_AMD_mixed_attachment_samples@ extension is enabled, all
