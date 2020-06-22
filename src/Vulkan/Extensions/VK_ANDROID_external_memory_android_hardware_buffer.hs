@@ -221,9 +221,8 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'
 --
 -- -   If @buffer@ is not @NULL@, it /must/ be a valid Android hardware
---     buffer object with @AHardwareBuffer_Desc@::@format@ and
---     @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan as described
---     in
+--     buffer object with @AHardwareBuffer_Desc@::@usage@ compatible with
+--     Vulkan as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 --
 -- == Valid Usage (Implicit)

@@ -378,6 +378,11 @@ foreign import ccall
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
 -- -   @baseGroupX@ /must/ be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
 --

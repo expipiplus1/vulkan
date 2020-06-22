@@ -118,6 +118,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdBindTransformFeedbackBuffersEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing.cmdBuildAccelerationStructureIndirectKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults',

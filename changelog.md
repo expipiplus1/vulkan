@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Bump API version to 1.2.145
   - Bump API version to 1.2.143
   - Bump API version to 1.2.144
     - Only documentation and version number changes

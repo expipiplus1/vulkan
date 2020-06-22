@@ -27,7 +27,8 @@ import Vulkan.Zero (Zero)
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT'
 newtype FrontFace = FrontFace Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

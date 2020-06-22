@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3c77f5fce0e982c3b81e2fe5ff6a0d28fbee1c6c2a168885b723ceda541b2b9a
+-- hash: 4b078678541ed8d42e463eec79e6c8149d3d0ce6749255d3b24764ece2b2bd43
 
 name:           vulkan
 version:        3.4
@@ -290,6 +290,7 @@ library
       Vulkan.Extensions.VK_EXT_discard_rectangles
       Vulkan.Extensions.VK_EXT_display_control
       Vulkan.Extensions.VK_EXT_display_surface_counter
+      Vulkan.Extensions.VK_EXT_extended_dynamic_state
       Vulkan.Extensions.VK_EXT_external_memory_dma_buf
       Vulkan.Extensions.VK_EXT_external_memory_host
       Vulkan.Extensions.VK_EXT_filter_cubic

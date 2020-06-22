@@ -8,6 +8,18 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_STENCIL_COMPARE_MASK
                                                       , DYNAMIC_STATE_STENCIL_WRITE_MASK
                                                       , DYNAMIC_STATE_STENCIL_REFERENCE
+                                                      , DYNAMIC_STATE_STENCIL_OP_EXT
+                                                      , DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT
+                                                      , DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT
+                                                      , DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT
+                                                      , DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT
+                                                      , DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT
+                                                      , DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT
+                                                      , DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT
+                                                      , DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT
+                                                      , DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT
+                                                      , DYNAMIC_STATE_FRONT_FACE_EXT
+                                                      , DYNAMIC_STATE_CULL_MODE_EXT
                                                       , DYNAMIC_STATE_LINE_STIPPLE_EXT
                                                       , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
                                                       , DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
@@ -115,6 +127,90 @@ pattern DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
 -- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
+-- | 'DYNAMIC_STATE_STENCIL_OP_EXT' specifies that the @failOp@, @passOp@,
+-- @depthFailOp@, and @compareOp@ states in
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' for both
+-- @front@ and @back@ will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
+-- before any draws are performed with a pipeline state with
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
+-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
+pattern DYNAMIC_STATE_STENCIL_OP_EXT = DynamicState 1000267011
+-- | 'DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT' specifies that the
+-- @stencilTestEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilTestEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT = DynamicState 1000267010
+-- | 'DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT' specifies that the
+-- @depthBoundsTestEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT = DynamicState 1000267009
+-- | 'DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT' specifies that the @depthCompareOp@
+-- state in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT = DynamicState 1000267008
+-- | 'DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT' specifies that the
+-- @depthWriteEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT = DynamicState 1000267007
+-- | 'DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT' specifies that the
+-- @depthTestEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthTestEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT = DynamicState 1000267006
+-- | 'DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT' specifies that the
+-- @stride@ state in 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT = DynamicState 1000267005
+-- | 'DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT' specifies that the @scissorCount@
+-- and @pScissors@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored
+-- and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT = DynamicState 1000267004
+-- | 'DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT' specifies that the
+-- @viewportCount@ and @pViewports@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored
+-- and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT = DynamicState 1000267003
+-- | 'DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT' specifies that the @topology@
+-- state in 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'
+-- only specifies the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>,
+-- and the specific topology order and adjacency /must/ be set dynamically
+-- with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+-- before any draw commands.
+pattern DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT = DynamicState 1000267002
+-- | 'DYNAMIC_STATE_FRONT_FACE_EXT' specifies that the @frontFace@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT'
+-- before any draw commands.
+pattern DYNAMIC_STATE_FRONT_FACE_EXT = DynamicState 1000267001
+-- | 'DYNAMIC_STATE_CULL_MODE_EXT' specifies that the @cullMode@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT'
+-- before any draw commands.
+pattern DYNAMIC_STATE_CULL_MODE_EXT = DynamicState 1000267000
 -- | 'DYNAMIC_STATE_LINE_STIPPLE_EXT' specifies that the @lineStippleFactor@
 -- and @lineStipplePattern@ state in
 -- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
@@ -188,6 +284,18 @@ pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_NV = DynamicState 1000087000
              DYNAMIC_STATE_STENCIL_COMPARE_MASK,
              DYNAMIC_STATE_STENCIL_WRITE_MASK,
              DYNAMIC_STATE_STENCIL_REFERENCE,
+             DYNAMIC_STATE_STENCIL_OP_EXT,
+             DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT,
+             DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT,
+             DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT,
+             DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT,
+             DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT,
+             DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT,
+             DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT,
+             DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT,
+             DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT,
+             DYNAMIC_STATE_FRONT_FACE_EXT,
+             DYNAMIC_STATE_CULL_MODE_EXT,
              DYNAMIC_STATE_LINE_STIPPLE_EXT,
              DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV,
              DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV,
@@ -207,6 +315,18 @@ instance Show DynamicState where
     DYNAMIC_STATE_STENCIL_COMPARE_MASK -> showString "DYNAMIC_STATE_STENCIL_COMPARE_MASK"
     DYNAMIC_STATE_STENCIL_WRITE_MASK -> showString "DYNAMIC_STATE_STENCIL_WRITE_MASK"
     DYNAMIC_STATE_STENCIL_REFERENCE -> showString "DYNAMIC_STATE_STENCIL_REFERENCE"
+    DYNAMIC_STATE_STENCIL_OP_EXT -> showString "DYNAMIC_STATE_STENCIL_OP_EXT"
+    DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT -> showString "DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"
+    DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT -> showString "DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"
+    DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT -> showString "DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"
+    DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT -> showString "DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"
+    DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT -> showString "DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"
+    DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT -> showString "DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"
+    DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT -> showString "DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"
+    DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT -> showString "DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"
+    DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT -> showString "DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"
+    DYNAMIC_STATE_FRONT_FACE_EXT -> showString "DYNAMIC_STATE_FRONT_FACE_EXT"
+    DYNAMIC_STATE_CULL_MODE_EXT -> showString "DYNAMIC_STATE_CULL_MODE_EXT"
     DYNAMIC_STATE_LINE_STIPPLE_EXT -> showString "DYNAMIC_STATE_LINE_STIPPLE_EXT"
     DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV -> showString "DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"
     DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV -> showString "DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"
@@ -226,6 +346,18 @@ instance Read DynamicState where
                             , ("DYNAMIC_STATE_STENCIL_COMPARE_MASK", pure DYNAMIC_STATE_STENCIL_COMPARE_MASK)
                             , ("DYNAMIC_STATE_STENCIL_WRITE_MASK", pure DYNAMIC_STATE_STENCIL_WRITE_MASK)
                             , ("DYNAMIC_STATE_STENCIL_REFERENCE", pure DYNAMIC_STATE_STENCIL_REFERENCE)
+                            , ("DYNAMIC_STATE_STENCIL_OP_EXT", pure DYNAMIC_STATE_STENCIL_OP_EXT)
+                            , ("DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT", pure DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT)
+                            , ("DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT", pure DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT)
+                            , ("DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT", pure DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT)
+                            , ("DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT", pure DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT)
+                            , ("DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT", pure DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT)
+                            , ("DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT", pure DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT)
+                            , ("DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT", pure DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT)
+                            , ("DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT", pure DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT)
+                            , ("DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT", pure DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT)
+                            , ("DYNAMIC_STATE_FRONT_FACE_EXT", pure DYNAMIC_STATE_FRONT_FACE_EXT)
+                            , ("DYNAMIC_STATE_CULL_MODE_EXT", pure DYNAMIC_STATE_CULL_MODE_EXT)
                             , ("DYNAMIC_STATE_LINE_STIPPLE_EXT", pure DYNAMIC_STATE_LINE_STIPPLE_EXT)
                             , ("DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV", pure DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV)
                             , ("DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV", pure DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV)
