@@ -96,7 +96,7 @@ fi
 
 if [ "$haddocks" ]; then
   git -C "$haddocks" rm --quiet -r -- .
-  nix-shell --pure -p stack nix --run "NIX_PATH=$NIX_PATH ./gen-standalone-haddocks.sh \"$haddocks\""
+  nix-shell --pure -p stack nix fd --run "NIX_PATH=$NIX_PATH ./gen-standalone-haddocks.sh \"$haddocks\""
   git -C "$haddocks" add .
   git -C "$haddocks" commit -m "v$vulkan_version"
 fi
