@@ -108,7 +108,7 @@ cat <<EOF
   --------------------------------
 
   # Open a PR for this release
-  git push
+  git push --set-upstream origin
   git pull-request
   # Wait for CI to complete
   git push --tags
