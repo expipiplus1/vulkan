@@ -11,12 +11,14 @@ module Vulkan.Utils.ShaderQQ
 import           Control.Monad.IO.Class
 import           Data.ByteString                ( ByteString )
 import qualified Data.ByteString               as BS
+import qualified Data.ByteString.Lazy.Char8    as BSL
 import           Data.Char
 import           Data.FileEmbed
 import           Data.List.Extra
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Quote
 import           Language.Haskell.TH.Syntax
+import           System.Exit
 import           System.IO
 import           System.IO.Temp
 import           System.Process.Typed
@@ -59,16 +61,15 @@ compileShader loc stage code =
     let shader = dir <> "/shader." <> stage
         spirv  = dir <> "/shader.spv"
     writeFile shader codeWithLineDirective
-    let -- TODO: writing to stdout here breaks HIE
-        p =
-          setStderr inherit
-            . setStdout (useHandleOpen stderr)
-            . setStdin closed
-            $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
-    runProcess_ p
-    -- 'runIO' suggests flushing as GHC may not
-    hFlush stderr
-    BS.readFile spirv
+    (rc, out, err) <- readProcess $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
+    case rc of
+      ExitSuccess ->
+        BS.readFile spirv
+      ExitFailure _rc ->
+        if BSL.null out then
+          fail $ BSL.unpack err
+        else
+          fail $ BSL.unpack out
 
 -- If possible, insert a #line directive after the #version directive (as well
 -- as the extension which allows filenames in line directives.
