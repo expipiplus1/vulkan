@@ -20,7 +20,7 @@ echo "Building generator"
 generate=$(nix-build -A generate-new)
 
 echo "Cleaning src"
-rm -r src/Vulkan src/Vulkan.hs
+git rm --quiet -r src/Vulkan src/Vulkan.hs
 echo "Generating vulkan"
 nix-shell --run "sh -c 'cd generate-new && \"$generate/bin/vk\"'"
 hpack
@@ -43,4 +43,4 @@ hpack VulkanMemoryAllocator
 
 echo "Cleaning VMA documentation"
 git -C VulkanMemoryAllocator/VulkanMemoryAllocator clean -dxf
-git -C VulkanMemoryAllocator/VulkanMemoryAllocator checkout
+git -C VulkanMemoryAllocator/VulkanMemoryAllocator checkout .
