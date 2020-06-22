@@ -5,7 +5,9 @@ module Vulkan.Utils.ShaderQQ
   , tesc
   , tese
   , vert
+  , compileShaderQ
   , compileShader
+  , processValidatorMessages
   ) where
 
 import           Control.Monad.IO.Class
@@ -17,25 +19,31 @@ import           Data.FileEmbed
 import           Data.List.Extra
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Quote
-import           Language.Haskell.TH.Syntax
 import           System.Exit
-import           System.IO
 import           System.IO.Temp
 import           System.Process.Typed
 
+comp :: QuasiQuoter
 comp = shaderQQ "comp"
+
+frag :: QuasiQuoter
 frag = shaderQQ "frag"
+
+geom :: QuasiQuoter
 geom = shaderQQ "geom"
+
+tesc :: QuasiQuoter
 tesc = shaderQQ "tesc"
+
+tese :: QuasiQuoter
 tese = shaderQQ "tese"
+
+vert :: QuasiQuoter
 vert = shaderQQ "vert"
 
 shaderQQ :: String -> QuasiQuoter
 shaderQQ stage = QuasiQuoter
-  { quoteExp  = \code -> do
-                  loc <- location
-                  bs  <- compileShader (Just loc) stage code
-                  bsToExp bs
+  { quoteExp  = compileShaderQ stage
   , quotePat  = bad "pattern"
   , quoteType = bad "type"
   , quoteDec  = bad "declaration"
@@ -43,6 +51,36 @@ shaderQQ stage = QuasiQuoter
  where
   bad :: String -> a
   bad s = error $ "Can't use " <> stage <> " quote in a " <> s <> " context"
+
+-- | Compile a glsl shader to spir-v using glslangValidator.
+--
+-- Messages are converted to GHC warnings or errors depending on compilation success.
+compileShaderQ
+  :: String
+  -- ^ stage
+  -> String
+  -- ^ glsl code
+  -> Q Exp
+  -- ^ Spir-V bytecode
+compileShaderQ stage code = do
+  loc <- location
+  result <- compileShader (Just loc) stage code
+  bs <- case result of
+    Left [] ->
+      fail "Unknown validator error"
+    Left messages -> do
+      reportError $ prepare messages
+      pure mempty
+
+    Right ([], bs) ->
+      pure bs
+    Right (messages, bs) -> do
+      reportWarning $ prepare messages
+      pure bs
+  bsToExp bs
+  where
+    prepare [singleLine] = singleLine
+    prepare multiline    = intercalate "\n" $ "glslangValidator:" : map (mappend "        ") multiline
 
 -- | Compile a glsl shader to spir-v using glslangValidator
 compileShader
@@ -53,23 +91,33 @@ compileShader
   -- ^ stage
   -> String
   -- ^ glsl code
-  -> m ByteString
-  -- ^ Spir-V bytecode
-compileShader loc stage code =
+  -> m (Either [String] ([String], ByteString))
+  -- ^ Spir-V bytecode with warnings or errors
+compileShader loc stage code = do
   liftIO $ withSystemTempDirectory "th-shader" $ \dir -> do
     let codeWithLineDirective = maybe code (insertLineDirective code) loc
     let shader = dir <> "/shader." <> stage
         spirv  = dir <> "/shader.spv"
     writeFile shader codeWithLineDirective
+
     (rc, out, err) <- readProcess $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
+    let messages = processValidatorMessages (out <> err)
     case rc of
-      ExitSuccess ->
-        BS.readFile spirv
+      ExitSuccess -> do
+        bs <- BS.readFile spirv
+        pure $ Right (messages, bs)
       ExitFailure _rc ->
-        if BSL.null out then
-          fail $ BSL.unpack err
-        else
-          fail $ BSL.unpack out
+        pure $ Left messages
+
+processValidatorMessages :: BSL.ByteString -> [String]
+processValidatorMessages = foldr grep [] . filter (not . null) . lines . BSL.unpack
+  where
+    grep line acc
+      | "WARNING: " `isPrefixOf` line = cut line : acc
+      | "ERROR: "   `isPrefixOf` line = cut line : acc
+      | otherwise                     = acc
+
+    cut = drop 1 . dropWhile (/= '/')
 
 -- If possible, insert a #line directive after the #version directive (as well
 -- as the extension which allows filenames in line directives.
