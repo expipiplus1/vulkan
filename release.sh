@@ -27,8 +27,18 @@ if [ $help ]; then
       --regenerate: regenerate source
       --vulkan 3.4.5: new vulkan version
       --vma 3.4.1: new VulkanMemoryAllocator version
+      --standalone-haddocks path/to/standalone-haddocks
 EOF
   exit 0
+fi
+
+if [ "$vulkan_version" ]; then
+  tag=v$vulkan_version
+elif [ "$vma_version" ]; then
+  tag=vma-v$vma_version
+else
+  echo "running without new vma or vulkan version"
+  exit 1
 fi
 
 if [ $regenerate ]; then
@@ -47,6 +57,7 @@ if [ "$vulkan_version" ]; then
   sed -i.bak "s/^version: .*/version: $vulkan_version/g" package.yaml
   sed -i.bak "s/^## WIP$/\0\n\n## [$vulkan_version] - $(date --iso-8601)/" changelog.md
   hpack
+  git add package.yaml vulkan.cabal changelog.md
 
   cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source"
   cabal sdist
@@ -61,16 +72,20 @@ if [ "$vma_version" ]; then
   sed -i.bak "s/^version: .*/version: $vma_version/g" VulkanMemoryAllocator/package.yaml
   sed -i.bak "s/- vulkan [0-9 .<>=*]*/- vulkan == $vulkan_breaking.*/" VulkanMemoryAllocator/package.yaml
   sed -i.bak "s/^## WIP$/\0\n\n## [$vma_version] - $(date --iso-8601)/" VulkanMemoryAllocator/changelog.md
-
   hpack VulkanMemoryAllocator
+  git add VulkanMemoryAllocator/package.yaml VulkanMemoryAllocator/vulkan.cabal VulkanMemoryAllocator/changelog.md
 
   cabal haddock --haddock-option="--hyperlinked-source"
   cabal haddock --haddock-for-hackage --haddock-option="--hyperlinked-source" VulkanMemoryAllocator
   cabal sdist
 fi
 
+branch="release-$tag"
+git checkout -b "$branch"
+git commit -m "$tag"
+
 if [ "$vulkan_version" ]; then
-  git tag "v$vulkan_version"
+  git tag "$tag"
   git push --tags
 fi
 
@@ -81,24 +96,41 @@ if [ "$haddocks" ]; then
   git -C "$haddocks" commit -m "v$vulkan_version"
 fi
 
-echo --------------------------------
-echo "Commands to upload these changes"
-echo --------------------------------
+
+cat <<EOF
+  --------------------------------
+  Commands to upload these changes
+  --------------------------------
+
+  # Open a PR for this release
+  git push
+  git pull-request
+  # Wait for CI to complete
+  git checkout master
+  git merge "$branch"
+  git push
+
+EOF
 
 if [ "$vulkan_version" ]; then
   cat <<EOF
+  # Upload vulkan-$vulkan_version
   cabal upload dist-newstyle/sdist/vulkan-$vulkan_version.tar.gz
   cabal upload --doc dist-newstyle/vulkan-$vulkan_version-docs.tar.gz
+
 EOF
 fi
 
 if [ "$vma_version" ]; then
   cat <<EOF
+  # Upload VulkanMemoryAllocator-$vulkan_version
   cabal upload dist-newstyle/sdist/VulkanMemoryAllocator-$vma_version.tar.gz
   cabal upload --doc dist-newstyle/VulkanMemoryAllocator-$vma_version-docs.tar.gz
+
 EOF
 fi
 
 if [ "$haddocks" ]; then
+  # Upload standalone haddocks
   echo "git -C \"$haddocks\" push"
 fi
