@@ -21,6 +21,7 @@ generate=$(nix-build -A generate-new)
 
 echo "Cleaning src"
 git rm --quiet -r src/Vulkan src/Vulkan.hs
+mkdir -p src
 echo "Generating vulkan"
 nix-shell --run "sh -c 'cd generate-new && \"$generate/bin/vk\"'"
 hpack
