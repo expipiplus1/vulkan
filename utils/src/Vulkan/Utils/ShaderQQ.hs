@@ -65,18 +65,20 @@ compileShaderQ
   -- ^ Spir-V bytecode
 compileShaderQ stage code = do
   loc <- location
-  result <- compileShader (Just loc) stage code
+  (warnings, result) <- compileShader (Just loc) stage code
+  case warnings of
+    [] ->
+      pure ()
+    _some ->
+      reportWarning $ prepare warnings
+
   bs <- case result of
     Left [] ->
       fail "Unknown validator error"
-    Left messages -> do
-      reportError $ prepare messages
+    Left errors -> do
+      reportError $ prepare errors
       pure mempty
-
-    Right ([], bs) ->
-      pure bs
-    Right (messages, bs) -> do
-      reportWarning $ prepare messages
+    Right bs ->
       pure bs
   bsToExp bs
   where
@@ -92,7 +94,7 @@ compileShader
   -- ^ stage
   -> String
   -- ^ glsl code
-  -> m (Either [String] ([String], ByteString))
+  -> m ([String], Either [String] ByteString)
   -- ^ Spir-V bytecode with warnings or errors
 compileShader loc stage code = do
   liftIO $ withSystemTempDirectory "th-shader" $ \dir -> do
@@ -102,21 +104,21 @@ compileShader loc stage code = do
     writeFile shader codeWithLineDirective
 
     (rc, out, err) <- readProcess $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
-    let messages = processValidatorMessages (out <> err)
+    let (warnings, errors) = processValidatorMessages (out <> err)
     case rc of
       ExitSuccess -> do
         bs <- BS.readFile spirv
-        pure $ Right (messages, bs)
+        pure (warnings, Right bs)
       ExitFailure _rc ->
-        pure $ Left messages
+        pure (warnings, Left errors)
 
-processValidatorMessages :: BSL.ByteString -> [String]
-processValidatorMessages = foldr grep [] . filter (not . null) . lines . BSL.unpack
+processValidatorMessages :: BSL.ByteString -> ([String], [String])
+processValidatorMessages = foldr grep ([], []) . filter (not . null) . lines . BSL.unpack
   where
-    grep line acc
-      | "WARNING: " `isPrefixOf` line = cut line : acc
-      | "ERROR: "   `isPrefixOf` line = cut line : acc
-      | otherwise                     = acc
+    grep line (ws, es)
+      | "WARNING: " `isPrefixOf` line = (cut line : ws, es)
+      | "ERROR: "   `isPrefixOf` line = (ws, cut line : es)
+      | otherwise                     = (ws, es)
 
     cut line = takeFileName path <> msg
       where
