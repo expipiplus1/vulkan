@@ -13,7 +13,10 @@ let
 
   targets = let
     srcFilter = path: type:
-      (baseNameOf path == "package.yaml") || pkgs.lib.hasInfix "/src" path;
+      (baseNameOf path == "package.yaml")
+      || pkgs.lib.hasInfix "/src" path
+      || pkgs.lib.hasInfix "/vk" path
+      || pkgs.lib.hasInfix "/vma" path;
     filter = builtins.filterSource srcFilter;
   in {
     vulkan = filter ./.;
@@ -21,7 +24,7 @@ let
     vulkan-examples = ./examples;
     VulkanMemoryAllocator = ./VulkanMemoryAllocator;
   } // pkgs.lib.optionalAttrs (compiler == "ghc882") {
-    generate-new = ./generate-new;
+    generate-new = filter ./generate-new;
   };
 
   # Any overrides we require to the specified haskell package set
