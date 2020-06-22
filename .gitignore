@@ -29,3 +29,5 @@ result-*
 
 generate-new/out
 generate-new/out-vma
+
+*.bak
