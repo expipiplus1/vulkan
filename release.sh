@@ -79,7 +79,6 @@ git commit -m "$tag"
 
 if [ "$vulkan_version" ]; then
   git tag "$tag"
-  git push --tags
 fi
 
 if [ "$vulkan_version" ]; then
@@ -112,6 +111,7 @@ cat <<EOF
   git push
   git pull-request
   # Wait for CI to complete
+  git push --tags
   git checkout master
   git merge "$branch"
   git push
