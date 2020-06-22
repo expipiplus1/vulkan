@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.BorderColor</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier">BorderColor</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span class="hs-identifier">BORDER_COLOR_FLOAT_TRANSPARENT_BLACK</span></a></span><span>
+</span><span id="line-3"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_TRANSPARENT_BLACK"><span class="hs-identifier">BORDER_COLOR_INT_TRANSPARENT_BLACK</span></a></span><span>
+</span><span id="line-4"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_BLACK"><span class="hs-identifier">BORDER_COLOR_FLOAT_OPAQUE_BLACK</span></a></span><span>
+</span><span id="line-5"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_BLACK"><span class="hs-identifier">BORDER_COLOR_INT_OPAQUE_BLACK</span></a></span><span>
+</span><span id="line-6"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_WHITE"><span class="hs-identifier">BORDER_COLOR_FLOAT_OPAQUE_WHITE</span></a></span><span>
+</span><span id="line-7"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_WHITE"><span class="hs-identifier">BORDER_COLOR_INT_OPAQUE_WHITE</span></a></span><span>
+</span><span id="line-8"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_CUSTOM_EXT"><span class="hs-identifier">BORDER_COLOR_INT_CUSTOM_EXT</span></a></span><span>
+</span><span id="line-9"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_CUSTOM_EXT"><span class="hs-identifier">BORDER_COLOR_FLOAT_CUSTOM_EXT</span></a></span><span>
+</span><span id="line-10"></span><span>                                                    </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-11"></span><span>                                                    </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- | VkBorderColor - Specify border color used for texture lookups</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- These colors are described in detail in</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement&gt;.</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-35"></span><span class="hs-comment">--</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">newtype</span><span> </span><span id="BorderColor"><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-var">BorderColor</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="BorderColor"><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-var">BorderColor</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-38"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680081730"><span id="local-6989586621680081732"><span class="annot"><span class="annottext">BorderColor -&gt; BorderColor -&gt; Bool
+(BorderColor -&gt; BorderColor -&gt; Bool)
+-&gt; (BorderColor -&gt; BorderColor -&gt; Bool) -&gt; Eq BorderColor
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: BorderColor -&gt; BorderColor -&gt; Bool
+$c/= :: BorderColor -&gt; BorderColor -&gt; Bool
+== :: BorderColor -&gt; BorderColor -&gt; Bool
+$c== :: BorderColor -&gt; BorderColor -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680081714"><span id="local-6989586621680081716"><span id="local-6989586621680081718"><span id="local-6989586621680081720"><span id="local-6989586621680081722"><span id="local-6989586621680081724"><span id="local-6989586621680081726"><span class="annot"><span class="annottext">Eq BorderColor
+Eq BorderColor =&gt;
+(BorderColor -&gt; BorderColor -&gt; Ordering)
+-&gt; (BorderColor -&gt; BorderColor -&gt; Bool)
+-&gt; (BorderColor -&gt; BorderColor -&gt; Bool)
+-&gt; (BorderColor -&gt; BorderColor -&gt; Bool)
+-&gt; (BorderColor -&gt; BorderColor -&gt; Bool)
+-&gt; (BorderColor -&gt; BorderColor -&gt; BorderColor)
+-&gt; (BorderColor -&gt; BorderColor -&gt; BorderColor)
+-&gt; Ord BorderColor
+BorderColor -&gt; BorderColor -&gt; Bool
+BorderColor -&gt; BorderColor -&gt; Ordering
+BorderColor -&gt; BorderColor -&gt; BorderColor
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: BorderColor -&gt; BorderColor -&gt; BorderColor
+$cmin :: BorderColor -&gt; BorderColor -&gt; BorderColor
+max :: BorderColor -&gt; BorderColor -&gt; BorderColor
+$cmax :: BorderColor -&gt; BorderColor -&gt; BorderColor
+&gt;= :: BorderColor -&gt; BorderColor -&gt; Bool
+$c&gt;= :: BorderColor -&gt; BorderColor -&gt; Bool
+&gt; :: BorderColor -&gt; BorderColor -&gt; Bool
+$c&gt; :: BorderColor -&gt; BorderColor -&gt; Bool
+&lt;= :: BorderColor -&gt; BorderColor -&gt; Bool
+$c&lt;= :: BorderColor -&gt; BorderColor -&gt; Bool
+&lt; :: BorderColor -&gt; BorderColor -&gt; Bool
+$c&lt; :: BorderColor -&gt; BorderColor -&gt; Bool
+compare :: BorderColor -&gt; BorderColor -&gt; Ordering
+$ccompare :: BorderColor -&gt; BorderColor -&gt; Ordering
+$cp1Ord :: Eq BorderColor
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680081697"><span id="local-6989586621680081699"><span id="local-6989586621680081701"><span id="local-6989586621680081703"><span id="local-6989586621680081705"><span id="local-6989586621680081707"><span id="local-6989586621680081709"><span id="local-6989586621680081711"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO BorderColor
+Ptr b -&gt; Int -&gt; BorderColor -&gt; IO ()
+Ptr BorderColor -&gt; IO BorderColor
+Ptr BorderColor -&gt; Int -&gt; IO BorderColor
+Ptr BorderColor -&gt; Int -&gt; BorderColor -&gt; IO ()
+Ptr BorderColor -&gt; BorderColor -&gt; IO ()
+BorderColor -&gt; Int
+(BorderColor -&gt; Int)
+-&gt; (BorderColor -&gt; Int)
+-&gt; (Ptr BorderColor -&gt; Int -&gt; IO BorderColor)
+-&gt; (Ptr BorderColor -&gt; Int -&gt; BorderColor -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO BorderColor)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; BorderColor -&gt; IO ())
+-&gt; (Ptr BorderColor -&gt; IO BorderColor)
+-&gt; (Ptr BorderColor -&gt; BorderColor -&gt; IO ())
+-&gt; Storable BorderColor
+forall b. Ptr b -&gt; Int -&gt; IO BorderColor
+forall b. Ptr b -&gt; Int -&gt; BorderColor -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr BorderColor -&gt; BorderColor -&gt; IO ()
+$cpoke :: Ptr BorderColor -&gt; BorderColor -&gt; IO ()
+peek :: Ptr BorderColor -&gt; IO BorderColor
+$cpeek :: Ptr BorderColor -&gt; IO BorderColor
+pokeByteOff :: Ptr b -&gt; Int -&gt; BorderColor -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; BorderColor -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO BorderColor
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO BorderColor
+pokeElemOff :: Ptr BorderColor -&gt; Int -&gt; BorderColor -&gt; IO ()
+$cpokeElemOff :: Ptr BorderColor -&gt; Int -&gt; BorderColor -&gt; IO ()
+peekElemOff :: Ptr BorderColor -&gt; Int -&gt; IO BorderColor
+$cpeekElemOff :: Ptr BorderColor -&gt; Int -&gt; IO BorderColor
+alignment :: BorderColor -&gt; Int
+$calignment :: BorderColor -&gt; Int
+sizeOf :: BorderColor -&gt; Int
+$csizeOf :: BorderColor -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680081694"><span class="annot"><span class="annottext">BorderColor
+BorderColor -&gt; Zero BorderColor
+forall a. a -&gt; Zero a
+zero :: BorderColor
+$czero :: BorderColor
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- | 'BORDER_COLOR_FLOAT_TRANSPARENT_BLACK' specifies a transparent,</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- floating-point format, black color.</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span id="%24mBORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span id="BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span class="annot"><span class="annottext">$bBORDER_COLOR_FLOAT_TRANSPARENT_BLACK :: BorderColor
+$mBORDER_COLOR_FLOAT_TRANSPARENT_BLACK :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_FLOAT_TRANSPARENT_BLACK</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- | 'BORDER_COLOR_INT_TRANSPARENT_BLACK' specifies a transparent, integer</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- format, black color.</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_INT_TRANSPARENT_BLACK"><span id="%24mBORDER_COLOR_INT_TRANSPARENT_BLACK"><span id="BORDER_COLOR_INT_TRANSPARENT_BLACK"><span class="annot"><span class="annottext">$bBORDER_COLOR_INT_TRANSPARENT_BLACK :: BorderColor
+$mBORDER_COLOR_INT_TRANSPARENT_BLACK :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_INT_TRANSPARENT_BLACK"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_INT_TRANSPARENT_BLACK</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- | 'BORDER_COLOR_FLOAT_OPAQUE_BLACK' specifies an opaque, floating-point</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- format, black color.</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_FLOAT_OPAQUE_BLACK"><span id="%24mBORDER_COLOR_FLOAT_OPAQUE_BLACK"><span id="BORDER_COLOR_FLOAT_OPAQUE_BLACK"><span class="annot"><span class="annottext">$bBORDER_COLOR_FLOAT_OPAQUE_BLACK :: BorderColor
+$mBORDER_COLOR_FLOAT_OPAQUE_BLACK :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_FLOAT_OPAQUE_BLACK"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_FLOAT_OPAQUE_BLACK</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- | 'BORDER_COLOR_INT_OPAQUE_BLACK' specifies an opaque, integer format,</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- black color.</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_INT_OPAQUE_BLACK"><span id="%24mBORDER_COLOR_INT_OPAQUE_BLACK"><span id="BORDER_COLOR_INT_OPAQUE_BLACK"><span class="annot"><span class="annottext">$bBORDER_COLOR_INT_OPAQUE_BLACK :: BorderColor
+$mBORDER_COLOR_INT_OPAQUE_BLACK :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_INT_OPAQUE_BLACK"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_INT_OPAQUE_BLACK</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- | 'BORDER_COLOR_FLOAT_OPAQUE_WHITE' specifies an opaque, floating-point</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- format, white color.</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_FLOAT_OPAQUE_WHITE"><span id="%24mBORDER_COLOR_FLOAT_OPAQUE_WHITE"><span id="BORDER_COLOR_FLOAT_OPAQUE_WHITE"><span class="annot"><span class="annottext">$bBORDER_COLOR_FLOAT_OPAQUE_WHITE :: BorderColor
+$mBORDER_COLOR_FLOAT_OPAQUE_WHITE :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_FLOAT_OPAQUE_WHITE"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_FLOAT_OPAQUE_WHITE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">4</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- | 'BORDER_COLOR_INT_OPAQUE_WHITE' specifies an opaque, integer format,</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- white color.</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_INT_OPAQUE_WHITE"><span id="%24mBORDER_COLOR_INT_OPAQUE_WHITE"><span id="BORDER_COLOR_INT_OPAQUE_WHITE"><span class="annot"><span class="annottext">$bBORDER_COLOR_INT_OPAQUE_WHITE :: BorderColor
+$mBORDER_COLOR_INT_OPAQUE_WHITE :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_INT_OPAQUE_WHITE"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_INT_OPAQUE_WHITE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">5</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- | 'BORDER_COLOR_INT_CUSTOM_EXT' indicates that a</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- structure is present in the</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain which contains</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- the color data in integer format.</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_INT_CUSTOM_EXT"><span id="%24mBORDER_COLOR_INT_CUSTOM_EXT"><span id="BORDER_COLOR_INT_CUSTOM_EXT"><span class="annot"><span class="annottext">$bBORDER_COLOR_INT_CUSTOM_EXT :: BorderColor
+$mBORDER_COLOR_INT_CUSTOM_EXT :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_INT_CUSTOM_EXT"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_INT_CUSTOM_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">1000287004</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- | 'BORDER_COLOR_FLOAT_CUSTOM_EXT' indicates that a</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- structure is present in the</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain which contains</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- the color data in floating-point format.</span><span>
+</span><span id="line-69"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bBORDER_COLOR_FLOAT_CUSTOM_EXT"><span id="%24mBORDER_COLOR_FLOAT_CUSTOM_EXT"><span id="BORDER_COLOR_FLOAT_CUSTOM_EXT"><span class="annot"><span class="annottext">$bBORDER_COLOR_FLOAT_CUSTOM_EXT :: BorderColor
+$mBORDER_COLOR_FLOAT_CUSTOM_EXT :: forall r. BorderColor -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#%24bBORDER_COLOR_FLOAT_CUSTOM_EXT"><span class="hs-identifier hs-var hs-var hs-var">BORDER_COLOR_FLOAT_CUSTOM_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span class="hs-number">1000287003</span><span>
+</span><span id="line-70"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span class="hs-pragma hs-type">BORDER_COLOR_FLOAT_TRANSPARENT_BLACK</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-71"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_TRANSPARENT_BLACK"><span class="hs-pragma hs-type">BORDER_COLOR_INT_TRANSPARENT_BLACK</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-72"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_BLACK"><span class="hs-pragma hs-type">BORDER_COLOR_FLOAT_OPAQUE_BLACK</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-73"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_BLACK"><span class="hs-pragma hs-type">BORDER_COLOR_INT_OPAQUE_BLACK</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-74"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_WHITE"><span class="hs-pragma hs-type">BORDER_COLOR_FLOAT_OPAQUE_WHITE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-75"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_WHITE"><span class="hs-pragma hs-type">BORDER_COLOR_INT_OPAQUE_WHITE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-76"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_CUSTOM_EXT"><span class="hs-pragma hs-type">BORDER_COLOR_INT_CUSTOM_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-77"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_CUSTOM_EXT"><span class="hs-pragma hs-type">BORDER_COLOR_FLOAT_CUSTOM_EXT</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-pragma hs-type">BorderColor</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-78"></span><span>
+</span><span id="line-79"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680081672"><span id="local-6989586621680081674"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-80"></span><span>  </span><span id="local-6989586621680081670"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; BorderColor -&gt; ShowS
+</span><a href="#local-6989586621680081670"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span id="local-6989586621680081669"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680081669"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span class="hs-identifier hs-type">BORDER_COLOR_FLOAT_TRANSPARENT_BLACK</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_TRANSPARENT_BLACK&quot;</span></span><span>
+</span><span id="line-82"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_TRANSPARENT_BLACK"><span class="hs-identifier hs-type">BORDER_COLOR_INT_TRANSPARENT_BLACK</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_TRANSPARENT_BLACK&quot;</span></span><span>
+</span><span id="line-83"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_BLACK"><span class="hs-identifier hs-type">BORDER_COLOR_FLOAT_OPAQUE_BLACK</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_OPAQUE_BLACK&quot;</span></span><span>
+</span><span id="line-84"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_BLACK"><span class="hs-identifier hs-type">BORDER_COLOR_INT_OPAQUE_BLACK</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_OPAQUE_BLACK&quot;</span></span><span>
+</span><span id="line-85"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_WHITE"><span class="hs-identifier hs-type">BORDER_COLOR_FLOAT_OPAQUE_WHITE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_OPAQUE_WHITE&quot;</span></span><span>
+</span><span id="line-86"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_WHITE"><span class="hs-identifier hs-type">BORDER_COLOR_INT_OPAQUE_WHITE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_OPAQUE_WHITE&quot;</span></span><span>
+</span><span id="line-87"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_CUSTOM_EXT"><span class="hs-identifier hs-type">BORDER_COLOR_INT_CUSTOM_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_CUSTOM_EXT&quot;</span></span><span>
+</span><span id="line-88"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_CUSTOM_EXT"><span class="hs-identifier hs-type">BORDER_COLOR_FLOAT_CUSTOM_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_CUSTOM_EXT&quot;</span></span><span>
+</span><span id="line-89"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span><span> </span><span id="local-6989586621680081668"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680081668"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680081669"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BorderColor &quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680081668"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680081660"><span id="local-6989586621680081663"><span id="local-6989586621680081665"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-type">BorderColor</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-92"></span><span>  </span><span id="local-6989586621680081658"><span class="annot"><span class="annottext">readPrec :: ReadPrec BorderColor
+</span><a href="#local-6989586621680081658"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec BorderColor -&gt; ReadPrec BorderColor
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec BorderColor)] -&gt; ReadPrec BorderColor
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_TRANSPARENT_BLACK&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"><span class="hs-identifier hs-var">BORDER_COLOR_FLOAT_TRANSPARENT_BLACK</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_TRANSPARENT_BLACK&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_TRANSPARENT_BLACK"><span class="hs-identifier hs-var">BORDER_COLOR_INT_TRANSPARENT_BLACK</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_OPAQUE_BLACK&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_BLACK"><span class="hs-identifier hs-var">BORDER_COLOR_FLOAT_OPAQUE_BLACK</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_OPAQUE_BLACK&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_BLACK"><span class="hs-identifier hs-var">BORDER_COLOR_INT_OPAQUE_BLACK</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_OPAQUE_WHITE&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_OPAQUE_WHITE"><span class="hs-identifier hs-var">BORDER_COLOR_FLOAT_OPAQUE_WHITE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-97"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_OPAQUE_WHITE&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_OPAQUE_WHITE"><span class="hs-identifier hs-var">BORDER_COLOR_INT_OPAQUE_WHITE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-98"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_INT_CUSTOM_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_INT_CUSTOM_EXT"><span class="hs-identifier hs-var">BORDER_COLOR_INT_CUSTOM_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;BORDER_COLOR_FLOAT_CUSTOM_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BORDER_COLOR_FLOAT_CUSTOM_EXT"><span class="hs-identifier hs-var">BORDER_COLOR_FLOAT_CUSTOM_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-100"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec BorderColor
+-&gt; ReadPrec BorderColor -&gt; ReadPrec BorderColor
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-101"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec BorderColor -&gt; ReadPrec BorderColor
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-102"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;BorderColor&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-103"></span><span>                       </span><span id="local-6989586621680081657"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680081657"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32 -&gt; ReadPrec Int32
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-104"></span><span>                       </span><span class="annot"><span class="annottext">BorderColor -&gt; ReadPrec BorderColor
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int32 -&gt; BorderColor
+</span><a href="Vulkan.Core10.Enums.BorderColor.html#BorderColor"><span class="hs-identifier hs-var">BorderColor</span></a></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680081657"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-105"></span><span>
+</span><span id="line-106"></span></pre></body></html>

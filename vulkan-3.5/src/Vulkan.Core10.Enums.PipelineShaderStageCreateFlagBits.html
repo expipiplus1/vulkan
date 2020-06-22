@@ -1,0 +1,452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier">PipelineShaderStageCreateFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"><span class="hs-identifier">PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"><span class="hs-identifier">PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                                                 </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                                                 </span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlags"><span class="hs-identifier">PipelineShaderStageCreateFlags</span></a></span><span>
+</span><span id="line-7"></span><span>                                                              </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | VkPipelineShaderStageCreateFlagBits - Bitmask controlling how a pipeline</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- shader stage is created</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- If 'PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- and 'PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT' are</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- specified and</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size minSubgroupSize&gt;</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- does not equal</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize&gt;</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- and no</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-required-subgroup-size required subgroup size&gt;</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- is specified, then the only way to guarantee that the \'X\' dimension of</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- the local workgroup size is a multiple of</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize&gt;</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- is to make it a multiple of @maxSubgroupSize@. Under these conditions,</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- you are guaranteed full subgroups but not any particular subgroup size.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- 'PipelineShaderStageCreateFlags'</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">newtype</span><span> </span><span id="PipelineShaderStageCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-var">PipelineShaderStageCreateFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PipelineShaderStageCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-var">PipelineShaderStageCreateFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680065987"><span id="local-6989586621680065989"><span class="annot"><span class="annottext">PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+(PipelineShaderStageCreateFlagBits
+ -&gt; PipelineShaderStageCreateFlagBits -&gt; Bool)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits -&gt; Bool)
+-&gt; Eq PipelineShaderStageCreateFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+$c/= :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+== :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+$c== :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680065971"><span id="local-6989586621680065973"><span id="local-6989586621680065975"><span id="local-6989586621680065977"><span id="local-6989586621680065979"><span id="local-6989586621680065981"><span id="local-6989586621680065983"><span class="annot"><span class="annottext">Eq PipelineShaderStageCreateFlagBits
+Eq PipelineShaderStageCreateFlagBits =&gt;
+(PipelineShaderStageCreateFlagBits
+ -&gt; PipelineShaderStageCreateFlagBits -&gt; Ordering)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits -&gt; Bool)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits -&gt; Bool)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits -&gt; Bool)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits -&gt; Bool)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; Ord PipelineShaderStageCreateFlagBits
+PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Ordering
+PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+$cmin :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+max :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+$cmax :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+&gt;= :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+$c&gt;= :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+&gt; :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+$c&gt; :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+&lt;= :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+$c&lt;= :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+&lt; :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+$c&lt; :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Bool
+compare :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Ordering
+$ccompare :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; Ordering
+$cp1Ord :: Eq PipelineShaderStageCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680065954"><span id="local-6989586621680065956"><span id="local-6989586621680065958"><span id="local-6989586621680065960"><span id="local-6989586621680065962"><span id="local-6989586621680065964"><span id="local-6989586621680065966"><span id="local-6989586621680065968"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits
+Ptr b -&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+Ptr PipelineShaderStageCreateFlagBits
+-&gt; IO PipelineShaderStageCreateFlagBits
+Ptr PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits
+Ptr PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+Ptr PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+PipelineShaderStageCreateFlagBits -&gt; Int
+(PipelineShaderStageCreateFlagBits -&gt; Int)
+-&gt; (PipelineShaderStageCreateFlagBits -&gt; Int)
+-&gt; (Ptr PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits)
+-&gt; (Ptr PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ())
+-&gt; (Ptr PipelineShaderStageCreateFlagBits
+    -&gt; IO PipelineShaderStageCreateFlagBits)
+-&gt; (Ptr PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ())
+-&gt; Storable PipelineShaderStageCreateFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits
+forall b.
+Ptr b -&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+$cpoke :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+peek :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; IO PipelineShaderStageCreateFlagBits
+$cpeek :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; IO PipelineShaderStageCreateFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b.
+Ptr b -&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits
+pokeElemOff :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits -&gt; IO ()
+peekElemOff :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits
+$cpeekElemOff :: Ptr PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; IO PipelineShaderStageCreateFlagBits
+alignment :: PipelineShaderStageCreateFlagBits -&gt; Int
+$calignment :: PipelineShaderStageCreateFlagBits -&gt; Int
+sizeOf :: PipelineShaderStageCreateFlagBits -&gt; Int
+$csizeOf :: PipelineShaderStageCreateFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680065951"><span class="annot"><span class="annottext">PipelineShaderStageCreateFlagBits
+PipelineShaderStageCreateFlagBits
+-&gt; Zero PipelineShaderStageCreateFlagBits
+forall a. a -&gt; Zero a
+zero :: PipelineShaderStageCreateFlagBits
+$czero :: PipelineShaderStageCreateFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680065905"><span id="local-6989586621680065907"><span id="local-6989586621680065909"><span id="local-6989586621680065911"><span id="local-6989586621680065913"><span id="local-6989586621680065915"><span id="local-6989586621680065917"><span id="local-6989586621680065919"><span id="local-6989586621680065921"><span id="local-6989586621680065923"><span id="local-6989586621680065925"><span id="local-6989586621680065927"><span id="local-6989586621680065929"><span id="local-6989586621680065931"><span id="local-6989586621680065933"><span id="local-6989586621680065935"><span id="local-6989586621680065937"><span id="local-6989586621680065939"><span id="local-6989586621680065941"><span id="local-6989586621680065943"><span id="local-6989586621680065945"><span id="local-6989586621680065947"><span class="annot"><span class="annottext">Eq PipelineShaderStageCreateFlagBits
+PipelineShaderStageCreateFlagBits
+Eq PipelineShaderStageCreateFlagBits =&gt;
+(PipelineShaderStageCreateFlagBits
+ -&gt; PipelineShaderStageCreateFlagBits
+ -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; (Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits -&gt; Int -&gt; Bool)
+-&gt; (PipelineShaderStageCreateFlagBits -&gt; Maybe Int)
+-&gt; (PipelineShaderStageCreateFlagBits -&gt; Int)
+-&gt; (PipelineShaderStageCreateFlagBits -&gt; Bool)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits
+    -&gt; Int -&gt; PipelineShaderStageCreateFlagBits)
+-&gt; (PipelineShaderStageCreateFlagBits -&gt; Int)
+-&gt; Bits PipelineShaderStageCreateFlagBits
+Int -&gt; PipelineShaderStageCreateFlagBits
+PipelineShaderStageCreateFlagBits -&gt; Bool
+PipelineShaderStageCreateFlagBits -&gt; Int
+PipelineShaderStageCreateFlagBits -&gt; Maybe Int
+PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+PipelineShaderStageCreateFlagBits -&gt; Int -&gt; Bool
+PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: PipelineShaderStageCreateFlagBits -&gt; Int
+$cpopCount :: PipelineShaderStageCreateFlagBits -&gt; Int
+rotateR :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$crotateR :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+rotateL :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$crotateL :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+unsafeShiftR :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$cunsafeShiftR :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+shiftR :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$cshiftR :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+unsafeShiftL :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$cunsafeShiftL :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+shiftL :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$cshiftL :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+isSigned :: PipelineShaderStageCreateFlagBits -&gt; Bool
+$cisSigned :: PipelineShaderStageCreateFlagBits -&gt; Bool
+bitSize :: PipelineShaderStageCreateFlagBits -&gt; Int
+$cbitSize :: PipelineShaderStageCreateFlagBits -&gt; Int
+bitSizeMaybe :: PipelineShaderStageCreateFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: PipelineShaderStageCreateFlagBits -&gt; Maybe Int
+testBit :: PipelineShaderStageCreateFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: PipelineShaderStageCreateFlagBits -&gt; Int -&gt; Bool
+complementBit :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$ccomplementBit :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+clearBit :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$cclearBit :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+setBit :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$csetBit :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+bit :: Int -&gt; PipelineShaderStageCreateFlagBits
+$cbit :: Int -&gt; PipelineShaderStageCreateFlagBits
+zeroBits :: PipelineShaderStageCreateFlagBits
+$czeroBits :: PipelineShaderStageCreateFlagBits
+rotate :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$crotate :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+shift :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+$cshift :: PipelineShaderStageCreateFlagBits
+-&gt; Int -&gt; PipelineShaderStageCreateFlagBits
+complement :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+$ccomplement :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+xor :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+$cxor :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+.|. :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+$c.|. :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+.&amp;. :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+$c.&amp;. :: PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+-&gt; PipelineShaderStageCreateFlagBits
+$cp1Bits :: Eq PipelineShaderStageCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- | 'PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT' specifies</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- that the subgroup sizes /must/ be launched with all invocations active</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- in the compute stage.</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bPIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"><span id="%24mPIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"><span id="PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"><span class="annot"><span class="annottext">$bPIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT :: PipelineShaderStageCreateFlagBits
+$mPIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT :: forall r.
+PipelineShaderStageCreateFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#%24bPIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-type">PipelineShaderStageCreateFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- | 'PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT'</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- specifies that the</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize&gt;</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- /may/ vary in the shader stage.</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bPIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"><span id="%24mPIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"><span id="PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"><span class="annot"><span class="annottext">$bPIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT :: PipelineShaderStageCreateFlagBits
+$mPIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT :: forall r.
+PipelineShaderStageCreateFlagBits
+-&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#%24bPIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-type">PipelineShaderStageCreateFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span><span class="hs-keyword">type</span><span> </span><span id="PipelineShaderStageCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlags"><span class="hs-identifier hs-var">PipelineShaderStageCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-type">PipelineShaderStageCreateFlagBits</span></a></span><span>
+</span><span id="line-62"></span><span>
+</span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680065895"><span id="local-6989586621680065897"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-type">PipelineShaderStageCreateFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-64"></span><span>  </span><span id="local-6989586621680065893"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; PipelineShaderStageCreateFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680065891"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680065891"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-65"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"><span class="hs-identifier hs-type">PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT&quot;</span></span><span>
+</span><span id="line-66"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"><span class="hs-identifier hs-type">PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT&quot;</span></span><span>
+</span><span id="line-67"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-type">PipelineShaderStageCreateFlagBits</span></a></span><span> </span><span id="local-6989586621680065890"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680065890"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680065891"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineShaderStageCreateFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680065890"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>
+</span><span id="line-69"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680065882"><span id="local-6989586621680065885"><span id="local-6989586621680065887"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-type">PipelineShaderStageCreateFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-70"></span><span>  </span><span id="local-6989586621680065880"><span class="annot"><span class="annottext">readPrec :: ReadPrec PipelineShaderStageCreateFlagBits
+</span><a href="#local-6989586621680065880"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec PipelineShaderStageCreateFlagBits
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec PipelineShaderStageCreateFlagBits)]
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">PipelineShaderStageCreateFlagBits
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">PipelineShaderStageCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT"><span class="hs-identifier hs-var">PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">PipelineShaderStageCreateFlagBits
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">PipelineShaderStageCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT"><span class="hs-identifier hs-var">PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-72"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec PipelineShaderStageCreateFlagBits
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-73"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-74"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineShaderStageCreateFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>                       </span><span id="local-6989586621680065879"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680065879"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-76"></span><span>                       </span><span class="annot"><span class="annottext">PipelineShaderStageCreateFlagBits
+-&gt; ReadPrec PipelineShaderStageCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; PipelineShaderStageCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.html#PipelineShaderStageCreateFlagBits"><span class="hs-identifier hs-var">PipelineShaderStageCreateFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680065879"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>
+</span><span id="line-78"></span></pre></body></html>

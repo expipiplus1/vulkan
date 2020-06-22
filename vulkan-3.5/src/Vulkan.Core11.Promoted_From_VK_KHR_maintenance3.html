@@ -1,0 +1,901 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core11.Promoted_From_VK_KHR_maintenance3</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#getDescriptorSetLayoutSupport"><span class="hs-identifier">getDescriptorSetLayoutSupport</span></a></span><span>
+</span><span id="line-3"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier">PhysicalDeviceMaintenance3Properties</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier">DescriptorSetLayoutSupport</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                                        </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">eqT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">castPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Type.Equality</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(:~:)</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Refl</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#forgetExtensions"><span class="hs-identifier">forgetExtensions</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Chain"><span class="hs-identifier">Chain</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html"><span class="hs-identifier">Vulkan.Core10.DescriptorSet</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#DescriptorSetLayoutCreateInfo"><span class="hs-identifier">DescriptorSetLayoutCreateInfo</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="hs-pragma">{-# SOURCE</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.html"><span class="hs-identifier">Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.html#DescriptorSetVariableDescriptorCountLayoutSupport"><span class="hs-identifier">DescriptorSetVariableDescriptorCountLayoutSupport</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetDescriptorSetLayoutSupport%3ADeviceCmds"><span class="hs-identifier">pVkGetDescriptorSetLayoutSupport</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier">DeviceSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier">Device_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extends"><span class="hs-identifier">Extends</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extendss"><span class="hs-identifier">Extendss</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extensible"><span class="hs-identifier">Extensible</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PeekChain"><span class="hs-identifier">PeekChain</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PeekChain"><span class="hs-identifier">PeekChain</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PokeChain"><span class="hs-identifier">PokeChain</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PokeChain"><span class="hs-identifier">PokeChain</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html"><span class="hs-identifier">Vulkan.CStruct.Extends</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#SomeStruct"><span class="hs-identifier">SomeStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"><span class="hs-identifier">STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetDescriptorSetLayoutSupport"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#mkVkGetDescriptorSetLayoutSupport"><span class="hs-identifier hs-var">mkVkGetDescriptorSetLayoutSupport</span></a></span></span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#SomeStruct"><span class="hs-identifier hs-type">SomeStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#DescriptorSetLayoutCreateInfo"><span class="hs-identifier hs-type">DescriptorSetLayoutCreateInfo</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#SomeStruct"><span class="hs-identifier hs-type">SomeStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#SomeStruct"><span class="hs-identifier hs-type">SomeStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#DescriptorSetLayoutCreateInfo"><span class="hs-identifier hs-type">DescriptorSetLayoutCreateInfo</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#SomeStruct"><span class="hs-identifier hs-type">SomeStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- | vkGetDescriptorSetLayoutSupport - Query whether a descriptor set layout</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- can be created</span><span>
+</span><span id="line-72"></span><span class="hs-comment">--</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- Some implementations have limitations on what fits in a descriptor set</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- which are not easily expressible in terms of existing limits like</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- @maxDescriptorSet@*, for example if all descriptor types share a limited</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- space in memory but each descriptor is a different size or alignment.</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- This command returns information about whether a descriptor set</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- satisfies this limit. If the descriptor set layout satisfies the</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- 'PhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- this command is guaranteed to return</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.TRUE' in</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- 'DescriptorSetLayoutSupport'::@supported@. If the descriptor set layout</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- exceeds the</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- 'PhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- whether the descriptor set layout is supported is</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- implementation-dependent and /may/ depend on whether the descriptor</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- sizes and alignments cause the layout to exceed an internal limit.</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- This command does not consider other limits such as</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- @maxPerStageDescriptor@*, and so a descriptor set layout that is</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- supported according to this command /must/ still satisfy the pipeline</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- layout limits such as @maxPerStageDescriptor@* in order to be used in a</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- pipeline layout.</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- This is a 'Vulkan.Core10.Handles.Device' query rather than</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.PhysicalDevice' because the answer /may/ depend</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- on enabled features.</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'</span><span>
+</span><span id="line-109"></span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#getDescriptorSetLayoutSupport"><span class="hs-identifier hs-type">getDescriptorSetLayoutSupport</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680158898"><span class="annot"><a href="#local-6989586621680158898"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span id="local-6989586621680158897"><span class="annot"><a href="#local-6989586621680158897"><span class="hs-identifier hs-type">b</span></a></span></span><span> </span><span id="local-6989586621680158896"><span class="annot"><a href="#local-6989586621680158896"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-110"></span><span>                               </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extendss"><span class="hs-identifier hs-type">Extendss</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#DescriptorSetLayoutCreateInfo"><span class="hs-identifier hs-type">DescriptorSetLayoutCreateInfo</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158898"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extendss"><span class="hs-identifier hs-type">Extendss</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158897"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PokeChain"><span class="hs-identifier hs-type">PokeChain</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158898"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PokeChain"><span class="hs-identifier hs-type">PokeChain</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158897"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PeekChain"><span class="hs-identifier hs-type">PeekChain</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158897"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680158896"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span>                              </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that would create the descriptor set</span><span>
+</span><span id="line-112"></span><span>                                 </span><span class="hs-comment">-- layout.</span><span>
+</span><span id="line-113"></span><span>                                 </span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span>                                 </span><span class="hs-comment">-- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-115"></span><span>                                 </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-116"></span><span>                              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @pCreateInfo@ is a pointer to a</span><span>
+</span><span id="line-117"></span><span>                                 </span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure</span><span>
+</span><span id="line-118"></span><span>                                 </span><span class="hs-comment">-- specifying the state of the descriptor set layout object.</span><span>
+</span><span id="line-119"></span><span>                                 </span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span>                                 </span><span class="hs-comment">-- @pCreateInfo@ /must/ be a valid pointer to a valid</span><span>
+</span><span id="line-121"></span><span>                                 </span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure</span><span>
+</span><span id="line-122"></span><span>                                 </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.DescriptorSet.html#DescriptorSetLayoutCreateInfo"><span class="hs-identifier hs-type">DescriptorSetLayoutCreateInfo</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158898"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-123"></span><span>                              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680158896"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158897"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span id="getDescriptorSetLayoutSupport"><span class="annot"><span class="annottext">getDescriptorSetLayoutSupport :: Device
+-&gt; DescriptorSetLayoutCreateInfo a
+-&gt; io (DescriptorSetLayoutSupport b)
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#getDescriptorSetLayoutSupport"><span class="hs-identifier hs-var hs-var">getDescriptorSetLayoutSupport</span></a></span></span><span> </span><span id="local-6989586621680158895"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680158895"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680158894"><span class="annot"><span class="annottext">createInfo :: DescriptorSetLayoutCreateInfo a
+</span><a href="#local-6989586621680158894"><span class="hs-identifier hs-var">createInfo</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO (DescriptorSetLayoutSupport b)
+-&gt; io (DescriptorSetLayoutSupport b)
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO (DescriptorSetLayoutSupport b)
+ -&gt; io (DescriptorSetLayoutSupport b))
+-&gt; (ContT
+      (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+    -&gt; IO (DescriptorSetLayoutSupport b))
+-&gt; ContT
+     (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+-&gt; io (DescriptorSetLayoutSupport b)
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT
+  (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+-&gt; IO (DescriptorSetLayoutSupport b)
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT
+   (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+ -&gt; io (DescriptorSetLayoutSupport b))
+-&gt; ContT
+     (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+-&gt; io (DescriptorSetLayoutSupport b)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-125"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680158892"><span class="annot"><span class="annottext">vkGetDescriptorSetLayoutSupportPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot;
+       ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+   -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+   -&gt; IO ())
+</span><a href="#local-6989586621680158892"><span class="hs-identifier hs-var hs-var">vkGetDescriptorSetLayoutSupportPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; (&quot;pCreateInfo&quot;
+          ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+      -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+      -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetDescriptorSetLayoutSupport%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkGetDescriptorSetLayoutSupport</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680158895"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-126"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT (DescriptorSetLayoutSupport b) IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT (DescriptorSetLayoutSupport b) IO ())
+-&gt; IO () -&gt; ContT (DescriptorSetLayoutSupport b) IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot;
+       ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+   -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+   -&gt; IO ())
+</span><a href="#local-6989586621680158892"><span class="hs-identifier hs-var">vkGetDescriptorSetLayoutSupportPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot;
+       ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+   -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+   -&gt; IO ())
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; (&quot;pCreateInfo&quot;
+          ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+      -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+      -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot;
+       ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+   -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+   -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-127"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetDescriptorSetLayoutSupport is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-128"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680158887"><span class="annot"><span class="annottext">vkGetDescriptorSetLayoutSupport' :: Ptr Device_T
+-&gt; (&quot;pCreateInfo&quot;
+    ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+-&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+-&gt; IO ()
+</span><a href="#local-6989586621680158887"><span class="hs-identifier hs-var hs-var">vkGetDescriptorSetLayoutSupport'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot;
+       ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+   -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+   -&gt; IO ())
+-&gt; Ptr Device_T
+-&gt; (&quot;pCreateInfo&quot;
+    ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+-&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+-&gt; IO ()
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#mkVkGetDescriptorSetLayoutSupport"><span class="hs-identifier hs-var">mkVkGetDescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot;
+       ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+   -&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+   -&gt; IO ())
+</span><a href="#local-6989586621680158892"><span class="hs-identifier hs-var">vkGetDescriptorSetLayoutSupportPtr</span></a></span><span>
+</span><span id="line-129"></span><span>  </span><span id="local-6989586621680158886"><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutCreateInfo a)
+</span><a href="#local-6989586621680158886"><span class="hs-identifier hs-var">pCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">((Ptr (DescriptorSetLayoutCreateInfo a)
+  -&gt; IO (DescriptorSetLayoutSupport b))
+ -&gt; IO (DescriptorSetLayoutSupport b))
+-&gt; ContT
+     (DescriptorSetLayoutSupport b)
+     IO
+     (Ptr (DescriptorSetLayoutCreateInfo a))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr (DescriptorSetLayoutCreateInfo a)
+   -&gt; IO (DescriptorSetLayoutSupport b))
+  -&gt; IO (DescriptorSetLayoutSupport b))
+ -&gt; ContT
+      (DescriptorSetLayoutSupport b)
+      IO
+      (Ptr (DescriptorSetLayoutCreateInfo a)))
+-&gt; ((Ptr (DescriptorSetLayoutCreateInfo a)
+     -&gt; IO (DescriptorSetLayoutSupport b))
+    -&gt; IO (DescriptorSetLayoutSupport b))
+-&gt; ContT
+     (DescriptorSetLayoutSupport b)
+     IO
+     (Ptr (DescriptorSetLayoutCreateInfo a))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">DescriptorSetLayoutCreateInfo a
+-&gt; (Ptr (DescriptorSetLayoutCreateInfo a)
+    -&gt; IO (DescriptorSetLayoutSupport b))
+-&gt; IO (DescriptorSetLayoutSupport b)
+forall a b. ToCStruct a =&gt; a -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var">withCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DescriptorSetLayoutCreateInfo a
+</span><a href="#local-6989586621680158894"><span class="hs-identifier hs-var">createInfo</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span>  </span><span id="local-6989586621680158883"><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport b)
+</span><a href="#local-6989586621680158883"><span class="hs-identifier hs-var">pPSupport</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">((Ptr (DescriptorSetLayoutSupport b)
+  -&gt; IO (DescriptorSetLayoutSupport b))
+ -&gt; IO (DescriptorSetLayoutSupport b))
+-&gt; ContT
+     (DescriptorSetLayoutSupport b)
+     IO
+     (Ptr (DescriptorSetLayoutSupport b))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall b.
+ToCStruct (DescriptorSetLayoutSupport b) =&gt;
+(Ptr (DescriptorSetLayoutSupport b) -&gt; IO b) -&gt; IO b
+forall a b. ToCStruct a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withZeroCStruct"><span class="hs-identifier hs-var">withZeroCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-131"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT (DescriptorSetLayoutSupport b) IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT (DescriptorSetLayoutSupport b) IO ())
+-&gt; IO () -&gt; ContT (DescriptorSetLayoutSupport b) IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; (&quot;pCreateInfo&quot;
+    ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo))
+-&gt; (&quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport))
+-&gt; IO ()
+</span><a href="#local-6989586621680158887"><span class="hs-identifier hs-var">vkGetDescriptorSetLayoutSupport'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680158895"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutCreateInfo a)
+-&gt; &quot;pCreateInfo&quot; ::: Ptr (SomeStruct DescriptorSetLayoutCreateInfo)
+forall (a :: [*] -&gt; *) (es :: [*]).
+Ptr (a es) -&gt; Ptr (SomeStruct a)
+</span><a href="Vulkan.CStruct.Extends.html#forgetExtensions"><span class="hs-identifier hs-var">forgetExtensions</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutCreateInfo a)
+</span><a href="#local-6989586621680158886"><span class="hs-identifier hs-var">pCreateInfo</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport b)
+-&gt; &quot;pSupport&quot; ::: Ptr (SomeStruct DescriptorSetLayoutSupport)
+forall (a :: [*] -&gt; *) (es :: [*]).
+Ptr (a es) -&gt; Ptr (SomeStruct a)
+</span><a href="Vulkan.CStruct.Extends.html#forgetExtensions"><span class="hs-identifier hs-var">forgetExtensions</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport b)
+</span><a href="#local-6989586621680158883"><span class="hs-identifier hs-var">pPSupport</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>  </span><span id="local-6989586621680158880"><span class="annot"><span class="annottext">DescriptorSetLayoutSupport b
+</span><a href="#local-6989586621680158880"><span class="hs-identifier hs-var">pSupport</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (DescriptorSetLayoutSupport b)
+-&gt; ContT
+     (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO (DescriptorSetLayoutSupport b)
+ -&gt; ContT
+      (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b))
+-&gt; IO (DescriptorSetLayoutSupport b)
+-&gt; ContT
+     (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport b)
+-&gt; IO (DescriptorSetLayoutSupport b)
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport b)
+</span><a href="#local-6989586621680158883"><span class="hs-identifier hs-var">pPSupport</span></a></span><span>
+</span><span id="line-133"></span><span>  </span><span class="annot"><span class="annottext">DescriptorSetLayoutSupport b
+-&gt; ContT
+     (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(DescriptorSetLayoutSupport b
+ -&gt; ContT
+      (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b))
+-&gt; DescriptorSetLayoutSupport b
+-&gt; ContT
+     (DescriptorSetLayoutSupport b) IO (DescriptorSetLayoutSupport b)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DescriptorSetLayoutSupport b
+</span><a href="#local-6989586621680158880"><span class="hs-identifier hs-var">pSupport</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-134"></span><span>
+</span><span id="line-135"></span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- | VkPhysicalDeviceMaintenance3Properties - Structure describing descriptor</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- set properties</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-140"></span><span class="hs-comment">--</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceMaintenance3Properties' structure</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- describe the following implementation-dependent limits:</span><span>
+</span><span id="line-143"></span><span class="hs-comment">--</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-145"></span><span class="hs-comment">--</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- If the 'PhysicalDeviceMaintenance3Properties' structure is included in</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- the @pNext@ chain of</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- it is filled with the implementation-dependent limits.</span><span>
+</span><span id="line-150"></span><span class="hs-comment">--</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-152"></span><span class="hs-comment">--</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-154"></span><span class="hs-comment">--</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-157"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceMaintenance3Properties"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-var">PhysicalDeviceMaintenance3Properties</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceMaintenance3Properties"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-var">PhysicalDeviceMaintenance3Properties</span></a></span></span><span>
+</span><span id="line-158"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @maxPerSetDescriptors@ is a maximum number of descriptors (summed over</span><span>
+</span><span id="line-159"></span><span>    </span><span class="hs-comment">-- all descriptor types) in a single descriptor set that is guaranteed to</span><span>
+</span><span id="line-160"></span><span>    </span><span class="hs-comment">-- satisfy any implementation-dependent constraints on the size of a</span><span>
+</span><span id="line-161"></span><span>    </span><span class="hs-comment">-- descriptor set itself. Applications /can/ query whether a descriptor set</span><span>
+</span><span id="line-162"></span><span>    </span><span class="hs-comment">-- that goes beyond this limit is supported using</span><span>
+</span><span id="line-163"></span><span>    </span><span class="hs-comment">-- 'getDescriptorSetLayoutSupport'.</span><span>
+</span><span id="line-164"></span><span>    </span><span id="%24sel%3AmaxPerSetDescriptors%3APhysicalDeviceMaintenance3Properties"><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties -&gt; Word32
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#%24sel%3AmaxPerSetDescriptors%3APhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-var hs-var">maxPerSetDescriptors</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-165"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @maxMemoryAllocationSize@ is the maximum size of a memory allocation</span><span>
+</span><span id="line-166"></span><span>    </span><span class="hs-comment">-- that /can/ be created, even if there is more space available in the</span><span>
+</span><span id="line-167"></span><span>    </span><span class="hs-comment">-- heap.</span><span>
+</span><span id="line-168"></span><span>    </span><span id="%24sel%3AmaxMemoryAllocationSize%3APhysicalDeviceMaintenance3Properties"><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties -&gt; DeviceSize
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#%24sel%3AmaxMemoryAllocationSize%3APhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-var hs-var">maxMemoryAllocationSize</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span>
+</span><span id="line-169"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-170"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680158872"><span id="local-6989586621680158874"><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; Bool
+(PhysicalDeviceMaintenance3Properties
+ -&gt; PhysicalDeviceMaintenance3Properties -&gt; Bool)
+-&gt; (PhysicalDeviceMaintenance3Properties
+    -&gt; PhysicalDeviceMaintenance3Properties -&gt; Bool)
+-&gt; Eq PhysicalDeviceMaintenance3Properties
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; Bool
+$c/= :: PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; Bool
+== :: PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; Bool
+$c== :: PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceMaintenance3Properties</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680158865"><span id="local-6989586621680158867"><span id="local-6989586621680158869"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-type">PhysicalDeviceMaintenance3Properties</span></a></span></span></span></span><span>
+</span><span id="line-175"></span><span>
+</span><span id="line-176"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680158860"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-type">PhysicalDeviceMaintenance3Properties</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-177"></span><span>  </span><span id="local-6989586621680158855"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceMaintenance3Properties
+-&gt; (Ptr PhysicalDeviceMaintenance3Properties -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680158855"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680158854"><span class="annot"><span class="annottext">x :: PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158854"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680158853"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceMaintenance3Properties -&gt; IO b
+</span><a href="#local-6989586621680158853"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceMaintenance3Properties -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceMaintenance3Properties -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceMaintenance3Properties -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680158852"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158852"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158852"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158854"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; IO b
+</span><a href="#local-6989586621680158853"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158852"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>  </span><span id="local-6989586621680158850"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680158850"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680158849"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158849"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680158847"><span id="local-6989586621680158848"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-type">PhysicalDeviceMaintenance3Properties</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680158846"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680158846"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-179"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158849"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-180"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158849"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-181"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158849"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680158848"><span class="hs-identifier hs-var">maxPerSetDescriptors</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-182"></span><span>    </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; DeviceSize -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158849"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr DeviceSize
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceSize
+</span><a href="#local-6989586621680158847"><span class="hs-identifier hs-var">maxMemoryAllocationSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-183"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680158846"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-184"></span><span>  </span><span id="local-6989586621680158845"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-185"></span><span>  </span><span id="local-6989586621680158843"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-186"></span><span>  </span><span id="local-6989586621680158841"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceMaintenance3Properties -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680158839"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158839"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680158838"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680158838"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-187"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158839"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-188"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158839"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-189"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158839"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-190"></span><span>    </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; DeviceSize -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158839"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr DeviceSize
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceSize
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-191"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680158838"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-192"></span><span>
+</span><span id="line-193"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-type">PhysicalDeviceMaintenance3Properties</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-194"></span><span>  </span><span id="local-6989586621680158834"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceMaintenance3Properties
+-&gt; IO PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158834"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680158833"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158833"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-195"></span><span>    </span><span id="local-6989586621680158832"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680158832"><span class="hs-identifier hs-var">maxPerSetDescriptors</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158833"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-196"></span><span>    </span><span id="local-6989586621680158831"><span class="annot"><span class="annottext">DeviceSize
+</span><a href="#local-6989586621680158831"><span class="hs-identifier hs-var">maxMemoryAllocationSize</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; IO DeviceSize
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158833"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties -&gt; Int -&gt; Ptr DeviceSize
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-197"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties
+-&gt; IO PhysicalDeviceMaintenance3Properties
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceMaintenance3Properties
+ -&gt; IO PhysicalDeviceMaintenance3Properties)
+-&gt; PhysicalDeviceMaintenance3Properties
+-&gt; IO PhysicalDeviceMaintenance3Properties
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; DeviceSize -&gt; PhysicalDeviceMaintenance3Properties
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-var">PhysicalDeviceMaintenance3Properties</span></a></span><span>
+</span><span id="line-198"></span><span>             </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680158832"><span class="hs-identifier hs-var">maxPerSetDescriptors</span></a></span><span> </span><span class="annot"><span class="annottext">DeviceSize
+</span><a href="#local-6989586621680158831"><span class="hs-identifier hs-var">maxMemoryAllocationSize</span></a></span><span>
+</span><span id="line-199"></span><span>
+</span><span id="line-200"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680158821"><span id="local-6989586621680158823"><span id="local-6989586621680158825"><span id="local-6989586621680158827"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-type">PhysicalDeviceMaintenance3Properties</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-201"></span><span>  </span><span id="local-6989586621680158817"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceMaintenance3Properties -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-202"></span><span>  </span><span id="local-6989586621680158815"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceMaintenance3Properties -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-203"></span><span>  </span><span id="local-6989586621680158813"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceMaintenance3Properties
+-&gt; IO PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158813"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+-&gt; IO PhysicalDeviceMaintenance3Properties
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-204"></span><span>  </span><span id="local-6989586621680158812"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; IO ()
+</span><a href="#local-6989586621680158812"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680158811"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158811"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680158810"><span class="annot"><span class="annottext">poked :: PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158810"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+-&gt; PhysicalDeviceMaintenance3Properties -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158811"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158810"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-205"></span><span>
+</span><span id="line-206"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-type">PhysicalDeviceMaintenance3Properties</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-207"></span><span>  </span><span id="local-6989586621680158807"><span class="annot"><span class="annottext">zero :: PhysicalDeviceMaintenance3Properties
+</span><a href="#local-6989586621680158807"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; DeviceSize -&gt; PhysicalDeviceMaintenance3Properties
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#PhysicalDeviceMaintenance3Properties"><span class="hs-identifier hs-var">PhysicalDeviceMaintenance3Properties</span></a></span><span>
+</span><span id="line-208"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-209"></span><span>           </span><span class="annot"><span class="annottext">DeviceSize
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-210"></span><span>
+</span><span id="line-211"></span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- | VkDescriptorSetLayoutSupport - Structure returning information about</span><span>
+</span><span id="line-213"></span><span class="hs-comment">-- whether a descriptor set layout can be supported</span><span>
+</span><span id="line-214"></span><span class="hs-comment">--</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-216"></span><span class="hs-comment">--</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- @supported@ is set to 'Vulkan.Core10.FundamentalTypes.TRUE' if the</span><span>
+</span><span id="line-218"></span><span class="hs-comment">-- descriptor set /can/ be created, or else is set to</span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.FALSE'.</span><span>
+</span><span id="line-220"></span><span class="hs-comment">--</span><span>
+</span><span id="line-221"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-222"></span><span class="hs-comment">--</span><span>
+</span><span id="line-223"></span><span class="hs-comment">-- -   @sType@ /must/ be</span><span>
+</span><span id="line-224"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT'</span><span>
+</span><span id="line-225"></span><span class="hs-comment">--</span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of</span><span>
+</span><span id="line-227"></span><span class="hs-comment">--     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountLayoutSupport'</span><span>
+</span><span id="line-228"></span><span class="hs-comment">--</span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be</span><span>
+</span><span id="line-230"></span><span class="hs-comment">--     unique</span><span>
+</span><span id="line-231"></span><span class="hs-comment">--</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-233"></span><span class="hs-comment">--</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-235"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- 'getDescriptorSetLayoutSupport',</span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR'</span><span>
+</span><span id="line-238"></span><span class="hs-keyword">data</span><span> </span><span id="DescriptorSetLayoutSupport"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-var">DescriptorSetLayoutSupport</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680158949"><span class="annot"><a href="#local-6989586621680158949"><span class="hs-identifier hs-type">es</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">Type</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DescriptorSetLayoutSupport"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-var">DescriptorSetLayoutSupport</span></a></span></span><span>
+</span><span id="line-239"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.</span><span>
+</span><span id="line-240"></span><span>    </span><span id="%24sel%3Anext%3ADescriptorSetLayoutSupport"><span class="annot"><span class="annottext">DescriptorSetLayoutSupport es -&gt; Chain es
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#%24sel%3Anext%3ADescriptorSetLayoutSupport"><span class="hs-identifier hs-var hs-var">next</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Chain"><span class="hs-identifier hs-type">Chain</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158949"><span class="hs-identifier hs-type">es</span></a></span><span>
+</span><span id="line-241"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @supported@ specifies whether the descriptor set layout /can/ be</span><span>
+</span><span id="line-242"></span><span>    </span><span class="hs-comment">-- created.</span><span>
+</span><span id="line-243"></span><span>    </span><span id="%24sel%3Asupported%3ADescriptorSetLayoutSupport"><span class="annot"><span class="annottext">DescriptorSetLayoutSupport es -&gt; Bool
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#%24sel%3Asupported%3ADescriptorSetLayoutSupport"><span class="hs-identifier hs-var hs-var">supported</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-244"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-245"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">DescriptorSetLayoutSupport</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">es</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="hs-identifier">Type</span><span class="hs-special">]</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680158797"><span id="local-6989586621680158799"><span id="local-6989586621680158801"><span id="local-6989586621680158803"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Chain"><span class="hs-identifier hs-type">Chain</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158803"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158803"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span></span></span></span></span><span>
+</span><span id="line-250"></span><span>
+</span><span id="line-251"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extensible"><span class="hs-identifier hs-type">Extensible</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-252"></span><span>  </span><span id="local-6989586621680158791"><span class="annot"><span class="annottext">extensibleType :: StructureType
+</span><a href="Vulkan.CStruct.Extends.html#extensibleType"><span class="hs-identifier hs-var hs-var hs-var hs-var">extensibleType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT</span></a></span><span>
+</span><span id="line-253"></span><span>  </span><span id="local-6989586621680158789"><span class="annot"><span class="annottext">setNext :: DescriptorSetLayoutSupport ds
+-&gt; Chain es -&gt; DescriptorSetLayoutSupport es
+</span><a href="Vulkan.CStruct.Extends.html#setNext"><span class="hs-identifier hs-var hs-var hs-var hs-var">setNext</span></a></span></span><span> </span><span id="local-6989586621680158787"><span class="annot"><span class="annottext">x :: DescriptorSetLayoutSupport ds
+</span><a href="#local-6989586621680158787"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680158786"><span class="annot"><span class="annottext">next :: Chain es
+</span><a href="#local-6989586621680158786"><span class="hs-identifier hs-var">next</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DescriptorSetLayoutSupport ds
+</span><a href="#local-6989586621680158787"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">{</span><span class="annot"><span class="annottext">$sel:next:DescriptorSetLayoutSupport :: Chain es
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#%24sel%3Anext%3ADescriptorSetLayoutSupport"><span class="hs-identifier hs-var">next</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Chain es
+</span><a href="#local-6989586621680158786"><span class="hs-identifier hs-var">next</span></a></span><span class="hs-special">}</span><span>
+</span><span id="line-254"></span><span>  </span><span id="local-6989586621680158785"><span class="annot"><span class="annottext">getNext :: DescriptorSetLayoutSupport es -&gt; Chain es
+</span><a href="Vulkan.CStruct.Extends.html#getNext"><span class="hs-identifier hs-var hs-var hs-var hs-var">getNext</span></a></span></span><span> </span><span id="local-6989586621680158782"><span id="local-6989586621680158783"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Chain es
+</span><a href="#local-6989586621680158783"><span class="hs-identifier hs-var">next</span></a></span><span>
+</span><span id="line-255"></span><span>  </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#extends"><span class="hs-identifier hs-type">extends</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680158780"><span class="annot"><a href="#local-6989586621680158780"><span class="hs-identifier hs-type">e</span></a></span></span><span> </span><span id="local-6989586621680158779"><span class="annot"><a href="#local-6989586621680158779"><span class="hs-identifier hs-type">b</span></a></span></span><span> </span><span id="local-6989586621680158778"><span class="annot"><a href="#local-6989586621680158778"><span class="hs-identifier hs-type">proxy</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span> </span><span class="annot"><a href="#local-6989586621680158780"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680158778"><span class="hs-identifier hs-type">proxy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158780"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extends"><span class="hs-identifier hs-type">Extends</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158780"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680158779"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="#local-6989586621680158779"><span class="hs-identifier hs-type">b</span></a></span><span>
+</span><span id="line-256"></span><span>  </span><span id="local-6989586621680158777"><span class="annot"><span class="annottext">extends :: proxy e -&gt; (Extends DescriptorSetLayoutSupport e =&gt; b) -&gt; Maybe b
+</span><a href="#local-6989586621680158777"><span class="hs-identifier hs-var hs-var hs-var hs-var">extends</span></a></span></span><span> </span><span class="hs-identifier">_</span><span> </span><span id="local-6989586621680158776"><span class="annot"><span class="annottext">f :: Extends DescriptorSetLayoutSupport e =&gt; b
+</span><a href="#local-6989586621680158776"><span class="hs-identifier hs-var">f</span></a></span></span><span>
+</span><span id="line-257"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Refl</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Typeable e,
+ Typeable DescriptorSetVariableDescriptorCountLayoutSupport) =&gt;
+Maybe (e :~: DescriptorSetVariableDescriptorCountLayoutSupport)
+forall k (a :: k) (b :: k).
+(Typeable a, Typeable b) =&gt;
+Maybe (a :~: b)
+</span><span class="hs-identifier hs-var">eqT</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="#local-6989586621680158780"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.html#DescriptorSetVariableDescriptorCountLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetVariableDescriptorCountLayoutSupport</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; Maybe b
+forall a. a -&gt; Maybe a
+</span><span class="hs-identifier hs-var">Just</span></span><span> </span><span class="annot"><span class="annottext">b
+Extends DescriptorSetLayoutSupport e =&gt; b
+</span><a href="#local-6989586621680158776"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-258"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe b
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-259"></span><span>
+</span><span id="line-260"></span><span id="local-6989586621680158775"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680158771"><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extendss"><span class="hs-identifier hs-type">Extendss</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158775"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PokeChain"><span class="hs-identifier hs-type">PokeChain</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158775"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158775"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-261"></span><span>  </span><span id="local-6989586621680158767"><span class="annot"><span class="annottext">withCStruct :: DescriptorSetLayoutSupport es
+-&gt; (Ptr (DescriptorSetLayoutSupport es) -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680158767"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680158766"><span class="annot"><span class="annottext">x :: DescriptorSetLayoutSupport es
+</span><a href="#local-6989586621680158766"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680158765"><span class="annot"><span class="annottext">f :: Ptr (DescriptorSetLayoutSupport es) -&gt; IO b
+</span><a href="#local-6989586621680158765"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr (DescriptorSetLayoutSupport es) -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr (DescriptorSetLayoutSupport es) -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr (DescriptorSetLayoutSupport es) -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680158764"><span class="annot"><span class="annottext">p :: Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158764"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+-&gt; DescriptorSetLayoutSupport es -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158764"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">DescriptorSetLayoutSupport es
+</span><a href="#local-6989586621680158766"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; IO b
+</span><a href="#local-6989586621680158765"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158764"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-262"></span><span>  </span><span id="local-6989586621680158763"><span class="annot"><span class="annottext">pokeCStruct :: Ptr (DescriptorSetLayoutSupport es)
+-&gt; DescriptorSetLayoutSupport es -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680158763"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680158762"><span class="annot"><span class="annottext">p :: Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158762"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680158760"><span id="local-6989586621680158761"><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680158759"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680158759"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-263"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158762"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-264"></span><span>    </span><span id="local-6989586621680158758"><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680158758"><span class="hs-identifier hs-var">pNext''</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Ptr (Chain es) -&gt; Ptr ())
+-&gt; ContT b IO (Ptr (Chain es)) -&gt; ContT b IO (Ptr ())
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Chain es) -&gt; Ptr ()
+forall a b. Ptr a -&gt; Ptr b
+</span><span class="hs-identifier hs-var">castPtr</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO (Ptr (Chain es)) -&gt; ContT b IO (Ptr ()))
+-&gt; (((Ptr (Chain es) -&gt; IO b) -&gt; IO b)
+    -&gt; ContT b IO (Ptr (Chain es)))
+-&gt; ((Ptr (Chain es) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr ())
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">((Ptr (Chain es) -&gt; IO b) -&gt; IO b) -&gt; ContT b IO (Ptr (Chain es))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr (Chain es) -&gt; IO b) -&gt; IO b) -&gt; ContT b IO (Ptr ()))
+-&gt; ((Ptr (Chain es) -&gt; IO b) -&gt; IO b) -&gt; ContT b IO (Ptr ())
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Chain es -&gt; (Ptr (Chain es) -&gt; IO b) -&gt; IO b
+forall (es :: [*]) a.
+PokeChain es =&gt;
+Chain es -&gt; (Ptr (Chain es) -&gt; IO a) -&gt; IO a
+</span><a href="Vulkan.CStruct.Extends.html#withChain"><span class="hs-identifier hs-var">withChain</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Chain es
+</span><a href="#local-6989586621680158761"><span class="hs-identifier hs-var">next</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-265"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158762"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680158758"><span class="hs-identifier hs-var">pNext''</span></a></span><span>
+</span><span id="line-266"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158762"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680158760"><span class="hs-identifier hs-var">supported</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-267"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680158759"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-268"></span><span>  </span><span id="local-6989586621680158756"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680158756"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-269"></span><span>  </span><span id="local-6989586621680158755"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680158755"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-270"></span><span>  </span><span id="local-6989586621680158754"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr (DescriptorSetLayoutSupport es) -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680158754"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680158753"><span class="annot"><span class="annottext">p :: Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158753"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680158752"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680158752"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-271"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158753"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-272"></span><span>    </span><span id="local-6989586621680158751"><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680158751"><span class="hs-identifier hs-var">pNext'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Ptr (Chain es) -&gt; Ptr ())
+-&gt; ContT b IO (Ptr (Chain es)) -&gt; ContT b IO (Ptr ())
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-identifier hs-var">fmap</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Chain es) -&gt; Ptr ()
+forall a b. Ptr a -&gt; Ptr b
+</span><span class="hs-identifier hs-var">castPtr</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO (Ptr (Chain es)) -&gt; ContT b IO (Ptr ()))
+-&gt; (((Ptr (Chain es) -&gt; IO b) -&gt; IO b)
+    -&gt; ContT b IO (Ptr (Chain es)))
+-&gt; ((Ptr (Chain es) -&gt; IO b) -&gt; IO b)
+-&gt; ContT b IO (Ptr ())
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">((Ptr (Chain es) -&gt; IO b) -&gt; IO b) -&gt; ContT b IO (Ptr (Chain es))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((Ptr (Chain es) -&gt; IO b) -&gt; IO b) -&gt; ContT b IO (Ptr ()))
+-&gt; ((Ptr (Chain es) -&gt; IO b) -&gt; IO b) -&gt; ContT b IO (Ptr ())
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">forall a. PokeChain es =&gt; (Ptr (Chain es) -&gt; IO a) -&gt; IO a
+forall (es :: [*]) a.
+PokeChain es =&gt;
+(Ptr (Chain es) -&gt; IO a) -&gt; IO a
+</span><a href="Vulkan.CStruct.Extends.html#withZeroChain"><span class="hs-identifier hs-var">withZeroChain</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="#local-6989586621680158775"><span class="hs-identifier hs-type">es</span></a></span><span>
+</span><span id="line-273"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158753"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680158751"><span class="hs-identifier hs-var">pNext'</span></a></span><span>
+</span><span id="line-274"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158753"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-275"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680158752"><span class="hs-identifier hs-var">f</span></a></span></span><span>
+</span><span id="line-276"></span><span>
+</span><span id="line-277"></span><span id="local-6989586621680158749"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Extends.html#Extendss"><span class="hs-identifier hs-type">Extendss</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158749"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Extends.html#PeekChain"><span class="hs-identifier hs-type">PeekChain</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158749"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158749"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-278"></span><span>  </span><span id="local-6989586621680158747"><span class="annot"><span class="annottext">peekCStruct :: Ptr (DescriptorSetLayoutSupport es)
+-&gt; IO (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158747"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680158746"><span class="annot"><span class="annottext">p :: Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158746"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-279"></span><span>    </span><span id="local-6989586621680158745"><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680158745"><span class="hs-identifier hs-var">pNext</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; IO (Ptr ())
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158746"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-280"></span><span>    </span><span id="local-6989586621680158744"><span class="annot"><span class="annottext">Chain es
+</span><a href="#local-6989586621680158744"><span class="hs-identifier hs-var">next</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Chain es) -&gt; IO (Chain es)
+forall (es :: [*]). PeekChain es =&gt; Ptr (Chain es) -&gt; IO (Chain es)
+</span><a href="Vulkan.CStruct.Extends.html#peekChain"><span class="hs-identifier hs-var">peekChain</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr () -&gt; Ptr (Chain es)
+forall a b. Ptr a -&gt; Ptr b
+</span><span class="hs-identifier hs-var">castPtr</span></span><span> </span><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680158745"><span class="hs-identifier hs-var">pNext</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-281"></span><span>    </span><span id="local-6989586621680158742"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680158742"><span class="hs-identifier hs-var">supported</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es)
+</span><a href="#local-6989586621680158746"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (DescriptorSetLayoutSupport es) -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-282"></span><span>    </span><span class="annot"><span class="annottext">DescriptorSetLayoutSupport es -&gt; IO (DescriptorSetLayoutSupport es)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(DescriptorSetLayoutSupport es
+ -&gt; IO (DescriptorSetLayoutSupport es))
+-&gt; DescriptorSetLayoutSupport es
+-&gt; IO (DescriptorSetLayoutSupport es)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Chain es -&gt; Bool -&gt; DescriptorSetLayoutSupport es
+forall (es :: [*]).
+Chain es -&gt; Bool -&gt; DescriptorSetLayoutSupport es
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-var">DescriptorSetLayoutSupport</span></a></span><span>
+</span><span id="line-283"></span><span>             </span><span class="annot"><span class="annottext">Chain es
+</span><a href="#local-6989586621680158744"><span class="hs-identifier hs-var">next</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680158742"><span class="hs-identifier hs-var">supported</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-284"></span><span>
+</span><span id="line-285"></span><span id="local-6989586621680158741"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="#local-6989586621680158741"><span class="hs-identifier hs-type">es</span></a></span><span> </span><span class="annot"><span class="hs-glyph hs-type">~</span></span><span> </span><span class="hs-special">'</span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-type">DescriptorSetLayoutSupport</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680158741"><span class="hs-identifier hs-type">es</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-286"></span><span>  </span><span id="local-6989586621680158739"><span class="annot"><span class="annottext">zero :: DescriptorSetLayoutSupport es
+</span><a href="#local-6989586621680158739"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Chain es -&gt; Bool -&gt; DescriptorSetLayoutSupport es
+forall (es :: [*]).
+Chain es -&gt; Bool -&gt; DescriptorSetLayoutSupport es
+</span><a href="Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.html#DescriptorSetLayoutSupport"><span class="hs-identifier hs-var">DescriptorSetLayoutSupport</span></a></span><span>
+</span><span id="line-287"></span><span>           </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-288"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span></span><span>
+</span><span id="line-289"></span><span>
+</span><span id="line-290"></span></pre></body></html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_NV_shader_sm_builtins</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_SPEC_VERSION"><span class="hs-identifier">NV_SHADER_SM_BUILTINS_SPEC_VERSION</span></a></span><span>
+</span><span id="line-5"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_SPEC_VERSION"><span class="hs-identifier">NV_SHADER_SM_BUILTINS_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span class="hs-identifier">NV_SHADER_SM_BUILTINS_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-7"></span><span>                                                   </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span class="hs-identifier">NV_SHADER_SM_BUILTINS_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                   </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- | VkPhysicalDeviceShaderSMBuiltinsPropertiesNV - Structure describing</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- shader SM Builtins properties supported by an implementation</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceShaderSMBuiltinsPropertiesNV'</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- structure describe the following implementation-dependent limits:</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- If the 'PhysicalDeviceShaderSMBuiltinsPropertiesNV' structure is</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- included in the @pNext@ chain of</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- it is filled with the implementation-dependent limits.</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span></span><span>
+</span><span id="line-55"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @shaderSMCount@ is the number of SMs on the device.</span><span>
+</span><span id="line-56"></span><span>    </span><span id="%24sel%3AshaderSMCount%3APhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Word32
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#%24sel%3AshaderSMCount%3APhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-var hs-var">shaderSMCount</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @shaderWarpsPerSM@ is the maximum number of simultaneously executing</span><span>
+</span><span id="line-58"></span><span>    </span><span class="hs-comment">-- warps on an SM.</span><span>
+</span><span id="line-59"></span><span>    </span><span id="%24sel%3AshaderWarpsPerSM%3APhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Word32
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#%24sel%3AshaderWarpsPerSM%3APhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-var hs-var">shaderWarpsPerSM</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-60"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680044124"><span id="local-6989586621680044126"><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Bool
+(PhysicalDeviceShaderSMBuiltinsPropertiesNV
+ -&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Bool)
+-&gt; (PhysicalDeviceShaderSMBuiltinsPropertiesNV
+    -&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Bool)
+-&gt; Eq PhysicalDeviceShaderSMBuiltinsPropertiesNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Bool
+$c/= :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Bool
+== :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Bool
+$c== :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680044117"><span id="local-6989586621680044119"><span id="local-6989586621680044121"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span></span></span></span><span>
+</span><span id="line-66"></span><span>
+</span><span id="line-67"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680044112"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-68"></span><span>  </span><span id="local-6989586621680044107"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; (Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680044105"><span class="annot"><span class="annottext">x :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044105"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680044104"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b
+</span><a href="#local-6989586621680044104"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680044103"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044103"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044103"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044105"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b
+</span><a href="#local-6989586621680044104"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044103"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span>  </span><span id="local-6989586621680044101"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680044101"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680044100"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044100"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680044098"><span id="local-6989586621680044099"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680044097"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680044097"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-70"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044100"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044100"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044100"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680044099"><span class="hs-identifier hs-var">shaderSMCount</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044100"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680044098"><span class="hs-identifier hs-var">shaderWarpsPerSM</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680044097"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-75"></span><span>  </span><span id="local-6989586621680044096"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-76"></span><span>  </span><span id="local-6989586621680044094"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-77"></span><span>  </span><span id="local-6989586621680044092"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680044090"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044090"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680044089"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680044089"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-78"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044090"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044090"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044090"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044090"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680044089"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-85"></span><span>  </span><span id="local-6989586621680044085"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680044083"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044083"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-86"></span><span>    </span><span id="local-6989586621680044082"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680044082"><span class="hs-identifier hs-var">shaderSMCount</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044083"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span>    </span><span id="local-6989586621680044081"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680044081"><span class="hs-identifier hs-var">shaderWarpsPerSM</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044083"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsPropertiesNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceShaderSMBuiltinsPropertiesNV
+ -&gt; IO PhysicalDeviceShaderSMBuiltinsPropertiesNV)
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsPropertiesNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span><span>
+</span><span id="line-89"></span><span>             </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680044082"><span class="hs-identifier hs-var">shaderSMCount</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680044081"><span class="hs-identifier hs-var">shaderWarpsPerSM</span></a></span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680044071"><span id="local-6989586621680044073"><span id="local-6989586621680044075"><span id="local-6989586621680044077"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-92"></span><span>  </span><span id="local-6989586621680044067"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-93"></span><span>  </span><span id="local-6989586621680044065"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-94"></span><span>  </span><span id="local-6989586621680044063"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044063"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsPropertiesNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-95"></span><span>  </span><span id="local-6989586621680044062"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO ()
+</span><a href="#local-6989586621680044062"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680044061"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044061"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680044060"><span class="annot"><span class="annottext">poked :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044060"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044061"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044060"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span>
+</span><span id="line-97"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680044057"><span class="annot"><span class="annottext">zero :: PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="#local-6989586621680044057"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; PhysicalDeviceShaderSMBuiltinsPropertiesNV
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsPropertiesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsPropertiesNV</span></a></span><span>
+</span><span id="line-99"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-100"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- | VkPhysicalDeviceShaderSMBuiltinsFeaturesNV - Structure describing the</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- shader SM Builtins features that can be supported by an implementation</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' structure</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- describe the following features:</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- If the 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' structure is included</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- in the @pNext@ chain of</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- it is filled with values indicating whether the feature is supported.</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' /can/ also be included in the</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- feature.</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-124"></span><span class="hs-comment">--</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-127"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span></span><span>
+</span><span id="line-128"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @shaderSMBuiltins@ indicates whether the implementation supports the</span><span>
+</span><span id="line-129"></span><span>    </span><span class="hs-comment">-- SPIR-V @ShaderSMBuiltinsNV@ capability.</span><span>
+</span><span id="line-130"></span><span>    </span><span id="%24sel%3AshaderSMBuiltins%3APhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#%24sel%3AshaderSMBuiltins%3APhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-var hs-var">shaderSMBuiltins</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-131"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680044051"><span id="local-6989586621680044053"><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool
+(PhysicalDeviceShaderSMBuiltinsFeaturesNV
+ -&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool)
+-&gt; (PhysicalDeviceShaderSMBuiltinsFeaturesNV
+    -&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool)
+-&gt; Eq PhysicalDeviceShaderSMBuiltinsFeaturesNV
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool
+$c/= :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool
+== :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool
+$c== :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680044045"><span id="local-6989586621680044047"><span id="local-6989586621680044049"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span></span></span></span><span>
+</span><span id="line-136"></span><span>
+</span><span id="line-137"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680044041"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-138"></span><span>  </span><span id="local-6989586621680044037"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; (Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680044037"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680044036"><span class="annot"><span class="annottext">x :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044036"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680044035"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b
+</span><a href="#local-6989586621680044035"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680044034"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044034"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044034"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044036"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b
+</span><a href="#local-6989586621680044035"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044034"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span>  </span><span id="local-6989586621680044033"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680044033"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680044032"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044032"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680044031"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680044030"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680044030"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-140"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044032"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-141"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044032"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044032"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680044031"><span class="hs-identifier hs-var">shaderSMBuiltins</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-143"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680044030"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-144"></span><span>  </span><span id="local-6989586621680044029"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680044029"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-145"></span><span>  </span><span id="local-6989586621680044028"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680044028"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-146"></span><span>  </span><span id="local-6989586621680044027"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680044027"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680044026"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044026"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680044025"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680044025"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-147"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044026"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-148"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044026"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-149"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044026"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680044025"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-151"></span><span>
+</span><span id="line-152"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-153"></span><span>  </span><span id="local-6989586621680044023"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044023"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680044022"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044022"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-154"></span><span>    </span><span id="local-6989586621680044021"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680044021"><span class="hs-identifier hs-var">shaderSMBuiltins</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044022"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsFeaturesNV
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceShaderSMBuiltinsFeaturesNV
+ -&gt; IO PhysicalDeviceShaderSMBuiltinsFeaturesNV)
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsFeaturesNV
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span><span>
+</span><span id="line-156"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680044021"><span class="hs-identifier hs-var">shaderSMBuiltins</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span>
+</span><span id="line-158"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680044011"><span id="local-6989586621680044013"><span id="local-6989586621680044015"><span id="local-6989586621680044017"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-159"></span><span>  </span><span id="local-6989586621680044008"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Int
+</span><a href="#local-6989586621680044008"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-160"></span><span>  </span><span id="local-6989586621680044007"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; Int
+</span><a href="#local-6989586621680044007"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-161"></span><span>  </span><span id="local-6989586621680044006"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044006"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; IO PhysicalDeviceShaderSMBuiltinsFeaturesNV
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-162"></span><span>  </span><span id="local-6989586621680044005"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO ()
+</span><a href="#local-6989586621680044005"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680044004"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044004"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680044003"><span class="annot"><span class="annottext">poked :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044003"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+-&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044004"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044003"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span>
+</span><span id="line-164"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-type">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-165"></span><span>  </span><span id="local-6989586621680044001"><span class="annot"><span class="annottext">zero :: PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="#local-6989586621680044001"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceShaderSMBuiltinsFeaturesNV
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#PhysicalDeviceShaderSMBuiltinsFeaturesNV"><span class="hs-identifier hs-var">PhysicalDeviceShaderSMBuiltinsFeaturesNV</span></a></span><span>
+</span><span id="line-166"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-167"></span><span>
+</span><span id="line-168"></span><span>
+</span><span id="line-169"></span><span class="hs-keyword">type</span><span> </span><span id="NV_SHADER_SM_BUILTINS_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_SPEC_VERSION"><span class="hs-identifier hs-var">NV_SHADER_SM_BUILTINS_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-170"></span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_SHADER_SM_BUILTINS_SPEC_VERSION&quot;</span><span>
+</span><span id="line-172"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_SPEC_VERSION"><span class="hs-identifier hs-type">NV_SHADER_SM_BUILTINS_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680044150"><span class="annot"><a href="#local-6989586621680044150"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680044150"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680044150"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-173"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_SHADER_SM_BUILTINS_SPEC_VERSION"><span id="%24mNV_SHADER_SM_BUILTINS_SPEC_VERSION"><span id="NV_SHADER_SM_BUILTINS_SPEC_VERSION"><span class="annot"><span class="annottext">$bNV_SHADER_SM_BUILTINS_SPEC_VERSION :: a
+$mNV_SHADER_SM_BUILTINS_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#%24bNV_SHADER_SM_BUILTINS_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">NV_SHADER_SM_BUILTINS_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-174"></span><span>
+</span><span id="line-175"></span><span>
+</span><span id="line-176"></span><span class="hs-keyword">type</span><span> </span><span id="NV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span class="hs-identifier hs-var">NV_SHADER_SM_BUILTINS_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_shader_sm_builtins&quot;</span></span><span>
+</span><span id="line-177"></span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_NV_SHADER_SM_BUILTINS_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-179"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#NV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span class="hs-identifier hs-type">NV_SHADER_SM_BUILTINS_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680044146"><span class="annot"><a href="#local-6989586621680044146"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680044146"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680044146"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680044146"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-180"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bNV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span id="%24mNV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span id="NV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span class="annot"><span class="annottext">$bNV_SHADER_SM_BUILTINS_EXTENSION_NAME :: a
+$mNV_SHADER_SM_BUILTINS_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_NV_shader_sm_builtins.html#%24bNV_SHADER_SM_BUILTINS_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">NV_SHADER_SM_BUILTINS_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_NV_shader_sm_builtins&quot;</span></span><span>
+</span><span id="line-181"></span><span>
+</span><span id="line-182"></span></pre></body></html>
