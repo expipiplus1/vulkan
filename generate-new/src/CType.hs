@@ -192,7 +192,7 @@ cTypeSize constantValue nonBaseSize = \case
   Float                          -> Just (4, 4)
   Double                         -> Just (8, 8)
   Ptr _ _                        -> Just (8, 8)
-  -- ^ TODO: 32 bit support
+  --- ^ TODO: 32 bit support
   Array _ (NumericArraySize n) t -> do
     ~(es, ea) <- cTypeSize constantValue nonBaseSize t
     Just (es * fromIntegral n, ea)
