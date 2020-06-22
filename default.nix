@@ -137,6 +137,8 @@ let
         addExtraLibrary drv pkgs.vulkan-headers
       else if name == "vulkan-utils" then
         addExtraLibrary drv pkgs.vulkan-headers
+      else if name == "generate-new" then
+        dontHaddock drv
       else
         drv;
     in disableLibraryProfiling drv';
