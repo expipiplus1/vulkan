@@ -330,6 +330,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (Physica
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PhysicalDeviceDiscardRectanglePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_scissor_exclusive (PhysicalDeviceExclusiveScissorFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state (PhysicalDeviceExtendedDynamicStateFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceExternalBufferInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities (PhysicalDeviceExternalFenceInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceExternalImageFormatInfo)
@@ -788,6 +789,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceVulkan12Features = ()
   Extends DeviceCreateInfo PhysicalDeviceCoherentMemoryFeaturesAMD = ()
   Extends DeviceCreateInfo PhysicalDeviceCustomBorderColorFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceExtendedDynamicStateFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceDiagnosticsConfigFeaturesNV = ()
   Extends DeviceCreateInfo DeviceDiagnosticsConfigCreateInfoNV = ()
   Extends DeviceCreateInfo PhysicalDeviceRobustness2FeaturesEXT = ()
@@ -901,6 +903,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVulkan12Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCoherentMemoryFeaturesAMD = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCustomBorderColorFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceExtendedDynamicStateFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDiagnosticsConfigFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRobustness2FeaturesEXT = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
@@ -1352,6 +1355,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT -> go @PhysicalDeviceCustomBorderColorPropertiesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT -> go @PhysicalDeviceCustomBorderColorFeaturesEXT
   STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR -> go @DeferredOperationInfoKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT -> go @PhysicalDeviceExtendedDynamicStateFeaturesEXT
   STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM -> go @RenderPassTransformBeginInfoQCOM
   STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM -> go @CommandBufferInheritanceRenderPassTransformInfoQCOM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV -> go @PhysicalDeviceDiagnosticsConfigFeaturesNV
@@ -1643,6 +1647,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceCustomBorderColorPropertiesEXT #-}
 {-# complete (::&) :: PhysicalDeviceCustomBorderColorFeaturesEXT #-}
 {-# complete (::&) :: DeferredOperationInfoKHR #-}
+{-# complete (::&) :: PhysicalDeviceExtendedDynamicStateFeaturesEXT #-}
 {-# complete (::&) :: RenderPassTransformBeginInfoQCOM #-}
 {-# complete (::&) :: CommandBufferInheritanceRenderPassTransformInfoQCOM #-}
 {-# complete (::&) :: PhysicalDeviceDiagnosticsConfigFeaturesNV #-}

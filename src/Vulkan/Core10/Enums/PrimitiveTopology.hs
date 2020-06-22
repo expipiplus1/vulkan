@@ -63,7 +63,8 @@ import Vulkan.Zero (Zero)
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'
+-- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 newtype PrimitiveTopology = PrimitiveTopology Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

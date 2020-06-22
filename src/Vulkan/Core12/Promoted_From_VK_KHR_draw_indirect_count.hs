@@ -178,6 +178,11 @@ foreign import ccall
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
@@ -211,6 +216,59 @@ foreign import ccall
 --     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
+--
+-- -   If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     dynamic state enabled, then then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @viewportCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ match the
+--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
+--     of the pipeline
+--
+-- -   If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic state enabled, then then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @scissorCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     /must/ match the
+--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
+--     of the pipeline
+--
+-- -   If the bound graphics pipeline state was created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic states enabled then both
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     and
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @viewportCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ match the @scissorCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--
+-- -   If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
 --
 -- -   All vertex input bindings accessed via vertex input variables
 --     declared in the vertex shader entry point’s interface /must/ have
@@ -503,6 +561,11 @@ foreign import ccall
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
@@ -536,6 +599,59 @@ foreign import ccall
 --     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
+--
+-- -   If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     dynamic state enabled, then then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @viewportCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ match the
+--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
+--     of the pipeline
+--
+-- -   If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic state enabled, then then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @scissorCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     /must/ match the
+--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
+--     of the pipeline
+--
+-- -   If the bound graphics pipeline state was created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic states enabled then both
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     and
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @viewportCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ match the @scissorCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--
+-- -   If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
 --
 -- -   All vertex input bindings accessed via vertex input variables
 --     declared in the vertex shader entry point’s interface /must/ have

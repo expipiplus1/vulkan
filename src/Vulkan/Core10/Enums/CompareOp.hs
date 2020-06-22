@@ -30,7 +30,9 @@ import Vulkan.Zero (Zero)
 --
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo',
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
--- 'Vulkan.Core10.Pipeline.StencilOpState'
+-- 'Vulkan.Core10.Pipeline.StencilOpState',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
 newtype CompareOp = CompareOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

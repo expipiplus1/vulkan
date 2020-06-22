@@ -1441,6 +1441,11 @@ foreign import ccall
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
 --
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
 -- -   Any shader group handle referenced by this call /must/ have been
 --     queried from the currently bound ray tracing shader pipeline
 --
@@ -2122,6 +2127,11 @@ foreign import ccall
 --     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command /must/ not be a protected
 --     resource
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
 --
 -- -   Any shader group handle referenced by this call /must/ have been
 --     queried from the currently bound ray tracing shader pipeline
@@ -4820,7 +4830,7 @@ instance es ~ '[] => Zero (AccelerationStructureBuildGeometryInfoKHR es) where
 --     geometry doesn’t use indices, the offset @primitiveOffset@ from
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexData@ /must/
 --     be a multiple of the component size of
---     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexType@
+--     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@
 --
 -- -   For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', the offset
 --     @transformOffset@ from

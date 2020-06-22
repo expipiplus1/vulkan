@@ -650,7 +650,8 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
 -- = See Also
 --
 -- 'PipelineViewportStateCreateInfo',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport'
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 data Viewport = Viewport
   { -- | @x@ and @y@ are the viewport’s upper left corner (x,y).
     x :: Float
@@ -3568,6 +3569,33 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRONT_FACE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT',
+--     or 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP_EXT'
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     is included in the @pDynamicStates@ array then @viewportCount@
+--     /must/ be zero
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     is included in the @pDynamicStates@ array then @scissorCount@ /must/
+--     be zero
 --
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',

@@ -516,7 +516,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     -   If @tiling@ is
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', then
 --         @imageCreateFormatFeatures@ is the value of
---         'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@linearTilingFeatures@
+--         'Vulkan.Core10.DeviceInitialization.FormatProperties'::@linearTilingFeatures@
 --         found by calling
 --         'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --         with parameter @format@ equal to 'ImageCreateInfo'::@format@.
@@ -527,7 +527,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --         'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --         structure with non-zero @externalFormat@, then
 --         @imageCreateFormatFeatures@ is value of
---         'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@optimalTilingFeatures@
+--         'Vulkan.Core10.DeviceInitialization.FormatProperties'::@optimalTilingFeatures@
 --         found by calling
 --         'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --         with parameter @format@ equal to 'ImageCreateInfo'::@format@.

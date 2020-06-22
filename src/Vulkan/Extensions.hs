@@ -40,6 +40,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_discard_rectangles
                           , module Vulkan.Extensions.VK_EXT_display_control
                           , module Vulkan.Extensions.VK_EXT_display_surface_counter
+                          , module Vulkan.Extensions.VK_EXT_extended_dynamic_state
                           , module Vulkan.Extensions.VK_EXT_external_memory_dma_buf
                           , module Vulkan.Extensions.VK_EXT_external_memory_host
                           , module Vulkan.Extensions.VK_EXT_filter_cubic
@@ -247,6 +248,7 @@ import Vulkan.Extensions.VK_EXT_direct_mode_display
 import Vulkan.Extensions.VK_EXT_discard_rectangles
 import Vulkan.Extensions.VK_EXT_display_control
 import Vulkan.Extensions.VK_EXT_display_surface_counter
+import Vulkan.Extensions.VK_EXT_extended_dynamic_state
 import Vulkan.Extensions.VK_EXT_external_memory_dma_buf
 import Vulkan.Extensions.VK_EXT_external_memory_host
 import Vulkan.Extensions.VK_EXT_filter_cubic

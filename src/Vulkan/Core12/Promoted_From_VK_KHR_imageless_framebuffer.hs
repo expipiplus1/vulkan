@@ -302,6 +302,10 @@ instance Zero FramebufferAttachmentImageInfo where
 -- -   Each element of @pAttachments@ /must/ have been created with the
 --     identity swizzle
 --
+-- -   Each element of @pAttachments@ /must/ have been created with
+--     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@viewType@ not equal
+--     to 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

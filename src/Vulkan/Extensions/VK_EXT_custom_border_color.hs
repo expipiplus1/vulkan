@@ -57,7 +57,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   If the sampler is used to sample an image view of
---     'Vulkan.Core10.Enums.Format.FORMAT_B4G4R4A4_UNORM_PACK16' format
+--     'Vulkan.Core10.Enums.Format.FORMAT_B4G4R4A4_UNORM_PACK16',
+--     'Vulkan.Core10.Enums.Format.FORMAT_B5G6R5_UNORM_PACK16', or
+--     'Vulkan.Core10.Enums.Format.FORMAT_B5G5R5A1_UNORM_PACK16' format
 --     then @format@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --

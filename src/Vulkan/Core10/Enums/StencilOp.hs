@@ -33,7 +33,8 @@ import Vulkan.Zero (Zero)
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Pipeline.StencilOpState'
+-- 'Vulkan.Core10.Pipeline.StencilOpState',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
 newtype StencilOp = StencilOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
