@@ -108,7 +108,7 @@ cat <<EOF
   --------------------------------
 
   # Open a PR for this release
-  git push
+  git push --set-upstream origin
   git pull-request
   # Wait for CI to complete
   git push --tags
@@ -124,15 +124,22 @@ if [ "$vulkan_version" ]; then
   cabal upload dist-newstyle/sdist/vulkan-$vulkan_version.tar.gz
   cabal upload --doc dist-newstyle/vulkan-$vulkan_version-docs.tar.gz
 
+  # After checking everything's OK
+  cabal upload --publish dist-newstyle/sdist/vulkan-$vulkan_version.tar.gz
+  cabal upload --publish --doc dist-newstyle/vulkan-$vulkan_version-docs.tar.gz
+
 EOF
 fi
 
 if [ "$vma_version" ]; then
   cat <<EOF
-  # Upload VulkanMemoryAllocator-$vulkan_version
+  # Upload VulkanMemoryAllocator-$vma_version
   cabal upload dist-newstyle/sdist/VulkanMemoryAllocator-$vma_version.tar.gz
   cabal upload --doc dist-newstyle/VulkanMemoryAllocator-$vma_version-docs.tar.gz
 
+  # After checking everything's OK
+  cabal upload --publish dist-newstyle/sdist/VulkanMemoryAllocator-$vma_version.tar.gz
+  cabal upload --publish --doc dist-newstyle/VulkanMemoryAllocator-$vma_version-docs.tar.gz
 EOF
 fi
 
