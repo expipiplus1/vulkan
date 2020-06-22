@@ -58,9 +58,6 @@ if [ "$vulkan_version" ]; then
   sed -i.bak "s/^## WIP$/\0\n\n## [$vulkan_version] - $(date --iso-8601)/" changelog.md
   hpack
   git add package.yaml vulkan.cabal changelog.md
-
-  cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source"
-  cabal sdist
 fi
 
 if [ "$vma_version" ]; then
@@ -74,10 +71,6 @@ if [ "$vma_version" ]; then
   sed -i.bak "s/^## WIP$/\0\n\n## [$vma_version] - $(date --iso-8601)/" VulkanMemoryAllocator/changelog.md
   hpack VulkanMemoryAllocator
   git add VulkanMemoryAllocator/package.yaml VulkanMemoryAllocator/vulkan.cabal VulkanMemoryAllocator/changelog.md
-
-  cabal haddock --haddock-option="--hyperlinked-source"
-  cabal haddock --haddock-for-hackage --haddock-option="--hyperlinked-source" VulkanMemoryAllocator
-  cabal sdist
 fi
 
 branch="release-$tag"
@@ -87,6 +80,19 @@ git commit -m "$tag"
 if [ "$vulkan_version" ]; then
   git tag "$tag"
   git push --tags
+fi
+
+if [ "$vulkan_version" ]; then
+  echo "Generating vulkan tarballs"
+  cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source"
+  cabal sdist
+fi
+
+if [ "$vma_version" ]; then
+  echo "generating VulkanMemoryAllocator tarballs"
+  cabal haddock --haddock-option="--hyperlinked-source"
+  cabal haddock --haddock-for-hackage --haddock-option="--hyperlinked-source" VulkanMemoryAllocator
+  cabal sdist VulkanMemoryAllocator
 fi
 
 if [ "$haddocks" ]; then
