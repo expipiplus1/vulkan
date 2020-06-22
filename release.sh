@@ -70,7 +70,7 @@ if [ "$vma_version" ]; then
   sed -i.bak "s/- vulkan [0-9 .<>=*]*/- vulkan == $vulkan_breaking.*/" VulkanMemoryAllocator/package.yaml
   sed -i.bak "s/^## WIP$/\0\n\n## [$vma_version] - $(date --iso-8601)/" VulkanMemoryAllocator/changelog.md
   hpack VulkanMemoryAllocator
-  git add VulkanMemoryAllocator/package.yaml VulkanMemoryAllocator/vulkan.cabal VulkanMemoryAllocator/changelog.md
+  git add VulkanMemoryAllocator/package.yaml VulkanMemoryAllocator/VulkanMemoryAllocator.cabal VulkanMemoryAllocator/changelog.md
 fi
 
 branch="release-$tag"
