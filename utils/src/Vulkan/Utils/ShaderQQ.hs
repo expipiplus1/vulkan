@@ -20,6 +20,7 @@ import           Data.List.Extra
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Quote
 import           System.Exit
+import           System.FilePath
 import           System.IO.Temp
 import           System.Process.Typed
 
@@ -117,7 +118,9 @@ processValidatorMessages = foldr grep [] . filter (not . null) . lines . BSL.unp
       | "ERROR: "   `isPrefixOf` line = cut line : acc
       | otherwise                     = acc
 
-    cut = drop 1 . dropWhile (/= '/')
+    cut line = takeFileName path <> msg
+      where
+        (path, msg) = break (== ':') . drop 1 $ dropWhile (/= ' ') line
 
 -- If possible, insert a #line directive after the #version directive (as well
 -- as the extension which allows filenames in line directives.

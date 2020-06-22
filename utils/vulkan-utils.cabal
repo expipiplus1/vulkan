@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4932fa53ef89839352ab8a611016196cf2d6f06cae0690fd721ef21efe0c73f9
+-- hash: bf2abe816ee07e2c6d5e207a4ec2c4a44910f18d6be88017d73e851879ad5078
 
 name:           vulkan-utils
 version:        0.1.1.0
@@ -39,6 +39,7 @@ library
     , bytestring
     , extra
     , file-embed
+    , filepath
     , template-haskell
     , temporary
     , typed-process

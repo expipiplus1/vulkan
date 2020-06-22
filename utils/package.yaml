@@ -15,6 +15,7 @@ library:
     - bytestring
     - extra
     - file-embed
+    - filepath
     - template-haskell
     - temporary
     - typed-process
