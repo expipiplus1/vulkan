@@ -5,6 +5,8 @@ module Vulkan.Utils.ShaderQQ
   , tesc
   , tese
   , vert
+  , GLSLError
+  , GLSLWarning
   , compileShaderQ
   , compileShader
   , processValidatorMessages
@@ -64,26 +66,28 @@ compileShaderQ
   -> Q Exp
   -- ^ Spir-V bytecode
 compileShaderQ stage code = do
-  loc <- location
+  loc                <- location
   (warnings, result) <- compileShader (Just loc) stage code
   case warnings of
-    [] ->
-      pure ()
-    _some ->
-      reportWarning $ prepare warnings
+    []    -> pure ()
+    _some -> reportWarning $ prepare warnings
 
   bs <- case result of
-    Left [] ->
-      fail "Unknown validator error"
+    Left []     -> fail "glslangValidator failed with no errors"
     Left errors -> do
       reportError $ prepare errors
       pure mempty
-    Right bs ->
-      pure bs
+    Right bs -> pure bs
+
   bsToExp bs
-  where
-    prepare [singleLine] = singleLine
-    prepare multiline    = intercalate "\n" $ "glslangValidator:" : map (mappend "        ") multiline
+
+ where
+  prepare [singleLine] = singleLine
+  prepare multiline =
+    intercalate "\n" $ "glslangValidator:" : map (mappend "        ") multiline
+
+type GLSLError = String
+type GLSLWarning = String
 
 -- | Compile a glsl shader to spir-v using glslangValidator
 compileShader
@@ -94,25 +98,25 @@ compileShader
   -- ^ stage
   -> String
   -- ^ glsl code
-  -> m ([String], Either [String] ByteString)
+  -> m ([GLSLWarning], Either [GLSLError] ByteString)
   -- ^ Spir-V bytecode with warnings or errors
-compileShader loc stage code = do
+compileShader loc stage code =
   liftIO $ withSystemTempDirectory "th-shader" $ \dir -> do
     let codeWithLineDirective = maybe code (insertLineDirective code) loc
     let shader = dir <> "/shader." <> stage
         spirv  = dir <> "/shader.spv"
     writeFile shader codeWithLineDirective
 
-    (rc, out, err) <- readProcess $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
+    (rc, out, err) <- readProcess
+      $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
     let (warnings, errors) = processValidatorMessages (out <> err)
     case rc of
       ExitSuccess -> do
         bs <- BS.readFile spirv
         pure (warnings, Right bs)
-      ExitFailure _rc ->
-        pure (warnings, Left errors)
+      ExitFailure _rc -> pure (warnings, Left errors)
 
-processValidatorMessages :: BSL.ByteString -> ([String], [String])
+processValidatorMessages :: BSL.ByteString -> ([GLSLWarning], [GLSLError])
 processValidatorMessages = foldr grep ([], []) . filter (not . null) . lines . BSL.unpack
   where
     grep line (ws, es)
