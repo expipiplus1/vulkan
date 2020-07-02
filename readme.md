@@ -302,6 +302,68 @@ Jonathan Merritt has made an excellent video detailing how to set up everything
 necessary for running the examples on macOS 
 [here](https://www.youtube.com/watch?v=BaBt-CNBfd0).
 
+### Building using Nix
+
+Here is some generally useful information for using the `default.nix` files in
+this repo.
+
+`default.nix { forShell = false; }` evaluates to an attribute set with one
+attribute for each of the following packages
+
+- `vulkan`, the main package of this repository
+- `VulkanMemoryAllocator`, bindings to VMA
+- `vulkan-utils`, a small selection of utility functions for using `vulkan`
+- `vulkan-examples`, some examples, this package is dependency-heavy
+- `generate-new`, the program to generate the source of `vulkan` and
+  `VulkanMemoryAllocator`, also quite dependency-heavy (this only build with
+  ghc 8.8).
+
+You may want to pass your `<nixpkgs>` as `pkgs` to `default.nix` to avoid
+rebuilding a parallel set of haskell packages based on the pegged nixpkgs
+version in `default.nix`. It should probably work with a wide range of
+nixpkgss, however some overrides in `default.nix` may need tweaking.
+
+`nix-build -A vulkan` is probably not terribly useful for using the library as
+it just builds the Haskell library.
+
+`nix-build -A vulkan-examples` will produce a path with several examples,
+however to run these on a non-NixOS platform you'll need to use the
+[`NixGL`](https://github.com/guibou/nixGL) project (or something similar) to
+run these. This isn't something tested very often so may be a little fragile.
+I'd suggest for non-NixOS platforms compiling without using Nix (or better yet
+get reliable instructions for using `NixGL` and open a PR).
+
+This library is currently up to date on nixpkgs master (as of
+https://github.com/NixOS/nixpkgs/commit/af9608d6d133ad9b6de712418db52603bbc8531c
+2020-06-23), so if you're just a consumer it might be best to just use
+`haskellPackages.vulkan` from a recent version there.
+
+For using this repository, I have two workflows:
+
+- For building and running examples
+  - I navigate to the examples directory and use the `default.nix` expression
+    in there to provision a shell with the correct dependencies for the
+    examples.
+  - I also make a `cabal.project` containing `packages: ./`, the reason for
+    this little dance instead of just using the root's `default.nix` is so that
+    nix builds the hoogle database for the dependencies and HIE's completion
+    and indexing works much better for external dependencies instead of using a
+    multi-package project as is the root.
+  - This will override nixpkgs's `vulkan` and `VulkanMemoryAllocator` libraries
+    with the ones in the repo, as well as building `vulkan-utils`.
+
+- For modifying the generation program I navigate to the `generate-new`
+  directory and run `nix-shell ..` to use `default.nix` in the repo's root to
+  provision a shell with:
+  - The dependencies for running the generator
+  - And the dependencies for compiling the `vulkan` source it spits out.
+  - I run the generator with `ghci $(HIE_BIOS_OUTPUT=/dev/stdout ./flags.sh $(pwd)/vk/Main.hs) vk/Main.hs +RTS -N16`
+
+For using the source in this package externally it may be easiest to do
+whatever you do to get a haskell environment with nix and simply override the
+source to point to this repo, the dependencies haven't changed for a while, so
+any version of nixpkgs from the last 3 months should do the trick.
+
 ### Building on Windows
 
 - Clone this repo
