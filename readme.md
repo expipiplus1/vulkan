@@ -308,7 +308,7 @@ Here is some generally useful information for using the `default.nix` files in
 this repo.
 
 `default.nix { forShell = false; }` evaluates to an attribute set with one
-attribute for each of the following packages
+attribute for each of the following packages:
 
 - `vulkan`, the main package of this repository
 - `VulkanMemoryAllocator`, bindings to VMA
@@ -321,7 +321,11 @@ attribute for each of the following packages
 You may want to pass your `<nixpkgs>` as `pkgs` to `default.nix` to avoid
 rebuilding a parallel set of haskell packages based on the pegged nixpkgs
 version in `default.nix`. It should probably work with a wide range of
-nixpkgss, however some overrides in `default.nix` may need tweaking.
+nixpkgss, however some overrides in `default.nix` may need tweaking,
+
+Alternatively you could use the Cachix repo
+https://app.cachix.org/cache/vulkan-haskell which contains the latest closure
+for the packages in this repo.
 
 `nix-build -A vulkan` is probably not terribly useful for using the library as
 it just builds the Haskell library.
