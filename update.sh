@@ -14,6 +14,7 @@ git add generate-new/Vulkan-Docs
 
 if ! ./regenerate.sh; then
   echo "Failed to regenerate vulkan source"
+  git restore --staged src/Vulkan src/Vulkan.hs
   git checkout src/Vulkan src/Vulkan.hs
   exit 1
 fi
