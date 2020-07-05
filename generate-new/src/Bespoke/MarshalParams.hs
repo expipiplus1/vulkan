@@ -125,6 +125,8 @@ isPassAsPointerType' = \case
              , "ANativeWindow"
              , "CAMetalLayer"
              , "SECURITY_ATTRIBUTES"
+             , "IDirectFB"
+             , "IDirectFBSurface"
              ]
     -> True
   _ -> False
