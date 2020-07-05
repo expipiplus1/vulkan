@@ -8,7 +8,7 @@ version=$1
 
 echo "Updating Vulkan-Docs"
 git -C generate-new/Vulkan-Docs fetch
-git -C generate-new/Vulkan-Docs checkout v$version
+git -C generate-new/Vulkan-Docs checkout "v$version"
 
 git add generate-new/Vulkan-Docs
 

@@ -30,7 +30,7 @@ indexPath=$($stackCommand 2>&1 |
   head -n1)
 
 docPath=$(dirname "$indexPath")
-printf "Docs generated in $docPath\n"
+printf "Docs generated in %s\n" "$docPath"
 
 mkdir -p "$out"
 
@@ -48,7 +48,7 @@ go(){
 
   printf "Making any links to local packages on Hackage relative\n"
   fd . --type d --maxdepth 1 |
-    while read d; do
+    while read -r d; do
       fd '.html$' --type f --exec sed -i 's|<a href="'"$remote$d"'/docs|<a href="../'"$d"'|g'
     done
 }
