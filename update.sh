@@ -12,7 +12,11 @@ git -C generate-new/Vulkan-Docs checkout "v$version"
 
 git add generate-new/Vulkan-Docs
 
-./regenerate.sh "$version"
+if ! ./regenerate.sh "$version"; then
+  echo "Failed to regenerate vulkan source"
+  git checkout src/Vulkan src/Vulkan.hs
+  exit 1
+fi
 
 git add src
 git add vulkan.cabal
