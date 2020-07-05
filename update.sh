@@ -12,7 +12,7 @@ git -C generate-new/Vulkan-Docs checkout "v$version"
 
 git add generate-new/Vulkan-Docs
 
-if ! ./regenerate.sh "$version"; then
+if ! ./regenerate.sh; then
   echo "Failed to regenerate vulkan source"
   git checkout src/Vulkan src/Vulkan.hs
   exit 1
