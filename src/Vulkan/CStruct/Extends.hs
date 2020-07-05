@@ -161,6 +161,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (DevicePrivateDataCr
 import {-# SOURCE #-} Vulkan.Core10.Device (DeviceQueueCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_global_priority (DeviceQueueGlobalPriorityCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (DeviceQueueInfo2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_directfb_surface (DirectFBSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.OtherTypes (DispatchIndirectCommand)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (DisplayEventInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_display (DisplayModeCreateInfoKHR)
@@ -339,6 +340,8 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capa
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceFeatures2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls (PhysicalDeviceFloatControlsProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map2 (PhysicalDeviceFragmentDensityMap2FeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map2 (PhysicalDeviceFragmentDensityMap2PropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
@@ -761,6 +764,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceRayTracingFeaturesKHR = ()
   Extends DeviceCreateInfo DeviceMemoryOverallocationCreateInfoAMD = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentDensityMapFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceFragmentDensityMap2FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceScalarBlockLayoutFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceUniformBufferStandardLayoutFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceDepthClipEnableFeaturesEXT = ()
@@ -875,6 +879,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMeshShaderFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMapFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMap2FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceScalarBlockLayoutFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceUniformBufferStandardLayoutFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDepthClipEnableFeaturesEXT = ()
@@ -943,6 +948,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceRayTracingPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceRayTracingPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentDensityMapPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentDensityMap2PropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceCooperativeMatrixPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDevicePerformanceQueryPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceShaderSMBuiltinsPropertiesNV = ()
@@ -1289,7 +1295,9 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO -> go @ImageStencilUsageCreateInfo
   STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD -> go @DeviceMemoryOverallocationCreateInfoAMD
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT -> go @PhysicalDeviceFragmentDensityMapFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT -> go @PhysicalDeviceFragmentDensityMap2FeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT -> go @PhysicalDeviceFragmentDensityMapPropertiesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT -> go @PhysicalDeviceFragmentDensityMap2PropertiesEXT
   STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT -> go @RenderPassFragmentDensityMapCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES -> go @PhysicalDeviceScalarBlockLayoutFeatures
   STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR -> go @SurfaceProtectedCapabilitiesKHR
@@ -1581,7 +1589,9 @@ infix 6 ::&
 {-# complete (::&) :: ImageStencilUsageCreateInfo #-}
 {-# complete (::&) :: DeviceMemoryOverallocationCreateInfoAMD #-}
 {-# complete (::&) :: PhysicalDeviceFragmentDensityMapFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceFragmentDensityMap2FeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceFragmentDensityMapPropertiesEXT #-}
+{-# complete (::&) :: PhysicalDeviceFragmentDensityMap2PropertiesEXT #-}
 {-# complete (::&) :: RenderPassFragmentDensityMapCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceScalarBlockLayoutFeatures #-}
 {-# complete (::&) :: SurfaceProtectedCapabilitiesKHR #-}

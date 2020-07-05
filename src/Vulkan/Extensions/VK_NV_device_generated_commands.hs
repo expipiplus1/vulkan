@@ -170,30 +170,27 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   [[VUID-{refpage}-None-02690]] If a 'Vulkan.Core10.Handles.ImageView'
---     is sampled with 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' as a
---     result of this command, then the image view’s
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
+--     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' as a result of this
+--     command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- -   [[VUID-{refpage}-None-02691]] If a 'Vulkan.Core10.Handles.ImageView'
---     is accessed using atomic operations as a result of this command,
---     then the image view’s
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using atomic
+--     operations as a result of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
 --
--- -   [[VUID-{refpage}-None-02692]] If a 'Vulkan.Core10.Handles.ImageView'
---     is sampled with
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
--- -   [[VUID-{refpage}-filterCubic-02694]] Any
---     'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
 --     of this command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
@@ -202,8 +199,7 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   [[VUID-{refpage}-filterCubicMinmax-02695]] Any
---     'Vulkan.Core10.Handles.ImageView' being sampled with
+-- -   Any 'Vulkan.Core10.Handles.ImageView' being sampled with
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
 --     reduction mode of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
@@ -217,58 +213,53 @@ foreign import ccall
 --     returned by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
--- -   [[VUID-{refpage}-flags-02696]] Any 'Vulkan.Core10.Handles.Image'
---     created with a 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
---     containing
+-- -   Any 'Vulkan.Core10.Handles.Image' created with a
+--     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   [[VUID-{refpage}-None-02697]] For each set /n/ that is statically
---     used by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
---     bind point used by this command, a descriptor set /must/ have been
---     bound to /n/ at the same pipeline bind point, with a
+-- -   For each set /n/ that is statically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command, a descriptor set /must/ have been bound to /n/
+--     at the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for set
 --     /n/, with the 'Vulkan.Core10.Handles.PipelineLayout' used to create
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   [[VUID-{refpage}-None-02698]] For each push constant that is
---     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
---     pipeline bind point used by this command, a push constant value
---     /must/ have been set for the same pipeline bind point, with a
+-- -   For each push constant that is statically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command, a push constant value /must/ have been set for
+--     the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   [[VUID-{refpage}-None-02699]] Descriptors in each bound descriptor
---     set, specified via
+-- -   Descriptors in each bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
 --     be valid if they are statically used by the
 --     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
 --     used by this command
 --
--- -   [[VUID-{refpage}-None-02700]] A valid pipeline /must/ be bound to
---     the pipeline bind point used by this command
+-- -   A valid pipeline /must/ be bound to the pipeline bind point used by
+--     this command
 --
--- -   [[VUID-{refpage}-commandBuffer-02701]] If the
+-- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
+--     bind point used by this command requires any dynamic state, that
+--     state /must/ have been set for @commandBuffer@, and done so after
+--     any previously bound pipeline with the corresponding state not
+--     specified as dynamic
+--
+-- -   There /must/ not have been any calls to dynamic state setting
+--     commands for any state not specified as dynamic in the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     point used by this command, since that pipeline was bound
 --
--- -   [[VUID-{refpage}-None-02859]] There /must/ not have been any calls
---     to dynamic state setting commands for any state not specified as
---     dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command, since that pipeline was
---     bound
---
--- -   [[VUID-{refpage}-None-02702]] If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+-- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
+--     bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used to sample from any
 --     'Vulkan.Core10.Handles.Image' with a
@@ -280,23 +271,21 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY', in
 --     any shader stage
 --
--- -   [[VUID-{refpage}-None-02703]] If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+-- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
+--     bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   [[VUID-{refpage}-None-02704]] If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command accesses a
+-- -   If the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
+--     bind point used by this command accesses a
 --     'Vulkan.Core10.Handles.Sampler' object that uses unnormalized
 --     coordinates, that sampler /must/ not be used with any of the SPIR-V
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   [[VUID-{refpage}-None-02705]] If the
+-- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -304,7 +293,7 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   [[VUID-{refpage}-None-02706]] If the
+-- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
 --     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
 --     object bound to the pipeline bind point used by this command
@@ -312,18 +301,17 @@ foreign import ccall
 --     the range of the buffer as specified in the descriptor set bound to
 --     the same pipeline bind point
 --
--- -   [[VUID-{refpage}-commandBuffer-02707]] If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command /must/ not be a protected resource
+-- -   If @commandBuffer@ is an unprotected command buffer, any resource
+--     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
+--     pipeline bind point used by this command /must/ not be a protected
+--     resource
 --
--- -   [[VUID-{refpage}-None-04115]] If a 'Vulkan.Core10.Handles.ImageView'
---     is accessed using @OpImageWrite@ as a result of this command, then
---     the @Type@ of the @Texel@ operand of that instruction /must/ have at
---     least as many components as the image view’s format.
+-- -   If a 'Vulkan.Core10.Handles.ImageView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
 --
--- -   [[VUID-{refpage}-renderPass-02684]] The current render pass /must/
---     be
+-- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
@@ -331,27 +319,25 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   [[VUID-{refpage}-subpass-02685]] The subpass index of the current
---     render pass /must/ be equal to the @subpass@ member of the
+-- -   The subpass index of the current render pass /must/ be equal to the
+--     @subpass@ member of the
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' structure
 --     specified when creating the 'Vulkan.Core10.Handles.Pipeline' bound
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   [[VUID-{refpage}-None-02686]] Every input attachment used by the
---     current subpass /must/ be bound to the pipeline via a descriptor set
+-- -   Every input attachment used by the current subpass /must/ be bound
+--     to the pipeline via a descriptor set
 --
--- -   [[VUID-{refpage}-None-02687]] Image subresources used as attachments
---     in the current render pass /must/ not be accessed in any way other
---     than as an attachment by this command
+-- -   Image subresources used as attachments in the current render pass
+--     /must/ not be accessed in any way other than as an attachment by
+--     this command
 --
--- -   [[VUID-{refpage}-maxMultiviewInstanceIndex-02688]] If the draw is
---     recorded in a render pass instance with multiview enabled, the
---     maximum instance index /must/ be less than or equal to
+-- -   If the draw is recorded in a render pass instance with multiview
+--     enabled, the maximum instance index /must/ be less than or equal to
 --     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
 --
--- -   [[VUID-{refpage}-sampleLocationsEnable-02689]] If the bound graphics
---     pipeline was created with
+-- -   If the bound graphics pipeline was created with
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
 --     set to 'Vulkan.Core10.FundamentalTypes.TRUE' and the current subpass
 --     has a depth\/stencil attachment, then that attachment /must/ have
@@ -359,8 +345,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   [[VUID-{refpage}-viewportCount-03417]] If the bound graphics
---     pipeline state was created with the
+-- -   If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
@@ -373,8 +358,7 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 --     of the pipeline
 --
--- -   [[VUID-{refpage}-scissorCount-03418]] If the bound graphics pipeline
---     state was created with the
+-- -   If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -387,8 +371,7 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 --     of the pipeline
 --
--- -   [[VUID-{refpage}-viewportCount-03419]] If the bound graphics
---     pipeline state was created with both the
+-- -   If the bound graphics pipeline state was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
@@ -402,8 +385,7 @@ foreign import ccall
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --
--- -   [[VUID-{refpage}-primitiveTopology-03420]] If the bound graphics
---     pipeline state was created with the
+-- -   If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
@@ -416,20 +398,20 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
 --
--- -   [[VUID-{refpage}-None-04007]] All vertex input bindings accessed via
---     vertex input variables declared in the vertex shader entry point’s
---     interface /must/ have either valid or
---     'Vulkan.Core10.APIConstants.NULL_HANDLE' buffers bound
+-- -   All vertex input bindings accessed via vertex input variables
+--     declared in the vertex shader entry point’s interface /must/ have
+--     either valid or 'Vulkan.Core10.APIConstants.NULL_HANDLE' buffers
+--     bound
 --
--- -   [[VUID-{refpage}-None-04008]] If the
+-- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, all vertex input bindings accessed via
 --     vertex input variables declared in the vertex shader entry point’s
 --     interface /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   [[VUID-{refpage}-None-02721]] For a given vertex buffer binding, any
---     attribute data fetched /must/ be entirely contained within the
---     corresponding vertex buffer binding, as described in
+-- -   For a given vertex buffer binding, any attribute data fetched /must/
+--     be entirely contained within the corresponding vertex buffer
+--     binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
 -- -   @commandBuffer@ /must/ not be a protected command buffer

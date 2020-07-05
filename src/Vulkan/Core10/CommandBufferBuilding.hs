@@ -4284,7 +4284,7 @@ foreign import ccall
 -- source buffer to the specified region of the destination image.
 --
 -- If the format of @dstImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>),
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 -- regions of each plane to be a target of a copy /must/ be specified
 -- separately using the @pRegions@ member of the 'BufferImageCopy'
 -- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/

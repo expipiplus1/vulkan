@@ -854,7 +854,7 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --     'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN', @objectHandle@
 --     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a valid Vulkan
 --     handle of the type associated with @objectType@ as defined in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types VkObjectType and Vulkan Handle Relationship>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
 --     table
 --
 -- == Valid Usage (Implicit)
@@ -959,7 +959,7 @@ data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
     --
     -- @objectHandle@ /must/ be a valid Vulkan handle of the type associated
     -- with @objectType@ as defined in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types VkObjectType and Vulkan Handle Relationship>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
     -- table
     objectHandle :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.

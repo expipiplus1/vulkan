@@ -1,5 +1,6 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.ImageViewCreateFlagBits  ( ImageViewCreateFlagBits( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
+module Vulkan.Core10.Enums.ImageViewCreateFlagBits  ( ImageViewCreateFlagBits( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+                                                                             , IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
                                                                              , ..
                                                                              )
                                                     , ImageViewCreateFlags
@@ -29,21 +30,27 @@ import Vulkan.Zero (Zero)
 newtype ImageViewCreateFlagBits = ImageViewCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- | 'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT' prohibits the
--- implementation from accessing the fragment density map by the host
--- during 'Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass' as the
--- contents are expected to change after recording
+-- | 'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT' specifies that
+-- the fragment density map will be read by the host during
+-- 'Vulkan.Core10.CommandBuffer.endCommandBuffer' for the primary command
+-- buffer that the render pass is recorded into
+pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT = ImageViewCreateFlagBits 0x00000002
+-- | 'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT' specifies that
+-- the fragment density map will be read by device during
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT = ImageViewCreateFlagBits 0x00000001
 
 type ImageViewCreateFlags = ImageViewCreateFlagBits
 
 instance Show ImageViewCreateFlagBits where
   showsPrec p = \case
+    IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT -> showString "IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT"
     IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT -> showString "IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT"
     ImageViewCreateFlagBits x -> showParen (p >= 11) (showString "ImageViewCreateFlagBits 0x" . showHex x)
 
 instance Read ImageViewCreateFlagBits where
-  readPrec = parens (choose [("IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT", pure IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT)]
+  readPrec = parens (choose [("IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT", pure IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT)
+                            , ("IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT", pure IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT)]
                      +++
                      prec 10 (do
                        expectP (Ident "ImageViewCreateFlagBits")

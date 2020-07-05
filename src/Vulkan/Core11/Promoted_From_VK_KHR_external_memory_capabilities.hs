@@ -518,6 +518,30 @@ instance Zero ExternalBufferProperties where
 -- device and driver combination to use when serializing and de-serializing
 -- pipeline state.
 --
+-- Implementations /should/ return @deviceUUID@ values which are likely to
+-- be unique even in the presence of multiple Vulkan implementations (such
+-- as a GPU driver and a software renderer; two drivers for different GPUs;
+-- or the same Vulkan driver running on two logically different devices).
+--
+-- Khronos\' conformance testing can not guarantee that @deviceUUID@ values
+-- are actually unique, so implementers should make their own best efforts
+-- to ensure this. In particular, hard-coded @deviceUUID@ values,
+-- especially all-@0@ bits, /should/ never be used.
+--
+-- A combination of values unique to the vendor, the driver, and the
+-- hardware environment can be used to provide a @deviceUUID@ which is
+-- unique to a high degree of certainty. Some possible inputs to such a
+-- computation are:
+--
+-- -   Information reported by
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceProperties'
+--
+-- -   PCI device ID (if defined)
+--
+-- -   PCI bus ID, or similar system configuration information.
+--
+-- -   Driver binary checksums.
+--
 -- Note
 --
 -- While 'PhysicalDeviceIDProperties'::@deviceUUID@ is specified to remain

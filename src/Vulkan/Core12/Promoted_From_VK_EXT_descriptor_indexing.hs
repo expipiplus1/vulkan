@@ -14,9 +14,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing  ( PhysicalDeviceD
                                                                , DescriptorBindingFlags
                                                                ) where
 
-import Control.Monad (unless)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
-import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -24,15 +22,12 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
-import qualified Data.Vector (null)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
-import GHC.IO.Exception (IOErrorType(..))
-import GHC.IO.Exception (IOException(..))
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
@@ -786,9 +781,8 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO'
 --
--- -   If @bindingCount@ is not @0@, and @pBindingFlags@ is not @NULL@,
---     @pBindingFlags@ /must/ be a valid pointer to an array of
---     @bindingCount@ valid combinations of
+-- -   If @bindingCount@ is not @0@, @pBindingFlags@ /must/ be a valid
+--     pointer to an array of @bindingCount@ valid combinations of
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
 --     values
 --
@@ -797,13 +791,10 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorSetLayoutBindingFlagsCreateInfo = DescriptorSetLayoutBindingFlagsCreateInfo
-  { -- | @bindingCount@ is zero or the number of elements in @pBindingFlags@.
-    bindingCount :: Word32
-  , -- | @pBindingFlags@ is a pointer to an array of
+  { -- | @pBindingFlags@ is a pointer to an array of
     -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlags'
     -- bitfields, one for each descriptor set layout binding.
-    bindingFlags :: Vector DescriptorBindingFlags
-  }
+    bindingFlags :: Vector DescriptorBindingFlags }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (DescriptorSetLayoutBindingFlagsCreateInfo)
@@ -815,41 +806,31 @@ instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
   pokeCStruct p DescriptorSetLayoutBindingFlagsCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    let pBindingFlagsLength = Data.Vector.length $ (bindingFlags)
-    bindingCount'' <- lift $ if (bindingCount) == 0
-      then pure $ fromIntegral pBindingFlagsLength
-      else do
-        unless (fromIntegral pBindingFlagsLength == (bindingCount) || pBindingFlagsLength == 0) $
-          throwIO $ IOError Nothing InvalidArgument "" "pBindingFlags must be empty or have 'bindingCount' elements" Nothing Nothing
-        pure (bindingCount)
-    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (bindingCount'')
-    pBindingFlags'' <- if Data.Vector.null (bindingFlags)
-      then pure nullPtr
-      else do
-        pPBindingFlags <- ContT $ allocaBytesAligned @DescriptorBindingFlags (((Data.Vector.length (bindingFlags))) * 4) 4
-        lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) ((bindingFlags))
-        pure $ pPBindingFlags
-    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags))) pBindingFlags''
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bindingFlags)) :: Word32))
+    pPBindingFlags' <- ContT $ allocaBytesAligned @DescriptorBindingFlags ((Data.Vector.length (bindingFlags)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags' `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) (bindingFlags)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags))) (pPBindingFlags')
     lift $ f
   cStructSize = 32
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pPBindingFlags' <- ContT $ allocaBytesAligned @DescriptorBindingFlags ((Data.Vector.length (mempty)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags' `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) (mempty)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags))) (pPBindingFlags')
+    lift $ f
 
 instance FromCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
   peekCStruct p = do
     bindingCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     pBindingFlags <- peek @(Ptr DescriptorBindingFlags) ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags)))
-    let pBindingFlagsLength = if pBindingFlags == nullPtr then 0 else (fromIntegral bindingCount)
-    pBindingFlags' <- generateM pBindingFlagsLength (\i -> peek @DescriptorBindingFlags ((pBindingFlags `advancePtrBytes` (4 * (i)) :: Ptr DescriptorBindingFlags)))
+    pBindingFlags' <- generateM (fromIntegral bindingCount) (\i -> peek @DescriptorBindingFlags ((pBindingFlags `advancePtrBytes` (4 * (i)) :: Ptr DescriptorBindingFlags)))
     pure $ DescriptorSetLayoutBindingFlagsCreateInfo
-             bindingCount pBindingFlags'
+             pBindingFlags'
 
 instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
   zero = DescriptorSetLayoutBindingFlagsCreateInfo
-           zero
            mempty
 
 

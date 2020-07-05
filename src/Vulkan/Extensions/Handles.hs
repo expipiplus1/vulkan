@@ -265,6 +265,7 @@ instance Show DisplayModeKHR where
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',
+-- 'Vulkan.Extensions.VK_EXT_directfb_surface.createDirectFBSurfaceEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayPlaneSurfaceKHR',
 -- 'Vulkan.Extensions.VK_EXT_headless_surface.createHeadlessSurfaceEXT',
 -- 'Vulkan.Extensions.VK_MVK_ios_surface.createIOSSurfaceMVK',

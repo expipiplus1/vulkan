@@ -138,6 +138,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 -- = See Also
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
@@ -163,7 +167,8 @@ getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRandROutputDisplayEXT is null" Nothing Nothing
   let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT vkGetRandROutputDisplayEXTPtr
   pPDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
-  _ <- lift $ vkGetRandROutputDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (rrOutput) (pPDisplay)
+  r <- lift $ vkGetRandROutputDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (rrOutput) (pPDisplay)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDisplay <- lift $ peek @DisplayKHR pPDisplay
   pure $ (pDisplay)
 
