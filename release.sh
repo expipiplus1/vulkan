@@ -32,6 +32,8 @@ EOF
   exit 0
 fi
 
+ghc --version
+
 if [ "$vulkan_version" ]; then
   tag=v$vulkan_version
 elif [ "$vma_version" ]; then
