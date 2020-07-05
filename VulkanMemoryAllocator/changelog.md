@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+  - Bump VMA, just documentation change
 
 ## [0.3.3] - 2020-06-22
   - Bump VMA
