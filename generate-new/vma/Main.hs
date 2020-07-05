@@ -63,6 +63,7 @@ main =
     Left es -> do
       traverse_ sayErr es
       sayErr (show (length es) <> " errors")
+      exitFailure
     Right () -> pure ()
  where
   go :: Sem '[Err , Fixpoint , Embed IO , Final IO] ()
