@@ -114,8 +114,8 @@ isDefaultableForeignType t =
 -- | Is this a type we don't want to marshal
 isPassAsPointerType' :: CType -> Bool
 isPassAsPointerType' = \case
-  TypeName n
-    | n
+  TypeName n ->
+    n
       `elem` [ "MirConnection"
              , "wl_display"
              , "wl_surface"
@@ -128,7 +128,6 @@ isPassAsPointerType' = \case
              , "IDirectFB"
              , "IDirectFBSurface"
              ]
-    -> True
   _ -> False
 
 ----------------------------------------------------------------
