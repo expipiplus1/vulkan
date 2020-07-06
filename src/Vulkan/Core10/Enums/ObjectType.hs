@@ -142,7 +142,7 @@ import Vulkan.Zero (Zero)
 -- | 'OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL' | 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' |
 -- +-----------------------------------------------+-----------------------------------------------------------+
 --
--- VkObjectType and Vulkan Handle Relationship
+-- 'ObjectType' and Vulkan Handle Relationship
 --
 -- = See Also
 --

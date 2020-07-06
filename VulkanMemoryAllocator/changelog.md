@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [0.3.4] - 2020-07-05
+  - Bump VMA, just documentation change
+
 ## [0.3.3] - 2020-06-22
   - Bump VMA
 

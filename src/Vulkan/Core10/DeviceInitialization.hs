@@ -3524,25 +3524,35 @@ instance Zero PhysicalDeviceSparseProperties where
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'PhysicalDeviceProperties',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags'
 data PhysicalDeviceLimits = PhysicalDeviceLimits
-  { -- | @maxImageDimension1D@ is the maximum dimension (@width@) supported for
-    -- all images created with an @imageType@ of
-    -- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D'.
+  { -- | @maxImageDimension1D@ is the largest dimension (@width@) that is
+    -- guaranteed to be supported for all images created with an @imageType@ of
+    -- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D'. Some combinations of
+    -- image parameters (format, usage, etc.) /may/ allow support for larger
+    -- dimensions, which /can/ be queried using
+    -- 'getPhysicalDeviceImageFormatProperties'.
     maxImageDimension1D :: Word32
-  , -- | @maxImageDimension2D@ is the maximum dimension (@width@ or @height@)
-    -- supported for all images created with an @imageType@ of
-    -- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and without
+  , -- | @maxImageDimension2D@ is the largest dimension (@width@ or @height@)
+    -- that is guaranteed to be supported for all images created with an
+    -- @imageType@ of 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and without
     -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
-    -- set in @flags@.
+    -- set in @flags@. Some combinations of image parameters (format, usage,
+    -- etc.) /may/ allow support for larger dimensions, which /can/ be queried
+    -- using 'getPhysicalDeviceImageFormatProperties'.
     maxImageDimension2D :: Word32
-  , -- | @maxImageDimension3D@ is the maximum dimension (@width@, @height@, or
-    -- @depth@) supported for all images created with an @imageType@ of
-    -- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'.
+  , -- | @maxImageDimension3D@ is the largest dimension (@width@, @height@, or
+    -- @depth@) that is guaranteed to be supported for all images created with
+    -- an @imageType@ of 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'. Some
+    -- combinations of image parameters (format, usage, etc.) /may/ allow
+    -- support for larger dimensions, which /can/ be queried using
+    -- 'getPhysicalDeviceImageFormatProperties'.
     maxImageDimension3D :: Word32
-  , -- | @maxImageDimensionCube@ is the maximum dimension (@width@ or @height@)
-    -- supported for all images created with an @imageType@ of
-    -- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and with
+  , -- | @maxImageDimensionCube@ is the largest dimension (@width@ or @height@)
+    -- that is guaranteed to be supported for all images created with an
+    -- @imageType@ of 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and with
     -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
-    -- set in @flags@.
+    -- set in @flags@. Some combinations of image parameters (format, usage,
+    -- etc.) /may/ allow support for larger dimensions, which /can/ be queried
+    -- using 'getPhysicalDeviceImageFormatProperties'.
     maxImageDimensionCube :: Word32
   , -- | @maxImageArrayLayers@ is the maximum number of layers (@arrayLayers@)
     -- for an image.
@@ -3927,8 +3937,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dualSrcBlend dualSrcBlend>.
     maxFragmentDualSrcAttachments :: Word32
   , -- | @maxFragmentCombinedOutputResources@ is the total number of storage
-    -- buffers, storage images, and output buffers which /can/ be used in the
-    -- fragment shader stage.
+    -- buffers, storage images, and output @Location@ decorated color
+    -- attachments (described in
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-fragmentoutput Fragment Output Interface>)
+    -- which /can/ be used in the fragment shader stage.
     maxFragmentCombinedOutputResources :: Word32
   , -- | @maxComputeSharedMemorySize@ is the maximum total storage size, in
     -- bytes, available for variables declared with the @Workgroup@ storage

@@ -210,13 +210,26 @@ instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
 --
 -- = Description
 --
--- The fragment density map attachment is read at an
--- implementation-dependent time either by the host during
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass' if the
--- attachment’s image view was not created with @flags@ containing
--- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT',
--- or by the device when drawing commands in the renderpass execute
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'.
+-- The fragment density map is read at an implementation-dependent time
+-- with the following constraints determined by the attachment’s image view
+-- @flags@:
+--
+-- -   'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
+--     specifies that the fragment density map will be read by the device
+--     during
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'
+--     specifies that the fragment density map will be read by the host
+--     during 'Vulkan.Core10.CommandBuffer.endCommandBuffer' of the primary
+--     command buffer that the render pass is recorded into
+--
+-- -   Otherwise the fragment density map will be read by the host during
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass'
+--
+-- The fragment density map /may/ additionally be read by the device during
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+-- for any mode.
 --
 -- If this structure is not present, it is as if
 -- @fragmentDensityMapAttachment@ was given as

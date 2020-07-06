@@ -4,10 +4,10 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4abff3b0c093724ec1d3e755d652d1c7693cd3efe7d03bcbc523e4dba41414ca
+-- hash: 5d8265056859e741eaa7e8b75c2a0912a2af1449556e077fc144ec532a2b3dc0
 
 name:           vulkan
-version:        3.5
+version:        3.6
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -287,6 +287,7 @@ library
       Vulkan.Extensions.VK_EXT_depth_range_unrestricted
       Vulkan.Extensions.VK_EXT_descriptor_indexing
       Vulkan.Extensions.VK_EXT_direct_mode_display
+      Vulkan.Extensions.VK_EXT_directfb_surface
       Vulkan.Extensions.VK_EXT_discard_rectangles
       Vulkan.Extensions.VK_EXT_display_control
       Vulkan.Extensions.VK_EXT_display_surface_counter
@@ -295,6 +296,7 @@ library
       Vulkan.Extensions.VK_EXT_external_memory_host
       Vulkan.Extensions.VK_EXT_filter_cubic
       Vulkan.Extensions.VK_EXT_fragment_density_map
+      Vulkan.Extensions.VK_EXT_fragment_density_map2
       Vulkan.Extensions.VK_EXT_fragment_shader_interlock
       Vulkan.Extensions.VK_EXT_full_screen_exclusive
       Vulkan.Extensions.VK_EXT_global_priority

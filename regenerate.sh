@@ -17,7 +17,7 @@ echo "Generating Vulkan-Docs documentation"
     --run "./makeAllExts refpages generated")
 
 echo "Building generator"
-generate=$(IN_NIX_SHELL= nix-build -A generate-new)
+generate=$(IN_NIX_SHELL='' nix-build -A generate-new)
 
 echo "Cleaning src"
 git rm --quiet -r src/Vulkan src/Vulkan.hs

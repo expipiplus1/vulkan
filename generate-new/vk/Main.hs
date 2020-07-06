@@ -25,8 +25,8 @@ import           Render.Names
 import           Render.SpecInfo
 import           Spec.Parse
 
-import           VK.Render
 import           VK.AssignModules
+import           VK.Render
 
 main :: IO ()
 main =
@@ -34,6 +34,7 @@ main =
     Left es -> do
       traverse_ sayErr es
       sayErr (show (length es) <+> "errors")
+      exitFailure
     Right () -> pure ()
  where
   go :: Sem '[Err , Fixpoint , Embed IO , Final IO] ()

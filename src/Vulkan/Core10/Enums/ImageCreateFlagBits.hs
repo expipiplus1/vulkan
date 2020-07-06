@@ -94,8 +94,20 @@ pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlagBits 0x00000010
 --     contents were not written as an attachment in an earlier subpass of
 --     the same render pass.
 --
--- -   Image data read with load operations /may/ be resampled to the
---     fragment density of the render pass.
+-- -   Image data read as an image sampler in the fragment shader will be
+--     additionally be read by the device during
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT'
+--     if
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subsampledcoarsereconstructionearlyaccess ::subsampledCoarseReconstructionEarlyAccess>
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE' and the sampler was created
+--     with @flags@ containing
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'.
+--
+-- -   Image data read with load operations are resampled to the fragment
+--     density of the render pass if
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subsampledloads ::subsampledLoads>
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE', otherwise they are
+--     undefined.
 --
 -- -   Image contents outside of the render area become undefined if the
 --     image is stored as a render pass attachment.

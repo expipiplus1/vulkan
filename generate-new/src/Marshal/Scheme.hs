@@ -287,7 +287,9 @@ voidPointerScheme p = do
 -- | TODO: This should be fleshed out a bit more
 returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 returnPointerScheme p = do
+  MarshalParams {..} <- input
   Ptr NonConst t <- pure $ type' p
+  guard (not (isPassAsPointerType t))
   let inout = do
         Empty                <- pure $ lengths p
         False :<| True :<| _ <- pure $ isOptional p

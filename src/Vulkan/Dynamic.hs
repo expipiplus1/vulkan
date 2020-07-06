@@ -116,6 +116,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (DeviceQueueInfo2)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (DeviceSize)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_directfb_surface (DirectFBSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (Display)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (DisplayEventInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (DisplayKHR)
@@ -160,6 +161,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pipeline (GraphicsPipelineCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (HANDLE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_hdr_metadata (HdrMetadataEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_headless_surface (HeadlessSurfaceCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_directfb_surface (IDirectFB)
 import {-# SOURCE #-} Vulkan.Extensions.VK_MVK_ios_surface (IOSSurfaceCreateInfoMVK)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Image)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageBlit)
@@ -369,6 +371,8 @@ data InstanceCmds = InstanceCmds
   , pVkGetPhysicalDeviceXlibPresentationSupportKHR :: FunPtr (Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("dpy" ::: Ptr Display) -> VisualID -> IO Bool32)
   , pVkCreateXcbSurfaceKHR :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr XcbSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
   , pVkGetPhysicalDeviceXcbPresentationSupportKHR :: FunPtr (Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> Ptr Xcb_connection_t -> ("visual_id" ::: Xcb_visualid_t) -> IO Bool32)
+  , pVkCreateDirectFBSurfaceEXT :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr DirectFBSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
+  , pVkGetPhysicalDeviceDirectFBPresentationSupportEXT :: FunPtr (Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("dfb" ::: Ptr IDirectFB) -> IO Bool32)
   , pVkCreateImagePipeSurfaceFUCHSIA :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr ImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
   , pVkCreateStreamDescriptorSurfaceGGP :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr StreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
   , pVkCreateDebugReportCallbackEXT :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr DebugReportCallbackCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pCallback" ::: Ptr DebugReportCallbackEXT) -> IO Result)
@@ -427,7 +431,8 @@ instance Zero InstanceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
 
 -- | A version of 'getInstanceProcAddr' which can be called
 -- with a null pointer for the instance.
@@ -474,6 +479,8 @@ initInstanceCmds handle = do
   vkGetPhysicalDeviceXlibPresentationSupportKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceXlibPresentationSupportKHR"#)
   vkCreateXcbSurfaceKHR <- getInstanceProcAddr' handle (Ptr "vkCreateXcbSurfaceKHR"#)
   vkGetPhysicalDeviceXcbPresentationSupportKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceXcbPresentationSupportKHR"#)
+  vkCreateDirectFBSurfaceEXT <- getInstanceProcAddr' handle (Ptr "vkCreateDirectFBSurfaceEXT"#)
+  vkGetPhysicalDeviceDirectFBPresentationSupportEXT <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceDirectFBPresentationSupportEXT"#)
   vkCreateImagePipeSurfaceFUCHSIA <- getInstanceProcAddr' handle (Ptr "vkCreateImagePipeSurfaceFUCHSIA"#)
   vkCreateStreamDescriptorSurfaceGGP <- getInstanceProcAddr' handle (Ptr "vkCreateStreamDescriptorSurfaceGGP"#)
   vkCreateDebugReportCallbackEXT <- getInstanceProcAddr' handle (Ptr "vkCreateDebugReportCallbackEXT"#)
@@ -553,6 +560,8 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("dpy" ::: Ptr Display) -> VisualID -> IO Bool32) vkGetPhysicalDeviceXlibPresentationSupportKHR)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr XcbSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateXcbSurfaceKHR)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> Ptr Xcb_connection_t -> ("visual_id" ::: Xcb_visualid_t) -> IO Bool32) vkGetPhysicalDeviceXcbPresentationSupportKHR)
+    (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr DirectFBSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateDirectFBSurfaceEXT)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("dfb" ::: Ptr IDirectFB) -> IO Bool32) vkGetPhysicalDeviceDirectFBPresentationSupportEXT)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr ImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateImagePipeSurfaceFUCHSIA)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr StreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateStreamDescriptorSurfaceGGP)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr DebugReportCallbackCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pCallback" ::: Ptr DebugReportCallbackEXT) -> IO Result) vkCreateDebugReportCallbackEXT)

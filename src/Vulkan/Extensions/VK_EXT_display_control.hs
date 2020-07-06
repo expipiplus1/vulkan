@@ -133,6 +133,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.DisplayKHR',
@@ -153,8 +157,8 @@ displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDisplayPowerControlEXT is null" Nothing Nothing
   let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT vkDisplayPowerControlEXTPtr
   pDisplayPowerInfo <- ContT $ withCStruct (displayPowerInfo)
-  _ <- lift $ vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo
-  pure $ ()
+  r <- lift $ vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
@@ -186,6 +190,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
@@ -213,7 +221,8 @@ registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ d
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  _ <- lift $ vkRegisterDeviceEventEXT' (deviceHandle (device)) pDeviceEventInfo pAllocator (pPFence)
+  r <- lift $ vkRegisterDeviceEventEXT' (deviceHandle (device)) pDeviceEventInfo pAllocator (pPFence)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
 
@@ -253,6 +262,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
 --
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
@@ -282,7 +295,8 @@ registerDisplayEventEXT device display displayEventInfo allocator = liftIO . eva
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  _ <- lift $ vkRegisterDisplayEventEXT' (deviceHandle (device)) (display) pDisplayEventInfo pAllocator (pPFence)
+  r <- lift $ vkRegisterDisplayEventEXT' (deviceHandle (device)) (display) pDisplayEventInfo pAllocator (pPFence)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
 

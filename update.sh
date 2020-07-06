@@ -8,11 +8,16 @@ version=$1
 
 echo "Updating Vulkan-Docs"
 git -C generate-new/Vulkan-Docs fetch
-git -C generate-new/Vulkan-Docs checkout v$version
+git -C generate-new/Vulkan-Docs checkout "v$version"
 
 git add generate-new/Vulkan-Docs
 
-./regenerate.sh "$version"
+if ! ./regenerate.sh; then
+  echo "Failed to regenerate vulkan source"
+  git restore --staged src/Vulkan src/Vulkan.hs
+  git checkout src/Vulkan src/Vulkan.hs
+  exit 1
+fi
 
 git add src
 git add vulkan.cabal

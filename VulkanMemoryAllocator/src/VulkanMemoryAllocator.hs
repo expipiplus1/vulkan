@@ -4137,6 +4137,15 @@ data AllocationInfo = AllocationInfo
   , -- | Size of this allocation, in bytes.
     --
     -- It never changes, unless allocation is lost.
+    --
+    -- Note
+    --
+    -- Allocation size returned in this variable may be greater than the size
+    -- requested for the resource e.g. as @VkBufferCreateInfo::size@. Whole
+    -- size of the allocation is accessible for operations on memory e.g. using
+    -- a pointer after mapping with 'mapMemory', but operations on the resource
+    -- e.g. using @vkCmdCopyBuffer@ must be limited to the size of the
+    -- resource.
     size :: DeviceSize
   , -- | Pointer to the beginning of this allocation as mapped data.
     --

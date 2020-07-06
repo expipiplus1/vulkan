@@ -61,6 +61,7 @@ import Vulkan.Zero (Zero(..))
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.createDescriptorUpdateTemplate',
 -- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR',
 -- 'Vulkan.Core10.Device.createDevice',
+-- 'Vulkan.Extensions.VK_EXT_directfb_surface.createDirectFBSurfaceEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayModeKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayPlaneSurfaceKHR',
 -- 'Vulkan.Core10.Event.createEvent', 'Vulkan.Core10.Fence.createFence',

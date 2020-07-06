@@ -689,7 +689,7 @@ boolConversion = genRe "Bool conversion" $ do
 
 wsiTypes :: (HasErr r, HasRenderParams r) => [Sem r RenderElement]
 wsiTypes = (snd <$> concat [win32, x11, xcb2, zircon, ggp])
-  <> concat [win32', xcb1, wayland, metal, android]
+  <> concat [win32', xcb1, wayland, metal, android, directfb]
 
 namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
@@ -791,6 +791,10 @@ zircon =
 android :: HasRenderParams r => [Sem r RenderElement]
 android =
   [voidData "AHardwareBuffer", voidData "ANativeWindow"]
+
+directfb :: HasRenderParams r => [Sem r RenderElement]
+directfb =
+  [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
 ----------------------------------------------------------------
 -- Helpers

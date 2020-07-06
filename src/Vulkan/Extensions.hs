@@ -37,6 +37,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_depth_range_unrestricted
                           , module Vulkan.Extensions.VK_EXT_descriptor_indexing
                           , module Vulkan.Extensions.VK_EXT_direct_mode_display
+                          , module Vulkan.Extensions.VK_EXT_directfb_surface
                           , module Vulkan.Extensions.VK_EXT_discard_rectangles
                           , module Vulkan.Extensions.VK_EXT_display_control
                           , module Vulkan.Extensions.VK_EXT_display_surface_counter
@@ -45,6 +46,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_external_memory_host
                           , module Vulkan.Extensions.VK_EXT_filter_cubic
                           , module Vulkan.Extensions.VK_EXT_fragment_density_map
+                          , module Vulkan.Extensions.VK_EXT_fragment_density_map2
                           , module Vulkan.Extensions.VK_EXT_fragment_shader_interlock
                           , module Vulkan.Extensions.VK_EXT_full_screen_exclusive
                           , module Vulkan.Extensions.VK_EXT_global_priority
@@ -245,6 +247,7 @@ import Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Vulkan.Extensions.VK_EXT_depth_range_unrestricted
 import Vulkan.Extensions.VK_EXT_descriptor_indexing
 import Vulkan.Extensions.VK_EXT_direct_mode_display
+import Vulkan.Extensions.VK_EXT_directfb_surface
 import Vulkan.Extensions.VK_EXT_discard_rectangles
 import Vulkan.Extensions.VK_EXT_display_control
 import Vulkan.Extensions.VK_EXT_display_surface_counter
@@ -253,6 +256,7 @@ import Vulkan.Extensions.VK_EXT_external_memory_dma_buf
 import Vulkan.Extensions.VK_EXT_external_memory_host
 import Vulkan.Extensions.VK_EXT_filter_cubic
 import Vulkan.Extensions.VK_EXT_fragment_density_map
+import Vulkan.Extensions.VK_EXT_fragment_density_map2
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock
 import Vulkan.Extensions.VK_EXT_full_screen_exclusive
 import Vulkan.Extensions.VK_EXT_global_priority
