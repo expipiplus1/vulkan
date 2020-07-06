@@ -30,6 +30,15 @@ geom :: QuasiQuoter
 tesc :: QuasiQuoter
 tese :: QuasiQuoter
 vert :: QuasiQuoter
+type GLSLError = String
+type GLSLWarning = String
+
+-- | Compile a glsl shader to spir-v using glslangValidator.
+--   
+--   Messages are converted to GHC warnings or errors depending on
+--   compilation success.
+compileShaderQ :: String -> String -> Q Exp
 
 -- | Compile a glsl shader to spir-v using glslangValidator
-compileShader :: MonadIO m => Maybe Loc -> String -> String -> m ByteString
+compileShader :: MonadIO m => Maybe Loc -> String -> String -> m ([GLSLWarning], Either [GLSLError] ByteString)
+processValidatorMessages :: ByteString -> ([GLSLWarning], [GLSLError])

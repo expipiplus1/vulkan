@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.CommandBufferLevel</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier">CommandBufferLevel</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_PRIMARY"><span class="hs-identifier">COMMAND_BUFFER_LEVEL_PRIMARY</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_SECONDARY"><span class="hs-identifier">COMMAND_BUFFER_LEVEL_SECONDARY</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                  </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- | VkCommandBufferLevel - Enumerant specifying a command buffer level</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBuffer.CommandBufferAllocateInfo'</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">newtype</span><span> </span><span id="CommandBufferLevel"><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-var">CommandBufferLevel</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CommandBufferLevel"><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-var">CommandBufferLevel</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680085555"><span id="local-6989586621680085557"><span class="annot"><span class="annottext">CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+(CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool)
+-&gt; (CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool)
+-&gt; Eq CommandBufferLevel
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+$c/= :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+== :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+$c== :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680085539"><span id="local-6989586621680085541"><span id="local-6989586621680085543"><span id="local-6989586621680085545"><span id="local-6989586621680085547"><span id="local-6989586621680085549"><span id="local-6989586621680085551"><span class="annot"><span class="annottext">Eq CommandBufferLevel
+Eq CommandBufferLevel =&gt;
+(CommandBufferLevel -&gt; CommandBufferLevel -&gt; Ordering)
+-&gt; (CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool)
+-&gt; (CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool)
+-&gt; (CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool)
+-&gt; (CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool)
+-&gt; (CommandBufferLevel -&gt; CommandBufferLevel -&gt; CommandBufferLevel)
+-&gt; (CommandBufferLevel -&gt; CommandBufferLevel -&gt; CommandBufferLevel)
+-&gt; Ord CommandBufferLevel
+CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+CommandBufferLevel -&gt; CommandBufferLevel -&gt; Ordering
+CommandBufferLevel -&gt; CommandBufferLevel -&gt; CommandBufferLevel
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; CommandBufferLevel
+$cmin :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; CommandBufferLevel
+max :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; CommandBufferLevel
+$cmax :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; CommandBufferLevel
+&gt;= :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+$c&gt;= :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+&gt; :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+$c&gt; :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+&lt;= :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+$c&lt;= :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+&lt; :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+$c&lt; :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Bool
+compare :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Ordering
+$ccompare :: CommandBufferLevel -&gt; CommandBufferLevel -&gt; Ordering
+$cp1Ord :: Eq CommandBufferLevel
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680085522"><span id="local-6989586621680085524"><span id="local-6989586621680085526"><span id="local-6989586621680085528"><span id="local-6989586621680085530"><span id="local-6989586621680085532"><span id="local-6989586621680085534"><span id="local-6989586621680085536"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO CommandBufferLevel
+Ptr b -&gt; Int -&gt; CommandBufferLevel -&gt; IO ()
+Ptr CommandBufferLevel -&gt; IO CommandBufferLevel
+Ptr CommandBufferLevel -&gt; Int -&gt; IO CommandBufferLevel
+Ptr CommandBufferLevel -&gt; Int -&gt; CommandBufferLevel -&gt; IO ()
+Ptr CommandBufferLevel -&gt; CommandBufferLevel -&gt; IO ()
+CommandBufferLevel -&gt; Int
+(CommandBufferLevel -&gt; Int)
+-&gt; (CommandBufferLevel -&gt; Int)
+-&gt; (Ptr CommandBufferLevel -&gt; Int -&gt; IO CommandBufferLevel)
+-&gt; (Ptr CommandBufferLevel -&gt; Int -&gt; CommandBufferLevel -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO CommandBufferLevel)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; CommandBufferLevel -&gt; IO ())
+-&gt; (Ptr CommandBufferLevel -&gt; IO CommandBufferLevel)
+-&gt; (Ptr CommandBufferLevel -&gt; CommandBufferLevel -&gt; IO ())
+-&gt; Storable CommandBufferLevel
+forall b. Ptr b -&gt; Int -&gt; IO CommandBufferLevel
+forall b. Ptr b -&gt; Int -&gt; CommandBufferLevel -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr CommandBufferLevel -&gt; CommandBufferLevel -&gt; IO ()
+$cpoke :: Ptr CommandBufferLevel -&gt; CommandBufferLevel -&gt; IO ()
+peek :: Ptr CommandBufferLevel -&gt; IO CommandBufferLevel
+$cpeek :: Ptr CommandBufferLevel -&gt; IO CommandBufferLevel
+pokeByteOff :: Ptr b -&gt; Int -&gt; CommandBufferLevel -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; CommandBufferLevel -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO CommandBufferLevel
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO CommandBufferLevel
+pokeElemOff :: Ptr CommandBufferLevel -&gt; Int -&gt; CommandBufferLevel -&gt; IO ()
+$cpokeElemOff :: Ptr CommandBufferLevel -&gt; Int -&gt; CommandBufferLevel -&gt; IO ()
+peekElemOff :: Ptr CommandBufferLevel -&gt; Int -&gt; IO CommandBufferLevel
+$cpeekElemOff :: Ptr CommandBufferLevel -&gt; Int -&gt; IO CommandBufferLevel
+alignment :: CommandBufferLevel -&gt; Int
+$calignment :: CommandBufferLevel -&gt; Int
+sizeOf :: CommandBufferLevel -&gt; Int
+$csizeOf :: CommandBufferLevel -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680085519"><span class="annot"><span class="annottext">CommandBufferLevel
+CommandBufferLevel -&gt; Zero CommandBufferLevel
+forall a. a -&gt; Zero a
+zero :: CommandBufferLevel
+$czero :: CommandBufferLevel
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- | 'COMMAND_BUFFER_LEVEL_PRIMARY' specifies a primary command buffer.</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOMMAND_BUFFER_LEVEL_PRIMARY"><span id="%24mCOMMAND_BUFFER_LEVEL_PRIMARY"><span id="COMMAND_BUFFER_LEVEL_PRIMARY"><span class="annot"><span class="annottext">$bCOMMAND_BUFFER_LEVEL_PRIMARY :: CommandBufferLevel
+$mCOMMAND_BUFFER_LEVEL_PRIMARY :: forall r. CommandBufferLevel -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#%24bCOMMAND_BUFFER_LEVEL_PRIMARY"><span class="hs-identifier hs-var hs-var hs-var">COMMAND_BUFFER_LEVEL_PRIMARY</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-type">CommandBufferLevel</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- | 'COMMAND_BUFFER_LEVEL_SECONDARY' specifies a secondary command buffer.</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOMMAND_BUFFER_LEVEL_SECONDARY"><span id="%24mCOMMAND_BUFFER_LEVEL_SECONDARY"><span id="COMMAND_BUFFER_LEVEL_SECONDARY"><span class="annot"><span class="annottext">$bCOMMAND_BUFFER_LEVEL_SECONDARY :: CommandBufferLevel
+$mCOMMAND_BUFFER_LEVEL_SECONDARY :: forall r. CommandBufferLevel -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#%24bCOMMAND_BUFFER_LEVEL_SECONDARY"><span class="hs-identifier hs-var hs-var hs-var">COMMAND_BUFFER_LEVEL_SECONDARY</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-type">CommandBufferLevel</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-33"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_PRIMARY"><span class="hs-pragma hs-type">COMMAND_BUFFER_LEVEL_PRIMARY</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-34"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_SECONDARY"><span class="hs-pragma hs-type">COMMAND_BUFFER_LEVEL_SECONDARY</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-pragma hs-type">CommandBufferLevel</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680085509"><span id="local-6989586621680085511"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-type">CommandBufferLevel</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-37"></span><span>  </span><span id="local-6989586621680085507"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; CommandBufferLevel -&gt; ShowS
+</span><a href="#local-6989586621680085507"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span id="local-6989586621680085506"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680085506"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-38"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_PRIMARY"><span class="hs-identifier hs-type">COMMAND_BUFFER_LEVEL_PRIMARY</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;COMMAND_BUFFER_LEVEL_PRIMARY&quot;</span></span><span>
+</span><span id="line-39"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_SECONDARY"><span class="hs-identifier hs-type">COMMAND_BUFFER_LEVEL_SECONDARY</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;COMMAND_BUFFER_LEVEL_SECONDARY&quot;</span></span><span>
+</span><span id="line-40"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-type">CommandBufferLevel</span></a></span><span> </span><span id="local-6989586621680085505"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680085505"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680085506"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CommandBufferLevel &quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680085505"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680085497"><span id="local-6989586621680085500"><span id="local-6989586621680085502"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-type">CommandBufferLevel</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span id="local-6989586621680085495"><span class="annot"><span class="annottext">readPrec :: ReadPrec CommandBufferLevel
+</span><a href="#local-6989586621680085495"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec CommandBufferLevel -&gt; ReadPrec CommandBufferLevel
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec CommandBufferLevel)]
+-&gt; ReadPrec CommandBufferLevel
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;COMMAND_BUFFER_LEVEL_PRIMARY&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CommandBufferLevel -&gt; ReadPrec CommandBufferLevel
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CommandBufferLevel
+</span><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_PRIMARY"><span class="hs-identifier hs-var">COMMAND_BUFFER_LEVEL_PRIMARY</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;COMMAND_BUFFER_LEVEL_SECONDARY&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CommandBufferLevel -&gt; ReadPrec CommandBufferLevel
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CommandBufferLevel
+</span><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#COMMAND_BUFFER_LEVEL_SECONDARY"><span class="hs-identifier hs-var">COMMAND_BUFFER_LEVEL_SECONDARY</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-45"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec CommandBufferLevel
+-&gt; ReadPrec CommandBufferLevel -&gt; ReadPrec CommandBufferLevel
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-46"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec CommandBufferLevel -&gt; ReadPrec CommandBufferLevel
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-47"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CommandBufferLevel&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span>                       </span><span id="local-6989586621680085494"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680085494"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32 -&gt; ReadPrec Int32
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-49"></span><span>                       </span><span class="annot"><span class="annottext">CommandBufferLevel -&gt; ReadPrec CommandBufferLevel
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int32 -&gt; CommandBufferLevel
+</span><a href="Vulkan.Core10.Enums.CommandBufferLevel.html#CommandBufferLevel"><span class="hs-identifier hs-var">CommandBufferLevel</span></a></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680085494"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span></pre></body></html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.SamplerCreateFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier">SamplerCreateFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"><span class="hs-identifier">SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                         </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"><span class="hs-identifier">SAMPLER_CREATE_SUBSAMPLED_BIT_EXT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                         </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                         </span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                                  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlags"><span class="hs-identifier">SamplerCreateFlags</span></a></span><span>
+</span><span id="line-7"></span><span>                                                  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | VkSamplerCreateFlagBits - Bitmask specifying additional parameters of</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- sampler</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- The approximations used when</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' is specified</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- are implementation defined. Some implementations /may/ interpolate</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- between fragment density levels in a subsampled image. In that case,</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- this bit /may/ be used to decide whether the interpolation factors are</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- calculated per fragment or at a coarser granularity.</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- 'SamplerCreateFlags'</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">newtype</span><span> </span><span id="SamplerCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-var">SamplerCreateFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SamplerCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-var">SamplerCreateFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680068224"><span id="local-6989586621680068226"><span class="annot"><span class="annottext">SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+(SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool)
+-&gt; (SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool)
+-&gt; Eq SamplerCreateFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+$c/= :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+== :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+$c== :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680068208"><span id="local-6989586621680068210"><span id="local-6989586621680068212"><span id="local-6989586621680068214"><span id="local-6989586621680068216"><span id="local-6989586621680068218"><span id="local-6989586621680068220"><span class="annot"><span class="annottext">Eq SamplerCreateFlagBits
+Eq SamplerCreateFlagBits =&gt;
+(SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Ordering)
+-&gt; (SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool)
+-&gt; (SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool)
+-&gt; (SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool)
+-&gt; (SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool)
+-&gt; (SamplerCreateFlagBits
+    -&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits
+    -&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits)
+-&gt; Ord SamplerCreateFlagBits
+SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Ordering
+SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+$cmin :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+max :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+$cmax :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+&gt;= :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+$c&gt;= :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+&gt; :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+$c&gt; :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+&lt;= :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+$c&lt;= :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+&lt; :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+$c&lt; :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Bool
+compare :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Ordering
+$ccompare :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; Ordering
+$cp1Ord :: Eq SamplerCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680068191"><span id="local-6989586621680068193"><span id="local-6989586621680068195"><span id="local-6989586621680068197"><span id="local-6989586621680068199"><span id="local-6989586621680068201"><span id="local-6989586621680068203"><span id="local-6989586621680068205"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SamplerCreateFlagBits
+Ptr b -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ()
+Ptr SamplerCreateFlagBits -&gt; IO SamplerCreateFlagBits
+Ptr SamplerCreateFlagBits -&gt; Int -&gt; IO SamplerCreateFlagBits
+Ptr SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ()
+Ptr SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; IO ()
+SamplerCreateFlagBits -&gt; Int
+(SamplerCreateFlagBits -&gt; Int)
+-&gt; (SamplerCreateFlagBits -&gt; Int)
+-&gt; (Ptr SamplerCreateFlagBits -&gt; Int -&gt; IO SamplerCreateFlagBits)
+-&gt; (Ptr SamplerCreateFlagBits
+    -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SamplerCreateFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ())
+-&gt; (Ptr SamplerCreateFlagBits -&gt; IO SamplerCreateFlagBits)
+-&gt; (Ptr SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; IO ())
+-&gt; Storable SamplerCreateFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO SamplerCreateFlagBits
+forall b. Ptr b -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; IO ()
+$cpoke :: Ptr SamplerCreateFlagBits -&gt; SamplerCreateFlagBits -&gt; IO ()
+peek :: Ptr SamplerCreateFlagBits -&gt; IO SamplerCreateFlagBits
+$cpeek :: Ptr SamplerCreateFlagBits -&gt; IO SamplerCreateFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SamplerCreateFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SamplerCreateFlagBits
+pokeElemOff :: Ptr SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits -&gt; IO ()
+peekElemOff :: Ptr SamplerCreateFlagBits -&gt; Int -&gt; IO SamplerCreateFlagBits
+$cpeekElemOff :: Ptr SamplerCreateFlagBits -&gt; Int -&gt; IO SamplerCreateFlagBits
+alignment :: SamplerCreateFlagBits -&gt; Int
+$calignment :: SamplerCreateFlagBits -&gt; Int
+sizeOf :: SamplerCreateFlagBits -&gt; Int
+$csizeOf :: SamplerCreateFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680068188"><span class="annot"><span class="annottext">SamplerCreateFlagBits
+SamplerCreateFlagBits -&gt; Zero SamplerCreateFlagBits
+forall a. a -&gt; Zero a
+zero :: SamplerCreateFlagBits
+$czero :: SamplerCreateFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680068142"><span id="local-6989586621680068144"><span id="local-6989586621680068146"><span id="local-6989586621680068148"><span id="local-6989586621680068150"><span id="local-6989586621680068152"><span id="local-6989586621680068154"><span id="local-6989586621680068156"><span id="local-6989586621680068158"><span id="local-6989586621680068160"><span id="local-6989586621680068162"><span id="local-6989586621680068164"><span id="local-6989586621680068166"><span id="local-6989586621680068168"><span id="local-6989586621680068170"><span id="local-6989586621680068172"><span id="local-6989586621680068174"><span id="local-6989586621680068176"><span id="local-6989586621680068178"><span id="local-6989586621680068180"><span id="local-6989586621680068182"><span id="local-6989586621680068184"><span class="annot"><span class="annottext">Eq SamplerCreateFlagBits
+SamplerCreateFlagBits
+Eq SamplerCreateFlagBits =&gt;
+(SamplerCreateFlagBits
+ -&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits
+    -&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits
+    -&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; SamplerCreateFlagBits
+-&gt; (Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; Bool)
+-&gt; (SamplerCreateFlagBits -&gt; Maybe Int)
+-&gt; (SamplerCreateFlagBits -&gt; Int)
+-&gt; (SamplerCreateFlagBits -&gt; Bool)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits)
+-&gt; (SamplerCreateFlagBits -&gt; Int)
+-&gt; Bits SamplerCreateFlagBits
+Int -&gt; SamplerCreateFlagBits
+SamplerCreateFlagBits -&gt; Bool
+SamplerCreateFlagBits -&gt; Int
+SamplerCreateFlagBits -&gt; Maybe Int
+SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+SamplerCreateFlagBits -&gt; Int -&gt; Bool
+SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SamplerCreateFlagBits -&gt; Int
+$cpopCount :: SamplerCreateFlagBits -&gt; Int
+rotateR :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$crotateR :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+rotateL :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$crotateL :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+unsafeShiftR :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$cunsafeShiftR :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+shiftR :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$cshiftR :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+unsafeShiftL :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$cunsafeShiftL :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+shiftL :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$cshiftL :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+isSigned :: SamplerCreateFlagBits -&gt; Bool
+$cisSigned :: SamplerCreateFlagBits -&gt; Bool
+bitSize :: SamplerCreateFlagBits -&gt; Int
+$cbitSize :: SamplerCreateFlagBits -&gt; Int
+bitSizeMaybe :: SamplerCreateFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: SamplerCreateFlagBits -&gt; Maybe Int
+testBit :: SamplerCreateFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: SamplerCreateFlagBits -&gt; Int -&gt; Bool
+complementBit :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$ccomplementBit :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+clearBit :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$cclearBit :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+setBit :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$csetBit :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+bit :: Int -&gt; SamplerCreateFlagBits
+$cbit :: Int -&gt; SamplerCreateFlagBits
+zeroBits :: SamplerCreateFlagBits
+$czeroBits :: SamplerCreateFlagBits
+rotate :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$crotate :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+shift :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+$cshift :: SamplerCreateFlagBits -&gt; Int -&gt; SamplerCreateFlagBits
+complement :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+$ccomplement :: SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+xor :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+$cxor :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+.|. :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+$c.|. :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+.&amp;. :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+$c.&amp;. :: SamplerCreateFlagBits
+-&gt; SamplerCreateFlagBits -&gt; SamplerCreateFlagBits
+$cp1Bits :: Eq SamplerCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- | 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies that</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- the implementation /may/ use approximations when reconstructing a full</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- color value for texture access from a subsampled image.</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"><span id="%24mSAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"><span id="SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"><span class="annot"><span class="annottext">$bSAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT :: SamplerCreateFlagBits
+$mSAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT :: forall r.
+SamplerCreateFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#%24bSAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-type">SamplerCreateFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- | 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT' specifies that the sampler will read</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- from an image created with @flags@ containing</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSAMPLER_CREATE_SUBSAMPLED_BIT_EXT"><span id="%24mSAMPLER_CREATE_SUBSAMPLED_BIT_EXT"><span id="SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"><span class="annot"><span class="annottext">$bSAMPLER_CREATE_SUBSAMPLED_BIT_EXT :: SamplerCreateFlagBits
+$mSAMPLER_CREATE_SUBSAMPLED_BIT_EXT :: forall r.
+SamplerCreateFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#%24bSAMPLER_CREATE_SUBSAMPLED_BIT_EXT"><span class="hs-identifier hs-var hs-var hs-var">SAMPLER_CREATE_SUBSAMPLED_BIT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-type">SamplerCreateFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span><span class="hs-keyword">type</span><span> </span><span id="SamplerCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlags"><span class="hs-identifier hs-var">SamplerCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-type">SamplerCreateFlagBits</span></a></span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680068132"><span id="local-6989586621680068134"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-type">SamplerCreateFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-56"></span><span>  </span><span id="local-6989586621680068130"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SamplerCreateFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680068128"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680068128"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-57"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"><span class="hs-identifier hs-type">SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT&quot;</span></span><span>
+</span><span id="line-58"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"><span class="hs-identifier hs-type">SAMPLER_CREATE_SUBSAMPLED_BIT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SAMPLER_CREATE_SUBSAMPLED_BIT_EXT&quot;</span></span><span>
+</span><span id="line-59"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-type">SamplerCreateFlagBits</span></a></span><span> </span><span id="local-6989586621680068127"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680068127"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680068128"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SamplerCreateFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680068127"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680068119"><span id="local-6989586621680068122"><span id="local-6989586621680068124"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-type">SamplerCreateFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-62"></span><span>  </span><span id="local-6989586621680068117"><span class="annot"><span class="annottext">readPrec :: ReadPrec SamplerCreateFlagBits
+</span><a href="#local-6989586621680068117"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec SamplerCreateFlagBits -&gt; ReadPrec SamplerCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec SamplerCreateFlagBits)]
+-&gt; ReadPrec SamplerCreateFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SamplerCreateFlagBits -&gt; ReadPrec SamplerCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SamplerCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"><span class="hs-identifier hs-var">SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SAMPLER_CREATE_SUBSAMPLED_BIT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SamplerCreateFlagBits -&gt; ReadPrec SamplerCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SamplerCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"><span class="hs-identifier hs-var">SAMPLER_CREATE_SUBSAMPLED_BIT_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-64"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec SamplerCreateFlagBits
+-&gt; ReadPrec SamplerCreateFlagBits -&gt; ReadPrec SamplerCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-65"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec SamplerCreateFlagBits -&gt; ReadPrec SamplerCreateFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-66"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SamplerCreateFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>                       </span><span id="local-6989586621680068116"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680068116"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-68"></span><span>                       </span><span class="annot"><span class="annottext">SamplerCreateFlagBits -&gt; ReadPrec SamplerCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; SamplerCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.SamplerCreateFlagBits.html#SamplerCreateFlagBits"><span class="hs-identifier hs-var">SamplerCreateFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680068116"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span>
+</span><span id="line-70"></span></pre></body></html>

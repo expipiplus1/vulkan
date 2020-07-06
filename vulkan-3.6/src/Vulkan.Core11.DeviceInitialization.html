@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core11.DeviceInitialization</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core11.DeviceInitialization.html#enumerateInstanceVersion"><span class="hs-identifier">enumerateInstanceVersion</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Exception.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bracket</span></span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">callocBytes</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">free</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">castFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#getInstanceProcAddr%27"><span class="hs-identifier">getInstanceProcAddr'</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Exception.html"><span class="hs-identifier">Vulkan.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier">VulkanException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkEnumerateInstanceVersion"><span class="annot"><a href="Vulkan.Core11.DeviceInitialization.html#mkVkEnumerateInstanceVersion"><span class="hs-identifier hs-var">mkVkEnumerateInstanceVersion</span></a></span></span><span>
+</span><span id="line-36"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- | vkEnumerateInstanceVersion - Query instance-level version before</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- instance creation</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- Note</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- The intended behaviour of 'enumerateInstanceVersion' is that an</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- implementation /should/ not need to perform memory allocations and</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- /should/ unconditionally return 'Vulkan.Core10.Enums.Result.SUCCESS'.</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- The loader, and any enabled layers, /may/ return</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' in the case of a</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- failed memory allocation.</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- No cross-references are available</span><span>
+</span><span id="line-65"></span><span class="annot"><a href="Vulkan.Core11.DeviceInitialization.html#enumerateInstanceVersion"><span class="hs-identifier hs-type">enumerateInstanceVersion</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680091792"><span class="annot"><a href="#local-6989586621680091792"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-66"></span><span>                          </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680091792"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>                         </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680091792"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;apiVersion&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span id="enumerateInstanceVersion"><span class="annot"><span class="annottext">enumerateInstanceVersion :: io (&quot;apiVersion&quot; ::: Word32)
+</span><a href="Vulkan.Core11.DeviceInitialization.html#enumerateInstanceVersion"><span class="hs-identifier hs-var hs-var">enumerateInstanceVersion</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO (&quot;apiVersion&quot; ::: Word32) -&gt; io (&quot;apiVersion&quot; ::: Word32)
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO (&quot;apiVersion&quot; ::: Word32) -&gt; io (&quot;apiVersion&quot; ::: Word32))
+-&gt; (ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+    -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+-&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+-&gt; io (&quot;apiVersion&quot; ::: Word32)
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+-&gt; IO (&quot;apiVersion&quot; ::: Word32)
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+ -&gt; io (&quot;apiVersion&quot; ::: Word32))
+-&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+-&gt; io (&quot;apiVersion&quot; ::: Word32)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-69"></span><span>  </span><span id="local-6989586621680091790"><span class="annot"><span class="annottext">FunPtr
+  ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+</span><a href="#local-6989586621680091790"><span class="hs-identifier hs-var">vkEnumerateInstanceVersionPtr</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO
+  (FunPtr
+     ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result))
+-&gt; ContT
+     (&quot;apiVersion&quot; ::: Word32)
+     IO
+     (FunPtr
+        ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result))
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO
+   (FunPtr
+      ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result))
+ -&gt; ContT
+      (&quot;apiVersion&quot; ::: Word32)
+      IO
+      (FunPtr
+         ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)))
+-&gt; IO
+     (FunPtr
+        ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result))
+-&gt; ContT
+     (&quot;apiVersion&quot; ::: Word32)
+     IO
+     (FunPtr
+        ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">FunPtr FN_vkVoidFunction
+-&gt; FunPtr
+     ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+forall a b. FunPtr a -&gt; FunPtr b
+</span><span class="hs-identifier hs-var">castFunPtr</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;pApiVersion&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(FunPtr FN_vkVoidFunction
+ -&gt; FunPtr
+      ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result))
+-&gt; IO (FunPtr FN_vkVoidFunction)
+-&gt; IO
+     (FunPtr
+        ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result))
+forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">Ptr Instance_T
+-&gt; (&quot;pName&quot; ::: Ptr CChar) -&gt; IO (FunPtr FN_vkVoidFunction)
+</span><a href="Vulkan.Dynamic.html#getInstanceProcAddr%27"><span class="hs-identifier hs-var">getInstanceProcAddr'</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr Instance_T
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Addr# -&gt; &quot;pName&quot; ::: Ptr CChar
+forall a. Addr# -&gt; Ptr a
+</span><span class="hs-identifier hs-var">Ptr</span></span><span> </span><span class="annot"><span class="hs-string">&quot;vkEnumerateInstanceVersion&quot;#</span></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO ())
+-&gt; IO () -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+</span><a href="#local-6989586621680091790"><span class="hs-identifier hs-var">vkEnumerateInstanceVersionPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+-&gt; FunPtr
+     ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-71"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkEnumerateInstanceVersion is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-72"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680091785"><span class="annot"><span class="annottext">vkEnumerateInstanceVersion' :: (&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result
+</span><a href="#local-6989586621680091785"><span class="hs-identifier hs-var hs-var">vkEnumerateInstanceVersion'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+-&gt; (&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result
+</span><a href="Vulkan.Core11.DeviceInitialization.html#mkVkEnumerateInstanceVersion"><span class="hs-identifier hs-var">mkVkEnumerateInstanceVersion</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result)
+</span><a href="#local-6989586621680091790"><span class="hs-identifier hs-var">vkEnumerateInstanceVersionPtr</span></a></span><span>
+</span><span id="line-73"></span><span>  </span><span id="local-6989586621680091784"><span class="annot"><span class="annottext">&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)
+</span><a href="#local-6989586621680091784"><span class="hs-identifier hs-var">pPApiVersion</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+  -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+ -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+-&gt; ContT
+     (&quot;apiVersion&quot; ::: Word32)
+     IO
+     (&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+   -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+  -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+ -&gt; ContT
+      (&quot;apiVersion&quot; ::: Word32)
+      IO
+      (&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)))
+-&gt; (((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+     -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+    -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+-&gt; ContT
+     (&quot;apiVersion&quot; ::: Word32)
+     IO
+     (&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+-&gt; ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO ())
+-&gt; ((&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+    -&gt; IO (&quot;apiVersion&quot; ::: Word32))
+-&gt; IO (&quot;apiVersion&quot; ::: Word32)
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-74"></span><span>  </span><span id="local-6989586621680091782"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680091782"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO Result)
+-&gt; IO Result -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)) -&gt; IO Result
+</span><a href="#local-6989586621680091785"><span class="hs-identifier hs-var">vkEnumerateInstanceVersion'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)
+</span><a href="#local-6989586621680091784"><span class="hs-identifier hs-var">pPApiVersion</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO ())
+-&gt; IO () -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680091782"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680091782"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>  </span><span id="local-6989586621680091779"><span class="annot"><span class="annottext">&quot;apiVersion&quot; ::: Word32
+</span><a href="#local-6989586621680091779"><span class="hs-identifier hs-var">pApiVersion</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (&quot;apiVersion&quot; ::: Word32)
+-&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO (&quot;apiVersion&quot; ::: Word32)
+ -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32))
+-&gt; IO (&quot;apiVersion&quot; ::: Word32)
+-&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32))
+-&gt; IO (&quot;apiVersion&quot; ::: Word32)
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="annot"><span class="annottext">&quot;pApiVersion&quot; ::: Ptr (&quot;apiVersion&quot; ::: Word32)
+</span><a href="#local-6989586621680091784"><span class="hs-identifier hs-var">pPApiVersion</span></a></span><span>
+</span><span id="line-77"></span><span>  </span><span class="annot"><span class="annottext">(&quot;apiVersion&quot; ::: Word32)
+-&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">((&quot;apiVersion&quot; ::: Word32)
+ -&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32))
+-&gt; (&quot;apiVersion&quot; ::: Word32)
+-&gt; ContT (&quot;apiVersion&quot; ::: Word32) IO (&quot;apiVersion&quot; ::: Word32)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;apiVersion&quot; ::: Word32
+</span><a href="#local-6989586621680091779"><span class="hs-identifier hs-var">pApiVersion</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span>
+</span><span id="line-79"></span></pre></body></html>

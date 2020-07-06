@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.PipelineViewportStateCreateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.html#PipelineViewportStateCreateFlags"><span class="hs-identifier">PipelineViewportStateCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- | VkPipelineViewportStateCreateFlags - Reserved for future use</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- 'PipelineViewportStateCreateFlags' is a bitmask type for setting a mask,</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- but is currently reserved for future use.</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="PipelineViewportStateCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.html#PipelineViewportStateCreateFlags"><span class="hs-identifier hs-var">PipelineViewportStateCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PipelineViewportStateCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.html#PipelineViewportStateCreateFlags"><span class="hs-identifier hs-var">PipelineViewportStateCreateFlags</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680069917"><span id="local-6989586621680069919"><span class="annot"><span class="annottext">PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+(PipelineViewportStateCreateFlags
+ -&gt; PipelineViewportStateCreateFlags -&gt; Bool)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags -&gt; Bool)
+-&gt; Eq PipelineViewportStateCreateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+$c/= :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+== :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+$c== :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069901"><span id="local-6989586621680069903"><span id="local-6989586621680069905"><span id="local-6989586621680069907"><span id="local-6989586621680069909"><span id="local-6989586621680069911"><span id="local-6989586621680069913"><span class="annot"><span class="annottext">Eq PipelineViewportStateCreateFlags
+Eq PipelineViewportStateCreateFlags =&gt;
+(PipelineViewportStateCreateFlags
+ -&gt; PipelineViewportStateCreateFlags -&gt; Ordering)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags -&gt; Bool)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags -&gt; Bool)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags -&gt; Bool)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags -&gt; Bool)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags)
+-&gt; Ord PipelineViewportStateCreateFlags
+PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Ordering
+PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+$cmin :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+max :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+$cmax :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+&gt;= :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+$c&gt;= :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+&gt; :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+$c&gt; :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+&lt;= :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+$c&lt;= :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+&lt; :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+$c&lt; :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Bool
+compare :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Ordering
+$ccompare :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; Ordering
+$cp1Ord :: Eq PipelineViewportStateCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069884"><span id="local-6989586621680069886"><span id="local-6989586621680069888"><span id="local-6989586621680069890"><span id="local-6989586621680069892"><span id="local-6989586621680069894"><span id="local-6989586621680069896"><span id="local-6989586621680069898"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO PipelineViewportStateCreateFlags
+Ptr b -&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+Ptr PipelineViewportStateCreateFlags
+-&gt; IO PipelineViewportStateCreateFlags
+Ptr PipelineViewportStateCreateFlags
+-&gt; Int -&gt; IO PipelineViewportStateCreateFlags
+Ptr PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+Ptr PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+PipelineViewportStateCreateFlags -&gt; Int
+(PipelineViewportStateCreateFlags -&gt; Int)
+-&gt; (PipelineViewportStateCreateFlags -&gt; Int)
+-&gt; (Ptr PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; IO PipelineViewportStateCreateFlags)
+-&gt; (Ptr PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO PipelineViewportStateCreateFlags)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ())
+-&gt; (Ptr PipelineViewportStateCreateFlags
+    -&gt; IO PipelineViewportStateCreateFlags)
+-&gt; (Ptr PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags -&gt; IO ())
+-&gt; Storable PipelineViewportStateCreateFlags
+forall b. Ptr b -&gt; Int -&gt; IO PipelineViewportStateCreateFlags
+forall b. Ptr b -&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+$cpoke :: Ptr PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+peek :: Ptr PipelineViewportStateCreateFlags
+-&gt; IO PipelineViewportStateCreateFlags
+$cpeek :: Ptr PipelineViewportStateCreateFlags
+-&gt; IO PipelineViewportStateCreateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO PipelineViewportStateCreateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO PipelineViewportStateCreateFlags
+pokeElemOff :: Ptr PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags -&gt; IO ()
+peekElemOff :: Ptr PipelineViewportStateCreateFlags
+-&gt; Int -&gt; IO PipelineViewportStateCreateFlags
+$cpeekElemOff :: Ptr PipelineViewportStateCreateFlags
+-&gt; Int -&gt; IO PipelineViewportStateCreateFlags
+alignment :: PipelineViewportStateCreateFlags -&gt; Int
+$calignment :: PipelineViewportStateCreateFlags -&gt; Int
+sizeOf :: PipelineViewportStateCreateFlags -&gt; Int
+$csizeOf :: PipelineViewportStateCreateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069881"><span class="annot"><span class="annottext">PipelineViewportStateCreateFlags
+PipelineViewportStateCreateFlags
+-&gt; Zero PipelineViewportStateCreateFlags
+forall a. a -&gt; Zero a
+zero :: PipelineViewportStateCreateFlags
+$czero :: PipelineViewportStateCreateFlags
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680069835"><span id="local-6989586621680069837"><span id="local-6989586621680069839"><span id="local-6989586621680069841"><span id="local-6989586621680069843"><span id="local-6989586621680069845"><span id="local-6989586621680069847"><span id="local-6989586621680069849"><span id="local-6989586621680069851"><span id="local-6989586621680069853"><span id="local-6989586621680069855"><span id="local-6989586621680069857"><span id="local-6989586621680069859"><span id="local-6989586621680069861"><span id="local-6989586621680069863"><span id="local-6989586621680069865"><span id="local-6989586621680069867"><span id="local-6989586621680069869"><span id="local-6989586621680069871"><span id="local-6989586621680069873"><span id="local-6989586621680069875"><span id="local-6989586621680069877"><span class="annot"><span class="annottext">Eq PipelineViewportStateCreateFlags
+PipelineViewportStateCreateFlags
+Eq PipelineViewportStateCreateFlags =&gt;
+(PipelineViewportStateCreateFlags
+ -&gt; PipelineViewportStateCreateFlags
+ -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; PipelineViewportStateCreateFlags
+-&gt; (Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags -&gt; Int -&gt; Bool)
+-&gt; (PipelineViewportStateCreateFlags -&gt; Maybe Int)
+-&gt; (PipelineViewportStateCreateFlags -&gt; Int)
+-&gt; (PipelineViewportStateCreateFlags -&gt; Bool)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags
+    -&gt; Int -&gt; PipelineViewportStateCreateFlags)
+-&gt; (PipelineViewportStateCreateFlags -&gt; Int)
+-&gt; Bits PipelineViewportStateCreateFlags
+Int -&gt; PipelineViewportStateCreateFlags
+PipelineViewportStateCreateFlags -&gt; Bool
+PipelineViewportStateCreateFlags -&gt; Int
+PipelineViewportStateCreateFlags -&gt; Maybe Int
+PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+PipelineViewportStateCreateFlags -&gt; Int -&gt; Bool
+PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: PipelineViewportStateCreateFlags -&gt; Int
+$cpopCount :: PipelineViewportStateCreateFlags -&gt; Int
+rotateR :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$crotateR :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+rotateL :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$crotateL :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+unsafeShiftR :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$cunsafeShiftR :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+shiftR :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$cshiftR :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+unsafeShiftL :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$cunsafeShiftL :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+shiftL :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$cshiftL :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+isSigned :: PipelineViewportStateCreateFlags -&gt; Bool
+$cisSigned :: PipelineViewportStateCreateFlags -&gt; Bool
+bitSize :: PipelineViewportStateCreateFlags -&gt; Int
+$cbitSize :: PipelineViewportStateCreateFlags -&gt; Int
+bitSizeMaybe :: PipelineViewportStateCreateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: PipelineViewportStateCreateFlags -&gt; Maybe Int
+testBit :: PipelineViewportStateCreateFlags -&gt; Int -&gt; Bool
+$ctestBit :: PipelineViewportStateCreateFlags -&gt; Int -&gt; Bool
+complementBit :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$ccomplementBit :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+clearBit :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$cclearBit :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+setBit :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$csetBit :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+bit :: Int -&gt; PipelineViewportStateCreateFlags
+$cbit :: Int -&gt; PipelineViewportStateCreateFlags
+zeroBits :: PipelineViewportStateCreateFlags
+$czeroBits :: PipelineViewportStateCreateFlags
+rotate :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$crotate :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+shift :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+$cshift :: PipelineViewportStateCreateFlags
+-&gt; Int -&gt; PipelineViewportStateCreateFlags
+complement :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+$ccomplement :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+xor :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+$cxor :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+.|. :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+$c.|. :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+.&amp;. :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+$c.&amp;. :: PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+-&gt; PipelineViewportStateCreateFlags
+$cp1Bits :: Eq PipelineViewportStateCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680069829"><span id="local-6989586621680069831"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.html#PipelineViewportStateCreateFlags"><span class="hs-identifier hs-type">PipelineViewportStateCreateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621680069827"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; PipelineViewportStateCreateFlags -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680069825"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680069825"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.html#PipelineViewportStateCreateFlags"><span class="hs-identifier hs-type">PipelineViewportStateCreateFlags</span></a></span><span> </span><span id="local-6989586621680069824"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680069824"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680069825"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineViewportStateCreateFlags 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680069824"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680069816"><span id="local-6989586621680069819"><span id="local-6989586621680069821"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.html#PipelineViewportStateCreateFlags"><span class="hs-identifier hs-type">PipelineViewportStateCreateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621680069814"><span class="annot"><span class="annottext">readPrec :: ReadPrec PipelineViewportStateCreateFlags
+</span><a href="#local-6989586621680069814"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec PipelineViewportStateCreateFlags
+-&gt; ReadPrec PipelineViewportStateCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec PipelineViewportStateCreateFlags)]
+-&gt; ReadPrec PipelineViewportStateCreateFlags
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-40"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec PipelineViewportStateCreateFlags
+-&gt; ReadPrec PipelineViewportStateCreateFlags
+-&gt; ReadPrec PipelineViewportStateCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-41"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec PipelineViewportStateCreateFlags
+-&gt; ReadPrec PipelineViewportStateCreateFlags
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-42"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineViewportStateCreateFlags&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>                       </span><span id="local-6989586621680069813"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680069813"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-44"></span><span>                       </span><span class="annot"><span class="annottext">PipelineViewportStateCreateFlags
+-&gt; ReadPrec PipelineViewportStateCreateFlags
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; PipelineViewportStateCreateFlags
+</span><a href="Vulkan.Core10.Enums.PipelineViewportStateCreateFlags.html#PipelineViewportStateCreateFlags"><span class="hs-identifier hs-var">PipelineViewportStateCreateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680069813"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span></pre></body></html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core12.Promoted_From_VK_KHR_driver_properties</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier">ConformanceVersion</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier">PhysicalDeviceDriverProperties</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier">DriverId</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier">MAX_DRIVER_NAME_SIZE</span></a></span><span>
+</span><span id="line-7"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier">MAX_DRIVER_NAME_SIZE</span></a></span><span>
+</span><span id="line-8"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier">MAX_DRIVER_INFO_SIZE</span></a></span><span>
+</span><span id="line-9"></span><span>                                                             </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier">MAX_DRIVER_INFO_SIZE</span></a></span><span>
+</span><span id="line-10"></span><span>                                                             </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier">FixedArray</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.ByteString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">packCString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CChar</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word8</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.ByteString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ByteString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier">lowerArrayPtr</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#pokeFixedLengthNullTerminatedByteString"><span class="hs-identifier">pokeFixedLengthNullTerminatedByteString</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html"><span class="hs-identifier">Vulkan.Core12.Enums.DriverId</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier">DriverId</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier">MAX_DRIVER_INFO_SIZE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier">MAX_DRIVER_NAME_SIZE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html"><span class="hs-identifier">Vulkan.Core12.Enums.DriverId</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier">DriverId</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier">MAX_DRIVER_INFO_SIZE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier">MAX_DRIVER_NAME_SIZE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier">MAX_DRIVER_INFO_SIZE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier">MAX_DRIVER_NAME_SIZE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- | VkConformanceVersion - Structure containing the conformance test suite</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- version the implementation is compliant with</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- 'PhysicalDeviceDriverProperties',</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">data</span><span> </span><span id="ConformanceVersion"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-var">ConformanceVersion</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ConformanceVersion"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-var">ConformanceVersion</span></a></span></span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @major@ is the major version number of the conformance test suite.</span><span>
+</span><span id="line-58"></span><span>    </span><span id="%24sel%3Amajor%3AConformanceVersion"><span class="annot"><span class="annottext">ConformanceVersion -&gt; Word8
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3Amajor%3AConformanceVersion"><span class="hs-identifier hs-var hs-var">major</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span>
+</span><span id="line-59"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @minor@ is the minor version number of the conformance test suite.</span><span>
+</span><span id="line-60"></span><span>    </span><span id="%24sel%3Aminor%3AConformanceVersion"><span class="annot"><span class="annottext">ConformanceVersion -&gt; Word8
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3Aminor%3AConformanceVersion"><span class="hs-identifier hs-var hs-var">minor</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @subminor@ is the subminor version number of the conformance test suite.</span><span>
+</span><span id="line-62"></span><span>    </span><span id="%24sel%3Asubminor%3AConformanceVersion"><span class="annot"><span class="annottext">ConformanceVersion -&gt; Word8
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3Asubminor%3AConformanceVersion"><span class="hs-identifier hs-var hs-var">subminor</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span>
+</span><span id="line-63"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @patch@ is the patch version number of the conformance test suite.</span><span>
+</span><span id="line-64"></span><span>    </span><span id="%24sel%3Apatch%3AConformanceVersion"><span class="annot"><span class="annottext">ConformanceVersion -&gt; Word8
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3Apatch%3AConformanceVersion"><span class="hs-identifier hs-var hs-var">patch</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span>
+</span><span id="line-65"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-66"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680088462"><span id="local-6989586621680088464"><span class="annot"><span class="annottext">ConformanceVersion -&gt; ConformanceVersion -&gt; Bool
+(ConformanceVersion -&gt; ConformanceVersion -&gt; Bool)
+-&gt; (ConformanceVersion -&gt; ConformanceVersion -&gt; Bool)
+-&gt; Eq ConformanceVersion
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ConformanceVersion -&gt; ConformanceVersion -&gt; Bool
+$c/= :: ConformanceVersion -&gt; ConformanceVersion -&gt; Bool
+== :: ConformanceVersion -&gt; ConformanceVersion -&gt; Bool
+$c== :: ConformanceVersion -&gt; ConformanceVersion -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">ConformanceVersion</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680088455"><span id="local-6989586621680088457"><span id="local-6989586621680088459"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span></span></span></span><span>
+</span><span id="line-71"></span><span>
+</span><span id="line-72"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680088450"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-73"></span><span>  </span><span id="local-6989586621680088445"><span class="annot"><span class="annottext">withCStruct :: ConformanceVersion -&gt; (Ptr ConformanceVersion -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680088443"><span class="annot"><span class="annottext">x :: ConformanceVersion
+</span><a href="#local-6989586621680088443"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680088442"><span class="annot"><span class="annottext">f :: Ptr ConformanceVersion -&gt; IO b
+</span><a href="#local-6989586621680088442"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr ConformanceVersion -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span> </span><span class="annot"><span class="annottext">((Ptr ConformanceVersion -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr ConformanceVersion -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680088441"><span class="annot"><span class="annottext">p :: Ptr ConformanceVersion
+</span><a href="#local-6989586621680088441"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; ConformanceVersion -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088441"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">ConformanceVersion
+</span><a href="#local-6989586621680088443"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; IO b
+</span><a href="#local-6989586621680088442"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088441"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span>  </span><span id="local-6989586621680088439"><span class="annot"><span class="annottext">pokeCStruct :: Ptr ConformanceVersion -&gt; ConformanceVersion -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680088439"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680088438"><span class="annot"><span class="annottext">p :: Ptr ConformanceVersion
+</span><a href="#local-6989586621680088438"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680088434"><span id="local-6989586621680088435"><span id="local-6989586621680088436"><span id="local-6989586621680088437"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span></span><span> </span><span id="local-6989586621680088433"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680088433"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-75"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088438"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088437"><span class="hs-identifier hs-var">major</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088438"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088436"><span class="hs-identifier hs-var">minor</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088438"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">2</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088435"><span class="hs-identifier hs-var">subminor</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088438"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">3</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088434"><span class="hs-identifier hs-var">patch</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680088433"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-80"></span><span>  </span><span id="local-6989586621680088432"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-81"></span><span>  </span><span id="local-6989586621680088430"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-82"></span><span>  </span><span id="local-6989586621680088428"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr ConformanceVersion -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680088426"><span class="annot"><span class="annottext">p :: Ptr ConformanceVersion
+</span><a href="#local-6989586621680088426"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680088425"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680088425"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-83"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088426"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088426"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-85"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088426"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">2</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; Word8 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088426"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">3</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680088425"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-88"></span><span>
+</span><span id="line-89"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-90"></span><span>  </span><span id="local-6989586621680088421"><span class="annot"><span class="annottext">peekCStruct :: Ptr ConformanceVersion -&gt; IO ConformanceVersion
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680088419"><span class="annot"><span class="annottext">p :: Ptr ConformanceVersion
+</span><a href="#local-6989586621680088419"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-91"></span><span>    </span><span id="local-6989586621680088418"><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088418"><span class="hs-identifier hs-var">major</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; IO Word8
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088419"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span>    </span><span id="local-6989586621680088417"><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088417"><span class="hs-identifier hs-var">minor</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; IO Word8
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088419"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">1</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>    </span><span id="local-6989586621680088416"><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088416"><span class="hs-identifier hs-var">subminor</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; IO Word8
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088419"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">2</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span>    </span><span id="local-6989586621680088415"><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088415"><span class="hs-identifier hs-var">patch</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word8 -&gt; IO Word8
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088419"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; Int -&gt; Ptr Word8
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">3</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word8</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>    </span><span class="annot"><span class="annottext">ConformanceVersion -&gt; IO ConformanceVersion
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(ConformanceVersion -&gt; IO ConformanceVersion)
+-&gt; ConformanceVersion -&gt; IO ConformanceVersion
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Word8 -&gt; Word8 -&gt; Word8 -&gt; Word8 -&gt; ConformanceVersion
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-var">ConformanceVersion</span></a></span><span>
+</span><span id="line-96"></span><span>             </span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088418"><span class="hs-identifier hs-var">major</span></a></span><span> </span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088417"><span class="hs-identifier hs-var">minor</span></a></span><span> </span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088416"><span class="hs-identifier hs-var">subminor</span></a></span><span> </span><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621680088415"><span class="hs-identifier hs-var">patch</span></a></span><span>
+</span><span id="line-97"></span><span>
+</span><span id="line-98"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680088405"><span id="local-6989586621680088407"><span id="local-6989586621680088409"><span id="local-6989586621680088411"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621680088401"><span class="annot"><span class="annottext">sizeOf :: ConformanceVersion -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ConformanceVersion
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">4</span></span><span>
+</span><span id="line-100"></span><span>  </span><span id="local-6989586621680088399"><span class="annot"><span class="annottext">alignment :: ConformanceVersion -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">ConformanceVersion
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-101"></span><span>  </span><span id="local-6989586621680088397"><span class="annot"><span class="annottext">peek :: Ptr ConformanceVersion -&gt; IO ConformanceVersion
+</span><a href="#local-6989586621680088397"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; IO ConformanceVersion
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-102"></span><span>  </span><span id="local-6989586621680088396"><span class="annot"><span class="annottext">poke :: Ptr ConformanceVersion -&gt; ConformanceVersion -&gt; IO ()
+</span><a href="#local-6989586621680088396"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680088395"><span class="annot"><span class="annottext">ptr :: Ptr ConformanceVersion
+</span><a href="#local-6989586621680088395"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680088394"><span class="annot"><span class="annottext">poked :: ConformanceVersion
+</span><a href="#local-6989586621680088394"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; ConformanceVersion -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion
+</span><a href="#local-6989586621680088395"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">ConformanceVersion
+</span><a href="#local-6989586621680088394"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-103"></span><span>
+</span><span id="line-104"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-105"></span><span>  </span><span id="local-6989586621680088391"><span class="annot"><span class="annottext">zero :: ConformanceVersion
+</span><a href="#local-6989586621680088391"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Word8 -&gt; Word8 -&gt; Word8 -&gt; Word8 -&gt; ConformanceVersion
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-var">ConformanceVersion</span></a></span><span>
+</span><span id="line-106"></span><span>           </span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-107"></span><span>           </span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-108"></span><span>           </span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-109"></span><span>           </span><span class="annot"><span class="annottext">Word8
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-110"></span><span>
+</span><span id="line-111"></span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- | VkPhysicalDeviceDriverProperties - Structure containing driver</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- identification information</span><span>
+</span><span id="line-114"></span><span class="hs-comment">--</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-116"></span><span class="hs-comment">--</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- @driverID@ /must/ be immutable for a given driver across instances,</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- processes, driver versions, and system reboots.</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- 'ConformanceVersion', 'Vulkan.Core12.Enums.DriverId.DriverId',</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-126"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceDriverProperties"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-var">PhysicalDeviceDriverProperties</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceDriverProperties"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-var">PhysicalDeviceDriverProperties</span></a></span></span><span>
+</span><span id="line-127"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @driverID@ is a unique identifier for the driver of the physical device.</span><span>
+</span><span id="line-128"></span><span>    </span><span id="%24sel%3AdriverID%3APhysicalDeviceDriverProperties"><span class="annot"><span class="annottext">PhysicalDeviceDriverProperties -&gt; DriverId
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3AdriverID%3APhysicalDeviceDriverProperties"><span class="hs-identifier hs-var hs-var">driverID</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier hs-type">DriverId</span></a></span><span>
+</span><span id="line-129"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @driverName@ is an array of</span><span>
+</span><span id="line-130"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE' @char@ containing a</span><span>
+</span><span id="line-131"></span><span>    </span><span class="hs-comment">-- null-terminated UTF-8 string which is the name of the driver.</span><span>
+</span><span id="line-132"></span><span>    </span><span id="%24sel%3AdriverName%3APhysicalDeviceDriverProperties"><span class="annot"><span class="annottext">PhysicalDeviceDriverProperties -&gt; ByteString
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3AdriverName%3APhysicalDeviceDriverProperties"><span class="hs-identifier hs-var hs-var">driverName</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span>
+</span><span id="line-133"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @driverInfo@ is an array of</span><span>
+</span><span id="line-134"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE' @char@ containing a</span><span>
+</span><span id="line-135"></span><span>    </span><span class="hs-comment">-- null-terminated UTF-8 string with additional information about the</span><span>
+</span><span id="line-136"></span><span>    </span><span class="hs-comment">-- driver.</span><span>
+</span><span id="line-137"></span><span>    </span><span id="%24sel%3AdriverInfo%3APhysicalDeviceDriverProperties"><span class="annot"><span class="annottext">PhysicalDeviceDriverProperties -&gt; ByteString
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3AdriverInfo%3APhysicalDeviceDriverProperties"><span class="hs-identifier hs-var hs-var">driverInfo</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ByteString</span></span><span>
+</span><span id="line-138"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @conformanceVersion@ is the version of the Vulkan conformance test this</span><span>
+</span><span id="line-139"></span><span>    </span><span class="hs-comment">-- driver is conformant against (see 'ConformanceVersion').</span><span>
+</span><span id="line-140"></span><span>    </span><span id="%24sel%3AconformanceVersion%3APhysicalDeviceDriverProperties"><span class="annot"><span class="annottext">PhysicalDeviceDriverProperties -&gt; ConformanceVersion
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#%24sel%3AconformanceVersion%3APhysicalDeviceDriverProperties"><span class="hs-identifier hs-var hs-var">conformanceVersion</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span>
+</span><span id="line-141"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-142"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceDriverProperties</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680088380"><span id="local-6989586621680088382"><span id="local-6989586621680088384"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-type">PhysicalDeviceDriverProperties</span></a></span></span></span></span><span>
+</span><span id="line-147"></span><span>
+</span><span id="line-148"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680088376"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-type">PhysicalDeviceDriverProperties</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-149"></span><span>  </span><span id="local-6989586621680088372"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceDriverProperties
+-&gt; (Ptr PhysicalDeviceDriverProperties -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680088372"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680088371"><span class="annot"><span class="annottext">x :: PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088371"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680088370"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceDriverProperties -&gt; IO b
+</span><a href="#local-6989586621680088370"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr PhysicalDeviceDriverProperties -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">536</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceDriverProperties -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceDriverProperties -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680088369"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088369"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+-&gt; PhysicalDeviceDriverProperties -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088369"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088371"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; IO b
+</span><a href="#local-6989586621680088370"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088369"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span>  </span><span id="local-6989586621680088368"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceDriverProperties
+-&gt; PhysicalDeviceDriverProperties -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680088368"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680088367"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088367"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680088363"><span id="local-6989586621680088364"><span id="local-6989586621680088365"><span id="local-6989586621680088366"><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-type">PhysicalDeviceDriverProperties</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span></span><span> </span><span id="local-6989586621680088362"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680088362"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-151"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088367"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088367"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-153"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr DriverId -&gt; DriverId -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088367"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr DriverId
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier hs-type">DriverId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DriverId
+</span><a href="#local-6989586621680088366"><span class="hs-identifier hs-var">driverID</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar) -&gt; ByteString -&gt; IO ()
+forall (n :: Nat).
+KnownNat n =&gt;
+Ptr (FixedArray n CChar) -&gt; ByteString -&gt; IO ()
+</span><a href="Vulkan.CStruct.Utils.html#pokeFixedLengthNullTerminatedByteString"><span class="hs-identifier hs-var">pokeFixedLengthNullTerminatedByteString</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088367"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+-&gt; Int -&gt; Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier hs-type">MAX_DRIVER_NAME_SIZE</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CChar</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621680088365"><span class="hs-identifier hs-var">driverName</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar) -&gt; ByteString -&gt; IO ()
+forall (n :: Nat).
+KnownNat n =&gt;
+Ptr (FixedArray n CChar) -&gt; ByteString -&gt; IO ()
+</span><a href="Vulkan.CStruct.Utils.html#pokeFixedLengthNullTerminatedByteString"><span class="hs-identifier hs-var">pokeFixedLengthNullTerminatedByteString</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088367"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+-&gt; Int -&gt; Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">276</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier hs-type">MAX_DRIVER_INFO_SIZE</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CChar</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621680088364"><span class="hs-identifier hs-var">driverInfo</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-156"></span><span>    </span><span class="annot"><span class="annottext">((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ())
+-&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; ConformanceVersion -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088367"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr ConformanceVersion
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">532</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ConformanceVersion
+</span><a href="#local-6989586621680088363"><span class="hs-identifier hs-var">conformanceVersion</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; IO b) -&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; (() -&gt; IO b) -&gt; IO b
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(() -&gt; IO b) -&gt; () -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680088362"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-158"></span><span>  </span><span id="local-6989586621680088359"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680088359"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">536</span></span><span>
+</span><span id="line-159"></span><span>  </span><span id="local-6989586621680088358"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680088358"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-160"></span><span>  </span><span id="local-6989586621680088357"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceDriverProperties -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680088357"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680088356"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088356"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680088355"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680088355"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-161"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088356"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088356"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr DriverId -&gt; DriverId -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088356"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr DriverId
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier hs-type">DriverId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DriverId
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-164"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar) -&gt; ByteString -&gt; IO ()
+forall (n :: Nat).
+KnownNat n =&gt;
+Ptr (FixedArray n CChar) -&gt; ByteString -&gt; IO ()
+</span><a href="Vulkan.CStruct.Utils.html#pokeFixedLengthNullTerminatedByteString"><span class="hs-identifier hs-var">pokeFixedLengthNullTerminatedByteString</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088356"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+-&gt; Int -&gt; Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier hs-type">MAX_DRIVER_NAME_SIZE</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CChar</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-165"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar) -&gt; ByteString -&gt; IO ()
+forall (n :: Nat).
+KnownNat n =&gt;
+Ptr (FixedArray n CChar) -&gt; ByteString -&gt; IO ()
+</span><a href="Vulkan.CStruct.Utils.html#pokeFixedLengthNullTerminatedByteString"><span class="hs-identifier hs-var">pokeFixedLengthNullTerminatedByteString</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088356"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+-&gt; Int -&gt; Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">276</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier hs-type">MAX_DRIVER_INFO_SIZE</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CChar</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-166"></span><span>    </span><span class="annot"><span class="annottext">((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ())
+-&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; ConformanceVersion -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088356"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr ConformanceVersion
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">532</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ConformanceVersion
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; IO b) -&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; (() -&gt; IO b) -&gt; IO b
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(() -&gt; IO b) -&gt; () -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-167"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680088355"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-168"></span><span>
+</span><span id="line-169"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-type">PhysicalDeviceDriverProperties</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-170"></span><span>  </span><span id="local-6989586621680088353"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceDriverProperties
+-&gt; IO PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088353"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680088352"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088352"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-171"></span><span>    </span><span id="local-6989586621680088351"><span class="annot"><span class="annottext">DriverId
+</span><a href="#local-6989586621680088351"><span class="hs-identifier hs-var">driverID</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr DriverId -&gt; IO DriverId
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier hs-type">DriverId</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088352"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr DriverId
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Enums.DriverId.html#DriverId"><span class="hs-identifier hs-type">DriverId</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-172"></span><span>    </span><span id="local-6989586621680088350"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621680088350"><span class="hs-identifier hs-var">driverName</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO ByteString
+</span><span class="hs-identifier hs-var">packCString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar) -&gt; CString
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088352"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+-&gt; Int -&gt; Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_NAME_SIZE"><span class="hs-identifier hs-type">MAX_DRIVER_NAME_SIZE</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CChar</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-173"></span><span>    </span><span id="local-6989586621680088349"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621680088349"><span class="hs-identifier hs-var">driverInfo</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO ByteString
+</span><span class="hs-identifier hs-var">packCString</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar) -&gt; CString
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088352"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+-&gt; Int -&gt; Ptr (FixedArray MAX_DRIVER_NAME_SIZE CChar)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">276</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_DRIVER_INFO_SIZE"><span class="hs-identifier hs-type">MAX_DRIVER_INFO_SIZE</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CChar</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-174"></span><span>    </span><span id="local-6989586621680088348"><span class="annot"><span class="annottext">ConformanceVersion
+</span><a href="#local-6989586621680088348"><span class="hs-identifier hs-var">conformanceVersion</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr ConformanceVersion -&gt; IO ConformanceVersion
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088352"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceDriverProperties -&gt; Int -&gt; Ptr ConformanceVersion
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">532</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#ConformanceVersion"><span class="hs-identifier hs-type">ConformanceVersion</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-175"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceDriverProperties -&gt; IO PhysicalDeviceDriverProperties
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceDriverProperties
+ -&gt; IO PhysicalDeviceDriverProperties)
+-&gt; PhysicalDeviceDriverProperties
+-&gt; IO PhysicalDeviceDriverProperties
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">DriverId
+-&gt; ByteString
+-&gt; ByteString
+-&gt; ConformanceVersion
+-&gt; PhysicalDeviceDriverProperties
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-var">PhysicalDeviceDriverProperties</span></a></span><span>
+</span><span id="line-176"></span><span>             </span><span class="annot"><span class="annottext">DriverId
+</span><a href="#local-6989586621680088351"><span class="hs-identifier hs-var">driverID</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621680088350"><span class="hs-identifier hs-var">driverName</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621680088349"><span class="hs-identifier hs-var">driverInfo</span></a></span><span> </span><span class="annot"><span class="annottext">ConformanceVersion
+</span><a href="#local-6989586621680088348"><span class="hs-identifier hs-var">conformanceVersion</span></a></span><span>
+</span><span id="line-177"></span><span>
+</span><span id="line-178"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-type">PhysicalDeviceDriverProperties</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-179"></span><span>  </span><span id="local-6989586621680088346"><span class="annot"><span class="annottext">zero :: PhysicalDeviceDriverProperties
+</span><a href="#local-6989586621680088346"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DriverId
+-&gt; ByteString
+-&gt; ByteString
+-&gt; ConformanceVersion
+-&gt; PhysicalDeviceDriverProperties
+</span><a href="Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.html#PhysicalDeviceDriverProperties"><span class="hs-identifier hs-var">PhysicalDeviceDriverProperties</span></a></span><span>
+</span><span id="line-180"></span><span>           </span><span class="annot"><span class="annottext">DriverId
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-181"></span><span>           </span><span class="annot"><span class="annottext">ByteString
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-182"></span><span>           </span><span class="annot"><span class="annottext">ByteString
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-183"></span><span>           </span><span class="annot"><span class="annottext">ConformanceVersion
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-184"></span><span>
+</span><span id="line-185"></span></pre></body></html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.CommandPoolResetFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier">CommandPoolResetFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier">COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                               </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-4"></span><span>                                                                               </span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                     </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlags"><span class="hs-identifier">CommandPoolResetFlags</span></a></span><span>
+</span><span id="line-6"></span><span>                                                     </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- | VkCommandPoolResetFlagBits - Bitmask controlling behavior of a command</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- pool reset</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'CommandPoolResetFlags'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="CommandPoolResetFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-var">CommandPoolResetFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CommandPoolResetFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-var">CommandPoolResetFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680084960"><span id="local-6989586621680084962"><span class="annot"><span class="annottext">CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+(CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool)
+-&gt; (CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool)
+-&gt; Eq CommandPoolResetFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+$c/= :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+== :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+$c== :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680084944"><span id="local-6989586621680084946"><span id="local-6989586621680084948"><span id="local-6989586621680084950"><span id="local-6989586621680084952"><span id="local-6989586621680084954"><span id="local-6989586621680084956"><span class="annot"><span class="annottext">Eq CommandPoolResetFlagBits
+Eq CommandPoolResetFlagBits =&gt;
+(CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Ordering)
+-&gt; (CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool)
+-&gt; (CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool)
+-&gt; (CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool)
+-&gt; (CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool)
+-&gt; (CommandPoolResetFlagBits
+    -&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits
+    -&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits)
+-&gt; Ord CommandPoolResetFlagBits
+CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Ordering
+CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+$cmin :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+max :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+$cmax :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+&gt;= :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+$c&gt;= :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+&gt; :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+$c&gt; :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+&lt;= :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+$c&lt;= :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+&lt; :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+$c&lt; :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Bool
+compare :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Ordering
+$ccompare :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; Ordering
+$cp1Ord :: Eq CommandPoolResetFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680084927"><span id="local-6989586621680084929"><span id="local-6989586621680084931"><span id="local-6989586621680084933"><span id="local-6989586621680084935"><span id="local-6989586621680084937"><span id="local-6989586621680084939"><span id="local-6989586621680084941"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO CommandPoolResetFlagBits
+Ptr b -&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ()
+Ptr CommandPoolResetFlagBits -&gt; IO CommandPoolResetFlagBits
+Ptr CommandPoolResetFlagBits -&gt; Int -&gt; IO CommandPoolResetFlagBits
+Ptr CommandPoolResetFlagBits
+-&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ()
+Ptr CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; IO ()
+CommandPoolResetFlagBits -&gt; Int
+(CommandPoolResetFlagBits -&gt; Int)
+-&gt; (CommandPoolResetFlagBits -&gt; Int)
+-&gt; (Ptr CommandPoolResetFlagBits
+    -&gt; Int -&gt; IO CommandPoolResetFlagBits)
+-&gt; (Ptr CommandPoolResetFlagBits
+    -&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO CommandPoolResetFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ())
+-&gt; (Ptr CommandPoolResetFlagBits -&gt; IO CommandPoolResetFlagBits)
+-&gt; (Ptr CommandPoolResetFlagBits
+    -&gt; CommandPoolResetFlagBits -&gt; IO ())
+-&gt; Storable CommandPoolResetFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO CommandPoolResetFlagBits
+forall b. Ptr b -&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; IO ()
+$cpoke :: Ptr CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits -&gt; IO ()
+peek :: Ptr CommandPoolResetFlagBits -&gt; IO CommandPoolResetFlagBits
+$cpeek :: Ptr CommandPoolResetFlagBits -&gt; IO CommandPoolResetFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO CommandPoolResetFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO CommandPoolResetFlagBits
+pokeElemOff :: Ptr CommandPoolResetFlagBits
+-&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr CommandPoolResetFlagBits
+-&gt; Int -&gt; CommandPoolResetFlagBits -&gt; IO ()
+peekElemOff :: Ptr CommandPoolResetFlagBits -&gt; Int -&gt; IO CommandPoolResetFlagBits
+$cpeekElemOff :: Ptr CommandPoolResetFlagBits -&gt; Int -&gt; IO CommandPoolResetFlagBits
+alignment :: CommandPoolResetFlagBits -&gt; Int
+$calignment :: CommandPoolResetFlagBits -&gt; Int
+sizeOf :: CommandPoolResetFlagBits -&gt; Int
+$csizeOf :: CommandPoolResetFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680084924"><span class="annot"><span class="annottext">CommandPoolResetFlagBits
+CommandPoolResetFlagBits -&gt; Zero CommandPoolResetFlagBits
+forall a. a -&gt; Zero a
+zero :: CommandPoolResetFlagBits
+$czero :: CommandPoolResetFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680084878"><span id="local-6989586621680084880"><span id="local-6989586621680084882"><span id="local-6989586621680084884"><span id="local-6989586621680084886"><span id="local-6989586621680084888"><span id="local-6989586621680084890"><span id="local-6989586621680084892"><span id="local-6989586621680084894"><span id="local-6989586621680084896"><span id="local-6989586621680084898"><span id="local-6989586621680084900"><span id="local-6989586621680084902"><span id="local-6989586621680084904"><span id="local-6989586621680084906"><span id="local-6989586621680084908"><span id="local-6989586621680084910"><span id="local-6989586621680084912"><span id="local-6989586621680084914"><span id="local-6989586621680084916"><span id="local-6989586621680084918"><span id="local-6989586621680084920"><span class="annot"><span class="annottext">Eq CommandPoolResetFlagBits
+CommandPoolResetFlagBits
+Eq CommandPoolResetFlagBits =&gt;
+(CommandPoolResetFlagBits
+ -&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits
+    -&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits
+    -&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; CommandPoolResetFlagBits
+-&gt; (Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; Bool)
+-&gt; (CommandPoolResetFlagBits -&gt; Maybe Int)
+-&gt; (CommandPoolResetFlagBits -&gt; Int)
+-&gt; (CommandPoolResetFlagBits -&gt; Bool)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits)
+-&gt; (CommandPoolResetFlagBits -&gt; Int)
+-&gt; Bits CommandPoolResetFlagBits
+Int -&gt; CommandPoolResetFlagBits
+CommandPoolResetFlagBits -&gt; Bool
+CommandPoolResetFlagBits -&gt; Int
+CommandPoolResetFlagBits -&gt; Maybe Int
+CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+CommandPoolResetFlagBits -&gt; Int -&gt; Bool
+CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: CommandPoolResetFlagBits -&gt; Int
+$cpopCount :: CommandPoolResetFlagBits -&gt; Int
+rotateR :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$crotateR :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+rotateL :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$crotateL :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+unsafeShiftR :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$cunsafeShiftR :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+shiftR :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$cshiftR :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+unsafeShiftL :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$cunsafeShiftL :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+shiftL :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$cshiftL :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+isSigned :: CommandPoolResetFlagBits -&gt; Bool
+$cisSigned :: CommandPoolResetFlagBits -&gt; Bool
+bitSize :: CommandPoolResetFlagBits -&gt; Int
+$cbitSize :: CommandPoolResetFlagBits -&gt; Int
+bitSizeMaybe :: CommandPoolResetFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: CommandPoolResetFlagBits -&gt; Maybe Int
+testBit :: CommandPoolResetFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: CommandPoolResetFlagBits -&gt; Int -&gt; Bool
+complementBit :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$ccomplementBit :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+clearBit :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$cclearBit :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+setBit :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$csetBit :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+bit :: Int -&gt; CommandPoolResetFlagBits
+$cbit :: Int -&gt; CommandPoolResetFlagBits
+zeroBits :: CommandPoolResetFlagBits
+$czeroBits :: CommandPoolResetFlagBits
+rotate :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$crotate :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+shift :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+$cshift :: CommandPoolResetFlagBits -&gt; Int -&gt; CommandPoolResetFlagBits
+complement :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+$ccomplement :: CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+xor :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+$cxor :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+.|. :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+$c.|. :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+.&amp;. :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+$c.&amp;. :: CommandPoolResetFlagBits
+-&gt; CommandPoolResetFlagBits -&gt; CommandPoolResetFlagBits
+$cp1Bits :: Eq CommandPoolResetFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT' specifies that resetting a</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- command pool recycles all of the resources from the command pool back to</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- the system.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCOMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"><span id="%24mCOMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"><span id="COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"><span class="annot"><span class="annottext">$bCOMMAND_POOL_RESET_RELEASE_RESOURCES_BIT :: CommandPoolResetFlagBits
+$mCOMMAND_POOL_RESET_RELEASE_RESOURCES_BIT :: forall r.
+CommandPoolResetFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#%24bCOMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier hs-var hs-var hs-var">COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-type">CommandPoolResetFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span class="hs-keyword">type</span><span> </span><span id="CommandPoolResetFlags"><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlags"><span class="hs-identifier hs-var">CommandPoolResetFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-type">CommandPoolResetFlagBits</span></a></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680084870"><span id="local-6989586621680084872"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-type">CommandPoolResetFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>  </span><span id="local-6989586621680084868"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; CommandPoolResetFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680084866"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680084866"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-41"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier hs-type">COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT&quot;</span></span><span>
+</span><span id="line-42"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-type">CommandPoolResetFlagBits</span></a></span><span> </span><span id="local-6989586621680084865"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680084865"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680084866"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CommandPoolResetFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680084865"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680084857"><span id="local-6989586621680084860"><span id="local-6989586621680084862"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-type">CommandPoolResetFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-45"></span><span>  </span><span id="local-6989586621680084855"><span class="annot"><span class="annottext">readPrec :: ReadPrec CommandPoolResetFlagBits
+</span><a href="#local-6989586621680084855"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec CommandPoolResetFlagBits
+-&gt; ReadPrec CommandPoolResetFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec CommandPoolResetFlagBits)]
+-&gt; ReadPrec CommandPoolResetFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CommandPoolResetFlagBits -&gt; ReadPrec CommandPoolResetFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CommandPoolResetFlagBits
+</span><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"><span class="hs-identifier hs-var">COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-46"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec CommandPoolResetFlagBits
+-&gt; ReadPrec CommandPoolResetFlagBits
+-&gt; ReadPrec CommandPoolResetFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-47"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec CommandPoolResetFlagBits
+-&gt; ReadPrec CommandPoolResetFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-48"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CommandPoolResetFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span>                       </span><span id="local-6989586621680084854"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680084854"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-50"></span><span>                       </span><span class="annot"><span class="annottext">CommandPoolResetFlagBits -&gt; ReadPrec CommandPoolResetFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; CommandPoolResetFlagBits
+</span><a href="Vulkan.Core10.Enums.CommandPoolResetFlagBits.html#CommandPoolResetFlagBits"><span class="hs-identifier hs-var">CommandPoolResetFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680084854"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span></pre></body></html>
