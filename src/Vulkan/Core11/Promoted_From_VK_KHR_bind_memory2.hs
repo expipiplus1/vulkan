@@ -247,6 +247,18 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     and @memoryOffset@ /must/ be zero
 --
+-- -   If @buffer@ was created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--     bit set, the buffer /must/ be bound to a memory object allocated
+--     with a memory type that reports
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
+--
+-- -   If @buffer@ was created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--     bit not set, the buffer /must/ not be bound to a memory object
+--     created with a memory type that reports
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
+--
 -- -   If @buffer@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
@@ -514,6 +526,18 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     for which the allocation was created; and the @arrayLayers@
 --     parameter of the image being bound /must/ be equal to or smaller
 --     than the original image for which the allocation was created
+--
+-- -   If image was created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
+--     bit set, the image /must/ be bound to a memory object allocated with
+--     a memory type that reports
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
+--
+-- -   If image was created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
+--     bit not set, the image /must/ not be bound to a memory object
+--     created with a memory type that reports
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
 -- -   If @image@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@

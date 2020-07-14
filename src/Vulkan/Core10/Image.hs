@@ -864,6 +864,11 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --
+-- -   If @tiling@ is
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', @flags@
+--     /must/ not contain
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--
 -- -   If @imageType@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D',
 --     @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'

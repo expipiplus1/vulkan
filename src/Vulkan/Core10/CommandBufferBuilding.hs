@@ -4014,15 +4014,13 @@ foreign import ccall
 -- of @srcSubresource@ for the source and @dstSubresource@ for the
 -- destination. @layerCount@ layers are blitted to the destination image.
 --
--- 3D textures are blitted slice by slice. Slices in the source region
--- bounded by @srcOffsets@[0].z and @srcOffsets@[1].z are copied to slices
--- in the destination region bounded by @dstOffsets@[0].z and
--- @dstOffsets@[1].z. For each destination slice, a source __z__ coordinate
--- is linearly interpolated between @srcOffsets@[0].z and
--- @srcOffsets@[1].z. If the @filter@ parameter is
--- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' then the value sampled from
--- the source image is taken by doing linear filtering using the
--- interpolated __z__ coordinate. If @filter@ parameter is
+-- When blitting 3D textures, slices in the destination region bounded by
+-- @dstOffsets@[0].z and @dstOffsets@[1].z are sampled from slices in the
+-- source region bounded by @srcOffsets@[0].z and @srcOffsets@[1].z. If the
+-- @filter@ parameter is 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' then
+-- the value sampled from the source image is taken by doing linear
+-- filtering using the interpolated __z__ coordinate represented by __w__
+-- in the previous equations. If the @filter@ parameter is
 -- 'Vulkan.Core10.Enums.Filter.FILTER_NEAREST' then the value sampled from
 -- the source image is taken from the single nearest slice, with an
 -- implementation-dependent arithmetic rounding mode.

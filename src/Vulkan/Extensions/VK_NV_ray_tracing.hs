@@ -609,6 +609,20 @@ foreign import ccall
 
 -- | vkCmdBuildAccelerationStructureNV - Build an acceleration structure
 --
+-- = Description
+--
+-- Accesses to @scratch@ /must/ be
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- with the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- and an
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types access type>
+-- of
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'
+-- or
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
+--
 -- == Valid Usage
 --
 -- -   @geometryCount@ /must/ be less than or equal to

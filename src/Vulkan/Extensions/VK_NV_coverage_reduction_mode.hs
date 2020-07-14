@@ -236,8 +236,8 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 --
 -- = Description
 --
--- If this structure is not present, the default coverage reduction mode is
--- inferred as follows:
+-- If this structure is not present, or if the extension is not enabled,
+-- the default coverage reduction mode is inferred as follows:
 --
 -- -   If the @VK_NV_framebuffer_mixed_samples@ extension is enabled, then
 --     it is as if the @coverageReductionMode@ is
@@ -270,7 +270,7 @@ data PipelineCoverageReductionStateCreateInfoNV = PipelineCoverageReductionState
   { -- | @flags@ is reserved for future use.
     flags :: PipelineCoverageReductionStateCreateFlagsNV
   , -- | @coverageReductionMode@ is a 'CoverageReductionModeNV' value controlling
-    -- how the /color sample mask/ is generated from the coverage mask.
+    -- how color sample coverage is generated from pixel coverage.
     coverageReductionMode :: CoverageReductionModeNV
   }
   deriving (Typeable, Eq)
@@ -429,16 +429,16 @@ instance Read PipelineCoverageReductionStateCreateFlagsNV where
 newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'COVERAGE_REDUCTION_MODE_MERGE_NV': In this mode, there is an
--- implementation-dependent association of each coverage sample to a color
--- sample. The reduced color sample mask is computed such that the bit for
--- each color sample is 1 if any of the associated bits in the fragment’s
--- coverage is on, and 0 otherwise.
+-- | 'COVERAGE_REDUCTION_MODE_MERGE_NV' specifies that each color sample will
+-- be associated with an implementation-dependent subset of samples in the
+-- pixel coverage. If any of those associated samples are covered, the
+-- color sample is covered.
 pattern COVERAGE_REDUCTION_MODE_MERGE_NV = CoverageReductionModeNV 0
--- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV': In this mode, only the first M
--- coverage samples are associated with the color samples such that
+-- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color samples
+-- present in the color attachments, a color sample is covered if the pixel
+-- coverage sample with the same
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
--- i maps to color sample index i, where M is the number of color samples.
+-- i is covered; other pixel coverage samples are discarded.
 pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
 {-# complete COVERAGE_REDUCTION_MODE_MERGE_NV,
              COVERAGE_REDUCTION_MODE_TRUNCATE_NV :: CoverageReductionModeNV #-}

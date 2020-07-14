@@ -653,6 +653,13 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
+-- -   If the @pNext@ chain of this structure does not include a
+--     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo'
+--     structure with @protectedSubmit@ set to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then each element of the
+--     command buffer of the @pCommandBuffers@ array /must/ be an
+--     unprotected command buffer
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

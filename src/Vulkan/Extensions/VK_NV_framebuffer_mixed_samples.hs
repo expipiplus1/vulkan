@@ -73,10 +73,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- If @coverageModulationTableEnable@ is
 -- 'Vulkan.Core10.FundamentalTypes.FALSE', then for each color sample the
--- associated bits of the fragment’s coverage are counted and divided by
--- the number of associated bits to produce a modulation factor R in the
--- range (0,1] (a value of zero would have been killed due to a color
--- coverage of 0). Specifically:
+-- associated bits of the pixel coverage are counted and divided by the
+-- number of associated bits to produce a modulation factor R in the range
+-- (0,1] (a value of zero would have been killed due to a color coverage of
+-- 0). Specifically:
 --
 -- -   N = value of @rasterizationSamples@
 --
