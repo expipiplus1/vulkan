@@ -65,7 +65,7 @@ fi
 if [ "$vma_version" ]; then
   echo "Bumping VulkanMemoryAllocator version and generating tarballs"
 
-  vulkan_breaking=$(yq <package.yaml .version |
+  vulkan_breaking=$(yq <package.yaml .version --raw-output |
     sed -E 's/([0-9]+\.[0-9]+).*/\1/')
 
   sed -i.bak "s/^version: .*/version: $vma_version/g" VulkanMemoryAllocator/package.yaml
