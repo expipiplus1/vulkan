@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.3.5] - 2020-07-14
   - Bump VMA, no interface changes
 
 ## [0.3.4] - 2020-07-05
