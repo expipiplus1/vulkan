@@ -146,6 +146,8 @@ EOF
 fi
 
 if [ "$haddocks" ]; then
+  cat <<EOF
   # Upload standalone haddocks
-  echo "git -C \"$haddocks\" push"
+  git -C \"$haddocks\" push
+EOF
 fi
