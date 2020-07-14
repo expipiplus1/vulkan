@@ -270,10 +270,14 @@ pattern ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT = AccessFlagBits 0x01000000
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV'.
 pattern ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV = AccessFlagBits 0x00800000
 -- | 'ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR' specifies write access to
--- an acceleration structure as part of a build command.
+-- an acceleration structure or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-scratch acceleration structure scratch buffer>
+-- as part of a build command.
 pattern ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR = AccessFlagBits 0x00400000
 -- | 'ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR' specifies read access to an
--- acceleration structure as part of a trace or build command.
+-- acceleration structure as part of a trace or build command, or to an
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-scratch acceleration structure scratch buffer>
+-- as part of a build command.
 pattern ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR = AccessFlagBits 0x00200000
 -- | 'ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' is similar to
 -- 'ACCESS_COLOR_ATTACHMENT_READ_BIT', but also includes

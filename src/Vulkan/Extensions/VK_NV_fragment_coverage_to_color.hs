@@ -49,6 +49,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
+-- If the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' includes a
+-- 'PipelineCoverageToColorStateCreateInfoNV' structure, then that
+-- structure controls whether the fragment coverage is substituted for a
+-- fragment color output and, if so, which output is replaced.
+--
 -- If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE', the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage mask>
 -- replaces the first component of the color value corresponding to the

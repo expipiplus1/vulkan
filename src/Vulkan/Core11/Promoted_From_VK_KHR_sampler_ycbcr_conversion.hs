@@ -368,14 +368,18 @@ instance Zero SamplerYcbcrConversionInfo where
 --     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
---     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN' if
+--     the corresponding channels are
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     of the sampler Y′CBCR conversion do not support
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
---     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT' if the
+--     corresponding channels are
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
 -- -   If the format has a @_422@ or @_420@ suffix, then @components.g@
 --     /must/ be the
@@ -506,7 +510,7 @@ data SamplerYcbcrConversionCreateInfo (es :: [Type]) = SamplerYcbcrConversionCre
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>
     -- associated with downsampled chroma channels in the x dimension.
     -- @xChromaOffset@ has no effect for formats in which chroma channels are
-    -- the same resolution as the luma channel.
+    -- not downsampled horizontally.
     xChromaOffset :: ChromaLocation
   , -- | @yChromaOffset@ describes the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>

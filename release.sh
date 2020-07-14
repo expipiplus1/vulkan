@@ -65,7 +65,7 @@ fi
 if [ "$vma_version" ]; then
   echo "Bumping VulkanMemoryAllocator version and generating tarballs"
 
-  vulkan_breaking=$(yq <package.yaml .version |
+  vulkan_breaking=$(yq <package.yaml .version --raw-output |
     sed -E 's/([0-9]+\.[0-9]+).*/\1/')
 
   sed -i.bak "s/^version: .*/version: $vma_version/g" VulkanMemoryAllocator/package.yaml
@@ -110,7 +110,7 @@ cat <<EOF
   --------------------------------
 
   # Open a PR for this release
-  git push --set-upstream origin
+  git push --set-upstream origin "$branch"
   git pull-request
   # Wait for CI to complete
   git push --tags
@@ -146,6 +146,8 @@ EOF
 fi
 
 if [ "$haddocks" ]; then
+  cat <<EOF
   # Upload standalone haddocks
-  echo "git -C \"$haddocks\" push"
+  git -C \"$haddocks\" push
+EOF
 fi

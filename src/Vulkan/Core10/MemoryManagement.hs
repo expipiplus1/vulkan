@@ -65,23 +65,7 @@ foreign import ccall
 -- | vkGetBufferMemoryRequirements - Returns the memory requirements for
 -- specified Vulkan object
 --
--- == Valid Usage
---
--- -   If @buffer@ was created with the
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @buffer@ /must/ be bound to memory
---
 -- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
---
--- -   @pMemoryRequirements@ /must/ be a valid pointer to a
---     'MemoryRequirements' structure
---
--- -   @buffer@ /must/ have been created, allocated, or retrieved from
---     @device@
 --
 -- = See Also
 --
@@ -90,8 +74,14 @@ foreign import ccall
 getBufferMemoryRequirements :: forall io
                              . (MonadIO io)
                             => -- | @device@ is the logical device that owns the buffer.
+                               --
+                               -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                Device
                             -> -- | @buffer@ is the buffer to query.
+                               --
+                               -- @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+                               --
+                               -- @buffer@ /must/ have been created, allocated, or retrieved from @device@
                                Buffer
                             -> io (MemoryRequirements)
 getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
