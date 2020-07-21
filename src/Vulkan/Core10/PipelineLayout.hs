@@ -596,7 +596,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
 --     across all shader stages and across all elements of @pSetLayouts@
 --     /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxdescriptorsetsubsampledsamplers ::maxDescriptorSetSubsampledSamplers>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
 --
 -- == Valid Usage (Implicit)
 --

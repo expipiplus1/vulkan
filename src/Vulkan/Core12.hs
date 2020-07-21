@@ -526,10 +526,10 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     used in such objects. This also indicates whether shader modules
 --     /can/ declare the @StoragePushConstant8@ capability.
 --
--- -   @shaderBufferInt64Atomics@ indicates whether shaders /can/ support
+-- -   @shaderBufferInt64Atomics@ indicates whether shaders /can/ perform
 --     64-bit unsigned and signed integer atomic operations on buffers.
 --
--- -   @shaderSharedInt64Atomics@ indicates whether shaders /can/ support
+-- -   @shaderSharedInt64Atomics@ indicates whether shaders /can/ perform
 --     64-bit unsigned and signed integer atomic operations on shared
 --     memory.
 --

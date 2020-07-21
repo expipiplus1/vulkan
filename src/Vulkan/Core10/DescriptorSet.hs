@@ -598,8 +598,7 @@ foreign import ccall
 --     @pAllocateInfo->descriptorSetCount@
 --     'Vulkan.Core10.Handles.DescriptorSet' handles
 --
--- -   The value referenced by @pAllocateInfo->descriptorSetCount@ /must/
---     be greater than @0@
+-- -   @pAllocateInfo->descriptorSetCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --

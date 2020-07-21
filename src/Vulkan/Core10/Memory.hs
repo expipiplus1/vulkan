@@ -771,6 +771,15 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- -   'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     with a non-@NULL@ @buffer@ value
 --
+-- If the parameters define an import operation and the external handle
+-- type is
+-- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
+-- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT',
+-- or
+-- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
+-- @allocationSize@ is ignored. The implementation /must/ query the size of
+-- these allocations from the OS.
+--
 -- Importing memory /must/ not modify the content of the memory.
 -- Implementations /must/ ensure that importing memory does not enable the
 -- importing Vulkan instance to access any memory or resources in other
@@ -868,17 +877,6 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
 --     match those specified when the memory object being imported was
 --     created
---
--- -   If the parameters define an import operation and the external handle
---     type is
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT',
---     or
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
---     @allocationSize@ /must/ match the size reported in the memory
---     requirements of the @image@ or @buffer@ member of the
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
---     structure included in the @pNext@ chain
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is

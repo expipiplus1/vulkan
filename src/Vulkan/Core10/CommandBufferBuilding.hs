@@ -6866,7 +6866,7 @@ foreign import ccall
 --     been used within @commandBuffer@, its parent primary command buffer
 --     or secondary command buffer recorded within the same parent primary
 --     command buffer as @commandBuffer@, the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-features-performanceCounterMultipleQueryPools performanceCounterMultipleQueryPools>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-performanceCounterMultipleQueryPools performanceCounterMultipleQueryPools>
 --     feature /must/ be enabled
 --
 -- -   If @queryPool@ was created with a @queryType@ of
@@ -9575,11 +9575,11 @@ instance Zero ImageResolve where
 --
 -- -   If the @pNext@ chain includes
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
---     @renderArea@::@offset@ /must/ equal (0,0)
+--     @renderArea.offset@ /must/ equal (0,0)
 --
 -- -   If the @pNext@ chain includes
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
---     @renderArea@::@extent@ transformed by
+--     @renderArea.extent@ transformed by
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM'::@transform@
 --     /must/ equal the @framebuffer@ dimensions
 --

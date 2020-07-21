@@ -40,8 +40,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#texture-derivatives-compute Compute Shader Derivatives>
--- for more information.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-quad>
+-- chapter for more information.
 --
 -- If the 'PhysicalDeviceComputeShaderDerivativesFeaturesNV' structure is
 -- included in the @pNext@ chain of

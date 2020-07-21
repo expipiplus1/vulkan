@@ -12,6 +12,7 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_GGP_PROPRIETARY
                                               , DRIVER_ID_BROADCOM_PROPRIETARY
                                               , DRIVER_ID_MESA_LLVMPIPE
+                                              , DRIVER_ID_MOLTENVK
                                               , ..
                                               )) where
 
@@ -80,6 +81,8 @@ pattern DRIVER_ID_GGP_PROPRIETARY = DriverId 11
 pattern DRIVER_ID_BROADCOM_PROPRIETARY = DriverId 12
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_LLVMPIPE"
 pattern DRIVER_ID_MESA_LLVMPIPE = DriverId 13
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MOLTENVK"
+pattern DRIVER_ID_MOLTENVK = DriverId 14
 {-# complete DRIVER_ID_AMD_PROPRIETARY,
              DRIVER_ID_AMD_OPEN_SOURCE,
              DRIVER_ID_MESA_RADV,
@@ -92,7 +95,8 @@ pattern DRIVER_ID_MESA_LLVMPIPE = DriverId 13
              DRIVER_ID_GOOGLE_SWIFTSHADER,
              DRIVER_ID_GGP_PROPRIETARY,
              DRIVER_ID_BROADCOM_PROPRIETARY,
-             DRIVER_ID_MESA_LLVMPIPE :: DriverId #-}
+             DRIVER_ID_MESA_LLVMPIPE,
+             DRIVER_ID_MOLTENVK :: DriverId #-}
 
 instance Show DriverId where
   showsPrec p = \case
@@ -109,6 +113,7 @@ instance Show DriverId where
     DRIVER_ID_GGP_PROPRIETARY -> showString "DRIVER_ID_GGP_PROPRIETARY"
     DRIVER_ID_BROADCOM_PROPRIETARY -> showString "DRIVER_ID_BROADCOM_PROPRIETARY"
     DRIVER_ID_MESA_LLVMPIPE -> showString "DRIVER_ID_MESA_LLVMPIPE"
+    DRIVER_ID_MOLTENVK -> showString "DRIVER_ID_MOLTENVK"
     DriverId x -> showParen (p >= 11) (showString "DriverId " . showsPrec 11 x)
 
 instance Read DriverId where
@@ -124,7 +129,8 @@ instance Read DriverId where
                             , ("DRIVER_ID_GOOGLE_SWIFTSHADER", pure DRIVER_ID_GOOGLE_SWIFTSHADER)
                             , ("DRIVER_ID_GGP_PROPRIETARY", pure DRIVER_ID_GGP_PROPRIETARY)
                             , ("DRIVER_ID_BROADCOM_PROPRIETARY", pure DRIVER_ID_BROADCOM_PROPRIETARY)
-                            , ("DRIVER_ID_MESA_LLVMPIPE", pure DRIVER_ID_MESA_LLVMPIPE)]
+                            , ("DRIVER_ID_MESA_LLVMPIPE", pure DRIVER_ID_MESA_LLVMPIPE)
+                            , ("DRIVER_ID_MOLTENVK", pure DRIVER_ID_MOLTENVK)]
                      +++
                      prec 10 (do
                        expectP (Ident "DriverId")

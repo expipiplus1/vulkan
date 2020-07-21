@@ -54,8 +54,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- = Description
 --
 -- If the 'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT' is not set in @flags@,
--- an implementation /must/ not set any other bits in @flags@, and all
--- other 'PipelineCreationFeedbackEXT' data members are undefined.
+-- an implementation /must/ not set any other bits in @flags@, and the
+-- values of all other 'PipelineCreationFeedbackEXT' data members are
+-- undefined.
 --
 -- = See Also
 --

@@ -133,7 +133,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sampler-YCbCr-conversion sampler Y′CBCR conversion feature>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-samplerYcbcrConversion sampler Y′CBCR conversion feature>
 --     /must/ be enabled
 --
 -- == Valid Usage (Implicit)

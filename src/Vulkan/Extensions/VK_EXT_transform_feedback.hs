@@ -286,6 +286,9 @@ foreign import ccall
 --     with a @usage@ value containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --
+-- -   The last vertex processing stage of the bound graphics pipeline
+--     /must/ have been declared with the @Xfb@ execution mode
+--
 -- -   Transform feedback /must/ not be made active in a render pass
 --     instance with multiview enabled
 --
@@ -636,7 +639,7 @@ foreign import ccall
 --     been used within @commandBuffer@, its parent primary command buffer
 --     or secondary command buffer recorded within the same parent primary
 --     command buffer as @commandBuffer@, the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-features-performanceCounterMultipleQueryPools performanceCounterMultipleQueryPools>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-performanceCounterMultipleQueryPools performanceCounterMultipleQueryPools>
 --     feature /must/ be enabled
 --
 -- -   If @queryPool@ was created with a @queryType@ of

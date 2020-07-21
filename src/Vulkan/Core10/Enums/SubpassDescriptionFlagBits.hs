@@ -31,10 +31,10 @@ import Vulkan.Zero (Zero)
 --
 -- Shader resolve operations allow for custom resolve operations, but
 -- overdrawing pixels /may/ have a performance and\/or power cost.
--- Furthermore, since the contents of any depth stencil attachment or color
+-- Furthermore, since the content of any depth stencil attachment or color
 -- attachment is undefined at the begining of a shader resolve subpass, any
--- depth testing, stencil testing, or blending which sources these
--- undefined values are also undefined.
+-- depth testing, stencil testing, or blending operation which sources
+-- these undefined values also has undefined result value.
 --
 -- = See Also
 --

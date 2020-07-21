@@ -431,7 +431,7 @@ foreign import ccall
 -- -   Transform feedback /must/ not be active
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -516,7 +516,7 @@ foreign import ccall
 --     'INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV' bit set
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -599,7 +599,7 @@ foreign import ccall
 --     @groupIndex@ information
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -679,7 +679,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -732,7 +732,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -831,7 +831,7 @@ foreign import ccall
 --     /must/ be @NULL@
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1208,7 +1208,7 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 --     'GraphicsShaderGroupCreateInfoNV'
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-device-generated-commands ::deviceGeneratedCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)

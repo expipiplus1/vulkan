@@ -83,34 +83,34 @@ pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlagBits 0x00000010
 -- attachment by a render pass that has a fragment density map attachment.
 -- Accessing a subsampled image has additional considerations:
 --
--- -   Image data read as an image sampler is undefined if the sampler was
---     not created with @flags@ containing
+-- -   Image data read as an image sampler will have undefined values if
+--     the sampler was not created with @flags@ containing
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
 --     or was not sampled through the use of a combined image sampler with
 --     an immutable sampler in
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding'.
 --
--- -   Image data read with an input attachment is undefined if the
---     contents were not written as an attachment in an earlier subpass of
---     the same render pass.
+-- -   Image data read with an input attachment will have undefined values
+--     if the contents were not written as an attachment in an earlier
+--     subpass of the same render pass.
 --
 -- -   Image data read as an image sampler in the fragment shader will be
 --     additionally be read by the device during
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT'
 --     if
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subsampledcoarsereconstructionearlyaccess ::subsampledCoarseReconstructionEarlyAccess>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subsampledCoarseReconstructionEarlyAccess ::subsampledCoarseReconstructionEarlyAccess>
 --     is 'Vulkan.Core10.FundamentalTypes.TRUE' and the sampler was created
 --     with @flags@ containing
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'.
 --
 -- -   Image data read with load operations are resampled to the fragment
 --     density of the render pass if
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subsampledloads ::subsampledLoads>
---     is 'Vulkan.Core10.FundamentalTypes.TRUE', otherwise they are
---     undefined.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subsampledLoads ::subsampledLoads>
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE'. Otherwise, values of image
+--     data are undefined.
 --
--- -   Image contents outside of the render area become undefined if the
---     image is stored as a render pass attachment.
+-- -   Image contents outside of the render area take on undefined values
+--     if the image is stored as a render pass attachment.
 pattern IMAGE_CREATE_SUBSAMPLED_BIT_EXT = ImageCreateFlagBits 0x00004000
 -- | 'IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT' specifies that
 -- an image with a depth or depth\/stencil format /can/ be used with custom

@@ -477,10 +477,11 @@ foreign import ccall
 -- the current state for the vertex input binding @firstBinding@ + i, for i
 -- in [0, @bindingCount@). The vertex input binding is updated to start at
 -- the offset indicated by @pOffsets@[i] from the start of the buffer
--- @pBuffers@[i] If @pSizes@ is not @NULL@ then @pSizes@[i] specifies the
--- bound size of the corresponding vertex buffer. All vertex input
--- attributes that use each of these bindings will use these updated
--- addresses in their address calculations for subsequent draw commands.
+-- @pBuffers@[i]. If @pSizes@ is not @NULL@ then @pSizes@[i] specifies the
+-- bound size of the vertex buffer starting from the corresponding elements
+-- of @pBuffers@[i] plus @pOffsets@[i]. All vertex input attributes that
+-- use each of these bindings will use these updated addresses in their
+-- address calculations for subsequent draw commands.
 --
 -- If the bound pipeline state object was created with the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
@@ -604,8 +605,8 @@ cmdBindVertexBuffers2EXT :: forall io
                             ("buffers" ::: Vector Buffer)
                          -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
                             ("offsets" ::: Vector DeviceSize)
-                         -> -- | @pSizes@ is optional, and when not @NULL@ is a pointer to an array of
-                            -- buffer sizes.
+                         -> -- | @pSizes@ is an optional array of the size in bytes of vertex data bound
+                            -- from @pBuffers@.
                             ("sizes" ::: Vector DeviceSize)
                          -> -- | @pStrides@ is optional, and when not @NULL@ is a pointer to an array of
                             -- buffer strides.

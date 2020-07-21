@@ -198,8 +198,8 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 -- If the condition is satisfied when 'waitSemaphores' is called, then
 -- 'waitSemaphores' returns immediately. If the condition is not satisfied
 -- at the time 'waitSemaphores' is called, then 'waitSemaphores' will block
--- and wait up to @timeout@ nanoseconds for the condition to become
--- satisfied.
+-- and wait until the condition is satisfied or the @timeout@ has expired,
+-- whichever is sooner.
 --
 -- If @timeout@ is zero, then 'waitSemaphores' does not wait, but simply
 -- returns information about the current state of the semaphore.
@@ -207,11 +207,10 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 -- the condition is not satisfied, even though no actual wait was
 -- performed.
 --
--- If the specified timeout period expires before the condition is
--- satisfied, 'waitSemaphores' returns
--- 'Vulkan.Core10.Enums.Result.TIMEOUT'. If the condition is satisfied
--- before @timeout@ nanoseconds has expired, 'waitSemaphores' returns
--- 'Vulkan.Core10.Enums.Result.SUCCESS'.
+-- If the condition is satisfied before the @timeout@ has expired,
+-- 'waitSemaphores' returns 'Vulkan.Core10.Enums.Result.SUCCESS'.
+-- Otherwise, 'waitSemaphores' returns 'Vulkan.Core10.Enums.Result.TIMEOUT'
+-- after the @timeout@ has expired.
 --
 -- If device loss occurs (see
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)

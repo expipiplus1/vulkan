@@ -570,7 +570,7 @@ foreign import ccall
 --     referenced by this command /must/ be bound to host-visible memory
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -791,7 +791,7 @@ foreign import ccall
 --     contain valid host pointers
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -988,7 +988,7 @@ foreign import ccall
 --     contain valid host pointers
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1223,7 +1223,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
 -- -   the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -3005,7 +3005,7 @@ foreign import ccall
 --     referenced by this command /must/ be bound to host-visible memory
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-raytracing-hostascmds ::rayTracingHostAccelerationStructureCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -4370,8 +4370,8 @@ data AccelerationStructureGeometryTrianglesDataKHR = AccelerationStructureGeomet
   , -- | @indexType@ is the 'Vulkan.Core10.Enums.IndexType.IndexType' of each
     -- index element.
     indexType :: IndexType
-  , -- | @indexData@ is the device or host address to memory containing index
-    -- data for this geometry.
+  , -- | @indexData@ is a device or host address to memory containing index data
+    -- for this geometry.
     indexData :: DeviceOrHostAddressConstKHR
   , -- | @transformData@ is a device or host address to memory containing an
     -- optional reference to a 'TransformMatrixKHR' structure defining a
@@ -5429,8 +5429,8 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
   { -- | @transform@ is a 'TransformMatrixKHR' structure describing a
     -- transformation to be applied to the acceleration structure.
     transform :: TransformMatrixKHR
-  , -- | @instanceCustomIndex@ a 24-bit user-specified index value accessible to
-    -- ray shaders in the @InstanceCustomIndexKHR@ built-in.
+  , -- | @instanceCustomIndex@ is a 24-bit user-specified index value accessible
+    -- to ray shaders in the @InstanceCustomIndexKHR@ built-in.
     --
     -- @instanceCustomIndex@ and @mask@ occupy the same memory as if a single
     -- @int32_t@ was specified in their place

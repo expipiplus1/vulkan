@@ -95,7 +95,8 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = ExternalSemaphoreHandl
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000004
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT' specifies an NT handle
 -- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D
--- 12 fence. It owns a reference to the underlying synchronization
+-- 12 fence, or @ID3D11Device5@::'Vulkan.Core10.Fence.createFence' by a
+-- Direct3D 11 fence. It owns a reference to the underlying synchronization
 -- primitive associated with the Direct3D fence.
 pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000008
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT' specifies a POSIX file

@@ -972,6 +972,9 @@ foreign import ccall
 -- -   The count stored in @countBuffer@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDrawIndirectCount@
 --
+-- -   (@countBufferOffset@ + @sizeof@(uint32_t)) /must/ be less than or
+--     equal to the size of @countBuffer@
+--
 -- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or
 --     equal to @sizeof@('DrawMeshTasksIndirectCommandNV')
 --

@@ -445,8 +445,8 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
 -- If the condition is satisfied when 'waitForFences' is called, then
 -- 'waitForFences' returns immediately. If the condition is not satisfied
 -- at the time 'waitForFences' is called, then 'waitForFences' will block
--- and wait up to @timeout@ nanoseconds for the condition to become
--- satisfied.
+-- and wait until the condition is satisfied or the @timeout@ has expired,
+-- whichever is sooner.
 --
 -- If @timeout@ is zero, then 'waitForFences' does not wait, but simply
 -- returns the current state of the fences.
@@ -454,10 +454,10 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
 -- the condition is not satisfied, even though no actual wait was
 -- performed.
 --
--- If the specified timeout period expires before the condition is
--- satisfied, 'waitForFences' returns 'Vulkan.Core10.Enums.Result.TIMEOUT'.
--- If the condition is satisfied before @timeout@ nanoseconds has expired,
--- 'waitForFences' returns 'Vulkan.Core10.Enums.Result.SUCCESS'.
+-- If the condition is satisfied before the @timeout@ has expired,
+-- 'waitForFences' returns 'Vulkan.Core10.Enums.Result.SUCCESS'. Otherwise,
+-- 'waitForFences' returns 'Vulkan.Core10.Enums.Result.TIMEOUT' after the
+-- @timeout@ has expired.
 --
 -- If device loss occurs (see
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)

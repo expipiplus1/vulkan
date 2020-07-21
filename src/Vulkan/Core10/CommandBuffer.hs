@@ -149,8 +149,7 @@ foreign import ccall
 --     @pAllocateInfo->commandBufferCount@
 --     'Vulkan.Core10.Handles.CommandBuffer' handles
 --
--- -   The value referenced by @pAllocateInfo->commandBufferCount@ /must/
---     be greater than @0@
+-- -   @pAllocateInfo->commandBufferCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --

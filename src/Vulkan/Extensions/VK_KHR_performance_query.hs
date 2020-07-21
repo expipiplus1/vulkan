@@ -381,34 +381,19 @@ releaseProfilingLockKHR device = liftIO $ do
 -- | VkPhysicalDevicePerformanceQueryFeaturesKHR - Structure describing
 -- performance query support for an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDevicePerformanceQueryFeaturesKHR' structure
--- describe the following implementation-dependent features:
---
 -- == Valid Usage (Implicit)
---
--- To query supported performance counter query pool features, call
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2'
--- with a 'PhysicalDevicePerformanceQueryFeaturesKHR' structure included in
--- the @pNext@ chain of its @pFeatures@ parameter. The
--- 'PhysicalDevicePerformanceQueryFeaturesKHR' structure /can/ also be
--- included in the @pNext@ chain of a
--- 'Vulkan.Core10.Device.DeviceCreateInfo' structure, in which case it
--- controls which additional features are enabled in the device.
 --
 -- = See Also
 --
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryFeaturesKHR
-  { -- | @performanceCounterQueryPools@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
-    -- if the physical device supports performance counter query pools.
+  { -- | @performanceCounterQueryPools@ indicates whether the implementation
+    -- supports performance counter query pools.
     performanceCounterQueryPools :: Bool
-  , -- | @performanceCounterMultipleQueryPools@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE'\` if the physical device supports
-    -- using multiple performance query pools in a primary command buffer and
-    -- secondary command buffers executed within it.
+  , -- | @performanceCounterMultipleQueryPools@ indicates whether the
+    -- implementation supports using multiple performance query pools in a
+    -- primary command buffer and secondary command buffers executed within it.
     performanceCounterMultipleQueryPools :: Bool
   }
   deriving (Typeable, Eq)
@@ -676,7 +661,7 @@ instance Zero PerformanceCounterDescriptionKHR where
 --     device
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-features-performanceCounterQueryPools performanceCounterQueryPools>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
 --     feature /must/ be enabled
 --
 -- -   Each element of @pCounterIndices@ /must/ be in the range of counters

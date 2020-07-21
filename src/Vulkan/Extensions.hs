@@ -54,6 +54,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_headless_surface
                           , module Vulkan.Extensions.VK_EXT_host_query_reset
                           , module Vulkan.Extensions.VK_EXT_image_drm_format_modifier
+                          , module Vulkan.Extensions.VK_EXT_image_robustness
                           , module Vulkan.Extensions.VK_EXT_index_type_uint8
                           , module Vulkan.Extensions.VK_EXT_inline_uniform_block
                           , module Vulkan.Extensions.VK_EXT_line_rasterization
@@ -71,6 +72,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_sampler_filter_minmax
                           , module Vulkan.Extensions.VK_EXT_scalar_block_layout
                           , module Vulkan.Extensions.VK_EXT_separate_stencil_usage
+                          , module Vulkan.Extensions.VK_EXT_shader_atomic_float
                           , module Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
                           , module Vulkan.Extensions.VK_EXT_shader_stencil_export
                           , module Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
@@ -264,6 +266,7 @@ import Vulkan.Extensions.VK_EXT_hdr_metadata
 import Vulkan.Extensions.VK_EXT_headless_surface
 import Vulkan.Extensions.VK_EXT_host_query_reset
 import Vulkan.Extensions.VK_EXT_image_drm_format_modifier
+import Vulkan.Extensions.VK_EXT_image_robustness
 import Vulkan.Extensions.VK_EXT_index_type_uint8
 import Vulkan.Extensions.VK_EXT_inline_uniform_block
 import Vulkan.Extensions.VK_EXT_line_rasterization
@@ -281,6 +284,7 @@ import Vulkan.Extensions.VK_EXT_sample_locations
 import Vulkan.Extensions.VK_EXT_sampler_filter_minmax
 import Vulkan.Extensions.VK_EXT_scalar_block_layout
 import Vulkan.Extensions.VK_EXT_separate_stencil_usage
+import Vulkan.Extensions.VK_EXT_shader_atomic_float
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
 import Vulkan.Extensions.VK_EXT_shader_stencil_export
 import Vulkan.Extensions.VK_EXT_shader_subgroup_ballot

@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ab4f11203014cb17410935e123ca7ec6a20dfab05bbc237d3c7519e80d55be2a
+-- hash: 888f14f21d84f7dffb643126b1a2db408703f6081fe10f259d4278e55da19b30
 
 name:           vulkan
 version:        3.6.1
@@ -304,6 +304,7 @@ library
       Vulkan.Extensions.VK_EXT_headless_surface
       Vulkan.Extensions.VK_EXT_host_query_reset
       Vulkan.Extensions.VK_EXT_image_drm_format_modifier
+      Vulkan.Extensions.VK_EXT_image_robustness
       Vulkan.Extensions.VK_EXT_index_type_uint8
       Vulkan.Extensions.VK_EXT_inline_uniform_block
       Vulkan.Extensions.VK_EXT_line_rasterization
@@ -321,6 +322,7 @@ library
       Vulkan.Extensions.VK_EXT_sampler_filter_minmax
       Vulkan.Extensions.VK_EXT_scalar_block_layout
       Vulkan.Extensions.VK_EXT_separate_stencil_usage
+      Vulkan.Extensions.VK_EXT_shader_atomic_float
       Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
       Vulkan.Extensions.VK_EXT_shader_stencil_export
       Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
