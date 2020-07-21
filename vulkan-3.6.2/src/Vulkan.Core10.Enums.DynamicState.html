@@ -1,0 +1,671 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.DynamicState</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier">DynamicState</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT"><span class="hs-identifier">DYNAMIC_STATE_VIEWPORT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR"><span class="hs-identifier">DYNAMIC_STATE_SCISSOR</span></a></span><span>
+</span><span id="line-4"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_WIDTH"><span class="hs-identifier">DYNAMIC_STATE_LINE_WIDTH</span></a></span><span>
+</span><span id="line-5"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BIAS"><span class="hs-identifier">DYNAMIC_STATE_DEPTH_BIAS</span></a></span><span>
+</span><span id="line-6"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_BLEND_CONSTANTS"><span class="hs-identifier">DYNAMIC_STATE_BLEND_CONSTANTS</span></a></span><span>
+</span><span id="line-7"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS"><span class="hs-identifier">DYNAMIC_STATE_DEPTH_BOUNDS</span></a></span><span>
+</span><span id="line-8"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_COMPARE_MASK"><span class="hs-identifier">DYNAMIC_STATE_STENCIL_COMPARE_MASK</span></a></span><span>
+</span><span id="line-9"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_WRITE_MASK"><span class="hs-identifier">DYNAMIC_STATE_STENCIL_WRITE_MASK</span></a></span><span>
+</span><span id="line-10"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_REFERENCE"><span class="hs-identifier">DYNAMIC_STATE_STENCIL_REFERENCE</span></a></span><span>
+</span><span id="line-11"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_OP_EXT"><span class="hs-identifier">DYNAMIC_STATE_STENCIL_OP_EXT</span></a></span><span>
+</span><span id="line-12"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span class="hs-identifier">DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT</span></a></span><span>
+</span><span id="line-13"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span class="hs-identifier">DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT</span></a></span><span>
+</span><span id="line-14"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span class="hs-identifier">DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT</span></a></span><span>
+</span><span id="line-15"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span class="hs-identifier">DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT</span></a></span><span>
+</span><span id="line-16"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span class="hs-identifier">DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT</span></a></span><span>
+</span><span id="line-17"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span class="hs-identifier">DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT</span></a></span><span>
+</span><span id="line-18"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span class="hs-identifier">DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT</span></a></span><span>
+</span><span id="line-19"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span class="hs-identifier">DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT</span></a></span><span>
+</span><span id="line-20"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span class="hs-identifier">DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT</span></a></span><span>
+</span><span id="line-21"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_FRONT_FACE_EXT"><span class="hs-identifier">DYNAMIC_STATE_FRONT_FACE_EXT</span></a></span><span>
+</span><span id="line-22"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_CULL_MODE_EXT"><span class="hs-identifier">DYNAMIC_STATE_CULL_MODE_EXT</span></a></span><span>
+</span><span id="line-23"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_STIPPLE_EXT"><span class="hs-identifier">DYNAMIC_STATE_LINE_STIPPLE_EXT</span></a></span><span>
+</span><span id="line-24"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span class="hs-identifier">DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV</span></a></span><span>
+</span><span id="line-25"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span class="hs-identifier">DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV</span></a></span><span>
+</span><span id="line-26"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span class="hs-identifier">DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV</span></a></span><span>
+</span><span id="line-27"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span class="hs-identifier">DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT</span></a></span><span>
+</span><span id="line-28"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span class="hs-identifier">DYNAMIC_STATE_DISCARD_RECTANGLE_EXT</span></a></span><span>
+</span><span id="line-29"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span class="hs-identifier">DYNAMIC_STATE_VIEWPORT_W_SCALING_NV</span></a></span><span>
+</span><span id="line-30"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-31"></span><span>                                                      </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- | VkDynamicState - Indicate which dynamic state is taken from dynamic</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- state commands</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-51"></span><span class="hs-comment">--</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">newtype</span><span> </span><span id="DynamicState"><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-var">DynamicState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DynamicState"><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-var">DynamicState</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680083924"><span id="local-6989586621680083926"><span class="annot"><span class="annottext">DynamicState -&gt; DynamicState -&gt; Bool
+(DynamicState -&gt; DynamicState -&gt; Bool)
+-&gt; (DynamicState -&gt; DynamicState -&gt; Bool) -&gt; Eq DynamicState
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DynamicState -&gt; DynamicState -&gt; Bool
+$c/= :: DynamicState -&gt; DynamicState -&gt; Bool
+== :: DynamicState -&gt; DynamicState -&gt; Bool
+$c== :: DynamicState -&gt; DynamicState -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680083908"><span id="local-6989586621680083910"><span id="local-6989586621680083912"><span id="local-6989586621680083914"><span id="local-6989586621680083916"><span id="local-6989586621680083918"><span id="local-6989586621680083920"><span class="annot"><span class="annottext">Eq DynamicState
+Eq DynamicState =&gt;
+(DynamicState -&gt; DynamicState -&gt; Ordering)
+-&gt; (DynamicState -&gt; DynamicState -&gt; Bool)
+-&gt; (DynamicState -&gt; DynamicState -&gt; Bool)
+-&gt; (DynamicState -&gt; DynamicState -&gt; Bool)
+-&gt; (DynamicState -&gt; DynamicState -&gt; Bool)
+-&gt; (DynamicState -&gt; DynamicState -&gt; DynamicState)
+-&gt; (DynamicState -&gt; DynamicState -&gt; DynamicState)
+-&gt; Ord DynamicState
+DynamicState -&gt; DynamicState -&gt; Bool
+DynamicState -&gt; DynamicState -&gt; Ordering
+DynamicState -&gt; DynamicState -&gt; DynamicState
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: DynamicState -&gt; DynamicState -&gt; DynamicState
+$cmin :: DynamicState -&gt; DynamicState -&gt; DynamicState
+max :: DynamicState -&gt; DynamicState -&gt; DynamicState
+$cmax :: DynamicState -&gt; DynamicState -&gt; DynamicState
+&gt;= :: DynamicState -&gt; DynamicState -&gt; Bool
+$c&gt;= :: DynamicState -&gt; DynamicState -&gt; Bool
+&gt; :: DynamicState -&gt; DynamicState -&gt; Bool
+$c&gt; :: DynamicState -&gt; DynamicState -&gt; Bool
+&lt;= :: DynamicState -&gt; DynamicState -&gt; Bool
+$c&lt;= :: DynamicState -&gt; DynamicState -&gt; Bool
+&lt; :: DynamicState -&gt; DynamicState -&gt; Bool
+$c&lt; :: DynamicState -&gt; DynamicState -&gt; Bool
+compare :: DynamicState -&gt; DynamicState -&gt; Ordering
+$ccompare :: DynamicState -&gt; DynamicState -&gt; Ordering
+$cp1Ord :: Eq DynamicState
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680083891"><span id="local-6989586621680083893"><span id="local-6989586621680083895"><span id="local-6989586621680083897"><span id="local-6989586621680083899"><span id="local-6989586621680083901"><span id="local-6989586621680083903"><span id="local-6989586621680083905"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO DynamicState
+Ptr b -&gt; Int -&gt; DynamicState -&gt; IO ()
+Ptr DynamicState -&gt; IO DynamicState
+Ptr DynamicState -&gt; Int -&gt; IO DynamicState
+Ptr DynamicState -&gt; Int -&gt; DynamicState -&gt; IO ()
+Ptr DynamicState -&gt; DynamicState -&gt; IO ()
+DynamicState -&gt; Int
+(DynamicState -&gt; Int)
+-&gt; (DynamicState -&gt; Int)
+-&gt; (Ptr DynamicState -&gt; Int -&gt; IO DynamicState)
+-&gt; (Ptr DynamicState -&gt; Int -&gt; DynamicState -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO DynamicState)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; DynamicState -&gt; IO ())
+-&gt; (Ptr DynamicState -&gt; IO DynamicState)
+-&gt; (Ptr DynamicState -&gt; DynamicState -&gt; IO ())
+-&gt; Storable DynamicState
+forall b. Ptr b -&gt; Int -&gt; IO DynamicState
+forall b. Ptr b -&gt; Int -&gt; DynamicState -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr DynamicState -&gt; DynamicState -&gt; IO ()
+$cpoke :: Ptr DynamicState -&gt; DynamicState -&gt; IO ()
+peek :: Ptr DynamicState -&gt; IO DynamicState
+$cpeek :: Ptr DynamicState -&gt; IO DynamicState
+pokeByteOff :: Ptr b -&gt; Int -&gt; DynamicState -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; DynamicState -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO DynamicState
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO DynamicState
+pokeElemOff :: Ptr DynamicState -&gt; Int -&gt; DynamicState -&gt; IO ()
+$cpokeElemOff :: Ptr DynamicState -&gt; Int -&gt; DynamicState -&gt; IO ()
+peekElemOff :: Ptr DynamicState -&gt; Int -&gt; IO DynamicState
+$cpeekElemOff :: Ptr DynamicState -&gt; Int -&gt; IO DynamicState
+alignment :: DynamicState -&gt; Int
+$calignment :: DynamicState -&gt; Int
+sizeOf :: DynamicState -&gt; Int
+$csizeOf :: DynamicState -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680083888"><span class="annot"><span class="annottext">DynamicState
+DynamicState -&gt; Zero DynamicState
+forall a. a -&gt; Zero a
+zero :: DynamicState
+$czero :: DynamicState
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_VIEWPORT' specifies that the @pViewports@ state in</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- and /must/ be set dynamically with</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport' before any draw</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- commands. The number of viewports used by a pipeline is still specified</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- by the @viewportCount@ member of</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'.</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_VIEWPORT"><span id="%24mDYNAMIC_STATE_VIEWPORT"><span id="DYNAMIC_STATE_VIEWPORT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_VIEWPORT :: DynamicState
+$mDYNAMIC_STATE_VIEWPORT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_VIEWPORT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_VIEWPORT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_SCISSOR' specifies that the @pScissors@ state in</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- and /must/ be set dynamically with</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetScissor' before any draw</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- commands. The number of scissor rectangles used by a pipeline is still</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- specified by the @scissorCount@ member of</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'.</span><span>
+</span><span id="line-71"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_SCISSOR"><span id="%24mDYNAMIC_STATE_SCISSOR"><span id="DYNAMIC_STATE_SCISSOR"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_SCISSOR :: DynamicState
+$mDYNAMIC_STATE_SCISSOR :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_SCISSOR"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_SCISSOR</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_LINE_WIDTH' specifies that the @lineWidth@ state in</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetLineWidth' before any draw</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- commands that generate line primitives for the rasterizer.</span><span>
+</span><span id="line-77"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_LINE_WIDTH"><span id="%24mDYNAMIC_STATE_LINE_WIDTH"><span id="DYNAMIC_STATE_LINE_WIDTH"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_LINE_WIDTH :: DynamicState
+$mDYNAMIC_STATE_LINE_WIDTH :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_LINE_WIDTH"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_LINE_WIDTH</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">2</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_DEPTH_BIAS' specifies that the @depthBiasConstantFactor@,</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- @depthBiasClamp@ and @depthBiasSlopeFactor@ states in</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBias' before any draws</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- are performed with @depthBiasEnable@ in</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' set to</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.TRUE'.</span><span>
+</span><span id="line-86"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_DEPTH_BIAS"><span id="%24mDYNAMIC_STATE_DEPTH_BIAS"><span id="DYNAMIC_STATE_DEPTH_BIAS"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_DEPTH_BIAS :: DynamicState
+$mDYNAMIC_STATE_DEPTH_BIAS :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_DEPTH_BIAS"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_DEPTH_BIAS</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">3</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_BLEND_CONSTANTS' specifies that the @blendConstants@</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- state in 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo' will</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetBlendConstants' before any</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- draws are performed with a pipeline state with</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState' member</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- @blendEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE' and any of</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- the blend functions using a constant blend color.</span><span>
+</span><span id="line-95"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_BLEND_CONSTANTS"><span id="%24mDYNAMIC_STATE_BLEND_CONSTANTS"><span id="DYNAMIC_STATE_BLEND_CONSTANTS"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_BLEND_CONSTANTS :: DynamicState
+$mDYNAMIC_STATE_BLEND_CONSTANTS :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_BLEND_CONSTANTS"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_BLEND_CONSTANTS</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">4</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_DEPTH_BOUNDS' specifies that the @minDepthBounds@ and</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- @maxDepthBounds@ states of</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetDepthBounds' before any draws</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- are performed with a pipeline state with</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- @depthBoundsTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'.</span><span>
+</span><span id="line-104"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_DEPTH_BOUNDS"><span id="%24mDYNAMIC_STATE_DEPTH_BOUNDS"><span id="DYNAMIC_STATE_DEPTH_BOUNDS"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_DEPTH_BOUNDS :: DynamicState
+$mDYNAMIC_STATE_DEPTH_BOUNDS :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_DEPTH_BOUNDS"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_DEPTH_BOUNDS</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">5</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_STENCIL_COMPARE_MASK' specifies that the @compareMask@</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- state in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- for both @front@ and @back@ will be ignored and /must/ be set</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- dynamically with</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilCompareMask' before</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- any draws are performed with a pipeline state with</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'</span><span>
+</span><span id="line-113"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_STENCIL_COMPARE_MASK"><span id="%24mDYNAMIC_STATE_STENCIL_COMPARE_MASK"><span id="DYNAMIC_STATE_STENCIL_COMPARE_MASK"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_STENCIL_COMPARE_MASK :: DynamicState
+$mDYNAMIC_STATE_STENCIL_COMPARE_MASK :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_STENCIL_COMPARE_MASK"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_STENCIL_COMPARE_MASK</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">6</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_STENCIL_WRITE_MASK' specifies that the @writeMask@ state</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' for both</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- @front@ and @back@ will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilWriteMask' before any</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- draws are performed with a pipeline state with</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'</span><span>
+</span><span id="line-121"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_STENCIL_WRITE_MASK"><span id="%24mDYNAMIC_STATE_STENCIL_WRITE_MASK"><span id="DYNAMIC_STATE_STENCIL_WRITE_MASK"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_STENCIL_WRITE_MASK :: DynamicState
+$mDYNAMIC_STATE_STENCIL_WRITE_MASK :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_STENCIL_WRITE_MASK"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_STENCIL_WRITE_MASK</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">7</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_STENCIL_REFERENCE' specifies that the @reference@ state</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' for both</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- @front@ and @back@ will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetStencilReference' before any</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- draws are performed with a pipeline state with</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'</span><span>
+</span><span id="line-129"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_STENCIL_REFERENCE"><span id="%24mDYNAMIC_STATE_STENCIL_REFERENCE"><span id="DYNAMIC_STATE_STENCIL_REFERENCE"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_STENCIL_REFERENCE :: DynamicState
+$mDYNAMIC_STATE_STENCIL_REFERENCE :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_STENCIL_REFERENCE"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_STENCIL_REFERENCE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">8</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_STENCIL_OP_EXT' specifies that the @failOp@, @passOp@,</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- @depthFailOp@, and @compareOp@ states in</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' for both</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- @front@ and @back@ will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- before any draws are performed with a pipeline state with</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_STENCIL_OP_EXT"><span id="%24mDYNAMIC_STATE_STENCIL_OP_EXT"><span id="DYNAMIC_STATE_STENCIL_OP_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_STENCIL_OP_EXT :: DynamicState
+$mDYNAMIC_STATE_STENCIL_OP_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_STENCIL_OP_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_STENCIL_OP_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267011</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT' specifies that the</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- @stencilTestEnable@ state in</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-143"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilTestEnableEXT'</span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span id="%24mDYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span id="DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT :: DynamicState
+$mDYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267010</span><span>
+</span><span id="line-146"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT' specifies that the</span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- @depthBoundsTestEnable@ state in</span><span>
+</span><span id="line-148"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be</span><span>
+</span><span id="line-149"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-150"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthBoundsTestEnableEXT'</span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-152"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span id="%24mDYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span id="DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT :: DynamicState
+$mDYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267009</span><span>
+</span><span id="line-153"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT' specifies that the @depthCompareOp@</span><span>
+</span><span id="line-154"></span><span class="hs-comment">-- state in 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'</span><span>
+</span><span id="line-155"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-156"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT'</span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-158"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span id="%24mDYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span id="DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_DEPTH_COMPARE_OP_EXT :: DynamicState
+$mDYNAMIC_STATE_DEPTH_COMPARE_OP_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267008</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT' specifies that the</span><span>
+</span><span id="line-160"></span><span class="hs-comment">-- @depthWriteEnable@ state in</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be</span><span>
+</span><span id="line-162"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-163"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthWriteEnableEXT'</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-165"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span id="%24mDYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span id="DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT :: DynamicState
+$mDYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267007</span><span>
+</span><span id="line-166"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT' specifies that the</span><span>
+</span><span id="line-167"></span><span class="hs-comment">-- @depthTestEnable@ state in</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' will be</span><span>
+</span><span id="line-169"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-170"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthTestEnableEXT'</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-172"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span id="%24mDYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span id="DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT :: DynamicState
+$mDYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267006</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT' specifies that the</span><span>
+</span><span id="line-174"></span><span class="hs-comment">-- @stride@ state in 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-176"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'</span><span>
+</span><span id="line-177"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-178"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span id="%24mDYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span id="DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT :: DynamicState
+$mDYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267005</span><span>
+</span><span id="line-179"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT' specifies that the @scissorCount@</span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- and @pScissors@ state in</span><span>
+</span><span id="line-181"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- and /must/ be set dynamically with</span><span>
+</span><span id="line-183"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'</span><span>
+</span><span id="line-184"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-185"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span id="%24mDYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span id="DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT :: DynamicState
+$mDYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267004</span><span>
+</span><span id="line-186"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT' specifies that the</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- @viewportCount@ and @pViewports@ state in</span><span>
+</span><span id="line-188"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- and /must/ be set dynamically with</span><span>
+</span><span id="line-190"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- before any draw call.</span><span>
+</span><span id="line-192"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span id="%24mDYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span id="DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT :: DynamicState
+$mDYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267003</span><span>
+</span><span id="line-193"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT' specifies that the @topology@</span><span>
+</span><span id="line-194"></span><span class="hs-comment">-- state in 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'</span><span>
+</span><span id="line-195"></span><span class="hs-comment">-- only specifies the</span><span>
+</span><span id="line-196"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class&gt;,</span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- and the specific topology order and adjacency /must/ be set dynamically</span><span>
+</span><span id="line-198"></span><span class="hs-comment">-- with</span><span>
+</span><span id="line-199"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'</span><span>
+</span><span id="line-200"></span><span class="hs-comment">-- before any draw commands.</span><span>
+</span><span id="line-201"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span id="%24mDYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span id="DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT :: DynamicState
+$mDYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267002</span><span>
+</span><span id="line-202"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_FRONT_FACE_EXT' specifies that the @frontFace@ state in</span><span>
+</span><span id="line-203"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be</span><span>
+</span><span id="line-204"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-205"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT'</span><span>
+</span><span id="line-206"></span><span class="hs-comment">-- before any draw commands.</span><span>
+</span><span id="line-207"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_FRONT_FACE_EXT"><span id="%24mDYNAMIC_STATE_FRONT_FACE_EXT"><span id="DYNAMIC_STATE_FRONT_FACE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_FRONT_FACE_EXT :: DynamicState
+$mDYNAMIC_STATE_FRONT_FACE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_FRONT_FACE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_FRONT_FACE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267001</span><span>
+</span><span id="line-208"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_CULL_MODE_EXT' specifies that the @cullMode@ state in</span><span>
+</span><span id="line-209"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be</span><span>
+</span><span id="line-210"></span><span class="hs-comment">-- ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-211"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT'</span><span>
+</span><span id="line-212"></span><span class="hs-comment">-- before any draw commands.</span><span>
+</span><span id="line-213"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_CULL_MODE_EXT"><span id="%24mDYNAMIC_STATE_CULL_MODE_EXT"><span id="DYNAMIC_STATE_CULL_MODE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_CULL_MODE_EXT :: DynamicState
+$mDYNAMIC_STATE_CULL_MODE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_CULL_MODE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_CULL_MODE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000267000</span><span>
+</span><span id="line-214"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_LINE_STIPPLE_EXT' specifies that the @lineStippleFactor@</span><span>
+</span><span id="line-215"></span><span class="hs-comment">-- and @lineStipplePattern@ state in</span><span>
+</span><span id="line-216"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'</span><span>
+</span><span id="line-217"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-218"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT'</span><span>
+</span><span id="line-219"></span><span class="hs-comment">-- before any draws are performed with a pipeline state with</span><span>
+</span><span id="line-220"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'</span><span>
+</span><span id="line-221"></span><span class="hs-comment">-- member @stippledLineEnable@ set to</span><span>
+</span><span id="line-222"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.TRUE'.</span><span>
+</span><span id="line-223"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_LINE_STIPPLE_EXT"><span id="%24mDYNAMIC_STATE_LINE_STIPPLE_EXT"><span id="DYNAMIC_STATE_LINE_STIPPLE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_LINE_STIPPLE_EXT :: DynamicState
+$mDYNAMIC_STATE_LINE_STIPPLE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_LINE_STIPPLE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_LINE_STIPPLE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000259000</span><span>
+</span><span id="line-224"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' specifies that the</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- @pExclusiveScissors@ state in</span><span>
+</span><span id="line-226"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'</span><span>
+</span><span id="line-229"></span><span class="hs-comment">-- before any draw commands. The number of exclusive scissor rectangles</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- used by a pipeline is still specified by the @exclusiveScissorCount@</span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- member of</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'.</span><span>
+</span><span id="line-233"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span id="%24mDYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span id="DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV :: DynamicState
+$mDYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000205001</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV' specifies that the</span><span>
+</span><span id="line-235"></span><span class="hs-comment">-- coarse sample order state in</span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportCoarseSampleOrderStateCreateInfoNV'</span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-238"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetCoarseSampleOrderNV'</span><span>
+</span><span id="line-239"></span><span class="hs-comment">-- before any draw commands.</span><span>
+</span><span id="line-240"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span id="%24mDYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span id="DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV :: DynamicState
+$mDYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000164006</span><span>
+</span><span id="line-241"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV' specifies that the</span><span>
+</span><span id="line-242"></span><span class="hs-comment">-- @pShadingRatePalettes@ state in</span><span>
+</span><span id="line-243"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV'</span><span>
+</span><span id="line-244"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'</span><span>
+</span><span id="line-246"></span><span class="hs-comment">-- before any draw commands.</span><span>
+</span><span id="line-247"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span id="%24mDYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span id="DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV :: DynamicState
+$mDYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000164004</span><span>
+</span><span id="line-248"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT' specifies that the</span><span>
+</span><span id="line-249"></span><span class="hs-comment">-- @sampleLocationsInfo@ state in</span><span>
+</span><span id="line-250"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'</span><span>
+</span><span id="line-251"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-252"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'</span><span>
+</span><span id="line-253"></span><span class="hs-comment">-- before any draw or clear commands. Enabling custom sample locations is</span><span>
+</span><span id="line-254"></span><span class="hs-comment">-- still indicated by the @sampleLocationsEnable@ member of</span><span>
+</span><span id="line-255"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'.</span><span>
+</span><span id="line-256"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span id="%24mDYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span id="DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_SAMPLE_LOCATIONS_EXT :: DynamicState
+$mDYNAMIC_STATE_SAMPLE_LOCATIONS_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000143000</span><span>
+</span><span id="line-257"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_DISCARD_RECTANGLE_EXT' specifies that the</span><span>
+</span><span id="line-258"></span><span class="hs-comment">-- @pDiscardRectangles@ state in</span><span>
+</span><span id="line-259"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'</span><span>
+</span><span id="line-260"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-261"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'</span><span>
+</span><span id="line-262"></span><span class="hs-comment">-- before any draw or clear commands. The</span><span>
+</span><span id="line-263"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.DiscardRectangleModeEXT'</span><span>
+</span><span id="line-264"></span><span class="hs-comment">-- and the number of active discard rectangles is still specified by the</span><span>
+</span><span id="line-265"></span><span class="hs-comment">-- @discardRectangleMode@ and @discardRectangleCount@ members of</span><span>
+</span><span id="line-266"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'.</span><span>
+</span><span id="line-267"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span id="%24mDYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span id="DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_DISCARD_RECTANGLE_EXT :: DynamicState
+$mDYNAMIC_STATE_DISCARD_RECTANGLE_EXT :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_DISCARD_RECTANGLE_EXT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000099000</span><span>
+</span><span id="line-268"></span><span class="hs-comment">-- | 'DYNAMIC_STATE_VIEWPORT_W_SCALING_NV' specifies that the</span><span>
+</span><span id="line-269"></span><span class="hs-comment">-- @pViewportScalings@ state in</span><span>
+</span><span id="line-270"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'</span><span>
+</span><span id="line-271"></span><span class="hs-comment">-- will be ignored and /must/ be set dynamically with</span><span>
+</span><span id="line-272"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'</span><span>
+</span><span id="line-273"></span><span class="hs-comment">-- before any draws are performed with a pipeline state with</span><span>
+</span><span id="line-274"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'</span><span>
+</span><span id="line-275"></span><span class="hs-comment">-- member @viewportScalingEnable@ set to</span><span>
+</span><span id="line-276"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.TRUE'</span><span>
+</span><span id="line-277"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bDYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span id="%24mDYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span id="DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span class="annot"><span class="annottext">$bDYNAMIC_STATE_VIEWPORT_W_SCALING_NV :: DynamicState
+$mDYNAMIC_STATE_VIEWPORT_W_SCALING_NV :: forall r. DynamicState -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#%24bDYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span class="hs-identifier hs-var hs-var hs-var">DYNAMIC_STATE_VIEWPORT_W_SCALING_NV</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span class="hs-number">1000087000</span><span>
+</span><span id="line-278"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT"><span class="hs-pragma hs-type">DYNAMIC_STATE_VIEWPORT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-279"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR"><span class="hs-pragma hs-type">DYNAMIC_STATE_SCISSOR</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-280"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_WIDTH"><span class="hs-pragma hs-type">DYNAMIC_STATE_LINE_WIDTH</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-281"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BIAS"><span class="hs-pragma hs-type">DYNAMIC_STATE_DEPTH_BIAS</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-282"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_BLEND_CONSTANTS"><span class="hs-pragma hs-type">DYNAMIC_STATE_BLEND_CONSTANTS</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-283"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS"><span class="hs-pragma hs-type">DYNAMIC_STATE_DEPTH_BOUNDS</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-284"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_COMPARE_MASK"><span class="hs-pragma hs-type">DYNAMIC_STATE_STENCIL_COMPARE_MASK</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-285"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_WRITE_MASK"><span class="hs-pragma hs-type">DYNAMIC_STATE_STENCIL_WRITE_MASK</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-286"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_REFERENCE"><span class="hs-pragma hs-type">DYNAMIC_STATE_STENCIL_REFERENCE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-287"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_OP_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_STENCIL_OP_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-288"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-289"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-290"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-291"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-292"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-293"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-294"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-295"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-296"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-297"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_FRONT_FACE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_FRONT_FACE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-298"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_CULL_MODE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_CULL_MODE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-299"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_STIPPLE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_LINE_STIPPLE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-300"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span class="hs-pragma hs-type">DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-301"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span class="hs-pragma hs-type">DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-302"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span class="hs-pragma hs-type">DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-303"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-304"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span class="hs-pragma hs-type">DYNAMIC_STATE_DISCARD_RECTANGLE_EXT</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-305"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span class="hs-pragma hs-type">DYNAMIC_STATE_VIEWPORT_W_SCALING_NV</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-pragma hs-type">DynamicState</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-306"></span><span>
+</span><span id="line-307"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680083826"><span id="local-6989586621680083828"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-308"></span><span>  </span><span id="local-6989586621680083824"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; DynamicState -&gt; ShowS
+</span><a href="#local-6989586621680083824"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span id="local-6989586621680083823"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680083823"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-309"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT"><span class="hs-identifier hs-type">DYNAMIC_STATE_VIEWPORT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT&quot;</span></span><span>
+</span><span id="line-310"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR"><span class="hs-identifier hs-type">DYNAMIC_STATE_SCISSOR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_SCISSOR&quot;</span></span><span>
+</span><span id="line-311"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_WIDTH"><span class="hs-identifier hs-type">DYNAMIC_STATE_LINE_WIDTH</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_LINE_WIDTH&quot;</span></span><span>
+</span><span id="line-312"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BIAS"><span class="hs-identifier hs-type">DYNAMIC_STATE_DEPTH_BIAS</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_BIAS&quot;</span></span><span>
+</span><span id="line-313"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_BLEND_CONSTANTS"><span class="hs-identifier hs-type">DYNAMIC_STATE_BLEND_CONSTANTS</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_BLEND_CONSTANTS&quot;</span></span><span>
+</span><span id="line-314"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS"><span class="hs-identifier hs-type">DYNAMIC_STATE_DEPTH_BOUNDS</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_BOUNDS&quot;</span></span><span>
+</span><span id="line-315"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_COMPARE_MASK"><span class="hs-identifier hs-type">DYNAMIC_STATE_STENCIL_COMPARE_MASK</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_COMPARE_MASK&quot;</span></span><span>
+</span><span id="line-316"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_WRITE_MASK"><span class="hs-identifier hs-type">DYNAMIC_STATE_STENCIL_WRITE_MASK</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_WRITE_MASK&quot;</span></span><span>
+</span><span id="line-317"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_REFERENCE"><span class="hs-identifier hs-type">DYNAMIC_STATE_STENCIL_REFERENCE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_REFERENCE&quot;</span></span><span>
+</span><span id="line-318"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_OP_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_STENCIL_OP_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_OP_EXT&quot;</span></span><span>
+</span><span id="line-319"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT&quot;</span></span><span>
+</span><span id="line-320"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT&quot;</span></span><span>
+</span><span id="line-321"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT&quot;</span></span><span>
+</span><span id="line-322"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT&quot;</span></span><span>
+</span><span id="line-323"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT&quot;</span></span><span>
+</span><span id="line-324"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT&quot;</span></span><span>
+</span><span id="line-325"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT&quot;</span></span><span>
+</span><span id="line-326"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT&quot;</span></span><span>
+</span><span id="line-327"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT&quot;</span></span><span>
+</span><span id="line-328"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_FRONT_FACE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_FRONT_FACE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_FRONT_FACE_EXT&quot;</span></span><span>
+</span><span id="line-329"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_CULL_MODE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_CULL_MODE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_CULL_MODE_EXT&quot;</span></span><span>
+</span><span id="line-330"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_STIPPLE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_LINE_STIPPLE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_LINE_STIPPLE_EXT&quot;</span></span><span>
+</span><span id="line-331"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span class="hs-identifier hs-type">DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV&quot;</span></span><span>
+</span><span id="line-332"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span class="hs-identifier hs-type">DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV&quot;</span></span><span>
+</span><span id="line-333"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span class="hs-identifier hs-type">DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV&quot;</span></span><span>
+</span><span id="line-334"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT&quot;</span></span><span>
+</span><span id="line-335"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span class="hs-identifier hs-type">DYNAMIC_STATE_DISCARD_RECTANGLE_EXT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DISCARD_RECTANGLE_EXT&quot;</span></span><span>
+</span><span id="line-336"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span class="hs-identifier hs-type">DYNAMIC_STATE_VIEWPORT_W_SCALING_NV</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_W_SCALING_NV&quot;</span></span><span>
+</span><span id="line-337"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span><span> </span><span id="local-6989586621680083822"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680083822"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680083823"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DynamicState &quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680083822"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-338"></span><span>
+</span><span id="line-339"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680083814"><span id="local-6989586621680083817"><span id="local-6989586621680083819"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-type">DynamicState</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-340"></span><span>  </span><span id="local-6989586621680083812"><span class="annot"><span class="annottext">readPrec :: ReadPrec DynamicState
+</span><a href="#local-6989586621680083812"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec DynamicState -&gt; ReadPrec DynamicState
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec DynamicState)] -&gt; ReadPrec DynamicState
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT"><span class="hs-identifier hs-var">DYNAMIC_STATE_VIEWPORT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-341"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_SCISSOR&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR"><span class="hs-identifier hs-var">DYNAMIC_STATE_SCISSOR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-342"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_LINE_WIDTH&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_WIDTH"><span class="hs-identifier hs-var">DYNAMIC_STATE_LINE_WIDTH</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-343"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_BIAS&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BIAS"><span class="hs-identifier hs-var">DYNAMIC_STATE_DEPTH_BIAS</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-344"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_BLEND_CONSTANTS&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_BLEND_CONSTANTS"><span class="hs-identifier hs-var">DYNAMIC_STATE_BLEND_CONSTANTS</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-345"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_BOUNDS&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS"><span class="hs-identifier hs-var">DYNAMIC_STATE_DEPTH_BOUNDS</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-346"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_COMPARE_MASK&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_COMPARE_MASK"><span class="hs-identifier hs-var">DYNAMIC_STATE_STENCIL_COMPARE_MASK</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-347"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_WRITE_MASK&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_WRITE_MASK"><span class="hs-identifier hs-var">DYNAMIC_STATE_STENCIL_WRITE_MASK</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-348"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_REFERENCE&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_REFERENCE"><span class="hs-identifier hs-var">DYNAMIC_STATE_STENCIL_REFERENCE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-349"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_OP_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_OP_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_STENCIL_OP_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-350"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-351"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-352"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-353"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-354"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-355"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-356"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-357"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-358"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-359"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_FRONT_FACE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_FRONT_FACE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_FRONT_FACE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-360"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_CULL_MODE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_CULL_MODE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_CULL_MODE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-361"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_LINE_STIPPLE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_LINE_STIPPLE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_LINE_STIPPLE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-362"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"><span class="hs-identifier hs-var">DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-363"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"><span class="hs-identifier hs-var">DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-364"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"><span class="hs-identifier hs-var">DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-365"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-366"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_DISCARD_RECTANGLE_EXT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"><span class="hs-identifier hs-var">DYNAMIC_STATE_DISCARD_RECTANGLE_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-367"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;DYNAMIC_STATE_VIEWPORT_W_SCALING_NV&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"><span class="hs-identifier hs-var">DYNAMIC_STATE_VIEWPORT_W_SCALING_NV</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-368"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec DynamicState
+-&gt; ReadPrec DynamicState -&gt; ReadPrec DynamicState
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-369"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec DynamicState -&gt; ReadPrec DynamicState
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-370"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DynamicState&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-371"></span><span>                       </span><span id="local-6989586621680083811"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680083811"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32 -&gt; ReadPrec Int32
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-372"></span><span>                       </span><span class="annot"><span class="annottext">DynamicState -&gt; ReadPrec DynamicState
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int32 -&gt; DynamicState
+</span><a href="Vulkan.Core10.Enums.DynamicState.html#DynamicState"><span class="hs-identifier hs-var">DynamicState</span></a></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680083811"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-373"></span><span>
+</span><span id="line-374"></span></pre></body></html>
