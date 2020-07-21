@@ -46,7 +46,9 @@ jobs:
 
     - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-20.04'
-      run: sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
@@ -135,7 +137,9 @@ jobs:
 
     - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-20.04'
-      run: sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+      run: |
+        sudo apt-get update
+        sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
 
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
