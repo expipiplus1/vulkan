@@ -99,9 +99,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04, macOS-latest]
-        # Use windows with 8.10.2+ https://gitlab.haskell.org/ghc/ghc/issues/17926
-        # os: [windows-latest]
+        os: [ubuntu-20.04, macOS-latest, windows-latest]
         stack-args: ['--system-ghc --flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
       fail-fast: false
 
