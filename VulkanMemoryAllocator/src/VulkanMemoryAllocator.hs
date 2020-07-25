@@ -482,11 +482,12 @@ getBudget :: forall io
            . (MonadIO io)
           => -- No documentation found for Nested "vmaGetBudget" "allocator"
              Allocator
-          -> io (Budget)
+          -> io (("budget" ::: Vector Budget))
 getBudget allocator = liftIO . evalContT $ do
-  pPBudget <- ContT (withZeroCStruct @Budget)
-  lift $ (ffiVmaGetBudget) (allocator) (pPBudget)
-  pBudget <- lift $ peekCStruct @Budget pPBudget
+  pPBudget <- ContT $ bracket (callocBytes @Budget ((MAX_MEMORY_HEAPS) * 32)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPBudget `advancePtrBytes` (i * 32) :: Ptr Budget) . ($ ())) [0..(MAX_MEMORY_HEAPS) - 1]
+  lift $ (ffiVmaGetBudget) (allocator) ((pPBudget))
+  pBudget <- lift $ generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @Budget (((pPBudget) `advancePtrBytes` (32 * (i)) :: Ptr Budget)))
   pure $ (pBudget)
 
 
