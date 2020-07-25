@@ -722,6 +722,8 @@ getLenRef lengths = do
             $   "fromIntegral $"
             <+> pretty (mkMemberName member)
             <+> parens (structValue <+> "::" <+> structTyDoc)
+    NamedConstantLength n :<| _ ->
+      pure . Pure AlwaysInline . ValueDoc . pretty . mkPatternName $ n
     NullTerminated :<| _ -> throw "Trying to allocate a null terminated array"
     -- _ -> throw "Trying to allocate something with multiple lengths"
 
