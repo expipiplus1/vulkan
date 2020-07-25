@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+  - Fix call to getBudget
+    - Now works on devices with more than one memory heap!
 
 ## [0.3.5] - 2020-07-14
   - Bump VMA, no interface changes
