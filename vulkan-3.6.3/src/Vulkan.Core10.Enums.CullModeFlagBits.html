@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.CullModeFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier">CullModeFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_NONE"><span class="hs-identifier">CULL_MODE_NONE</span></a></span><span>
+</span><span id="line-3"></span><span>                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_FRONT_BIT"><span class="hs-identifier">CULL_MODE_FRONT_BIT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_BACK_BIT"><span class="hs-identifier">CULL_MODE_BACK_BIT</span></a></span><span>
+</span><span id="line-5"></span><span>                                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_FRONT_AND_BACK"><span class="hs-identifier">CULL_MODE_FRONT_AND_BACK</span></a></span><span>
+</span><span id="line-6"></span><span>                                                               </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-7"></span><span>                                                               </span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span>                                             </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlags"><span class="hs-identifier">CullModeFlags</span></a></span><span>
+</span><span id="line-9"></span><span>                                             </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- | VkCullModeFlagBits - Bitmask controlling triangle culling</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- Following culling, fragments are produced for any triangles which have</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- not been discarded.</span><span>
+</span><span id="line-32"></span><span class="hs-comment">--</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- 'CullModeFlags'</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">newtype</span><span> </span><span id="CullModeFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-var">CullModeFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CullModeFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-var">CullModeFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-37"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680087976"><span id="local-6989586621680087978"><span class="annot"><span class="annottext">CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+(CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool)
+-&gt; Eq CullModeFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+$c/= :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+== :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+$c== :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680087960"><span id="local-6989586621680087962"><span id="local-6989586621680087964"><span id="local-6989586621680087966"><span id="local-6989586621680087968"><span id="local-6989586621680087970"><span id="local-6989586621680087972"><span class="annot"><span class="annottext">Eq CullModeFlagBits
+Eq CullModeFlagBits =&gt;
+(CullModeFlagBits -&gt; CullModeFlagBits -&gt; Ordering)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits)
+-&gt; Ord CullModeFlagBits
+CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+CullModeFlagBits -&gt; CullModeFlagBits -&gt; Ordering
+CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+$cmin :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+max :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+$cmax :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+&gt;= :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+$c&gt;= :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+&gt; :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+$c&gt; :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+&lt;= :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+$c&lt;= :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+&lt; :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+$c&lt; :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Bool
+compare :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Ordering
+$ccompare :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; Ordering
+$cp1Ord :: Eq CullModeFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680087943"><span id="local-6989586621680087945"><span id="local-6989586621680087947"><span id="local-6989586621680087949"><span id="local-6989586621680087951"><span id="local-6989586621680087953"><span id="local-6989586621680087955"><span id="local-6989586621680087957"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO CullModeFlagBits
+Ptr b -&gt; Int -&gt; CullModeFlagBits -&gt; IO ()
+Ptr CullModeFlagBits -&gt; IO CullModeFlagBits
+Ptr CullModeFlagBits -&gt; Int -&gt; IO CullModeFlagBits
+Ptr CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits -&gt; IO ()
+Ptr CullModeFlagBits -&gt; CullModeFlagBits -&gt; IO ()
+CullModeFlagBits -&gt; Int
+(CullModeFlagBits -&gt; Int)
+-&gt; (CullModeFlagBits -&gt; Int)
+-&gt; (Ptr CullModeFlagBits -&gt; Int -&gt; IO CullModeFlagBits)
+-&gt; (Ptr CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO CullModeFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; CullModeFlagBits -&gt; IO ())
+-&gt; (Ptr CullModeFlagBits -&gt; IO CullModeFlagBits)
+-&gt; (Ptr CullModeFlagBits -&gt; CullModeFlagBits -&gt; IO ())
+-&gt; Storable CullModeFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO CullModeFlagBits
+forall b. Ptr b -&gt; Int -&gt; CullModeFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr CullModeFlagBits -&gt; CullModeFlagBits -&gt; IO ()
+$cpoke :: Ptr CullModeFlagBits -&gt; CullModeFlagBits -&gt; IO ()
+peek :: Ptr CullModeFlagBits -&gt; IO CullModeFlagBits
+$cpeek :: Ptr CullModeFlagBits -&gt; IO CullModeFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; CullModeFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; CullModeFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO CullModeFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO CullModeFlagBits
+pokeElemOff :: Ptr CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits -&gt; IO ()
+peekElemOff :: Ptr CullModeFlagBits -&gt; Int -&gt; IO CullModeFlagBits
+$cpeekElemOff :: Ptr CullModeFlagBits -&gt; Int -&gt; IO CullModeFlagBits
+alignment :: CullModeFlagBits -&gt; Int
+$calignment :: CullModeFlagBits -&gt; Int
+sizeOf :: CullModeFlagBits -&gt; Int
+$csizeOf :: CullModeFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680087940"><span class="annot"><span class="annottext">CullModeFlagBits
+CullModeFlagBits -&gt; Zero CullModeFlagBits
+forall a. a -&gt; Zero a
+zero :: CullModeFlagBits
+$czero :: CullModeFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680087894"><span id="local-6989586621680087896"><span id="local-6989586621680087898"><span id="local-6989586621680087900"><span id="local-6989586621680087902"><span id="local-6989586621680087904"><span id="local-6989586621680087906"><span id="local-6989586621680087908"><span id="local-6989586621680087910"><span id="local-6989586621680087912"><span id="local-6989586621680087914"><span id="local-6989586621680087916"><span id="local-6989586621680087918"><span id="local-6989586621680087920"><span id="local-6989586621680087922"><span id="local-6989586621680087924"><span id="local-6989586621680087926"><span id="local-6989586621680087928"><span id="local-6989586621680087930"><span id="local-6989586621680087932"><span id="local-6989586621680087934"><span id="local-6989586621680087936"><span class="annot"><span class="annottext">Eq CullModeFlagBits
+CullModeFlagBits
+Eq CullModeFlagBits =&gt;
+(CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; CullModeFlagBits
+-&gt; (Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; Bool)
+-&gt; (CullModeFlagBits -&gt; Maybe Int)
+-&gt; (CullModeFlagBits -&gt; Int)
+-&gt; (CullModeFlagBits -&gt; Bool)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits)
+-&gt; (CullModeFlagBits -&gt; Int)
+-&gt; Bits CullModeFlagBits
+Int -&gt; CullModeFlagBits
+CullModeFlagBits -&gt; Bool
+CullModeFlagBits -&gt; Int
+CullModeFlagBits -&gt; Maybe Int
+CullModeFlagBits -&gt; CullModeFlagBits
+CullModeFlagBits -&gt; Int -&gt; Bool
+CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: CullModeFlagBits -&gt; Int
+$cpopCount :: CullModeFlagBits -&gt; Int
+rotateR :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$crotateR :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+rotateL :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$crotateL :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+unsafeShiftR :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$cunsafeShiftR :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+shiftR :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$cshiftR :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+unsafeShiftL :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$cunsafeShiftL :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+shiftL :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$cshiftL :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+isSigned :: CullModeFlagBits -&gt; Bool
+$cisSigned :: CullModeFlagBits -&gt; Bool
+bitSize :: CullModeFlagBits -&gt; Int
+$cbitSize :: CullModeFlagBits -&gt; Int
+bitSizeMaybe :: CullModeFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: CullModeFlagBits -&gt; Maybe Int
+testBit :: CullModeFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: CullModeFlagBits -&gt; Int -&gt; Bool
+complementBit :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$ccomplementBit :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+clearBit :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$cclearBit :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+setBit :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$csetBit :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+bit :: Int -&gt; CullModeFlagBits
+$cbit :: Int -&gt; CullModeFlagBits
+zeroBits :: CullModeFlagBits
+$czeroBits :: CullModeFlagBits
+rotate :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$crotate :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+shift :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+$cshift :: CullModeFlagBits -&gt; Int -&gt; CullModeFlagBits
+complement :: CullModeFlagBits -&gt; CullModeFlagBits
+$ccomplement :: CullModeFlagBits -&gt; CullModeFlagBits
+xor :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+$cxor :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+.|. :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+$c.|. :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+.&amp;. :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+$c.&amp;. :: CullModeFlagBits -&gt; CullModeFlagBits -&gt; CullModeFlagBits
+$cp1Bits :: Eq CullModeFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- | 'CULL_MODE_NONE' specifies that no triangles are discarded</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCULL_MODE_NONE"><span id="%24mCULL_MODE_NONE"><span id="CULL_MODE_NONE"><span class="annot"><span class="annottext">$bCULL_MODE_NONE :: CullModeFlagBits
+$mCULL_MODE_NONE :: forall r. CullModeFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#%24bCULL_MODE_NONE"><span class="hs-identifier hs-var hs-var hs-var">CULL_MODE_NONE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000000</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- | 'CULL_MODE_FRONT_BIT' specifies that front-facing triangles are</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- discarded</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCULL_MODE_FRONT_BIT"><span id="%24mCULL_MODE_FRONT_BIT"><span id="CULL_MODE_FRONT_BIT"><span class="annot"><span class="annottext">$bCULL_MODE_FRONT_BIT :: CullModeFlagBits
+$mCULL_MODE_FRONT_BIT :: forall r. CullModeFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#%24bCULL_MODE_FRONT_BIT"><span class="hs-identifier hs-var hs-var hs-var">CULL_MODE_FRONT_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- | 'CULL_MODE_BACK_BIT' specifies that back-facing triangles are discarded</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCULL_MODE_BACK_BIT"><span id="%24mCULL_MODE_BACK_BIT"><span id="CULL_MODE_BACK_BIT"><span class="annot"><span class="annottext">$bCULL_MODE_BACK_BIT :: CullModeFlagBits
+$mCULL_MODE_BACK_BIT :: forall r. CullModeFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#%24bCULL_MODE_BACK_BIT"><span class="hs-identifier hs-var hs-var hs-var">CULL_MODE_BACK_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- | 'CULL_MODE_FRONT_AND_BACK' specifies that all triangles are discarded.</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bCULL_MODE_FRONT_AND_BACK"><span id="%24mCULL_MODE_FRONT_AND_BACK"><span id="CULL_MODE_FRONT_AND_BACK"><span class="annot"><span class="annottext">$bCULL_MODE_FRONT_AND_BACK :: CullModeFlagBits
+$mCULL_MODE_FRONT_AND_BACK :: forall r. CullModeFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#%24bCULL_MODE_FRONT_AND_BACK"><span class="hs-identifier hs-var hs-var hs-var">CULL_MODE_FRONT_AND_BACK</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span><span> </span><span class="hs-number">0x00000003</span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-keyword">type</span><span> </span><span id="CullModeFlags"><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlags"><span class="hs-identifier hs-var">CullModeFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680087880"><span id="local-6989586621680087882"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-52"></span><span>  </span><span id="local-6989586621680087878"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; CullModeFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680087876"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680087876"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-53"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_NONE"><span class="hs-identifier hs-type">CULL_MODE_NONE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CULL_MODE_NONE&quot;</span></span><span>
+</span><span id="line-54"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_FRONT_BIT"><span class="hs-identifier hs-type">CULL_MODE_FRONT_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CULL_MODE_FRONT_BIT&quot;</span></span><span>
+</span><span id="line-55"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_BACK_BIT"><span class="hs-identifier hs-type">CULL_MODE_BACK_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CULL_MODE_BACK_BIT&quot;</span></span><span>
+</span><span id="line-56"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_FRONT_AND_BACK"><span class="hs-identifier hs-type">CULL_MODE_FRONT_AND_BACK</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CULL_MODE_FRONT_AND_BACK&quot;</span></span><span>
+</span><span id="line-57"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span><span> </span><span id="local-6989586621680087875"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680087875"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680087876"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CullModeFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680087875"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680087867"><span id="local-6989586621680087870"><span id="local-6989586621680087872"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-type">CullModeFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-60"></span><span>  </span><span id="local-6989586621680087865"><span class="annot"><span class="annottext">readPrec :: ReadPrec CullModeFlagBits
+</span><a href="#local-6989586621680087865"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec CullModeFlagBits)] -&gt; ReadPrec CullModeFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;CULL_MODE_NONE&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_NONE"><span class="hs-identifier hs-var">CULL_MODE_NONE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;CULL_MODE_FRONT_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_FRONT_BIT"><span class="hs-identifier hs-var">CULL_MODE_FRONT_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;CULL_MODE_BACK_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_BACK_BIT"><span class="hs-identifier hs-var">CULL_MODE_BACK_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;CULL_MODE_FRONT_AND_BACK&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">CullModeFlagBits
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CULL_MODE_FRONT_AND_BACK"><span class="hs-identifier hs-var">CULL_MODE_FRONT_AND_BACK</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-64"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec CullModeFlagBits
+-&gt; ReadPrec CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-65"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-66"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;CullModeFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>                       </span><span id="local-6989586621680087864"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680087864"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-68"></span><span>                       </span><span class="annot"><span class="annottext">CullModeFlagBits -&gt; ReadPrec CullModeFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; CullModeFlagBits
+</span><a href="Vulkan.Core10.Enums.CullModeFlagBits.html#CullModeFlagBits"><span class="hs-identifier hs-var">CullModeFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680087864"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span>
+</span><span id="line-70"></span></pre></body></html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.SamplerMipmapMode</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier">SamplerMipmapMode</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_NEAREST"><span class="hs-identifier">SAMPLER_MIPMAP_MODE_NEAREST</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_LINEAR"><span class="hs-identifier">SAMPLER_MIPMAP_MODE_LINEAR</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- | VkSamplerMipmapMode - Specify mipmap mode used for texture lookups</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- These modes are described in detail in</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering&gt;.</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">newtype</span><span> </span><span id="SamplerMipmapMode"><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-var">SamplerMipmapMode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SamplerMipmapMode"><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-var">SamplerMipmapMode</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680049385"><span id="local-6989586621680049387"><span class="annot"><span class="annottext">SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+(SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool)
+-&gt; (SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool)
+-&gt; Eq SamplerMipmapMode
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+$c/= :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+== :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+$c== :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680049369"><span id="local-6989586621680049371"><span id="local-6989586621680049373"><span id="local-6989586621680049375"><span id="local-6989586621680049377"><span id="local-6989586621680049379"><span id="local-6989586621680049381"><span class="annot"><span class="annottext">Eq SamplerMipmapMode
+Eq SamplerMipmapMode =&gt;
+(SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Ordering)
+-&gt; (SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool)
+-&gt; (SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool)
+-&gt; (SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool)
+-&gt; (SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool)
+-&gt; (SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; SamplerMipmapMode)
+-&gt; (SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; SamplerMipmapMode)
+-&gt; Ord SamplerMipmapMode
+SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Ordering
+SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; SamplerMipmapMode
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; SamplerMipmapMode
+$cmin :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; SamplerMipmapMode
+max :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; SamplerMipmapMode
+$cmax :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; SamplerMipmapMode
+&gt;= :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+$c&gt;= :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+&gt; :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+$c&gt; :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+&lt;= :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+$c&lt;= :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+&lt; :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+$c&lt; :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Bool
+compare :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Ordering
+$ccompare :: SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; Ordering
+$cp1Ord :: Eq SamplerMipmapMode
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680049352"><span id="local-6989586621680049354"><span id="local-6989586621680049356"><span id="local-6989586621680049358"><span id="local-6989586621680049360"><span id="local-6989586621680049362"><span id="local-6989586621680049364"><span id="local-6989586621680049366"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SamplerMipmapMode
+Ptr b -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ()
+Ptr SamplerMipmapMode -&gt; IO SamplerMipmapMode
+Ptr SamplerMipmapMode -&gt; Int -&gt; IO SamplerMipmapMode
+Ptr SamplerMipmapMode -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ()
+Ptr SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; IO ()
+SamplerMipmapMode -&gt; Int
+(SamplerMipmapMode -&gt; Int)
+-&gt; (SamplerMipmapMode -&gt; Int)
+-&gt; (Ptr SamplerMipmapMode -&gt; Int -&gt; IO SamplerMipmapMode)
+-&gt; (Ptr SamplerMipmapMode -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SamplerMipmapMode)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ())
+-&gt; (Ptr SamplerMipmapMode -&gt; IO SamplerMipmapMode)
+-&gt; (Ptr SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; IO ())
+-&gt; Storable SamplerMipmapMode
+forall b. Ptr b -&gt; Int -&gt; IO SamplerMipmapMode
+forall b. Ptr b -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; IO ()
+$cpoke :: Ptr SamplerMipmapMode -&gt; SamplerMipmapMode -&gt; IO ()
+peek :: Ptr SamplerMipmapMode -&gt; IO SamplerMipmapMode
+$cpeek :: Ptr SamplerMipmapMode -&gt; IO SamplerMipmapMode
+pokeByteOff :: Ptr b -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SamplerMipmapMode
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SamplerMipmapMode
+pokeElemOff :: Ptr SamplerMipmapMode -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ()
+$cpokeElemOff :: Ptr SamplerMipmapMode -&gt; Int -&gt; SamplerMipmapMode -&gt; IO ()
+peekElemOff :: Ptr SamplerMipmapMode -&gt; Int -&gt; IO SamplerMipmapMode
+$cpeekElemOff :: Ptr SamplerMipmapMode -&gt; Int -&gt; IO SamplerMipmapMode
+alignment :: SamplerMipmapMode -&gt; Int
+$calignment :: SamplerMipmapMode -&gt; Int
+sizeOf :: SamplerMipmapMode -&gt; Int
+$csizeOf :: SamplerMipmapMode -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680049349"><span class="annot"><span class="annottext">SamplerMipmapMode
+SamplerMipmapMode -&gt; Zero SamplerMipmapMode
+forall a. a -&gt; Zero a
+zero :: SamplerMipmapMode
+$czero :: SamplerMipmapMode
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- | 'SAMPLER_MIPMAP_MODE_NEAREST' specifies nearest filtering.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSAMPLER_MIPMAP_MODE_NEAREST"><span id="%24mSAMPLER_MIPMAP_MODE_NEAREST"><span id="SAMPLER_MIPMAP_MODE_NEAREST"><span class="annot"><span class="annottext">$bSAMPLER_MIPMAP_MODE_NEAREST :: SamplerMipmapMode
+$mSAMPLER_MIPMAP_MODE_NEAREST :: forall r. SamplerMipmapMode -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#%24bSAMPLER_MIPMAP_MODE_NEAREST"><span class="hs-identifier hs-var hs-var hs-var">SAMPLER_MIPMAP_MODE_NEAREST</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-type">SamplerMipmapMode</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- | 'SAMPLER_MIPMAP_MODE_LINEAR' specifies linear filtering.</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSAMPLER_MIPMAP_MODE_LINEAR"><span id="%24mSAMPLER_MIPMAP_MODE_LINEAR"><span id="SAMPLER_MIPMAP_MODE_LINEAR"><span class="annot"><span class="annottext">$bSAMPLER_MIPMAP_MODE_LINEAR :: SamplerMipmapMode
+$mSAMPLER_MIPMAP_MODE_LINEAR :: forall r. SamplerMipmapMode -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#%24bSAMPLER_MIPMAP_MODE_LINEAR"><span class="hs-identifier hs-var hs-var hs-var">SAMPLER_MIPMAP_MODE_LINEAR</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-type">SamplerMipmapMode</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-38"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_NEAREST"><span class="hs-pragma hs-type">SAMPLER_MIPMAP_MODE_NEAREST</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-39"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_LINEAR"><span class="hs-pragma hs-type">SAMPLER_MIPMAP_MODE_LINEAR</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-pragma hs-type">SamplerMipmapMode</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680049339"><span id="local-6989586621680049341"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-type">SamplerMipmapMode</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-42"></span><span>  </span><span id="local-6989586621680049337"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SamplerMipmapMode -&gt; ShowS
+</span><a href="#local-6989586621680049337"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span id="local-6989586621680049336"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680049336"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-43"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_NEAREST"><span class="hs-identifier hs-type">SAMPLER_MIPMAP_MODE_NEAREST</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SAMPLER_MIPMAP_MODE_NEAREST&quot;</span></span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_LINEAR"><span class="hs-identifier hs-type">SAMPLER_MIPMAP_MODE_LINEAR</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SAMPLER_MIPMAP_MODE_LINEAR&quot;</span></span><span>
+</span><span id="line-45"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-type">SamplerMipmapMode</span></a></span><span> </span><span id="local-6989586621680049335"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680049335"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680049336"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SamplerMipmapMode &quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680049335"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680049327"><span id="local-6989586621680049330"><span id="local-6989586621680049332"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-type">SamplerMipmapMode</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621680049325"><span class="annot"><span class="annottext">readPrec :: ReadPrec SamplerMipmapMode
+</span><a href="#local-6989586621680049325"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec SamplerMipmapMode -&gt; ReadPrec SamplerMipmapMode
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec SamplerMipmapMode)]
+-&gt; ReadPrec SamplerMipmapMode
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SAMPLER_MIPMAP_MODE_NEAREST&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SamplerMipmapMode -&gt; ReadPrec SamplerMipmapMode
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SamplerMipmapMode
+</span><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_NEAREST"><span class="hs-identifier hs-var">SAMPLER_MIPMAP_MODE_NEAREST</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SAMPLER_MIPMAP_MODE_LINEAR&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SamplerMipmapMode -&gt; ReadPrec SamplerMipmapMode
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SamplerMipmapMode
+</span><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SAMPLER_MIPMAP_MODE_LINEAR"><span class="hs-identifier hs-var">SAMPLER_MIPMAP_MODE_LINEAR</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-50"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec SamplerMipmapMode
+-&gt; ReadPrec SamplerMipmapMode -&gt; ReadPrec SamplerMipmapMode
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-51"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec SamplerMipmapMode -&gt; ReadPrec SamplerMipmapMode
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-52"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SamplerMipmapMode&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span>                       </span><span id="local-6989586621680049324"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680049324"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32 -&gt; ReadPrec Int32
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-54"></span><span>                       </span><span class="annot"><span class="annottext">SamplerMipmapMode -&gt; ReadPrec SamplerMipmapMode
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int32 -&gt; SamplerMipmapMode
+</span><a href="Vulkan.Core10.Enums.SamplerMipmapMode.html#SamplerMipmapMode"><span class="hs-identifier hs-var">SamplerMipmapMode</span></a></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680049324"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span></pre></body></html>
