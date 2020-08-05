@@ -4,10 +4,10 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 21ae0ed40b39ebb3efecff1070c720833bba165c8bad20936bfe822be95ef5ee
+-- hash: 14155dcf426cf6fd705b8752c72ecf0ad37d593e437a0999679d7310edeef968
 
 name:           vulkan
-version:        3.6.2
+version:        3.6.3
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
