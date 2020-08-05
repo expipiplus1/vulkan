@@ -235,7 +235,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
 --     for @buffer@), @memory@ /must/ have been created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
---     equal to @buffer@ and @memoryOffset@ /must/ be zero
+--     equal to @buffer@
 --
 -- -   If the 'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when
 --     @memory@ was allocated included a
@@ -244,16 +244,16 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then @buffer@
 --     /must/ equal
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
 --     and @memoryOffset@ /must/ be zero
 --
--- -   If @buffer@ was created with the
+-- -   If buffer was created with the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit set, the buffer /must/ be bound to a memory object allocated
 --     with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
--- -   If @buffer@ was created with the
+-- -   If buffer was created with the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit not set, the buffer /must/ not be bound to a memory object
 --     created with a memory type that reports
@@ -264,13 +264,8 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
 --     been created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
---     equal to @buffer@ and @memoryOffset@ /must/ be zero
---
--- -   If the @pNext@ chain includes a
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
---     structure, all instances of @memory@ specified by
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'::@pDeviceIndices@
---     /must/ have been allocated
+--     equal to a buffer handle created with identical creation parameters
+--     to @buffer@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the value of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
@@ -295,12 +290,18 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     when @buffer@ was created
 --
 -- -   If the
---     'Vulkan.Extensions.VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeaturesKHR'::@bufferDeviceAddress@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddress@
 --     feature is enabled and @buffer@ was created with the
---     'Vulkan.Extensions.VK_KHR_buffer_device_address.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_KHR'
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 --     bit set, @memory@ /must/ have been allocated with the
---     'Vulkan.Extensions.VK_KHR_buffer_device_address.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT_KHR'
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
+--
+-- -   If the @pNext@ chain includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
+--     structure, all instances of @memory@ specified by
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'::@pDeviceIndices@
+--     /must/ have been allocated
 --
 -- == Valid Usage (Implicit)
 --
@@ -408,6 +409,89 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
 --
+-- -   If @image@ requires a dedicated allocation (as reported by
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
+--     in
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
+--     for @image@), @memory@ /must/ have been created with
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     equal to @image@
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     feature is not enabled, and the
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
+--     allocated included a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure in its @pNext@ chain, and
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then @image@
+--     /must/ equal
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     and @memoryOffset@ /must/ be zero
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     feature is enabled, and the
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
+--     allocated included a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure in its @pNext@ chain, and
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then
+--     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     or an image that was created using the same parameters in
+--     'Vulkan.Core10.Image.ImageCreateInfo', with the exception that
+--     @extent@ and @arrayLayers@ /may/ differ subject to the following
+--     restrictions: every dimension in the @extent@ parameter of the image
+--     being bound /must/ be equal to or smaller than the original image
+--     for which the allocation was created; and the @arrayLayers@
+--     parameter of the image being bound /must/ be equal to or smaller
+--     than the original image for which the allocation was created
+--
+-- -   If image was created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
+--     bit set, the image /must/ be bound to a memory object allocated with
+--     a memory type that reports
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
+--
+-- -   If image was created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
+--     bit not set, the image /must/ not be bound to a memory object
+--     created with a memory type that reports
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
+--
+-- -   If @image@ was created with
+--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
+--     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
+--     been created with
+--     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
+--     equal to an image handle created with identical creation parameters
+--     to @image@ and @memoryOffset@ /must/ be zero
+--
+-- -   If the value of
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
+--     used to allocate @memory@ is not @0@, it /must/ include at least one
+--     of the handles set in
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
+--     when @image@ was created
+--
+-- -   If @memory@ was created by a memory import operation, that is not
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     with a non-@NULL@ @buffer@ value, the external handle type of the
+--     imported memory /must/ also have been set in
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
+--     when @image@ was created
+--
+-- -   If @memory@ was created with the
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     memory import operation with a non-@NULL@ @buffer@ value,
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     /must/ also have been set in
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
+--     when @image@ was created
+--
 -- -   If the @pNext@ chain does not include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
 --     structure, @memory@ /must/ have been allocated using one of the
@@ -486,66 +570,6 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageMemoryRequirementsInfo2'
 --     structure’s @pNext@ chain
 --
--- -   If @image@ requires a dedicated allocation (as reported by
---     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @image@), @memory@ /must/ have been created with
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     equal to @image@ and @memoryOffset@ /must/ be zero
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is not enabled, and the
---     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
---     allocated included a
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure in its @pNext@ chain, and
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then @image@
---     /must/ equal
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     and @memoryOffset@ /must/ be zero
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is enabled, and the
---     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
---     allocated included a
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure in its @pNext@ chain, and
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
---     or an image that was created using the same parameters in
---     'Vulkan.Core10.Image.ImageCreateInfo', with the exception that
---     @extent@ and @arrayLayers@ /may/ differ subject to the following
---     restrictions: every dimension in the @extent@ parameter of the image
---     being bound /must/ be equal to or smaller than the original image
---     for which the allocation was created; and the @arrayLayers@
---     parameter of the image being bound /must/ be equal to or smaller
---     than the original image for which the allocation was created
---
--- -   If image was created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
---     bit set, the image /must/ be bound to a memory object allocated with
---     a memory type that reports
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
---
--- -   If image was created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'
---     bit not set, the image /must/ not be bound to a memory object
---     created with a memory type that reports
---     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
---
--- -   If @image@ was created with
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
---     been created with
---     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
---     equal to @image@ and @memoryOffset@ /must/ be zero
---
 -- -   If the @pNext@ chain includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'
 --     structure, all instances of @memory@ specified by
@@ -589,28 +613,6 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR'
 --     structure, @memory@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DeviceMemory' handle
---
--- -   If the value of
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
---     used to allocate @memory@ is not @0@, it /must/ include at least one
---     of the handles set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when @image@ was created
---
--- -   If @memory@ was created by a memory import operation, that is not
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
---     with a non-@NULL@ @buffer@ value, the external handle type of the
---     imported memory /must/ also have been set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when @image@ was created
---
--- -   If @memory@ was created with the
---     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
---     memory import operation with a non-@NULL@ @buffer@ value,
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     /must/ also have been set in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when @image@ was created
 --
 -- == Valid Usage (Implicit)
 --

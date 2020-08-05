@@ -1880,21 +1880,19 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
---     feature is not enabled, @viewportCount@ /must/ be @1@
+--     feature is not enabled, @viewportCount@ /must/ not be greater than
+--     @1@
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
---     feature is not enabled, @scissorCount@ /must/ be @1@
+--     feature is not enabled, @scissorCount@ /must/ not be greater than
+--     @1@
 --
--- -   @viewportCount@ /must/ be between @1@ and
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
---     inclusive
+-- -   @viewportCount@ /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
 --
--- -   @scissorCount@ /must/ be between @1@ and
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
---     inclusive
---
--- -   @scissorCount@ and @viewportCount@ /must/ be identical
+-- -   @scissorCount@ /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
 --
 -- -   The @x@ and @y@ members of @offset@ member of any element of
 --     @pScissors@ /must/ be greater than or equal to @0@
@@ -1905,13 +1903,30 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 -- -   Evaluation of (@offset.y@ + @extent.height@) /must/ not cause a
 --     signed integer addition overflow for any element of @pScissors@
 --
+-- -   If the graphics pipeline is being created without
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     set then @scissorCount@ and @viewportCount@ /must/ be identical
+--
+-- -   If the graphics pipeline is being created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     set then @viewportCount@ /must/ be @0@, otherwise it /must/ be
+--     greater than @0@
+--
+-- -   If the graphics pipeline is being created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     set then @scissorCount@ /must/ be @0@, otherwise it /must/ be
+--     greater than @0@
+--
 -- -   If the @viewportWScalingEnable@ member of a
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
 --     structure included in the @pNext@ chain is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', the @viewportCount@ member of
 --     the
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
---     structure /must/ be equal to @viewportCount@
+--     structure /must/ be greater than or equal to
+--     'PipelineViewportStateCreateInfo'::@viewportCount@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1932,10 +1947,6 @@ instance es ~ '[] => Zero (PipelineTessellationStateCreateInfo es) where
 --     unique
 --
 -- -   @flags@ /must/ be @0@
---
--- -   @viewportCount@ /must/ be greater than @0@
---
--- -   @scissorCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -3286,15 +3297,17 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     @subpass@
 --
 -- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT', the
---     @pViewports@ member of @pViewportState@ /must/ be a valid pointer to
---     an array of @pViewportState->viewportCount@ valid 'Viewport'
---     structures
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT',
+--     the @pViewports@ member of @pViewportState@ /must/ be a valid
+--     pointer to an array of @pViewportState->viewportCount@ valid
+--     'Viewport' structures
 --
 -- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR', the
---     @pScissors@ member of @pViewportState@ /must/ be a valid pointer to
---     an array of @pViewportState->scissorCount@
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT',
+--     the @pScissors@ member of @pViewportState@ /must/ be a valid pointer
+--     to an array of @pViewportState->scissorCount@
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
 -- -   If the wide lines feature is not enabled, and no element of the
@@ -3596,6 +3609,18 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --     is included in the @pDynamicStates@ array then @scissorCount@ /must/
 --     be zero
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     is included in the @pDynamicStates@ array then
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' /must/ not
+--     be present
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     is included in the @pDynamicStates@ array then
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' /must/ not
+--     be present
 --
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',

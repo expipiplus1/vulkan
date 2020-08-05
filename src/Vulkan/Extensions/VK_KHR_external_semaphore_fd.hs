@@ -238,6 +238,25 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 --     field of the semaphore from which @fd@ was exported /must/ not be
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
 --
+-- If @handleType@ is
+-- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT',
+-- the special value @-1@ for @fd@ is treated like a valid sync file
+-- descriptor referring to an object that has already signaled. The import
+-- operation will succeed and the 'Vulkan.Core10.Handles.Semaphore' will
+-- have a temporarily imported payload as if a valid file descriptor had
+-- been provided.
+--
+-- Note
+--
+-- This special behavior for importing an invalid sync file descriptor
+-- allows easier interoperability with other system APIs which use the
+-- convention that an invalid sync file descriptor represents work that has
+-- already completed and does not need to be waited for. It is consistent
+-- with the option for implementations to return a @-1@ file descriptor
+-- when exporting a
+-- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT'
+-- from a 'Vulkan.Core10.Handles.Semaphore' which is signaled.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

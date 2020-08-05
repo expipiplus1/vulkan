@@ -333,30 +333,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @image@ /must/ not have been created with the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     set
---
 -- -   @image@ /must/ not already be backed by a memory object
 --
 -- -   @image@ /must/ not have been created with any sparse memory binding
 --     flags
 --
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
---
--- -   @memory@ /must/ have been allocated using one of the memory types
---     allowed in the @memoryTypeBits@ member of the 'MemoryRequirements'
---     structure returned from a call to 'getImageMemoryRequirements' with
---     @image@
---
--- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
---     member of the 'MemoryRequirements' structure returned from a call to
---     'getImageMemoryRequirements' with @image@
---
--- -   The difference of the size of @memory@ and @memoryOffset@ /must/ be
---     greater than or equal to the @size@ member of the
---     'MemoryRequirements' structure returned from a call to
---     'getImageMemoryRequirements' with the same @image@
 --
 -- -   If @image@ requires a dedicated allocation (as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
@@ -440,6 +422,24 @@ foreign import ccall
 --     /must/ also have been set in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
+--
+-- -   @image@ /must/ not have been created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
+--     set
+--
+-- -   @memory@ /must/ have been allocated using one of the memory types
+--     allowed in the @memoryTypeBits@ member of the 'MemoryRequirements'
+--     structure returned from a call to 'getImageMemoryRequirements' with
+--     @image@
+--
+-- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
+--     member of the 'MemoryRequirements' structure returned from a call to
+--     'getImageMemoryRequirements' with @image@
+--
+-- -   The difference of the size of @memory@ and @memoryOffset@ /must/ be
+--     greater than or equal to the @size@ member of the
+--     'MemoryRequirements' structure returned from a call to
+--     'getImageMemoryRequirements' with the same @image@
 --
 -- == Valid Usage (Implicit)
 --
