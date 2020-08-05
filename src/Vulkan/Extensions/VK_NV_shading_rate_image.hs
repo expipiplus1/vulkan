@@ -463,7 +463,7 @@ instance Zero ShadingRatePaletteNV where
 --
 -- -   If @shadingRateImageEnable@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', @viewportCount@ /must/ be
---     equal to the @viewportCount@ member of
+--     greater or equal to the @viewportCount@ member of
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
 --
 -- == Valid Usage (Implicit)

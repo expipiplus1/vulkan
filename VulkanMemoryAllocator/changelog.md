@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.3.6] - 2020-08-05
   - Fix call to getBudget
     - Now works on devices with more than one memory heap!
 

@@ -267,8 +267,8 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 -- -   @exclusiveScissorCount@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
 --
--- -   @exclusiveScissorCount@ /must/ be @0@ or identical to the
---     @viewportCount@ member of
+-- -   @exclusiveScissorCount@ /must/ be @0@ or greater than or equal to
+--     the @viewportCount@ member of
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
 --
 -- == Valid Usage (Implicit)

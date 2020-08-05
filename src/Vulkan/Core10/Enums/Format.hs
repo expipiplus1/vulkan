@@ -184,6 +184,8 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_ASTC_12x10_SRGB_BLOCK
                                           , FORMAT_ASTC_12x12_UNORM_BLOCK
                                           , FORMAT_ASTC_12x12_SRGB_BLOCK
+                                          , FORMAT_A4B4G4R4_UNORM_PACK16_EXT
+                                          , FORMAT_A4R4G4B4_UNORM_PACK16_EXT
                                           , FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT
                                           , FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT
                                           , FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT
@@ -1112,6 +1114,16 @@ pattern FORMAT_ASTC_12x12_UNORM_BLOCK = Format 183
 -- 12×12 rectangle of unsigned normalized RGBA texel data with sRGB
 -- nonlinear encoding applied to the RGB components.
 pattern FORMAT_ASTC_12x12_SRGB_BLOCK = Format 184
+-- | 'FORMAT_A4B4G4R4_UNORM_PACK16_EXT' specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 4-bit A component in bits
+-- 12..15, a 4-bit B component in bits 8..11, a 4-bit G component in bits
+-- 4..7, and a 4-bit R component in bits 0..3.
+pattern FORMAT_A4B4G4R4_UNORM_PACK16_EXT = Format 1000340001
+-- | 'FORMAT_A4R4G4B4_UNORM_PACK16_EXT' specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 4-bit A component in bits
+-- 12..15, a 4-bit R component in bits 8..11, a 4-bit G component in bits
+-- 4..7, and a 4-bit B component in bits 0..3.
+pattern FORMAT_A4R4G4B4_UNORM_PACK16_EXT = Format 1000340000
 -- | 'FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
 -- compressed format where each 128-bit compressed texel block encodes a
 -- 12×12 rectangle of signed floating-point RGBA texel data.
@@ -1891,6 +1903,8 @@ pattern FORMAT_G8B8G8R8_422_UNORM = Format 1000156000
              FORMAT_ASTC_12x10_SRGB_BLOCK,
              FORMAT_ASTC_12x12_UNORM_BLOCK,
              FORMAT_ASTC_12x12_SRGB_BLOCK,
+             FORMAT_A4B4G4R4_UNORM_PACK16_EXT,
+             FORMAT_A4R4G4B4_UNORM_PACK16_EXT,
              FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT,
              FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT,
              FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT,
@@ -2135,6 +2149,8 @@ instance Show Format where
     FORMAT_ASTC_12x10_SRGB_BLOCK -> showString "FORMAT_ASTC_12x10_SRGB_BLOCK"
     FORMAT_ASTC_12x12_UNORM_BLOCK -> showString "FORMAT_ASTC_12x12_UNORM_BLOCK"
     FORMAT_ASTC_12x12_SRGB_BLOCK -> showString "FORMAT_ASTC_12x12_SRGB_BLOCK"
+    FORMAT_A4B4G4R4_UNORM_PACK16_EXT -> showString "FORMAT_A4B4G4R4_UNORM_PACK16_EXT"
+    FORMAT_A4R4G4B4_UNORM_PACK16_EXT -> showString "FORMAT_A4R4G4B4_UNORM_PACK16_EXT"
     FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT -> showString "FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT"
     FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT -> showString "FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT"
     FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT -> showString "FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT"
@@ -2379,6 +2395,8 @@ instance Read Format where
                             , ("FORMAT_ASTC_12x10_SRGB_BLOCK", pure FORMAT_ASTC_12x10_SRGB_BLOCK)
                             , ("FORMAT_ASTC_12x12_UNORM_BLOCK", pure FORMAT_ASTC_12x12_UNORM_BLOCK)
                             , ("FORMAT_ASTC_12x12_SRGB_BLOCK", pure FORMAT_ASTC_12x12_SRGB_BLOCK)
+                            , ("FORMAT_A4B4G4R4_UNORM_PACK16_EXT", pure FORMAT_A4B4G4R4_UNORM_PACK16_EXT)
+                            , ("FORMAT_A4R4G4B4_UNORM_PACK16_EXT", pure FORMAT_A4R4G4B4_UNORM_PACK16_EXT)
                             , ("FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT", pure FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT)
                             , ("FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT", pure FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT)
                             , ("FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT", pure FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT)

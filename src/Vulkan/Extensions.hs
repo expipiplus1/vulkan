@@ -22,6 +22,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_AMD_shader_trinary_minmax
                           , module Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
                           , module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+                          , module Vulkan.Extensions.VK_EXT_4444_formats
                           , module Vulkan.Extensions.VK_EXT_acquire_xlib_display
                           , module Vulkan.Extensions.VK_EXT_astc_decode_mode
                           , module Vulkan.Extensions.VK_EXT_blend_operation_advanced
@@ -234,6 +235,7 @@ import Vulkan.Extensions.VK_AMD_shader_info
 import Vulkan.Extensions.VK_AMD_shader_trinary_minmax
 import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
 import Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+import Vulkan.Extensions.VK_EXT_4444_formats
 import Vulkan.Extensions.VK_EXT_acquire_xlib_display
 import Vulkan.Extensions.VK_EXT_astc_decode_mode
 import Vulkan.Extensions.VK_EXT_blend_operation_advanced
