@@ -1340,7 +1340,8 @@ instance Zero ApplicationInfo where
 --     or 'Vulkan.Extensions.VK_EXT_validation_flags.ValidationFlagsEXT'
 --
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+--     unique, with the exception of structures of type
+--     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
 --
 -- -   @flags@ /must/ be @0@
 --

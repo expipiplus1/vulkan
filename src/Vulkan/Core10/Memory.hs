@@ -134,13 +134,19 @@ foreign import ccall
 --
 -- The maximum number of valid memory allocations that /can/ exist
 -- simultaneously within a 'Vulkan.Core10.Handles.Device' /may/ be
--- restricted by implementation- or platform-dependent limits. If a call to
--- 'allocateMemory' would cause the total number of allocations to exceed
--- these limits, such a call will fail and /must/ return
--- 'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'. The
+-- restricted by implementation- or platform-dependent limits. The
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxMemoryAllocationCount maxMemoryAllocationCount>
 -- feature describes the number of allocations that /can/ exist
 -- simultaneously before encountering these internal limits.
+--
+-- Note
+--
+-- For historical reasons, if @maxMemoryAllocationCount@ is exceeded, some
+-- implementations may return
+-- 'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'. Exceeding this
+-- limit will result in undefined behavior, and an application should not
+-- rely on the use of the returned error code in order to identify when the
+-- limit is reached.
 --
 -- Some platforms /may/ have a limit on the maximum size of a single
 -- allocation. For example, certain systems /may/ fail to create
@@ -209,8 +215,6 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
 --

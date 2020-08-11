@@ -66,9 +66,16 @@ import Vulkan.Zero (Zero)
 -- have undefined contents, except that @sType@ and @pNext@ will be
 -- unmodified.
 --
--- Out of memory errors do not damage any currently existing Vulkan
--- objects. Objects that have already been successfully created /can/ still
--- be used by the application.
+-- @VK_ERROR_OUT_OF_*_MEMORY@ errors do not modify any currently existing
+-- Vulkan objects. Objects that have already been successfully created
+-- /can/ still be used by the application.
+--
+-- Note
+--
+-- As a general rule, @Free@, @Release@, and @Reset@ commands do not return
+-- 'ERROR_OUT_OF_HOST_MEMORY', while any other command with a return code
+-- /may/ return it. Any exceptions from this rule are described for those
+-- commands.
 --
 -- 'ERROR_UNKNOWN' will be returned by an implementation when an unexpected
 -- error occurs that cannot be attributed to valid behavior of the

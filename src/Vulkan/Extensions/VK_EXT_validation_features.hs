@@ -4,6 +4,7 @@ module Vulkan.Extensions.VK_EXT_validation_features  ( ValidationFeaturesEXT(..)
                                                                                  , VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT
                                                                                  , VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT
                                                                                  , VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT
+                                                                                 , VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT
                                                                                  , ..
                                                                                  )
                                                      , ValidationFeatureDisableEXT( VALIDATION_FEATURE_DISABLE_ALL_EXT
@@ -187,10 +188,17 @@ pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT = ValidationFeatureEnableEX
 -- resulting output to the debug callback. This feature is disabled by
 -- default.
 pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT = ValidationFeatureEnableEXT 3
+-- | 'VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT' specifies
+-- that Vulkan synchronization validation is enabled. This feature reports
+-- resource access conflicts due to missing or incorrect synchronization
+-- operations between actions (Draw, Copy, Dispatch, Blit) reading or
+-- writing the same regions of memory. This feature is disabled by default.
+pattern VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT = ValidationFeatureEnableEXT 4
 {-# complete VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
              VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
              VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT,
-             VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT :: ValidationFeatureEnableEXT #-}
+             VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT,
+             VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT :: ValidationFeatureEnableEXT #-}
 
 instance Show ValidationFeatureEnableEXT where
   showsPrec p = \case
@@ -198,13 +206,15 @@ instance Show ValidationFeatureEnableEXT where
     VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT -> showString "VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT"
     VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT -> showString "VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT"
     VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT -> showString "VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT"
+    VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT -> showString "VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT"
     ValidationFeatureEnableEXT x -> showParen (p >= 11) (showString "ValidationFeatureEnableEXT " . showsPrec 11 x)
 
 instance Read ValidationFeatureEnableEXT where
   readPrec = parens (choose [("VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT", pure VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT)
                             , ("VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT", pure VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT)
                             , ("VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT", pure VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT)
-                            , ("VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT", pure VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT)]
+                            , ("VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT", pure VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT)
+                            , ("VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT", pure VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT)]
                      +++
                      prec 10 (do
                        expectP (Ident "ValidationFeatureEnableEXT")
@@ -278,11 +288,11 @@ instance Read ValidationFeatureDisableEXT where
                        pure (ValidationFeatureDisableEXT v)))
 
 
-type EXT_VALIDATION_FEATURES_SPEC_VERSION = 3
+type EXT_VALIDATION_FEATURES_SPEC_VERSION = 4
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_SPEC_VERSION"
 pattern EXT_VALIDATION_FEATURES_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_VALIDATION_FEATURES_SPEC_VERSION = 3
+pattern EXT_VALIDATION_FEATURES_SPEC_VERSION = 4
 
 
 type EXT_VALIDATION_FEATURES_EXTENSION_NAME = "VK_EXT_validation_features"

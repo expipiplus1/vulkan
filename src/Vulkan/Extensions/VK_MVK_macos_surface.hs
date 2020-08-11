@@ -80,6 +80,31 @@ foreign import ccall
 -- | vkCreateMacOSSurfaceMVK - Create a VkSurfaceKHR object for a macOS
 -- NSView
 --
+-- = Parameters
+--
+-- Note
+--
+-- The 'createMacOSSurfaceMVK' function is considered deprecated and has
+-- been superseded by
+-- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT' from the
+-- @VK_EXT_metal_surface@ extension.
+--
+-- = Description
+--
+-- -   @instance@ is the instance with which to associate the surface.
+--
+-- -   @pCreateInfo@ is a pointer to a 'MacOSSurfaceCreateInfoMVK'
+--     structure containing parameters affecting the creation of the
+--     surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ is a pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle in which the created surface object is returned.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
@@ -115,14 +140,11 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 createMacOSSurfaceMVK :: forall io
                        . (MonadIO io)
-                      => -- | @instance@ is the instance with which to associate the surface.
+                      => -- No documentation found for Nested "vkCreateMacOSSurfaceMVK" "instance"
                          Instance
-                      -> -- | @pCreateInfo@ is a pointer to a 'MacOSSurfaceCreateInfoMVK' structure
-                         -- containing parameters affecting the creation of the surface object.
+                      -> -- No documentation found for Nested "vkCreateMacOSSurfaceMVK" "pCreateInfo"
                          MacOSSurfaceCreateInfoMVK
-                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
-                         -- surface object when there is no more specific allocator available (see
-                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                      -> -- No documentation found for Nested "vkCreateMacOSSurfaceMVK" "pAllocator"
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
@@ -144,7 +166,26 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 -- | VkMacOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
 -- created macOS surface object
 --
+-- == Valid Usage
+--
+-- -   If @pView@ is a
+--     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object, it
+--     /must/ be a valid
+--     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+--
+-- -   If @pView@ is an @NSView@ object, it /must/ be a valid @NSView@,
+--     /must/ be backed by a @CALayer@ object of type
+--     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', and
+--     'createMacOSSurfaceMVK' /must/ be called on the main thread.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
 --
 -- = See Also
 --
@@ -153,15 +194,10 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 -- 'createMacOSSurfaceMVK'
 data MacOSSurfaceCreateInfoMVK = MacOSSurfaceCreateInfoMVK
   { -- | @flags@ is reserved for future use.
-    --
-    -- @flags@ /must/ be @0@
     flags :: MacOSSurfaceCreateFlagsMVK
-  , -- | @pView@ is a reference to a @NSView@ object which will display this
-    -- surface. This @NSView@ /must/ be backed by a @CALayer@ instance of type
-    -- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
-    --
-    -- @pView@ /must/ be a valid @NSView@ and /must/ be backed by a @CALayer@
-    -- instance of type 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'
+  , -- | @pView@ is a reference to either a
+    -- 'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object or an
+    -- @NSView@ object.
     view :: Ptr ()
   }
   deriving (Typeable)
@@ -233,11 +269,11 @@ instance Read MacOSSurfaceCreateFlagsMVK where
                        pure (MacOSSurfaceCreateFlagsMVK v)))
 
 
-type MVK_MACOS_SURFACE_SPEC_VERSION = 2
+type MVK_MACOS_SURFACE_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_MVK_MACOS_SURFACE_SPEC_VERSION"
 pattern MVK_MACOS_SURFACE_SPEC_VERSION :: forall a . Integral a => a
-pattern MVK_MACOS_SURFACE_SPEC_VERSION = 2
+pattern MVK_MACOS_SURFACE_SPEC_VERSION = 3
 
 
 type MVK_MACOS_SURFACE_EXTENSION_NAME = "VK_MVK_macos_surface"

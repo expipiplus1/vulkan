@@ -9711,7 +9711,7 @@ instance Zero ImageResolve where
 -- -   If @framebuffer@ was created with a
 --     'Vulkan.Core10.Pass.FramebufferCreateInfo'::@flags@ value that
 --     included
---     'Vulkan.Extensions.VK_KHR_imageless_framebuffer.FRAMEBUFFER_CREATE_IMAGELESS_BIT_KHR',
+--     'Vulkan.Core10.Enums.FramebufferCreateFlagBits.FRAMEBUFFER_CREATE_IMAGELESS_BIT',
 --     each element of the @pAttachments@ member of a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo'
 --     structure included in the @pNext@ chain /must/ have been created on
@@ -9728,7 +9728,7 @@ instance Zero ImageResolve where
 --     'Vulkan.Core10.Handles.ImageView' of an image created with a value
 --     of 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ equal to the
 --     @flags@ member of the corresponding element of
---     'Vulkan.Extensions.VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfoKHR'::@pAttachments@
+--     'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentsCreateInfo'::@pAttachments@
 --     used to create @framebuffer@
 --
 -- -   If @framebuffer@ was created with a

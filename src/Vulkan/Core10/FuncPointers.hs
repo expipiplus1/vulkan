@@ -143,7 +143,8 @@ type PFN_vkFreeFunction = FunPtr FN_vkFreeFunction
 
 
 type FN_vkVoidFunction = () -> IO ()
--- | PFN_vkVoidFunction - Dummy function pointer type returned by queries
+-- | PFN_vkVoidFunction - Placeholder function pointer type returned by
+-- queries
 --
 -- = See Also
 --

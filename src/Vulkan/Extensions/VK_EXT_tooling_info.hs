@@ -24,6 +24,7 @@ import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -80,9 +81,11 @@ import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT))
+import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -127,6 +130,10 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
 -- = See Also
 --
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
@@ -144,14 +151,16 @@ getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceToolPropertiesEXT' = mkVkGetPhysicalDeviceToolPropertiesEXT vkGetPhysicalDeviceToolPropertiesEXTPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPToolCount <- ContT $ bracket (callocBytes @Word32 4) free
-  _ <- lift $ vkGetPhysicalDeviceToolPropertiesEXT' physicalDevice' (pPToolCount) (nullPtr)
+  r <- lift $ vkGetPhysicalDeviceToolPropertiesEXT' physicalDevice' (pPToolCount) (nullPtr)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pToolCount <- lift $ peek @Word32 pPToolCount
   pPToolProperties <- ContT $ bracket (callocBytes @PhysicalDeviceToolPropertiesEXT ((fromIntegral (pToolCount)) * 1048)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPToolProperties `advancePtrBytes` (i * 1048) :: Ptr PhysicalDeviceToolPropertiesEXT) . ($ ())) [0..(fromIntegral (pToolCount)) - 1]
-  r <- lift $ vkGetPhysicalDeviceToolPropertiesEXT' physicalDevice' (pPToolCount) ((pPToolProperties))
+  r' <- lift $ vkGetPhysicalDeviceToolPropertiesEXT' physicalDevice' (pPToolCount) ((pPToolProperties))
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pToolCount' <- lift $ peek @Word32 pPToolCount
   pToolProperties' <- lift $ generateM (fromIntegral (pToolCount')) (\i -> peekCStruct @PhysicalDeviceToolPropertiesEXT (((pPToolProperties) `advancePtrBytes` (1048 * (i)) :: Ptr PhysicalDeviceToolPropertiesEXT)))
-  pure $ (r, pToolProperties')
+  pure $ ((r'), pToolProperties')
 
 
 -- | VkPhysicalDeviceToolPropertiesEXT - Structure providing information

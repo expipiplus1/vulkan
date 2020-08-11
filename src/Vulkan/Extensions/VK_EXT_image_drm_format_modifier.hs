@@ -15,6 +15,7 @@ module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDrmFormatMo
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -58,12 +59,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Image (SubresourceLayout)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
+import Vulkan.Exception (VulkanException(..))
 import Vulkan.Zero (Zero(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT))
+import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -79,6 +82,10 @@ foreign import ccall
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
 --     -   'Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
@@ -107,7 +114,8 @@ getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageDrmFormatModifierPropertiesEXT is null" Nothing Nothing
   let vkGetImageDrmFormatModifierPropertiesEXT' = mkVkGetImageDrmFormatModifierPropertiesEXT vkGetImageDrmFormatModifierPropertiesEXTPtr
   pPProperties <- ContT (withZeroCStruct @ImageDrmFormatModifierPropertiesEXT)
-  _ <- lift $ vkGetImageDrmFormatModifierPropertiesEXT' (deviceHandle (device)) (image) (pPProperties)
+  r <- lift $ vkGetImageDrmFormatModifierPropertiesEXT' (deviceHandle (device)) (image) (pPProperties)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @ImageDrmFormatModifierPropertiesEXT pPProperties
   pure $ (pProperties)
 

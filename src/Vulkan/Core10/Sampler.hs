@@ -131,8 +131,6 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
---     -   'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
---
 -- = See Also
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
@@ -283,8 +281,16 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- created on a device is implementation-dependent and specified by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSamplerAllocationCount maxSamplerAllocationCount>
 -- member of the 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
--- structure. If @maxSamplerAllocationCount@ is exceeded, 'createSampler'
--- will return 'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'.
+-- structure.
+--
+-- Note
+--
+-- For historical reasons, if @maxSamplerAllocationCount@ is exceeded, some
+-- implementations may return
+-- 'Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'. Exceeding this
+-- limit will result in undefined behavior, and an application should not
+-- rely on the use of the returned error code in order to identify when the
+-- limit is reached.
 --
 -- Since 'Vulkan.Core10.Handles.Sampler' is a non-dispatchable handle type,
 -- implementations /may/ return the same handle for sampler state vectors
