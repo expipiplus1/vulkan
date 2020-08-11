@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.FramebufferCreateFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier">FramebufferCreateFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FRAMEBUFFER_CREATE_IMAGELESS_BIT"><span class="hs-identifier">FRAMEBUFFER_CREATE_IMAGELESS_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                 </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-4"></span><span>                                                                                 </span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlags"><span class="hs-identifier">FramebufferCreateFlags</span></a></span><span>
+</span><span id="line-6"></span><span>                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- | VkFramebufferCreateFlagBits - Bitmask specifying framebuffer properties</span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'FramebufferCreateFlags'</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">newtype</span><span> </span><span id="FramebufferCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-var">FramebufferCreateFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="FramebufferCreateFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-var">FramebufferCreateFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680081571"><span id="local-6989586621680081573"><span class="annot"><span class="annottext">FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+(FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool)
+-&gt; (FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool)
+-&gt; Eq FramebufferCreateFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+$c/= :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+== :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+$c== :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680081555"><span id="local-6989586621680081557"><span id="local-6989586621680081559"><span id="local-6989586621680081561"><span id="local-6989586621680081563"><span id="local-6989586621680081565"><span id="local-6989586621680081567"><span class="annot"><span class="annottext">Eq FramebufferCreateFlagBits
+Eq FramebufferCreateFlagBits =&gt;
+(FramebufferCreateFlagBits
+ -&gt; FramebufferCreateFlagBits -&gt; Ordering)
+-&gt; (FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool)
+-&gt; (FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool)
+-&gt; (FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool)
+-&gt; (FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool)
+-&gt; (FramebufferCreateFlagBits
+    -&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits
+    -&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits)
+-&gt; Ord FramebufferCreateFlagBits
+FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Ordering
+FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+$cmin :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+max :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+$cmax :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+&gt;= :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+$c&gt;= :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+&gt; :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+$c&gt; :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+&lt;= :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+$c&lt;= :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+&lt; :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+$c&lt; :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Bool
+compare :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Ordering
+$ccompare :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; Ordering
+$cp1Ord :: Eq FramebufferCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680081538"><span id="local-6989586621680081540"><span id="local-6989586621680081542"><span id="local-6989586621680081544"><span id="local-6989586621680081546"><span id="local-6989586621680081548"><span id="local-6989586621680081550"><span id="local-6989586621680081552"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO FramebufferCreateFlagBits
+Ptr b -&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ()
+Ptr FramebufferCreateFlagBits -&gt; IO FramebufferCreateFlagBits
+Ptr FramebufferCreateFlagBits
+-&gt; Int -&gt; IO FramebufferCreateFlagBits
+Ptr FramebufferCreateFlagBits
+-&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ()
+Ptr FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; IO ()
+FramebufferCreateFlagBits -&gt; Int
+(FramebufferCreateFlagBits -&gt; Int)
+-&gt; (FramebufferCreateFlagBits -&gt; Int)
+-&gt; (Ptr FramebufferCreateFlagBits
+    -&gt; Int -&gt; IO FramebufferCreateFlagBits)
+-&gt; (Ptr FramebufferCreateFlagBits
+    -&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO FramebufferCreateFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ())
+-&gt; (Ptr FramebufferCreateFlagBits -&gt; IO FramebufferCreateFlagBits)
+-&gt; (Ptr FramebufferCreateFlagBits
+    -&gt; FramebufferCreateFlagBits -&gt; IO ())
+-&gt; Storable FramebufferCreateFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO FramebufferCreateFlagBits
+forall b. Ptr b -&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; IO ()
+$cpoke :: Ptr FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits -&gt; IO ()
+peek :: Ptr FramebufferCreateFlagBits -&gt; IO FramebufferCreateFlagBits
+$cpeek :: Ptr FramebufferCreateFlagBits -&gt; IO FramebufferCreateFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO FramebufferCreateFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO FramebufferCreateFlagBits
+pokeElemOff :: Ptr FramebufferCreateFlagBits
+-&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr FramebufferCreateFlagBits
+-&gt; Int -&gt; FramebufferCreateFlagBits -&gt; IO ()
+peekElemOff :: Ptr FramebufferCreateFlagBits
+-&gt; Int -&gt; IO FramebufferCreateFlagBits
+$cpeekElemOff :: Ptr FramebufferCreateFlagBits
+-&gt; Int -&gt; IO FramebufferCreateFlagBits
+alignment :: FramebufferCreateFlagBits -&gt; Int
+$calignment :: FramebufferCreateFlagBits -&gt; Int
+sizeOf :: FramebufferCreateFlagBits -&gt; Int
+$csizeOf :: FramebufferCreateFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680081535"><span class="annot"><span class="annottext">FramebufferCreateFlagBits
+FramebufferCreateFlagBits -&gt; Zero FramebufferCreateFlagBits
+forall a. a -&gt; Zero a
+zero :: FramebufferCreateFlagBits
+$czero :: FramebufferCreateFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680081489"><span id="local-6989586621680081491"><span id="local-6989586621680081493"><span id="local-6989586621680081495"><span id="local-6989586621680081497"><span id="local-6989586621680081499"><span id="local-6989586621680081501"><span id="local-6989586621680081503"><span id="local-6989586621680081505"><span id="local-6989586621680081507"><span id="local-6989586621680081509"><span id="local-6989586621680081511"><span id="local-6989586621680081513"><span id="local-6989586621680081515"><span id="local-6989586621680081517"><span id="local-6989586621680081519"><span id="local-6989586621680081521"><span id="local-6989586621680081523"><span id="local-6989586621680081525"><span id="local-6989586621680081527"><span id="local-6989586621680081529"><span id="local-6989586621680081531"><span class="annot"><span class="annottext">Eq FramebufferCreateFlagBits
+FramebufferCreateFlagBits
+Eq FramebufferCreateFlagBits =&gt;
+(FramebufferCreateFlagBits
+ -&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits
+    -&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits
+    -&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; FramebufferCreateFlagBits
+-&gt; (Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; Bool)
+-&gt; (FramebufferCreateFlagBits -&gt; Maybe Int)
+-&gt; (FramebufferCreateFlagBits -&gt; Int)
+-&gt; (FramebufferCreateFlagBits -&gt; Bool)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits)
+-&gt; (FramebufferCreateFlagBits -&gt; Int)
+-&gt; Bits FramebufferCreateFlagBits
+Int -&gt; FramebufferCreateFlagBits
+FramebufferCreateFlagBits -&gt; Bool
+FramebufferCreateFlagBits -&gt; Int
+FramebufferCreateFlagBits -&gt; Maybe Int
+FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+FramebufferCreateFlagBits -&gt; Int -&gt; Bool
+FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: FramebufferCreateFlagBits -&gt; Int
+$cpopCount :: FramebufferCreateFlagBits -&gt; Int
+rotateR :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$crotateR :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+rotateL :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$crotateL :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+unsafeShiftR :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$cunsafeShiftR :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+shiftR :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$cshiftR :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+unsafeShiftL :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$cunsafeShiftL :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+shiftL :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$cshiftL :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+isSigned :: FramebufferCreateFlagBits -&gt; Bool
+$cisSigned :: FramebufferCreateFlagBits -&gt; Bool
+bitSize :: FramebufferCreateFlagBits -&gt; Int
+$cbitSize :: FramebufferCreateFlagBits -&gt; Int
+bitSizeMaybe :: FramebufferCreateFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: FramebufferCreateFlagBits -&gt; Maybe Int
+testBit :: FramebufferCreateFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: FramebufferCreateFlagBits -&gt; Int -&gt; Bool
+complementBit :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$ccomplementBit :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+clearBit :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$cclearBit :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+setBit :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$csetBit :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+bit :: Int -&gt; FramebufferCreateFlagBits
+$cbit :: Int -&gt; FramebufferCreateFlagBits
+zeroBits :: FramebufferCreateFlagBits
+$czeroBits :: FramebufferCreateFlagBits
+rotate :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$crotate :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+shift :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+$cshift :: FramebufferCreateFlagBits -&gt; Int -&gt; FramebufferCreateFlagBits
+complement :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+$ccomplement :: FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+xor :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+$cxor :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+.|. :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+$c.|. :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+.&amp;. :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+$c.&amp;. :: FramebufferCreateFlagBits
+-&gt; FramebufferCreateFlagBits -&gt; FramebufferCreateFlagBits
+$cp1Bits :: Eq FramebufferCreateFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- | 'FRAMEBUFFER_CREATE_IMAGELESS_BIT' specifies that image views are not</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- specified, and only attachment compatibility information will be</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- provided via a</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo'</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- structure.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bFRAMEBUFFER_CREATE_IMAGELESS_BIT"><span id="%24mFRAMEBUFFER_CREATE_IMAGELESS_BIT"><span id="FRAMEBUFFER_CREATE_IMAGELESS_BIT"><span class="annot"><span class="annottext">$bFRAMEBUFFER_CREATE_IMAGELESS_BIT :: FramebufferCreateFlagBits
+$mFRAMEBUFFER_CREATE_IMAGELESS_BIT :: forall r.
+FramebufferCreateFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#%24bFRAMEBUFFER_CREATE_IMAGELESS_BIT"><span class="hs-identifier hs-var hs-var hs-var">FRAMEBUFFER_CREATE_IMAGELESS_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-type">FramebufferCreateFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">type</span><span> </span><span id="FramebufferCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlags"><span class="hs-identifier hs-var">FramebufferCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-type">FramebufferCreateFlagBits</span></a></span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680081481"><span id="local-6989586621680081483"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-type">FramebufferCreateFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-41"></span><span>  </span><span id="local-6989586621680081479"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; FramebufferCreateFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680081477"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680081477"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-42"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FRAMEBUFFER_CREATE_IMAGELESS_BIT"><span class="hs-identifier hs-type">FRAMEBUFFER_CREATE_IMAGELESS_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;FRAMEBUFFER_CREATE_IMAGELESS_BIT&quot;</span></span><span>
+</span><span id="line-43"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-type">FramebufferCreateFlagBits</span></a></span><span> </span><span id="local-6989586621680081476"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680081476"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680081477"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;FramebufferCreateFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680081476"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680081468"><span id="local-6989586621680081471"><span id="local-6989586621680081473"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-type">FramebufferCreateFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-46"></span><span>  </span><span id="local-6989586621680081466"><span class="annot"><span class="annottext">readPrec :: ReadPrec FramebufferCreateFlagBits
+</span><a href="#local-6989586621680081466"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec FramebufferCreateFlagBits
+-&gt; ReadPrec FramebufferCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec FramebufferCreateFlagBits)]
+-&gt; ReadPrec FramebufferCreateFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;FRAMEBUFFER_CREATE_IMAGELESS_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">FramebufferCreateFlagBits -&gt; ReadPrec FramebufferCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">FramebufferCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FRAMEBUFFER_CREATE_IMAGELESS_BIT"><span class="hs-identifier hs-var">FRAMEBUFFER_CREATE_IMAGELESS_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-47"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec FramebufferCreateFlagBits
+-&gt; ReadPrec FramebufferCreateFlagBits
+-&gt; ReadPrec FramebufferCreateFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-48"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec FramebufferCreateFlagBits
+-&gt; ReadPrec FramebufferCreateFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-49"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;FramebufferCreateFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span>                       </span><span id="local-6989586621680081465"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680081465"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-51"></span><span>                       </span><span class="annot"><span class="annottext">FramebufferCreateFlagBits -&gt; ReadPrec FramebufferCreateFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; FramebufferCreateFlagBits
+</span><a href="Vulkan.Core10.Enums.FramebufferCreateFlagBits.html#FramebufferCreateFlagBits"><span class="hs-identifier hs-var">FramebufferCreateFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680081465"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span></pre></body></html>

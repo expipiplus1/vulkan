@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.SparseImageFormatFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier">SparseImageFormatFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"><span class="hs-identifier">SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"><span class="hs-identifier">SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"><span class="hs-identifier">SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT</span></a></span><span>
+</span><span id="line-5"></span><span>                                                                                 </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-6"></span><span>                                                                                 </span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span>                                                      </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlags"><span class="hs-identifier">SparseImageFormatFlags</span></a></span><span>
+</span><span id="line-8"></span><span>                                                      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- | VkSparseImageFormatFlagBits - Bitmask specifying additional information</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- about a sparse image resource</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-29"></span><span class="hs-comment">--</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- 'SparseImageFormatFlags'</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">newtype</span><span> </span><span id="SparseImageFormatFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-var">SparseImageFormatFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SparseImageFormatFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-var">SparseImageFormatFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680070197"><span id="local-6989586621680070199"><span class="annot"><span class="annottext">SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+(SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool)
+-&gt; (SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool)
+-&gt; Eq SparseImageFormatFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+$c/= :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+== :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+$c== :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680070181"><span id="local-6989586621680070183"><span id="local-6989586621680070185"><span id="local-6989586621680070187"><span id="local-6989586621680070189"><span id="local-6989586621680070191"><span id="local-6989586621680070193"><span class="annot"><span class="annottext">Eq SparseImageFormatFlagBits
+Eq SparseImageFormatFlagBits =&gt;
+(SparseImageFormatFlagBits
+ -&gt; SparseImageFormatFlagBits -&gt; Ordering)
+-&gt; (SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool)
+-&gt; (SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool)
+-&gt; (SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool)
+-&gt; (SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool)
+-&gt; (SparseImageFormatFlagBits
+    -&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits
+    -&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits)
+-&gt; Ord SparseImageFormatFlagBits
+SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Ordering
+SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+$cmin :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+max :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+$cmax :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+&gt;= :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+$c&gt;= :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+&gt; :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+$c&gt; :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+&lt;= :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+$c&lt;= :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+&lt; :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+$c&lt; :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Bool
+compare :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Ordering
+$ccompare :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; Ordering
+$cp1Ord :: Eq SparseImageFormatFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680070164"><span id="local-6989586621680070166"><span id="local-6989586621680070168"><span id="local-6989586621680070170"><span id="local-6989586621680070172"><span id="local-6989586621680070174"><span id="local-6989586621680070176"><span id="local-6989586621680070178"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SparseImageFormatFlagBits
+Ptr b -&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ()
+Ptr SparseImageFormatFlagBits -&gt; IO SparseImageFormatFlagBits
+Ptr SparseImageFormatFlagBits
+-&gt; Int -&gt; IO SparseImageFormatFlagBits
+Ptr SparseImageFormatFlagBits
+-&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ()
+Ptr SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; IO ()
+SparseImageFormatFlagBits -&gt; Int
+(SparseImageFormatFlagBits -&gt; Int)
+-&gt; (SparseImageFormatFlagBits -&gt; Int)
+-&gt; (Ptr SparseImageFormatFlagBits
+    -&gt; Int -&gt; IO SparseImageFormatFlagBits)
+-&gt; (Ptr SparseImageFormatFlagBits
+    -&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SparseImageFormatFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ())
+-&gt; (Ptr SparseImageFormatFlagBits -&gt; IO SparseImageFormatFlagBits)
+-&gt; (Ptr SparseImageFormatFlagBits
+    -&gt; SparseImageFormatFlagBits -&gt; IO ())
+-&gt; Storable SparseImageFormatFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO SparseImageFormatFlagBits
+forall b. Ptr b -&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; IO ()
+$cpoke :: Ptr SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits -&gt; IO ()
+peek :: Ptr SparseImageFormatFlagBits -&gt; IO SparseImageFormatFlagBits
+$cpeek :: Ptr SparseImageFormatFlagBits -&gt; IO SparseImageFormatFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SparseImageFormatFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SparseImageFormatFlagBits
+pokeElemOff :: Ptr SparseImageFormatFlagBits
+-&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr SparseImageFormatFlagBits
+-&gt; Int -&gt; SparseImageFormatFlagBits -&gt; IO ()
+peekElemOff :: Ptr SparseImageFormatFlagBits
+-&gt; Int -&gt; IO SparseImageFormatFlagBits
+$cpeekElemOff :: Ptr SparseImageFormatFlagBits
+-&gt; Int -&gt; IO SparseImageFormatFlagBits
+alignment :: SparseImageFormatFlagBits -&gt; Int
+$calignment :: SparseImageFormatFlagBits -&gt; Int
+sizeOf :: SparseImageFormatFlagBits -&gt; Int
+$csizeOf :: SparseImageFormatFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680070161"><span class="annot"><span class="annottext">SparseImageFormatFlagBits
+SparseImageFormatFlagBits -&gt; Zero SparseImageFormatFlagBits
+forall a. a -&gt; Zero a
+zero :: SparseImageFormatFlagBits
+$czero :: SparseImageFormatFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680070115"><span id="local-6989586621680070117"><span id="local-6989586621680070119"><span id="local-6989586621680070121"><span id="local-6989586621680070123"><span id="local-6989586621680070125"><span id="local-6989586621680070127"><span id="local-6989586621680070129"><span id="local-6989586621680070131"><span id="local-6989586621680070133"><span id="local-6989586621680070135"><span id="local-6989586621680070137"><span id="local-6989586621680070139"><span id="local-6989586621680070141"><span id="local-6989586621680070143"><span id="local-6989586621680070145"><span id="local-6989586621680070147"><span id="local-6989586621680070149"><span id="local-6989586621680070151"><span id="local-6989586621680070153"><span id="local-6989586621680070155"><span id="local-6989586621680070157"><span class="annot"><span class="annottext">Eq SparseImageFormatFlagBits
+SparseImageFormatFlagBits
+Eq SparseImageFormatFlagBits =&gt;
+(SparseImageFormatFlagBits
+ -&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits
+    -&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits
+    -&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; SparseImageFormatFlagBits
+-&gt; (Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; Bool)
+-&gt; (SparseImageFormatFlagBits -&gt; Maybe Int)
+-&gt; (SparseImageFormatFlagBits -&gt; Int)
+-&gt; (SparseImageFormatFlagBits -&gt; Bool)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits)
+-&gt; (SparseImageFormatFlagBits -&gt; Int)
+-&gt; Bits SparseImageFormatFlagBits
+Int -&gt; SparseImageFormatFlagBits
+SparseImageFormatFlagBits -&gt; Bool
+SparseImageFormatFlagBits -&gt; Int
+SparseImageFormatFlagBits -&gt; Maybe Int
+SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+SparseImageFormatFlagBits -&gt; Int -&gt; Bool
+SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SparseImageFormatFlagBits -&gt; Int
+$cpopCount :: SparseImageFormatFlagBits -&gt; Int
+rotateR :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$crotateR :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+rotateL :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$crotateL :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+unsafeShiftR :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$cunsafeShiftR :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+shiftR :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$cshiftR :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+unsafeShiftL :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$cunsafeShiftL :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+shiftL :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$cshiftL :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+isSigned :: SparseImageFormatFlagBits -&gt; Bool
+$cisSigned :: SparseImageFormatFlagBits -&gt; Bool
+bitSize :: SparseImageFormatFlagBits -&gt; Int
+$cbitSize :: SparseImageFormatFlagBits -&gt; Int
+bitSizeMaybe :: SparseImageFormatFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: SparseImageFormatFlagBits -&gt; Maybe Int
+testBit :: SparseImageFormatFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: SparseImageFormatFlagBits -&gt; Int -&gt; Bool
+complementBit :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$ccomplementBit :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+clearBit :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$cclearBit :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+setBit :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$csetBit :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+bit :: Int -&gt; SparseImageFormatFlagBits
+$cbit :: Int -&gt; SparseImageFormatFlagBits
+zeroBits :: SparseImageFormatFlagBits
+$czeroBits :: SparseImageFormatFlagBits
+rotate :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$crotate :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+shift :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+$cshift :: SparseImageFormatFlagBits -&gt; Int -&gt; SparseImageFormatFlagBits
+complement :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+$ccomplement :: SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+xor :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+$cxor :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+.|. :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+$c.|. :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+.&amp;. :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+$c.&amp;. :: SparseImageFormatFlagBits
+-&gt; SparseImageFormatFlagBits -&gt; SparseImageFormatFlagBits
+$cp1Bits :: Eq SparseImageFormatFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- | 'SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT' specifies that the image uses a</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- single mip tail region for all array layers.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"><span id="%24mSPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"><span id="SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"><span class="annot"><span class="annottext">$bSPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT :: SparseImageFormatFlagBits
+$mSPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT :: forall r.
+SparseImageFormatFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#%24bSPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"><span class="hs-identifier hs-var hs-var hs-var">SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-type">SparseImageFormatFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- | 'SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT' specifies that the first mip</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- level whose dimensions are not integer multiples of the corresponding</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- dimensions of the sparse image block begins the mip tail region.</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"><span id="%24mSPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"><span id="SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"><span class="annot"><span class="annottext">$bSPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT :: SparseImageFormatFlagBits
+$mSPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT :: forall r.
+SparseImageFormatFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#%24bSPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"><span class="hs-identifier hs-var hs-var hs-var">SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-type">SparseImageFormatFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- | 'SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT' specifies that the</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- image uses non-standard sparse image block dimensions, and the</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- @imageGranularity@ values do not match the standard sparse image block</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- dimensions for the given format.</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"><span id="%24mSPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"><span id="SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"><span class="annot"><span class="annottext">$bSPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT :: SparseImageFormatFlagBits
+$mSPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT :: forall r.
+SparseImageFormatFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#%24bSPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"><span class="hs-identifier hs-var hs-var hs-var">SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-type">SparseImageFormatFlagBits</span></a></span><span> </span><span class="hs-number">0x00000004</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">type</span><span> </span><span id="SparseImageFormatFlags"><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlags"><span class="hs-identifier hs-var">SparseImageFormatFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-type">SparseImageFormatFlagBits</span></a></span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680070103"><span id="local-6989586621680070105"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-type">SparseImageFormatFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-50"></span><span>  </span><span id="local-6989586621680070101"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SparseImageFormatFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680070099"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680070099"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-51"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"><span class="hs-identifier hs-type">SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT&quot;</span></span><span>
+</span><span id="line-52"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"><span class="hs-identifier hs-type">SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT&quot;</span></span><span>
+</span><span id="line-53"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"><span class="hs-identifier hs-type">SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT&quot;</span></span><span>
+</span><span id="line-54"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-type">SparseImageFormatFlagBits</span></a></span><span> </span><span id="local-6989586621680070098"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680070098"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680070099"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SparseImageFormatFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680070098"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span>
+</span><span id="line-56"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680070090"><span id="local-6989586621680070093"><span id="local-6989586621680070095"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-type">SparseImageFormatFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-57"></span><span>  </span><span id="local-6989586621680070088"><span class="annot"><span class="annottext">readPrec :: ReadPrec SparseImageFormatFlagBits
+</span><a href="#local-6989586621680070088"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec SparseImageFormatFlagBits
+-&gt; ReadPrec SparseImageFormatFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec SparseImageFormatFlagBits)]
+-&gt; ReadPrec SparseImageFormatFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SparseImageFormatFlagBits -&gt; ReadPrec SparseImageFormatFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SparseImageFormatFlagBits
+</span><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"><span class="hs-identifier hs-var">SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SparseImageFormatFlagBits -&gt; ReadPrec SparseImageFormatFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SparseImageFormatFlagBits
+</span><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"><span class="hs-identifier hs-var">SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SparseImageFormatFlagBits -&gt; ReadPrec SparseImageFormatFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SparseImageFormatFlagBits
+</span><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"><span class="hs-identifier hs-var">SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-60"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec SparseImageFormatFlagBits
+-&gt; ReadPrec SparseImageFormatFlagBits
+-&gt; ReadPrec SparseImageFormatFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-61"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec SparseImageFormatFlagBits
+-&gt; ReadPrec SparseImageFormatFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-62"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SparseImageFormatFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span>                       </span><span id="local-6989586621680070087"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680070087"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-64"></span><span>                       </span><span class="annot"><span class="annottext">SparseImageFormatFlagBits -&gt; ReadPrec SparseImageFormatFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; SparseImageFormatFlagBits
+</span><a href="Vulkan.Core10.Enums.SparseImageFormatFlagBits.html#SparseImageFormatFlagBits"><span class="hs-identifier hs-var">SparseImageFormatFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680070087"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span>
+</span><span id="line-66"></span></pre></body></html>

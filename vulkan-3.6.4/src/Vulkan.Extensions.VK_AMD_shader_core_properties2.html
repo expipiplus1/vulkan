@@ -1,0 +1,630 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_AMD_shader_core_properties2</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier">PhysicalDeviceShaderCoreProperties2AMD</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                         </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier">ShaderCorePropertiesFlagBitsAMD</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                         </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagsAMD"><span class="hs-identifier">ShaderCorePropertiesFlagsAMD</span></a></span><span>
+</span><span id="line-5"></span><span>                                                         </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span class="hs-identifier">AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                         </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span class="hs-identifier">AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION</span></a></span><span>
+</span><span id="line-7"></span><span>                                                         </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span class="hs-identifier">AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                         </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span class="hs-identifier">AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-9"></span><span>                                                         </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- | VkPhysicalDeviceShaderCoreProperties2AMD - Structure describing shader</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- core properties that can be supported by an implementation</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceShaderCoreProperties2AMD' structure</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- describe the following implementation-dependent limits:</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- If the 'PhysicalDeviceShaderCoreProperties2AMD' structure is included in</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- the @pNext@ chain of</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- it is filled with the implementation-dependent limits.</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'ShaderCorePropertiesFlagsAMD',</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-66"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceShaderCoreProperties2AMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-var">PhysicalDeviceShaderCoreProperties2AMD</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceShaderCoreProperties2AMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-var">PhysicalDeviceShaderCoreProperties2AMD</span></a></span></span><span>
+</span><span id="line-67"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @shaderCoreFeatures@ is a bitmask of 'ShaderCorePropertiesFlagBitsAMD'</span><span>
+</span><span id="line-68"></span><span>    </span><span class="hs-comment">-- indicating the set of features supported by the shader core.</span><span>
+</span><span id="line-69"></span><span>    </span><span id="%24sel%3AshaderCoreFeatures%3APhysicalDeviceShaderCoreProperties2AMD"><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD
+-&gt; ShaderCorePropertiesFlagsAMD
+</span><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#%24sel%3AshaderCoreFeatures%3APhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-var hs-var">shaderCoreFeatures</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagsAMD</span></a></span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @activeComputeUnitCount@ is an unsigned integer value indicating the</span><span>
+</span><span id="line-71"></span><span>    </span><span class="hs-comment">-- number of compute units that have been enabled.</span><span>
+</span><span id="line-72"></span><span>    </span><span id="%24sel%3AactiveComputeUnitCount%3APhysicalDeviceShaderCoreProperties2AMD"><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD -&gt; Word32
+</span><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#%24sel%3AactiveComputeUnitCount%3APhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-var hs-var">activeComputeUnitCount</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-73"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680058779"><span id="local-6989586621680058781"><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; Bool
+(PhysicalDeviceShaderCoreProperties2AMD
+ -&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; Bool)
+-&gt; (PhysicalDeviceShaderCoreProperties2AMD
+    -&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; Bool)
+-&gt; Eq PhysicalDeviceShaderCoreProperties2AMD
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; Bool
+$c/= :: PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; Bool
+== :: PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; Bool
+$c== :: PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceShaderCoreProperties2AMD</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680058772"><span id="local-6989586621680058774"><span id="local-6989586621680058776"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-type">PhysicalDeviceShaderCoreProperties2AMD</span></a></span></span></span></span><span>
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680058767"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-type">PhysicalDeviceShaderCoreProperties2AMD</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-81"></span><span>  </span><span id="local-6989586621680058762"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceShaderCoreProperties2AMD
+-&gt; (Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680058760"><span class="annot"><span class="annottext">x :: PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058760"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680058759"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b
+</span><a href="#local-6989586621680058759"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680058758"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058758"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058758"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058760"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b
+</span><a href="#local-6989586621680058759"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058758"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span>  </span><span id="local-6989586621680058756"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680058756"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680058755"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058755"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680058753"><span id="local-6989586621680058754"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-type">PhysicalDeviceShaderCoreProperties2AMD</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680058752"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680058752"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-83"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058755"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058755"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-85"></span><span>    </span><span class="annot"><span class="annottext">Ptr ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058755"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; Int -&gt; Ptr ShaderCorePropertiesFlagsAMD
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagsAMD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+</span><a href="#local-6989586621680058754"><span class="hs-identifier hs-var">shaderCoreFeatures</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058755"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680058753"><span class="hs-identifier hs-var">activeComputeUnitCount</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680058752"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-88"></span><span>  </span><span id="local-6989586621680058751"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-89"></span><span>  </span><span id="local-6989586621680058749"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-90"></span><span>  </span><span id="local-6989586621680058747"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680058745"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058745"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680058744"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680058744"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-91"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>    </span><span class="annot"><span class="annottext">Ptr ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; Int -&gt; Ptr ShaderCorePropertiesFlagsAMD
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagsAMD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-94"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058745"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680058744"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-96"></span><span>
+</span><span id="line-97"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-type">PhysicalDeviceShaderCoreProperties2AMD</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680058740"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; IO PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680058738"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058738"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-99"></span><span>    </span><span id="local-6989586621680058737"><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+</span><a href="#local-6989586621680058737"><span class="hs-identifier hs-var">shaderCoreFeatures</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr ShaderCorePropertiesFlagsAMD -&gt; IO ShaderCorePropertiesFlagsAMD
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagsAMD</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058738"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; Int -&gt; Ptr ShaderCorePropertiesFlagsAMD
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagsAMD</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span>    </span><span id="local-6989586621680058736"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680058736"><span class="hs-identifier hs-var">activeComputeUnitCount</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058738"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD -&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD
+-&gt; IO PhysicalDeviceShaderCoreProperties2AMD
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceShaderCoreProperties2AMD
+ -&gt; IO PhysicalDeviceShaderCoreProperties2AMD)
+-&gt; PhysicalDeviceShaderCoreProperties2AMD
+-&gt; IO PhysicalDeviceShaderCoreProperties2AMD
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+-&gt; Word32 -&gt; PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-var">PhysicalDeviceShaderCoreProperties2AMD</span></a></span><span>
+</span><span id="line-102"></span><span>             </span><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+</span><a href="#local-6989586621680058737"><span class="hs-identifier hs-var">shaderCoreFeatures</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680058736"><span class="hs-identifier hs-var">activeComputeUnitCount</span></a></span><span>
+</span><span id="line-103"></span><span>
+</span><span id="line-104"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680058726"><span id="local-6989586621680058728"><span id="local-6989586621680058730"><span id="local-6989586621680058732"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-type">PhysicalDeviceShaderCoreProperties2AMD</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-105"></span><span>  </span><span id="local-6989586621680058722"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceShaderCoreProperties2AMD -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-106"></span><span>  </span><span id="local-6989586621680058720"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceShaderCoreProperties2AMD -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-107"></span><span>  </span><span id="local-6989586621680058718"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; IO PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058718"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; IO PhysicalDeviceShaderCoreProperties2AMD
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-108"></span><span>  </span><span id="local-6989586621680058717"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; IO ()
+</span><a href="#local-6989586621680058717"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680058716"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058716"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680058715"><span class="annot"><span class="annottext">poked :: PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058715"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+-&gt; PhysicalDeviceShaderCoreProperties2AMD -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058716"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058715"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-109"></span><span>
+</span><span id="line-110"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-type">PhysicalDeviceShaderCoreProperties2AMD</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-111"></span><span>  </span><span id="local-6989586621680058712"><span class="annot"><span class="annottext">zero :: PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="#local-6989586621680058712"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+-&gt; Word32 -&gt; PhysicalDeviceShaderCoreProperties2AMD
+</span><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#PhysicalDeviceShaderCoreProperties2AMD"><span class="hs-identifier hs-var">PhysicalDeviceShaderCoreProperties2AMD</span></a></span><span>
+</span><span id="line-112"></span><span>           </span><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-113"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- | VkShaderCorePropertiesFlagBitsAMD - Bitmask specifying shader core</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- properties</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- 'PhysicalDeviceShaderCoreProperties2AMD', 'ShaderCorePropertiesFlagsAMD'</span><span>
+</span><span id="line-122"></span><span class="hs-keyword">newtype</span><span> </span><span id="ShaderCorePropertiesFlagBitsAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier hs-var">ShaderCorePropertiesFlagBitsAMD</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ShaderCorePropertiesFlagBitsAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier hs-var">ShaderCorePropertiesFlagBitsAMD</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-123"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680058707"><span id="local-6989586621680058709"><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+(ShaderCorePropertiesFlagsAMD
+ -&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool)
+-&gt; Eq ShaderCorePropertiesFlagsAMD
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+$c/= :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+== :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+$c== :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680058692"><span id="local-6989586621680058694"><span id="local-6989586621680058696"><span id="local-6989586621680058698"><span id="local-6989586621680058700"><span id="local-6989586621680058702"><span id="local-6989586621680058704"><span class="annot"><span class="annottext">Eq ShaderCorePropertiesFlagsAMD
+Eq ShaderCorePropertiesFlagsAMD =&gt;
+(ShaderCorePropertiesFlagsAMD
+ -&gt; ShaderCorePropertiesFlagsAMD -&gt; Ordering)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; Ord ShaderCorePropertiesFlagsAMD
+ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Ordering
+ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+$cmin :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+max :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+$cmax :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+&gt;= :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+$c&gt;= :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+&gt; :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+$c&gt; :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+&lt;= :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+$c&lt;= :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+&lt; :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+$c&lt; :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Bool
+compare :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Ordering
+$ccompare :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; Ordering
+$cp1Ord :: Eq ShaderCorePropertiesFlagsAMD
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680058675"><span id="local-6989586621680058677"><span id="local-6989586621680058679"><span id="local-6989586621680058681"><span id="local-6989586621680058683"><span id="local-6989586621680058685"><span id="local-6989586621680058687"><span id="local-6989586621680058689"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD
+Ptr b -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+Ptr ShaderCorePropertiesFlagsAMD -&gt; IO ShaderCorePropertiesFlagsAMD
+Ptr ShaderCorePropertiesFlagsAMD
+-&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD
+Ptr ShaderCorePropertiesFlagsAMD
+-&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+Ptr ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+ShaderCorePropertiesFlagsAMD -&gt; Int
+(ShaderCorePropertiesFlagsAMD -&gt; Int)
+-&gt; (ShaderCorePropertiesFlagsAMD -&gt; Int)
+-&gt; (Ptr ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD)
+-&gt; (Ptr ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ())
+-&gt; (Ptr ShaderCorePropertiesFlagsAMD
+    -&gt; IO ShaderCorePropertiesFlagsAMD)
+-&gt; (Ptr ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ())
+-&gt; Storable ShaderCorePropertiesFlagsAMD
+forall b. Ptr b -&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD
+forall b. Ptr b -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+$cpoke :: Ptr ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+peek :: Ptr ShaderCorePropertiesFlagsAMD -&gt; IO ShaderCorePropertiesFlagsAMD
+$cpeek :: Ptr ShaderCorePropertiesFlagsAMD -&gt; IO ShaderCorePropertiesFlagsAMD
+pokeByteOff :: Ptr b -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD
+pokeElemOff :: Ptr ShaderCorePropertiesFlagsAMD
+-&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+$cpokeElemOff :: Ptr ShaderCorePropertiesFlagsAMD
+-&gt; Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; IO ()
+peekElemOff :: Ptr ShaderCorePropertiesFlagsAMD
+-&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD
+$cpeekElemOff :: Ptr ShaderCorePropertiesFlagsAMD
+-&gt; Int -&gt; IO ShaderCorePropertiesFlagsAMD
+alignment :: ShaderCorePropertiesFlagsAMD -&gt; Int
+$calignment :: ShaderCorePropertiesFlagsAMD -&gt; Int
+sizeOf :: ShaderCorePropertiesFlagsAMD -&gt; Int
+$csizeOf :: ShaderCorePropertiesFlagsAMD -&gt; Int
+</span><a href="#local-6989586621680058675"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></a></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680058673"><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+ShaderCorePropertiesFlagsAMD -&gt; Zero ShaderCorePropertiesFlagsAMD
+forall a. a -&gt; Zero a
+zero :: ShaderCorePropertiesFlagsAMD
+$czero :: ShaderCorePropertiesFlagsAMD
+</span><a href="#local-6989586621680058673"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680058628"><span id="local-6989586621680058630"><span id="local-6989586621680058632"><span id="local-6989586621680058634"><span id="local-6989586621680058636"><span id="local-6989586621680058638"><span id="local-6989586621680058640"><span id="local-6989586621680058642"><span id="local-6989586621680058644"><span id="local-6989586621680058646"><span id="local-6989586621680058648"><span id="local-6989586621680058650"><span id="local-6989586621680058652"><span id="local-6989586621680058654"><span id="local-6989586621680058656"><span id="local-6989586621680058658"><span id="local-6989586621680058660"><span id="local-6989586621680058662"><span id="local-6989586621680058664"><span id="local-6989586621680058666"><span id="local-6989586621680058668"><span id="local-6989586621680058670"><span class="annot"><span class="annottext">Eq ShaderCorePropertiesFlagsAMD
+ShaderCorePropertiesFlagsAMD
+Eq ShaderCorePropertiesFlagsAMD =&gt;
+(ShaderCorePropertiesFlagsAMD
+ -&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; ShaderCorePropertiesFlagsAMD
+-&gt; (Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; Bool)
+-&gt; (ShaderCorePropertiesFlagsAMD -&gt; Maybe Int)
+-&gt; (ShaderCorePropertiesFlagsAMD -&gt; Int)
+-&gt; (ShaderCorePropertiesFlagsAMD -&gt; Bool)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD
+    -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD)
+-&gt; (ShaderCorePropertiesFlagsAMD -&gt; Int)
+-&gt; Bits ShaderCorePropertiesFlagsAMD
+Int -&gt; ShaderCorePropertiesFlagsAMD
+ShaderCorePropertiesFlagsAMD -&gt; Bool
+ShaderCorePropertiesFlagsAMD -&gt; Int
+ShaderCorePropertiesFlagsAMD -&gt; Maybe Int
+ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; Bool
+ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: ShaderCorePropertiesFlagsAMD -&gt; Int
+$cpopCount :: ShaderCorePropertiesFlagsAMD -&gt; Int
+rotateR :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$crotateR :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+rotateL :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$crotateL :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+unsafeShiftR :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$cunsafeShiftR :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+shiftR :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$cshiftR :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+unsafeShiftL :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$cunsafeShiftL :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+shiftL :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$cshiftL :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+isSigned :: ShaderCorePropertiesFlagsAMD -&gt; Bool
+$cisSigned :: ShaderCorePropertiesFlagsAMD -&gt; Bool
+bitSize :: ShaderCorePropertiesFlagsAMD -&gt; Int
+$cbitSize :: ShaderCorePropertiesFlagsAMD -&gt; Int
+bitSizeMaybe :: ShaderCorePropertiesFlagsAMD -&gt; Maybe Int
+$cbitSizeMaybe :: ShaderCorePropertiesFlagsAMD -&gt; Maybe Int
+testBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; Bool
+$ctestBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; Bool
+complementBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$ccomplementBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+clearBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$cclearBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+setBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$csetBit :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+bit :: Int -&gt; ShaderCorePropertiesFlagsAMD
+$cbit :: Int -&gt; ShaderCorePropertiesFlagsAMD
+zeroBits :: ShaderCorePropertiesFlagsAMD
+$czeroBits :: ShaderCorePropertiesFlagsAMD
+rotate :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$crotate :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+shift :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+$cshift :: ShaderCorePropertiesFlagsAMD -&gt; Int -&gt; ShaderCorePropertiesFlagsAMD
+complement :: ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+$ccomplement :: ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+xor :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+$cxor :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+.|. :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+$c.|. :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+.&amp;. :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+$c.&amp;. :: ShaderCorePropertiesFlagsAMD
+-&gt; ShaderCorePropertiesFlagsAMD -&gt; ShaderCorePropertiesFlagsAMD
+$cp1Bits :: Eq ShaderCorePropertiesFlagsAMD
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-124"></span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span><span>
+</span><span id="line-127"></span><span class="hs-keyword">type</span><span> </span><span id="ShaderCorePropertiesFlagsAMD"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagsAMD"><span class="hs-identifier hs-var">ShaderCorePropertiesFlagsAMD</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagBitsAMD</span></a></span><span>
+</span><span id="line-128"></span><span>
+</span><span id="line-129"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680058622"><span id="local-6989586621680058624"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagBitsAMD</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-130"></span><span>  </span><span id="local-6989586621680058621"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ShaderCorePropertiesFlagsAMD -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680058619"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680058619"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-131"></span><span>    </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagBitsAMD</span></a></span><span> </span><span id="local-6989586621680058618"><span class="annot"><span class="annottext">x :: Word32
+</span><a href="#local-6989586621680058618"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680058619"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ShaderCorePropertiesFlagBitsAMD 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680058618"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>
+</span><span id="line-133"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680058610"><span id="local-6989586621680058613"><span id="local-6989586621680058615"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier hs-type">ShaderCorePropertiesFlagBitsAMD</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-134"></span><span>  </span><span id="local-6989586621680058608"><span class="annot"><span class="annottext">readPrec :: ReadPrec ShaderCorePropertiesFlagsAMD
+</span><a href="#local-6989586621680058608"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec ShaderCorePropertiesFlagsAMD
+-&gt; ReadPrec ShaderCorePropertiesFlagsAMD
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec ShaderCorePropertiesFlagsAMD)]
+-&gt; ReadPrec ShaderCorePropertiesFlagsAMD
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-135"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec ShaderCorePropertiesFlagsAMD
+-&gt; ReadPrec ShaderCorePropertiesFlagsAMD
+-&gt; ReadPrec ShaderCorePropertiesFlagsAMD
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-136"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec ShaderCorePropertiesFlagsAMD
+-&gt; ReadPrec ShaderCorePropertiesFlagsAMD
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-137"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ShaderCorePropertiesFlagBitsAMD&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-138"></span><span>                       </span><span id="local-6989586621680058607"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680058607"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Word32 -&gt; ReadPrec Word32
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Word32
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-139"></span><span>                       </span><span class="annot"><span class="annottext">ShaderCorePropertiesFlagsAMD
+-&gt; ReadPrec ShaderCorePropertiesFlagsAMD
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32 -&gt; ShaderCorePropertiesFlagsAMD
+</span><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#ShaderCorePropertiesFlagBitsAMD"><span class="hs-identifier hs-var">ShaderCorePropertiesFlagBitsAMD</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680058607"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-140"></span><span>
+</span><span id="line-141"></span><span>
+</span><span id="line-142"></span><span class="hs-keyword">type</span><span> </span><span id="AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span class="hs-identifier hs-var">AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-143"></span><span>
+</span><span id="line-144"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION&quot;</span><span>
+</span><span id="line-145"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span class="hs-identifier hs-type">AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680058815"><span class="annot"><a href="#local-6989586621680058815"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680058815"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680058815"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-146"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bAMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span id="%24mAMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span id="AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span class="annot"><span class="annottext">$bAMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION :: a
+$mAMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#%24bAMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-147"></span><span>
+</span><span id="line-148"></span><span>
+</span><span id="line-149"></span><span class="hs-keyword">type</span><span> </span><span id="AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span class="hs-identifier hs-var">AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_AMD_shader_core_properties2&quot;</span></span><span>
+</span><span id="line-150"></span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-152"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span class="hs-identifier hs-type">AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680058811"><span class="annot"><a href="#local-6989586621680058811"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680058811"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680058811"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680058811"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-153"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bAMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span id="%24mAMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span id="AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span class="annot"><span class="annottext">$bAMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME :: a
+$mAMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_AMD_shader_core_properties2.html#%24bAMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">AMD_SHADER_CORE_PROPERTIES_2_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_AMD_shader_core_properties2&quot;</span></span><span>
+</span><span id="line-154"></span><span>
+</span><span id="line-155"></span></pre></body></html>

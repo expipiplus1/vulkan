@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.AllocationCallbacks</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier">AllocationCallbacks</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html"><span class="hs-identifier">Vulkan.Core10.FuncPointers</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkAllocationFunction"><span class="hs-identifier">PFN_vkAllocationFunction</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html"><span class="hs-identifier">Vulkan.Core10.FuncPointers</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkFreeFunction"><span class="hs-identifier">PFN_vkFreeFunction</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html"><span class="hs-identifier">Vulkan.Core10.FuncPointers</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalAllocationNotification"><span class="hs-identifier">PFN_vkInternalAllocationNotification</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html"><span class="hs-identifier">Vulkan.Core10.FuncPointers</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalFreeNotification"><span class="hs-identifier">PFN_vkInternalFreeNotification</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html"><span class="hs-identifier">Vulkan.Core10.FuncPointers</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkReallocationFunction"><span class="hs-identifier">PFN_vkReallocationFunction</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | VkAllocationCallbacks - Structure containing callback function pointers</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- for memory allocation</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- -   @pfnAllocation@ /must/ be a valid pointer to a valid user-defined</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--     'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction'</span><span>
+</span><span id="line-31"></span><span class="hs-comment">--</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- -   @pfnReallocation@ /must/ be a valid pointer to a valid user-defined</span><span>
+</span><span id="line-33"></span><span class="hs-comment">--     'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction'</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- -   @pfnFree@ /must/ be a valid pointer to a valid user-defined</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--     'Vulkan.Core10.FuncPointers.PFN_vkFreeFunction'</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- -   If either of @pfnInternalAllocation@ or @pfnInternalFree@ is not</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--     @NULL@, both /must/ be valid callbacks</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction',</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkFreeFunction',</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification',</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification',</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction',</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- 'Vulkan.Core10.Memory.allocateMemory',</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_ray_tracing.createAccelerationStructureKHR',</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV',</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- 'Vulkan.Core10.Buffer.createBuffer',</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- 'Vulkan.Core10.BufferView.createBufferView',</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandPool.createCommandPool',</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.createComputePipelines',</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT',</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT',</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.createDeferredOperationKHR',</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.createDescriptorPool',</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.createDescriptorSetLayout',</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.createDescriptorUpdateTemplate',</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR',</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- 'Vulkan.Core10.Device.createDevice',</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_directfb_surface.createDirectFBSurfaceEXT',</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_display.createDisplayModeKHR',</span><span>
+</span><span id="line-66"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_display.createDisplayPlaneSurfaceKHR',</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- 'Vulkan.Core10.Event.createEvent', 'Vulkan.Core10.Fence.createFence',</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- 'Vulkan.Core10.Pass.createFramebuffer',</span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.createGraphicsPipelines',</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_headless_surface.createHeadlessSurfaceEXT',</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_MVK_ios_surface.createIOSSurfaceMVK',</span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- 'Vulkan.Core10.Image.createImage',</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface.createImagePipeSurfaceFUCHSIA',</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- 'Vulkan.Core10.ImageView.createImageView',</span><span>
+</span><span id="line-75"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_device_generated_commands.createIndirectCommandsLayoutNV',</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.createInstance',</span><span>
+</span><span id="line-77"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_MVK_macos_surface.createMacOSSurfaceMVK',</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT',</span><span>
+</span><span id="line-79"></span><span class="hs-comment">-- 'Vulkan.Core10.PipelineCache.createPipelineCache',</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- 'Vulkan.Core10.PipelineLayout.createPipelineLayout',</span><span>
+</span><span id="line-81"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT',</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- 'Vulkan.Core10.Query.createQueryPool',</span><span>
+</span><span id="line-83"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_ray_tracing.createRayTracingPipelinesKHR',</span><span>
+</span><span id="line-84"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV',</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- 'Vulkan.Core10.Pass.createRenderPass',</span><span>
+</span><span id="line-86"></span><span class="hs-comment">-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2',</span><span>
+</span><span id="line-87"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_create_renderpass2.createRenderPass2KHR',</span><span>
+</span><span id="line-88"></span><span class="hs-comment">-- 'Vulkan.Core10.Sampler.createSampler',</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversion',</span><span>
+</span><span id="line-90"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversionKHR',</span><span>
+</span><span id="line-91"></span><span class="hs-comment">-- 'Vulkan.Core10.QueueSemaphore.createSemaphore',</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- 'Vulkan.Core10.Shader.createShaderModule',</span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_display_swapchain.createSharedSwapchainsKHR',</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_GGP_stream_descriptor_surface.createStreamDescriptorSurfaceGGP',</span><span>
+</span><span id="line-95"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR',</span><span>
+</span><span id="line-96"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_validation_cache.createValidationCacheEXT',</span><span>
+</span><span id="line-97"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NN_vi_surface.createViSurfaceNN',</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_wayland_surface.createWaylandSurfaceKHR',</span><span>
+</span><span id="line-99"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_win32_surface.createWin32SurfaceKHR',</span><span>
+</span><span id="line-100"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_xcb_surface.createXcbSurfaceKHR',</span><span>
+</span><span id="line-101"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_xlib_surface.createXlibSurfaceKHR',</span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_ray_tracing.destroyAccelerationStructureKHR',</span><span>
+</span><span id="line-103"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_ray_tracing.destroyAccelerationStructureNV',</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- 'Vulkan.Core10.Buffer.destroyBuffer',</span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- 'Vulkan.Core10.BufferView.destroyBufferView',</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandPool.destroyCommandPool',</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_debug_report.destroyDebugReportCallbackEXT',</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_debug_utils.destroyDebugUtilsMessengerEXT',</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.destroyDeferredOperationKHR',</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.destroyDescriptorPool',</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- 'Vulkan.Core10.DescriptorSet.destroyDescriptorSetLayout',</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.destroyDescriptorUpdateTemplate',</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.destroyDescriptorUpdateTemplateKHR',</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- 'Vulkan.Core10.Device.destroyDevice',</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- 'Vulkan.Core10.Event.destroyEvent', 'Vulkan.Core10.Fence.destroyFence',</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- 'Vulkan.Core10.Pass.destroyFramebuffer',</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- 'Vulkan.Core10.Image.destroyImage',</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- 'Vulkan.Core10.ImageView.destroyImageView',</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_NV_device_generated_commands.destroyIndirectCommandsLayoutNV',</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.destroyInstance',</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- 'Vulkan.Core10.Pipeline.destroyPipeline',</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- 'Vulkan.Core10.PipelineCache.destroyPipelineCache',</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- 'Vulkan.Core10.PipelineLayout.destroyPipelineLayout',</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_private_data.destroyPrivateDataSlotEXT',</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- 'Vulkan.Core10.Query.destroyQueryPool',</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- 'Vulkan.Core10.Pass.destroyRenderPass',</span><span>
+</span><span id="line-127"></span><span class="hs-comment">-- 'Vulkan.Core10.Sampler.destroySampler',</span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.destroySamplerYcbcrConversion',</span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion.destroySamplerYcbcrConversionKHR',</span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- 'Vulkan.Core10.QueueSemaphore.destroySemaphore',</span><span>
+</span><span id="line-131"></span><span class="hs-comment">-- 'Vulkan.Core10.Shader.destroyShaderModule',</span><span>
+</span><span id="line-132"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.destroySurfaceKHR',</span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR',</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_validation_cache.destroyValidationCacheEXT',</span><span>
+</span><span id="line-135"></span><span class="hs-comment">-- 'Vulkan.Core10.Memory.freeMemory',</span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_display_control.registerDeviceEventEXT',</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT'</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">data</span><span> </span><span id="AllocationCallbacks"><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-var">AllocationCallbacks</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="AllocationCallbacks"><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-var">AllocationCallbacks</span></a></span></span><span>
+</span><span id="line-139"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @pUserData@ is a value to be interpreted by the implementation of the</span><span>
+</span><span id="line-140"></span><span>    </span><span class="hs-comment">-- callbacks. When any of the callbacks in 'AllocationCallbacks' are</span><span>
+</span><span id="line-141"></span><span>    </span><span class="hs-comment">-- called, the Vulkan implementation will pass this value as the first</span><span>
+</span><span id="line-142"></span><span>    </span><span class="hs-comment">-- parameter to the callback. This value /can/ vary each time an allocator</span><span>
+</span><span id="line-143"></span><span>    </span><span class="hs-comment">-- is passed into a command, even when the same object takes an allocator</span><span>
+</span><span id="line-144"></span><span>    </span><span class="hs-comment">-- in multiple commands.</span><span>
+</span><span id="line-145"></span><span>    </span><span id="%24sel%3AuserData%3AAllocationCallbacks"><span class="annot"><span class="annottext">AllocationCallbacks -&gt; Ptr ()
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#%24sel%3AuserData%3AAllocationCallbacks"><span class="hs-identifier hs-var hs-var">userData</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @pfnAllocation@ is a</span><span>
+</span><span id="line-147"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkAllocationFunction' pointer to an</span><span>
+</span><span id="line-148"></span><span>    </span><span class="hs-comment">-- application-defined memory allocation function.</span><span>
+</span><span id="line-149"></span><span>    </span><span id="%24sel%3ApfnAllocation%3AAllocationCallbacks"><span class="annot"><span class="annottext">AllocationCallbacks -&gt; PFN_vkAllocationFunction
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#%24sel%3ApfnAllocation%3AAllocationCallbacks"><span class="hs-identifier hs-var hs-var">pfnAllocation</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkAllocationFunction"><span class="hs-identifier hs-type">PFN_vkAllocationFunction</span></a></span><span>
+</span><span id="line-150"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @pfnReallocation@ is a</span><span>
+</span><span id="line-151"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction' pointer to an</span><span>
+</span><span id="line-152"></span><span>    </span><span class="hs-comment">-- application-defined memory reallocation function.</span><span>
+</span><span id="line-153"></span><span>    </span><span id="%24sel%3ApfnReallocation%3AAllocationCallbacks"><span class="annot"><span class="annottext">AllocationCallbacks -&gt; PFN_vkReallocationFunction
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#%24sel%3ApfnReallocation%3AAllocationCallbacks"><span class="hs-identifier hs-var hs-var">pfnReallocation</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkReallocationFunction"><span class="hs-identifier hs-type">PFN_vkReallocationFunction</span></a></span><span>
+</span><span id="line-154"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @pfnFree@ is a 'Vulkan.Core10.FuncPointers.PFN_vkFreeFunction' pointer</span><span>
+</span><span id="line-155"></span><span>    </span><span class="hs-comment">-- to an application-defined memory free function.</span><span>
+</span><span id="line-156"></span><span>    </span><span id="%24sel%3ApfnFree%3AAllocationCallbacks"><span class="annot"><span class="annottext">AllocationCallbacks -&gt; PFN_vkFreeFunction
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#%24sel%3ApfnFree%3AAllocationCallbacks"><span class="hs-identifier hs-var hs-var">pfnFree</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkFreeFunction"><span class="hs-identifier hs-type">PFN_vkFreeFunction</span></a></span><span>
+</span><span id="line-157"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @pfnInternalAllocation@ is a</span><span>
+</span><span id="line-158"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification'</span><span>
+</span><span id="line-159"></span><span>    </span><span class="hs-comment">-- pointer to an application-defined function that is called by the</span><span>
+</span><span id="line-160"></span><span>    </span><span class="hs-comment">-- implementation when the implementation makes internal allocations.</span><span>
+</span><span id="line-161"></span><span>    </span><span id="%24sel%3ApfnInternalAllocation%3AAllocationCallbacks"><span class="annot"><span class="annottext">AllocationCallbacks -&gt; PFN_vkInternalAllocationNotification
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#%24sel%3ApfnInternalAllocation%3AAllocationCallbacks"><span class="hs-identifier hs-var hs-var">pfnInternalAllocation</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalAllocationNotification"><span class="hs-identifier hs-type">PFN_vkInternalAllocationNotification</span></a></span><span>
+</span><span id="line-162"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @pfnInternalFree@ is a</span><span>
+</span><span id="line-163"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification' pointer to</span><span>
+</span><span id="line-164"></span><span>    </span><span class="hs-comment">-- an application-defined function that is called by the implementation</span><span>
+</span><span id="line-165"></span><span>    </span><span class="hs-comment">-- when the implementation frees internal allocations.</span><span>
+</span><span id="line-166"></span><span>    </span><span id="%24sel%3ApfnInternalFree%3AAllocationCallbacks"><span class="annot"><span class="annottext">AllocationCallbacks -&gt; PFN_vkInternalAllocationNotification
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#%24sel%3ApfnInternalFree%3AAllocationCallbacks"><span class="hs-identifier hs-var hs-var">pfnInternalFree</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalFreeNotification"><span class="hs-identifier hs-type">PFN_vkInternalFreeNotification</span></a></span><span>
+</span><span id="line-167"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-168"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">AllocationCallbacks</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680091032"><span id="local-6989586621680091034"><span id="local-6989586621680091036"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span></span></span></span><span>
+</span><span id="line-173"></span><span>
+</span><span id="line-174"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680091027"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-175"></span><span>  </span><span id="local-6989586621680091022"><span class="annot"><span class="annottext">withCStruct :: AllocationCallbacks -&gt; (Ptr AllocationCallbacks -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680091020"><span class="annot"><span class="annottext">x :: AllocationCallbacks
+</span><a href="#local-6989586621680091020"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680091019"><span class="annot"><span class="annottext">f :: Ptr AllocationCallbacks -&gt; IO b
+</span><a href="#local-6989586621680091019"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr AllocationCallbacks -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">48</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr AllocationCallbacks -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr AllocationCallbacks -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680091018"><span class="annot"><span class="annottext">p :: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091018"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; AllocationCallbacks -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091018"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">AllocationCallbacks
+</span><a href="#local-6989586621680091020"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; IO b
+</span><a href="#local-6989586621680091019"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091018"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-176"></span><span>  </span><span id="local-6989586621680091016"><span class="annot"><span class="annottext">pokeCStruct :: Ptr AllocationCallbacks -&gt; AllocationCallbacks -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680091016"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680091015"><span class="annot"><span class="annottext">p :: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091015"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680091009"><span id="local-6989586621680091010"><span id="local-6989586621680091011"><span id="local-6989586621680091012"><span id="local-6989586621680091013"><span id="local-6989586621680091014"><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span></span></span></span><span> </span><span id="local-6989586621680091008"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680091008"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-177"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091015"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680091014"><span class="hs-identifier hs-var">userData</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkAllocationFunction -&gt; PFN_vkAllocationFunction -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091015"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkAllocationFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkAllocationFunction"><span class="hs-identifier hs-type">PFN_vkAllocationFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkAllocationFunction
+</span><a href="#local-6989586621680091013"><span class="hs-identifier hs-var">pfnAllocation</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-179"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkReallocationFunction
+-&gt; PFN_vkReallocationFunction -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091015"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkReallocationFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkReallocationFunction"><span class="hs-identifier hs-type">PFN_vkReallocationFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkReallocationFunction
+</span><a href="#local-6989586621680091012"><span class="hs-identifier hs-var">pfnReallocation</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-180"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkFreeFunction -&gt; PFN_vkFreeFunction -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091015"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkFreeFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkFreeFunction"><span class="hs-identifier hs-type">PFN_vkFreeFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkFreeFunction
+</span><a href="#local-6989586621680091011"><span class="hs-identifier hs-var">pfnFree</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-181"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkInternalAllocationNotification
+-&gt; PFN_vkInternalAllocationNotification -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091015"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+-&gt; Int -&gt; Ptr PFN_vkInternalAllocationNotification
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalAllocationNotification"><span class="hs-identifier hs-type">PFN_vkInternalAllocationNotification</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+</span><a href="#local-6989586621680091010"><span class="hs-identifier hs-var">pfnInternalAllocation</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-182"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkInternalAllocationNotification
+-&gt; PFN_vkInternalAllocationNotification -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091015"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+-&gt; Int -&gt; Ptr PFN_vkInternalAllocationNotification
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">40</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalFreeNotification"><span class="hs-identifier hs-type">PFN_vkInternalFreeNotification</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+</span><a href="#local-6989586621680091009"><span class="hs-identifier hs-var">pfnInternalFree</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-183"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680091008"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-184"></span><span>  </span><span id="local-6989586621680091007"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">48</span></span><span>
+</span><span id="line-185"></span><span>  </span><span id="local-6989586621680091005"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-186"></span><span>  </span><span id="local-6989586621680091003"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr AllocationCallbacks -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680091001"><span class="annot"><span class="annottext">p :: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091001"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680091000"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680091000"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-187"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkAllocationFunction -&gt; PFN_vkAllocationFunction -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091001"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkAllocationFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkAllocationFunction"><span class="hs-identifier hs-type">PFN_vkAllocationFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkAllocationFunction
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-188"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkReallocationFunction
+-&gt; PFN_vkReallocationFunction -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091001"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkReallocationFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkReallocationFunction"><span class="hs-identifier hs-type">PFN_vkReallocationFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkReallocationFunction
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-189"></span><span>    </span><span class="annot"><span class="annottext">Ptr PFN_vkFreeFunction -&gt; PFN_vkFreeFunction -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680091001"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkFreeFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkFreeFunction"><span class="hs-identifier hs-type">PFN_vkFreeFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">PFN_vkFreeFunction
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-190"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680091000"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-191"></span><span>
+</span><span id="line-192"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-193"></span><span>  </span><span id="local-6989586621680090996"><span class="annot"><span class="annottext">peekCStruct :: Ptr AllocationCallbacks -&gt; IO AllocationCallbacks
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680090994"><span class="annot"><span class="annottext">p :: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090994"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-194"></span><span>    </span><span id="local-6989586621680090993"><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680090993"><span class="hs-identifier hs-var">pUserData</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; IO (Ptr ())
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090994"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-195"></span><span>    </span><span id="local-6989586621680090992"><span class="annot"><span class="annottext">PFN_vkAllocationFunction
+</span><a href="#local-6989586621680090992"><span class="hs-identifier hs-var">pfnAllocation</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr PFN_vkAllocationFunction -&gt; IO PFN_vkAllocationFunction
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkAllocationFunction"><span class="hs-identifier hs-type">PFN_vkAllocationFunction</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090994"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkAllocationFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkAllocationFunction"><span class="hs-identifier hs-type">PFN_vkAllocationFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-196"></span><span>    </span><span id="local-6989586621680090991"><span class="annot"><span class="annottext">PFN_vkReallocationFunction
+</span><a href="#local-6989586621680090991"><span class="hs-identifier hs-var">pfnReallocation</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr PFN_vkReallocationFunction -&gt; IO PFN_vkReallocationFunction
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkReallocationFunction"><span class="hs-identifier hs-type">PFN_vkReallocationFunction</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090994"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkReallocationFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkReallocationFunction"><span class="hs-identifier hs-type">PFN_vkReallocationFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-197"></span><span>    </span><span id="local-6989586621680090990"><span class="annot"><span class="annottext">PFN_vkFreeFunction
+</span><a href="#local-6989586621680090990"><span class="hs-identifier hs-var">pfnFree</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr PFN_vkFreeFunction -&gt; IO PFN_vkFreeFunction
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkFreeFunction"><span class="hs-identifier hs-type">PFN_vkFreeFunction</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090994"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; Int -&gt; Ptr PFN_vkFreeFunction
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkFreeFunction"><span class="hs-identifier hs-type">PFN_vkFreeFunction</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-198"></span><span>    </span><span id="local-6989586621680090989"><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+</span><a href="#local-6989586621680090989"><span class="hs-identifier hs-var">pfnInternalAllocation</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr PFN_vkInternalAllocationNotification
+-&gt; IO PFN_vkInternalAllocationNotification
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalAllocationNotification"><span class="hs-identifier hs-type">PFN_vkInternalAllocationNotification</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090994"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+-&gt; Int -&gt; Ptr PFN_vkInternalAllocationNotification
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalAllocationNotification"><span class="hs-identifier hs-type">PFN_vkInternalAllocationNotification</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-199"></span><span>    </span><span id="local-6989586621680090988"><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+</span><a href="#local-6989586621680090988"><span class="hs-identifier hs-var">pfnInternalFree</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr PFN_vkInternalAllocationNotification
+-&gt; IO PFN_vkInternalAllocationNotification
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalFreeNotification"><span class="hs-identifier hs-type">PFN_vkInternalFreeNotification</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090994"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+-&gt; Int -&gt; Ptr PFN_vkInternalAllocationNotification
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">40</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FuncPointers.html#PFN_vkInternalFreeNotification"><span class="hs-identifier hs-type">PFN_vkInternalFreeNotification</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-200"></span><span>    </span><span class="annot"><span class="annottext">AllocationCallbacks -&gt; IO AllocationCallbacks
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(AllocationCallbacks -&gt; IO AllocationCallbacks)
+-&gt; AllocationCallbacks -&gt; IO AllocationCallbacks
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr ()
+-&gt; PFN_vkAllocationFunction
+-&gt; PFN_vkReallocationFunction
+-&gt; PFN_vkFreeFunction
+-&gt; PFN_vkInternalAllocationNotification
+-&gt; PFN_vkInternalAllocationNotification
+-&gt; AllocationCallbacks
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-var">AllocationCallbacks</span></a></span><span>
+</span><span id="line-201"></span><span>             </span><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621680090993"><span class="hs-identifier hs-var">pUserData</span></a></span><span> </span><span class="annot"><span class="annottext">PFN_vkAllocationFunction
+</span><a href="#local-6989586621680090992"><span class="hs-identifier hs-var">pfnAllocation</span></a></span><span> </span><span class="annot"><span class="annottext">PFN_vkReallocationFunction
+</span><a href="#local-6989586621680090991"><span class="hs-identifier hs-var">pfnReallocation</span></a></span><span> </span><span class="annot"><span class="annottext">PFN_vkFreeFunction
+</span><a href="#local-6989586621680090990"><span class="hs-identifier hs-var">pfnFree</span></a></span><span> </span><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+</span><a href="#local-6989586621680090989"><span class="hs-identifier hs-var">pfnInternalAllocation</span></a></span><span> </span><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+</span><a href="#local-6989586621680090988"><span class="hs-identifier hs-var">pfnInternalFree</span></a></span><span>
+</span><span id="line-202"></span><span>
+</span><span id="line-203"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680090978"><span id="local-6989586621680090980"><span id="local-6989586621680090982"><span id="local-6989586621680090984"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-204"></span><span>  </span><span id="local-6989586621680090974"><span class="annot"><span class="annottext">sizeOf :: AllocationCallbacks -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">AllocationCallbacks
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">48</span></span><span>
+</span><span id="line-205"></span><span>  </span><span id="local-6989586621680090972"><span class="annot"><span class="annottext">alignment :: AllocationCallbacks -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">AllocationCallbacks
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-206"></span><span>  </span><span id="local-6989586621680090970"><span class="annot"><span class="annottext">peek :: Ptr AllocationCallbacks -&gt; IO AllocationCallbacks
+</span><a href="#local-6989586621680090970"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; IO AllocationCallbacks
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-207"></span><span>  </span><span id="local-6989586621680090969"><span class="annot"><span class="annottext">poke :: Ptr AllocationCallbacks -&gt; AllocationCallbacks -&gt; IO ()
+</span><a href="#local-6989586621680090969"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680090968"><span class="annot"><span class="annottext">ptr :: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090968"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680090967"><span class="annot"><span class="annottext">poked :: AllocationCallbacks
+</span><a href="#local-6989586621680090967"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks -&gt; AllocationCallbacks -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr AllocationCallbacks
+</span><a href="#local-6989586621680090968"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">AllocationCallbacks
+</span><a href="#local-6989586621680090967"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-208"></span><span>
+</span><span id="line-209"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-210"></span><span>  </span><span id="local-6989586621680090964"><span class="annot"><span class="annottext">zero :: AllocationCallbacks
+</span><a href="#local-6989586621680090964"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr ()
+-&gt; PFN_vkAllocationFunction
+-&gt; PFN_vkReallocationFunction
+-&gt; PFN_vkFreeFunction
+-&gt; PFN_vkInternalAllocationNotification
+-&gt; PFN_vkInternalAllocationNotification
+-&gt; AllocationCallbacks
+</span><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-var">AllocationCallbacks</span></a></span><span>
+</span><span id="line-211"></span><span>           </span><span class="annot"><span class="annottext">Ptr ()
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-212"></span><span>           </span><span class="annot"><span class="annottext">PFN_vkAllocationFunction
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-213"></span><span>           </span><span class="annot"><span class="annottext">PFN_vkReallocationFunction
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-214"></span><span>           </span><span class="annot"><span class="annottext">PFN_vkFreeFunction
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-215"></span><span>           </span><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-216"></span><span>           </span><span class="annot"><span class="annottext">PFN_vkInternalAllocationNotification
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-217"></span><span>
+</span><span id="line-218"></span></pre></body></html>

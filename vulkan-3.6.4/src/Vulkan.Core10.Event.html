@@ -1,0 +1,1131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Event</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#createEvent"><span class="hs-identifier">createEvent</span></a></span><span>
+</span><span id="line-3"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#withEvent"><span class="hs-identifier">withEvent</span></a></span><span>
+</span><span id="line-4"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#destroyEvent"><span class="hs-identifier">destroyEvent</span></a></span><span>
+</span><span id="line-5"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#getEventStatus"><span class="hs-identifier">getEventStatus</span></a></span><span>
+</span><span id="line-6"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#setEvent"><span class="hs-identifier">setEvent</span></a></span><span>
+</span><span id="line-7"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#resetEvent"><span class="hs-identifier">resetEvent</span></a></span><span>
+</span><span id="line-8"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier">EventCreateInfo</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier">Event</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier">EventCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span>                            </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Exception.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">bracket</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">liftIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">callocBytes</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">free</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Base</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">when</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullFunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.IO.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">MonadIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">FunPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.NamedType.html"><span class="hs-identifier">Vulkan.NamedType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator">(:::)</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html"><span class="hs-identifier">Vulkan.Core10.AllocationCallbacks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier">AllocationCallbacks</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier">Device</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkCreateEvent%3ADeviceCmds"><span class="hs-identifier">pVkCreateEvent</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkDestroyEvent%3ADeviceCmds"><span class="hs-identifier">pVkDestroyEvent</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetEventStatus%3ADeviceCmds"><span class="hs-identifier">pVkGetEventStatus</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkResetEvent%3ADeviceCmds"><span class="hs-identifier">pVkResetEvent</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Dynamic.html"><span class="hs-identifier">Vulkan.Dynamic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#DeviceCmds"><span class="hs-identifier">DeviceCmds</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Dynamic.html#%24sel%3ApVkSetEvent%3ADeviceCmds"><span class="hs-identifier">pVkSetEvent</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier">Device_T</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier">Event</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier">Event</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html"><span class="hs-identifier">Vulkan.Core10.Enums.EventCreateFlags</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier">EventCreateFlags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Exception.html"><span class="hs-identifier">Vulkan.Exception</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier">VulkanException</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_EVENT_CREATE_INFO"><span class="hs-identifier">STRUCTURE_TYPE_EVENT_CREATE_INFO</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html"><span class="hs-identifier">Vulkan.Core10.Enums.Result</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier">Result</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier">SUCCESS</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html"><span class="hs-identifier">Vulkan.Core10.Handles</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier">Event</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html"><span class="hs-identifier">Vulkan.Core10.Enums.EventCreateFlags</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier">EventCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkCreateEvent"><span class="annot"><a href="Vulkan.Core10.Event.html#mkVkCreateEvent"><span class="hs-identifier hs-var">mkVkCreateEvent</span></a></span></span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-71"></span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- | vkCreateEvent - Create a new event object</span><span>
+</span><span id="line-73"></span><span class="hs-comment">--</span><span>
+</span><span id="line-74"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--</span><span>
+</span><span id="line-76"></span><span class="hs-comment">-- When created, the event object is in the unsignaled state.</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--</span><span>
+</span><span id="line-78"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--</span><span>
+</span><span id="line-80"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span class="hs-comment">-- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'EventCreateInfo'</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--     structure</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--</span><span>
+</span><span id="line-85"></span><span class="hs-comment">-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--     pointer to a valid</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--</span><span>
+</span><span id="line-89"></span><span class="hs-comment">-- -   @pEvent@ /must/ be a valid pointer to a</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--     'Vulkan.Core10.Handles.Event' handle</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--</span><span>
+</span><span id="line-92"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--</span><span>
+</span><span id="line-94"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--</span><span>
+</span><span id="line-98"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event',</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- 'EventCreateInfo'</span><span>
+</span><span id="line-109"></span><span class="annot"><a href="Vulkan.Core10.Event.html#createEvent"><span class="hs-identifier hs-type">createEvent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680137131"><span class="annot"><a href="#local-6989586621680137131"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-110"></span><span>             </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680137131"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-111"></span><span>            </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that creates the event.</span><span>
+</span><span id="line-112"></span><span>               </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-113"></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @pCreateInfo@ is a pointer to a 'EventCreateInfo' structure containing</span><span>
+</span><span id="line-114"></span><span>               </span><span class="hs-comment">-- information about how the event is to be created.</span><span>
+</span><span id="line-115"></span><span>               </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span><span>
+</span><span id="line-116"></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @pAllocator@ controls host memory allocation as described in the</span><span>
+</span><span id="line-117"></span><span>               </span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation&gt;</span><span>
+</span><span id="line-118"></span><span>               </span><span class="hs-comment">-- chapter.</span><span>
+</span><span id="line-119"></span><span>               </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;allocator&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span>            </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137131"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span id="createEvent"><span class="annot"><span class="annottext">createEvent :: Device
+-&gt; EventCreateInfo
+-&gt; (&quot;allocator&quot; ::: Maybe AllocationCallbacks)
+-&gt; io Event
+</span><a href="Vulkan.Core10.Event.html#createEvent"><span class="hs-identifier hs-var hs-var">createEvent</span></a></span></span><span> </span><span id="local-6989586621680137073"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680137073"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680137072"><span class="annot"><span class="annottext">createInfo :: EventCreateInfo
+</span><a href="#local-6989586621680137072"><span class="hs-identifier hs-var">createInfo</span></a></span></span><span> </span><span id="local-6989586621680137071"><span class="annot"><span class="annottext">allocator :: &quot;allocator&quot; ::: Maybe AllocationCallbacks
+</span><a href="#local-6989586621680137071"><span class="hs-identifier hs-var">allocator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO Event -&gt; io Event
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO Event -&gt; io Event)
+-&gt; (ContT Event IO Event -&gt; IO Event)
+-&gt; ContT Event IO Event
+-&gt; io Event
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT Event IO Event -&gt; IO Event
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT Event IO Event -&gt; io Event)
+-&gt; ContT Event IO Event -&gt; io Event
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-122"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137069"><span class="annot"><span class="annottext">vkCreateEventPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+   -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+   -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680137069"><span class="hs-identifier hs-var hs-var">vkCreateEventPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+      -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+      -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+      -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkCreateEvent%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkCreateEvent</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137073"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-123"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT Event IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT Event IO ()) -&gt; IO () -&gt; ContT Event IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+   -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+   -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680137069"><span class="hs-identifier hs-var">vkCreateEventPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+   -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+   -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+   -&gt; IO Result)
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+      -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+      -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+      -&gt; IO Result)
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+   -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+   -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+   -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-124"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkCreateEvent is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-125"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137064"><span class="annot"><span class="annottext">vkCreateEvent' :: Ptr Device_T
+-&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+-&gt; (&quot;pEvent&quot; ::: Ptr Event)
+-&gt; IO Result
+</span><a href="#local-6989586621680137064"><span class="hs-identifier hs-var hs-var">vkCreateEvent'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+   -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+   -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+   -&gt; IO Result)
+-&gt; Ptr Device_T
+-&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+-&gt; (&quot;pEvent&quot; ::: Ptr Event)
+-&gt; IO Result
+</span><a href="Vulkan.Core10.Event.html#mkVkCreateEvent"><span class="hs-identifier hs-var">mkVkCreateEvent</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+   -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+   -&gt; (&quot;pEvent&quot; ::: Ptr Event)
+   -&gt; IO Result)
+</span><a href="#local-6989586621680137069"><span class="hs-identifier hs-var">vkCreateEventPtr</span></a></span><span>
+</span><span id="line-126"></span><span>  </span><span id="local-6989586621680137063"><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680137063"><span class="hs-identifier hs-var">pCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO Event) -&gt; IO Event)
+-&gt; ContT Event IO (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO Event)
+  -&gt; IO Event)
+ -&gt; ContT Event IO (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo))
+-&gt; (((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO Event)
+    -&gt; IO Event)
+-&gt; ContT Event IO (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">EventCreateInfo
+-&gt; ((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO Event)
+-&gt; IO Event
+forall a b. ToCStruct a =&gt; a -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var">withCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">EventCreateInfo
+</span><a href="#local-6989586621680137072"><span class="hs-identifier hs-var">createInfo</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span>  </span><span id="local-6989586621680137060"><span class="annot"><span class="annottext">&quot;pAllocator&quot; ::: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680137060"><span class="hs-identifier hs-var">pAllocator</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;allocator&quot; ::: Maybe AllocationCallbacks
+</span><a href="#local-6989586621680137071"><span class="hs-identifier hs-var">allocator</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-128"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+-&gt; ContT Event IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">&quot;pAllocator&quot; ::: Ptr AllocationCallbacks
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span>
+</span><span id="line-129"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680137059"><span class="annot"><span class="annottext">j :: AllocationCallbacks
+</span><a href="#local-6989586621680137059"><span class="hs-identifier hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO Event)
+ -&gt; IO Event)
+-&gt; ContT Event IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO Event)
+  -&gt; IO Event)
+ -&gt; ContT Event IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks))
+-&gt; (((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO Event)
+    -&gt; IO Event)
+-&gt; ContT Event IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">AllocationCallbacks
+-&gt; ((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO Event)
+-&gt; IO Event
+forall a b. ToCStruct a =&gt; a -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var">withCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">AllocationCallbacks
+</span><a href="#local-6989586621680137059"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-130"></span><span>  </span><span id="local-6989586621680137058"><span class="annot"><span class="annottext">&quot;pEvent&quot; ::: Ptr Event
+</span><a href="#local-6989586621680137058"><span class="hs-identifier hs-var">pPEvent</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(((&quot;pEvent&quot; ::: Ptr Event) -&gt; IO Event) -&gt; IO Event)
+-&gt; ContT Event IO (&quot;pEvent&quot; ::: Ptr Event)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pEvent&quot; ::: Ptr Event) -&gt; IO Event) -&gt; IO Event)
+ -&gt; ContT Event IO (&quot;pEvent&quot; ::: Ptr Event))
+-&gt; (((&quot;pEvent&quot; ::: Ptr Event) -&gt; IO Event) -&gt; IO Event)
+-&gt; ContT Event IO (&quot;pEvent&quot; ::: Ptr Event)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO (&quot;pEvent&quot; ::: Ptr Event)
+-&gt; ((&quot;pEvent&quot; ::: Ptr Event) -&gt; IO ())
+-&gt; ((&quot;pEvent&quot; ::: Ptr Event) -&gt; IO Event)
+-&gt; IO Event
+forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span class="hs-identifier hs-var">bracket</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO (&quot;pEvent&quot; ::: Ptr Event)
+forall a. Int -&gt; IO (Ptr a)
+</span><span class="hs-identifier hs-var">callocBytes</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&quot;pEvent&quot; ::: Ptr Event) -&gt; IO ()
+forall a. Ptr a -&gt; IO ()
+</span><span class="hs-identifier hs-var">free</span></span><span>
+</span><span id="line-131"></span><span>  </span><span id="local-6989586621680137057"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137057"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; ContT Event IO Result
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; ContT Event IO Result)
+-&gt; IO Result -&gt; ContT Event IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+-&gt; (&quot;pEvent&quot; ::: Ptr Event)
+-&gt; IO Result
+</span><a href="#local-6989586621680137064"><span class="hs-identifier hs-var">vkCreateEvent'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137073"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680137063"><span class="hs-identifier hs-var">pCreateInfo</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pAllocator&quot; ::: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680137060"><span class="hs-identifier hs-var">pAllocator</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pEvent&quot; ::: Ptr Event
+</span><a href="#local-6989586621680137058"><span class="hs-identifier hs-var">pPEvent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT Event IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT Event IO ()) -&gt; IO () -&gt; ContT Event IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137057"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137057"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621680137053"><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137053"><span class="hs-identifier hs-var">pEvent</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Event -&gt; ContT Event IO Event
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO Event -&gt; ContT Event IO Event)
+-&gt; IO Event -&gt; ContT Event IO Event
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&quot;pEvent&quot; ::: Ptr Event) -&gt; IO Event
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pEvent&quot; ::: Ptr Event
+</span><a href="#local-6989586621680137058"><span class="hs-identifier hs-var">pPEvent</span></a></span><span>
+</span><span id="line-134"></span><span>  </span><span class="annot"><span class="annottext">Event -&gt; ContT Event IO Event
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Event -&gt; ContT Event IO Event) -&gt; Event -&gt; ContT Event IO Event
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137053"><span class="hs-identifier hs-var">pEvent</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-135"></span><span>
+</span><span id="line-136"></span><span class="hs-comment">-- | A convenience wrapper to make a compatible pair of calls to</span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- 'createEvent' and 'destroyEvent'</span><span>
+</span><span id="line-138"></span><span class="hs-comment">--</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-- To ensure that 'destroyEvent' is always called: pass</span><span>
+</span><span id="line-140"></span><span class="hs-comment">-- 'Control.Exception.bracket' (or the allocate function from your</span><span>
+</span><span id="line-141"></span><span class="hs-comment">-- favourite resource management library) as the first argument.</span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- To just extract the pair pass '(,)' as the first argument.</span><span>
+</span><span id="line-143"></span><span class="hs-comment">--</span><span>
+</span><span id="line-144"></span><span class="annot"><a href="Vulkan.Core10.Event.html#withEvent"><span class="hs-identifier hs-type">withEvent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680137052"><span class="annot"><a href="#local-6989586621680137052"><span class="hs-identifier hs-type">io</span></a></span></span><span> </span><span id="local-6989586621680137051"><span class="annot"><a href="#local-6989586621680137051"><span class="hs-identifier hs-type">r</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680137052"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680137052"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137052"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137051"><span class="hs-identifier hs-type">r</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137051"><span class="hs-identifier hs-type">r</span></a></span><span>
+</span><span id="line-145"></span><span id="withEvent"><span class="annot"><span class="annottext">withEvent :: Device
+-&gt; EventCreateInfo
+-&gt; (&quot;allocator&quot; ::: Maybe AllocationCallbacks)
+-&gt; (io Event -&gt; (Event -&gt; io ()) -&gt; r)
+-&gt; r
+</span><a href="Vulkan.Core10.Event.html#withEvent"><span class="hs-identifier hs-var hs-var">withEvent</span></a></span></span><span> </span><span id="local-6989586621680137050"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680137050"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680137049"><span class="annot"><span class="annottext">pCreateInfo :: EventCreateInfo
+</span><a href="#local-6989586621680137049"><span class="hs-identifier hs-var">pCreateInfo</span></a></span></span><span> </span><span id="local-6989586621680137048"><span class="annot"><span class="annottext">pAllocator :: &quot;allocator&quot; ::: Maybe AllocationCallbacks
+</span><a href="#local-6989586621680137048"><span class="hs-identifier hs-var">pAllocator</span></a></span></span><span> </span><span id="local-6989586621680137047"><span class="annot"><span class="annottext">b :: io Event -&gt; (Event -&gt; io ()) -&gt; r
+</span><a href="#local-6989586621680137047"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-146"></span><span>  </span><span class="annot"><span class="annottext">io Event -&gt; (Event -&gt; io ()) -&gt; r
+</span><a href="#local-6989586621680137047"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+-&gt; EventCreateInfo
+-&gt; (&quot;allocator&quot; ::: Maybe AllocationCallbacks)
+-&gt; io Event
+forall (io :: * -&gt; *).
+MonadIO io =&gt;
+Device
+-&gt; EventCreateInfo
+-&gt; (&quot;allocator&quot; ::: Maybe AllocationCallbacks)
+-&gt; io Event
+</span><a href="Vulkan.Core10.Event.html#createEvent"><span class="hs-identifier hs-var">createEvent</span></a></span><span> </span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137050"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="annot"><span class="annottext">EventCreateInfo
+</span><a href="#local-6989586621680137049"><span class="hs-identifier hs-var">pCreateInfo</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;allocator&quot; ::: Maybe AllocationCallbacks
+</span><a href="#local-6989586621680137048"><span class="hs-identifier hs-var">pAllocator</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-147"></span><span>    </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span id="local-6989586621680137046"><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137046"><span class="hs-identifier hs-var">o0</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Device
+-&gt; Event -&gt; (&quot;allocator&quot; ::: Maybe AllocationCallbacks) -&gt; io ()
+forall (io :: * -&gt; *).
+MonadIO io =&gt;
+Device
+-&gt; Event -&gt; (&quot;allocator&quot; ::: Maybe AllocationCallbacks) -&gt; io ()
+</span><a href="Vulkan.Core10.Event.html#destroyEvent"><span class="hs-identifier hs-var">destroyEvent</span></a></span><span> </span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137050"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137046"><span class="hs-identifier hs-var">o0</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;allocator&quot; ::: Maybe AllocationCallbacks
+</span><a href="#local-6989586621680137048"><span class="hs-identifier hs-var">pAllocator</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-148"></span><span>
+</span><span id="line-149"></span><span>
+</span><span id="line-150"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkDestroyEvent"><span class="annot"><a href="Vulkan.Core10.Event.html#mkVkDestroyEvent"><span class="hs-identifier hs-var">mkVkDestroyEvent</span></a></span></span><span>
+</span><span id="line-155"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-156"></span><span>
+</span><span id="line-157"></span><span class="hs-comment">-- | vkDestroyEvent - Destroy an event object</span><span>
+</span><span id="line-158"></span><span class="hs-comment">--</span><span>
+</span><span id="line-159"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-160"></span><span class="hs-comment">--</span><span>
+</span><span id="line-161"></span><span class="hs-comment">-- -   All submitted commands that refer to @event@ /must/ have completed</span><span>
+</span><span id="line-162"></span><span class="hs-comment">--     execution</span><span>
+</span><span id="line-163"></span><span class="hs-comment">--</span><span>
+</span><span id="line-164"></span><span class="hs-comment">-- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were</span><span>
+</span><span id="line-165"></span><span class="hs-comment">--     provided when @event@ was created, a compatible set of callbacks</span><span>
+</span><span id="line-166"></span><span class="hs-comment">--     /must/ be provided here</span><span>
+</span><span id="line-167"></span><span class="hs-comment">--</span><span>
+</span><span id="line-168"></span><span class="hs-comment">-- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were</span><span>
+</span><span id="line-169"></span><span class="hs-comment">--     provided when @event@ was created, @pAllocator@ /must/ be @NULL@</span><span>
+</span><span id="line-170"></span><span class="hs-comment">--</span><span>
+</span><span id="line-171"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-172"></span><span class="hs-comment">--</span><span>
+</span><span id="line-173"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-174"></span><span class="hs-comment">--</span><span>
+</span><span id="line-175"></span><span class="hs-comment">-- -   If @event@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @event@</span><span>
+</span><span id="line-176"></span><span class="hs-comment">--     /must/ be a valid 'Vulkan.Core10.Handles.Event' handle</span><span>
+</span><span id="line-177"></span><span class="hs-comment">--</span><span>
+</span><span id="line-178"></span><span class="hs-comment">-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid</span><span>
+</span><span id="line-179"></span><span class="hs-comment">--     pointer to a valid</span><span>
+</span><span id="line-180"></span><span class="hs-comment">--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure</span><span>
+</span><span id="line-181"></span><span class="hs-comment">--</span><span>
+</span><span id="line-182"></span><span class="hs-comment">-- -   If @event@ is a valid handle, it /must/ have been created,</span><span>
+</span><span id="line-183"></span><span class="hs-comment">--     allocated, or retrieved from @device@</span><span>
+</span><span id="line-184"></span><span class="hs-comment">--</span><span>
+</span><span id="line-185"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-186"></span><span class="hs-comment">--</span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- -   Host access to @event@ /must/ be externally synchronized</span><span>
+</span><span id="line-188"></span><span class="hs-comment">--</span><span>
+</span><span id="line-189"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-190"></span><span class="hs-comment">--</span><span>
+</span><span id="line-191"></span><span class="hs-comment">-- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',</span><span>
+</span><span id="line-192"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'</span><span>
+</span><span id="line-193"></span><span class="annot"><a href="Vulkan.Core10.Event.html#destroyEvent"><span class="hs-identifier hs-type">destroyEvent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680137130"><span class="annot"><a href="#local-6989586621680137130"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-194"></span><span>              </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680137130"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-195"></span><span>             </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that destroys the event.</span><span>
+</span><span id="line-196"></span><span>                </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-197"></span><span>             </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @event@ is the handle of the event to destroy.</span><span>
+</span><span id="line-198"></span><span>                </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span>
+</span><span id="line-199"></span><span>             </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @pAllocator@ controls host memory allocation as described in the</span><span>
+</span><span id="line-200"></span><span>                </span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation&gt;</span><span>
+</span><span id="line-201"></span><span>                </span><span class="hs-comment">-- chapter.</span><span>
+</span><span id="line-202"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;allocator&quot;</span></span><span> </span><span class="annot"><a href="Vulkan.NamedType.html#%3A%3A%3A"><span class="hs-operator hs-type">:::</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Maybe</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.AllocationCallbacks.html#AllocationCallbacks"><span class="hs-identifier hs-type">AllocationCallbacks</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-203"></span><span>             </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137130"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-204"></span><span id="destroyEvent"><span class="annot"><span class="annottext">destroyEvent :: Device
+-&gt; Event -&gt; (&quot;allocator&quot; ::: Maybe AllocationCallbacks) -&gt; io ()
+</span><a href="Vulkan.Core10.Event.html#destroyEvent"><span class="hs-identifier hs-var hs-var">destroyEvent</span></a></span></span><span> </span><span id="local-6989586621680137044"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680137044"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680137043"><span class="annot"><span class="annottext">event :: Event
+</span><a href="#local-6989586621680137043"><span class="hs-identifier hs-var">event</span></a></span></span><span> </span><span id="local-6989586621680137042"><span class="annot"><span class="annottext">allocator :: &quot;allocator&quot; ::: Maybe AllocationCallbacks
+</span><a href="#local-6989586621680137042"><span class="hs-identifier hs-var">allocator</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ())
+-&gt; (ContT () IO () -&gt; IO ()) -&gt; ContT () IO () -&gt; io ()
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">ContT () IO () -&gt; IO ()
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT () IO () -&gt; io ()) -&gt; ContT () IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-205"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137041"><span class="annot"><span class="annottext">vkDestroyEventPtr :: FunPtr
+  (Ptr Device_T
+   -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+</span><a href="#local-6989586621680137041"><span class="hs-identifier hs-var hs-var">vkDestroyEventPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkDestroyEvent%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkDestroyEvent</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137044"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-206"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT () IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT () IO ()) -&gt; IO () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+</span><a href="#local-6989586621680137041"><span class="hs-identifier hs-var">vkDestroyEventPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+-&gt; FunPtr
+     (Ptr Device_T
+      -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+-&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-207"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkDestroyEvent is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-208"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137040"><span class="annot"><span class="annottext">vkDestroyEvent' :: Ptr Device_T
+-&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ()
+</span><a href="#local-6989586621680137040"><span class="hs-identifier hs-var hs-var">vkDestroyEvent'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+-&gt; Ptr Device_T
+-&gt; Event
+-&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+-&gt; IO ()
+</span><a href="Vulkan.Core10.Event.html#mkVkDestroyEvent"><span class="hs-identifier hs-var">mkVkDestroyEvent</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr
+  (Ptr Device_T
+   -&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ())
+</span><a href="#local-6989586621680137041"><span class="hs-identifier hs-var">vkDestroyEventPtr</span></a></span><span>
+</span><span id="line-209"></span><span>  </span><span id="local-6989586621680137039"><span class="annot"><span class="annottext">&quot;pAllocator&quot; ::: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680137039"><span class="hs-identifier hs-var">pAllocator</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;allocator&quot; ::: Maybe AllocationCallbacks
+</span><a href="#local-6989586621680137042"><span class="hs-identifier hs-var">allocator</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-210"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Nothing</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+-&gt; ContT () IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">&quot;pAllocator&quot; ::: Ptr AllocationCallbacks
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span>
+</span><span id="line-211"></span><span>    </span><span class="annot"><span class="hs-identifier hs-type">Just</span></span><span> </span><span id="local-6989586621680137038"><span class="annot"><span class="annottext">j :: AllocationCallbacks
+</span><a href="#local-6989586621680137038"><span class="hs-identifier hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ()) -&gt; IO ())
+-&gt; ContT () IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">((((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ()) -&gt; IO ())
+ -&gt; ContT () IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks))
+-&gt; (((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ()) -&gt; IO ())
+-&gt; ContT () IO (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">AllocationCallbacks
+-&gt; ((&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ()) -&gt; IO ()
+forall a b. ToCStruct a =&gt; a -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var">withCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">AllocationCallbacks
+</span><a href="#local-6989586621680137038"><span class="hs-identifier hs-var">j</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-212"></span><span>  </span><span class="annot"><span class="annottext">IO () -&gt; ContT () IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT () IO ()) -&gt; IO () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Device_T
+-&gt; Event -&gt; (&quot;pAllocator&quot; ::: Ptr AllocationCallbacks) -&gt; IO ()
+</span><a href="#local-6989586621680137040"><span class="hs-identifier hs-var">vkDestroyEvent'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137044"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137043"><span class="hs-identifier hs-var">event</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&quot;pAllocator&quot; ::: Ptr AllocationCallbacks
+</span><a href="#local-6989586621680137039"><span class="hs-identifier hs-var">pAllocator</span></a></span><span>
+</span><span id="line-213"></span><span>  </span><span class="annot"><span class="annottext">() -&gt; ContT () IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(() -&gt; ContT () IO ()) -&gt; () -&gt; ContT () IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-214"></span><span>
+</span><span id="line-215"></span><span>
+</span><span id="line-216"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkGetEventStatus"><span class="annot"><a href="Vulkan.Core10.Event.html#mkVkGetEventStatus"><span class="hs-identifier hs-var">mkVkGetEventStatus</span></a></span></span><span>
+</span><span id="line-221"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-222"></span><span>
+</span><span id="line-223"></span><span class="hs-comment">-- | vkGetEventStatus - Retrieve the status of an event object</span><span>
+</span><span id="line-224"></span><span class="hs-comment">--</span><span>
+</span><span id="line-225"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-226"></span><span class="hs-comment">--</span><span>
+</span><span id="line-227"></span><span class="hs-comment">-- Upon success, 'getEventStatus' returns the state of the event object</span><span>
+</span><span id="line-228"></span><span class="hs-comment">-- with the following return codes:</span><span>
+</span><span id="line-229"></span><span class="hs-comment">--</span><span>
+</span><span id="line-230"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-231"></span><span class="hs-comment">-- | Status                                   | Meaning                           |</span><span>
+</span><span id="line-232"></span><span class="hs-comment">-- +==========================================+===================================+</span><span>
+</span><span id="line-233"></span><span class="hs-comment">-- | 'Vulkan.Core10.Enums.Result.EVENT_SET'   | The event specified by @event@ is |</span><span>
+</span><span id="line-234"></span><span class="hs-comment">-- |                                          | signaled.                         |</span><span>
+</span><span id="line-235"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-236"></span><span class="hs-comment">-- | 'Vulkan.Core10.Enums.Result.EVENT_RESET' | The event specified by @event@ is |</span><span>
+</span><span id="line-237"></span><span class="hs-comment">-- |                                          | unsignaled.                       |</span><span>
+</span><span id="line-238"></span><span class="hs-comment">-- +------------------------------------------+-----------------------------------+</span><span>
+</span><span id="line-239"></span><span class="hs-comment">--</span><span>
+</span><span id="line-240"></span><span class="hs-comment">-- Event Object Status Codes</span><span>
+</span><span id="line-241"></span><span class="hs-comment">--</span><span>
+</span><span id="line-242"></span><span class="hs-comment">-- If a 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent' or</span><span>
+</span><span id="line-243"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' command is in a</span><span>
+</span><span id="line-244"></span><span class="hs-comment">-- command buffer that is in the</span><span>
+</span><span id="line-245"></span><span class="hs-comment">-- &lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state&gt;,</span><span>
+</span><span id="line-246"></span><span class="hs-comment">-- then the value returned by this command /may/ immediately be out of</span><span>
+</span><span id="line-247"></span><span class="hs-comment">-- date.</span><span>
+</span><span id="line-248"></span><span class="hs-comment">--</span><span>
+</span><span id="line-249"></span><span class="hs-comment">-- The state of an event /can/ be updated by the host. The state of the</span><span>
+</span><span id="line-250"></span><span class="hs-comment">-- event is immediately changed, and subsequent calls to 'getEventStatus'</span><span>
+</span><span id="line-251"></span><span class="hs-comment">-- will return the new state. If an event is already in the requested</span><span>
+</span><span id="line-252"></span><span class="hs-comment">-- state, then updating it to the same state has no effect.</span><span>
+</span><span id="line-253"></span><span class="hs-comment">--</span><span>
+</span><span id="line-254"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-255"></span><span class="hs-comment">--</span><span>
+</span><span id="line-256"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-257"></span><span class="hs-comment">--</span><span>
+</span><span id="line-258"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.EVENT_SET'</span><span>
+</span><span id="line-259"></span><span class="hs-comment">--</span><span>
+</span><span id="line-260"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.EVENT_RESET'</span><span>
+</span><span id="line-261"></span><span class="hs-comment">--</span><span>
+</span><span id="line-262"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-263"></span><span class="hs-comment">--</span><span>
+</span><span id="line-264"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-265"></span><span class="hs-comment">--</span><span>
+</span><span id="line-266"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'</span><span>
+</span><span id="line-267"></span><span class="hs-comment">--</span><span>
+</span><span id="line-268"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'</span><span>
+</span><span id="line-269"></span><span class="hs-comment">--</span><span>
+</span><span id="line-270"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-271"></span><span class="hs-comment">--</span><span>
+</span><span id="line-272"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'</span><span>
+</span><span id="line-273"></span><span class="annot"><a href="Vulkan.Core10.Event.html#getEventStatus"><span class="hs-identifier hs-type">getEventStatus</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680137036"><span class="annot"><a href="#local-6989586621680137036"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-274"></span><span>                </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680137036"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-275"></span><span>               </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the event.</span><span>
+</span><span id="line-276"></span><span>                  </span><span class="hs-comment">--</span><span>
+</span><span id="line-277"></span><span>                  </span><span class="hs-comment">-- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-278"></span><span>                  </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-279"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @event@ is the handle of the event to query.</span><span>
+</span><span id="line-280"></span><span>                  </span><span class="hs-comment">--</span><span>
+</span><span id="line-281"></span><span>                  </span><span class="hs-comment">-- @event@ /must/ be a valid 'Vulkan.Core10.Handles.Event' handle</span><span>
+</span><span id="line-282"></span><span>                  </span><span class="hs-comment">--</span><span>
+</span><span id="line-283"></span><span>                  </span><span class="hs-comment">-- @event@ /must/ have been created, allocated, or retrieved from @device@</span><span>
+</span><span id="line-284"></span><span>                  </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span>
+</span><span id="line-285"></span><span>               </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137036"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-286"></span><span id="getEventStatus"><span class="annot"><span class="annottext">getEventStatus :: Device -&gt; Event -&gt; io Result
+</span><a href="Vulkan.Core10.Event.html#getEventStatus"><span class="hs-identifier hs-var hs-var">getEventStatus</span></a></span></span><span> </span><span id="local-6989586621680137035"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680137035"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680137034"><span class="annot"><span class="annottext">event :: Event
+</span><a href="#local-6989586621680137034"><span class="hs-identifier hs-var">event</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO Result -&gt; io Result
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO Result -&gt; io Result) -&gt; IO Result -&gt; io Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-287"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137033"><span class="annot"><span class="annottext">vkGetEventStatusPtr :: FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137033"><span class="hs-identifier hs-var hs-var">vkGetEventStatusPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds -&gt; FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkGetEventStatus%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkGetEventStatus</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137035"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-288"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137033"><span class="hs-identifier hs-var">vkGetEventStatusPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+-&gt; FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result) -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-289"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkGetEventStatus is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-290"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137032"><span class="annot"><span class="annottext">vkGetEventStatus' :: Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="#local-6989586621680137032"><span class="hs-identifier hs-var hs-var">vkGetEventStatus'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+-&gt; Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="Vulkan.Core10.Event.html#mkVkGetEventStatus"><span class="hs-identifier hs-var">mkVkGetEventStatus</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137033"><span class="hs-identifier hs-var">vkGetEventStatusPtr</span></a></span><span>
+</span><span id="line-291"></span><span>  </span><span id="local-6989586621680137031"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137031"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="#local-6989586621680137032"><span class="hs-identifier hs-var">vkGetEventStatus'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137035"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137034"><span class="hs-identifier hs-var">event</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-292"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137031"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137031"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-293"></span><span>  </span><span class="annot"><span class="annottext">Result -&gt; IO Result
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(Result -&gt; IO Result) -&gt; Result -&gt; IO Result
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137031"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-294"></span><span>
+</span><span id="line-295"></span><span>
+</span><span id="line-296"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkSetEvent"><span class="annot"><a href="Vulkan.Core10.Event.html#mkVkSetEvent"><span class="hs-identifier hs-var">mkVkSetEvent</span></a></span></span><span>
+</span><span id="line-301"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-302"></span><span>
+</span><span id="line-303"></span><span class="hs-comment">-- | vkSetEvent - Set an event to signaled state</span><span>
+</span><span id="line-304"></span><span class="hs-comment">--</span><span>
+</span><span id="line-305"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-306"></span><span class="hs-comment">--</span><span>
+</span><span id="line-307"></span><span class="hs-comment">-- When 'setEvent' is executed on the host, it defines an /event signal</span><span>
+</span><span id="line-308"></span><span class="hs-comment">-- operation/ which sets the event to the signaled state.</span><span>
+</span><span id="line-309"></span><span class="hs-comment">--</span><span>
+</span><span id="line-310"></span><span class="hs-comment">-- If @event@ is already in the signaled state when 'setEvent' is executed,</span><span>
+</span><span id="line-311"></span><span class="hs-comment">-- then 'setEvent' has no effect, and no event signal operation occurs.</span><span>
+</span><span id="line-312"></span><span class="hs-comment">--</span><span>
+</span><span id="line-313"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-314"></span><span class="hs-comment">--</span><span>
+</span><span id="line-315"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-316"></span><span class="hs-comment">--</span><span>
+</span><span id="line-317"></span><span class="hs-comment">-- -   @event@ /must/ be a valid 'Vulkan.Core10.Handles.Event' handle</span><span>
+</span><span id="line-318"></span><span class="hs-comment">--</span><span>
+</span><span id="line-319"></span><span class="hs-comment">-- -   @event@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-320"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-321"></span><span class="hs-comment">--</span><span>
+</span><span id="line-322"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-323"></span><span class="hs-comment">--</span><span>
+</span><span id="line-324"></span><span class="hs-comment">-- -   Host access to @event@ /must/ be externally synchronized</span><span>
+</span><span id="line-325"></span><span class="hs-comment">--</span><span>
+</span><span id="line-326"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-327"></span><span class="hs-comment">--</span><span>
+</span><span id="line-328"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-329"></span><span class="hs-comment">--</span><span>
+</span><span id="line-330"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-331"></span><span class="hs-comment">--</span><span>
+</span><span id="line-332"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-333"></span><span class="hs-comment">--</span><span>
+</span><span id="line-334"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'</span><span>
+</span><span id="line-335"></span><span class="hs-comment">--</span><span>
+</span><span id="line-336"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'</span><span>
+</span><span id="line-337"></span><span class="hs-comment">--</span><span>
+</span><span id="line-338"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-339"></span><span class="hs-comment">--</span><span>
+</span><span id="line-340"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'</span><span>
+</span><span id="line-341"></span><span class="annot"><a href="Vulkan.Core10.Event.html#setEvent"><span class="hs-identifier hs-type">setEvent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680137029"><span class="annot"><a href="#local-6989586621680137029"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-342"></span><span>          </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680137029"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-343"></span><span>         </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the event.</span><span>
+</span><span id="line-344"></span><span>            </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-345"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @event@ is the event to set.</span><span>
+</span><span id="line-346"></span><span>            </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span>
+</span><span id="line-347"></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137029"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-348"></span><span id="setEvent"><span class="annot"><span class="annottext">setEvent :: Device -&gt; Event -&gt; io ()
+</span><a href="Vulkan.Core10.Event.html#setEvent"><span class="hs-identifier hs-var hs-var">setEvent</span></a></span></span><span> </span><span id="local-6989586621680137028"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680137028"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680137027"><span class="annot"><span class="annottext">event :: Event
+</span><a href="#local-6989586621680137027"><span class="hs-identifier hs-var">event</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-349"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137026"><span class="annot"><span class="annottext">vkSetEventPtr :: FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137026"><span class="hs-identifier hs-var hs-var">vkSetEventPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds -&gt; FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkSetEvent%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkSetEvent</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137028"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-350"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137026"><span class="hs-identifier hs-var">vkSetEventPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+-&gt; FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result) -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-351"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkSetEvent is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-352"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137025"><span class="annot"><span class="annottext">vkSetEvent' :: Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="#local-6989586621680137025"><span class="hs-identifier hs-var hs-var">vkSetEvent'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+-&gt; Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="Vulkan.Core10.Event.html#mkVkSetEvent"><span class="hs-identifier hs-var">mkVkSetEvent</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137026"><span class="hs-identifier hs-var">vkSetEventPtr</span></a></span><span>
+</span><span id="line-353"></span><span>  </span><span id="local-6989586621680137024"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137024"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="#local-6989586621680137025"><span class="hs-identifier hs-var">vkSetEvent'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137028"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137027"><span class="hs-identifier hs-var">event</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-354"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137024"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137024"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-355"></span><span>
+</span><span id="line-356"></span><span>
+</span><span id="line-357"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span class="hs-cpp">
+#if !defined(SAFE_FOREIGN_CALLS)
+</span><span>  </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span class="hs-cpp">
+#endif
+</span><span>  </span><span class="annot"><span class="hs-string">&quot;dynamic&quot;</span></span><span> </span><span id="mkVkResetEvent"><span class="annot"><a href="Vulkan.Core10.Event.html#mkVkResetEvent"><span class="hs-identifier hs-var">mkVkResetEvent</span></a></span></span><span>
+</span><span id="line-362"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FunPtr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device_T"><span class="hs-identifier hs-type">Device_T</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.Result.html#Result"><span class="hs-identifier hs-type">Result</span></a></span><span>
+</span><span id="line-363"></span><span>
+</span><span id="line-364"></span><span class="hs-comment">-- | vkResetEvent - Reset an event to non-signaled state</span><span>
+</span><span id="line-365"></span><span class="hs-comment">--</span><span>
+</span><span id="line-366"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-367"></span><span class="hs-comment">--</span><span>
+</span><span id="line-368"></span><span class="hs-comment">-- When 'resetEvent' is executed on the host, it defines an /event unsignal</span><span>
+</span><span id="line-369"></span><span class="hs-comment">-- operation/ which resets the event to the unsignaled state.</span><span>
+</span><span id="line-370"></span><span class="hs-comment">--</span><span>
+</span><span id="line-371"></span><span class="hs-comment">-- If @event@ is already in the unsignaled state when 'resetEvent' is</span><span>
+</span><span id="line-372"></span><span class="hs-comment">-- executed, then 'resetEvent' has no effect, and no event unsignal</span><span>
+</span><span id="line-373"></span><span class="hs-comment">-- operation occurs.</span><span>
+</span><span id="line-374"></span><span class="hs-comment">--</span><span>
+</span><span id="line-375"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-376"></span><span class="hs-comment">--</span><span>
+</span><span id="line-377"></span><span class="hs-comment">-- -   @event@ /must/ not be waited on by a</span><span>
+</span><span id="line-378"></span><span class="hs-comment">--     'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' command that is</span><span>
+</span><span id="line-379"></span><span class="hs-comment">--     currently executing</span><span>
+</span><span id="line-380"></span><span class="hs-comment">--</span><span>
+</span><span id="line-381"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-382"></span><span class="hs-comment">--</span><span>
+</span><span id="line-383"></span><span class="hs-comment">-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle</span><span>
+</span><span id="line-384"></span><span class="hs-comment">--</span><span>
+</span><span id="line-385"></span><span class="hs-comment">-- -   @event@ /must/ be a valid 'Vulkan.Core10.Handles.Event' handle</span><span>
+</span><span id="line-386"></span><span class="hs-comment">--</span><span>
+</span><span id="line-387"></span><span class="hs-comment">-- -   @event@ /must/ have been created, allocated, or retrieved from</span><span>
+</span><span id="line-388"></span><span class="hs-comment">--     @device@</span><span>
+</span><span id="line-389"></span><span class="hs-comment">--</span><span>
+</span><span id="line-390"></span><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><span id="line-391"></span><span class="hs-comment">--</span><span>
+</span><span id="line-392"></span><span class="hs-comment">-- -   Host access to @event@ /must/ be externally synchronized</span><span>
+</span><span id="line-393"></span><span class="hs-comment">--</span><span>
+</span><span id="line-394"></span><span class="hs-comment">-- == Return Codes</span><span>
+</span><span id="line-395"></span><span class="hs-comment">--</span><span>
+</span><span id="line-396"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success&gt;]</span><span>
+</span><span id="line-397"></span><span class="hs-comment">--</span><span>
+</span><span id="line-398"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.SUCCESS'</span><span>
+</span><span id="line-399"></span><span class="hs-comment">--</span><span>
+</span><span id="line-400"></span><span class="hs-comment">-- [&lt;https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure&gt;]</span><span>
+</span><span id="line-401"></span><span class="hs-comment">--</span><span>
+</span><span id="line-402"></span><span class="hs-comment">--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'</span><span>
+</span><span id="line-403"></span><span class="hs-comment">--</span><span>
+</span><span id="line-404"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-405"></span><span class="hs-comment">--</span><span>
+</span><span id="line-406"></span><span class="hs-comment">-- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'</span><span>
+</span><span id="line-407"></span><span class="annot"><a href="Vulkan.Core10.Event.html#resetEvent"><span class="hs-identifier hs-type">resetEvent</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680137022"><span class="annot"><a href="#local-6989586621680137022"><span class="hs-identifier hs-type">io</span></a></span></span><span>
+</span><span id="line-408"></span><span>            </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">MonadIO</span></span><span> </span><span class="annot"><a href="#local-6989586621680137022"><span class="hs-identifier hs-type">io</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-409"></span><span>           </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-comment">-- | @device@ is the logical device that owns the event.</span><span>
+</span><span id="line-410"></span><span>              </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span>
+</span><span id="line-411"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-comment">-- | @event@ is the event to reset.</span><span>
+</span><span id="line-412"></span><span>              </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Event"><span class="hs-identifier hs-type">Event</span></a></span><span>
+</span><span id="line-413"></span><span>           </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680137022"><span class="hs-identifier hs-type">io</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-414"></span><span id="resetEvent"><span class="annot"><span class="annottext">resetEvent :: Device -&gt; Event -&gt; io ()
+</span><a href="Vulkan.Core10.Event.html#resetEvent"><span class="hs-identifier hs-var hs-var">resetEvent</span></a></span></span><span> </span><span id="local-6989586621680137021"><span class="annot"><span class="annottext">device :: Device
+</span><a href="#local-6989586621680137021"><span class="hs-identifier hs-var">device</span></a></span></span><span> </span><span id="local-6989586621680137020"><span class="annot"><span class="annottext">event :: Event
+</span><a href="#local-6989586621680137020"><span class="hs-identifier hs-var">event</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; io ()
+forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
+</span><span class="hs-identifier hs-var">liftIO</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; io ()) -&gt; IO () -&gt; io ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-415"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137019"><span class="annot"><span class="annottext">vkResetEventPtr :: FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137019"><span class="hs-identifier hs-var hs-var">vkResetEventPtr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DeviceCmds -&gt; FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="Vulkan.Dynamic.html#%24sel%3ApVkResetEvent%3ADeviceCmds"><span class="hs-identifier hs-var hs-var">pVkResetEvent</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; DeviceCmds
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceCmds%3ADevice"><span class="hs-identifier hs-var hs-var">deviceCmds</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137021"><span class="hs-identifier hs-var">device</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Handles.html#Device"><span class="hs-identifier hs-type">Device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-416"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137019"><span class="hs-identifier hs-var">vkResetEventPtr</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+-&gt; FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result) -&gt; Bool
+forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+forall a. FunPtr a
+</span><span class="hs-identifier hs-var">nullFunPtr</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-417"></span><span>    </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;The function pointer for vkResetEvent is null&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-418"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680137018"><span class="annot"><span class="annottext">vkResetEvent' :: Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="#local-6989586621680137018"><span class="hs-identifier hs-var hs-var">vkResetEvent'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+-&gt; Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="Vulkan.Core10.Event.html#mkVkResetEvent"><span class="hs-identifier hs-var">mkVkResetEvent</span></a></span><span> </span><span class="annot"><span class="annottext">FunPtr (Ptr Device_T -&gt; Event -&gt; IO Result)
+</span><a href="#local-6989586621680137019"><span class="hs-identifier hs-var">vkResetEventPtr</span></a></span><span>
+</span><span id="line-419"></span><span>  </span><span id="local-6989586621680137017"><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137017"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Device_T -&gt; Event -&gt; IO Result
+</span><a href="#local-6989586621680137018"><span class="hs-identifier hs-var">vkResetEvent'</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device -&gt; Ptr Device_T
+</span><a href="Vulkan.Core10.Handles.html#%24sel%3AdeviceHandle%3ADevice"><span class="hs-identifier hs-var hs-var">deviceHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Device
+</span><a href="#local-6989586621680137021"><span class="hs-identifier hs-var">device</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Event
+</span><a href="#local-6989586621680137020"><span class="hs-identifier hs-var">event</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-420"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">when</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137017"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">Result -&gt; Result -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="Vulkan.Core10.Enums.Result.html#SUCCESS"><span class="hs-identifier hs-var">SUCCESS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VulkanException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Result -&gt; VulkanException
+</span><a href="Vulkan.Exception.html#VulkanException"><span class="hs-identifier hs-var">VulkanException</span></a></span><span> </span><span class="annot"><span class="annottext">Result
+</span><a href="#local-6989586621680137017"><span class="hs-identifier hs-var">r</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-421"></span><span>
+</span><span id="line-422"></span><span>
+</span><span id="line-423"></span><span class="hs-comment">-- | VkEventCreateInfo - Structure specifying parameters of a newly created</span><span>
+</span><span id="line-424"></span><span class="hs-comment">-- event</span><span>
+</span><span id="line-425"></span><span class="hs-comment">--</span><span>
+</span><span id="line-426"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-427"></span><span class="hs-comment">--</span><span>
+</span><span id="line-428"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-429"></span><span class="hs-comment">--</span><span>
+</span><span id="line-430"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.EventCreateFlags.EventCreateFlags',</span><span>
+</span><span id="line-431"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createEvent'</span><span>
+</span><span id="line-432"></span><span class="hs-keyword">data</span><span> </span><span id="EventCreateInfo"><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-var">EventCreateInfo</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EventCreateInfo"><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-var">EventCreateInfo</span></a></span></span><span>
+</span><span id="line-433"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @flags@ is reserved for future use.</span><span>
+</span><span id="line-434"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-435"></span><span>    </span><span class="hs-comment">-- @flags@ /must/ be @0@</span><span>
+</span><span id="line-436"></span><span>    </span><span id="%24sel%3Aflags%3AEventCreateInfo"><span class="annot"><span class="annottext">EventCreateInfo -&gt; EventCreateFlags
+</span><a href="Vulkan.Core10.Event.html#%24sel%3Aflags%3AEventCreateInfo"><span class="hs-identifier hs-var hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-type">EventCreateFlags</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-437"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680137011"><span id="local-6989586621680137013"><span class="annot"><span class="annottext">EventCreateInfo -&gt; EventCreateInfo -&gt; Bool
+(EventCreateInfo -&gt; EventCreateInfo -&gt; Bool)
+-&gt; (EventCreateInfo -&gt; EventCreateInfo -&gt; Bool)
+-&gt; Eq EventCreateInfo
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: EventCreateInfo -&gt; EventCreateInfo -&gt; Bool
+$c/= :: EventCreateInfo -&gt; EventCreateInfo -&gt; Bool
+== :: EventCreateInfo -&gt; EventCreateInfo -&gt; Bool
+$c== :: EventCreateInfo -&gt; EventCreateInfo -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">EventCreateInfo</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680137004"><span id="local-6989586621680137006"><span id="local-6989586621680137008"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span></span></span></span><span>
+</span><span id="line-442"></span><span>
+</span><span id="line-443"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680136999"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-444"></span><span>  </span><span id="local-6989586621680136994"><span class="annot"><span class="annottext">withCStruct :: EventCreateInfo
+-&gt; ((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680136994"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680136993"><span class="annot"><span class="annottext">x :: EventCreateInfo
+</span><a href="#local-6989586621680136993"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680136992"><span class="annot"><span class="annottext">f :: (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO b
+</span><a href="#local-6989586621680136992"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int -&gt; ((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">(((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO b) -&gt; IO b)
+-&gt; ((&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680136991"><span class="annot"><span class="annottext">p :: &quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136991"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; EventCreateInfo -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136991"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">EventCreateInfo
+</span><a href="#local-6989586621680136993"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO b
+</span><a href="#local-6989586621680136992"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136991"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-445"></span><span>  </span><span id="local-6989586621680136989"><span class="annot"><span class="annottext">pokeCStruct :: (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; EventCreateInfo -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680136989"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680136988"><span class="annot"><span class="annottext">p :: &quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136988"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680136987"><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680136986"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680136986"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-446"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136988"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_EVENT_CREATE_INFO"><span class="hs-identifier hs-var">STRUCTURE_TYPE_EVENT_CREATE_INFO</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-447"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136988"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-448"></span><span>    </span><span class="annot"><span class="annottext">Ptr EventCreateFlags -&gt; EventCreateFlags -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136988"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; Int -&gt; Ptr EventCreateFlags
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-type">EventCreateFlags</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">EventCreateFlags
+</span><a href="#local-6989586621680136987"><span class="hs-identifier hs-var">flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-449"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680136986"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-450"></span><span>  </span><span id="local-6989586621680136985"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-451"></span><span>  </span><span id="local-6989586621680136983"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-452"></span><span>  </span><span id="local-6989586621680136981"><span class="annot"><span class="annottext">pokeZeroCStruct :: (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680136979"><span class="annot"><span class="annottext">p :: &quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136979"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680136978"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680136978"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-453"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136979"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_EVENT_CREATE_INFO"><span class="hs-identifier hs-var">STRUCTURE_TYPE_EVENT_CREATE_INFO</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-454"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136979"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-455"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680136978"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-456"></span><span>
+</span><span id="line-457"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-458"></span><span>  </span><span id="local-6989586621680136975"><span class="annot"><span class="annottext">peekCStruct :: (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO EventCreateInfo
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680136973"><span class="annot"><span class="annottext">p :: &quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136973"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-459"></span><span>    </span><span id="local-6989586621680136972"><span class="annot"><span class="annottext">EventCreateFlags
+</span><a href="#local-6989586621680136972"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr EventCreateFlags -&gt; IO EventCreateFlags
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-type">EventCreateFlags</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136973"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; Int -&gt; Ptr EventCreateFlags
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-type">EventCreateFlags</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-460"></span><span>    </span><span class="annot"><span class="annottext">EventCreateInfo -&gt; IO EventCreateInfo
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(EventCreateInfo -&gt; IO EventCreateInfo)
+-&gt; EventCreateInfo -&gt; IO EventCreateInfo
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">EventCreateFlags -&gt; EventCreateInfo
+</span><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-var">EventCreateInfo</span></a></span><span>
+</span><span id="line-461"></span><span>             </span><span class="annot"><span class="annottext">EventCreateFlags
+</span><a href="#local-6989586621680136972"><span class="hs-identifier hs-var">flags</span></a></span><span>
+</span><span id="line-462"></span><span>
+</span><span id="line-463"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680136962"><span id="local-6989586621680136964"><span id="local-6989586621680136966"><span id="local-6989586621680136968"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-464"></span><span>  </span><span id="local-6989586621680136958"><span class="annot"><span class="annottext">sizeOf :: EventCreateInfo -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">EventCreateInfo
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-465"></span><span>  </span><span id="local-6989586621680136956"><span class="annot"><span class="annottext">alignment :: EventCreateInfo -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">EventCreateInfo
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-466"></span><span>  </span><span id="local-6989586621680136954"><span class="annot"><span class="annottext">peek :: (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO EventCreateInfo
+</span><a href="#local-6989586621680136954"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; IO EventCreateInfo
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-467"></span><span>  </span><span id="local-6989586621680136953"><span class="annot"><span class="annottext">poke :: (&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo) -&gt; EventCreateInfo -&gt; IO ()
+</span><a href="#local-6989586621680136953"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680136952"><span class="annot"><span class="annottext">ptr :: &quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136952"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680136951"><span class="annot"><span class="annottext">poked :: EventCreateInfo
+</span><a href="#local-6989586621680136951"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo)
+-&gt; EventCreateInfo -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">&quot;pCreateInfo&quot; ::: Ptr EventCreateInfo
+</span><a href="#local-6989586621680136952"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">EventCreateInfo
+</span><a href="#local-6989586621680136951"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-468"></span><span>
+</span><span id="line-469"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-type">EventCreateInfo</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-470"></span><span>  </span><span id="local-6989586621680136948"><span class="annot"><span class="annottext">zero :: EventCreateInfo
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">EventCreateFlags -&gt; EventCreateInfo
+</span><a href="Vulkan.Core10.Event.html#EventCreateInfo"><span class="hs-identifier hs-var">EventCreateInfo</span></a></span><span>
+</span><span id="line-471"></span><span>           </span><span class="annot"><span class="annottext">EventCreateFlags
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-472"></span><span>
+</span><span id="line-473"></span></pre></body></html>
