@@ -337,23 +337,29 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     subgroupSize :: Word32
   , -- | @subgroupSupportedStages@ is a bitfield of
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' describing
-    -- the shader stages that subgroup operations are supported in.
-    -- @subgroupSupportedStages@ will have the
+    -- the shader stages that
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- with
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- are supported in. @subgroupSupportedStages@ will have the
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
     -- set if any of the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
     subgroupSupportedStages :: ShaderStageFlags
   , -- | @subgroupSupportedOperations@ is a bitmask of
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
-    -- specifying the sets of subgroup operations supported on this device.
-    -- @subgroupSupportedOperations@ will have the
+    -- specifying the sets of
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- with
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- supported on this device. @subgroupSupportedOperations@ will have the
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
     -- bit set if any of the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'.
     subgroupSupportedOperations :: SubgroupFeatureFlags
   , -- | @subgroupQuadOperationsInAllStages@ is a boolean specifying whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroup-quad quad subgroup operations>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
     -- are available in all stages, or are restricted to fragment and compute
     -- stages.
     subgroupQuadOperationsInAllStages :: Bool

@@ -49,9 +49,8 @@ import Vulkan.Zero (Zero)
 --     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
 --     bit. (see
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-memory Protected Memory>).
---     If the protected memory physical device feature is supported, then
---     at least one queue family of at least one physical device exposed by
---     the implementation /must/ support this bit.
+--     If the physical device supports the @protectedMemory@ feature, at
+--     least one of its queue families /must/ support this bit.
 --
 -- If an implementation exposes any queue family that supports graphics
 -- operations, at least one queue family of at least one physical device

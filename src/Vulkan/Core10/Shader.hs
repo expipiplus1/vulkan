@@ -285,6 +285,17 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
 --     appendix, one of the corresponding requirements /must/ be satisfied
 --
+-- -   @pCode@ /must/ not declare any SPIR-V extension that is not
+--     supported by the API, as described by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-extensions Extension>
+--     section of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     appendix
+--
+-- -   If @pCode@ declares any of the SPIR-V extensions listed in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Environment>
+--     appendix, one of the corresponding requirements /must/ be satisfied
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

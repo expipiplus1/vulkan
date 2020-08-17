@@ -909,7 +909,7 @@ instance Zero ImageSubresourceRange where
 --     /must/ be compatible with the @format@ as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
 --
--- -   If @flags@ dose not contain
+-- -   If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     and the @pNext@ chain include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'

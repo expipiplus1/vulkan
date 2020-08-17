@@ -1056,6 +1056,13 @@ instance Zero SpecializationInfo where
 --     in the X dimension of the pipeline /must/ be a multiple of
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>
 --
+-- -   The SPIR-V code that was used to create @module@ /must/ be valid as
+--     described by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
+--     after applying the specializations provided in
+--     @pSpecializationInfo@, if any, and then converting all
+--     specialization constants into fixed constants.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
