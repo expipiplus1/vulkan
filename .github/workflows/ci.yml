@@ -156,7 +156,7 @@ jobs:
         brew cask install vulkan-sdk
 
     - name: Install dependencies
-      run: stack build --test --bench --only-dependencies $ARGS
+      run: stack build $ARGS --test --bench --only-dependencies $ARGS
       env:
         ARGS: ${{ matrix.stack-args }}
 
