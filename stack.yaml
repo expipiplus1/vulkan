@@ -1,4 +1,4 @@
-resolver: lts-15.13
+resolver: nightly-2020-08-23
 packages:
 - .
 - utils
