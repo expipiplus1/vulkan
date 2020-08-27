@@ -78,10 +78,10 @@ foreign import ccall
 --
 -- When a command buffer begins recording, all push descriptors are
 -- undefined. Push descriptors /can/ be updated incrementally and cause
--- shaders to use the updated descriptors for subsequent rendering commands
--- (either compute or graphics, according to the @pipelineBindPoint@) until
--- the descriptor is overwritten, or else until the set is disturbed as
--- described in
+-- shaders to use the updated descriptors for subsequent
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
+-- with the pipeline type set by @pipelineBindPoint@ until the descriptor
+-- is overwritten, or else until the set is disturbed as described in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 -- When the set is disturbed or push descriptors with a different
 -- descriptor set layout are set, all push descriptors are undefined.
@@ -186,10 +186,10 @@ cmdPushDescriptorSetKHR :: forall io
                            -- recorded in.
                            CommandBuffer
                         -> -- | @pipelineBindPoint@ is a
-                           -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating
-                           -- whether the descriptors will be used by graphics pipelines or compute
-                           -- pipelines. There is a separate set of push descriptor bindings for each
-                           -- of graphics and compute, so binding one does not disturb the other.
+                           -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating the
+                           -- type of the pipeline that will use the descriptors. There is a separate
+                           -- set of push descriptor bindings for each pipeline type, so binding one
+                           -- does not disturb the others.
                            PipelineBindPoint
                         -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
                            -- program the bindings.

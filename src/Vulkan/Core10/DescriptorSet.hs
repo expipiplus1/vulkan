@@ -1254,13 +1254,6 @@ instance Zero DescriptorImageInfo where
 --     to the corresponding immutable sampler
 --
 -- -   If @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     for each descriptor that will be accessed via load or store
---     operations the @imageLayout@ member for corresponding elements of
---     @pImageInfo@ /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
---
--- -   If @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1356,14 +1349,33 @@ instance Zero DescriptorImageInfo where
 --
 -- -   If @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
 --     member of the list given in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage Sampled Image>
---     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>,
---     corresponding to its type
+--
+-- -   If @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
+--     member of the list given in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>
+--
+-- -   If @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
+--     member of the list given in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inputattachment Input Attachment>
+--
+-- -   If @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
+--     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
+--     member of the list given in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage Storage Image>
+--
+-- -   If @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
+--     member of the list given in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage Storage Image>
 --
 -- -   If @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',

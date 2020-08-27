@@ -1188,6 +1188,10 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Vulkan.Core10.Pass.AttachmentReference' member, then each use
 --     /must/ use the same @layout@
 --
+-- -   Attachments /must/ follow the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#attachment-type-imagelayout image layout requirements>
+--     based on the type of attachment it is being used as
+--
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
 --     it /must/ also include
@@ -1206,6 +1210,9 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the
 --     @aspectMask@ member /must/ not include
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
+--
+-- -   An attachment /must/ not be used in both @pDepthStencilAttachment@
+--     and @pColorAttachments@
 --
 -- == Valid Usage (Implicit)
 --

@@ -103,14 +103,15 @@ pattern IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = ImageLayout 2
 pattern IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 3
 -- | 'IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL' specifies a layout for
 -- both the depth and stencil aspects of a depth\/stencil format image
--- allowing read only access as a depth\/stencil attachment or in shaders.
--- It is equivalent to 'IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL' and
+-- allowing read only access as a depth\/stencil attachment or in shaders
+-- as a sampled image, combined image\/sampler, or input attachment. It is
+-- equivalent to 'IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL' and
 -- 'IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'.
 pattern IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = ImageLayout 4
--- | 'IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL' /must/ only be used as a
--- read-only image in a shader (which /can/ be read as a sampled image,
--- combined image\/sampler and\/or input attachment). This layout is valid
--- only for image subresources of images created with the
+-- | 'IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL' specifies a layout allowing
+-- read-only access in a shader as a sampled image, combined
+-- image\/sampler, or input attachment. This layout is valid only for image
+-- subresources of images created with the
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT' or
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 -- usage bit enabled.
@@ -170,7 +171,8 @@ pattern IMAGE_LAYOUT_SHARED_PRESENT_KHR = ImageLayout 1000111000
 pattern IMAGE_LAYOUT_PRESENT_SRC_KHR = ImageLayout 1000001002
 -- | 'IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL' specifies a layout for the
 -- stencil aspect of a depth\/stencil format image allowing read-only
--- access as a stencil attachment or in shaders.
+-- access as a stencil attachment or in shaders as a sampled image,
+-- combined image\/sampler, or input attachment.
 pattern IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL = ImageLayout 1000241003
 -- | 'IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL' specifies a layout for the
 -- stencil aspect of a depth\/stencil format image allowing read and write
@@ -178,7 +180,8 @@ pattern IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL = ImageLayout 1000241003
 pattern IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 1000241002
 -- | 'IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL' specifies a layout for the depth
 -- aspect of a depth\/stencil format image allowing read-only access as a
--- depth attachment or in shaders.
+-- depth attachment or in shaders as a sampled image, combined
+-- image\/sampler, or input attachment.
 pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL = ImageLayout 1000241001
 -- | 'IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL' specifies a layout for the depth
 -- aspect of a depth\/stencil format image allowing read and write access
@@ -187,15 +190,17 @@ pattern IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL = ImageLayout 1000241000
 -- | 'IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL' specifies a
 -- layout for depth\/stencil format images allowing read and write access
 -- to the depth aspect as a depth attachment, and read only access to the
--- stencil aspect as a stencil attachment or in shaders. It is equivalent
--- to 'IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL' and
+-- stencil aspect as a stencil attachment or in shaders as a sampled image,
+-- combined image\/sampler, or input attachment. It is equivalent to
+-- 'IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL' and
 -- 'IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'.
 pattern IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL = ImageLayout 1000117001
 -- | 'IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL' specifies a
 -- layout for depth\/stencil format images allowing read and write access
 -- to the stencil aspect as a stencil attachment, and read only access to
--- the depth aspect as a depth attachment or in shaders. It is equivalent
--- to 'IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL' and
+-- the depth aspect as a depth attachment or in shaders as a sampled image,
+-- combined image\/sampler, or input attachment. It is equivalent to
+-- 'IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL' and
 -- 'IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'.
 pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 1000117000
 {-# complete IMAGE_LAYOUT_UNDEFINED,

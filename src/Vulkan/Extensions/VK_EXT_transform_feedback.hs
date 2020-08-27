@@ -132,12 +132,13 @@ foreign import ccall
 --     than or equal to
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBufferSize@
 --
--- -   All elements of @pSizes@ /must/ be less than or equal to the size of
---     the corresponding buffer in @pBuffers@
+-- -   All elements of @pSizes@ /must/ be either
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', or less than or equal to
+--     the size of the corresponding buffer in @pBuffers@
 --
 -- -   All elements of @pOffsets@ plus @pSizes@, where the @pSizes@,
 --     element is not 'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be
---     less than or equal to the size of the corresponding element in
+--     less than or equal to the size of the corresponding buffer in
 --     @pBuffers@
 --
 -- -   Each element of @pBuffers@ that is non-sparse /must/ be bound

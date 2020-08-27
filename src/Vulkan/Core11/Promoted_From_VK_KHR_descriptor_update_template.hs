@@ -603,9 +603,9 @@ data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
     -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'.
     descriptorSetLayout :: DescriptorSetLayout
   , -- | @pipelineBindPoint@ is a
-    -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating
-    -- whether the descriptors will be used by graphics pipelines or compute
-    -- pipelines. This parameter is ignored if @templateType@ is not
+    -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating the
+    -- type of the pipeline that will use the descriptors. This parameter is
+    -- ignored if @templateType@ is not
     -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
     pipelineBindPoint :: PipelineBindPoint
   , -- | @pipelineLayout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used

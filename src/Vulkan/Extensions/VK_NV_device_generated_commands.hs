@@ -716,7 +716,7 @@ cmdBindPipelineShaderGroupNV :: forall io
                                 CommandBuffer
                              -> -- | @pipelineBindPoint@ is a
                                 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
-                                -- specifying to which bind point the pipeline is bound.
+                                -- specifying the bind point to which the pipeline will be bound.
                                 PipelineBindPoint
                              -> -- | @pipeline@ is the pipeline to be bound.
                                 Pipeline

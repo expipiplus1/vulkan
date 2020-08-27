@@ -520,6 +520,27 @@ foreign import ccall
 -- | vkReleasePerformanceConfigurationINTEL - Release a configuration to
 -- capture performance data
 --
+-- == Valid Usage
+--
+-- -   @configuration@ /must/ not be released before all command buffers
+--     submitted while the configuration was set are in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   If @configuration@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @configuration@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle
+--
+-- -   If @configuration@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @configuration@ /must/ be externally synchronized
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -540,20 +561,8 @@ releasePerformanceConfigurationINTEL :: forall io
                                       . (MonadIO io)
                                      => -- | @device@ is the device associated to the configuration object to
                                         -- release.
-                                        --
-                                        -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                         Device
                                      -> -- | @configuration@ is the configuration object to release.
-                                        --
-                                        -- @configuration@ /must/ not be released before all command buffers
-                                        -- submitted while the configuration was set are in
-                                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
-                                        --
-                                        -- @configuration@ /must/ be a valid
-                                        -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle
-                                        --
-                                        -- @configuration@ /must/ have been created, allocated, or retrieved from
-                                        -- @device@
                                         PerformanceConfigurationINTEL
                                      -> io ()
 releasePerformanceConfigurationINTEL device configuration = liftIO $ do
@@ -764,7 +773,6 @@ instance ToCStruct InitializePerformanceApiInfoINTEL where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr (Ptr ()))) (zero)
     f
 
 instance FromCStruct InitializePerformanceApiInfoINTEL where
