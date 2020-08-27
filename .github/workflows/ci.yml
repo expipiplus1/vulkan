@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['8.10.1', '8.8.3', '8.6.5']
+        ghc: ['8.10.1', '8.8.4', '8.6.5']
         cabal: ['3.0']
         os: [ubuntu-20.04, macOS-latest]
         exclude:
@@ -63,10 +63,10 @@ jobs:
         sed -ibak '/examples/d' cabal.project
       if: matrix.ghc == '8.6.5'
 
-    - name: Remove generator for all but 8.8.3
+    - name: Remove generator for all but 8.8.4
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.8.3'
+      if: matrix.ghc != '8.8.4'
 
     - run: cabal update
 
@@ -113,7 +113,7 @@ jobs:
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: '8.8.3'
+        ghc-version: '8.8.4'
 
     - name: Cache stack global package db
       id:   stack-global
