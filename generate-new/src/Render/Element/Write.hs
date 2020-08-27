@@ -238,31 +238,41 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
           )
         )
         es
+      languageExtensions =
+        let allExts =
+              Set.toList
+                . Set.insert (LanguageExtension "CPP")
+                . Set.unions
+                . toList
+                . fmap reExtensions
+                $ es
+        in  [ "{-# language" <+> pretty e <+> "#-}" | e <- allExts ]
       contents =
         vsep
-          $ "{-# language CPP #-}"
-          : (   "module"
-            <+> pretty modName
-            <>  indent
-                  2
-                  (  parenList
-                  $  ( fmap exportDoc
-                     . nubOrdOnV exportName
-                     $ (exports <> reexports)
+          $  languageExtensions
+          <> ( (   "module"
+               <+> pretty modName
+               <>  indent
+                     2
+                     (  parenList
+                     $  ( fmap exportDoc
+                        . nubOrdOnV exportName
+                        $ (exports <> reexports)
+                        )
+                     <> (   (\(ModName m) -> renderExport Module m mempty)
+                        <$> allReexportedModules
+                        )
                      )
-                  <> (   (\(ModName m) -> renderExport Module m mempty)
-                     <$> allReexportedModules
-                     )
-                  )
-            <+> "where"
-            )
-          : openImports
-          : imports
-          : localImports
-          : V.toList
-              (   (<> (line <> line))
-              <$> V.mapMaybe (($ getDocumentation) . reDoc) es
-              )
+               <+> "where"
+               )
+             : openImports
+             : imports
+             : localImports
+             : V.toList
+                 (   (<> (line <> line))
+                 <$> V.mapMaybe (($ getDocumentation) . reDoc) es
+                 )
+             )
 
     liftIO $ createDirectoryIfMissing True (takeDirectory f)
     liftIO $ withFile f WriteMode $ \h -> T.hPutStr h $ renderStrict

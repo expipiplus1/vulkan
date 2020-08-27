@@ -19,6 +19,7 @@ module Render.Element
   , IdiomaticType(..)
   , IdiomaticTypeTo(..)
   , UnionDiscriminator(..)
+  , LanguageExtension(..)
   , ModName(..)
   , Documentee(..)
   , tellDoc
@@ -37,6 +38,7 @@ module Render.Element
   , tellImport
   , tellImportWith
   , tellNotReexportable
+  , tellLanguageExtension
   , wrapSymbol
   , exportDoc
   , renderExport
@@ -98,6 +100,7 @@ data RenderElement = RenderElement
   , reReexportedNames   :: Set Export
   , reExplicitModule    :: Maybe ModName
   , reReexportable      :: All
+  , reExtensions        :: Set LanguageExtension
   }
 
 data Export = Export
@@ -127,6 +130,9 @@ data Import n = Import
   }
   deriving (Show, Eq, Ord)
 
+newtype LanguageExtension = LanguageExtension { unLanguageExtension :: Text }
+  deriving (Eq, Ord, Show, Pretty)
+
 newtype ModName = ModName { unModName :: Text }
   deriving (Eq, Ord, Show, Pretty)
 
@@ -143,6 +149,7 @@ instance Semigroup RenderElement where
     , reReexportedNames   = reReexportedNames r1 <> reReexportedNames r2
     , reExplicitModule    = reExplicitModule r1 <|> reExplicitModule r2
     , reReexportable      = reReexportable r1 <> reReexportable r2
+    , reExtensions        = reExtensions r1 <> reExtensions r2
     }
 
 lineMaybe :: Maybe (Doc ()) -> Maybe (Doc ()) -> Maybe (Doc ())
@@ -325,17 +332,18 @@ identicalBoot re = re { reBoot = Just re }
 
 emptyRenderElement :: Text -> RenderElement
 emptyRenderElement n = RenderElement { reName              = n
-                            , reBoot              = Nothing
-                            , reDoc               = mempty
-                            , reExports           = mempty
-                            , reInternal          = mempty
-                            , reImports           = mempty
-                            , reLocalImports      = mempty
-                            , reReexportedModules = mempty
-                            , reReexportedNames   = mempty
-                            , reExplicitModule    = Nothing
-                            , reReexportable      = mempty
-                            }
+                                     , reBoot              = Nothing
+                                     , reDoc               = mempty
+                                     , reExports           = mempty
+                                     , reInternal          = mempty
+                                     , reImports           = mempty
+                                     , reLocalImports      = mempty
+                                     , reReexportedModules = mempty
+                                     , reReexportedNames   = mempty
+                                     , reExplicitModule    = Nothing
+                                     , reReexportable      = mempty
+                                     , reExtensions        = mempty
+                                     }
 
 -- | Prevent any exports from being in the module export list
 makeRenderElementInternal :: RenderElement -> RenderElement
@@ -452,6 +460,11 @@ tellReexportMod e =
 
 tellNotReexportable :: MemberWithError (State RenderElement) r => Sem r ()
 tellNotReexportable = modify' (\r -> r { reReexportable = All False })
+
+tellLanguageExtension
+  :: MemberWithError (State RenderElement) r => LanguageExtension -> Sem r ()
+tellLanguageExtension e =
+  modify' (\r -> r { reExtensions = insert e (reExtensions r) })
 
 ----------------------------------------------------------------
 -- Utils
