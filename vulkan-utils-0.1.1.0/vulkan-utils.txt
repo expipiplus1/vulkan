@@ -23,6 +23,9 @@ debugCallbackFatalPtr :: PFN_vkDebugUtilsMessengerCallbackEXT
 --   note that the <tt>VK_EXT_debug_utils</tt> extension must be enabled.
 nameObject :: (HasObjectType a, MonadIO m) => Device -> a -> ByteString -> m ()
 
+module Vulkan.Utils.FromGL
+internalFormat :: (Eq a, Num a) => a -> Maybe Format
+
 module Vulkan.Utils.ShaderQQ
 comp :: QuasiQuoter
 frag :: QuasiQuoter

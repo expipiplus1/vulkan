@@ -1,0 +1,504 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_memory_budget</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_SPEC_VERSION"><span class="hs-identifier">EXT_MEMORY_BUDGET_SPEC_VERSION</span></a></span><span>
+</span><span id="line-4"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_SPEC_VERSION"><span class="hs-identifier">EXT_MEMORY_BUDGET_SPEC_VERSION</span></a></span><span>
+</span><span id="line-5"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_EXTENSION_NAME"><span class="hs-identifier">EXT_MEMORY_BUDGET_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-6"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_EXTENSION_NAME"><span class="hs-identifier">EXT_MEMORY_BUDGET_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-7"></span><span>                                               </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier">FixedArray</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">unless</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">throwIO</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">generateM</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">imapM_</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">length</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOErrorType</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.IO.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IOException</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Vector</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Vector</span></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#advancePtrBytes"><span class="hs-identifier">advancePtrBytes</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.Utils.html"><span class="hs-identifier">Vulkan.CStruct.Utils</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier">lowerArrayPtr</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier">DeviceSize</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-40"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html"><span class="hs-identifier">Vulkan.Core10.APIConstants</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-41"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- | VkPhysicalDeviceMemoryBudgetPropertiesEXT - Structure specifying</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- physical device memory budget and usage</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- The values returned in this structure are not invariant. The</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- @heapBudget@ and @heapUsage@ values /must/ be zero for array elements</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- greater than or equal to</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeapCount@.</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- The @heapBudget@ value /must/ be non-zero for array elements less than</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeapCount@.</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- The @heapBudget@ value /must/ be less than or equal to</span><span>
+</span><span id="line-54"></span><span class="hs-comment">-- 'Vulkan.Core10.DeviceInitialization.MemoryHeap'::@size@ for each heap.</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize',</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-62"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span></span><span>
+</span><span id="line-63"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @heapBudget@ is an array of</span><span>
+</span><span id="line-64"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.APIConstants.MAX_MEMORY_HEAPS'</span><span>
+</span><span id="line-65"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values in which memory</span><span>
+</span><span id="line-66"></span><span>    </span><span class="hs-comment">-- budgets are returned, with one element for each memory heap. A heap&#8217;s</span><span>
+</span><span id="line-67"></span><span>    </span><span class="hs-comment">-- budget is a rough estimate of how much memory the process /can/ allocate</span><span>
+</span><span id="line-68"></span><span>    </span><span class="hs-comment">-- from that heap before allocations /may/ fail or cause performance</span><span>
+</span><span id="line-69"></span><span>    </span><span class="hs-comment">-- degradation. The budget includes any currently allocated device memory.</span><span>
+</span><span id="line-70"></span><span>    </span><span id="%24sel%3AheapBudget%3APhysicalDeviceMemoryBudgetPropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; Vector DeviceSize
+</span><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#%24sel%3AheapBudget%3APhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-var hs-var">heapBudget</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Vector</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span>
+</span><span id="line-71"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @heapUsage@ is an array of 'Vulkan.Core10.APIConstants.MAX_MEMORY_HEAPS'</span><span>
+</span><span id="line-72"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values in which memory</span><span>
+</span><span id="line-73"></span><span>    </span><span class="hs-comment">-- usages are returned, with one element for each memory heap. A heap&#8217;s</span><span>
+</span><span id="line-74"></span><span>    </span><span class="hs-comment">-- usage is an estimate of how much memory the process is currently using</span><span>
+</span><span id="line-75"></span><span>    </span><span class="hs-comment">-- in that heap.</span><span>
+</span><span id="line-76"></span><span>    </span><span id="%24sel%3AheapUsage%3APhysicalDeviceMemoryBudgetPropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; Vector DeviceSize
+</span><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#%24sel%3AheapUsage%3APhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-var hs-var">heapUsage</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Vector</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span>
+</span><span id="line-77"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-78"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceMemoryBudgetPropertiesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680091304"><span id="local-6989586621680091306"><span id="local-6989586621680091308"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span></span></span></span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680091299"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-85"></span><span>  </span><span id="local-6989586621680091294"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; (Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680091292"><span class="annot"><span class="annottext">x :: PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091292"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680091291"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680091291"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">272</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680091290"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091290"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091290"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091292"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680091291"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091290"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>  </span><span id="local-6989586621680091288"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680091288"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680091287"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091287"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680091285"><span id="local-6989586621680091286"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680091284"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680091284"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-87"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091287"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091287"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-89"></span><span>    </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">(Vector DeviceSize -&gt; Int) -&gt; Vector DeviceSize -&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091286"><span class="hs-identifier hs-var">heapBudget</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
+forall a. Integral a =&gt; a
+</span><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-var">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-90"></span><span>      </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;heapBudget is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-91"></span><span>    </span><span class="annot"><span class="annottext">(Int -&gt; DeviceSize -&gt; IO ()) -&gt; Vector DeviceSize -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680091280"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680091280"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680091279"><span class="annot"><span class="annottext">e :: DeviceSize
+</span><a href="#local-6989586621680091279"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; DeviceSize -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize) -&gt; Ptr DeviceSize
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091287"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-type">MAX_MEMORY_HEAPS</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; Int -&gt; Ptr DeviceSize
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680091280"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceSize
+</span><a href="#local-6989586621680091279"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091286"><span class="hs-identifier hs-var">heapBudget</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-92"></span><span>    </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">(Vector DeviceSize -&gt; Int) -&gt; Vector DeviceSize -&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091285"><span class="hs-identifier hs-var">heapUsage</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
+forall a. Integral a =&gt; a
+</span><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-var">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-93"></span><span>      </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;heapUsage is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-94"></span><span>    </span><span class="annot"><span class="annottext">(Int -&gt; DeviceSize -&gt; IO ()) -&gt; Vector DeviceSize -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680091277"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680091277"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680091276"><span class="annot"><span class="annottext">e :: DeviceSize
+</span><a href="#local-6989586621680091276"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; DeviceSize -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize) -&gt; Ptr DeviceSize
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091287"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">144</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-type">MAX_MEMORY_HEAPS</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; Int -&gt; Ptr DeviceSize
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680091277"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceSize
+</span><a href="#local-6989586621680091276"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091285"><span class="hs-identifier hs-var">heapUsage</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-95"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680091284"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-96"></span><span>  </span><span id="local-6989586621680091275"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">272</span></span><span>
+</span><span id="line-97"></span><span>  </span><span id="local-6989586621680091273"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680091271"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680091269"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091269"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680091268"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680091268"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-99"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091269"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091269"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>    </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">(Vector Any -&gt; Int) -&gt; Vector Any -&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
+forall a. Integral a =&gt; a
+</span><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-var">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-102"></span><span>      </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;heapBudget is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-103"></span><span>    </span><span class="annot"><span class="annottext">(Int -&gt; DeviceSize -&gt; IO ()) -&gt; Vector DeviceSize -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680091267"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680091267"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680091266"><span class="annot"><span class="annottext">e :: DeviceSize
+</span><a href="#local-6989586621680091266"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; DeviceSize -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize) -&gt; Ptr DeviceSize
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091269"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-type">MAX_MEMORY_HEAPS</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; Int -&gt; Ptr DeviceSize
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680091267"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceSize
+</span><a href="#local-6989586621680091266"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-104"></span><span>    </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
+forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span class="hs-identifier hs-var">unless</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any -&gt; Int
+forall a. Vector a -&gt; Int
+</span><span class="hs-identifier hs-var">Data.Vector.length</span></span><span> </span><span class="annot"><span class="annottext">(Vector Any -&gt; Int) -&gt; Vector Any -&gt; Int
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector Any
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
+forall a. Integral a =&gt; a
+</span><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-var">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span>
+</span><span id="line-105"></span><span>      </span><span class="annot"><span class="annottext">IOException -&gt; IO ()
+forall e a. Exception e =&gt; e -&gt; IO a
+</span><span class="hs-identifier hs-var">throwIO</span></span><span> </span><span class="annot"><span class="annottext">(IOException -&gt; IO ()) -&gt; IOException -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+-&gt; IOErrorType
+-&gt; String
+-&gt; String
+-&gt; Maybe CInt
+-&gt; Maybe String
+-&gt; IOException
+</span><span class="hs-identifier hs-var">IOError</span></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">IOErrorType
+</span><span class="hs-identifier hs-var">InvalidArgument</span></span><span> </span><span class="annot"><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="hs-string">&quot;heapUsage is too long, a maximum of MAX_MEMORY_HEAPS elements are allowed&quot;</span></span><span> </span><span class="annot"><span class="annottext">Maybe CInt
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span> </span><span class="annot"><span class="annottext">Maybe String
+forall a. Maybe a
+</span><span class="hs-identifier hs-var">Nothing</span></span><span>
+</span><span id="line-106"></span><span>    </span><span class="annot"><span class="annottext">(Int -&gt; DeviceSize -&gt; IO ()) -&gt; Vector DeviceSize -&gt; IO ()
+forall (m :: * -&gt; *) a b.
+Monad m =&gt;
+(Int -&gt; a -&gt; m b) -&gt; Vector a -&gt; m ()
+</span><span class="hs-identifier hs-var">Data.Vector.imapM_</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680091265"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680091265"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680091264"><span class="annot"><span class="annottext">e :: DeviceSize
+</span><a href="#local-6989586621680091264"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; DeviceSize -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize) -&gt; Ptr DeviceSize
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091269"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">144</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-type">MAX_MEMORY_HEAPS</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; Int -&gt; Ptr DeviceSize
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680091265"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">DeviceSize
+</span><a href="#local-6989586621680091264"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Vector DeviceSize
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span class="hs-special">)</span><span>
+</span><span id="line-107"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680091268"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-108"></span><span>
+</span><span id="line-109"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-110"></span><span>  </span><span id="local-6989586621680091261"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; IO PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680091259"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091259"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-111"></span><span>    </span><span id="local-6989586621680091258"><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091258"><span class="hs-identifier hs-var">heapBudget</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; (Int -&gt; IO DeviceSize) -&gt; IO (Vector DeviceSize)
+forall (m :: * -&gt; *) a.
+Monad m =&gt;
+Int -&gt; (Int -&gt; m a) -&gt; m (Vector a)
+</span><span class="hs-identifier hs-var">generateM</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+forall a. Integral a =&gt; a
+</span><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-var">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680091257"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680091257"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; IO DeviceSize
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize) -&gt; Ptr DeviceSize
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091259"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-type">MAX_MEMORY_HEAPS</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; Int -&gt; Ptr DeviceSize
+forall a. Ptr a -&gt; Int -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#advancePtrBytes"><span class="hs-operator hs-var">`advancePtrBytes`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680091257"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span>    </span><span id="local-6989586621680091256"><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091256"><span class="hs-identifier hs-var">heapUsage</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; (Int -&gt; IO DeviceSize) -&gt; IO (Vector DeviceSize)
+forall (m :: * -&gt; *) a.
+Monad m =&gt;
+Int -&gt; (Int -&gt; m a) -&gt; m (Vector a)
+</span><span class="hs-identifier hs-var">generateM</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+forall a. Integral a =&gt; a
+</span><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-var">MAX_MEMORY_HEAPS</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621680091255"><span class="annot"><span class="annottext">i :: Int
+</span><a href="#local-6989586621680091255"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; IO DeviceSize
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize) -&gt; Ptr DeviceSize
+forall a (n :: Nat). Ptr (FixedArray n a) -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#lowerArrayPtr"><span class="hs-identifier hs-var">lowerArrayPtr</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091259"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; Int -&gt; Ptr (FixedArray MAX_MEMORY_HEAPS DeviceSize)
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">144</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.Utils.html#FixedArray"><span class="hs-identifier hs-type">FixedArray</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.APIConstants.html#MAX_MEMORY_HEAPS"><span class="hs-identifier hs-type">MAX_MEMORY_HEAPS</span></a></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr DeviceSize -&gt; Int -&gt; Ptr DeviceSize
+forall a. Ptr a -&gt; Int -&gt; Ptr a
+</span><a href="Vulkan.CStruct.Utils.html#advancePtrBytes"><span class="hs-operator hs-var">`advancePtrBytes`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-operator hs-var">*</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680091255"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-113"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; IO PhysicalDeviceMemoryBudgetPropertiesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceMemoryBudgetPropertiesEXT
+ -&gt; IO PhysicalDeviceMemoryBudgetPropertiesEXT)
+-&gt; PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; IO PhysicalDeviceMemoryBudgetPropertiesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Vector DeviceSize
+-&gt; Vector DeviceSize -&gt; PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span><span>
+</span><span id="line-114"></span><span>             </span><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091258"><span class="hs-identifier hs-var">heapBudget</span></a></span><span> </span><span class="annot"><span class="annottext">Vector DeviceSize
+</span><a href="#local-6989586621680091256"><span class="hs-identifier hs-var">heapUsage</span></a></span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680091245"><span id="local-6989586621680091247"><span id="local-6989586621680091249"><span id="local-6989586621680091251"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-117"></span><span>  </span><span id="local-6989586621680091241"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">272</span></span><span>
+</span><span id="line-118"></span><span>  </span><span id="local-6989586621680091239"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-119"></span><span>  </span><span id="local-6989586621680091237"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; IO PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091237"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; IO PhysicalDeviceMemoryBudgetPropertiesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-120"></span><span>  </span><span id="local-6989586621680091236"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO ()
+</span><a href="#local-6989586621680091236"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680091235"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091235"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680091234"><span class="annot"><span class="annottext">poked :: PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091234"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+-&gt; PhysicalDeviceMemoryBudgetPropertiesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091235"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="#local-6989586621680091234"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-121"></span><span>
+</span><span id="line-122"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-123"></span><span>  </span><span id="local-6989586621680091231"><span class="annot"><span class="annottext">zero :: PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Vector DeviceSize
+-&gt; Vector DeviceSize -&gt; PhysicalDeviceMemoryBudgetPropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#PhysicalDeviceMemoryBudgetPropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryBudgetPropertiesEXT</span></a></span><span>
+</span><span id="line-124"></span><span>           </span><span class="annot"><span class="annottext">Vector DeviceSize
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-125"></span><span>           </span><span class="annot"><span class="annottext">Vector DeviceSize
+forall a. Monoid a =&gt; a
+</span><span class="hs-identifier hs-var">mempty</span></span><span>
+</span><span id="line-126"></span><span>
+</span><span id="line-127"></span><span>
+</span><span id="line-128"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_MEMORY_BUDGET_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_MEMORY_BUDGET_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-129"></span><span>
+</span><span id="line-130"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_MEMORY_BUDGET_SPEC_VERSION&quot;</span><span>
+</span><span id="line-131"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_MEMORY_BUDGET_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680091337"><span class="annot"><a href="#local-6989586621680091337"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680091337"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680091337"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-132"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_MEMORY_BUDGET_SPEC_VERSION"><span id="%24mEXT_MEMORY_BUDGET_SPEC_VERSION"><span id="EXT_MEMORY_BUDGET_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_MEMORY_BUDGET_SPEC_VERSION :: a
+$mEXT_MEMORY_BUDGET_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#%24bEXT_MEMORY_BUDGET_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_MEMORY_BUDGET_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-133"></span><span>
+</span><span id="line-134"></span><span>
+</span><span id="line-135"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_MEMORY_BUDGET_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_MEMORY_BUDGET_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_memory_budget&quot;</span></span><span>
+</span><span id="line-136"></span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_MEMORY_BUDGET_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-138"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#EXT_MEMORY_BUDGET_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_MEMORY_BUDGET_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680091333"><span class="annot"><a href="#local-6989586621680091333"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680091333"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680091333"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680091333"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-139"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_MEMORY_BUDGET_EXTENSION_NAME"><span id="%24mEXT_MEMORY_BUDGET_EXTENSION_NAME"><span id="EXT_MEMORY_BUDGET_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_MEMORY_BUDGET_EXTENSION_NAME :: a
+$mEXT_MEMORY_BUDGET_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_memory_budget.html#%24bEXT_MEMORY_BUDGET_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_MEMORY_BUDGET_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_memory_budget&quot;</span></span><span>
+</span><span id="line-140"></span><span>
+</span><span id="line-141"></span></pre></body></html>

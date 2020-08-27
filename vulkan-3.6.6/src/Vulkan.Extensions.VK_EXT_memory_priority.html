@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_memory_priority</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier">MemoryPriorityAllocateInfoEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_SPEC_VERSION"><span class="hs-identifier">EXT_MEMORY_PRIORITY_SPEC_VERSION</span></a></span><span>
+</span><span id="line-5"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_SPEC_VERSION"><span class="hs-identifier">EXT_MEMORY_PRIORITY_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_EXTENSION_NAME"><span class="hs-identifier">EXT_MEMORY_PRIORITY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-7"></span><span>                                                 </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_EXTENSION_NAME"><span class="hs-identifier">EXT_MEMORY_PRIORITY_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                 </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.C.Types</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT"><span class="hs-identifier">STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- | VkPhysicalDeviceMemoryPriorityFeaturesEXT - Structure describing memory</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- priority features that can be supported by an implementation</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceMemoryPriorityFeaturesEXT' structure</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- describe the following features:</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- If the 'PhysicalDeviceMemoryPriorityFeaturesEXT' structure is included</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- in the @pNext@ chain of</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- it is filled with values indicating whether the feature is supported.</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- 'PhysicalDeviceMemoryPriorityFeaturesEXT' /can/ also be included in the</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- features.</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span></span><span>
+</span><span id="line-60"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @memoryPriority@ indicates that the implementation supports memory</span><span>
+</span><span id="line-61"></span><span>    </span><span class="hs-comment">-- priorities specified at memory allocation time via</span><span>
+</span><span id="line-62"></span><span>    </span><span class="hs-comment">-- 'MemoryPriorityAllocateInfoEXT'.</span><span>
+</span><span id="line-63"></span><span>    </span><span id="%24sel%3AmemoryPriority%3APhysicalDeviceMemoryPriorityFeaturesEXT"><span class="annot"><span class="annottext">PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#%24sel%3AmemoryPriority%3APhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-var hs-var">memoryPriority</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-64"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680056157"><span id="local-6989586621680056159"><span class="annot"><span class="annottext">PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool
+(PhysicalDeviceMemoryPriorityFeaturesEXT
+ -&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool)
+-&gt; (PhysicalDeviceMemoryPriorityFeaturesEXT
+    -&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool)
+-&gt; Eq PhysicalDeviceMemoryPriorityFeaturesEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool
+$c/= :: PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool
+== :: PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool
+$c== :: PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceMemoryPriorityFeaturesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680056150"><span id="local-6989586621680056152"><span id="local-6989586621680056154"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span></span></span></span><span>
+</span><span id="line-69"></span><span>
+</span><span id="line-70"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680056145"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-71"></span><span>  </span><span id="local-6989586621680056140"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; (Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680056138"><span class="annot"><span class="annottext">x :: PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056138"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680056137"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680056137"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680056136"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056136"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056136"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056138"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680056137"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056136"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span>  </span><span id="local-6989586621680056134"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680056134"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680056133"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056133"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680056132"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680056131"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680056131"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-73"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056133"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056133"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056133"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680056132"><span class="hs-identifier hs-var">memoryPriority</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680056131"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-77"></span><span>  </span><span id="local-6989586621680056130"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-78"></span><span>  </span><span id="local-6989586621680056128"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-79"></span><span>  </span><span id="local-6989586621680056126"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680056124"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056124"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680056123"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680056123"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-80"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056124"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056124"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056124"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-83"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680056123"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-84"></span><span>
+</span><span id="line-85"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-86"></span><span>  </span><span id="local-6989586621680056119"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; IO PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680056117"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056117"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-87"></span><span>    </span><span id="local-6989586621680056116"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680056116"><span class="hs-identifier hs-var">memoryPriority</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056117"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; IO PhysicalDeviceMemoryPriorityFeaturesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceMemoryPriorityFeaturesEXT
+ -&gt; IO PhysicalDeviceMemoryPriorityFeaturesEXT)
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; IO PhysicalDeviceMemoryPriorityFeaturesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span><span>
+</span><span id="line-89"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680056116"><span class="hs-identifier hs-var">memoryPriority</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680056106"><span id="local-6989586621680056108"><span id="local-6989586621680056110"><span id="local-6989586621680056112"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-92"></span><span>  </span><span id="local-6989586621680056102"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-93"></span><span>  </span><span id="local-6989586621680056100"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-94"></span><span>  </span><span id="local-6989586621680056098"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; IO PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056098"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; IO PhysicalDeviceMemoryPriorityFeaturesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-95"></span><span>  </span><span id="local-6989586621680056097"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO ()
+</span><a href="#local-6989586621680056097"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680056096"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056096"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680056095"><span class="annot"><span class="annottext">poked :: PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056095"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+-&gt; PhysicalDeviceMemoryPriorityFeaturesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056096"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056095"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span>
+</span><span id="line-97"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680056092"><span class="annot"><span class="annottext">zero :: PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="#local-6989586621680056092"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceMemoryPriorityFeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#PhysicalDeviceMemoryPriorityFeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceMemoryPriorityFeaturesEXT</span></a></span><span>
+</span><span id="line-99"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-100"></span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span class="hs-comment">-- | VkMemoryPriorityAllocateInfoEXT - Specify a memory allocation priority</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--</span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- Memory allocations with higher priority /may/ be more likely to stay in</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- device-local memory when the system is under memory pressure.</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- If this structure is not included, it is as if the @priority@ value were</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- @0.5@.</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-117"></span><span class="hs-keyword">data</span><span> </span><span id="MemoryPriorityAllocateInfoEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-var">MemoryPriorityAllocateInfoEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MemoryPriorityAllocateInfoEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-var">MemoryPriorityAllocateInfoEXT</span></a></span></span><span>
+</span><span id="line-118"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @priority@ is a floating-point value between @0@ and @1@, indicating the</span><span>
+</span><span id="line-119"></span><span>    </span><span class="hs-comment">-- priority of the allocation relative to other memory allocations. Larger</span><span>
+</span><span id="line-120"></span><span>    </span><span class="hs-comment">-- values are higher priority. The granularity of the priorities is</span><span>
+</span><span id="line-121"></span><span>    </span><span class="hs-comment">-- implementation-dependent.</span><span>
+</span><span id="line-122"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span>    </span><span class="hs-comment">-- @priority@ /must/ be between @0@ and @1@, inclusive</span><span>
+</span><span id="line-124"></span><span>    </span><span id="%24sel%3Apriority%3AMemoryPriorityAllocateInfoEXT"><span class="annot"><span class="annottext">MemoryPriorityAllocateInfoEXT -&gt; Float
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#%24sel%3Apriority%3AMemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-var hs-var">priority</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Float</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-125"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680056086"><span id="local-6989586621680056088"><span class="annot"><span class="annottext">MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; Bool
+(MemoryPriorityAllocateInfoEXT
+ -&gt; MemoryPriorityAllocateInfoEXT -&gt; Bool)
+-&gt; (MemoryPriorityAllocateInfoEXT
+    -&gt; MemoryPriorityAllocateInfoEXT -&gt; Bool)
+-&gt; Eq MemoryPriorityAllocateInfoEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; Bool
+$c/= :: MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; Bool
+== :: MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; Bool
+$c== :: MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">MemoryPriorityAllocateInfoEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680056080"><span id="local-6989586621680056082"><span id="local-6989586621680056084"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-type">MemoryPriorityAllocateInfoEXT</span></a></span></span></span></span><span>
+</span><span id="line-130"></span><span>
+</span><span id="line-131"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680056076"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-type">MemoryPriorityAllocateInfoEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-132"></span><span>  </span><span id="local-6989586621680056072"><span class="annot"><span class="annottext">withCStruct :: MemoryPriorityAllocateInfoEXT
+-&gt; (Ptr MemoryPriorityAllocateInfoEXT -&gt; IO b) -&gt; IO b
+</span><a href="#local-6989586621680056072"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680056071"><span class="annot"><span class="annottext">x :: MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056071"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680056070"><span class="annot"><span class="annottext">f :: Ptr MemoryPriorityAllocateInfoEXT -&gt; IO b
+</span><a href="#local-6989586621680056070"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; (Ptr MemoryPriorityAllocateInfoEXT -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr MemoryPriorityAllocateInfoEXT -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr MemoryPriorityAllocateInfoEXT -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680056069"><span class="annot"><span class="annottext">p :: Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056069"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056069"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056071"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; IO b
+</span><a href="#local-6989586621680056070"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056069"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-133"></span><span>  </span><span id="local-6989586621680056068"><span class="annot"><span class="annottext">pokeCStruct :: Ptr MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680056068"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680056067"><span class="annot"><span class="annottext">p :: Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056067"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680056066"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-type">MemoryPriorityAllocateInfoEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680056065"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680056065"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-134"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056067"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-135"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056067"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-136"></span><span>    </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; CFloat -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056067"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float -&gt; CFloat
+</span><span class="hs-identifier hs-var">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float
+</span><a href="#local-6989586621680056066"><span class="hs-identifier hs-var">priority</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680056065"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-138"></span><span>  </span><span id="local-6989586621680056064"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680056064"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-139"></span><span>  </span><span id="local-6989586621680056063"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680056063"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-140"></span><span>  </span><span id="local-6989586621680056062"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr MemoryPriorityAllocateInfoEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680056062"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680056061"><span class="annot"><span class="annottext">p :: Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056061"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680056060"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680056060"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-141"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056061"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-142"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056061"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-143"></span><span>    </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; CFloat -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056061"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float -&gt; CFloat
+</span><span class="hs-identifier hs-var">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Float
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-144"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680056060"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-145"></span><span>
+</span><span id="line-146"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-type">MemoryPriorityAllocateInfoEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-147"></span><span>  </span><span id="local-6989586621680056058"><span class="annot"><span class="annottext">peekCStruct :: Ptr MemoryPriorityAllocateInfoEXT
+-&gt; IO MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056058"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680056057"><span class="annot"><span class="annottext">p :: Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056057"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-148"></span><span>    </span><span id="local-6989586621680056056"><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621680056056"><span class="hs-identifier hs-var">priority</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CFloat -&gt; IO CFloat
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056057"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT -&gt; Int -&gt; Ptr CFloat
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-149"></span><span>    </span><span class="annot"><span class="annottext">MemoryPriorityAllocateInfoEXT -&gt; IO MemoryPriorityAllocateInfoEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(MemoryPriorityAllocateInfoEXT -&gt; IO MemoryPriorityAllocateInfoEXT)
+-&gt; MemoryPriorityAllocateInfoEXT
+-&gt; IO MemoryPriorityAllocateInfoEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Float -&gt; MemoryPriorityAllocateInfoEXT
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-var">MemoryPriorityAllocateInfoEXT</span></a></span><span>
+</span><span id="line-150"></span><span>             </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">CFloat</span></span><span> </span><span id="local-6989586621680056055"><span class="annot"><span class="annottext">a :: Float
+</span><a href="#local-6989586621680056055"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Float
+</span><a href="#local-6989586621680056055"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">CFloat
+</span><a href="#local-6989586621680056056"><span class="hs-identifier hs-var">priority</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-151"></span><span>
+</span><span id="line-152"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680056045"><span id="local-6989586621680056047"><span id="local-6989586621680056049"><span id="local-6989586621680056051"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-type">MemoryPriorityAllocateInfoEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-153"></span><span>  </span><span id="local-6989586621680056042"><span class="annot"><span class="annottext">sizeOf :: MemoryPriorityAllocateInfoEXT -&gt; Int
+</span><a href="#local-6989586621680056042"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">MemoryPriorityAllocateInfoEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-154"></span><span>  </span><span id="local-6989586621680056041"><span class="annot"><span class="annottext">alignment :: MemoryPriorityAllocateInfoEXT -&gt; Int
+</span><a href="#local-6989586621680056041"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">MemoryPriorityAllocateInfoEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-155"></span><span>  </span><span id="local-6989586621680056040"><span class="annot"><span class="annottext">peek :: Ptr MemoryPriorityAllocateInfoEXT
+-&gt; IO MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056040"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+-&gt; IO MemoryPriorityAllocateInfoEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-156"></span><span>  </span><span id="local-6989586621680056039"><span class="annot"><span class="annottext">poke :: Ptr MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; IO ()
+</span><a href="#local-6989586621680056039"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680056038"><span class="annot"><span class="annottext">ptr :: Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056038"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680056037"><span class="annot"><span class="annottext">poked :: MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056037"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+-&gt; MemoryPriorityAllocateInfoEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056038"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056037"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span>
+</span><span id="line-158"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-type">MemoryPriorityAllocateInfoEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-159"></span><span>  </span><span id="local-6989586621680056035"><span class="annot"><span class="annottext">zero :: MemoryPriorityAllocateInfoEXT
+</span><a href="#local-6989586621680056035"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Float -&gt; MemoryPriorityAllocateInfoEXT
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#MemoryPriorityAllocateInfoEXT"><span class="hs-identifier hs-var">MemoryPriorityAllocateInfoEXT</span></a></span><span>
+</span><span id="line-160"></span><span>           </span><span class="annot"><span class="annottext">Float
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-161"></span><span>
+</span><span id="line-162"></span><span>
+</span><span id="line-163"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_MEMORY_PRIORITY_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_MEMORY_PRIORITY_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-164"></span><span>
+</span><span id="line-165"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_MEMORY_PRIORITY_SPEC_VERSION&quot;</span><span>
+</span><span id="line-166"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_MEMORY_PRIORITY_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680056183"><span class="annot"><a href="#local-6989586621680056183"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680056183"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680056183"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-167"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_MEMORY_PRIORITY_SPEC_VERSION"><span id="%24mEXT_MEMORY_PRIORITY_SPEC_VERSION"><span id="EXT_MEMORY_PRIORITY_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_MEMORY_PRIORITY_SPEC_VERSION :: a
+$mEXT_MEMORY_PRIORITY_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#%24bEXT_MEMORY_PRIORITY_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_MEMORY_PRIORITY_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-168"></span><span>
+</span><span id="line-169"></span><span>
+</span><span id="line-170"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_MEMORY_PRIORITY_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_MEMORY_PRIORITY_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_memory_priority&quot;</span></span><span>
+</span><span id="line-171"></span><span>
+</span><span id="line-172"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-173"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#EXT_MEMORY_PRIORITY_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_MEMORY_PRIORITY_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680056179"><span class="annot"><a href="#local-6989586621680056179"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680056179"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680056179"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680056179"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-174"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_MEMORY_PRIORITY_EXTENSION_NAME"><span id="%24mEXT_MEMORY_PRIORITY_EXTENSION_NAME"><span id="EXT_MEMORY_PRIORITY_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_MEMORY_PRIORITY_EXTENSION_NAME :: a
+$mEXT_MEMORY_PRIORITY_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_memory_priority.html#%24bEXT_MEMORY_PRIORITY_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_MEMORY_PRIORITY_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_memory_priority&quot;</span></span><span>
+</span><span id="line-175"></span><span>
+</span><span id="line-176"></span></pre></body></html>

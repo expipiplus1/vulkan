@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.MemoryHeapFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier">MemoryHeapFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MEMORY_HEAP_DEVICE_LOCAL_BIT"><span class="hs-identifier">MEMORY_HEAP_DEVICE_LOCAL_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MEMORY_HEAP_MULTI_INSTANCE_BIT"><span class="hs-identifier">MEMORY_HEAP_MULTI_INSTANCE_BIT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                   </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                   </span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                               </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlags"><span class="hs-identifier">MemoryHeapFlags</span></a></span><span>
+</span><span id="line-7"></span><span>                                               </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | VkMemoryHeapFlagBits - Bitmask specifying attribute flags for a heap</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'MemoryHeapFlags'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="MemoryHeapFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-var">MemoryHeapFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MemoryHeapFlagBits"><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-var">MemoryHeapFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680076550"><span id="local-6989586621680076552"><span class="annot"><span class="annottext">MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+(MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool)
+-&gt; Eq MemoryHeapFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+$c/= :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+== :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+$c== :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680076534"><span id="local-6989586621680076536"><span id="local-6989586621680076538"><span id="local-6989586621680076540"><span id="local-6989586621680076542"><span id="local-6989586621680076544"><span id="local-6989586621680076546"><span class="annot"><span class="annottext">Eq MemoryHeapFlagBits
+Eq MemoryHeapFlagBits =&gt;
+(MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Ordering)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits)
+-&gt; Ord MemoryHeapFlagBits
+MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Ordering
+MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+$cmin :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+max :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+$cmax :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+&gt;= :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+$c&gt;= :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+&gt; :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+$c&gt; :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+&lt;= :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+$c&lt;= :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+&lt; :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+$c&lt; :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Bool
+compare :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Ordering
+$ccompare :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; Ordering
+$cp1Ord :: Eq MemoryHeapFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680076517"><span id="local-6989586621680076519"><span id="local-6989586621680076521"><span id="local-6989586621680076523"><span id="local-6989586621680076525"><span id="local-6989586621680076527"><span id="local-6989586621680076529"><span id="local-6989586621680076531"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO MemoryHeapFlagBits
+Ptr b -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ()
+Ptr MemoryHeapFlagBits -&gt; IO MemoryHeapFlagBits
+Ptr MemoryHeapFlagBits -&gt; Int -&gt; IO MemoryHeapFlagBits
+Ptr MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ()
+Ptr MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; IO ()
+MemoryHeapFlagBits -&gt; Int
+(MemoryHeapFlagBits -&gt; Int)
+-&gt; (MemoryHeapFlagBits -&gt; Int)
+-&gt; (Ptr MemoryHeapFlagBits -&gt; Int -&gt; IO MemoryHeapFlagBits)
+-&gt; (Ptr MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO MemoryHeapFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ())
+-&gt; (Ptr MemoryHeapFlagBits -&gt; IO MemoryHeapFlagBits)
+-&gt; (Ptr MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; IO ())
+-&gt; Storable MemoryHeapFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO MemoryHeapFlagBits
+forall b. Ptr b -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; IO ()
+$cpoke :: Ptr MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; IO ()
+peek :: Ptr MemoryHeapFlagBits -&gt; IO MemoryHeapFlagBits
+$cpeek :: Ptr MemoryHeapFlagBits -&gt; IO MemoryHeapFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO MemoryHeapFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO MemoryHeapFlagBits
+pokeElemOff :: Ptr MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits -&gt; IO ()
+peekElemOff :: Ptr MemoryHeapFlagBits -&gt; Int -&gt; IO MemoryHeapFlagBits
+$cpeekElemOff :: Ptr MemoryHeapFlagBits -&gt; Int -&gt; IO MemoryHeapFlagBits
+alignment :: MemoryHeapFlagBits -&gt; Int
+$calignment :: MemoryHeapFlagBits -&gt; Int
+sizeOf :: MemoryHeapFlagBits -&gt; Int
+$csizeOf :: MemoryHeapFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680076514"><span class="annot"><span class="annottext">MemoryHeapFlagBits
+MemoryHeapFlagBits -&gt; Zero MemoryHeapFlagBits
+forall a. a -&gt; Zero a
+zero :: MemoryHeapFlagBits
+$czero :: MemoryHeapFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680076468"><span id="local-6989586621680076470"><span id="local-6989586621680076472"><span id="local-6989586621680076474"><span id="local-6989586621680076476"><span id="local-6989586621680076478"><span id="local-6989586621680076480"><span id="local-6989586621680076482"><span id="local-6989586621680076484"><span id="local-6989586621680076486"><span id="local-6989586621680076488"><span id="local-6989586621680076490"><span id="local-6989586621680076492"><span id="local-6989586621680076494"><span id="local-6989586621680076496"><span id="local-6989586621680076498"><span id="local-6989586621680076500"><span id="local-6989586621680076502"><span id="local-6989586621680076504"><span id="local-6989586621680076506"><span id="local-6989586621680076508"><span id="local-6989586621680076510"><span class="annot"><span class="annottext">Eq MemoryHeapFlagBits
+MemoryHeapFlagBits
+Eq MemoryHeapFlagBits =&gt;
+(MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; MemoryHeapFlagBits
+-&gt; (Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; Bool)
+-&gt; (MemoryHeapFlagBits -&gt; Maybe Int)
+-&gt; (MemoryHeapFlagBits -&gt; Int)
+-&gt; (MemoryHeapFlagBits -&gt; Bool)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits)
+-&gt; (MemoryHeapFlagBits -&gt; Int)
+-&gt; Bits MemoryHeapFlagBits
+Int -&gt; MemoryHeapFlagBits
+MemoryHeapFlagBits -&gt; Bool
+MemoryHeapFlagBits -&gt; Int
+MemoryHeapFlagBits -&gt; Maybe Int
+MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+MemoryHeapFlagBits -&gt; Int -&gt; Bool
+MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: MemoryHeapFlagBits -&gt; Int
+$cpopCount :: MemoryHeapFlagBits -&gt; Int
+rotateR :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$crotateR :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+rotateL :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$crotateL :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+unsafeShiftR :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$cunsafeShiftR :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+shiftR :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$cshiftR :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+unsafeShiftL :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$cunsafeShiftL :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+shiftL :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$cshiftL :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+isSigned :: MemoryHeapFlagBits -&gt; Bool
+$cisSigned :: MemoryHeapFlagBits -&gt; Bool
+bitSize :: MemoryHeapFlagBits -&gt; Int
+$cbitSize :: MemoryHeapFlagBits -&gt; Int
+bitSizeMaybe :: MemoryHeapFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: MemoryHeapFlagBits -&gt; Maybe Int
+testBit :: MemoryHeapFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: MemoryHeapFlagBits -&gt; Int -&gt; Bool
+complementBit :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$ccomplementBit :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+clearBit :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$cclearBit :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+setBit :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$csetBit :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+bit :: Int -&gt; MemoryHeapFlagBits
+$cbit :: Int -&gt; MemoryHeapFlagBits
+zeroBits :: MemoryHeapFlagBits
+$czeroBits :: MemoryHeapFlagBits
+rotate :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$crotate :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+shift :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+$cshift :: MemoryHeapFlagBits -&gt; Int -&gt; MemoryHeapFlagBits
+complement :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+$ccomplement :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+xor :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+$cxor :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+.|. :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+$c.|. :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+.&amp;. :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+$c.&amp;. :: MemoryHeapFlagBits -&gt; MemoryHeapFlagBits -&gt; MemoryHeapFlagBits
+$cp1Bits :: Eq MemoryHeapFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'MEMORY_HEAP_DEVICE_LOCAL_BIT' specifies that the heap corresponds to</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- device local memory. Device local memory /may/ have different</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- performance characteristics than host local memory, and /may/ support</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- different memory property flags.</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bMEMORY_HEAP_DEVICE_LOCAL_BIT"><span id="%24mMEMORY_HEAP_DEVICE_LOCAL_BIT"><span id="MEMORY_HEAP_DEVICE_LOCAL_BIT"><span class="annot"><span class="annottext">$bMEMORY_HEAP_DEVICE_LOCAL_BIT :: MemoryHeapFlagBits
+$mMEMORY_HEAP_DEVICE_LOCAL_BIT :: forall r. MemoryHeapFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#%24bMEMORY_HEAP_DEVICE_LOCAL_BIT"><span class="hs-identifier hs-var hs-var hs-var">MEMORY_HEAP_DEVICE_LOCAL_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-type">MemoryHeapFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- | 'MEMORY_HEAP_MULTI_INSTANCE_BIT' specifies that in a logical device</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- representing more than one physical device, there is a per-physical</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- device instance of the heap memory. By default, an allocation from such</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- a heap will be replicated to each physical device&#8217;s instance of the</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- heap.</span><span>
+</span><span id="line-42"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bMEMORY_HEAP_MULTI_INSTANCE_BIT"><span id="%24mMEMORY_HEAP_MULTI_INSTANCE_BIT"><span id="MEMORY_HEAP_MULTI_INSTANCE_BIT"><span class="annot"><span class="annottext">$bMEMORY_HEAP_MULTI_INSTANCE_BIT :: MemoryHeapFlagBits
+$mMEMORY_HEAP_MULTI_INSTANCE_BIT :: forall r. MemoryHeapFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#%24bMEMORY_HEAP_MULTI_INSTANCE_BIT"><span class="hs-identifier hs-var hs-var hs-var">MEMORY_HEAP_MULTI_INSTANCE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-type">MemoryHeapFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span class="hs-keyword">type</span><span> </span><span id="MemoryHeapFlags"><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlags"><span class="hs-identifier hs-var">MemoryHeapFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-type">MemoryHeapFlagBits</span></a></span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680076458"><span id="local-6989586621680076460"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-type">MemoryHeapFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621680076456"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; MemoryHeapFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680076454"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680076454"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-48"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MEMORY_HEAP_DEVICE_LOCAL_BIT"><span class="hs-identifier hs-type">MEMORY_HEAP_DEVICE_LOCAL_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;MEMORY_HEAP_DEVICE_LOCAL_BIT&quot;</span></span><span>
+</span><span id="line-49"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MEMORY_HEAP_MULTI_INSTANCE_BIT"><span class="hs-identifier hs-type">MEMORY_HEAP_MULTI_INSTANCE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;MEMORY_HEAP_MULTI_INSTANCE_BIT&quot;</span></span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-type">MemoryHeapFlagBits</span></a></span><span> </span><span id="local-6989586621680076453"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680076453"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680076454"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;MemoryHeapFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680076453"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680076445"><span id="local-6989586621680076448"><span id="local-6989586621680076450"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-type">MemoryHeapFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-53"></span><span>  </span><span id="local-6989586621680076443"><span class="annot"><span class="annottext">readPrec :: ReadPrec MemoryHeapFlagBits
+</span><a href="#local-6989586621680076443"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec MemoryHeapFlagBits -&gt; ReadPrec MemoryHeapFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec MemoryHeapFlagBits)]
+-&gt; ReadPrec MemoryHeapFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;MEMORY_HEAP_DEVICE_LOCAL_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">MemoryHeapFlagBits -&gt; ReadPrec MemoryHeapFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">MemoryHeapFlagBits
+</span><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MEMORY_HEAP_DEVICE_LOCAL_BIT"><span class="hs-identifier hs-var">MEMORY_HEAP_DEVICE_LOCAL_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;MEMORY_HEAP_MULTI_INSTANCE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">MemoryHeapFlagBits -&gt; ReadPrec MemoryHeapFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">MemoryHeapFlagBits
+</span><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MEMORY_HEAP_MULTI_INSTANCE_BIT"><span class="hs-identifier hs-var">MEMORY_HEAP_MULTI_INSTANCE_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-55"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec MemoryHeapFlagBits
+-&gt; ReadPrec MemoryHeapFlagBits -&gt; ReadPrec MemoryHeapFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-56"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec MemoryHeapFlagBits -&gt; ReadPrec MemoryHeapFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-57"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;MemoryHeapFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-58"></span><span>                       </span><span id="local-6989586621680076442"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680076442"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-59"></span><span>                       </span><span class="annot"><span class="annottext">MemoryHeapFlagBits -&gt; ReadPrec MemoryHeapFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; MemoryHeapFlagBits
+</span><a href="Vulkan.Core10.Enums.MemoryHeapFlagBits.html#MemoryHeapFlagBits"><span class="hs-identifier hs-var">MemoryHeapFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680076442"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span>
+</span><span id="line-61"></span></pre></body></html>
