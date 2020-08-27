@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.3.7] - 2020-08-27
   - Bugfix https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/143
   - Documentation changes
 
