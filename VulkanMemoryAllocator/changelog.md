@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+  - Bugfix https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/143
+  - Documentation changes
 
 ## [0.3.6] - 2020-08-05
   - Fix call to getBudget
