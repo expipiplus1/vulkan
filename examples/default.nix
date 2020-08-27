@@ -17,7 +17,7 @@ let
       overrides = self: super:
         {
           th-desugar = self.th-desugar_1_11;
-          autoapply = dontCheck super.autoapply;
+          autoapply = markUnbroken (dontCheck super.autoapply);
           vulkan = let
             srcFilter = path: type:
               (baseNameOf path == "package.yaml")

@@ -36,7 +36,7 @@ let
           # Examples
           #
           th-desugar = self.th-desugar_1_11;
-          autoapply = dontCheck super.autoapply;
+          autoapply = markUnbroken (dontCheck super.autoapply);
 
           #
           # Generate
