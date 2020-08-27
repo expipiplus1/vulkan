@@ -1,6 +1,6 @@
 { nixpkgsSrc ? builtins.fetchTarball
-  "https://github.com/NixOS/nixpkgs/archive/33dd04ea4afa2e7c1a84bdc48e8cf0bd9923e882.tar.gz"
-, pkgs ? import nixpkgsSrc { }, compiler ? "ghc882", hoogle ? true }:
+  "https://github.com/NixOS/nixpkgs/archive/7b46d0e7771f910a1055f5aef854a7987ceebc13.tar.gz"
+, pkgs ? import nixpkgsSrc { }, compiler ? "ghc884", hoogle ? true }:
 
 let
   src = ./.;
@@ -16,18 +16,8 @@ let
     pkgs.haskell.packages.${compiler'}.override {
       overrides = self: super:
         {
-          th-desugar = self.callCabal2nix "" (pkgs.fetchFromGitHub {
-            owner = "goldfirere";
-            repo = "th-desugar";
-            rev = "f075206882ce4e554c37537e624b4be7409d74a3";
-            sha256 = "0747xggx2q8yphag2wv06dj0pgi9zvadi069c2d6lckg26chhnlk";
-          }) { };
-          autoapply = doHaddock (self.callCabal2nix "" (pkgs.fetchFromGitHub {
-            owner = "expipiplus1";
-            repo = "autoapply";
-            rev = "4ff481b28c9f2b081496593bba491633873ca155";
-            sha256 = "0hfcx9mnan0f5h5x8qvpzybbvn6brmia7s2wfgk8j61arghfwg8k";
-          }) { });
+          th-desugar = self.th-desugar_1_11;
+          autoapply = dontCheck super.autoapply;
           vulkan = let
             srcFilter = path: type:
               (baseNameOf path == "package.yaml")
@@ -43,18 +33,6 @@ let
             (disableLibraryProfiling
               (self.callCabal2nix "" ../VulkanMemoryAllocator { })))
             pkgs.vulkan-headers;
-
-          #
-          # Other packages
-          #
-          sdl2 = overrideSrc super.sdl2 {
-            src = pkgs.fetchFromGitHub {
-              owner = "haskell-game";
-              repo = "sdl2";
-              rev = "d10b2ae86ce3db58c5c011cbec6eccf69c2fd2f1";
-              sha256 = "1qfjfrzc9yjg8ibgr0a7fly6fnd1f2yv731n7h1wjgz9vaa3q6wg";
-            };
-          };
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = self.ghc.withPackages;
