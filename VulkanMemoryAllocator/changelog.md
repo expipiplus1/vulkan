@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.3.7] - 2020-08-27
+  - Bugfix https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/143
+  - Documentation changes
+
 ## [0.3.6] - 2020-08-05
   - Fix call to getBudget
     - Now works on devices with more than one memory heap!

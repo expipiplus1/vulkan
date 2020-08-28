@@ -235,20 +235,27 @@ foreign import ccall
 --
 -- = Description
 --
--- Once bound, a pipeline binding affects subsequent graphics or compute
--- commands in the command buffer until a different pipeline is bound to
--- the bind point. The pipeline bound to
--- 'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE'
--- controls the behavior of 'cmdDispatch' and 'cmdDispatchIndirect'. The
--- pipeline bound to
--- 'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
--- controls the behavior of all
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing drawing commands>.
--- The pipeline bound to
--- 'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR'
--- controls the behavior of
--- 'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysKHR'. No other
--- commands are affected by the pipeline state.
+-- Once bound, a pipeline binding affects subsequent commands that interact
+-- with the given pipeline type in the command buffer until a different
+-- pipeline of the same type is bound to the bind point. Commands that do
+-- not interact with the given pipeline type /must/ not be affected by the
+-- pipeline state.
+--
+-- -   The pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE'
+--     controls the behavior of all
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dispatch dispatching commands>.
+--
+-- -   The pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     controls the behavior of all
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing drawing commands>.
+--
+-- -   The pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR'
+--     controls the behavior of
+--     'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysKHR' and
+--     'Vulkan.Extensions.VK_KHR_ray_tracing.cmdTraceRaysIndirectKHR'.
 --
 -- == Valid Usage
 --
@@ -362,8 +369,8 @@ cmdBindPipeline :: forall io
                    CommandBuffer
                 -> -- | @pipelineBindPoint@ is a
                    -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
-                   -- specifying whether to bind to the compute or graphics bind point.
-                   -- Binding one does not disturb the other.
+                   -- specifying to which bind point the pipeline is bound. Binding one does
+                   -- not disturb the others.
                    PipelineBindPoint
                 -> -- | @pipeline@ is the pipeline to be bound.
                    Pipeline
@@ -1174,14 +1181,15 @@ foreign import ccall
 --
 -- 'cmdBindDescriptorSets' causes the sets numbered [@firstSet@..
 -- @firstSet@+@descriptorSetCount@-1] to use the bindings stored in
--- @pDescriptorSets@[0..descriptorSetCount-1] for subsequent rendering
--- commands (either compute or graphics, according to the
--- @pipelineBindPoint@). Any bindings that were previously applied via
--- these sets are no longer valid.
+-- @pDescriptorSets@[0..descriptorSetCount-1] for subsequent
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
+-- set by @pipelineBindPoint@. Any bindings that were previously applied
+-- via these sets are no longer valid.
 --
--- Once bound, a descriptor set affects rendering of subsequent graphics or
--- compute commands in the command buffer until a different set is bound to
--- the same set number, or else until the set is disturbed as described in
+-- Once bound, a descriptor set affects rendering of subsequent commands
+-- that interact with the given pipeline type in the command buffer until
+-- either a different set is bound to the same set number, or the set is
+-- disturbed as described in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 --
 -- A compatible descriptor set /must/ be bound for all set numbers that any
@@ -1209,8 +1217,9 @@ foreign import ccall
 --
 -- Each of the @pDescriptorSets@ /must/ be compatible with the pipeline
 -- layout specified by @layout@. The layout used to program the bindings
--- /must/ also be compatible with the pipeline used in subsequent graphics
--- or compute commands, as defined in the
+-- /must/ also be compatible with the pipeline used in subsequent
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
+-- with that pipeline type, as defined in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>
 -- section.
 --
@@ -1332,10 +1341,10 @@ cmdBindDescriptorSets :: forall io
                          -- bound to.
                          CommandBuffer
                       -> -- | @pipelineBindPoint@ is a
-                         -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating
-                         -- whether the descriptors will be used by graphics pipelines or compute
-                         -- pipelines. There is a separate set of bind points for each of graphics
-                         -- and compute, so binding one does not disturb the other.
+                         -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' indicating the
+                         -- type of the pipeline that will use the descriptors. There is a separate
+                         -- set of bind points for each pipeline type, so binding one does not
+                         -- disturb the others.
                          PipelineBindPoint
                       -> -- | @layout@ is a 'Vulkan.Core10.Handles.PipelineLayout' object used to
                          -- program the bindings.
@@ -3205,10 +3214,6 @@ foreign import ccall
 --     @sizeof@('Vulkan.Core10.OtherTypes.DrawIndexedIndirectCommand'))
 --     /must/ be less than or equal to the size of @buffer@
 --
--- -   If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-drawIndirectCount drawIndirectCount>
---     is not enabled this function /must/ not be used
---
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -4101,6 +4106,201 @@ foreign import ccall
 --     containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
+-- -   If neither @srcImage@ nor @dstImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     then for each element of @pRegions@, @srcSubresource.aspectMask@ and
+--     @dstSubresource.aspectMask@ /must/ match
+--
+-- -   If @srcImage@ has a 'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     then for each element of @pRegions@, @srcSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
+--
+-- -   If @srcImage@ has a 'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
+--     then for each element of @pRegions@, @srcSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--
+-- -   If @dstImage@ has a 'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     then for each element of @pRegions@, @dstSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
+--
+-- -   If @dstImage@ has a 'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
+--     then for each element of @pRegions@, @dstSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--
+-- -   If @srcImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     and the @dstImage@ does not have a multi-planar image format, then
+--     for each element of @pRegions@, @dstSubresource.aspectMask@ /must/
+--     be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   If @dstImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     and the @srcImage@ does not have a multi-planar image format, then
+--     for each element of @pRegions@, @srcSubresource.aspectMask@ /must/
+--     be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     @srcSubresource.layerCount@ /must/ be @1@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     @dstSubresource.layerCount@ /must/ be @1@
+--
+-- -   For each element of @pRegions@, @srcSubresource.aspectMask@ /must/
+--     specify aspects present in @srcImage@
+--
+-- -   For each element of @pRegions@, @dstSubresource.aspectMask@ /must/
+--     specify aspects present in @dstImage@
+--
+-- -   For each element of @pRegions@, @srcOffset.x@ and (@extent.width@ +
+--     @srcOffset.x@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the width of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   For each element of @pRegions@, @srcOffset.y@ and (@extent.height@ +
+--     @srcOffset.y@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the height of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @srcOffset.y@ /must/ be @0@ and @extent.height@
+--     /must/ be @1@
+--
+-- -   For each element of @pRegions@, @srcOffset.z@ and (@extent.depth@ +
+--     @srcOffset.z@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the depth of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/
+--     be @1@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/
+--     be @1@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @srcOffset.z@ /must/ be @0@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @dstOffset.z@ /must/ be @0@
+--
+-- -   If @srcImage@ and @dstImage@ are both of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @extent.depth@ /must/ be @1@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @dstImage@ is of
+--     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each
+--     element of @pRegions@, @extent.depth@ /must/ equal
+--     @srcSubresource.layerCount@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @srcImage@ is of
+--     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each
+--     element of @pRegions@, @extent.depth@ /must/ equal
+--     @dstSubresource.layerCount@
+--
+-- -   For each element of @pRegions@, @dstOffset.x@ and (@extent.width@ +
+--     @dstOffset.x@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the width of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   For each element of @pRegions@, @dstOffset.y@ and (@extent.height@ +
+--     @dstOffset.y@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the height of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @dstOffset.y@ /must/ be @0@ and @extent.height@
+--     /must/ be @1@
+--
+-- -   For each element of @pRegions@, @dstOffset.z@ and (@extent.depth@ +
+--     @dstOffset.z@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the depth of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, all members of @srcOffset@
+--     /must/ be a multiple of the corresponding dimensions of the
+--     compressed texel block
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, @extent.width@ /must/ be a
+--     multiple of the compressed texel block width or (@extent.width@ +
+--     @srcOffset.x@) /must/ equal the width of the specified
+--     @srcSubresource@ of @srcImage@
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, @extent.height@ /must/ be a
+--     multiple of the compressed texel block height or (@extent.height@ +
+--     @srcOffset.y@) /must/ equal the height of the specified
+--     @srcSubresource@ of @srcImage@
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, @extent.depth@ /must/ be a
+--     multiple of the compressed texel block depth or (@extent.depth@ +
+--     @srcOffset.z@) /must/ equal the depth of the specified
+--     @srcSubresource@ of @srcImage@
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, all members of @dstOffset@
+--     /must/ be a multiple of the corresponding dimensions of the
+--     compressed texel block
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, @extent.width@ /must/ be a
+--     multiple of the compressed texel block width or (@extent.width@ +
+--     @dstOffset.x@) /must/ equal the width of the specified
+--     @dstSubresource@ of @dstImage@
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, @extent.height@ /must/ be a
+--     multiple of the compressed texel block height or (@extent.height@ +
+--     @dstOffset.y@) /must/ equal the height of the specified
+--     @dstSubresource@ of @dstImage@
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     then for each element of @pRegions@, @extent.depth@ /must/ be a
+--     multiple of the compressed texel block depth or (@extent.depth@ +
+--     @dstOffset.z@) /must/ equal the depth of the specified
+--     @dstSubresource@ of @dstImage@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -4416,8 +4616,7 @@ foreign import ccall
 --
 -- -   If @filter@ is
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', @srcImage@
---     /must/ have a 'Vulkan.Core10.Enums.ImageType.ImageType' of
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--     /must/ be of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
 -- -   The @srcSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -4440,6 +4639,71 @@ foreign import ccall
 -- -   @dstImage@ and @srcImage@ /must/ not have been created with @flags@
 --     containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   If either @srcImage@ or @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @srcSubresource.baseArrayLayer@ and
+--     @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
+--     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
+--     each be @1@.
+--
+-- -   For each element of @pRegions@, @srcSubresource.aspectMask@ /must/
+--     specify aspects present in @srcImage@
+--
+-- -   For each element of @pRegions@, @dstSubresource.aspectMask@ /must/
+--     specify aspects present in @dstImage@
+--
+-- -   For each element of @pRegions@, @srcOffset@[0].x and
+--     @srcOffset@[1].x /must/ both be greater than or equal to @0@ and
+--     less than or equal to the width of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   For each element of @pRegions@, @srcOffset@[0].y and
+--     @srcOffset@[1].y /must/ both be greater than or equal to @0@ and
+--     less than or equal to the height of the specified @srcSubresource@
+--     of @srcImage@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y
+--     /must/ be @1@
+--
+-- -   For each element of @pRegions@, @srcOffset@[0].z and
+--     @srcOffset@[1].z /must/ both be greater than or equal to @0@ and
+--     less than or equal to the depth of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z
+--     /must/ be @1@
+--
+-- -   For each element of @pRegions@, @dstOffset@[0].x and
+--     @dstOffset@[1].x /must/ both be greater than or equal to @0@ and
+--     less than or equal to the width of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   For each element of @pRegions@, @dstOffset@[0].y and
+--     @dstOffset@[1].y /must/ both be greater than or equal to @0@ and
+--     less than or equal to the height of the specified @dstSubresource@
+--     of @dstImage@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y
+--     /must/ be @1@
+--
+-- -   For each element of @pRegions@, @dstOffset@[0].z and
+--     @dstOffset@[1].z /must/ both be greater than or equal to @0@ and
+--     less than or equal to the depth of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z
+--     /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --
@@ -4650,6 +4914,111 @@ foreign import ccall
 -- -   If @dstImage@ has a depth\/stencil format, the @bufferOffset@ member
 --     of any element of @pRegions@ /must/ be a multiple of @4@
 --
+-- -   If @dstImage@ does not have either a depth\/stencil or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the format’s texel block size
+--
+-- -   If @dstImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the element size of the compatible format for the format
+--     and the @aspectMask@ of the @imageSubresource@ as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
+--
+-- -   For each element of @pRegions@, @imageOffset.x@ and
+--     (@imageExtent.width@ + @imageOffset.x@) /must/ both be greater than
+--     or equal to @0@ and less than or equal to the width of the specified
+--     @imageSubresource@ of @dstImage@ where this refers to the width of
+--     the /plane/ of the image involved in the copy in the case of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   For each element of @pRegions@, @imageOffset.y@ and
+--     (imageExtent.height + @imageOffset.y@) /must/ both be greater than
+--     or equal to @0@ and less than or equal to the height of the
+--     specified @imageSubresource@ of @dstImage@ where this refers to the
+--     height of the /plane/ of the image involved in the copy in the case
+--     of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @imageOffset.y@ /must/ be @0@ and
+--     @imageExtent.height@ /must/ be @1@
+--
+-- -   For each element of @pRegions@, @imageOffset.z@ and
+--     (imageExtent.depth + @imageOffset.z@) /must/ both be greater than or
+--     equal to @0@ and less than or equal to the depth of the specified
+--     @imageSubresource@ of @dstImage@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
+--     /must/ be @1@
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ /must/ be a
+--     multiple of the compressed texel block width
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferImageHeight@ /must/ be a
+--     multiple of the compressed texel block height
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, all members of @imageOffset@ /must/
+--     be a multiple of the corresponding dimensions of the compressed
+--     texel block
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferOffset@ /must/ be a multiple
+--     of the compressed texel block size in bytes
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @imageExtent.width@ /must/ be a
+--     multiple of the compressed texel block width or (@imageExtent.width@
+--     + @imageOffset.x@) /must/ equal the width of the specified
+--     @imageSubresource@ of @dstImage@
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @imageExtent.height@ /must/ be a
+--     multiple of the compressed texel block height or
+--     (@imageExtent.height@ + @imageOffset.y@) /must/ equal the height of
+--     the specified @imageSubresource@ of @dstImage@
+--
+-- -   If @dstImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @imageExtent.depth@ /must/ be a
+--     multiple of the compressed texel block depth or (@imageExtent.depth@
+--     + @imageOffset.z@) /must/ equal the depth of the specified
+--     @imageSubresource@ of @dstImage@
+--
+-- -   For each element of @pRegions@, @imageSubresource.aspectMask@ /must/
+--     specify aspects present in @dstImage@
+--
+-- -   If @dstImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @imageSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     (with
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     valid only for image formats with three planes)
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each element of
+--     @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be @0@ and
+--     @imageSubresource.layerCount@ /must/ be @1@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid
@@ -4773,6 +5142,11 @@ foreign import ccall
 -- -   If @commandBuffer@ is a protected command buffer, then @dstBuffer@
 --     /must/ not be an unprotected buffer
 --
+-- -   @dstBuffer@ /must/ be large enough to contain all buffer locations
+--     that are accessed according to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
+--     for each element of @pRegions@
+--
 -- -   The image region specified by each element of @pRegions@ /must/ be a
 --     region that is contained within @srcImage@ if the @srcImage@’s
 --     'Vulkan.Core10.Enums.Format.Format' is not a
@@ -4781,25 +5155,27 @@ foreign import ccall
 --     copied if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format' is a
 --     multi-planar format
 --
--- -   @dstBuffer@ /must/ be large enough to contain all buffer locations
---     that are accessed according to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
---     for each element of @pRegions@
---
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
 --     in memory
+--
+-- -   @srcImage@ /must/ have been created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     usage flag
 --
 -- -   The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
--- -   @srcImage@ /must/ have been created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
+-- -   If @srcImage@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   @dstBuffer@ /must/ have been created with
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
 --     usage flag
 --
--- -   If @srcImage@ is non-sparse then it /must/ be bound completely and
+-- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   @srcImage@ /must/ have a sample count equal to
@@ -4810,16 +5186,9 @@ foreign import ccall
 --     executed on a 'Vulkan.Core10.Handles.Device'
 --
 -- -   @srcImageLayout@ /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
---     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
---
--- -   @dstBuffer@ /must/ have been created with
---     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
---     usage flag
---
--- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL', or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
 -- -   The @imageSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -4849,6 +5218,111 @@ foreign import ccall
 --
 -- -   If @srcImage@ has a depth\/stencil format, the @bufferOffset@ member
 --     of any element of @pRegions@ /must/ be a multiple of @4@
+--
+-- -   If @srcImage@ does not have either a depth\/stencil or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the format’s texel block size
+--
+-- -   If @srcImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the element size of the compatible format for the format
+--     and the @aspectMask@ of the @imageSubresource@ as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
+--
+-- -   For each element of @pRegions@, @imageOffset.x@ and
+--     (@imageExtent.width@ + @imageOffset.x@) /must/ both be greater than
+--     or equal to @0@ and less than or equal to the width of the specified
+--     @imageSubresource@ of @srcImage@ where this refers to the width of
+--     the /plane/ of the image involved in the copy in the case of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   For each element of @pRegions@, @imageOffset.y@ and
+--     (imageExtent.height + @imageOffset.y@) /must/ both be greater than
+--     or equal to @0@ and less than or equal to the height of the
+--     specified @imageSubresource@ of @srcImage@ where this refers to the
+--     height of the /plane/ of the image involved in the copy in the case
+--     of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @imageOffset.y@ /must/ be @0@ and
+--     @imageExtent.height@ /must/ be @1@
+--
+-- -   For each element of @pRegions@, @imageOffset.z@ and
+--     (imageExtent.depth + @imageOffset.z@) /must/ both be greater than or
+--     equal to @0@ and less than or equal to the depth of the specified
+--     @imageSubresource@ of @srcImage@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
+--     /must/ be @1@
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferRowLength@ /must/ be a
+--     multiple of the compressed texel block width
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferImageHeight@ /must/ be a
+--     multiple of the compressed texel block height
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, all members of @imageOffset@ /must/
+--     be a multiple of the corresponding dimensions of the compressed
+--     texel block
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @bufferOffset@ /must/ be a multiple
+--     of the compressed texel block size in bytes
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @imageExtent.width@ /must/ be a
+--     multiple of the compressed texel block width or (@imageExtent.width@
+--     + @imageOffset.x@) /must/ equal the width of the specified
+--     @imageSubresource@ of @srcImage@
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @imageExtent.height@ /must/ be a
+--     multiple of the compressed texel block height or
+--     (@imageExtent.height@ + @imageOffset.y@) /must/ equal the height of
+--     the specified @imageSubresource@ of @srcImage@
+--
+-- -   If @srcImage@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
+--     for each element of @pRegions@, @imageExtent.depth@ /must/ be a
+--     multiple of the compressed texel block depth or (@imageExtent.depth@
+--     + @imageOffset.z@) /must/ equal the depth of the specified
+--     @imageSubresource@ of @srcImage@
+--
+-- -   For each element of @pRegions@, @imageSubresource.aspectMask@ /must/
+--     specify aspects present in @srcImage@
+--
+-- -   If @srcImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @imageSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     (with
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--     valid only for image formats with three planes)
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each element of
+--     @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be @0@ and
+--     @imageSubresource.layerCount@ /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --
@@ -5819,6 +6293,68 @@ foreign import ccall
 -- -   @dstImage@ and @srcImage@ /must/ not have been created with @flags@
 --     containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
+--
+-- -   If either @srcImage@ or @dstImage@ are of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and
+--     @srcSubresource.layerCount@ /must/ be @1@
+--
+-- -   If either @srcImage@ or @dstImage@ are of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and
+--     @dstSubresource.layerCount@ /must/ be @1@
+--
+-- -   For each element of @pRegions@, @srcOffset.x@ and (@extent.width@ +
+--     @srcOffset.x@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the width of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   For each element of @pRegions@, @srcOffset.y@ and (@extent.height@ +
+--     @srcOffset.y@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the height of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @srcOffset.y@ /must/ be @0@ and @extent.height@
+--     /must/ be @1@
+--
+-- -   For each element of @pRegions@, @srcOffset.z@ and (@extent.depth@ +
+--     @srcOffset.z@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the depth of the specified @srcSubresource@ of
+--     @srcImage@
+--
+-- -   If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/
+--     be @1@
+--
+-- -   For each element of @pRegions@, @dstOffset.x@ and (@extent.width@ +
+--     @dstOffset.x@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the width of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   For each element of @pRegions@, @dstOffset.y@ and (@extent.height@ +
+--     @dstOffset.y@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the height of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
+--     of @pRegions@, @dstOffset.y@ /must/ be @0@ and @extent.height@
+--     /must/ be @1@
+--
+-- -   For each element of @pRegions@, @dstOffset.z@ and (@extent.depth@ +
+--     @dstOffset.z@) /must/ both be greater than or equal to @0@ and less
+--     than or equal to the depth of the specified @dstSubresource@ of
+--     @dstImage@
+--
+-- -   If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
+--     of @pRegions@, @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/
+--     be @1@
 --
 -- == Valid Usage (Implicit)
 --
@@ -8822,177 +9358,9 @@ instance Zero BufferCopy where
 --
 -- == Valid Usage
 --
--- -   If neither the calling command’s @srcImage@ nor the calling
---     command’s @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
---     then the @aspectMask@ member of @srcSubresource@ and
---     @dstSubresource@ /must/ match
---
--- -   If the calling command’s @srcImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
---     then the @srcSubresource@ @aspectMask@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---
--- -   If the calling command’s @srcImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
---     then the @srcSubresource@ @aspectMask@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---
--- -   If the calling command’s @dstImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
---     then the @dstSubresource@ @aspectMask@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
---
--- -   If the calling command’s @dstImage@ has a
---     'Vulkan.Core10.Enums.Format.Format' with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
---     then the @dstSubresource@ @aspectMask@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---
--- -   If the calling command’s @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
---     and the @dstImage@ does not have a multi-planar image format, the
---     @dstSubresource@ @aspectMask@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
---
--- -   If the calling command’s @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
---     and the @srcImage@ does not have a multi-planar image format, the
---     @srcSubresource@ @aspectMask@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
---
 -- -   The number of slices of the @extent@ (for 3D) or layers of the
 --     @srcSubresource@ (for non-3D) /must/ match the number of slices of
 --     the @extent@ (for 3D) or layers of the @dstSubresource@ (for non-3D)
---
--- -   If either of the calling command’s @srcImage@ or @dstImage@
---     parameters are of 'Vulkan.Core10.Enums.ImageType.ImageType'
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', the @baseArrayLayer@
---     and @layerCount@ members of the corresponding subresource /must/ be
---     @0@ and @1@, respectively
---
--- -   The @aspectMask@ member of @srcSubresource@ /must/ specify aspects
---     present in the calling command’s @srcImage@
---
--- -   The @aspectMask@ member of @dstSubresource@ /must/ specify aspects
---     present in the calling command’s @dstImage@
---
--- -   @srcOffset.x@ and (@extent.width@ + @srcOffset.x@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the source
---     image subresource width
---
--- -   @srcOffset.y@ and (@extent.height@ + @srcOffset.y@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the source
---     image subresource height
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @srcOffset.y@
---     /must/ be @0@ and @extent.height@ /must/ be @1@
---
--- -   @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the source
---     image subresource depth
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @srcOffset.z@
---     /must/ be @0@ and @extent.depth@ /must/ be @1@
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @dstOffset.z@
---     /must/ be @0@ and @extent.depth@ /must/ be @1@
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then @srcOffset.z@
---     /must/ be @0@
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then @dstOffset.z@
---     /must/ be @0@
---
--- -   If both @srcImage@ and @dstImage@ are of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' then @extent.depth@
---     /must/ be @1@
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and the @dstImage@ is
---     of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then
---     @extent.depth@ /must/ equal to the @layerCount@ member of
---     @srcSubresource@
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and the @srcImage@ is
---     of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then
---     @extent.depth@ /must/ equal to the @layerCount@ member of
---     @dstSubresource@
---
--- -   @dstOffset.x@ and (@extent.width@ + @dstOffset.x@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the
---     destination image subresource width
---
--- -   @dstOffset.y@ and (@extent.height@ + @dstOffset.y@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the
---     destination image subresource height
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @dstOffset.y@
---     /must/ be @0@ and @extent.height@ /must/ be @1@
---
--- -   @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the
---     destination image subresource depth
---
--- -   If the calling command’s @srcImage@ is a compressed image, or a
---     /single-plane/, “@_422@” image format, all members of @srcOffset@
---     /must/ be a multiple of the corresponding dimensions of the
---     compressed texel block
---
--- -   If the calling command’s @srcImage@ is a compressed image, or a
---     /single-plane/, “@_422@” image format, @extent.width@ /must/ be a
---     multiple of the compressed texel block width or (@extent.width@ +
---     @srcOffset.x@) /must/ equal the source image subresource width
---
--- -   If the calling command’s @srcImage@ is a compressed image, or a
---     /single-plane/, “@_422@” image format, @extent.height@ /must/ be a
---     multiple of the compressed texel block height or (@extent.height@ +
---     @srcOffset.y@) /must/ equal the source image subresource height
---
--- -   If the calling command’s @srcImage@ is a compressed image, or a
---     /single-plane/, “@_422@” image format, @extent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@extent.depth@ +
---     @srcOffset.z@) /must/ equal the source image subresource depth
---
--- -   If the calling command’s @dstImage@ is a compressed format image, or
---     a /single-plane/, “@_422@” image format, all members of @dstOffset@
---     /must/ be a multiple of the corresponding dimensions of the
---     compressed texel block
---
--- -   If the calling command’s @dstImage@ is a compressed format image, or
---     a /single-plane/, “@_422@” image format, @extent.width@ /must/ be a
---     multiple of the compressed texel block width or (@extent.width@ +
---     @dstOffset.x@) /must/ equal the destination image subresource width
---
--- -   If the calling command’s @dstImage@ is a compressed format image, or
---     a /single-plane/, “@_422@” image format, @extent.height@ /must/ be a
---     multiple of the compressed texel block height or (@extent.height@ +
---     @dstOffset.y@) /must/ equal the destination image subresource height
---
--- -   If the calling command’s @dstImage@ is a compressed format image, or
---     a /single-plane/, “@_422@” image format, @extent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@extent.depth@ +
---     @dstOffset.z@) /must/ equal the destination image subresource depth
 --
 -- == Valid Usage (Implicit)
 --
@@ -9080,60 +9448,6 @@ instance Zero ImageCopy where
 --
 -- -   The @layerCount@ member of @srcSubresource@ and @dstSubresource@
 --     /must/ match
---
--- -   If either of the calling command’s @srcImage@ or @dstImage@
---     parameters are of 'Vulkan.Core10.Enums.ImageType.ImageType'
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', the @baseArrayLayer@
---     and @layerCount@ members of both @srcSubresource@ and
---     @dstSubresource@ /must/ be @0@ and @1@, respectively
---
--- -   The @aspectMask@ member of @srcSubresource@ /must/ specify aspects
---     present in the calling command’s @srcImage@
---
--- -   The @aspectMask@ member of @dstSubresource@ /must/ specify aspects
---     present in the calling command’s @dstImage@
---
--- -   @srcOffset@[0].x and @srcOffset@[1].x /must/ both be greater than or
---     equal to @0@ and less than or equal to the source image subresource
---     width
---
--- -   @srcOffset@[0].y and @srcOffset@[1].y /must/ both be greater than or
---     equal to @0@ and less than or equal to the source image subresource
---     height
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @srcOffset@[0].y
---     /must/ be @0@ and @srcOffset@[1].y /must/ be @1@
---
--- -   @srcOffset@[0].z and @srcOffset@[1].z /must/ both be greater than or
---     equal to @0@ and less than or equal to the source image subresource
---     depth
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then @srcOffset@[0].z
---     /must/ be @0@ and @srcOffset@[1].z /must/ be @1@
---
--- -   @dstOffset@[0].x and @dstOffset@[1].x /must/ both be greater than or
---     equal to @0@ and less than or equal to the destination image
---     subresource width
---
--- -   @dstOffset@[0].y and @dstOffset@[1].y /must/ both be greater than or
---     equal to @0@ and less than or equal to the destination image
---     subresource height
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @dstOffset@[0].y
---     /must/ be @0@ and @dstOffset@[1].y /must/ be @1@
---
--- -   @dstOffset@[0].z and @dstOffset@[1].z /must/ both be greater than or
---     equal to @0@ and less than or equal to the destination image
---     subresource depth
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then @dstOffset@[0].z
---     /must/ be @0@ and @dstOffset@[1].z /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --
@@ -9271,21 +9585,15 @@ instance Zero ImageBlit where
 -- @baseArrayLayer@ member of @imageSubresource@. @layerCount@ layers are
 -- copied from the source image or to the destination image.
 --
+-- For purpose of valid usage statements here and in related copy commands,
+-- a /blocked image/ is defined as:
+--
+-- -   a image with a /single-plane/, “@_422@” format, which is treated as
+--     a format with a 2 × 1 compressed texel block, or
+--
+-- -   a compressed image.
+--
 -- == Valid Usage
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter’s
---     format is not a depth\/stencil format or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then @bufferOffset@ /must/ be a multiple of the format’s texel block
---     size
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter’s
---     format is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then @bufferOffset@ /must/ be a multiple of the element size of the
---     compatible format for the format and the @aspectMask@ of the
---     @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
 --
 -- -   @bufferRowLength@ /must/ be @0@, or greater than or equal to the
 --     @width@ member of @imageExtent@
@@ -9293,95 +9601,8 @@ instance Zero ImageBlit where
 -- -   @bufferImageHeight@ /must/ be @0@, or greater than or equal to the
 --     @height@ member of @imageExtent@
 --
--- -   @imageOffset.x@ and (@imageExtent.width@ + @imageOffset.x@) /must/
---     both be greater than or equal to @0@ and less than or equal to the
---     image subresource width where this refers to the width of the
---     /plane/ of the image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
---
--- -   @imageOffset.y@ and (imageExtent.height + @imageOffset.y@) /must/
---     both be greater than or equal to @0@ and less than or equal to the
---     image subresource height where this refers to the height of the
---     /plane/ of the image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
---
--- -   If the calling command’s @srcImage@ ('cmdCopyImageToBuffer') or
---     @dstImage@ ('cmdCopyBufferToImage') is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @imageOffset.y@
---     /must/ be @0@ and @imageExtent.height@ /must/ be @1@
---
--- -   @imageOffset.z@ and (imageExtent.depth + @imageOffset.z@) /must/
---     both be greater than or equal to @0@ and less than or equal to the
---     image subresource depth
---
--- -   If the calling command’s @srcImage@ ('cmdCopyImageToBuffer') or
---     @dstImage@ ('cmdCopyBufferToImage') is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then @imageOffset.z@
---     /must/ be @0@ and @imageExtent.depth@ /must/ be @1@
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     a compressed image, or a /single-plane/, “@_422@” image format,
---     @bufferRowLength@ /must/ be a multiple of the compressed texel block
---     width
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     a compressed image, or a /single-plane/, “@_422@” image format,
---     @bufferImageHeight@ /must/ be a multiple of the compressed texel
---     block height
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     a compressed image, or a /single-plane/, “@_422@” image format, all
---     members of @imageOffset@ /must/ be a multiple of the corresponding
---     dimensions of the compressed texel block
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     a compressed image, or a /single-plane/, “@_422@” image format,
---     @bufferOffset@ /must/ be a multiple of the compressed texel block
---     size in bytes
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     a compressed image, or a /single-plane/, “@_422@” image format,
---     @imageExtent.width@ /must/ be a multiple of the compressed texel
---     block width or (@imageExtent.width@ + @imageOffset.x@) /must/ equal
---     the image subresource width
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     a compressed image, or a /single-plane/, “@_422@” image format,
---     @imageExtent.height@ /must/ be a multiple of the compressed texel
---     block height or (@imageExtent.height@ + @imageOffset.y@) /must/
---     equal the image subresource height
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     a compressed image, or a /single-plane/, “@_422@” image format,
---     @imageExtent.depth@ /must/ be a multiple of the compressed texel
---     block depth or (@imageExtent.depth@ + @imageOffset.z@) /must/ equal
---     the image subresource depth
---
--- -   The @aspectMask@ member of @imageSubresource@ /must/ specify aspects
---     present in the calling command’s 'Vulkan.Core10.Handles.Image'
---     parameter
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter’s
---     format is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then the @aspectMask@ member of @imageSubresource@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     (with
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     valid only for image formats with three planes)
---
 -- -   The @aspectMask@ member of @imageSubresource@ /must/ only have a
 --     single bit set
---
--- -   If the calling command’s 'Vulkan.Core10.Handles.Image' parameter is
---     of 'Vulkan.Core10.Enums.ImageType.ImageType'
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', the @baseArrayLayer@
---     and @layerCount@ members of @imageSubresource@ /must/ be @0@ and
---     @1@, respectively
 --
 -- == Valid Usage (Implicit)
 --
@@ -9475,54 +9696,6 @@ instance Zero BufferImageCopy where
 --
 -- -   The @layerCount@ member of @srcSubresource@ and @dstSubresource@
 --     /must/ match
---
--- -   If either of the calling command’s @srcImage@ or @dstImage@
---     parameters are of 'Vulkan.Core10.Enums.ImageType.ImageType'
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', the @baseArrayLayer@
---     and @layerCount@ members of both @srcSubresource@ and
---     @dstSubresource@ /must/ be @0@ and @1@, respectively
---
--- -   @srcOffset.x@ and (@extent.width@ + @srcOffset.x@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the source
---     image subresource width
---
--- -   @srcOffset.y@ and (@extent.height@ + @srcOffset.y@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the source
---     image subresource height
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @srcOffset.y@
---     /must/ be @0@ and @extent.height@ /must/ be @1@
---
--- -   @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the source
---     image subresource depth
---
--- -   If the calling command’s @srcImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then @srcOffset.z@
---     /must/ be @0@ and @extent.depth@ /must/ be @1@
---
--- -   @dstOffset.x@ and (@extent.width@ + @dstOffset.x@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the
---     destination image subresource width
---
--- -   @dstOffset.y@ and (@extent.height@ + @dstOffset.y@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the
---     destination image subresource height
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then @dstOffset.y@
---     /must/ be @0@ and @extent.height@ /must/ be @1@
---
--- -   @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@) /must/ both be
---     greater than or equal to @0@ and less than or equal to the
---     destination image subresource depth
---
--- -   If the calling command’s @dstImage@ is of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then @dstOffset.z@
---     /must/ be @0@ and @extent.depth@ /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --

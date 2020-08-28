@@ -1,6 +1,6 @@
 { nixpkgsSrc ? builtins.fetchTarball
-  "https://github.com/NixOS/nixpkgs/archive/33dd04ea4afa2e7c1a84bdc48e8cf0bd9923e882.tar.gz"
-, pkgs ? import nixpkgsSrc { }, compiler ? "ghc882"
+  "https://github.com/NixOS/nixpkgs/archive/7b46d0e7771f910a1055f5aef854a7987ceebc13.tar.gz"
+, pkgs ? import nixpkgsSrc { }, compiler ? "ghc884"
 , forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
 
 let
@@ -23,7 +23,7 @@ let
     vulkan-utils = ./utils;
     vulkan-examples = ./examples;
     VulkanMemoryAllocator = ./VulkanMemoryAllocator;
-  } // pkgs.lib.optionalAttrs (compiler == "ghc882") {
+  } // pkgs.lib.optionalAttrs (compiler == "ghc884") {
     generate-new = filter ./generate-new;
   };
 
@@ -35,32 +35,12 @@ let
           #
           # Examples
           #
-          sdl2 = overrideSrc super.sdl2 {
-            src = pkgs.fetchFromGitHub {
-              owner = "haskell-game";
-              repo = "sdl2";
-              rev = "d10b2ae86ce3db58c5c011cbec6eccf69c2fd2f1";
-              sha256 = "1qfjfrzc9yjg8ibgr0a7fly6fnd1f2yv731n7h1wjgz9vaa3q6wg";
-            };
-          };
-          th-desugar = self.callCabal2nix "" (pkgs.fetchFromGitHub {
-            owner = "goldfirere";
-            repo = "th-desugar";
-            rev = "f075206882ce4e554c37537e624b4be7409d74a3";
-            sha256 = "0747xggx2q8yphag2wv06dj0pgi9zvadi069c2d6lckg26chhnlk";
-          }) { };
-          autoapply = doHaddock (self.callCabal2nix "" (pkgs.fetchFromGitHub {
-            owner = "expipiplus1";
-            repo = "autoapply";
-            rev = "4ff481b28c9f2b081496593bba491633873ca155";
-            sha256 = "0hfcx9mnan0f5h5x8qvpzybbvn6brmia7s2wfgk8j61arghfwg8k";
-          }) { });
+          th-desugar = self.th-desugar_1_11;
+          autoapply = markUnbroken (dontCheck super.autoapply);
 
           #
           # Generate
           #
-          algebraic-graphs = dontCheck super.algebraic-graphs;
-          first-class-families = doJailbreak super.first-class-families;
           dependent-sum = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
             owner = "obsidiansystems";
             repo = "dependent-sum";
@@ -73,12 +53,12 @@ let
             rev = "26677886eced970d661a5a7356ba4fe221c0324c";
             sha256 = "1865yqnxzlrkmbag4xn47csgagmk968z4n633sk2c75d48icyzf9";
           }) { };
-          polysemy = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
+          polysemy = doJailbreak (self.callCabal2nix "" ((pkgs.fetchFromGitHub {
             owner = "polysemy-research";
             repo = "polysemy";
             rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
             sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
-          })) { };
+          })) { });
           polysemy-zoo = dontCheck (self.callCabal2nix ""
             ((pkgs.fetchFromGitHub {
               owner = "polysemy-research";

@@ -659,6 +659,12 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then each element of the
 --     @pCommandBuffers@ array /must/ be an unprotected command buffer
 --
+-- -   If the @pNext@ chain of this structure includes a
+--     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo'
+--     structure with @protectedSubmit@ set to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then each element of the
+--     @pCommandBuffers@ array /must/ be an protected command buffer
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

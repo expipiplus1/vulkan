@@ -379,6 +379,10 @@ foreign import ccall
 -- -   (@countBufferOffset@ + @sizeof@(uint32_t)) /must/ be less than or
 --     equal to the size of @countBuffer@
 --
+-- -   If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-drawIndirectCount drawIndirectCount>
+--     is not enabled this function /must/ not be used
+--
 -- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or
 --     equal to sizeof('Vulkan.Core10.OtherTypes.DrawIndirectCommand')
 --
@@ -395,10 +399,6 @@ foreign import ccall
 --     × (@drawCount@ - 1) + @offset@ +
 --     sizeof('Vulkan.Core10.OtherTypes.DrawIndirectCommand')) /must/ be
 --     less than or equal to the size of @buffer@
---
--- -   If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-drawIndirectCount drawIndirectCount>
---     is not enabled this function /must/ not be used
 --
 -- == Valid Usage (Implicit)
 --
@@ -830,6 +830,10 @@ foreign import ccall
 --
 -- -   (@countBufferOffset@ + @sizeof@(uint32_t)) /must/ be less than or
 --     equal to the size of @countBuffer@
+--
+-- -   If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-drawIndirectCount drawIndirectCount>
+--     is not enabled this function /must/ not be used
 --
 -- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or
 --     equal to

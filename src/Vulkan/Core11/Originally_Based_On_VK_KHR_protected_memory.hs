@@ -128,10 +128,6 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 -- -   If the protected memory feature is not enabled, @protectedSubmit@
 --     /must/ not be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   If @protectedSubmit@ is 'Vulkan.Core10.FundamentalTypes.TRUE', then
---     each element of the @pCommandBuffers@ array /must/ be a protected
---     command buffer
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -314,8 +310,8 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 -- The queue returned by 'getDeviceQueue2' /must/ have the same @flags@
 -- value from this structure as that used at device creation time in a
 -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' instance. If no matching
--- @flags@ were specified at device creation time then @pQueue@ will return
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+-- @flags@ were specified at device creation time, then the handle returned
+-- in @pQueue@ /must/ be @NULL@.
 --
 -- == Valid Usage (Implicit)
 --

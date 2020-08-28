@@ -1,4 +1,5 @@
 {-# language CPP #-}
+{-# language NoDuplicateRecordFields #-}
 module Vulkan.Dynamic  ( InstanceCmds(..)
                        , getInstanceProcAddr'
                        , initInstanceCmds

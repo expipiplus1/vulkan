@@ -426,7 +426,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     then @unnormalizedCoordinates@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If @borderColor@ is set to one of
+-- -   If @borderColor@ is one of
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', then
 --     a
@@ -435,9 +435,17 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-customBorderColors customBorderColors>
---     feature is not enabled, @borderColor@ /must/ not be set to
+--     feature is not enabled, @borderColor@ /must/ not be
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
 --     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
+--
+-- -   If @borderColor@ is one of
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', and
+--     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'::@format@
+--     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
+--     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'::@customBorderColor@
+--     /must/ be within the range of values representable in @format@.
 --
 -- -   The maximum number of samplers with custom border colors which /can/
 --     be simultaneously created on a device is implementation-dependent

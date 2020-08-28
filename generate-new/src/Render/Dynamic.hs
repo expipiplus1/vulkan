@@ -41,6 +41,7 @@ renderDynamicLoader cs = do
   RenderParams {..} <- input
   genRe "dynamic loader" $ do
     tellExplicitModule (vulkanModule ["Dynamic"])
+    tellLanguageExtension (LanguageExtension "NoDuplicateRecordFields")
     tellNotReexportable
     enabledCommands <- V.filterM
       (fmap isNothing . getDisabledCommand . cName . mcCommand)

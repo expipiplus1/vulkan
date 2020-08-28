@@ -2099,7 +2099,7 @@ foreign import ccall
 --
 -- If @pNext@ is not null, 'Allocator' object must have been created with
 -- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
--- /VmaAllocatorCreateInfo::vulkanApiVersion/ @== VK_API_VERSION_1_1@.
+-- /VmaAllocatorCreateInfo::vulkanApiVersion/ @>= VK_API_VERSION_1_1@.
 -- Otherwise the call fails.
 bindBufferMemory2 :: forall io
                    . (MonadIO io)
@@ -2179,7 +2179,7 @@ foreign import ccall
 --
 -- If @pNext@ is not null, 'Allocator' object must have been created with
 -- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
--- /VmaAllocatorCreateInfo::vulkanApiVersion/ @== VK_API_VERSION_1_1@.
+-- /VmaAllocatorCreateInfo::vulkanApiVersion/ @>= VK_API_VERSION_1_1@.
 -- Otherwise the call fails.
 bindImageMemory2 :: forall io
                   . (MonadIO io)

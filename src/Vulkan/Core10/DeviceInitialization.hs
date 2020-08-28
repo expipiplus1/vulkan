@@ -4139,9 +4139,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
   , -- | @framebufferColorSampleCounts@ is a bitmask1 of
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' indicating
     -- the color sample counts that are supported for all framebuffer color
-    -- attachments with floating- or fixed-point formats. There is no limit
-    -- that specifies the color sample counts that are supported for all color
-    -- attachments with integer formats.
+    -- attachments with floating- or fixed-point formats. For color attachments
+    -- with integer formats, see
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-framebufferIntegerColorSampleCounts framebufferIntegerColorSampleCounts>.
     framebufferColorSampleCounts :: SampleCountFlags
   , -- | @framebufferDepthSampleCounts@ is a bitmask1 of
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' indicating

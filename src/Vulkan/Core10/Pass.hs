@@ -1158,6 +1158,10 @@ instance Zero AttachmentReference where
 -- -   If any attachment is used by more than one 'AttachmentReference'
 --     member, then each use /must/ use the same @layout@
 --
+-- -   Each attachment /must/ follow the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#attachment-type-imagelayout image layout requirements>
+--     specified for its attachment type
+--
 -- -   If @flags@ includes
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
 --     it /must/ also include
@@ -1193,6 +1197,9 @@ instance Zero AttachmentReference where
 --     'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM'
 --     each of the elements of @pInputAttachments@ /must/ be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   @pDepthStencilAttachment@ and @pColorAttachments@ must not contain
+--     references to the same attachment
 --
 -- == Valid Usage (Implicit)
 --

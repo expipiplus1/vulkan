@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [3.6.6] - 2020-08-27
+  - Bump API version to 1.2.152
+  - NoDuplicateRecordFields for Vulkan.Dynamic
+
 ## [3.6.5] - 2020-08-17
   - Bump API version to 1.2.151
 
