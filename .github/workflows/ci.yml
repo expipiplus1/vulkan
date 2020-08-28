@@ -153,7 +153,7 @@ jobs:
       run: |
         brew install pkg-config sdl2
         brew tap apenngrace/homebrew-vulkan 
-        brew cask install vulkan-sdk
+        brew cask install vulkan-sdk --verbose
 
     - name: Install dependencies
       run: stack build $ARGS --test --bench --only-dependencies $ARGS
