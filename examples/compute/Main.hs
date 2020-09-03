@@ -20,10 +20,11 @@ import           Control.Monad.Trans.Resource
 import           Data.Bits
 import qualified Data.ByteString.Lazy          as BSL
 import           Data.Foldable
-import           Data.Functor                   ( ($>) )
+import           Data.List                      ( partition )
 import           Data.Maybe                     ( catMaybes )
 import           Data.Ord                       ( comparing )
 import           Data.Text                      ( Text )
+import qualified Data.Text                     as T
 import           Data.Text.Encoding             ( decodeUtf8 )
 import qualified Data.Vector                   as V
 import           Data.Word
@@ -391,18 +392,27 @@ myApiVersion = API_VERSION_1_0
 createInstance :: MonadResource m => m Instance
 createInstance = do
   availableExtensionNames <-
-    fmap layerName . snd <$> enumerateInstanceLayerProperties
-  let requiredLayers = []
-      requiredExtensions =
-        [EXT_DEBUG_UTILS_EXTENSION_NAME, EXT_VALIDATION_FEATURES_EXTENSION_NAME]
-  optionalLayers <-
-    fmap (V.fromList . catMaybes)
-    . sequence
-    $ [ if n `elem` availableExtensionNames
-          then pure $ Just n
-          else sayErrString ("Unable to find layer " <> show n) $> Nothing
-      | n <- ["VK_LAYER_KHRONOS_validation"]
-      ]
+    toList
+    .   fmap extensionName
+    .   snd
+    <$> enumerateInstanceExtensionProperties Nothing
+  availableLayerNames <-
+    toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
+
+  let requiredLayers     = []
+      optionalLayers     = ["VK_LAYER_KHRONOS_validation"]
+      requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME]
+      optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
+
+  extensions <- partitionOptReq "extension"
+                                availableExtensionNames
+                                optionalExtensions
+                                requiredExtensions
+  layers <- partitionOptReq "layer"
+                            availableLayerNames
+                            optionalLayers
+                            requiredLayers
+
   let debugMessengerCreateInfo = zero
         { messageSeverity = DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
                               .|. DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
@@ -416,8 +426,8 @@ createInstance = do
             { applicationInfo       = Just zero { applicationName = Nothing
                                                 , apiVersion      = myApiVersion
                                                 }
-            , enabledLayerNames     = requiredLayers <> optionalLayers
-            , enabledExtensionNames = requiredExtensions
+            , enabledLayerNames     = V.fromList layers
+            , enabledExtensionNames = V.fromList extensions
             }
           ::& debugMessengerCreateInfo
           :&  ValidationFeaturesEXT
@@ -494,6 +504,24 @@ physicalDeviceName :: MonadIO m => PhysicalDevice -> m Text
 physicalDeviceName phys = do
   props <- getPhysicalDeviceProperties phys
   pure $ decodeUtf8 (deviceName props)
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+partitionOptReq
+  :: (Show a, Eq a, MonadIO m) => Text -> [a] -> [a] -> [a] -> m [a]
+partitionOptReq type' available optional required = do
+  let (optHave, optMissing) = partition (`elem` available) optional
+      (reqHave, reqMissing) = partition (`elem` available) required
+      tShow                 = T.pack . show
+  for_ optMissing
+    $ \n -> sayErr $ "Missing optional " <> type' <> ": " <> tShow n
+  case reqMissing of
+    []  -> pure ()
+    [x] -> sayErr $ "Missing required " <> type' <> ": " <> tShow x
+    xs  -> sayErr $ "Missing required " <> type' <> "s: " <> tShow xs
+  pure (reqHave <> optHave)
 
 ----------------------------------------------------------------
 -- Bit utils
