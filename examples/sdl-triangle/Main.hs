@@ -12,12 +12,16 @@ import           Control.Monad.Managed
 import           Control.Monad.Trans.Maybe
 import           Data.Bits
 import qualified Data.ByteString               as BS
-import           Data.Functor
-import           Data.List                      ( nub )
-import           Data.Maybe                     ( catMaybes )
+import           Data.Foldable
+import           Data.List                      ( nub
+                                                , partition
+                                                )
 import           Data.Ord
 import           Data.String                    ( IsString )
-import           Data.Text               hiding ( maximum )
+import           Data.Text               hiding ( maximum
+                                                , partition
+                                                )
+import qualified Data.Text                     as T
 import           Data.Text.Encoding
 import           Data.Traversable
 import qualified Data.Vector                   as V
@@ -413,28 +417,32 @@ windowInstanceCreateInfo window = do
   windowExtensions <-
     liftIO $ traverse BS.packCString =<< SDL.vkGetInstanceExtensions window
   availableExtensionNames <-
-    fmap layerName . snd <$> enumerateInstanceLayerProperties
-  let requiredLayers = []
-      requiredExtensions =
-        V.fromList
-          $ EXT_DEBUG_UTILS_EXTENSION_NAME
-          : EXT_VALIDATION_FEATURES_EXTENSION_NAME
-          : windowExtensions
-  optionalLayers <-
-    fmap (V.fromList . catMaybes)
-    . sequence
-    $ [ if n `elem` availableExtensionNames
-          then pure $ Just n
-          else sayErrString ("Unable to find layer " <> show n) $> Nothing
-      | n <- ["VK_LAYER_KHRONOS_validation"]
-      ]
+    toList
+    .   fmap extensionName
+    .   snd
+    <$> enumerateInstanceExtensionProperties Nothing
+  availableLayerNames <-
+    toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
+
+  let requiredLayers     = []
+      optionalLayers     = ["VK_LAYER_KHRONOS_validation"]
+      requiredExtensions = [EXT_DEBUG_UTILS_EXTENSION_NAME] <> windowExtensions
+      optionalExtensions = [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
+  extensions <- partitionOptReq "extension"
+                                availableExtensionNames
+                                optionalExtensions
+                                requiredExtensions
+  layers <- partitionOptReq "layer"
+                            availableLayerNames
+                            optionalLayers
+                            requiredLayers
   pure
     $   zero
           { applicationInfo       = Just zero { applicationName = Just appName
                                               , apiVersion = API_VERSION_1_0
                                               }
-          , enabledLayerNames     = requiredLayers <> optionalLayers
-          , enabledExtensionNames = requiredExtensions
+          , enabledLayerNames     = V.fromList layers
+          , enabledExtensionNames = V.fromList extensions
           }
     ::& debugUtilsMessengerCreateInfo
     :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
@@ -680,6 +688,24 @@ withSDLWindowSurface inst window = managed $ bracket
 
 allocate :: IO a -> (a -> IO ()) -> Managed a
 allocate c d = managed (bracket c d)
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+partitionOptReq
+  :: (Show a, Eq a, MonadIO m) => Text -> [a] -> [a] -> [a] -> m [a]
+partitionOptReq type' available optional required = do
+  let (optHave, optMissing) = partition (`elem` available) optional
+      (reqHave, reqMissing) = partition (`elem` available) required
+      tShow                 = T.pack . show
+  for_ optMissing
+    $ \n -> sayErr $ "Missing optional " <> type' <> ": " <> tShow n
+  case reqMissing of
+    []  -> pure ()
+    [x] -> sayErr $ "Missing required " <> type' <> ": " <> tShow x
+    xs  -> sayErr $ "Missing required " <> type' <> "s: " <> tShow xs
+  pure (reqHave <> optHave)
 
 ----------------------------------------------------------------
 -- Bit utils
