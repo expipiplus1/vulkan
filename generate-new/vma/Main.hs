@@ -191,7 +191,7 @@ vmaSpecInfo enums structs handles commands = do
 ----------------------------------------------------------------
 
 unitEnums
-  :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector (NodeInfo, Enum'))
+  :: HasErr r => TravState Identity s -> GlobalDecls -> Sem r (Vector (NodeInfo, Enum'))
 unitEnums state ds = do
   let ets = [ e | EnumDef e <- Map.elems (gTags ds) ]
   fmap fromList . forV ets $ \case
@@ -316,7 +316,7 @@ unitCommands ds =
         pure (nodeInfo, Command { .. })
 
 unitStructs
-  :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector (NodeInfo, Struct))
+  :: HasErr r => TravState Identity s -> GlobalDecls -> Sem r (Vector (NodeInfo, Struct))
 unitStructs state ds = do
   let sts =
         [ s | CompDef s@(CompType _ StructTag _ _ _) <- Map.elems (gTags ds) ]
@@ -521,7 +521,7 @@ fileDecls
   :: (HasErr r, Member (Embed IO) r)
   => IgnoreWarnings
   -> FilePath
-  -> Sem r (GlobalDecls, TravState ())
+  -> Sem r (GlobalDecls, TravState Identity ())
 fileDecls iw f = do
   preprocessed <- cpp f
   transUnit <- fromEitherShow $ parseC (toStrict preprocessed) (initPos f)
@@ -566,16 +566,16 @@ lenAttrName = "len_if_not_null"
 -- Trav to Sem
 ----------------------------------------------------------------
 
-runTrav_' :: HasErr r => IgnoreWarnings -> TravState s -> Trav s a -> Sem r a
+runTrav_' :: HasErr r => IgnoreWarnings -> TravState Identity s -> Trav s a -> Sem r a
 runTrav_' iw s t = fst <$> runTrav' iw s t
 
 runTrav'
   :: HasErr r
   => IgnoreWarnings
-  -> TravState s
+  -> TravState Identity s
   -> Trav s a
-  -> Sem r (a, TravState s)
-runTrav' iw s t = case runTravWithTravState s t of
+  -> Sem r (a, TravState Identity s)
+runTrav' iw s t = case runIdentity $ runTravTWithTravState s t of
   Left es -> throwMany (show <$> es)
   Right (r, s) | DoNotIgnoreWarnings <- iw ->
     traverse_ (throw . show) (travErrors s) >> pure (r, s)
