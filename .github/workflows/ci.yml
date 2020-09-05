@@ -99,9 +99,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04, macOS-latest]
-        # Use windows with 8.10.2+ https://gitlab.haskell.org/ghc/ghc/issues/17926
-        # os: [windows-latest]
+        os: [ubuntu-20.04, macOS-latest, windows-latest]
         stack-args: ['--system-ghc --flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances']
       fail-fast: false
 
@@ -154,11 +152,11 @@ jobs:
       shell: bash
       run: |
         brew install pkg-config sdl2
-        brew tap apenngrace/homebrew-vulkan 
-        brew cask install vulkan-sdk
+        brew tap apenngrace/homebrew-vulkan --verbose
+        brew cask install vulkan-sdk --verbose
 
     - name: Install dependencies
-      run: stack build --test --bench --only-dependencies $ARGS
+      run: stack build $ARGS --test --bench --only-dependencies $ARGS
       env:
         ARGS: ${{ matrix.stack-args }}
 
