@@ -25,7 +25,7 @@ import           Data.Vector                   as V
 import           Polysemy
 import qualified Polysemy.Error                as E
 import           Relude
-import           Relude.Extra.Validation
+import           Validation
 
 type Err = E.Error (Vector Text)
 type HasErr r = MemberWithError Err r
