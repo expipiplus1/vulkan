@@ -152,7 +152,7 @@ jobs:
       shell: bash
       run: |
         brew install pkg-config sdl2
-        brew tap apenngrace/homebrew-vulkan 
+        brew tap apenngrace/homebrew-vulkan --verbose
         brew cask install vulkan-sdk --verbose
 
     - name: Install dependencies
