@@ -41,7 +41,7 @@ echo "Generating VMA documentation"
   nix-shell -p doxygen --run "doxygen Doxyfile")
 
 echo "Generating VulkanMemoryAllocator"
-nix-shell -p asciidoctor --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"
+nix-shell -p vulkan-headers --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"
 nix-shell -p haskellPackages.hpack --run 'hpack VulkanMemoryAllocator'
 
 echo "Cleaning VMA documentation"
