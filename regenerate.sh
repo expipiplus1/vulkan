@@ -26,7 +26,7 @@ test -f generate-new/out || test -L generate-new/out || ln -s ../src generate-ne
 echo "Generating vulkan"
 nix-shell -p asciidoctor --run "sh -c 'cd generate-new && \"$generate/bin/vk\"'"
 git add src
-hpack
+nix-shell -p haskellPackages.hpack --run hpack
 
 ################################################################
 # VMA
@@ -42,7 +42,7 @@ echo "Generating VMA documentation"
 
 echo "Generating VulkanMemoryAllocator"
 nix-shell -p asciidoctor --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"
-hpack VulkanMemoryAllocator
+nix-shell -p haskellPackages.hpack --run 'hpack VulkanMemoryAllocator'
 
 echo "Cleaning VMA documentation"
 git -C VulkanMemoryAllocator/VulkanMemoryAllocator clean -dxf
