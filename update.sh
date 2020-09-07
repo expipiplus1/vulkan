@@ -3,7 +3,7 @@
 set -x
 set -e
 
-# like 1.4.145
+# like v1.4.145
 latest_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/KhronosGroup/Vulkan-Docs/tags |
   jq --raw-output 'map(.name) | .[]' |
   sort | tail -n1)
@@ -11,7 +11,7 @@ version=${1:-$latest_version}
 
 echo "Updating Vulkan-Docs"
 git -C generate-new/Vulkan-Docs fetch
-git -C generate-new/Vulkan-Docs checkout "v$version"
+git -C generate-new/Vulkan-Docs checkout "$version"
 
 git add generate-new/Vulkan-Docs
 
@@ -29,4 +29,4 @@ echo "Adding version bump to changelog"
 sed -i.bak "s/^## WIP$/\0\n  - Bump API version to $version/" changelog.md
 git add changelog.md
 
-git commit -m "Bump vulkan version to v$version"
+git commit -m "Bump vulkan version to $version"
