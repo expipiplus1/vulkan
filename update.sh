@@ -9,6 +9,11 @@ latest_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.gi
   sort | tail -n1)
 version=${1:-$latest_version}
 
+if git -C generate-new/Vulkan-Docs describe --tags | grep $version; then
+  echo "Vulkan-Docs is already at $version"
+  exit 0
+fi
+
 echo "Updating Vulkan-Docs"
 git -C generate-new/Vulkan-Docs fetch
 git -C generate-new/Vulkan-Docs checkout "$version"
