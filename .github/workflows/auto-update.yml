@@ -17,6 +17,10 @@ jobs:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
+    - name: Init git
+      run: |
+        git config user.name 'Joe Hermaszewski'
+        git config user.email 'expipiplus1@users.noreply.github.com'
     - run: ./update.sh
 
     - name: Create Pull Request
