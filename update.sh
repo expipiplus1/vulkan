@@ -4,7 +4,10 @@ set -x
 set -e
 
 # like 1.4.145
-version=$1
+latest_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/KhronosGroup/Vulkan-Docs/tags |
+  jq --raw-output 'map(.name) | .[]' |
+  sort | tail -n1)
+version=${1:-$latest_version}
 
 echo "Updating Vulkan-Docs"
 git -C generate-new/Vulkan-Docs fetch
