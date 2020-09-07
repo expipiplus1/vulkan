@@ -22,8 +22,9 @@ generate=$(IN_NIX_SHELL='' nix-build -A generate-new)
 echo "Cleaning src"
 git rm --quiet -r src/Vulkan src/Vulkan.hs
 mkdir -p src
+test -f generate-new/out || test -L generate-new/out || ln -s ../src generate-new/out
 echo "Generating vulkan"
-nix-shell --run "sh -c 'cd generate-new && \"$generate/bin/vk\"'"
+nix-shell -p asciidoctor --run "sh -c 'cd generate-new && \"$generate/bin/vk\"'"
 git add src
 hpack
 
@@ -40,7 +41,7 @@ echo "Generating VMA documentation"
   nix-shell -p doxygen --run "doxygen Doxyfile")
 
 echo "Generating VulkanMemoryAllocator"
-nix-shell --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"
+nix-shell -p asciidoctor --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"
 hpack VulkanMemoryAllocator
 
 echo "Cleaning VMA documentation"
