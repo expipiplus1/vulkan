@@ -1,0 +1,23 @@
+name: Auto Update
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  nix:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v8
+    - uses: cachix/cachix-action@v6
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+    - run: ./update.sh
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
