@@ -18,6 +18,7 @@ jobs:
         with:
           issue-type: pull-request
           dispatch-type: workflow
+          ref: auto-update
           allow-edits: true
           token: ${{ steps.generate-token.outputs.token }}
           static-args: |
