@@ -32,6 +32,6 @@ jobs:
           reaction-type: rocket
 
       - run: |
-          ./release --vulkan ${{ github.event.client_payload.slash_command.args.named.vulkan }}
+          ./release.sh --vulkan ${{ github.event.client_payload.slash_command.args.named.vulkan }}
           git push origin HEAD:${{ github.event.client_payload.pull_request.head.ref }}
 
