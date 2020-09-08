@@ -35,7 +35,7 @@ jobs:
           reaction-type: rocket
 
       - run: |
-          nix-shell --arg forShell false --arg hoogle false -A vulkan.env --run \
+          nix-shell --arg hoogle false --run \
             "./release.sh --vulkan ${{ github.event.client_payload.slash_command.args.named.vulkan }}"
           git push origin HEAD:${{ github.event.client_payload.pull_request.head.ref }}
 
