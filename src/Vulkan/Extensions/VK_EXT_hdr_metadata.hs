@@ -172,21 +172,21 @@ instance Zero XYColorEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'XYColorEXT',
 -- 'setHdrMetadataEXT'
 data HdrMetadataEXT = HdrMetadataEXT
-  { -- | @displayPrimaryRed@ is the mastering display’s red primary in
+  { -- | @displayPrimaryRed@ is the reference monitor’s red primary in
     -- chromaticity coordinates
     displayPrimaryRed :: XYColorEXT
-  , -- | @displayPrimaryGreen@ is the mastering display’s green primary in
+  , -- | @displayPrimaryGreen@ is the reference monitor’s green primary in
     -- chromaticity coordinates
     displayPrimaryGreen :: XYColorEXT
-  , -- | @displayPrimaryBlue@ is the mastering display’s blue primary in
+  , -- | @displayPrimaryBlue@ is the reference monitor’s blue primary in
     -- chromaticity coordinates
     displayPrimaryBlue :: XYColorEXT
-  , -- | @whitePoint@ is the mastering display’s white-point in chromaticity
+  , -- | @whitePoint@ is the reference monitor’s white-point in chromaticity
     -- coordinates
     whitePoint :: XYColorEXT
-  , -- | @maxLuminance@ is the maximum luminance of the mastering display in nits
+  , -- | @maxLuminance@ is the maximum luminance of the reference monitor in nits
     maxLuminance :: Float
-  , -- | @minLuminance@ is the minimum luminance of the mastering display in nits
+  , -- | @minLuminance@ is the minimum luminance of the reference monitor in nits
     minLuminance :: Float
   , -- | @maxContentLightLevel@ is content’s maximum luminance in nits
     maxContentLightLevel :: Float
