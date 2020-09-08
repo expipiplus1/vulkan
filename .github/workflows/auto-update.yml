@@ -27,7 +27,7 @@ jobs:
     - name: Init git
       run: |
         git config user.name 'Three Of Twelve'
-        git config user.email 'ThreeOfTwelve@users.noreply.github.com'
+        git config user.email 'Three.Of.Twelve@monoid.al'
     - id: update
       run: ./update.sh
 
