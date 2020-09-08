@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  nix:
+  update:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
     - name: Init git
       run: |
         git config user.name 'Three Of Twelve'
-        git config user.email 'Three.Of.Twelve@monoid.al'
+        git config user.email 'ThreeOfTwelve@monoid.al'
     - id: update
       run: ./update.sh
 

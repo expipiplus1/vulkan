@@ -1,0 +1,43 @@
+name: release-command
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'The repository from which the slash command was dispatched'
+        required: true
+      ref:
+        description: 'The ref for the PR to update'
+        required: true
+      version:
+        description: 'The version of the Haskell Vulkan package to be created'
+        required: true
+      comment-id:
+        description: 'Comment id which triggered this release action'
+        required: false
+jobs:
+  make-release:
+    runs-on: ubuntu-20.04
+    steps:
+      # Checkout the pull request branch
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TUVOK_TOKEN }}
+          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.client_payload.pull_request.head.ref }}
+          submodules: recursive
+
+      - run: |
+          echo "${{ github.event.inputs.repository }}"
+          echo "${{ github.event.inputs.ref }}"
+          echo "${{ github.event.inputs.version }}"
+          echo "${{ github.event.inputs.comment-id }}"
+          echo "${{ github.event.client_payload.pull_request.head.ref }}"
+          echo "${GITHUB_REF##*/}"
+
+      - name: Add reaction
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.TUVOK_TOKEN }}
+          repository: ${{ github.event.inputs.repository }}
+          comment-id: ${{ github.event.inputs.comment-id }}
+          reaction-type: rocket
