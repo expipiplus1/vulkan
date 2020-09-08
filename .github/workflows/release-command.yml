@@ -21,13 +21,10 @@ jobs:
           ref: ${{ github.event.client_payload.pull_request.head.ref }}
           submodules: recursive
 
-      - run: |
-          echo "${GITHUB_REF##*/}"
-          curl -H "Authorization: token ${{ secrets.TUVOK_TOKEN }}" https://api.github.com/user |
-            jq --raw-output '[.id,.login] | @tsv' | read id login
-          git config user.name "$login"
-          git config user.email "$id+$login@users.noreply.github.com"
-          git remote -v
+      - name: Init Git
+        run: |
+          git config --global user.name '${{ github.event.client_payload.github.actor }}'
+          git config --global user.email '${{ github.event.client_payload.github.actor }}@users.noreply.github.com'
 
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v1
