@@ -1,8 +1,5 @@
 name: release-command
 on:
-  repository_dispatch:
-    types: [release-command]
-
   workflow_dispatch:
     inputs:
       repository:
