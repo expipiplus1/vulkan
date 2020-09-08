@@ -27,7 +27,7 @@ jobs:
           echo "${{ github.events.inputs.repository }}"
           echo "${{ github.events.inputs.comment-id }}"
           echo "${{ github.events.inputs.version }}"
-          echo "${{ github.event.client_payload.pull_request.head.ref }}
+          echo "${{ github.event.client_payload.pull_request.head.ref }}"
           echo "${GITHUB_REF##*/}"
 
       - name: Add reaction
