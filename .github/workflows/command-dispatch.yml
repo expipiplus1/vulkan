@@ -12,32 +12,13 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - uses: xt0rted/pull-request-comment-branch@v1
-        id: comment-branch
-        with:
-          repo_token: ${{ secrets.TUVOK_TOKEN }}
-
       - name: Slash Command Dispatch
         id: scd
         uses: peter-evans/slash-command-dispatch@v2
         with:
           issue-type: pull-request
-          dispatch-type: workflow
+          dispatch-type: repository
           allow-edits: true
           token: ${{ steps.generate-token.outputs.token }}
-          static-args: |
-            repository=${{ github.repository }}
-            branch=${{ steps.comment-branch.outputs.ref }}
-            comment-id=${{ github.event.comment.id }}
-            ref=auto-update
           commands: |
             release
-
-      - name: Edit comment with error message
-        if: steps.scd.outputs.error-message
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ github.event.comment.id }}
-          body: |
-            > ${{ steps.scd.outputs.error-message }}
-
