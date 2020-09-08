@@ -27,14 +27,14 @@ jobs:
     - name: Init git
       run: |
         git config user.name 'Three Of Twelve'
-        git config user.email 'expipiplus1@users.noreply.github.com'
-    - run: ./update.sh
-    - run: export VULKAN_VERSION=$(git -C generate-new/Vulkan-Docs describe --tags | head -n1)
+        git config user.email 'ThreeOfTwelve@users.noreply.github.com'
+    - id: update
+      run: ./update.sh
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
         token: ${{ steps.generate-token.outputs.token }}
         delete-branch: true
-        branch: vulkan-updates-${{ env.VULKAN_VERSION }}
-        title: Update Vulkan to ${{ env.VULKAN_VERSION }}
+        branch: vulkan-updates-${{ steps.update.outputs.vulkan_version }}
+        title: Update Vulkan to ${{ steps.update.outputs.vulkan_version }}
