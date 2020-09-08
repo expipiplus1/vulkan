@@ -20,9 +20,16 @@ jobs:
 
     - name: Init git
       run: |
-        git config user.name 'Joe Hermaszewski'
-        git config user.email 'expipiplus1@users.noreply.github.com'
-    - run: ./update.sh
+        git config user.name 'Three Of Twelve'
+        git config user.email 'Three.Of.Twelve@monoid.al'
+    - id: update
+      run: ./update.sh
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.TUVOK_TOKEN }}
+        push-to-fork: ThreeOfTwelve/vulkan
+        delete-branch: true
+        branch: vulkan-updates-${{ steps.update.outputs.vulkan_version }}
+        title: Update Vulkan to ${{ steps.update.outputs.vulkan_version }}
