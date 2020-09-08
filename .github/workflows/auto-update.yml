@@ -18,12 +18,6 @@ jobs:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
-    - uses: tibdex/github-app-token@v1
-      id: generate-token
-      with:
-        app_id: '${{ secrets.APP_ID }}'
-        private_key: '${{ secrets.APP_PRIVATE_KEY }}'
-
     - name: Init git
       run: |
         git config user.name 'Three Of Twelve'
@@ -34,7 +28,8 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
-        token: ${{ steps.generate-token.outputs.token }}
+        token: ${{ secrets.TUVOK_TOKEN }}
+        push-to-fork: ThreeOfTwelve/vulkan
         delete-branch: true
         branch: vulkan-updates-${{ steps.update.outputs.vulkan_version }}
         title: Update Vulkan to ${{ steps.update.outputs.vulkan_version }}
