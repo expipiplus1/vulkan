@@ -23,13 +23,13 @@ jobs:
         with:
           issue-type: pull-request
           dispatch-type: workflow
-          ref: auto-update
           allow-edits: true
           token: ${{ steps.generate-token.outputs.token }}
           static-args: |
             repository=${{ github.repository }}
+            branch=${{ steps.comment-branch.outputs.ref }}
             comment-id=${{ github.event.comment.id }}
-            ref=${{ steps.comment-branch.outputs.ref }}
+            ref=auto-update
           commands: |
             release
 
