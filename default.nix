@@ -69,11 +69,11 @@ let
           compact = doJailbreak super.compact;
           pandoc = appendPatch super.pandoc
             ./generate-new/patches/pandoc-haddock-tables.patch;
-          language-c = appendPatches super.language-c [
-            ./generate-new/patches/language-c-custom-state.patch
-            ./generate-new/patches/language-c-align.patch
-            ./generate-new/patches/language-c-show-type.patch
-          ];
+          language-c = self.callHackageDirect {
+            pkg = "language-c";
+            ver = "0.9";
+            sha256 = "1dxi56aawabq2ds6crvhhr9dwmbyanjkn9l0yhw7wcqrwx71kliq";
+          } {};
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = p:

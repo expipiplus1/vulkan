@@ -536,7 +536,7 @@ isReturnPtr p' = case type' p' of
 getSizedWith :: Marshalable a => CName -> Vector a -> Vector a
 getSizedWith lengthName = V.filter $ \v -> case lengths v of
   (NamedLength len :<| _) | len == lengthName -> True
-  -- ^ TODO: Change this to [NamedLength len] and think about handling
+  --  ^ TODO: Change this to [NamedLength len] and think about handling
   _ -> False
 
 -- | Element types for which arrays of should be translated into @ByteString@s

@@ -114,6 +114,7 @@ dependencies:
   - typed-process
   - uniplate
   - unordered-containers
+  - validation-selective
   - vector
   - vector-algorithms
   - word-wrap

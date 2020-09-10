@@ -218,7 +218,7 @@ data RenderParams = RenderParams
   { mkTyName :: CName -> HName
   , mkConName
       :: CName
-      -- ^ Parent union or enum name
+      --  ^ Parent union or enum name
       -> CName
       -> HName
   , mkMemberName                :: CName -> HName
@@ -259,11 +259,11 @@ data RenderParams = RenderParams
       :: forall r
        . (HasRenderElem r, HasRenderParams r)
       => CName
-      -- ^ Sibling name
+      --  ^ Sibling name
       -> CName
-      -- ^ Member name
+      --  ^ Member name
       -> Doc ()
-      -- ^ What you must use to refer to the sibling, as it may be different from the name
+      --  ^ What you must use to refer to the sibling, as it may be different from the name
       -> Maybe (Sem r (Doc ()))
     -- Sometimes vectors are sized with the length of a member in an sibling
     -- (other parameter or member). Sometimes also this isn't a trivial case of
