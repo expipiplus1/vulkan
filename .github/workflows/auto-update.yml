@@ -22,14 +22,24 @@ jobs:
       run: |
         git config user.name 'Three Of Twelve'
         git config user.email 'ThreeOfTwelve@monoid.al'
+
     - id: update
       run: ./update.sh
 
+    - id: check_pr
+      run: |
+        echo "::set-output name=create_pr::true"
+        hub pr list --state open --head ThreeOfTwelve:vulkan-update-${{ steps.update.outputs.vulkan_version }} --format $'%U\n' | while read u; do
+          echo "PR already exists: $u"
+          echo "::set-output name=create_pr::false"
+        done
+
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
+      if: steps.check_pr.outputs.create_pr == 'true'
       with:
         token: ${{ secrets.TUVOK_TOKEN }}
         push-to-fork: ThreeOfTwelve/vulkan
         delete-branch: true
-        branch: vulkan-updates-${{ steps.update.outputs.vulkan_version }}
+        branch: vulkan-update-${{ steps.update.outputs.vulkan_version }}
         title: Update Vulkan to ${{ steps.update.outputs.vulkan_version }}
