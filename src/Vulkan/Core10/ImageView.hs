@@ -1069,6 +1069,20 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', the remaining
 --     number of layers /must/ be a multiple of @6@
 --
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageViewFormatSwizzle@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', all elements of
+--     @components@ /must/ be
+--     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'.
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageViewFormatReinterpretation@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', the
+--     'Vulkan.Core10.Enums.Format.Format' in @format@ /must/ not contain a
+--     different number of components, or a different number of bits in
+--     each component, than the format of the 'Vulkan.Core10.Handles.Image'
+--     in @image@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be

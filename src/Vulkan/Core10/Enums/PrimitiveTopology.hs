@@ -87,7 +87,12 @@ pattern PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = PrimitiveTopology 3
 pattern PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = PrimitiveTopology 4
 -- | 'PRIMITIVE_TOPOLOGY_TRIANGLE_FAN' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-triangle-fans connected triangle primitives>
--- with all triangles sharing a common vertex.
+-- with all triangles sharing a common vertex. If the
+-- @VK_KHR_portability_subset@ extension is enabled, and
+-- 'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@triangleFans@
+-- is 'Vulkan.Core10.FundamentalTypes.FALSE', then triangle fans are not
+-- supported by the implementation, and 'PRIMITIVE_TOPOLOGY_TRIANGLE_FAN'
+-- /must/ not be used.
 pattern PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = PrimitiveTopology 5
 -- | 'PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY' specifies a series of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-line-lists-with-adjacency separate line primitives with adjacency>.

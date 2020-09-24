@@ -52,18 +52,10 @@ newtype PeerMemoryFeatureFlagBits = PeerMemoryFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
 -- | 'PEER_MEMORY_FEATURE_COPY_SRC_BIT' specifies that the memory /can/ be
--- accessed as the source of a
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBuffer',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImage',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage', or
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer' command.
+-- accessed as the source of any @vkCmdCopy*@ command.
 pattern PEER_MEMORY_FEATURE_COPY_SRC_BIT = PeerMemoryFeatureFlagBits 0x00000001
 -- | 'PEER_MEMORY_FEATURE_COPY_DST_BIT' specifies that the memory /can/ be
--- accessed as the destination of a
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBuffer',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImage',
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage', or
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer' command.
+-- accessed as the destination of any @vkCmdCopy*@ command.
 pattern PEER_MEMORY_FEATURE_COPY_DST_BIT = PeerMemoryFeatureFlagBits 0x00000002
 -- | 'PEER_MEMORY_FEATURE_GENERIC_SRC_BIT' specifies that the memory /can/ be
 -- read as any memory access type.

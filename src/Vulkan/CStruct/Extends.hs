@@ -85,11 +85,14 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (BindInd
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (BindShaderGroupIndirectCommandNV)
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (BindSparseInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (BindVertexBufferIndirectCommandNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (BlitImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (BufferCopy)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (BufferCopy2KHR)
 import {-# SOURCE #-} Vulkan.Core10.Buffer (BufferCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (BufferDeviceAddressCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferDeviceAddressInfo)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (BufferImageCopy)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (BufferImageCopy2KHR)
 import {-# SOURCE #-} Vulkan.Core10.OtherTypes (BufferMemoryBarrier)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (BufferMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
@@ -114,7 +117,11 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (Conf
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cooperative_matrix (CooperativeMatrixPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureToMemoryInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyBufferInfo2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyBufferToImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (CopyDescriptorSet)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyImageInfo2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyImageToBufferInfo2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (CopyMemoryToAccelerationStructureInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (D3D12FenceSubmitInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_marker (DebugMarkerMarkerInfoEXT)
@@ -231,7 +238,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_hdr_metadata (HdrMetadataEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_headless_surface (HeadlessSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_MVK_ios_surface (IOSSurfaceCreateInfoMVK)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageBlit)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ImageBlit2KHR)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageCopy)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ImageCopy2KHR)
 import {-# SOURCE #-} Vulkan.Core10.Image (ImageCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (ImageDrmFormatModifierExplicitCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (ImageDrmFormatModifierListCreateInfoEXT)
@@ -244,6 +253,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface (ImagePipeSurfaceCreateInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion (ImagePlaneMemoryRequirementsInfo)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageResolve)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ImageResolve2KHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageSparseMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage (ImageStencilUsageCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (ImageSubresource)
@@ -377,6 +387,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevice
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PhysicalDevicePointClippingProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (PhysicalDevicePrivateDataFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceProperties2)
@@ -507,6 +519,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (RenderPas
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (RenderPassMultiviewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ResolveImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Sampler (SamplerCreateInfo)
@@ -802,6 +815,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo DeviceDiagnosticsConfigCreateInfoNV = ()
   Extends DeviceCreateInfo PhysicalDeviceRobustness2FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceImageRobustnessFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
@@ -919,6 +933,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDiagnosticsConfigFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRobustness2FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageRobustnessFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
@@ -968,6 +983,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceVulkan12Properties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceCustomBorderColorPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceRobustness2PropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDevicePortabilitySubsetPropertiesKHR = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends PipelineColorBlendStateCreateInfo PipelineColorBlendAdvancedStateCreateInfoEXT = ()
@@ -1381,6 +1397,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT -> go @PhysicalDeviceRobustness2FeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_PROPERTIES_EXT -> go @PhysicalDeviceRobustness2PropertiesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES_EXT -> go @PhysicalDeviceImageRobustnessFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR -> go @PhysicalDevicePortabilitySubsetFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR -> go @PhysicalDevicePortabilitySubsetPropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT -> go @PhysicalDevice4444FormatsFeaturesEXT
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
@@ -1678,6 +1696,8 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceRobustness2FeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceRobustness2PropertiesEXT #-}
 {-# complete (::&) :: PhysicalDeviceImageRobustnessFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDevicePortabilitySubsetFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDevicePortabilitySubsetPropertiesKHR #-}
 {-# complete (::&) :: PhysicalDevice4444FormatsFeaturesEXT #-}
 
 -- | View the head and tail of a 'Chain', see '::&'

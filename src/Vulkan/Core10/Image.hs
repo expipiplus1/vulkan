@@ -310,6 +310,23 @@ foreign import ccall
 --     @arrayLayers@ specified in 'ImageCreateInfo' when @image@ was
 --     created
 --
+-- -   If @format@ is a color format, the @aspectMask@ member of
+--     @pSubresource@ /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   If @format@ has a depth component, the @aspectMask@ member of
+--     @pSubresource@ /must/ contain
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
+--
+-- -   If @format@ has a stencil component, the @aspectMask@ member of
+--     @pSubresource@ /must/ contain
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   If @format@ does not contain a stencil or depth component, the
+--     @aspectMask@ member of @pSubresource@ /must/ not contain
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
 -- -   If the @tiling@ of the @image@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and its
 --     @format@ is a
@@ -1223,6 +1240,18 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- -   If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @mipLevels@ /must/ be @1@
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageView2DOn3DImage@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', @flags@ /must/ not
+--     contain
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'.
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@multisampleArrayImage@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', and @samples@ is not
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT', then
+--     @arrayLayers@ /must/ be @1@.
 --
 -- = Valid Usage (Implicit)
 --
