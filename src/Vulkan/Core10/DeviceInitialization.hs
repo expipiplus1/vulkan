@@ -4280,14 +4280,18 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     standardSampleLocations :: Bool
   , -- | @optimalBufferCopyOffsetAlignment@ is the optimal buffer offset
     -- alignment in bytes for
-    -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage' and
+    -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyBufferToImage2KHR',
+    -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage',
+    -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyImageToBuffer2KHR', and
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. The per
     -- texel alignment requirements are enforced, but applications /should/ use
     -- the optimal alignment for optimal performance and power use.
     optimalBufferCopyOffsetAlignment :: DeviceSize
   , -- | @optimalBufferCopyRowPitchAlignment@ is the optimal buffer row pitch
     -- alignment in bytes for
-    -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage' and
+    -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyBufferToImage2KHR',
+    -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage',
+    -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyImageToBuffer2KHR', and
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. Row pitch is
     -- the number of bytes between texels with the same X coordinate in
     -- adjacent rows (Y coordinates differ by one). The per texel alignment
