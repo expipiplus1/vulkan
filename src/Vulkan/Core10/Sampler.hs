@@ -302,6 +302,11 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   The absolute value of @mipLodBias@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxSamplerLodBias@
 --
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@samplerMipLodBias@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', @mipLodBias@ /must/ be
+--     zero.
+--
 -- -   @maxLod@ /must/ be greater than or equal to @minLod@
 --
 -- -   If the

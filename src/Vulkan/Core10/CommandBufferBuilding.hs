@@ -9209,8 +9209,11 @@ instance Zero ClearRect where
 -- = See Also
 --
 -- 'BufferImageCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', 'ImageBlit',
--- 'ImageCopy', 'ImageResolve'
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageBlit2KHR', 'ImageCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageCopy2KHR', 'ImageResolve',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageResolve2KHR'
 data ImageSubresourceLayers = ImageSubresourceLayers
   { -- | @aspectMask@ is a combination of
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits', selecting

@@ -113,9 +113,11 @@ pattern PIPELINE_STAGE_COMPUTE_SHADER_BIT = PipelineStageFlagBits 0x00000800
 --     including
 --     'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults'
 --
--- -   'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'
+-- -   'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'
 --
--- -   'Vulkan.Core10.CommandBufferBuilding.cmdResolveImage'
+-- -   'Vulkan.Extensions.VK_KHR_copy_commands2.cmdResolveImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdResolveImage'
 --
 -- -   All
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>,
