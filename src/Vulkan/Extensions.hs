@@ -106,6 +106,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_KHR_android_surface
                           , module Vulkan.Extensions.VK_KHR_bind_memory2
                           , module Vulkan.Extensions.VK_KHR_buffer_device_address
+                          , module Vulkan.Extensions.VK_KHR_copy_commands2
                           , module Vulkan.Extensions.VK_KHR_create_renderpass2
                           , module Vulkan.Extensions.VK_KHR_dedicated_allocation
                           , module Vulkan.Extensions.VK_KHR_deferred_host_operations
@@ -143,6 +144,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_KHR_performance_query
                           , module Vulkan.Extensions.VK_KHR_pipeline_executable_properties
                           , module Vulkan.Extensions.VK_KHR_pipeline_library
+                          , module Vulkan.Extensions.VK_KHR_portability_subset
                           , module Vulkan.Extensions.VK_KHR_push_descriptor
                           , module Vulkan.Extensions.VK_KHR_ray_tracing
                           , module Vulkan.Extensions.VK_KHR_relaxed_block_layout
@@ -319,6 +321,7 @@ import Vulkan.Extensions.VK_KHR_8bit_storage
 import Vulkan.Extensions.VK_KHR_android_surface
 import Vulkan.Extensions.VK_KHR_bind_memory2
 import Vulkan.Extensions.VK_KHR_buffer_device_address
+import Vulkan.Extensions.VK_KHR_copy_commands2
 import Vulkan.Extensions.VK_KHR_create_renderpass2
 import Vulkan.Extensions.VK_KHR_dedicated_allocation
 import Vulkan.Extensions.VK_KHR_deferred_host_operations
@@ -356,6 +359,7 @@ import Vulkan.Extensions.VK_KHR_multiview
 import Vulkan.Extensions.VK_KHR_performance_query
 import Vulkan.Extensions.VK_KHR_pipeline_executable_properties
 import Vulkan.Extensions.VK_KHR_pipeline_library
+import Vulkan.Extensions.VK_KHR_portability_subset
 import Vulkan.Extensions.VK_KHR_push_descriptor
 import Vulkan.Extensions.VK_KHR_ray_tracing
 import Vulkan.Extensions.VK_KHR_relaxed_block_layout

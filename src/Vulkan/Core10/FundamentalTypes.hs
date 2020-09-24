@@ -118,9 +118,13 @@ instance Zero Offset2D where
 -- = See Also
 --
 -- 'Vulkan.Core10.CommandBufferBuilding.BufferImageCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageBlit',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageBlit2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageCopy2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageResolve',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageResolve2KHR',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind'
 data Offset3D = Offset3D
   { -- | @x@ is the x offset.
@@ -239,10 +243,13 @@ instance Zero Extent2D where
 -- = See Also
 --
 -- 'Vulkan.Core10.CommandBufferBuilding.BufferImageCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageCopy2KHR',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
 -- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageResolve',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.ImageResolve2KHR',
 -- 'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind'
@@ -434,6 +441,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeaturesEXT',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
+-- 'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR',
 -- 'Vulkan.Extensions.VK_EXT_private_data.PhysicalDevicePrivateDataFeaturesEXT',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
@@ -600,8 +608,10 @@ type Flags = Word32
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.BufferCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferCopy2KHR',
 -- 'Vulkan.Core10.Buffer.BufferCreateInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.BufferImageCopy',
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',

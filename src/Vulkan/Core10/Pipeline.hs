@@ -37,8 +37,6 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , PrimitiveTopology(..)
                                , CompareOp(..)
                                , PolygonMode(..)
-                               , CullModeFlagBits(..)
-                               , CullModeFlags
                                , FrontFace(..)
                                , BlendFactor(..)
                                , BlendOp(..)
@@ -46,6 +44,8 @@ module Vulkan.Core10.Pipeline  ( createGraphicsPipelines
                                , LogicOp(..)
                                , VertexInputRate(..)
                                , DynamicState(..)
+                               , CullModeFlagBits(..)
+                               , CullModeFlags
                                , ShaderStageFlagBits(..)
                                , ShaderStageFlags
                                , PipelineCreateFlagBits(..)
@@ -1387,7 +1387,22 @@ instance es ~ '[] => Zero (ComputePipelineCreateInfo es) where
 -- | VkVertexInputBindingDescription - Structure specifying vertex input
 -- binding description
 --
+-- == Valid Usage
+--
+-- -   @binding@ /must/ be less than
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
+--
+-- -   @stride@ /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindingStride@
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, @stride@
+--     /must/ be a multiple of, and at least as large as,
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetPropertiesKHR'::@minVertexInputBindingStrideAlignment@.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   @inputRate@ /must/ be a valid
+--     'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate' value
 --
 -- = See Also
 --
@@ -1395,22 +1410,13 @@ instance es ~ '[] => Zero (ComputePipelineCreateInfo es) where
 -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate'
 data VertexInputBindingDescription = VertexInputBindingDescription
   { -- | @binding@ is the binding number that this structure describes.
-    --
-    -- @binding@ /must/ be less than
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
     binding :: Word32
   , -- | @stride@ is the distance in bytes between two consecutive elements
     -- within the buffer.
-    --
-    -- @stride@ /must/ be less than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindingStride@
     stride :: Word32
   , -- | @inputRate@ is a 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate'
     -- value specifying whether vertex attribute addressing is a function of
     -- the vertex index or of the instance index.
-    --
-    -- @inputRate@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.VertexInputRate.VertexInputRate' value
     inputRate :: VertexInputRate
   }
   deriving (Typeable, Eq)
@@ -1458,7 +1464,35 @@ instance Zero VertexInputBindingDescription where
 -- | VkVertexInputAttributeDescription - Structure specifying vertex input
 -- attribute description
 --
+-- == Valid Usage
+--
+-- -   @location@ /must/ be less than
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributes@
+--
+-- -   @binding@ /must/ be less than
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
+--
+-- -   @offset@ /must/ be less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributeOffset@
+--
+-- -   @format@ /must/ be allowed as a vertex buffer format, as specified
+--     by the
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_VERTEX_BUFFER_BIT'
+--     flag in
+--     'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
+--     returned by
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@vertexAttributeAccessBeyondStride@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', the sum of @offset@ plus
+--     the size of the vertex attribute data described by @format@ /must/
+--     not be greater than @stride@ in the 'VertexInputBindingDescription'
+--     referenced in @binding@.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
 -- = See Also
 --
@@ -1466,33 +1500,14 @@ instance Zero VertexInputBindingDescription where
 -- 'PipelineVertexInputStateCreateInfo'
 data VertexInputAttributeDescription = VertexInputAttributeDescription
   { -- | @location@ is the shader binding location number for this attribute.
-    --
-    -- @location@ /must/ be less than
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributes@
     location :: Word32
   , -- | @binding@ is the binding number which this attribute takes its data
     -- from.
-    --
-    -- @binding@ /must/ be less than
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
     binding :: Word32
   , -- | @format@ is the size and type of the vertex attribute data.
-    --
-    -- @format@ /must/ be allowed as a vertex buffer format, as specified by
-    -- the
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_VERTEX_BUFFER_BIT'
-    -- flag in
-    -- 'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
-    -- returned by
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
-    --
-    -- @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
     format :: Format
   , -- | @offset@ is a byte offset of this attribute relative to the start of an
     -- element in the vertex input binding.
-    --
-    -- @offset@ /must/ be less than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputAttributeOffset@
     offset :: Word32
   }
   deriving (Typeable, Eq)
@@ -1710,6 +1725,11 @@ instance es ~ '[] => Zero (PipelineVertexInputStateCreateInfo es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @topology@ /must/ not be
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST'
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@triangleFans@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', @topology@ /must/ not be
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_TRIANGLE_FAN'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -2102,6 +2122,13 @@ instance es ~ '[] => Zero (PipelineViewportStateCreateInfo es) where
 -- -   If the @VK_NV_fill_rectangle@ extension is not enabled,
 --     @polygonMode@ /must/ not be
 --     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL_RECTANGLE_NV'
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@pointPolygons@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', and
+--     @rasterizerDiscardEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
+--     @polygonMode@ /must/ not be
+--     'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_POINT'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -2549,6 +2576,20 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --     of the subpass this pipeline is compiled against /must/ be less than
 --     or equal to
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::advancedBlendMaxColorAttachments
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@constantAlphaColorBlendFactors@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', @srcColorBlendFactor@
+--     /must/ not be
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA' or
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA'.
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@constantAlphaColorBlendFactors@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', @dstColorBlendFactor@
+--     /must/ not be
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA' or
+--     'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -3018,6 +3059,16 @@ instance Zero StencilOpState where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-depthBounds depth bounds testing>
 --     feature is not enabled, @depthBoundsTestEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@separateStencilMaskRef@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', and the value of
+--     'PipelineDepthStencilStateCreateInfo'::@stencilTestEnable@ is
+--     'Vulkan.Core10.FundamentalTypes.TRUE', and the value of
+--     'PipelineRasterizationStateCreateInfo'::@cullMode@ is
+--     'Vulkan.Core10.Enums.CullModeFlagBits.CULL_MODE_NONE', the value of
+--     @reference@ in each of the 'StencilOpState' structs in @front@ and
+--     @back@ /must/ be the same.
 --
 -- == Valid Usage (Implicit)
 --

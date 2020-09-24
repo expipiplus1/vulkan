@@ -44,6 +44,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (BindAccelerationStru
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2 (BindBufferMemoryInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2 (BindImageMemoryInfo)
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (BindSparseInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (BlitImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Bool32)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Buffer)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (BufferCopy)
@@ -77,7 +78,11 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cooperative_matrix (CooperativeMat
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureModeKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (CopyAccelerationStructureToMemoryInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyBufferInfo2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyBufferToImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (CopyDescriptorSet)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyImageInfo2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (CopyImageToBufferInfo2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing (CopyMemoryToAccelerationStructureInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.Enums.CullModeFlagBits (CullModeFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_marker (DebugMarkerMarkerInfoEXT)
@@ -277,6 +282,7 @@ import {-# SOURCE #-} Vulkan.Core10.Handles (RenderPass)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (RenderPassCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (RenderPassCreateInfo2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_copy_commands2 (ResolveImageInfo2KHR)
 import {-# SOURCE #-} Vulkan.Core10.Enums.Result (Result)
 import {-# SOURCE #-} Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
@@ -913,6 +919,12 @@ data DeviceCmds = DeviceCmds
   , pVkDestroyPrivateDataSlotEXT :: FunPtr (Ptr Device_T -> PrivateDataSlotEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkSetPrivateDataEXT :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("data" ::: Word64) -> IO Result)
   , pVkGetPrivateDataEXT :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("pData" ::: Ptr Word64) -> IO ())
+  , pVkCmdCopyBuffer2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pCopyBufferInfo" ::: Ptr CopyBufferInfo2KHR) -> IO ())
+  , pVkCmdCopyImage2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pCopyImageInfo" ::: Ptr CopyImageInfo2KHR) -> IO ())
+  , pVkCmdBlitImage2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pBlitImageInfo" ::: Ptr BlitImageInfo2KHR) -> IO ())
+  , pVkCmdCopyBufferToImage2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pCopyBufferToImageInfo" ::: Ptr CopyBufferToImageInfo2KHR) -> IO ())
+  , pVkCmdCopyImageToBuffer2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pCopyImageToBufferInfo" ::: Ptr CopyImageToBufferInfo2KHR) -> IO ())
+  , pVkCmdResolveImage2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pResolveImageInfo" ::: Ptr ResolveImageInfo2KHR) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -957,7 +969,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1275,6 +1287,12 @@ initDeviceCmds instanceCmds handle = do
   vkDestroyPrivateDataSlotEXT <- getDeviceProcAddr' handle (Ptr "vkDestroyPrivateDataSlotEXT"#)
   vkSetPrivateDataEXT <- getDeviceProcAddr' handle (Ptr "vkSetPrivateDataEXT"#)
   vkGetPrivateDataEXT <- getDeviceProcAddr' handle (Ptr "vkGetPrivateDataEXT"#)
+  vkCmdCopyBuffer2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyBuffer2KHR"#)
+  vkCmdCopyImage2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyImage2KHR"#)
+  vkCmdBlitImage2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdBlitImage2KHR"#)
+  vkCmdCopyBufferToImage2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyBufferToImage2KHR"#)
+  vkCmdCopyImageToBuffer2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyImageToBuffer2KHR"#)
+  vkCmdResolveImage2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdResolveImage2KHR"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1580,4 +1598,10 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> PrivateDataSlotEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyPrivateDataSlotEXT)
     (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("data" ::: Word64) -> IO Result) vkSetPrivateDataEXT)
     (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlotEXT -> ("pData" ::: Ptr Word64) -> IO ()) vkGetPrivateDataEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pCopyBufferInfo" ::: Ptr CopyBufferInfo2KHR) -> IO ()) vkCmdCopyBuffer2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pCopyImageInfo" ::: Ptr CopyImageInfo2KHR) -> IO ()) vkCmdCopyImage2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pBlitImageInfo" ::: Ptr BlitImageInfo2KHR) -> IO ()) vkCmdBlitImage2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pCopyBufferToImageInfo" ::: Ptr CopyBufferToImageInfo2KHR) -> IO ()) vkCmdCopyBufferToImage2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pCopyImageToBufferInfo" ::: Ptr CopyImageToBufferInfo2KHR) -> IO ()) vkCmdCopyImageToBuffer2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pResolveImageInfo" ::: Ptr ResolveImageInfo2KHR) -> IO ()) vkCmdResolveImage2KHR)
 

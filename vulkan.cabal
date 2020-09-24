@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 06be98e0c8372433f3ac2d3c9ad40001abe816143e1d491edc5ac2656e3ad2e4
+-- hash: 2df31a628d6fd126349060aa025b85b90439aa15fb85b289b0e9e8cca08f3d95
 
 name:           vulkan
 version:        3.6.6
@@ -356,6 +356,7 @@ library
       Vulkan.Extensions.VK_KHR_android_surface
       Vulkan.Extensions.VK_KHR_bind_memory2
       Vulkan.Extensions.VK_KHR_buffer_device_address
+      Vulkan.Extensions.VK_KHR_copy_commands2
       Vulkan.Extensions.VK_KHR_create_renderpass2
       Vulkan.Extensions.VK_KHR_dedicated_allocation
       Vulkan.Extensions.VK_KHR_deferred_host_operations
@@ -393,6 +394,7 @@ library
       Vulkan.Extensions.VK_KHR_performance_query
       Vulkan.Extensions.VK_KHR_pipeline_executable_properties
       Vulkan.Extensions.VK_KHR_pipeline_library
+      Vulkan.Extensions.VK_KHR_portability_subset
       Vulkan.Extensions.VK_KHR_push_descriptor
       Vulkan.Extensions.VK_KHR_ray_tracing
       Vulkan.Extensions.VK_KHR_relaxed_block_layout

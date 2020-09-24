@@ -75,6 +75,15 @@ foreign import ccall
 --
 -- When created, the event object is in the unsignaled state.
 --
+-- == Valid Usage
+--
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@events@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
+--     does not support
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-events events>,
+--     and 'createEvent' /must/ not be used.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
