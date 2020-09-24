@@ -23,8 +23,8 @@ jobs:
 
       - name: Init Git
         run: |
-          git config --global user.name '${{ github.event.client_payload.github.actor }}'
-          git config --global user.email '${{ github.event.client_payload.github.actor }}@users.noreply.github.com'
+          git config --global user.name 'actions-bot'
+          git config --global user.email '58130806+actions-bot@users.noreply.github.com'
 
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v1
