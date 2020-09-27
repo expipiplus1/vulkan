@@ -6,6 +6,7 @@ help=
 regenerate=
 vulkan_version=
 vma_version=
+utils_version=
 haddocks=
 
 # from https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
@@ -15,6 +16,7 @@ while [[ "$#" -gt 0 ]]; do
         -r|--regenerate) regenerate=1 ;;
         --vulkan) vulkan_version="$2"; shift ;;
         --vma) vma_version="$2"; shift ;;
+        --utils) utils_version="$2"; shift ;;
         --standalone-haddocks) haddocks="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
@@ -27,6 +29,7 @@ if [ $help ]; then
       --regenerate: regenerate source
       --vulkan 3.4.5: new vulkan version
       --vma 3.4.1: new VulkanMemoryAllocator version
+      --utils 0.1.3: new vulkan-utils version
       --standalone-haddocks path/to/standalone-haddocks
 EOF
   exit 0
@@ -38,8 +41,10 @@ if [ "$vulkan_version" ]; then
   tag=v$vulkan_version
 elif [ "$vma_version" ]; then
   tag=vma-v$vma_version
+elif [ "$utils_version" ]; then
+  tag=vulkan-utils-v$utils_version
 else
-  echo "running without new vma or vulkan version"
+  echo "running without new version of any package"
   exit 1
 fi
 
@@ -75,6 +80,19 @@ if [ "$vma_version" ]; then
   git add VulkanMemoryAllocator/package.yaml VulkanMemoryAllocator/VulkanMemoryAllocator.cabal VulkanMemoryAllocator/changelog.md
 fi
 
+if [ "$utils_version" ]; then
+  echo "Bumping vulkan-utils version and generating tarballs"
+
+  vulkan_breaking=$(yq <package.yaml .version --raw-output |
+    sed -E 's/([0-9]+\.[0-9]+).*/\1/')
+
+  sed -i.bak "s/^version: .*/version: $utils_version/g" utils/package.yaml
+  sed -i.bak "s/- vulkan [0-9 .<>=*]*/- vulkan == $vulkan_breaking.*/" utils/package.yaml
+  sed -i.bak "s/^## WIP$/\0\n\n## [$utils_version] - $(date --iso-8601)/" utils/changelog.md
+  hpack utils
+  git add utils/package.yaml utils/vulkan-utils.cabal utils/changelog.md
+fi
+
 branch="release-$tag"
 git checkout -b "$branch"
 git commit -m "$tag"
@@ -94,6 +112,13 @@ if [ "$vma_version" ]; then
   cabal haddock --haddock-option="--hyperlinked-source"
   cabal haddock --haddock-for-hackage --haddock-option="--hyperlinked-source" VulkanMemoryAllocator
   cabal sdist VulkanMemoryAllocator
+fi
+
+if [ "$utils_version" ]; then
+  echo "generating vulkan-utils tarballs"
+  cabal haddock --haddock-option="--hyperlinked-source"
+  cabal haddock --haddock-for-hackage --haddock-option="--hyperlinked-source" vulkan-utils
+  cabal sdist vulkan-utils
 fi
 
 if [ "$haddocks" ]; then
@@ -142,6 +167,18 @@ if [ "$vma_version" ]; then
   # After checking everything's OK
   cabal upload --publish dist-newstyle/sdist/VulkanMemoryAllocator-$vma_version.tar.gz
   cabal upload --publish --doc dist-newstyle/VulkanMemoryAllocator-$vma_version-docs.tar.gz
+EOF
+fi
+
+if [ "$utils_version" ]; then
+  cat <<EOF
+  # Upload vulkan-utils-$utils_version
+  cabal upload dist-newstyle/sdist/vulkan-utils-$utils_version.tar.gz
+  cabal upload --doc dist-newstyle/vulkan-utils-$utils_version-docs.tar.gz
+
+  # After checking everything's OK
+  cabal upload --publish dist-newstyle/sdist/vulkan-utils-$utils_version.tar.gz
+  cabal upload --publish --doc dist-newstyle/vulkan-utils-$utils_version-docs.tar.gz
 EOF
 fi
 
