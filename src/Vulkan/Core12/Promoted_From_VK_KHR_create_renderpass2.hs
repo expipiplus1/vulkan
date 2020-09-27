@@ -1802,8 +1802,8 @@ data RenderPassCreateInfo2 (es :: [Type]) = RenderPassCreateInfo2
     -- 'SubpassDescription2' structures describing each subpass.
     subpasses :: Vector (SomeStruct SubpassDescription2)
   , -- | @pDependencies@ is a pointer to an array of @dependencyCount@
-    -- 'Vulkan.Core10.Pass.SubpassDependency' structures describing
-    -- dependencies between pairs of subpasses.
+    -- 'SubpassDependency2' structures describing dependencies between pairs of
+    -- subpasses.
     dependencies :: Vector SubpassDependency2
   , -- | @pCorrelatedViewMasks@ is a pointer to an array of view masks indicating
     -- sets of views that /may/ be more efficient to render concurrently.

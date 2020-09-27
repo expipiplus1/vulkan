@@ -981,6 +981,13 @@ instance Zero DescriptorBufferInfo where
 --     or (for three-plane formats only)
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
+-- -   If the @VK_KHR_portability_subset@ extension is enabled, and
+--     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@mutableComparisonSamplers@
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @sampler@ /must/
+--     have been created with
+--     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@compareEnable@ set to
+--     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   Both of @imageView@, and @sampler@ that are valid handles of
