@@ -1,11 +1,13 @@
 name: vulkan-utils
-version: 0.1.1.0
+version: 0.1.2
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
   - readme.md
+  - changelog.md
+  - src/Vulkan/Utils/gl_enums.h
 
 library:
   source-dirs: src

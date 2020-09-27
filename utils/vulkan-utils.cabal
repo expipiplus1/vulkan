@@ -1,13 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9089c0a79d140db7f054a4f019e4a21032e1973c36542569f1957c01939a4e2d
+-- hash: 25880478bf00adf1eff57812a7ac503083c38df26cb9334d47f921f42a5d8e18
 
 name:           vulkan-utils
-version:        0.1.1.0
+version:        0.1.2
 synopsis:       Utils for the vulkan package
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -18,6 +18,8 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     readme.md
+    changelog.md
+    src/Vulkan/Utils/gl_enums.h
 
 source-repository head
   type: git
