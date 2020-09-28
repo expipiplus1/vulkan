@@ -26,21 +26,27 @@ import           System.FilePath
 import           System.IO.Temp
 import           System.Process.Typed
 
+-- | QuasiQuoter for creating a compute shader
 comp :: QuasiQuoter
 comp = shaderQQ "comp"
 
+-- | QuasiQuoter for creating a fragment shader
 frag :: QuasiQuoter
 frag = shaderQQ "frag"
 
+-- | QuasiQuoter for creating a geometry shader
 geom :: QuasiQuoter
 geom = shaderQQ "geom"
 
+-- | QuasiQuoter for creating a tessellation control shader
 tesc :: QuasiQuoter
 tesc = shaderQQ "tesc"
 
+-- | QuasiQuoter for creating a tessellation evaluation shader
 tese :: QuasiQuoter
 tese = shaderQQ "tese"
 
+-- | QuasiQuoter for creating a vertex shader
 vert :: QuasiQuoter
 vert = shaderQQ "vert"
 

@@ -26,6 +26,10 @@ import qualified Vulkan.Core10.Enums.Format as Vk
 
 #include "gl_enums.h"
 
+-- | Convert an OpenGL format enum into a 'Vk.Format'
+--
+-- >>> internalFormat GL_RGB8
+-- Just FORMAT_R8G8B8_UNORM
 internalFormat :: (Eq a, Num a) => a -> Maybe Vk.Format
 internalFormat = \case
   GL_R8    -> Just Vk.FORMAT_R8_UNORM       -- 1-component, 8-bit unsigned normalized
