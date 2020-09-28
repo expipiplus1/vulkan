@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 78297cbb2ebab10d73e86eb391df435a119a9f23ac6445cccc0d15d85ba0a1d9
+-- hash: 47c0878f39668ac0b0c35e6f183320ded573b734abd84fa2f664fcea5f04b3fd
 
 name:           vulkan
 version:        3.6.7
@@ -325,6 +325,7 @@ library
       Vulkan.Extensions.VK_EXT_separate_stencil_usage
       Vulkan.Extensions.VK_EXT_shader_atomic_float
       Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
+      Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
       Vulkan.Extensions.VK_EXT_shader_stencil_export
       Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
       Vulkan.Extensions.VK_EXT_shader_subgroup_vote

@@ -1760,6 +1760,53 @@ foreign import ccall
 --     @Texel@ operand of that instruction /must/ have at least as many
 --     components as the image view’s format.
 --
+-- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
+--     created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
+--     created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
@@ -2172,6 +2219,53 @@ foreign import ccall
 --     @Texel@ operand of that instruction /must/ have at least as many
 --     components as the image view’s format.
 --
+-- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
+--     created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
+--     created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
@@ -2577,6 +2671,53 @@ foreign import ccall
 --     @OpImageWrite@ as a result of this command, then the @Type@ of the
 --     @Texel@ operand of that instruction /must/ have at least as many
 --     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
+--     created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
+--     created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
 --
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -3008,6 +3149,53 @@ foreign import ccall
 --     @Texel@ operand of that instruction /must/ have at least as many
 --     components as the image view’s format.
 --
+-- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
+--     created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
+--     created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
@@ -3434,6 +3622,53 @@ foreign import ccall
 --     @Texel@ operand of that instruction /must/ have at least as many
 --     components as the image view’s format.
 --
+-- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
+--     created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
+--     created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
 -- -   If @commandBuffer@ is a protected command buffer, any resource
 --     written to by the 'Vulkan.Core10.Handles.Pipeline' object bound to
 --     the pipeline bind point used by this command /must/ not be an
@@ -3670,6 +3905,53 @@ foreign import ccall
 --     @OpImageWrite@ as a result of this command, then the @Type@ of the
 --     @Texel@ operand of that instruction /must/ have at least as many
 --     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' is accessed using
+--     @OpImageWrite@ as a result of this command, then the @Type@ of the
+--     @Texel@ operand of that instruction /must/ have at least as many
+--     components as the image view’s format.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.ImageView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
+--     is accessed as a result of this command, the @SampledType@ of the
+--     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
+--     64.
+--
+-- -   If a 'Vulkan.Core10.Handles.BufferView' with a
+--     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     than 64-bit is accessed as a result of this command, the
+--     @SampledType@ of the @OpTypeImage@ operand of that instruction
+--     /must/ have a @Width@ of 32.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Image' objects
+--     created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
+--     feature is not enabled, 'Vulkan.Core10.Handles.Buffer' objects
+--     created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--     flag /must/ not be accessed by atomic instructions through an
+--     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
+--     command.
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
