@@ -4,10 +4,10 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 78297cbb2ebab10d73e86eb391df435a119a9f23ac6445cccc0d15d85ba0a1d9
+-- hash: 7d608c680747a39a9b3ffd73be1cba4bb23e9a99063b1885e194f37e934c885d
 
 name:           vulkan
-version:        3.6.7
+version:        3.6.8
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -325,6 +325,7 @@ library
       Vulkan.Extensions.VK_EXT_separate_stencil_usage
       Vulkan.Extensions.VK_EXT_shader_atomic_float
       Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
+      Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
       Vulkan.Extensions.VK_EXT_shader_stencil_export
       Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
       Vulkan.Extensions.VK_EXT_shader_subgroup_vote
