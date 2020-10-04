@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.InternalAllocationType</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier">InternalAllocationType</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#INTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span class="hs-identifier">INTERNAL_ALLOCATION_TYPE_EXECUTABLE</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                          </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-4"></span><span>                                                                          </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-5"></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-comment">-- | VkInternalAllocationType - Allocation type</span><span>
+</span><span id="line-21"></span><span class="hs-comment">--</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification',</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification'</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">newtype</span><span> </span><span id="InternalAllocationType"><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier hs-var">InternalAllocationType</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="InternalAllocationType"><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier hs-var">InternalAllocationType</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680094619"><span id="local-6989586621680094621"><span class="annot"><span class="annottext">InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+(InternalAllocationType -&gt; InternalAllocationType -&gt; Bool)
+-&gt; (InternalAllocationType -&gt; InternalAllocationType -&gt; Bool)
+-&gt; Eq InternalAllocationType
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+$c/= :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+== :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+$c== :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680094603"><span id="local-6989586621680094605"><span id="local-6989586621680094607"><span id="local-6989586621680094609"><span id="local-6989586621680094611"><span id="local-6989586621680094613"><span id="local-6989586621680094615"><span class="annot"><span class="annottext">Eq InternalAllocationType
+Eq InternalAllocationType =&gt;
+(InternalAllocationType -&gt; InternalAllocationType -&gt; Ordering)
+-&gt; (InternalAllocationType -&gt; InternalAllocationType -&gt; Bool)
+-&gt; (InternalAllocationType -&gt; InternalAllocationType -&gt; Bool)
+-&gt; (InternalAllocationType -&gt; InternalAllocationType -&gt; Bool)
+-&gt; (InternalAllocationType -&gt; InternalAllocationType -&gt; Bool)
+-&gt; (InternalAllocationType
+    -&gt; InternalAllocationType -&gt; InternalAllocationType)
+-&gt; (InternalAllocationType
+    -&gt; InternalAllocationType -&gt; InternalAllocationType)
+-&gt; Ord InternalAllocationType
+InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+InternalAllocationType -&gt; InternalAllocationType -&gt; Ordering
+InternalAllocationType
+-&gt; InternalAllocationType -&gt; InternalAllocationType
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: InternalAllocationType
+-&gt; InternalAllocationType -&gt; InternalAllocationType
+$cmin :: InternalAllocationType
+-&gt; InternalAllocationType -&gt; InternalAllocationType
+max :: InternalAllocationType
+-&gt; InternalAllocationType -&gt; InternalAllocationType
+$cmax :: InternalAllocationType
+-&gt; InternalAllocationType -&gt; InternalAllocationType
+&gt;= :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+$c&gt;= :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+&gt; :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+$c&gt; :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+&lt;= :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+$c&lt;= :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+&lt; :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+$c&lt; :: InternalAllocationType -&gt; InternalAllocationType -&gt; Bool
+compare :: InternalAllocationType -&gt; InternalAllocationType -&gt; Ordering
+$ccompare :: InternalAllocationType -&gt; InternalAllocationType -&gt; Ordering
+$cp1Ord :: Eq InternalAllocationType
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680094586"><span id="local-6989586621680094588"><span id="local-6989586621680094590"><span id="local-6989586621680094592"><span id="local-6989586621680094594"><span id="local-6989586621680094596"><span id="local-6989586621680094598"><span id="local-6989586621680094600"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO InternalAllocationType
+Ptr b -&gt; Int -&gt; InternalAllocationType -&gt; IO ()
+Ptr InternalAllocationType -&gt; IO InternalAllocationType
+Ptr InternalAllocationType -&gt; Int -&gt; IO InternalAllocationType
+Ptr InternalAllocationType
+-&gt; Int -&gt; InternalAllocationType -&gt; IO ()
+Ptr InternalAllocationType -&gt; InternalAllocationType -&gt; IO ()
+InternalAllocationType -&gt; Int
+(InternalAllocationType -&gt; Int)
+-&gt; (InternalAllocationType -&gt; Int)
+-&gt; (Ptr InternalAllocationType -&gt; Int -&gt; IO InternalAllocationType)
+-&gt; (Ptr InternalAllocationType
+    -&gt; Int -&gt; InternalAllocationType -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO InternalAllocationType)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; InternalAllocationType -&gt; IO ())
+-&gt; (Ptr InternalAllocationType -&gt; IO InternalAllocationType)
+-&gt; (Ptr InternalAllocationType -&gt; InternalAllocationType -&gt; IO ())
+-&gt; Storable InternalAllocationType
+forall b. Ptr b -&gt; Int -&gt; IO InternalAllocationType
+forall b. Ptr b -&gt; Int -&gt; InternalAllocationType -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr InternalAllocationType -&gt; InternalAllocationType -&gt; IO ()
+$cpoke :: Ptr InternalAllocationType -&gt; InternalAllocationType -&gt; IO ()
+peek :: Ptr InternalAllocationType -&gt; IO InternalAllocationType
+$cpeek :: Ptr InternalAllocationType -&gt; IO InternalAllocationType
+pokeByteOff :: Ptr b -&gt; Int -&gt; InternalAllocationType -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; InternalAllocationType -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO InternalAllocationType
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO InternalAllocationType
+pokeElemOff :: Ptr InternalAllocationType
+-&gt; Int -&gt; InternalAllocationType -&gt; IO ()
+$cpokeElemOff :: Ptr InternalAllocationType
+-&gt; Int -&gt; InternalAllocationType -&gt; IO ()
+peekElemOff :: Ptr InternalAllocationType -&gt; Int -&gt; IO InternalAllocationType
+$cpeekElemOff :: Ptr InternalAllocationType -&gt; Int -&gt; IO InternalAllocationType
+alignment :: InternalAllocationType -&gt; Int
+$calignment :: InternalAllocationType -&gt; Int
+sizeOf :: InternalAllocationType -&gt; Int
+$csizeOf :: InternalAllocationType -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680094583"><span class="annot"><span class="annottext">InternalAllocationType
+InternalAllocationType -&gt; Zero InternalAllocationType
+forall a. a -&gt; Zero a
+zero :: InternalAllocationType
+$czero :: InternalAllocationType
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- | 'INTERNAL_ALLOCATION_TYPE_EXECUTABLE' specifies that the allocation is</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- intended for execution by the host.</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bINTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span id="%24mINTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span id="INTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span class="annot"><span class="annottext">$bINTERNAL_ALLOCATION_TYPE_EXECUTABLE :: InternalAllocationType
+$mINTERNAL_ALLOCATION_TYPE_EXECUTABLE :: forall r.
+InternalAllocationType -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.InternalAllocationType.html#%24bINTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span class="hs-identifier hs-var hs-var hs-var">INTERNAL_ALLOCATION_TYPE_EXECUTABLE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier hs-type">InternalAllocationType</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-32"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#INTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span class="hs-pragma hs-type">INTERNAL_ALLOCATION_TYPE_EXECUTABLE</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-pragma hs-type">InternalAllocationType</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680094575"><span id="local-6989586621680094577"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier hs-type">InternalAllocationType</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621680094573"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; InternalAllocationType -&gt; ShowS
+</span><a href="#local-6989586621680094573"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span id="local-6989586621680094572"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680094572"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#INTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span class="hs-identifier hs-type">INTERNAL_ALLOCATION_TYPE_EXECUTABLE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;INTERNAL_ALLOCATION_TYPE_EXECUTABLE&quot;</span></span><span>
+</span><span id="line-37"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier hs-type">InternalAllocationType</span></a></span><span> </span><span id="local-6989586621680094571"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680094571"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680094572"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;InternalAllocationType &quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680094571"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680094563"><span id="local-6989586621680094566"><span id="local-6989586621680094568"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier hs-type">InternalAllocationType</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>  </span><span id="local-6989586621680094561"><span class="annot"><span class="annottext">readPrec :: ReadPrec InternalAllocationType
+</span><a href="#local-6989586621680094561"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec InternalAllocationType -&gt; ReadPrec InternalAllocationType
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec InternalAllocationType)]
+-&gt; ReadPrec InternalAllocationType
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;INTERNAL_ALLOCATION_TYPE_EXECUTABLE&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">InternalAllocationType -&gt; ReadPrec InternalAllocationType
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">InternalAllocationType
+</span><a href="Vulkan.Core10.Enums.InternalAllocationType.html#INTERNAL_ALLOCATION_TYPE_EXECUTABLE"><span class="hs-identifier hs-var">INTERNAL_ALLOCATION_TYPE_EXECUTABLE</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-41"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec InternalAllocationType
+-&gt; ReadPrec InternalAllocationType
+-&gt; ReadPrec InternalAllocationType
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-42"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec InternalAllocationType
+-&gt; ReadPrec InternalAllocationType
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-43"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;InternalAllocationType&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-44"></span><span>                       </span><span id="local-6989586621680094560"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680094560"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32 -&gt; ReadPrec Int32
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-45"></span><span>                       </span><span class="annot"><span class="annottext">InternalAllocationType -&gt; ReadPrec InternalAllocationType
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int32 -&gt; InternalAllocationType
+</span><a href="Vulkan.Core10.Enums.InternalAllocationType.html#InternalAllocationType"><span class="hs-identifier hs-var">InternalAllocationType</span></a></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680094560"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span></pre></body></html>

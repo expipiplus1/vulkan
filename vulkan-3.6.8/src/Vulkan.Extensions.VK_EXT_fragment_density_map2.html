@@ -1,0 +1,589 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_EXT_fragment_density_map2</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION</span></a></span><span>
+</span><span id="line-5"></span><span>                                                       </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-7"></span><span>                                                       </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span class="hs-identifier">EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                       </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Word</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Word32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier">bool32ToBool</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier">boolToBool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier">Bool32</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT"><span class="hs-identifier">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- | VkPhysicalDeviceFragmentDensityMap2FeaturesEXT - Structure describing</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- additional fragment density map features that can be supported by an</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- implementation</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceFragmentDensityMap2FeaturesEXT'</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- structure describe the following features:</span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-44"></span><span class="hs-comment">--</span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- If the 'PhysicalDeviceFragmentDensityMap2FeaturesEXT' structure is</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- included in the @pNext@ chain of</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- it is filled with values indicating whether each feature is supported.</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- 'PhysicalDeviceFragmentDensityMap2FeaturesEXT' /can/ also be included in</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- features.</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-59"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span></span><span>
+</span><span id="line-60"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @fragmentDensityMapDeferred@ specifies whether the implementation</span><span>
+</span><span id="line-61"></span><span>    </span><span class="hs-comment">-- supports deferred reads of fragment density map image views. If this</span><span>
+</span><span id="line-62"></span><span>    </span><span class="hs-comment">-- feature is not enabled,</span><span>
+</span><span id="line-63"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'</span><span>
+</span><span id="line-64"></span><span>    </span><span class="hs-comment">-- /must/ not be included in</span><span>
+</span><span id="line-65"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@flags@.</span><span>
+</span><span id="line-66"></span><span>    </span><span id="%24sel%3AfragmentDensityMapDeferred%3APhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#%24sel%3AfragmentDensityMapDeferred%3APhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-var hs-var">fragmentDensityMapDeferred</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-67"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680074716"><span id="local-6989586621680074718"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool
+(PhysicalDeviceFragmentDensityMap2FeaturesEXT
+ -&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool)
+-&gt; (PhysicalDeviceFragmentDensityMap2FeaturesEXT
+    -&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool)
+-&gt; Eq PhysicalDeviceFragmentDensityMap2FeaturesEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool
+$c/= :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool
+== :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool
+$c== :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680074709"><span id="local-6989586621680074711"><span id="local-6989586621680074713"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span></span></span></span><span>
+</span><span id="line-72"></span><span>
+</span><span id="line-73"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680074704"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-74"></span><span>  </span><span id="local-6989586621680074699"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; (Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b)
+-&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680074697"><span class="annot"><span class="annottext">x :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074697"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680074696"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680074696"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b)
+ -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680074695"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074695"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074695"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074697"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b
+</span><a href="#local-6989586621680074696"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074695"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>  </span><span id="local-6989586621680074693"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680074693"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680074692"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074692"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680074691"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680074690"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680074690"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-76"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074692"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074692"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074692"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680074691"><span class="hs-identifier hs-var">fragmentDensityMapDeferred</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680074690"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-80"></span><span>  </span><span id="local-6989586621680074689"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-81"></span><span>  </span><span id="local-6989586621680074687"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-82"></span><span>  </span><span id="local-6989586621680074685"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680074683"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074683"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680074682"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680074682"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-83"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074683"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-84"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074683"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-85"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074683"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680074682"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-87"></span><span>
+</span><span id="line-88"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-89"></span><span>  </span><span id="local-6989586621680074678"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680074676"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074676"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-90"></span><span>    </span><span id="local-6989586621680074675"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680074675"><span class="hs-identifier hs-var">fragmentDensityMapDeferred</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074676"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-91"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2FeaturesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceFragmentDensityMap2FeaturesEXT
+ -&gt; IO PhysicalDeviceFragmentDensityMap2FeaturesEXT)
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2FeaturesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span><span>
+</span><span id="line-92"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680074675"><span class="hs-identifier hs-var">fragmentDensityMapDeferred</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>
+</span><span id="line-94"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680074665"><span id="local-6989586621680074667"><span id="local-6989586621680074669"><span id="local-6989586621680074671"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-95"></span><span>  </span><span id="local-6989586621680074661"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-96"></span><span>  </span><span id="local-6989586621680074659"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-97"></span><span>  </span><span id="local-6989586621680074657"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074657"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2FeaturesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680074656"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO ()
+</span><a href="#local-6989586621680074656"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680074655"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074655"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680074654"><span class="annot"><span class="annottext">poked :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074654"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074655"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074654"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-99"></span><span>
+</span><span id="line-100"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-101"></span><span>  </span><span id="local-6989586621680074651"><span class="annot"><span class="annottext">zero :: PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="#local-6989586621680074651"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; PhysicalDeviceFragmentDensityMap2FeaturesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2FeaturesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2FeaturesEXT</span></a></span><span>
+</span><span id="line-102"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-103"></span><span>
+</span><span id="line-104"></span><span>
+</span><span id="line-105"></span><span class="hs-comment">-- | VkPhysicalDeviceFragmentDensityMap2PropertiesEXT - Structure describing</span><span>
+</span><span id="line-106"></span><span class="hs-comment">-- additional fragment density map properties that can be supported by an</span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- implementation</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--</span><span>
+</span><span id="line-109"></span><span class="hs-comment">-- = Members</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--</span><span>
+</span><span id="line-111"></span><span class="hs-comment">-- The members of the 'PhysicalDeviceFragmentDensityMap2PropertiesEXT'</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- structure describe the following implementation-dependent limits:</span><span>
+</span><span id="line-113"></span><span class="hs-comment">--</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-115"></span><span class="hs-comment">--</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- If the 'PhysicalDeviceFragmentDensityMap2PropertiesEXT' structure is</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- included in the @pNext@ chain of</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',</span><span>
+</span><span id="line-119"></span><span class="hs-comment">-- it is filled with the implementation-dependent limits and properties.</span><span>
+</span><span id="line-120"></span><span class="hs-comment">--</span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Bool32',</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType'</span><span>
+</span><span id="line-125"></span><span class="hs-keyword">data</span><span> </span><span id="PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span></span><span>
+</span><span id="line-126"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @subsampledLoads@ specifies if performing image data read with load</span><span>
+</span><span id="line-127"></span><span>    </span><span class="hs-comment">-- operations on subsampled attachments will be resampled to the fragment</span><span>
+</span><span id="line-128"></span><span>    </span><span class="hs-comment">-- density of the render pass</span><span>
+</span><span id="line-129"></span><span>    </span><span id="%24sel%3AsubsampledLoads%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#%24sel%3AsubsampledLoads%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var hs-var">subsampledLoads</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-130"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @subsampledCoarseReconstructionEarlyAccess@ specifies if performing</span><span>
+</span><span id="line-131"></span><span>    </span><span class="hs-comment">-- image data read with samplers created with @flags@ containing</span><span>
+</span><span id="line-132"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'</span><span>
+</span><span id="line-133"></span><span>    </span><span class="hs-comment">-- in fragment shader will trigger additional reads during</span><span>
+</span><span id="line-134"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT'</span><span>
+</span><span id="line-135"></span><span>    </span><span id="%24sel%3AsubsampledCoarseReconstructionEarlyAccess%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#%24sel%3AsubsampledCoarseReconstructionEarlyAccess%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var hs-var">subsampledCoarseReconstructionEarlyAccess</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span>
+</span><span id="line-136"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @maxSubsampledArrayLayers@ is the maximum number of</span><span>
+</span><span id="line-137"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Handles.ImageView' array layers for usages supporting</span><span>
+</span><span id="line-138"></span><span>    </span><span class="hs-comment">-- subsampled samplers</span><span>
+</span><span id="line-139"></span><span>    </span><span id="%24sel%3AmaxSubsampledArrayLayers%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Word32
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#%24sel%3AmaxSubsampledArrayLayers%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var hs-var">maxSubsampledArrayLayers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-140"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @maxDescriptorSetSubsampledSamplers@ is the maximum number of subsampled</span><span>
+</span><span id="line-141"></span><span>    </span><span class="hs-comment">-- samplers that /can/ be included in a</span><span>
+</span><span id="line-142"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Core10.Handles.PipelineLayout'</span><span>
+</span><span id="line-143"></span><span>    </span><span id="%24sel%3AmaxDescriptorSetSubsampledSamplers%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Word32
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#%24sel%3AmaxDescriptorSetSubsampledSamplers%3APhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var hs-var">maxDescriptorSetSubsampledSamplers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span>
+</span><span id="line-144"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-145"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680074642"><span id="local-6989586621680074644"><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool
+(PhysicalDeviceFragmentDensityMap2PropertiesEXT
+ -&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool)
+-&gt; (PhysicalDeviceFragmentDensityMap2PropertiesEXT
+    -&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool)
+-&gt; Eq PhysicalDeviceFragmentDensityMap2PropertiesEXT
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool
+$c/= :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool
+== :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool
+$c== :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680074636"><span id="local-6989586621680074638"><span id="local-6989586621680074640"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span></span></span></span><span>
+</span><span id="line-150"></span><span>
+</span><span id="line-151"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680074632"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-152"></span><span>  </span><span id="local-6989586621680074628"><span class="annot"><span class="annottext">withCStruct :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; (Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b)
+-&gt; IO b
+</span><a href="#local-6989586621680074628"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680074627"><span class="annot"><span class="annottext">x :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074627"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680074626"><span class="annot"><span class="annottext">f :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680074626"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">32</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b)
+ -&gt; IO b)
+-&gt; (Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680074625"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074625"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074625"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074627"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b
+</span><a href="#local-6989586621680074626"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074625"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-153"></span><span>  </span><span id="local-6989586621680074624"><span class="annot"><span class="annottext">pokeCStruct :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680074624"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680074623"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074623"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680074619"><span id="local-6989586621680074620"><span id="local-6989586621680074621"><span id="local-6989586621680074622"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span></span></span><span> </span><span id="local-6989586621680074618"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680074618"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-154"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074623"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074623"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-156"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074623"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680074622"><span class="hs-identifier hs-var">subsampledLoads</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-157"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074623"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680074621"><span class="hs-identifier hs-var">subsampledCoarseReconstructionEarlyAccess</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-158"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074623"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680074620"><span class="hs-identifier hs-var">maxSubsampledArrayLayers</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-159"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074623"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">28</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680074619"><span class="hs-identifier hs-var">maxDescriptorSetSubsampledSamplers</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-160"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680074618"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-161"></span><span>  </span><span id="local-6989586621680074617"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680074617"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-162"></span><span>  </span><span id="local-6989586621680074616"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680074616"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-163"></span><span>  </span><span id="local-6989586621680074615"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680074615"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680074614"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074614"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680074613"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680074613"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-164"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074614"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT"><span class="hs-identifier hs-var">STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-165"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074614"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-166"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074614"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-167"></span><span>    </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; Bool32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074614"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool32
+</span><a href="Vulkan.Core10.FundamentalTypes.html#boolToBool32"><span class="hs-identifier hs-var">boolToBool32</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-168"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074614"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-169"></span><span>    </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; Word32 -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074614"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">28</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-170"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680074613"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-171"></span><span>
+</span><span id="line-172"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-173"></span><span>  </span><span id="local-6989586621680074611"><span class="annot"><span class="annottext">peekCStruct :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074611"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680074610"><span class="annot"><span class="annottext">p :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074610"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-174"></span><span>    </span><span id="local-6989586621680074609"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680074609"><span class="hs-identifier hs-var">subsampledLoads</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074610"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-175"></span><span>    </span><span id="local-6989586621680074608"><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680074608"><span class="hs-identifier hs-var">subsampledCoarseReconstructionEarlyAccess</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Bool32 -&gt; IO Bool32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074610"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Bool32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Bool32"><span class="hs-identifier hs-type">Bool32</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-176"></span><span>    </span><span id="local-6989586621680074607"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680074607"><span class="hs-identifier hs-var">maxSubsampledArrayLayers</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074610"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-177"></span><span>    </span><span id="local-6989586621680074606"><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680074606"><span class="hs-identifier hs-var">maxDescriptorSetSubsampledSamplers</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Word32 -&gt; IO Word32
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074610"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; Int -&gt; Ptr Word32
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">28</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Word32</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-178"></span><span>    </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2PropertiesEXT
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(PhysicalDeviceFragmentDensityMap2PropertiesEXT
+ -&gt; IO PhysicalDeviceFragmentDensityMap2PropertiesEXT)
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2PropertiesEXT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Bool
+-&gt; Bool
+-&gt; Word32
+-&gt; Word32
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span><span>
+</span><span id="line-179"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680074609"><span class="hs-identifier hs-var">subsampledLoads</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool32 -&gt; Bool
+</span><a href="Vulkan.Core10.FundamentalTypes.html#bool32ToBool"><span class="hs-identifier hs-var">bool32ToBool</span></a></span><span> </span><span class="annot"><span class="annottext">Bool32
+</span><a href="#local-6989586621680074608"><span class="hs-identifier hs-var">subsampledCoarseReconstructionEarlyAccess</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680074607"><span class="hs-identifier hs-var">maxSubsampledArrayLayers</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><a href="#local-6989586621680074606"><span class="hs-identifier hs-var">maxDescriptorSetSubsampledSamplers</span></a></span><span>
+</span><span id="line-180"></span><span>
+</span><span id="line-181"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680074596"><span id="local-6989586621680074598"><span id="local-6989586621680074600"><span id="local-6989586621680074602"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-182"></span><span>  </span><span id="local-6989586621680074593"><span class="annot"><span class="annottext">sizeOf :: PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Int
+</span><a href="#local-6989586621680074593"><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">32</span></span><span>
+</span><span id="line-183"></span><span>  </span><span id="local-6989586621680074592"><span class="annot"><span class="annottext">alignment :: PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; Int
+</span><a href="#local-6989586621680074592"><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-184"></span><span>  </span><span id="local-6989586621680074591"><span class="annot"><span class="annottext">peek :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074591"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; IO PhysicalDeviceFragmentDensityMap2PropertiesEXT
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-185"></span><span>  </span><span id="local-6989586621680074590"><span class="annot"><span class="annottext">poke :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO ()
+</span><a href="#local-6989586621680074590"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680074589"><span class="annot"><span class="annottext">ptr :: Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074589"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680074588"><span class="annot"><span class="annottext">poked :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074588"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074589"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074588"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-186"></span><span>
+</span><span id="line-187"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-type">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-188"></span><span>  </span><span id="local-6989586621680074586"><span class="annot"><span class="annottext">zero :: PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="#local-6989586621680074586"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
+-&gt; Bool
+-&gt; Word32
+-&gt; Word32
+-&gt; PhysicalDeviceFragmentDensityMap2PropertiesEXT
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#PhysicalDeviceFragmentDensityMap2PropertiesEXT"><span class="hs-identifier hs-var">PhysicalDeviceFragmentDensityMap2PropertiesEXT</span></a></span><span>
+</span><span id="line-189"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-190"></span><span>           </span><span class="annot"><span class="annottext">Bool
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-191"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-192"></span><span>           </span><span class="annot"><span class="annottext">Word32
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-193"></span><span>
+</span><span id="line-194"></span><span>
+</span><span id="line-195"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span class="hs-identifier hs-var">EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-196"></span><span>
+</span><span id="line-197"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION&quot;</span><span>
+</span><span id="line-198"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span class="hs-identifier hs-type">EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680074741"><span class="annot"><a href="#local-6989586621680074741"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680074741"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680074741"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-199"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span id="%24mEXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span id="EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span class="annot"><span class="annottext">$bEXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION :: a
+$mEXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#%24bEXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-200"></span><span>
+</span><span id="line-201"></span><span>
+</span><span id="line-202"></span><span class="hs-keyword">type</span><span> </span><span id="EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span class="hs-identifier hs-var">EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_fragment_density_map2&quot;</span></span><span>
+</span><span id="line-203"></span><span>
+</span><span id="line-204"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-205"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span class="hs-identifier hs-type">EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680074737"><span class="annot"><a href="#local-6989586621680074737"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680074737"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680074737"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680074737"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-206"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span id="%24mEXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span id="EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span class="annot"><span class="annottext">$bEXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME :: a
+$mEXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_EXT_fragment_density_map2.html#%24bEXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_EXT_fragment_density_map2&quot;</span></span><span>
+</span><span id="line-207"></span><span>
+</span><span id="line-208"></span></pre></body></html>
