@@ -74,7 +74,7 @@ marshalParams spec@Spec {..} = do
 ----------------------------------------------------------------
 
 isDefaultable' :: CType -> Bool
-isDefaultable' t = isDefaultableForeignType t || isIntegral t
+isDefaultable' t = isDefaultableForeignType t || isIntegral t || hasUnknownEnum t
 
 isIntegral :: CType -> Bool
 isIntegral =
@@ -93,7 +93,6 @@ isIntegral =
           , TypeName "VkDeviceAddress"
           , TypeName "VkDeviceOrHostAddressConstKHR"
           , TypeName "VkDeviceOrHostAddressKHR"
-          , TypeName "VkFormat"
           , TypeName "VkBool32"
           ]
   )
@@ -110,6 +109,9 @@ isDefaultableForeignType t =
     || case t of
          TypeName (CName n) -> "PFN_" `T.isPrefixOf` n
          _                  -> False
+
+hasUnknownEnum :: CType -> Bool
+hasUnknownEnum = (`elem` [TypeName "VkFormat", TypeName "VkObjectType"])
 
 -- | Is this a type we don't want to marshal
 isPassAsPointerType' :: CType -> Bool
