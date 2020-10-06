@@ -29,12 +29,15 @@ jobs:
         message="${message//$'\n'/'%0A'}"
         message="${message//$'\r'/'%0D'}"
         echo "$message" > issue_body
-        echo > issue_body
+        echo >> issue_body
         echo "::set-env name=pr_message::$message"
 
     - name: Build dependencies
       run: |
         nix-build -A generate-new
+        nix-build -A python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp
+        nix-build -A haskellPackages.hpack
+        nix-build -A doxygen
 
     - id: update
       run: |
