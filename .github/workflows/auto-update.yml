@@ -84,7 +84,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TUVOK_TOKEN }}
 
     - name: Create issue for failure
-      if: steps.check_issue.outputs.create_issue == 'true'
+      if: ${{ failure() && steps.check_issue.outputs.create_issue == 'true' }}
       uses: peter-evans/create-issue-from-file@v2
       with:
         title: Failed to regenerate source for Vulkan ${{ steps.update.outputs.vulkan_version }}
