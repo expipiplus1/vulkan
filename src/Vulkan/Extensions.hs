@@ -37,6 +37,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_EXT_depth_clip_enable
                           , module Vulkan.Extensions.VK_EXT_depth_range_unrestricted
                           , module Vulkan.Extensions.VK_EXT_descriptor_indexing
+                          , module Vulkan.Extensions.VK_EXT_device_memory_report
                           , module Vulkan.Extensions.VK_EXT_direct_mode_display
                           , module Vulkan.Extensions.VK_EXT_directfb_surface
                           , module Vulkan.Extensions.VK_EXT_discard_rectangles
@@ -253,6 +254,7 @@ import Vulkan.Extensions.VK_EXT_debug_utils
 import Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Vulkan.Extensions.VK_EXT_depth_range_unrestricted
 import Vulkan.Extensions.VK_EXT_descriptor_indexing
+import Vulkan.Extensions.VK_EXT_device_memory_report
 import Vulkan.Extensions.VK_EXT_direct_mode_display
 import Vulkan.Extensions.VK_EXT_directfb_surface
 import Vulkan.Extensions.VK_EXT_discard_rectangles

@@ -282,11 +282,13 @@ foreign import ccall
 -- Before freeing a memory object, an application /must/ ensure the memory
 -- object is no longer in use by the device—​for example by command buffers
 -- in the /pending state/. Memory /can/ be freed whilst still bound to
--- resources, but those resources /must/ not be used afterwards. If there
--- are still any bound images or buffers, the memory /may/ not be
--- immediately released by the implementation, but /must/ be released by
--- the time all bound images and buffers have been destroyed. Once memory
--- is released, it is returned to the heap from which it was allocated.
+-- resources, but those resources /must/ not be used afterwards. Freeing a
+-- memory object releases the reference it held, if any, to its payload. If
+-- there are still any bound images or buffers, the memory object’s payload
+-- /may/ not be immediately released by the implementation, but /must/ be
+-- released by the time all bound images and buffers have been destroyed.
+-- Once all references to a payload are released, it is returned to the
+-- heap from which it was allocated.
 --
 -- How memory objects are bound to Images and Buffers is described in
 -- detail in the
@@ -760,8 +762,13 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- = Description
 --
--- A 'MemoryAllocateInfo' structure defines a memory import operation if
--- its @pNext@ chain includes one of the following structures:
+-- The internal data of an allocated device memory object /must/ include a
+-- reference to implementation-specific resources, referred to as the
+-- memory object’s /payload/. Applications /can/ also import and export
+-- that internal data to and from device memory objects to share data
+-- between Vulkan instances and other compatible APIs. A
+-- 'MemoryAllocateInfo' structure defines a memory import operation if its
+-- @pNext@ chain includes one of the following structures:
 --
 -- -   'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'
 --     with non-zero @handleType@ value
@@ -784,13 +791,16 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- @allocationSize@ is ignored. The implementation /must/ query the size of
 -- these allocations from the OS.
 --
--- Importing memory /must/ not modify the content of the memory.
--- Implementations /must/ ensure that importing memory does not enable the
--- importing Vulkan instance to access any memory or resources in other
--- Vulkan instances other than that corresponding to the memory object
--- imported. Implementations /must/ also ensure accessing imported memory
--- which has not been initialized does not allow the importing Vulkan
--- instance to obtain data from the exporting Vulkan instance or
+-- Whether device memory objects constructed via a memory import operation
+-- hold a reference to their payload depends on the properties of the
+-- handle type used to perform the import, as defined below for each valid
+-- handle type. Importing memory /must/ not modify the content of the
+-- memory. Implementations /must/ ensure that importing memory does not
+-- enable the importing Vulkan instance to access any memory or resources
+-- in other Vulkan instances other than that corresponding to the memory
+-- object imported. Implementations /must/ also ensure accessing imported
+-- memory which has not been initialized does not allow the importing
+-- Vulkan instance to obtain data from the exporting Vulkan instance or
 -- vice-versa.
 --
 -- Note
@@ -802,15 +812,22 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- /should/ avoid creating many small external memory objects whenever
 -- possible.
 --
+-- Importing memory /must/ not increase overall heap usage within a system.
+-- However, they /must/ affect the following per-process values: *
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationCount@
+-- *
+-- 'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'::@heapUsage@
+--
 -- When performing a memory import operation, it is the responsibility of
--- the application to ensure the external handles meet all valid usage
--- requirements. However, implementations /must/ perform sufficient
--- validation of external handles to ensure that the operation results in a
--- valid memory object which will not cause program termination, device
--- loss, queue stalls, or corruption of other resources when used as
--- allowed according to its allocation parameters. If the external handle
--- provided does not meet these requirements, the implementation /must/
--- fail the memory import operation with the error code
+-- the application to ensure the external handles and their associated
+-- payloads meet all valid usage requirements. However, implementations
+-- /must/ perform sufficient validation of external handles and payloads to
+-- ensure that the operation results in a valid memory object which will
+-- not cause program termination, device loss, queue stalls, or corruption
+-- of other resources when used as allowed according to its allocation
+-- parameters. If the external handle provided does not meet these
+-- requirements, the implementation /must/ fail the memory import operation
+-- with the error code
 -- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'.
 --
 -- == Valid Usage
@@ -851,21 +868,20 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     type is
 --     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the memory object being imported was
---     created
+--     match those specified when the payload being imported was created.
 --
 -- -   If the parameters define an import operation and the external handle
 --     specified was created by the Vulkan API, the device mask specified
 --     by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'
---     /must/ match that specified when the memory object being imported
---     was allocated
+--     /must/ match that specified when the payload being imported was
+--     allocated.
 --
 -- -   If the parameters define an import operation and the external handle
 --     specified was created by the Vulkan API, the list of physical
 --     devices that comprise the logical device passed to 'allocateMemory'
 --     /must/ match the list of physical devices that comprise the logical
---     device on which the memory was originally allocated
+--     device on which the payload was originally allocated.
 --
 -- -   If the parameters define an import operation and the external handle
 --     is an NT handle or a global share handle created outside of the
@@ -879,14 +895,13 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the memory object being imported was
---     created
+--     match those specified when the payload being imported was created.
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
 --     @allocationSize@ /must/ match the size specified when creating the
---     Direct3D 12 heap from which the external handle was extracted
+--     Direct3D 12 heap from which the payload was extracted.
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a POSIX file descriptor created outside of the Vulkan API, the
