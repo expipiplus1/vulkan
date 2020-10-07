@@ -115,6 +115,7 @@ jobs:
 
     - name: Cache stack global package db
       id:   stack-global
+      if: matrix.os != 'macOS-latest'
       uses: actions/cache@v1
       with:
         path: ~/.stack
