@@ -152,6 +152,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (De
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateEntry)
 import {-# SOURCE #-} Vulkan.Core10.Device (DeviceCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (DeviceDeviceMemoryReportCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (DeviceDiagnosticsConfigCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (DeviceEventInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupBindSparseInfo)
@@ -164,6 +165,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGro
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupSwapchainCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (DeviceMemoryOpaqueCaptureAddressInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_memory_overallocation_behavior (DeviceMemoryOverallocationCreateInfoAMD)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (DeviceMemoryReportCallbackDataEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_private_data (DevicePrivateDataCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Device (DeviceQueueCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_global_priority (DeviceQueueGlobalPriorityCreateInfoEXT)
@@ -338,6 +340,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (Ph
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsPropertiesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (PhysicalDeviceDeviceMemoryReportFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (PhysicalDeviceDiagnosticsConfigFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PhysicalDeviceDiscardRectanglePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
@@ -760,6 +763,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderDrawParametersFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderFloat16Int8Features = ()
   Extends DeviceCreateInfo PhysicalDeviceHostQueryResetFeatures = ()
+  Extends DeviceCreateInfo PhysicalDeviceDeviceMemoryReportFeaturesEXT = ()
+  Extends DeviceCreateInfo DeviceDeviceMemoryReportCreateInfoEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceDescriptorIndexingFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceTimelineSemaphoreFeatures = ()
   Extends DeviceCreateInfo PhysicalDevice8BitStorageFeatures = ()
@@ -881,6 +886,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderDrawParametersFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderFloat16Int8Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceHostQueryResetFeatures = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceDeviceMemoryReportFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDescriptorIndexingFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceTimelineSemaphoreFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevice8BitStorageFeatures = ()
@@ -1261,6 +1267,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES -> go @PhysicalDeviceHostQueryResetFeatures
   STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT -> go @DeviceQueueGlobalPriorityCreateInfoEXT
   STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT -> go @DebugUtilsMessengerCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT -> go @PhysicalDeviceDeviceMemoryReportFeaturesEXT
+  STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT -> go @DeviceDeviceMemoryReportCreateInfoEXT
   STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT -> go @ImportMemoryHostPointerInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT -> go @PhysicalDeviceExternalMemoryHostPropertiesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT -> go @PhysicalDeviceConservativeRasterizationPropertiesEXT
@@ -1561,6 +1569,8 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceHostQueryResetFeatures #-}
 {-# complete (::&) :: DeviceQueueGlobalPriorityCreateInfoEXT #-}
 {-# complete (::&) :: DebugUtilsMessengerCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceDeviceMemoryReportFeaturesEXT #-}
+{-# complete (::&) :: DeviceDeviceMemoryReportCreateInfoEXT #-}
 {-# complete (::&) :: ImportMemoryHostPointerInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceExternalMemoryHostPropertiesEXT #-}
 {-# complete (::&) :: PhysicalDeviceConservativeRasterizationPropertiesEXT #-}

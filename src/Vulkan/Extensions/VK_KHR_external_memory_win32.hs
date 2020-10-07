@@ -84,9 +84,16 @@ foreign import ccall
 -- = Description
 --
 -- For handle types defined as NT handles, the handles returned by
--- 'getMemoryWin32HandleKHR' are owned by the application. To avoid leaking
--- resources, the application /must/ release ownership of them using the
--- @CloseHandle@ system call when they are no longer needed.
+-- 'getMemoryWin32HandleKHR' are owned by the application and hold a
+-- reference to their payload. To avoid leaking resources, the application
+-- /must/ release ownership of them using the @CloseHandle@ system call
+-- when they are no longer needed.
+--
+-- Note
+--
+-- Non-NT handle types do not add a reference to their associated payload.
+-- If the original object owning the payload is destroyed, all resources
+-- and handles sharing that payload will become invalid.
 --
 -- == Return Codes
 --
@@ -194,16 +201,24 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 --
 -- = Description
 --
--- Importing memory objects from Windows handles does not transfer
+-- Importing memory object payloads from Windows handles does not transfer
 -- ownership of the handle to the Vulkan implementation. For handle types
--- defined as NT handles, the application /must/ release ownership using
--- the @CloseHandle@ system call when the handle is no longer needed.
+-- defined as NT handles, the application /must/ release handle ownership
+-- using the @CloseHandle@ system call when the handle is no longer needed.
+-- For handle types defined as NT handles, the imported memory object holds
+-- a reference to its payload.
 --
--- Applications /can/ import the same underlying memory into multiple
--- instances of Vulkan, into the same instance from which it was exported,
--- and multiple times into a given Vulkan instance. In all cases, each
--- import operation /must/ create a distinct
--- 'Vulkan.Core10.Handles.DeviceMemory' object.
+-- Note
+--
+-- Non-NT handle import operations do not add a reference to their
+-- associated payload. If the original object owning the payload is
+-- destroyed, all resources and handles sharing that payload will become
+-- invalid.
+--
+-- Applications /can/ import the same payload into multiple instances of
+-- Vulkan, into the same instance from which it was exported, and multiple
+-- times into a given Vulkan instance. In all cases, each import operation
+-- /must/ create a distinct 'Vulkan.Core10.Handles.DeviceMemory' object.
 --
 -- == Valid Usage
 --
@@ -262,8 +277,8 @@ data ImportMemoryWin32HandleInfoKHR = ImportMemoryWin32HandleInfoKHR
     handleType :: ExternalMemoryHandleTypeFlagBits
   , -- | @handle@ is the external handle to import, or @NULL@.
     handle :: HANDLE
-  , -- | @name@ is a null-terminated UTF-16 string naming the underlying memory
-    -- resource to import, or @NULL@.
+  , -- | @name@ is a null-terminated UTF-16 string naming the payload to import,
+    -- or @NULL@.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
@@ -384,9 +399,8 @@ data ExportMemoryWin32HandleInfoKHR = ExportMemoryWin32HandleInfoKHR
   , -- | @dwAccess@ is a 'Vulkan.Extensions.VK_NV_external_memory_win32.DWORD'
     -- specifying access rights of the handle.
     dwAccess :: DWORD
-  , -- | @name@ is a null-terminated UTF-16 string to associate with the
-    -- underlying resource referenced by NT handles exported from the created
-    -- memory.
+  , -- | @name@ is a null-terminated UTF-16 string to associate with the payload
+    -- referenced by NT handles exported from the created memory.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)

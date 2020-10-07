@@ -91,6 +91,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo',
+-- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryAABBNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',

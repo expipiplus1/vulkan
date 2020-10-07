@@ -75,13 +75,14 @@ foreign import ccall
 --
 -- = Description
 --
--- Each call to 'getMemoryFdKHR' /must/ create a new file descriptor and
--- transfer ownership of it to the application. To avoid leaking resources,
--- the application /must/ release ownership of the file descriptor using
--- the @close@ system call when it is no longer needed, or by importing a
--- Vulkan memory object from it. Where supported by the operating system,
--- the implementation /must/ set the file descriptor to be closed
--- automatically when an @execve@ system call is made.
+-- Each call to 'getMemoryFdKHR' /must/ create a new file descriptor
+-- holding a reference to the memory object’s payload and transfer
+-- ownership of the file descriptor to the application. To avoid leaking
+-- resources, the application /must/ release ownership of the file
+-- descriptor using the @close@ system call when it is no longer needed, or
+-- by importing a Vulkan memory object from it. Where supported by the
+-- operating system, the implementation /must/ set the file descriptor to
+-- be closed automatically when an @execve@ system call is made.
 --
 -- == Return Codes
 --
@@ -193,13 +194,13 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 -- Importing memory from a file descriptor transfers ownership of the file
 -- descriptor from the application to the Vulkan implementation. The
 -- application /must/ not perform any operations on the file descriptor
--- after a successful import.
+-- after a successful import. The imported memory object holds a reference
+-- to its payload.
 --
--- Applications /can/ import the same underlying memory into multiple
--- instances of Vulkan, into the same instance from which it was exported,
--- and multiple times into a given Vulkan instance. In all cases, each
--- import operation /must/ create a distinct
--- 'Vulkan.Core10.Handles.DeviceMemory' object.
+-- Applications /can/ import the same payload into multiple instances of
+-- Vulkan, into the same instance from which it was exported, and multiple
+-- times into a given Vulkan instance. In all cases, each import operation
+-- /must/ create a distinct 'Vulkan.Core10.Handles.DeviceMemory' object.
 --
 -- == Valid Usage
 --
