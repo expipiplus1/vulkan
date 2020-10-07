@@ -28,8 +28,8 @@ jobs:
         message="${message//'%'/'%25'}"
         message="${message//$'\n'/'%0A'}"
         message="${message//$'\r'/'%0D'}"
-        echo "$message" > issue_body
-        echo >> issue_body
+        echo "$message" > ~/issue_body
+        echo >> ~/issue_body
         echo "::set-env name=pr_message::$message"
 
     - name: Build dependencies
@@ -39,15 +39,16 @@ jobs:
         nix-build '<nixpkgs>' -A haskellPackages.hpack
         nix-build '<nixpkgs>' -A doxygen
 
-    - id: update
+    - name: run update.sh
+      id: update
       run: |
-        ./update.sh 2>&1 | tee --append update_output
+        ./update.sh 2>&1 | tee --append ~/update_output
         code=${PIPESTATUS[0]}
 
-        echo 'log of `generate-new/bin/vk`' >> issue_body
-        echo '```' >> issue_body
-        cat update_output >> issue_body
-        echo '```' >> issue_body
+        echo 'log of `generate-new/bin/vk`' >> ~/issue_body
+        echo '```' >> ~/issue_body
+        cat ~/update_output >> ~/issue_body
+        echo '```' >> ~/issue_body
 
         (exit $code)
 
@@ -88,5 +89,5 @@ jobs:
       uses: peter-evans/create-issue-from-file@v2
       with:
         title: Failed to regenerate source for Vulkan ${{ steps.update.outputs.vulkan_version }}
-        content-filepath: issue_body
+        content-filepath: ~/issue_body
         token: ${{ secrets.TUVOK_TOKEN }}
