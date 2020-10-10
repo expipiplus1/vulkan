@@ -148,6 +148,7 @@ import Vulkan.Zero (Zero)
 --
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
 -- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
 -- 'Vulkan.Extensions.VK_EXT_private_data.setPrivateDataEXT'
 newtype ObjectType = ObjectType Int32

@@ -140,13 +140,13 @@ getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalC
 -- between the host and the Vulkan implementation. The application /can/
 -- continue to access the memory through the host pointer but it is the
 -- application’s responsibility to synchronize device and non-device access
--- to the underlying memory as defined in
+-- to the payload as defined in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess Host Access to Device Memory Objects>.
 --
--- Applications /can/ import the same underlying memory into multiple
--- instances of Vulkan and multiple times into a given Vulkan instance.
--- However, implementations /may/ fail to import the same underlying memory
--- multiple times into a given physical device due to platform constraints.
+-- Applications /can/ import the same payload into multiple instances of
+-- Vulkan and multiple times into a given Vulkan instance. However,
+-- implementations /may/ fail to import the same payload multiple times
+-- into a given physical device due to platform constraints.
 --
 -- Importing memory from a particular host pointer /may/ not be possible
 -- due to additional platform-specific restrictions beyond the scope of
@@ -154,8 +154,10 @@ getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalC
 -- memory import operation with the error code
 -- 'Vulkan.Extensions.VK_KHR_external_memory.ERROR_INVALID_EXTERNAL_HANDLE_KHR'.
 --
--- The application /must/ ensure that the imported memory range remains
--- valid and accessible for the lifetime of the imported memory object.
+-- Whether device memory objects imported from a host pointer hold a
+-- reference to their payload is undefined. As such, the application /must/
+-- ensure that the imported memory range remains valid and accessible for
+-- the lifetime of the imported memory object.
 --
 -- == Valid Usage
 --

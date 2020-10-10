@@ -4,10 +4,10 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7d608c680747a39a9b3ffd73be1cba4bb23e9a99063b1885e194f37e934c885d
+-- hash: 4440a5ae30900bab6984276232f3e38c13b7d2ef81d1fb4c2b3e00fee27b1bee
 
 name:           vulkan
-version:        3.6.8
+version:        3.6.9
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -287,6 +287,7 @@ library
       Vulkan.Extensions.VK_EXT_depth_clip_enable
       Vulkan.Extensions.VK_EXT_depth_range_unrestricted
       Vulkan.Extensions.VK_EXT_descriptor_indexing
+      Vulkan.Extensions.VK_EXT_device_memory_report
       Vulkan.Extensions.VK_EXT_direct_mode_display
       Vulkan.Extensions.VK_EXT_directfb_surface
       Vulkan.Extensions.VK_EXT_discard_rectangles
