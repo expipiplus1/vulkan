@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier">ExternalFenceFeatureFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier">EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                       </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier">EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT</span></a></span><span>
+</span><span id="line-4"></span><span>                                                                                       </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                                                       </span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span>                                                         </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlags"><span class="hs-identifier">ExternalFenceFeatureFlags</span></a></span><span>
+</span><span id="line-7"></span><span>                                                         </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- | VkExternalFenceFeatureFlagBits - Bitfield describing features of an</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- external fence handle type</span><span>
+</span><span id="line-26"></span><span class="hs-comment">--</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-28"></span><span class="hs-comment">--</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- 'ExternalFenceFeatureFlags'</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">newtype</span><span> </span><span id="ExternalFenceFeatureFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-var">ExternalFenceFeatureFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ExternalFenceFeatureFlagBits"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-var">ExternalFenceFeatureFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680091489"><span id="local-6989586621680091491"><span class="annot"><span class="annottext">ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+(ExternalFenceFeatureFlagBits
+ -&gt; ExternalFenceFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; Bool)
+-&gt; Eq ExternalFenceFeatureFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+$c/= :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+== :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+$c== :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680091473"><span id="local-6989586621680091475"><span id="local-6989586621680091477"><span id="local-6989586621680091479"><span id="local-6989586621680091481"><span id="local-6989586621680091483"><span id="local-6989586621680091485"><span class="annot"><span class="annottext">Eq ExternalFenceFeatureFlagBits
+Eq ExternalFenceFeatureFlagBits =&gt;
+(ExternalFenceFeatureFlagBits
+ -&gt; ExternalFenceFeatureFlagBits -&gt; Ordering)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits)
+-&gt; Ord ExternalFenceFeatureFlagBits
+ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Ordering
+ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+$cmin :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+max :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+$cmax :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+&gt;= :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+$c&gt;= :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+&gt; :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+$c&gt; :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+&lt;= :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+$c&lt;= :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+&lt; :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+$c&lt; :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Bool
+compare :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Ordering
+$ccompare :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; Ordering
+$cp1Ord :: Eq ExternalFenceFeatureFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680091456"><span id="local-6989586621680091458"><span id="local-6989586621680091460"><span id="local-6989586621680091462"><span id="local-6989586621680091464"><span id="local-6989586621680091466"><span id="local-6989586621680091468"><span id="local-6989586621680091470"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO ExternalFenceFeatureFlagBits
+Ptr b -&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+Ptr ExternalFenceFeatureFlagBits -&gt; IO ExternalFenceFeatureFlagBits
+Ptr ExternalFenceFeatureFlagBits
+-&gt; Int -&gt; IO ExternalFenceFeatureFlagBits
+Ptr ExternalFenceFeatureFlagBits
+-&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+Ptr ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+ExternalFenceFeatureFlagBits -&gt; Int
+(ExternalFenceFeatureFlagBits -&gt; Int)
+-&gt; (ExternalFenceFeatureFlagBits -&gt; Int)
+-&gt; (Ptr ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; IO ExternalFenceFeatureFlagBits)
+-&gt; (Ptr ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO ExternalFenceFeatureFlagBits)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ())
+-&gt; (Ptr ExternalFenceFeatureFlagBits
+    -&gt; IO ExternalFenceFeatureFlagBits)
+-&gt; (Ptr ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; IO ())
+-&gt; Storable ExternalFenceFeatureFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO ExternalFenceFeatureFlagBits
+forall b. Ptr b -&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+$cpoke :: Ptr ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+peek :: Ptr ExternalFenceFeatureFlagBits -&gt; IO ExternalFenceFeatureFlagBits
+$cpeek :: Ptr ExternalFenceFeatureFlagBits -&gt; IO ExternalFenceFeatureFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO ExternalFenceFeatureFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO ExternalFenceFeatureFlagBits
+pokeElemOff :: Ptr ExternalFenceFeatureFlagBits
+-&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr ExternalFenceFeatureFlagBits
+-&gt; Int -&gt; ExternalFenceFeatureFlagBits -&gt; IO ()
+peekElemOff :: Ptr ExternalFenceFeatureFlagBits
+-&gt; Int -&gt; IO ExternalFenceFeatureFlagBits
+$cpeekElemOff :: Ptr ExternalFenceFeatureFlagBits
+-&gt; Int -&gt; IO ExternalFenceFeatureFlagBits
+alignment :: ExternalFenceFeatureFlagBits -&gt; Int
+$calignment :: ExternalFenceFeatureFlagBits -&gt; Int
+sizeOf :: ExternalFenceFeatureFlagBits -&gt; Int
+$csizeOf :: ExternalFenceFeatureFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680091453"><span class="annot"><span class="annottext">ExternalFenceFeatureFlagBits
+ExternalFenceFeatureFlagBits -&gt; Zero ExternalFenceFeatureFlagBits
+forall a. a -&gt; Zero a
+zero :: ExternalFenceFeatureFlagBits
+$czero :: ExternalFenceFeatureFlagBits
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680091407"><span id="local-6989586621680091409"><span id="local-6989586621680091411"><span id="local-6989586621680091413"><span id="local-6989586621680091415"><span id="local-6989586621680091417"><span id="local-6989586621680091419"><span id="local-6989586621680091421"><span id="local-6989586621680091423"><span id="local-6989586621680091425"><span id="local-6989586621680091427"><span id="local-6989586621680091429"><span id="local-6989586621680091431"><span id="local-6989586621680091433"><span id="local-6989586621680091435"><span id="local-6989586621680091437"><span id="local-6989586621680091439"><span id="local-6989586621680091441"><span id="local-6989586621680091443"><span id="local-6989586621680091445"><span id="local-6989586621680091447"><span id="local-6989586621680091449"><span class="annot"><span class="annottext">Eq ExternalFenceFeatureFlagBits
+ExternalFenceFeatureFlagBits
+Eq ExternalFenceFeatureFlagBits =&gt;
+(ExternalFenceFeatureFlagBits
+ -&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; ExternalFenceFeatureFlagBits
+-&gt; (Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits -&gt; Int -&gt; Bool)
+-&gt; (ExternalFenceFeatureFlagBits -&gt; Maybe Int)
+-&gt; (ExternalFenceFeatureFlagBits -&gt; Int)
+-&gt; (ExternalFenceFeatureFlagBits -&gt; Bool)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits
+    -&gt; Int -&gt; ExternalFenceFeatureFlagBits)
+-&gt; (ExternalFenceFeatureFlagBits -&gt; Int)
+-&gt; Bits ExternalFenceFeatureFlagBits
+Int -&gt; ExternalFenceFeatureFlagBits
+ExternalFenceFeatureFlagBits -&gt; Bool
+ExternalFenceFeatureFlagBits -&gt; Int
+ExternalFenceFeatureFlagBits -&gt; Maybe Int
+ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+ExternalFenceFeatureFlagBits -&gt; Int -&gt; Bool
+ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: ExternalFenceFeatureFlagBits -&gt; Int
+$cpopCount :: ExternalFenceFeatureFlagBits -&gt; Int
+rotateR :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$crotateR :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+rotateL :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$crotateL :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+unsafeShiftR :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$cunsafeShiftR :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+shiftR :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$cshiftR :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+unsafeShiftL :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$cunsafeShiftL :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+shiftL :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$cshiftL :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+isSigned :: ExternalFenceFeatureFlagBits -&gt; Bool
+$cisSigned :: ExternalFenceFeatureFlagBits -&gt; Bool
+bitSize :: ExternalFenceFeatureFlagBits -&gt; Int
+$cbitSize :: ExternalFenceFeatureFlagBits -&gt; Int
+bitSizeMaybe :: ExternalFenceFeatureFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: ExternalFenceFeatureFlagBits -&gt; Maybe Int
+testBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; Bool
+complementBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$ccomplementBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+clearBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$cclearBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+setBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$csetBit :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+bit :: Int -&gt; ExternalFenceFeatureFlagBits
+$cbit :: Int -&gt; ExternalFenceFeatureFlagBits
+zeroBits :: ExternalFenceFeatureFlagBits
+$czeroBits :: ExternalFenceFeatureFlagBits
+rotate :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$crotate :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+shift :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+$cshift :: ExternalFenceFeatureFlagBits -&gt; Int -&gt; ExternalFenceFeatureFlagBits
+complement :: ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+$ccomplement :: ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+xor :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+$cxor :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+.|. :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+$c.|. :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+.&amp;. :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+$c.&amp;. :: ExternalFenceFeatureFlagBits
+-&gt; ExternalFenceFeatureFlagBits -&gt; ExternalFenceFeatureFlagBits
+$cp1Bits :: Eq ExternalFenceFeatureFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- | 'EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT' specifies handles of this type</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- /can/ be exported from Vulkan fence objects.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"><span id="%24mEXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"><span id="EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT :: ExternalFenceFeatureFlagBits
+$mEXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT :: forall r.
+ExternalFenceFeatureFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#%24bEXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-type">ExternalFenceFeatureFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- | 'EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT' specifies handles of this type</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- /can/ be imported to Vulkan fence objects.</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bEXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"><span id="%24mEXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"><span id="EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"><span class="annot"><span class="annottext">$bEXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT :: ExternalFenceFeatureFlagBits
+$mEXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT :: forall r.
+ExternalFenceFeatureFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#%24bEXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier hs-var hs-var hs-var">EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-type">ExternalFenceFeatureFlagBits</span></a></span><span> </span><span class="hs-number">0x00000002</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">type</span><span> </span><span id="ExternalFenceFeatureFlags"><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlags"><span class="hs-identifier hs-var">ExternalFenceFeatureFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-type">ExternalFenceFeatureFlagBits</span></a></span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680091397"><span id="local-6989586621680091399"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-type">ExternalFenceFeatureFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-43"></span><span>  </span><span id="local-6989586621680091395"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; ExternalFenceFeatureFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680091393"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680091393"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-44"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier hs-type">EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT&quot;</span></span><span>
+</span><span id="line-45"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier hs-type">EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT&quot;</span></span><span>
+</span><span id="line-46"></span><span>    </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-type">ExternalFenceFeatureFlagBits</span></a></span><span> </span><span id="local-6989586621680091392"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680091392"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680091393"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalFenceFeatureFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680091392"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680091384"><span id="local-6989586621680091387"><span id="local-6989586621680091389"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-type">ExternalFenceFeatureFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-49"></span><span>  </span><span id="local-6989586621680091382"><span class="annot"><span class="annottext">readPrec :: ReadPrec ExternalFenceFeatureFlagBits
+</span><a href="#local-6989586621680091382"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec ExternalFenceFeatureFlagBits
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec ExternalFenceFeatureFlagBits)]
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalFenceFeatureFlagBits
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalFenceFeatureFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"><span class="hs-identifier hs-var">EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ExternalFenceFeatureFlagBits
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">ExternalFenceFeatureFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"><span class="hs-identifier hs-var">EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-51"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec ExternalFenceFeatureFlagBits
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-52"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-53"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ExternalFenceFeatureFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>                       </span><span id="local-6989586621680091381"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680091381"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-55"></span><span>                       </span><span class="annot"><span class="annottext">ExternalFenceFeatureFlagBits
+-&gt; ReadPrec ExternalFenceFeatureFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; ExternalFenceFeatureFlagBits
+</span><a href="Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.html#ExternalFenceFeatureFlagBits"><span class="hs-identifier hs-var">ExternalFenceFeatureFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680091381"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-56"></span><span>
+</span><span id="line-57"></span></pre></body></html>

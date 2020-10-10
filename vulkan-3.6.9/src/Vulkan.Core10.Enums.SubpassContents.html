@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.SubpassContents</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier">SubpassContents</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_INLINE"><span class="hs-identifier">SUBPASS_CONTENTS_INLINE</span></a></span><span>
+</span><span id="line-3"></span><span>                                                            </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span class="hs-identifier">SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS</span></a></span><span>
+</span><span id="line-4"></span><span>                                                            </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-5"></span><span>                                                            </span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-6"></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showsPrec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Int</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Int32</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- | VkSubpassContents - Specify how commands in the first subpass of a</span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- render pass are provided</span><span>
+</span><span id="line-23"></span><span class="hs-comment">--</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassBeginInfo',</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass',</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdNextSubpass'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="SubpassContents"><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-var">SubpassContents</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SubpassContents"><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-var">SubpassContents</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int32</span></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680067610"><span id="local-6989586621680067612"><span class="annot"><span class="annottext">SubpassContents -&gt; SubpassContents -&gt; Bool
+(SubpassContents -&gt; SubpassContents -&gt; Bool)
+-&gt; (SubpassContents -&gt; SubpassContents -&gt; Bool)
+-&gt; Eq SubpassContents
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SubpassContents -&gt; SubpassContents -&gt; Bool
+$c/= :: SubpassContents -&gt; SubpassContents -&gt; Bool
+== :: SubpassContents -&gt; SubpassContents -&gt; Bool
+$c== :: SubpassContents -&gt; SubpassContents -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680067594"><span id="local-6989586621680067596"><span id="local-6989586621680067598"><span id="local-6989586621680067600"><span id="local-6989586621680067602"><span id="local-6989586621680067604"><span id="local-6989586621680067606"><span class="annot"><span class="annottext">Eq SubpassContents
+Eq SubpassContents =&gt;
+(SubpassContents -&gt; SubpassContents -&gt; Ordering)
+-&gt; (SubpassContents -&gt; SubpassContents -&gt; Bool)
+-&gt; (SubpassContents -&gt; SubpassContents -&gt; Bool)
+-&gt; (SubpassContents -&gt; SubpassContents -&gt; Bool)
+-&gt; (SubpassContents -&gt; SubpassContents -&gt; Bool)
+-&gt; (SubpassContents -&gt; SubpassContents -&gt; SubpassContents)
+-&gt; (SubpassContents -&gt; SubpassContents -&gt; SubpassContents)
+-&gt; Ord SubpassContents
+SubpassContents -&gt; SubpassContents -&gt; Bool
+SubpassContents -&gt; SubpassContents -&gt; Ordering
+SubpassContents -&gt; SubpassContents -&gt; SubpassContents
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SubpassContents -&gt; SubpassContents -&gt; SubpassContents
+$cmin :: SubpassContents -&gt; SubpassContents -&gt; SubpassContents
+max :: SubpassContents -&gt; SubpassContents -&gt; SubpassContents
+$cmax :: SubpassContents -&gt; SubpassContents -&gt; SubpassContents
+&gt;= :: SubpassContents -&gt; SubpassContents -&gt; Bool
+$c&gt;= :: SubpassContents -&gt; SubpassContents -&gt; Bool
+&gt; :: SubpassContents -&gt; SubpassContents -&gt; Bool
+$c&gt; :: SubpassContents -&gt; SubpassContents -&gt; Bool
+&lt;= :: SubpassContents -&gt; SubpassContents -&gt; Bool
+$c&lt;= :: SubpassContents -&gt; SubpassContents -&gt; Bool
+&lt; :: SubpassContents -&gt; SubpassContents -&gt; Bool
+$c&lt; :: SubpassContents -&gt; SubpassContents -&gt; Bool
+compare :: SubpassContents -&gt; SubpassContents -&gt; Ordering
+$ccompare :: SubpassContents -&gt; SubpassContents -&gt; Ordering
+$cp1Ord :: Eq SubpassContents
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680067577"><span id="local-6989586621680067579"><span id="local-6989586621680067581"><span id="local-6989586621680067583"><span id="local-6989586621680067585"><span id="local-6989586621680067587"><span id="local-6989586621680067589"><span id="local-6989586621680067591"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SubpassContents
+Ptr b -&gt; Int -&gt; SubpassContents -&gt; IO ()
+Ptr SubpassContents -&gt; IO SubpassContents
+Ptr SubpassContents -&gt; Int -&gt; IO SubpassContents
+Ptr SubpassContents -&gt; Int -&gt; SubpassContents -&gt; IO ()
+Ptr SubpassContents -&gt; SubpassContents -&gt; IO ()
+SubpassContents -&gt; Int
+(SubpassContents -&gt; Int)
+-&gt; (SubpassContents -&gt; Int)
+-&gt; (Ptr SubpassContents -&gt; Int -&gt; IO SubpassContents)
+-&gt; (Ptr SubpassContents -&gt; Int -&gt; SubpassContents -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SubpassContents)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SubpassContents -&gt; IO ())
+-&gt; (Ptr SubpassContents -&gt; IO SubpassContents)
+-&gt; (Ptr SubpassContents -&gt; SubpassContents -&gt; IO ())
+-&gt; Storable SubpassContents
+forall b. Ptr b -&gt; Int -&gt; IO SubpassContents
+forall b. Ptr b -&gt; Int -&gt; SubpassContents -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SubpassContents -&gt; SubpassContents -&gt; IO ()
+$cpoke :: Ptr SubpassContents -&gt; SubpassContents -&gt; IO ()
+peek :: Ptr SubpassContents -&gt; IO SubpassContents
+$cpeek :: Ptr SubpassContents -&gt; IO SubpassContents
+pokeByteOff :: Ptr b -&gt; Int -&gt; SubpassContents -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SubpassContents -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SubpassContents
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SubpassContents
+pokeElemOff :: Ptr SubpassContents -&gt; Int -&gt; SubpassContents -&gt; IO ()
+$cpokeElemOff :: Ptr SubpassContents -&gt; Int -&gt; SubpassContents -&gt; IO ()
+peekElemOff :: Ptr SubpassContents -&gt; Int -&gt; IO SubpassContents
+$cpeekElemOff :: Ptr SubpassContents -&gt; Int -&gt; IO SubpassContents
+alignment :: SubpassContents -&gt; Int
+$calignment :: SubpassContents -&gt; Int
+sizeOf :: SubpassContents -&gt; Int
+$csizeOf :: SubpassContents -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680067574"><span class="annot"><span class="annottext">SubpassContents
+SubpassContents -&gt; Zero SubpassContents
+forall a. a -&gt; Zero a
+zero :: SubpassContents
+$czero :: SubpassContents
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'SUBPASS_CONTENTS_INLINE' specifies that the contents of the subpass</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- will be recorded inline in the primary command buffer, and secondary</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- command buffers /must/ not be executed within the subpass.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSUBPASS_CONTENTS_INLINE"><span id="%24mSUBPASS_CONTENTS_INLINE"><span id="SUBPASS_CONTENTS_INLINE"><span class="annot"><span class="annottext">$bSUBPASS_CONTENTS_INLINE :: SubpassContents
+$mSUBPASS_CONTENTS_INLINE :: forall r. SubpassContents -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SubpassContents.html#%24bSUBPASS_CONTENTS_INLINE"><span class="hs-identifier hs-var hs-var hs-var">SUBPASS_CONTENTS_INLINE</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-type">SubpassContents</span></a></span><span> </span><span class="hs-number">0</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- | 'SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS' specifies that the contents</span><span>
+</span><span id="line-37"></span><span class="hs-comment">-- are recorded in secondary command buffers that will be called from the</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- primary command buffer, and</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands' is the only</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- valid command on the command buffer until</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdNextSubpass' or</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- 'Vulkan.Core10.CommandBufferBuilding.cmdEndRenderPass'.</span><span>
+</span><span id="line-43"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span id="%24mSUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span id="SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span class="annot"><span class="annottext">$bSUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS :: SubpassContents
+$mSUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS :: forall r. SubpassContents -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Core10.Enums.SubpassContents.html#%24bSUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span class="hs-identifier hs-var hs-var hs-var">SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-type">SubpassContents</span></a></span><span> </span><span class="hs-number">1</span><span>
+</span><span id="line-44"></span><span class="hs-pragma">{-# complete</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_INLINE"><span class="hs-pragma hs-type">SUBPASS_CONTENTS_INLINE</span></a></span><span class="hs-pragma">,</span><span>
+</span><span id="line-45"></span><span>             </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span class="hs-pragma hs-type">SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-pragma hs-type">SubpassContents</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680067564"><span id="local-6989586621680067566"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-type">SubpassContents</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-48"></span><span>  </span><span id="local-6989586621680067562"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SubpassContents -&gt; ShowS
+</span><a href="#local-6989586621680067562"><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></a></span></span><span> </span><span id="local-6989586621680067561"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680067561"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-49"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_INLINE"><span class="hs-identifier hs-type">SUBPASS_CONTENTS_INLINE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SUBPASS_CONTENTS_INLINE&quot;</span></span><span>
+</span><span id="line-50"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span class="hs-identifier hs-type">SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS&quot;</span></span><span>
+</span><span id="line-51"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-type">SubpassContents</span></a></span><span> </span><span id="local-6989586621680067560"><span class="annot"><span class="annottext">x :: Int32
+</span><a href="#local-6989586621680067560"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680067561"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SubpassContents &quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int32 -&gt; ShowS
+forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680067560"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>
+</span><span id="line-53"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680067552"><span id="local-6989586621680067555"><span id="local-6989586621680067557"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-type">SubpassContents</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-54"></span><span>  </span><span id="local-6989586621680067550"><span class="annot"><span class="annottext">readPrec :: ReadPrec SubpassContents
+</span><a href="#local-6989586621680067550"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec SubpassContents -&gt; ReadPrec SubpassContents
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec SubpassContents)] -&gt; ReadPrec SubpassContents
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SUBPASS_CONTENTS_INLINE&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SubpassContents -&gt; ReadPrec SubpassContents
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SubpassContents
+</span><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_INLINE"><span class="hs-identifier hs-var">SUBPASS_CONTENTS_INLINE</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-55"></span><span>                            </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SubpassContents -&gt; ReadPrec SubpassContents
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SubpassContents
+</span><a href="Vulkan.Core10.Enums.SubpassContents.html#SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"><span class="hs-identifier hs-var">SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-56"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec SubpassContents
+-&gt; ReadPrec SubpassContents -&gt; ReadPrec SubpassContents
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-57"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec SubpassContents -&gt; ReadPrec SubpassContents
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-58"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SubpassContents&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span>                       </span><span id="local-6989586621680067549"><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680067549"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32 -&gt; ReadPrec Int32
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Int32
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-60"></span><span>                       </span><span class="annot"><span class="annottext">SubpassContents -&gt; ReadPrec SubpassContents
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int32 -&gt; SubpassContents
+</span><a href="Vulkan.Core10.Enums.SubpassContents.html#SubpassContents"><span class="hs-identifier hs-var">SubpassContents</span></a></span><span> </span><span class="annot"><span class="annottext">Int32
+</span><a href="#local-6989586621680067549"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-61"></span><span>
+</span><span id="line-62"></span></pre></body></html>
