@@ -1,0 +1,549 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Extensions.VK_QCOM_render_pass_transform</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier">RenderPassTransformBeginInfoQCOM</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-3"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span class="hs-identifier">QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION</span></a></span><span>
+</span><span id="line-5"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span class="hs-identifier">QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION</span></a></span><span>
+</span><span id="line-6"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span class="hs-identifier">QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-7"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span class="hs-identifier">QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME</span></a></span><span>
+</span><span id="line-8"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span>                                                        </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagsKHR"><span class="hs-identifier">SurfaceTransformFlagsKHR</span></a></span><span>
+</span><span id="line-10"></span><span>                                                        </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Marshal.Alloc</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">allocaBytesAligned</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">plusPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Class</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">lift</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">evalContT</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">IsString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Typeable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Typeable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">peek</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">poke</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ptr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Kind</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Type</span></span><span class="hs-special">)</span><span>
+</span><span id="line-26"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Trans.Cont</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">ContT</span></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-28"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier">FromCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier">Rect2D</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-30"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html"><span class="hs-identifier">Vulkan.Extensions.VK_KHR_surface</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-32"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html"><span class="hs-identifier">Vulkan.CStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier">ToCStruct</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM"><span class="hs-identifier">STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-36"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html"><span class="hs-identifier">Vulkan.Core10.Enums.StructureType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier">StructureType</span></a></span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM"><span class="hs-identifier">STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html"><span class="hs-identifier">Vulkan.Extensions.VK_KHR_surface</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-38"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html"><span class="hs-identifier">Vulkan.Extensions.VK_KHR_surface</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagsKHR"><span class="hs-identifier">SurfaceTransformFlagsKHR</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- | VkRenderPassTransformBeginInfoQCOM - Structure describing transform</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- parameters of a render pass instance</span><span>
+</span><span id="line-41"></span><span class="hs-comment">--</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- == Valid Usage</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- -   @transform@ /must/ be</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',</span><span>
+</span><span id="line-46"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',</span><span>
+</span><span id="line-48"></span><span class="hs-comment">--     or</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'</span><span>
+</span><span id="line-50"></span><span class="hs-comment">--</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- -   The @renderpass@ /must/ have been created with</span><span>
+</span><span id="line-52"></span><span class="hs-comment">--     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@flags@ containing</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM'</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- -   @sType@ /must/ be</span><span>
+</span><span id="line-58"></span><span class="hs-comment">--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM'</span><span>
+</span><span id="line-59"></span><span class="hs-comment">--</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-61"></span><span class="hs-comment">--</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'</span><span>
+</span><span id="line-64"></span><span class="hs-keyword">data</span><span> </span><span id="RenderPassTransformBeginInfoQCOM"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-var">RenderPassTransformBeginInfoQCOM</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="RenderPassTransformBeginInfoQCOM"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-var">RenderPassTransformBeginInfoQCOM</span></a></span></span><span>
+</span><span id="line-65"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @transform@ is a</span><span>
+</span><span id="line-66"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value</span><span>
+</span><span id="line-67"></span><span>    </span><span class="hs-comment">-- describing the transform to be applied to rasterization.</span><span>
+</span><span id="line-68"></span><span>    </span><span id="%24sel%3Atransform%3ARenderPassTransformBeginInfoQCOM"><span class="annot"><span class="annottext">RenderPassTransformBeginInfoQCOM -&gt; SurfaceTransformFlagBitsKHR
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#%24sel%3Atransform%3ARenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-var hs-var">transform</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-69"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680144473"><span id="local-6989586621680144475"><span class="annot"><span class="annottext">RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; Bool
+(RenderPassTransformBeginInfoQCOM
+ -&gt; RenderPassTransformBeginInfoQCOM -&gt; Bool)
+-&gt; (RenderPassTransformBeginInfoQCOM
+    -&gt; RenderPassTransformBeginInfoQCOM -&gt; Bool)
+-&gt; Eq RenderPassTransformBeginInfoQCOM
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; Bool
+$c/= :: RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; Bool
+== :: RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; Bool
+$c== :: RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">RenderPassTransformBeginInfoQCOM</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680144466"><span id="local-6989586621680144468"><span id="local-6989586621680144470"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-type">RenderPassTransformBeginInfoQCOM</span></a></span></span></span></span><span>
+</span><span id="line-74"></span><span>
+</span><span id="line-75"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680144461"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-type">RenderPassTransformBeginInfoQCOM</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-76"></span><span>  </span><span id="local-6989586621680144456"><span class="annot"><span class="annottext">withCStruct :: RenderPassTransformBeginInfoQCOM
+-&gt; (Ptr RenderPassTransformBeginInfoQCOM -&gt; IO b) -&gt; IO b
+</span><a href="Vulkan.CStruct.html#withCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680144454"><span class="annot"><span class="annottext">x :: RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144454"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680144453"><span class="annot"><span class="annottext">f :: Ptr RenderPassTransformBeginInfoQCOM -&gt; IO b
+</span><a href="#local-6989586621680144453"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int -&gt; (Ptr RenderPassTransformBeginInfoQCOM -&gt; IO b) -&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">24</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr RenderPassTransformBeginInfoQCOM -&gt; IO b) -&gt; IO b)
+-&gt; (Ptr RenderPassTransformBeginInfoQCOM -&gt; IO b) -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680144452"><span class="annot"><span class="annottext">p :: Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144452"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144452"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144454"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM -&gt; IO b
+</span><a href="#local-6989586621680144453"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144452"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>  </span><span id="local-6989586621680144450"><span class="annot"><span class="annottext">pokeCStruct :: Ptr RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680144450"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680144449"><span class="annot"><span class="annottext">p :: Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144449"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680144448"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-type">RenderPassTransformBeginInfoQCOM</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span><span> </span><span id="local-6989586621680144447"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680144447"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-78"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144449"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM"><span class="hs-identifier hs-var">STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144449"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-80"></span><span>    </span><span class="annot"><span class="annottext">Ptr SurfaceTransformFlagBitsKHR
+-&gt; SurfaceTransformFlagBitsKHR -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144449"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+-&gt; Int -&gt; Ptr SurfaceTransformFlagBitsKHR
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+</span><a href="#local-6989586621680144448"><span class="hs-identifier hs-var">transform</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680144447"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-82"></span><span>  </span><span id="local-6989586621680144446"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="Vulkan.CStruct.html#cStructSize"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-83"></span><span>  </span><span id="local-6989586621680144444"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="Vulkan.CStruct.html#cStructAlignment"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621680144442"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr RenderPassTransformBeginInfoQCOM -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeZeroCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680144440"><span class="annot"><span class="annottext">p :: Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144440"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680144439"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680144439"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-85"></span><span>    </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144440"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM -&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM"><span class="hs-identifier hs-var">STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-86"></span><span>    </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144440"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM -&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-87"></span><span>    </span><span class="annot"><span class="annottext">Ptr SurfaceTransformFlagBitsKHR
+-&gt; SurfaceTransformFlagBitsKHR -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144440"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+-&gt; Int -&gt; Ptr SurfaceTransformFlagBitsKHR
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-88"></span><span>    </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680144439"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-89"></span><span>
+</span><span id="line-90"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-type">RenderPassTransformBeginInfoQCOM</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-91"></span><span>  </span><span id="local-6989586621680144435"><span class="annot"><span class="annottext">peekCStruct :: Ptr RenderPassTransformBeginInfoQCOM
+-&gt; IO RenderPassTransformBeginInfoQCOM
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680144433"><span class="annot"><span class="annottext">p :: Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144433"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-92"></span><span>    </span><span id="local-6989586621680144432"><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+</span><a href="#local-6989586621680144432"><span class="hs-identifier hs-var">transform</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr SurfaceTransformFlagBitsKHR -&gt; IO SurfaceTransformFlagBitsKHR
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144433"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+-&gt; Int -&gt; Ptr SurfaceTransformFlagBitsKHR
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-93"></span><span>    </span><span class="annot"><span class="annottext">RenderPassTransformBeginInfoQCOM
+-&gt; IO RenderPassTransformBeginInfoQCOM
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(RenderPassTransformBeginInfoQCOM
+ -&gt; IO RenderPassTransformBeginInfoQCOM)
+-&gt; RenderPassTransformBeginInfoQCOM
+-&gt; IO RenderPassTransformBeginInfoQCOM
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR -&gt; RenderPassTransformBeginInfoQCOM
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-var">RenderPassTransformBeginInfoQCOM</span></a></span><span>
+</span><span id="line-94"></span><span>             </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+</span><a href="#local-6989586621680144432"><span class="hs-identifier hs-var">transform</span></a></span><span>
+</span><span id="line-95"></span><span>
+</span><span id="line-96"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680144422"><span id="local-6989586621680144424"><span id="local-6989586621680144426"><span id="local-6989586621680144428"><span class="annot"><span class="hs-identifier hs-type">Storable</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-type">RenderPassTransformBeginInfoQCOM</span></a></span></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-97"></span><span>  </span><span id="local-6989586621680144418"><span class="annot"><span class="annottext">sizeOf :: RenderPassTransformBeginInfoQCOM -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">sizeOf</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">RenderPassTransformBeginInfoQCOM
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">24</span></span><span>
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680144416"><span class="annot"><span class="annottext">alignment :: RenderPassTransformBeginInfoQCOM -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">alignment</span></span></span><span> </span><span class="hs-glyph">~</span><span class="annot"><span class="annottext">RenderPassTransformBeginInfoQCOM
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621680144414"><span class="annot"><span class="annottext">peek :: Ptr RenderPassTransformBeginInfoQCOM
+-&gt; IO RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144414"><span class="hs-identifier hs-var hs-var hs-var hs-var">peek</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+-&gt; IO RenderPassTransformBeginInfoQCOM
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span>
+</span><span id="line-100"></span><span>  </span><span id="local-6989586621680144413"><span class="annot"><span class="annottext">poke :: Ptr RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; IO ()
+</span><a href="#local-6989586621680144413"><span class="hs-identifier hs-var hs-var hs-var hs-var">poke</span></a></span></span><span> </span><span id="local-6989586621680144412"><span class="annot"><span class="annottext">ptr :: Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144412"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span id="local-6989586621680144411"><span class="annot"><span class="annottext">poked :: RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144411"><span class="hs-identifier hs-var">poked</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+-&gt; RenderPassTransformBeginInfoQCOM -&gt; IO () -&gt; IO ()
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144412"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144411"><span class="hs-identifier hs-var">poked</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">() -&gt; IO ()
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-type">RenderPassTransformBeginInfoQCOM</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-103"></span><span>  </span><span id="local-6989586621680144408"><span class="annot"><span class="annottext">zero :: RenderPassTransformBeginInfoQCOM
+</span><a href="#local-6989586621680144408"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR -&gt; RenderPassTransformBeginInfoQCOM
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#RenderPassTransformBeginInfoQCOM"><span class="hs-identifier hs-var">RenderPassTransformBeginInfoQCOM</span></a></span><span>
+</span><span id="line-104"></span><span>           </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-105"></span><span>
+</span><span id="line-106"></span><span>
+</span><span id="line-107"></span><span class="hs-comment">-- | VkCommandBufferInheritanceRenderPassTransformInfoQCOM - Structure</span><span>
+</span><span id="line-108"></span><span class="hs-comment">-- describing transformed render pass parameters command buffer</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-111"></span><span class="hs-comment">--</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- When the secondary is recorded to execute within a render pass instance</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-- using 'Vulkan.Core10.CommandBufferBuilding.cmdExecuteCommands', the</span><span>
+</span><span id="line-114"></span><span class="hs-comment">-- render pass transform parameters of the secondary command buffer /must/</span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- be consistent with the render pass transform parameters specified for</span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- the render pass instance. In particular, the @transform@ and</span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- @renderArea@ for command buffer /must/ be identical to the @transform@</span><span>
+</span><span id="line-118"></span><span class="hs-comment">-- and @renderArea@ of the render pass instance.</span><span>
+</span><span id="line-119"></span><span class="hs-comment">--</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--</span><span>
+</span><span id="line-122"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--</span><span>
+</span><span id="line-124"></span><span class="hs-comment">-- 'Vulkan.Core10.FundamentalTypes.Rect2D',</span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- 'Vulkan.Core10.Enums.StructureType.StructureType',</span><span>
+</span><span id="line-126"></span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'</span><span>
+</span><span id="line-127"></span><span class="hs-keyword">data</span><span> </span><span id="CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-var">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-var">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span></span><span>
+</span><span id="line-128"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="hs-comment">-- | @transform@ is a</span><span>
+</span><span id="line-129"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value</span><span>
+</span><span id="line-130"></span><span>    </span><span class="hs-comment">-- describing the transform to be applied to the render pass.</span><span>
+</span><span id="line-131"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-132"></span><span>    </span><span class="hs-comment">-- @transform@ /must/ be</span><span>
+</span><span id="line-133"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',</span><span>
+</span><span id="line-134"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',</span><span>
+</span><span id="line-135"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',</span><span>
+</span><span id="line-136"></span><span>    </span><span class="hs-comment">-- or</span><span>
+</span><span id="line-137"></span><span>    </span><span class="hs-comment">-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_270_BIT_KHR'</span><span>
+</span><span id="line-138"></span><span>    </span><span id="%24sel%3Atransform%3ACommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="annot"><span class="annottext">CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; SurfaceTransformFlagBitsKHR
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#%24sel%3Atransform%3ACommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-var hs-var">transform</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span>
+</span><span id="line-139"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-comment">-- | @renderArea@ is the render area that is affected by the command buffer.</span><span>
+</span><span id="line-140"></span><span>    </span><span id="%24sel%3ArenderArea%3ACommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="annot"><span class="annottext">CommandBufferInheritanceRenderPassTransformInfoQCOM -&gt; Rect2D
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#%24sel%3ArenderArea%3ACommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-var hs-var">renderArea</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span>
+</span><span id="line-141"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-142"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span class="hs-cpp">
+#if defined(GENERIC_INSTANCES)
+</span><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier">Generic</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">CommandBufferInheritanceRenderPassTransformInfoQCOM</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span id="local-6989586621680144399"><span id="local-6989586621680144401"><span id="local-6989586621680144403"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-type">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span></span></span></span><span>
+</span><span id="line-147"></span><span>
+</span><span id="line-148"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680144395"><span class="annot"><a href="Vulkan.CStruct.html#ToCStruct"><span class="hs-identifier hs-type">ToCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-type">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-149"></span><span>  </span><span id="local-6989586621680144391"><span class="annot"><span class="annottext">withCStruct :: CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; (Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+    -&gt; IO b)
+-&gt; IO b
+</span><a href="#local-6989586621680144391"><span class="hs-identifier hs-var hs-var hs-var hs-var">withCStruct</span></a></span></span><span> </span><span id="local-6989586621680144390"><span class="annot"><span class="annottext">x :: CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144390"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680144389"><span class="annot"><span class="annottext">f :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM -&gt; IO b
+</span><a href="#local-6989586621680144389"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; Int
+-&gt; (Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+    -&gt; IO b)
+-&gt; IO b
+forall a b. Int -&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span class="hs-identifier hs-var">allocaBytesAligned</span></span><span> </span><span class="annot"><span class="hs-number">40</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="annot"><span class="annottext">((Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM -&gt; IO b)
+ -&gt; IO b)
+-&gt; (Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+    -&gt; IO b)
+-&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621680144388"><span class="annot"><span class="annottext">p :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144388"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; IO b
+-&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144388"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144390"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM -&gt; IO b
+</span><a href="#local-6989586621680144389"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144388"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span>  </span><span id="local-6989586621680144387"><span class="annot"><span class="annottext">pokeCStruct :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; IO b
+-&gt; IO b
+</span><a href="#local-6989586621680144387"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeCStruct</span></a></span></span><span> </span><span id="local-6989586621680144386"><span class="annot"><span class="annottext">p :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144386"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680144384"><span id="local-6989586621680144385"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-type">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span><span class="hs-special">{</span><span class="hs-glyph">..</span><span class="hs-special">}</span></span></span><span> </span><span id="local-6989586621680144383"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680144383"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-151"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144386"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM"><span class="hs-identifier hs-var">STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-152"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144386"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-153"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr SurfaceTransformFlagBitsKHR
+-&gt; SurfaceTransformFlagBitsKHR -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144386"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr SurfaceTransformFlagBitsKHR
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+</span><a href="#local-6989586621680144385"><span class="hs-identifier hs-var">transform</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-154"></span><span>    </span><span class="annot"><span class="annottext">((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ())
+-&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Rect2D -&gt; Rect2D -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144386"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr Rect2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Rect2D
+</span><a href="#local-6989586621680144384"><span class="hs-identifier hs-var">renderArea</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; IO b) -&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; (() -&gt; IO b) -&gt; IO b
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(() -&gt; IO b) -&gt; () -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-155"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680144383"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-156"></span><span>  </span><span id="local-6989586621680144380"><span class="annot"><span class="annottext">cStructSize :: Int
+</span><a href="#local-6989586621680144380"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructSize</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">40</span></span><span>
+</span><span id="line-157"></span><span>  </span><span id="local-6989586621680144379"><span class="annot"><span class="annottext">cStructAlignment :: Int
+</span><a href="#local-6989586621680144379"><span class="hs-identifier hs-var hs-var hs-var hs-var">cStructAlignment</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">8</span></span><span>
+</span><span id="line-158"></span><span>  </span><span id="local-6989586621680144378"><span class="annot"><span class="annottext">pokeZeroCStruct :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; IO b -&gt; IO b
+</span><a href="#local-6989586621680144378"><span class="hs-identifier hs-var hs-var hs-var hs-var">pokeZeroCStruct</span></a></span></span><span> </span><span id="local-6989586621680144377"><span class="annot"><span class="annottext">p :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144377"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680144376"><span class="annot"><span class="annottext">f :: IO b
+</span><a href="#local-6989586621680144376"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ContT b IO b -&gt; IO b
+forall (m :: * -&gt; *) r. Monad m =&gt; ContT r m r -&gt; m r
+</span><span class="hs-identifier hs-var">evalContT</span></span><span> </span><span class="annot"><span class="annottext">(ContT b IO b -&gt; IO b) -&gt; ContT b IO b -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-159"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr StructureType -&gt; StructureType -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144377"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr StructureType
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">0</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.StructureType.html#StructureType"><span class="hs-identifier hs-type">StructureType</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StructureType
+</span><a href="Vulkan.Core10.Enums.StructureType.html#STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM"><span class="hs-identifier hs-var">STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-160"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr ()) -&gt; Ptr () -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144377"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr (Ptr ())
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">8</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
+forall a. Ptr a
+</span><span class="hs-identifier hs-var">nullPtr</span></span><span class="hs-special">)</span><span>
+</span><span id="line-161"></span><span>    </span><span class="annot"><span class="annottext">IO () -&gt; ContT b IO ()
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; ContT b IO ()) -&gt; IO () -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr SurfaceTransformFlagBitsKHR
+-&gt; SurfaceTransformFlagBitsKHR -&gt; IO ()
+forall a. Storable a =&gt; Ptr a -&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">poke</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144377"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr SurfaceTransformFlagBitsKHR
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-162"></span><span>    </span><span class="annot"><span class="annottext">((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall k (r :: k) (m :: k -&gt; *) a.
+((a -&gt; m r) -&gt; m r) -&gt; ContT r m a
+</span><span class="hs-identifier hs-var">ContT</span></span><span> </span><span class="annot"><span class="annottext">(((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ())
+-&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; ContT b IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Ptr Rect2D -&gt; Rect2D -&gt; IO b -&gt; IO b
+forall a b. ToCStruct a =&gt; Ptr a -&gt; a -&gt; IO b -&gt; IO b
+</span><a href="Vulkan.CStruct.html#pokeCStruct"><span class="hs-identifier hs-var">pokeCStruct</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144377"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr Rect2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Rect2D
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; IO b) -&gt; ((() -&gt; IO b) -&gt; IO b) -&gt; (() -&gt; IO b) -&gt; IO b
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(() -&gt; IO b) -&gt; () -&gt; IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-163"></span><span>    </span><span class="annot"><span class="annottext">IO b -&gt; ContT b IO b
+forall (t :: (* -&gt; *) -&gt; * -&gt; *) (m :: * -&gt; *) a.
+(MonadTrans t, Monad m) =&gt;
+m a -&gt; t m a
+</span><span class="hs-identifier hs-var">lift</span></span><span> </span><span class="annot"><span class="annottext">(IO b -&gt; ContT b IO b) -&gt; IO b -&gt; ContT b IO b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">IO b
+</span><a href="#local-6989586621680144376"><span class="hs-identifier hs-var">f</span></a></span><span>
+</span><span id="line-164"></span><span>
+</span><span id="line-165"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.CStruct.html#FromCStruct"><span class="hs-identifier hs-type">FromCStruct</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-type">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-166"></span><span>  </span><span id="local-6989586621680144374"><span class="annot"><span class="annottext">peekCStruct :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; IO CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144374"><span class="hs-identifier hs-var hs-var hs-var hs-var">peekCStruct</span></a></span></span><span> </span><span id="local-6989586621680144373"><span class="annot"><span class="annottext">p :: Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144373"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-167"></span><span>    </span><span id="local-6989586621680144372"><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+</span><a href="#local-6989586621680144372"><span class="hs-identifier hs-var">transform</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr SurfaceTransformFlagBitsKHR -&gt; IO SurfaceTransformFlagBitsKHR
+forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span class="hs-identifier hs-var">peek</span></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144373"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr SurfaceTransformFlagBitsKHR
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">16</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_KHR_surface.html#SurfaceTransformFlagBitsKHR"><span class="hs-identifier hs-type">SurfaceTransformFlagBitsKHR</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-168"></span><span>    </span><span id="local-6989586621680144371"><span class="annot"><span class="annottext">Rect2D
+</span><a href="#local-6989586621680144371"><span class="hs-identifier hs-var">renderArea</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr Rect2D -&gt; IO Rect2D
+forall a. FromCStruct a =&gt; Ptr a -&gt; IO a
+</span><a href="Vulkan.CStruct.html#peekCStruct"><span class="hs-identifier hs-var">peekCStruct</span></a></span><span> </span><span class="hs-glyph">@</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144373"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; Int -&gt; Ptr Rect2D
+forall a b. Ptr a -&gt; Int -&gt; Ptr b
+</span><span class="hs-operator hs-var">`plusPtr`</span></span><span> </span><span class="annot"><span class="hs-number">20</span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Ptr</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Rect2D"><span class="hs-identifier hs-type">Rect2D</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-169"></span><span>    </span><span class="annot"><span class="annottext">CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; IO CommandBufferInheritanceRenderPassTransformInfoQCOM
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">(CommandBufferInheritanceRenderPassTransformInfoQCOM
+ -&gt; IO CommandBufferInheritanceRenderPassTransformInfoQCOM)
+-&gt; CommandBufferInheritanceRenderPassTransformInfoQCOM
+-&gt; IO CommandBufferInheritanceRenderPassTransformInfoQCOM
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+-&gt; Rect2D -&gt; CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-var">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span><span>
+</span><span id="line-170"></span><span>             </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+</span><a href="#local-6989586621680144372"><span class="hs-identifier hs-var">transform</span></a></span><span> </span><span class="annot"><span class="annottext">Rect2D
+</span><a href="#local-6989586621680144371"><span class="hs-identifier hs-var">renderArea</span></a></span><span>
+</span><span id="line-171"></span><span>
+</span><span id="line-172"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier hs-type">Zero</span></a></span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-type">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-173"></span><span>  </span><span id="local-6989586621680144369"><span class="annot"><span class="annottext">zero :: CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="#local-6989586621680144369"><span class="hs-identifier hs-var hs-var hs-var hs-var">zero</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+-&gt; Rect2D -&gt; CommandBufferInheritanceRenderPassTransformInfoQCOM
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#CommandBufferInheritanceRenderPassTransformInfoQCOM"><span class="hs-identifier hs-var">CommandBufferInheritanceRenderPassTransformInfoQCOM</span></a></span><span>
+</span><span id="line-174"></span><span>           </span><span class="annot"><span class="annottext">SurfaceTransformFlagBitsKHR
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-175"></span><span>           </span><span class="annot"><span class="annottext">Rect2D
+forall a. Zero a =&gt; a
+</span><a href="Vulkan.Zero.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
+</span><span id="line-176"></span><span>
+</span><span id="line-177"></span><span>
+</span><span id="line-178"></span><span class="hs-keyword">type</span><span> </span><span id="QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span class="hs-identifier hs-var">QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-179"></span><span>
+</span><span id="line-180"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION&quot;</span><span>
+</span><span id="line-181"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span class="hs-identifier hs-type">QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680144499"><span class="annot"><a href="#local-6989586621680144499"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integral</span></span><span> </span><span class="annot"><a href="#local-6989586621680144499"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680144499"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-182"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bQCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span id="%24mQCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span id="QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span class="annot"><span class="annottext">$bQCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION :: a
+$mQCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION :: forall r a. Integral a =&gt; a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#%24bQCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"><span class="hs-identifier hs-var hs-var hs-var">QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-number">1</span></span><span>
+</span><span id="line-183"></span><span>
+</span><span id="line-184"></span><span>
+</span><span id="line-185"></span><span class="hs-keyword">type</span><span> </span><span id="QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span class="hs-identifier hs-var">QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_QCOM_render_pass_transform&quot;</span></span><span>
+</span><span id="line-186"></span><span>
+</span><span id="line-187"></span><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME&quot;</span><span>
+</span><span id="line-188"></span><span class="hs-keyword">pattern</span><span> </span><span class="annot"><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span class="hs-identifier hs-type">QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621680144495"><span class="annot"><a href="#local-6989586621680144495"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="#local-6989586621680144495"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IsString</span></span><span> </span><span class="annot"><a href="#local-6989586621680144495"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="#local-6989586621680144495"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-189"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bQCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span id="%24mQCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span id="QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span class="annot"><span class="annottext">$bQCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME :: a
+$mQCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME :: forall r a.
+(Eq a, IsString a) =&gt;
+a -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Vulkan.Extensions.VK_QCOM_render_pass_transform.html#%24bQCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME"><span class="hs-identifier hs-var hs-var hs-var">QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="hs-string">&quot;VK_QCOM_render_pass_transform&quot;</span></span><span>
+</span><span id="line-190"></span><span>
+</span><span id="line-191"></span></pre></body></html>

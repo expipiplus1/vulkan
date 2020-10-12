@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Vulkan.Core10.Enums.EventCreateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier">EventCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html"><span class="hs-identifier">Vulkan.Core10.FundamentalTypes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Vulkan.Zero.html"><span class="hs-identifier">Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- | VkEventCreateFlags - Reserved for future use</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- 'EventCreateFlags' is a bitmask type for setting a mask, but is</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- currently reserved for future use.</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'Vulkan.Core10.Event.EventCreateInfo'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="EventCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-var">EventCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="EventCreateFlags"><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-var">EventCreateFlags</span></a></span></span><span> </span><span class="annot"><a href="Vulkan.Core10.FundamentalTypes.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680107569"><span id="local-6989586621680107571"><span class="annot"><span class="annottext">EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+(EventCreateFlags -&gt; EventCreateFlags -&gt; Bool)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; Bool)
+-&gt; Eq EventCreateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+$c/= :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+== :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+$c== :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680107553"><span id="local-6989586621680107555"><span id="local-6989586621680107557"><span id="local-6989586621680107559"><span id="local-6989586621680107561"><span id="local-6989586621680107563"><span id="local-6989586621680107565"><span class="annot"><span class="annottext">Eq EventCreateFlags
+Eq EventCreateFlags =&gt;
+(EventCreateFlags -&gt; EventCreateFlags -&gt; Ordering)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; Bool)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; Bool)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; Bool)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; Bool)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags)
+-&gt; Ord EventCreateFlags
+EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+EventCreateFlags -&gt; EventCreateFlags -&gt; Ordering
+EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+$cmin :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+max :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+$cmax :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+&gt;= :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+$c&gt;= :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+&gt; :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+$c&gt; :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+&lt;= :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+$c&lt;= :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+&lt; :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+$c&lt; :: EventCreateFlags -&gt; EventCreateFlags -&gt; Bool
+compare :: EventCreateFlags -&gt; EventCreateFlags -&gt; Ordering
+$ccompare :: EventCreateFlags -&gt; EventCreateFlags -&gt; Ordering
+$cp1Ord :: Eq EventCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680107536"><span id="local-6989586621680107538"><span id="local-6989586621680107540"><span id="local-6989586621680107542"><span id="local-6989586621680107544"><span id="local-6989586621680107546"><span id="local-6989586621680107548"><span id="local-6989586621680107550"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO EventCreateFlags
+Ptr b -&gt; Int -&gt; EventCreateFlags -&gt; IO ()
+Ptr EventCreateFlags -&gt; IO EventCreateFlags
+Ptr EventCreateFlags -&gt; Int -&gt; IO EventCreateFlags
+Ptr EventCreateFlags -&gt; Int -&gt; EventCreateFlags -&gt; IO ()
+Ptr EventCreateFlags -&gt; EventCreateFlags -&gt; IO ()
+EventCreateFlags -&gt; Int
+(EventCreateFlags -&gt; Int)
+-&gt; (EventCreateFlags -&gt; Int)
+-&gt; (Ptr EventCreateFlags -&gt; Int -&gt; IO EventCreateFlags)
+-&gt; (Ptr EventCreateFlags -&gt; Int -&gt; EventCreateFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO EventCreateFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; EventCreateFlags -&gt; IO ())
+-&gt; (Ptr EventCreateFlags -&gt; IO EventCreateFlags)
+-&gt; (Ptr EventCreateFlags -&gt; EventCreateFlags -&gt; IO ())
+-&gt; Storable EventCreateFlags
+forall b. Ptr b -&gt; Int -&gt; IO EventCreateFlags
+forall b. Ptr b -&gt; Int -&gt; EventCreateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr EventCreateFlags -&gt; EventCreateFlags -&gt; IO ()
+$cpoke :: Ptr EventCreateFlags -&gt; EventCreateFlags -&gt; IO ()
+peek :: Ptr EventCreateFlags -&gt; IO EventCreateFlags
+$cpeek :: Ptr EventCreateFlags -&gt; IO EventCreateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; EventCreateFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; EventCreateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO EventCreateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO EventCreateFlags
+pokeElemOff :: Ptr EventCreateFlags -&gt; Int -&gt; EventCreateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr EventCreateFlags -&gt; Int -&gt; EventCreateFlags -&gt; IO ()
+peekElemOff :: Ptr EventCreateFlags -&gt; Int -&gt; IO EventCreateFlags
+$cpeekElemOff :: Ptr EventCreateFlags -&gt; Int -&gt; IO EventCreateFlags
+alignment :: EventCreateFlags -&gt; Int
+$calignment :: EventCreateFlags -&gt; Int
+sizeOf :: EventCreateFlags -&gt; Int
+$csizeOf :: EventCreateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680107533"><span class="annot"><span class="annottext">EventCreateFlags
+EventCreateFlags -&gt; Zero EventCreateFlags
+forall a. a -&gt; Zero a
+zero :: EventCreateFlags
+$czero :: EventCreateFlags
+</span><a href="Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680107487"><span id="local-6989586621680107489"><span id="local-6989586621680107491"><span id="local-6989586621680107493"><span id="local-6989586621680107495"><span id="local-6989586621680107497"><span id="local-6989586621680107499"><span id="local-6989586621680107501"><span id="local-6989586621680107503"><span id="local-6989586621680107505"><span id="local-6989586621680107507"><span id="local-6989586621680107509"><span id="local-6989586621680107511"><span id="local-6989586621680107513"><span id="local-6989586621680107515"><span id="local-6989586621680107517"><span id="local-6989586621680107519"><span id="local-6989586621680107521"><span id="local-6989586621680107523"><span id="local-6989586621680107525"><span id="local-6989586621680107527"><span id="local-6989586621680107529"><span class="annot"><span class="annottext">Eq EventCreateFlags
+EventCreateFlags
+Eq EventCreateFlags =&gt;
+(EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; EventCreateFlags
+-&gt; (Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; Bool)
+-&gt; (EventCreateFlags -&gt; Maybe Int)
+-&gt; (EventCreateFlags -&gt; Int)
+-&gt; (EventCreateFlags -&gt; Bool)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int -&gt; EventCreateFlags)
+-&gt; (EventCreateFlags -&gt; Int)
+-&gt; Bits EventCreateFlags
+Int -&gt; EventCreateFlags
+EventCreateFlags -&gt; Bool
+EventCreateFlags -&gt; Int
+EventCreateFlags -&gt; Maybe Int
+EventCreateFlags -&gt; EventCreateFlags
+EventCreateFlags -&gt; Int -&gt; Bool
+EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: EventCreateFlags -&gt; Int
+$cpopCount :: EventCreateFlags -&gt; Int
+rotateR :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$crotateR :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+rotateL :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$crotateL :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+unsafeShiftR :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$cunsafeShiftR :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+shiftR :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$cshiftR :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+unsafeShiftL :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$cunsafeShiftL :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+shiftL :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$cshiftL :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+isSigned :: EventCreateFlags -&gt; Bool
+$cisSigned :: EventCreateFlags -&gt; Bool
+bitSize :: EventCreateFlags -&gt; Int
+$cbitSize :: EventCreateFlags -&gt; Int
+bitSizeMaybe :: EventCreateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: EventCreateFlags -&gt; Maybe Int
+testBit :: EventCreateFlags -&gt; Int -&gt; Bool
+$ctestBit :: EventCreateFlags -&gt; Int -&gt; Bool
+complementBit :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$ccomplementBit :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+clearBit :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$cclearBit :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+setBit :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$csetBit :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+bit :: Int -&gt; EventCreateFlags
+$cbit :: Int -&gt; EventCreateFlags
+zeroBits :: EventCreateFlags
+$czeroBits :: EventCreateFlags
+rotate :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$crotate :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+shift :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+$cshift :: EventCreateFlags -&gt; Int -&gt; EventCreateFlags
+complement :: EventCreateFlags -&gt; EventCreateFlags
+$ccomplement :: EventCreateFlags -&gt; EventCreateFlags
+xor :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+$cxor :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+.|. :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+$c.|. :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+.&amp;. :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+$c.&amp;. :: EventCreateFlags -&gt; EventCreateFlags -&gt; EventCreateFlags
+$cp1Bits :: Eq EventCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680107481"><span id="local-6989586621680107483"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-type">EventCreateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621680107479"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; EventCreateFlags -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680107477"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680107477"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-type">EventCreateFlags</span></a></span><span> </span><span id="local-6989586621680107476"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680107476"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680107477"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EventCreateFlags 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680107476"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680107468"><span id="local-6989586621680107471"><span id="local-6989586621680107473"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-type">EventCreateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621680107466"><span class="annot"><span class="annottext">readPrec :: ReadPrec EventCreateFlags
+</span><a href="#local-6989586621680107466"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec EventCreateFlags -&gt; ReadPrec EventCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec EventCreateFlags)] -&gt; ReadPrec EventCreateFlags
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-40"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec EventCreateFlags
+-&gt; ReadPrec EventCreateFlags -&gt; ReadPrec EventCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-41"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec EventCreateFlags -&gt; ReadPrec EventCreateFlags
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-42"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;EventCreateFlags&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>                       </span><span id="local-6989586621680107465"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680107465"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-44"></span><span>                       </span><span class="annot"><span class="annottext">EventCreateFlags -&gt; ReadPrec EventCreateFlags
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; EventCreateFlags
+</span><a href="Vulkan.Core10.Enums.EventCreateFlags.html#EventCreateFlags"><span class="hs-identifier hs-var">EventCreateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680107465"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span></pre></body></html>
