@@ -196,10 +196,7 @@ foreign import ccall
 --
 -- After verifying and enabling the extensions the
 -- 'Vulkan.Core10.Handles.Device' object is created and returned to the
--- application. If a requested extension is only supported by a layer, both
--- the layer and the extension need to be specified at
--- 'Vulkan.Core10.DeviceInitialization.createInstance' time for the
--- creation to succeed.
+-- application.
 --
 -- Multiple logical devices /can/ be created from the same physical device.
 -- Logical device creation /may/ fail due to lack of device-specific
@@ -560,6 +557,12 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeatures'
 --     structure
+--
+-- -   If @ppEnabledExtensions@ contains
+--     @\"VK_KHR_shader_draw_parameters\"@ and the @pNext@ chain includes a
+--     'Vulkan.Core12.PhysicalDeviceVulkan11Features' structure, then
+--     'Vulkan.Core12.PhysicalDeviceVulkan11Features'::@shaderDrawParameters@
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   If @ppEnabledExtensions@ contains @\"VK_KHR_draw_indirect_count\"@
 --     and the @pNext@ chain includes a

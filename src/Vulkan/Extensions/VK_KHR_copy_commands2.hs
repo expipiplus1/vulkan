@@ -2005,6 +2005,15 @@ instance Zero BlitImageInfo2KHR where
 -- -   If @dstImage@ has a depth\/stencil format, the @bufferOffset@ member
 --     of any element of @pRegions@ /must/ be a multiple of @4@
 --
+-- -   If the queue family used to create the
+--     'Vulkan.Core10.Handles.CommandPool' which @commandBuffer@ was
+--     allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', for each
+--     element of @pRegions@, the @aspectMask@ member of @imageSubresource@
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
+--
 -- -   If @dstImage@ does not have either a depth\/stencil or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
