@@ -9,11 +9,11 @@ import           Vulkan.Zero
 
 main :: IO ()
 main = withInstance zero Nothing bracket $ \i -> do
-  pPrint i
+  myPrint i
   (_, layers    ) <- enumerateInstanceLayerProperties
   (_, extensions) <- enumerateInstanceExtensionProperties Nothing
-  pPrint layers
-  pPrint extensions
+  myPrint layers
+  myPrint extensions
   (_, devices) <- enumeratePhysicalDevices i
   traverse_ deviceInfo devices
 
@@ -21,7 +21,15 @@ deviceInfo :: PhysicalDevice -> IO ()
 deviceInfo p = do
   (_, extensions) <- enumerateDeviceExtensionProperties p Nothing
   (_, layers    ) <- enumerateDeviceLayerProperties p
-  traverse_ pPrint extensions
-  traverse_ pPrint layers
-  pPrint =<< getPhysicalDeviceFeatures p
-  pPrint =<< getPhysicalDeviceProperties p
+  traverse_ myPrint extensions
+  traverse_ myPrint layers
+  myPrint =<< getPhysicalDeviceFeatures p
+  myPrint =<< getPhysicalDeviceProperties p
+
+myPrint :: Show a => a -> IO ()
+myPrint =
+  pPrintOpt
+    CheckColorTty
+    defaultOutputOptionsDarkBg
+      { outputOptionsStringStyle = Literal
+      }
