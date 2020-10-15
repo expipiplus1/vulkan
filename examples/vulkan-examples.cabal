@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8cb9572d801b76c3fb997ca0f650d2911e687094ceffeb6198067a3d1f41f85d
+-- hash: 67399171b98a84d61f217b567c5a5dc6a097becfb14f912edc556e4b7ed5bab3
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -65,7 +65,7 @@ executable info
   build-depends:
       base <4.15
     , bytestring
-    , pretty-simple
+    , pretty-simple >=3.3
     , vulkan
   if os(windows)
     ghc-options: -optl-mconsole
