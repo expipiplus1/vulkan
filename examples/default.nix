@@ -1,5 +1,5 @@
 { nixpkgsSrc ? builtins.fetchTarball
-  "https://github.com/NixOS/nixpkgs/archive/7b46d0e7771f910a1055f5aef854a7987ceebc13.tar.gz"
+  "https://github.com/NixOS/nixpkgs/archive/84d74ae9c9cbed73274b8e4e00be14688ffc93fe.tar.gz"
 , pkgs ? import nixpkgsSrc { }, compiler ? "ghc884", hoogle ? true }:
 
 let
@@ -17,6 +17,8 @@ let
       overrides = self: super:
         {
           th-desugar = self.th-desugar_1_11;
+          pretty-simple = self.pretty-simple_4_0_0_0;
+          prettyprinter = self.prettyprinter_1_7_0;
           autoapply = markUnbroken (dontCheck super.autoapply);
           vulkan = let
             srcFilter = path: type:
