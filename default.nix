@@ -99,7 +99,7 @@ let
     with pkgs.haskell.lib;
     let
       drv =
-        haskellPackages.callCabal2nixWithOptions "" src "--flag=build-examples"
+        haskellPackages.callCabal2nix "" src
         ({ } // pkgs.lib.optionalAttrs (name == "vulkan") {
           vulkan = pkgs.vulkan-loader;
         } // pkgs.lib.optionalAttrs ((name == "vulkan-examples" || name
