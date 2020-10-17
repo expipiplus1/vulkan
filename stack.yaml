@@ -1,4 +1,4 @@
-resolver: lts-16.12
+resolver: lts-16.18
 packages:
 - .
 - utils
@@ -9,6 +9,7 @@ extra-deps:
 - autoapply-0.4
 - th-desugar-1.11
 - resourcet-1.2.4
+- pretty-simple-3.3.0.0
 nix:
   enable: false
   packages: [vulkan-loader vulkan-headers glslang pkg-config SDL2 zlib]

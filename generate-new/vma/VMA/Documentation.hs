@@ -107,6 +107,7 @@ splitStructDocumentation parent (Pandoc meta bs) =
       Para [Code _ "#include <vk_mem_alloc.h>"]             : t  -> t
       -- Boring headers
       Header 2 _ [Str "Detailed", Space, Str "Description"] : xs -> xs
+      Header 2 _ [Str "Public", Space, Str "Attributes"] : xs -> xs
       Header 2 _ [Str "Member", Space, Str "Data", Space, Str "Documentation"] : xs
         -> xs
       -- member list
@@ -192,7 +193,13 @@ splitHeaderDocumentation isValid (Pandoc meta bs) =
 
 enumValuesFromTable :: CName -> Meta -> Block -> Maybe [Documentation]
 enumValuesFromTable parent meta = \case
-  Table [Str "Enumerator"] _ _ _ rs -> traverse enumeratorRowToDocumentation rs
+  Table _ (Caption _ [Plain [Str "Enumerator"]]) _ _ bodies _ ->
+    let rs =
+          [ [ c | Cell _ _ _ _ c <- r ]
+          | TableBody _ _ rs1 rs2 <- bodies
+          , Row _ r               <- rs1 <> rs2
+          ]
+    in  traverse enumeratorRowToDocumentation rs
   _ -> Nothing
  where
   enumeratorRowToDocumentation = \case

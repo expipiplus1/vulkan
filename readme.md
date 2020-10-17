@@ -384,13 +384,21 @@ any version of nixpkgs from the last 3 months should do the trick.
   - pkg-config
   - SDL2
   - `stack exec -- pacman -S mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2`
-  - Note that the above command will also install mingw's `libvulkan-1.dll`,
-    I had trouble getting things to run with this dll, so make sure you're
-    linking to the windows SDK installed earlier instead.
+  - Note that the above command will also install mingw's `libvulkan-1.dll`.
+    Make sure that the Vulkan DLL linked by GHC is the same one that SDL
+    loads at runtime. By default SDL will load
+    `vulkan-1.dll`<sup>[1](#sdl-load)</sup>, so if you intend to use mingw's
+    `libvulkan-1.dll` make sure to either set the `SDL_VULKAN_LIBRARY`
+    environment variable to `"libvulkan-1.dll"` or pass `Just
+    "libvulkan-1.dll"` to [SDL's
+    `vkLoadLibrary`](https://hackage.haskell.org/package/sdl2-2.5.0.0/docs/SDL-Video-Vulkan.html#v:vkLoadLibrary)
+    before creating a window.
 - Build the packages
-  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0 build`
+  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0/Lib build`
+  - You can add `extra-lib-dirs: [ C:/VulkanSDK/1.2.135.0/Lib ]` to your `stack.yaml` 
+    instead of using the command line option here.
 - Run an example program
-  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0 run resize`
+  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0/Lib run resize`
 
 ## Examples
 
@@ -433,3 +441,5 @@ lifetime of any Vulkan command call.
   to pass `NULL` for the vector with a non-zero count. In these cases it was
   deemed clearer to preserve the "count" member and allow the Haskell
   application to pass a zero-length vector to indicate `NULL`.
+
+<a name="sdl-load">3</a>: <https://github.com/spurious/SDL-mirror/blob/6b6170caf69b4189c9a9d14fca96e97f09bbcc41/src/video/windows/SDL_windowsvulkan.c#L50-L54>

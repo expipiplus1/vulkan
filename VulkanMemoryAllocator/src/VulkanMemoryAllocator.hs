@@ -1228,7 +1228,8 @@ foreign import ccall
 -- | Returns current information about specified allocation and atomically
 -- marks it as used in current frame.
 --
--- Current paramters of given allocation are returned in @pAllocationInfo@.
+-- Current paramteres of given allocation are returned in
+-- @pAllocationInfo@.
 --
 -- This function also atomically \"touches\" allocation - marks it as used
 -- in current frame, just like 'touchAllocation'. If the allocation is in
@@ -2679,11 +2680,11 @@ pattern ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT = AllocatorCreateFlagBit
 --     to core Vulkan 1.2.
 --
 -- 2.  Found as available and enabled device feature
---     @VkPhysicalDeviceBufferDeviceAddressFeatures*::bufferDeviceAddress@.
+--     @VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddress@.
 --
 -- When this flag is set, you can create buffers with
--- @VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT*@ using VMA. The library
--- automatically adds @VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT*@ to allocated
+-- @VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT@ using VMA. The library
+-- automatically adds @VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT@ to allocated
 -- memory blocks wherever it might be needed.
 --
 -- For more information, see documentation chapter /Enabling buffer device
@@ -3741,7 +3742,7 @@ data AllocationCreateInfo = AllocationCreateInfo
   , -- | Flags that preferably should be set in a memory type chosen for an
     -- allocation.
     --
-    -- Set to 0 if no additional flags are prefered.   If @pool@ is not null,
+    -- Set to 0 if no additional flags are preferred.   If @pool@ is not null,
     -- this member is ignored.
     preferredFlags :: MemoryPropertyFlags
   , -- | Bitmask containing one bit set for every memory type acceptable for this
