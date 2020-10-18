@@ -37,30 +37,11 @@ storablePoke
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 storablePoke addr value = do
-  ty              <- refType value
-  isStructOrUnion <- case ty of
-    ConT n :@ VarT _ -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
-    ConT n           -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
-    _                -> pure False
-  if isStructOrUnion
-    then unitStmt $ do
-      AddrDoc  a <- use addr
-      ValueDoc v <- use value
-      tellImportWithAll (TyConName "ToCStruct")
-      tellImportWithAll ''ContT
-      pure
-        .   ContTAction
-        .   ValueDoc
-        $   "ContT $ pokeCStruct"
-        <+> a
-        <+> v
-        <+> ". ($ ())"
-    else unitStmt $ do
-      tellImportWith ''Storable 'poke
-      AddrDoc  a <- use addr
-      ValueDoc v <- use value
-      pure . IOAction . ValueDoc $ "poke" <+> a <+> v
-
+  -- 'unitStmt' is from ./src/Render/Stmt.hs
+  -- uncomment the below line to trigger:
+  -- 'Compilation Issue: initDs \ Please report this bug to the compiler authors.'
+  -- unitStmt @ValueDoc undefined
+  undefined
 
 -- | A doc which is an @IO a@ throwing an error as InvalidArgument unless some
 -- condition is met
