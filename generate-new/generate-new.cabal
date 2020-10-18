@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7069db853d48775968fa82171b112c752c823dd01f3d6725ed97515aa5926777
+-- hash: 5b6a6a912562e05c01394eb18c3f77eb1a0de76fcba02169c906b4b7be79cd3e
 
 name:           generate-new
 version:        0.0.0
@@ -123,6 +123,7 @@ library
     , typed-process
     , uniplate
     , unordered-containers
+    , validation-selective
     , vector
     , vector-algorithms
     , word-wrap
@@ -182,6 +183,7 @@ executable vk
     , typed-process
     , uniplate
     , unordered-containers
+    , validation-selective
     , vector
     , vector-algorithms
     , word-wrap
@@ -243,6 +245,7 @@ executable vma
     , typed-process
     , uniplate
     , unordered-containers
+    , validation-selective
     , vector
     , vector-algorithms
     , word-wrap
