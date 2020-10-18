@@ -1,2 +1,100 @@
 cradle:
   cabal:
+    - path: "./VulkanMemoryAllocator/src"
+      component: "lib:VulkanMemoryAllocator"
+
+    - path: "./examples/compute/Main.hs"
+      component: "vulkan-examples:exe:compute"
+
+    - path: "./examples/compute/Paths_vulkan_examples.hs"
+      component: "vulkan-examples:exe:compute"
+
+    - path: "./examples/info/Main.hs"
+      component: "vulkan-examples:exe:info"
+
+    - path: "./examples/info/Paths_vulkan_examples.hs"
+      component: "vulkan-examples:exe:info"
+
+    - path: "./examples/offscreen/Main.hs"
+      component: "vulkan-examples:exe:offscreen"
+
+    - path: "./examples/offscreen/Paths_vulkan_examples.hs"
+      component: "vulkan-examples:exe:offscreen"
+
+    - path: "./examples/resize/Main.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Frame.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Framebuffer.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Init.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Julia.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/MonadVulkan.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Pipeline.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Swapchain.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Window.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/resize/Paths_vulkan_examples.hs"
+      component: "vulkan-examples:exe:resize"
+
+    - path: "./examples/sdl-triangle/Main.hs"
+      component: "vulkan-examples:exe:sdl-triangle"
+
+    - path: "./examples/sdl-triangle/Paths_vulkan_examples.hs"
+      component: "vulkan-examples:exe:sdl-triangle"
+
+    - path: "./generate-new/src"
+      component: "lib:generate-new"
+
+    - path: "./generate-new/vk/Main.hs"
+      component: "generate-new:exe:vk"
+
+    - path: "./generate-new/vk/VK/AssignModules.hs"
+      component: "generate-new:exe:vk"
+
+    - path: "./generate-new/vk/VK/Bracket.hs"
+      component: "generate-new:exe:vk"
+
+    - path: "./generate-new/vk/VK/Render.hs"
+      component: "generate-new:exe:vk"
+
+    - path: "./generate-new/vk/Paths_generate_new.hs"
+      component: "generate-new:exe:vk"
+
+    - path: "./generate-new/vma/Main.hs"
+      component: "generate-new:exe:vma"
+
+    - path: "./generate-new/vma/VMA/Bracket.hs"
+      component: "generate-new:exe:vma"
+
+    - path: "./generate-new/vma/VMA/Documentation.hs"
+      component: "generate-new:exe:vma"
+
+    - path: "./generate-new/vma/VMA/Render.hs"
+      component: "generate-new:exe:vma"
+
+    - path: "./generate-new/vma/VMA/RenderParams.hs"
+      component: "generate-new:exe:vma"
+
+    - path: "./generate-new/vma/Paths_generate_new.hs"
+      component: "generate-new:exe:vma"
+
+    - path: "./utils/src"
+      component: "lib:vulkan-utils"
+
+    - path: "./src"
+      component: "lib:vulkan"
