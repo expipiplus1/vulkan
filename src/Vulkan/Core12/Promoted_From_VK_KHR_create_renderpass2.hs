@@ -80,6 +80,7 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentShadingRateAttachmentInfoKHR)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
@@ -1008,6 +1009,7 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 --
 -- = See Also
 --
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1094,6 +1096,13 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- @viewMask@ has the same effect for the described subpass as
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
 -- has on each corresponding subpass.
+--
+-- If an instance of
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
+-- is included in the @pNext@ chain, @pFragmentShadingRateAttachment@ is
+-- not @NULL@, and its @attachment@ member is not
+-- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the identified
+-- attachment defines a fragment shading rate attachment for that subpass.
 --
 -- == Valid Usage
 --
@@ -1214,6 +1223,13 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   An attachment /must/ not be used in both @pDepthStencilAttachment@
 --     and @pColorAttachments@
 --
+-- -   If the @pFragmentShadingRateAttachment@ member of a
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
+--     structure included in the @pNext@ chain is not @NULL@, and its
+--     @attachment@ member is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', that attachment
+--     /must/ not be used as any other attachment in this subpass
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -1302,6 +1318,7 @@ instance Extensible SubpassDescription2 where
   getNext SubpassDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDescription2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @FragmentShadingRateAttachmentInfoKHR = Just f
     | Just Refl <- eqT @e @SubpassDescriptionDepthStencilResolve = Just f
     | otherwise = Nothing
 
@@ -1749,6 +1766,19 @@ instance Zero SubpassDependency2 where
 --
 -- -   The @dstSubpass@ member of each element of @pDependencies@ /must/ be
 --     less than @subpassCount@
+--
+-- -   If any element of @pAttachmentImageInfos@ is used as a fragment
+--     shading rate attachment in any subpass, it /must/ not be used as any
+--     other attachment in the render pass
+--
+-- -   If @flags@ includes
+--     'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM',
+--     an element of @pSubpasses@ includes an instance of
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
+--     in its @pNext@ chain, and the @pFragmentShadingRateAttachment@
+--     member of that structure is not equal to @NULL@, the @attachment@
+--     member of @pFragmentShadingRateAttachment@ /must/ be
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- == Valid Usage (Implicit)
 --

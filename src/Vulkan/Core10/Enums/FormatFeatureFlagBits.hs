@@ -12,6 +12,7 @@ module Vulkan.Core10.Enums.FormatFeatureFlagBits  ( FormatFeatureFlagBits( FORMA
                                                                          , FORMAT_FEATURE_BLIT_SRC_BIT
                                                                          , FORMAT_FEATURE_BLIT_DST_BIT
                                                                          , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT
+                                                                         , FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                          , FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
                                                                          , FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
                                                                          , FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
@@ -211,6 +212,12 @@ import Vulkan.Zero (Zero)
 --     image view /can/ be used as a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 --
+-- -   'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
+--     that an image view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+--     An implementation /must/ not set this feature for formats that with
+--     numeric type other than @*UINT@, or set it as a buffer feature.
+--
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by <VkBuffer.html buffers> or
 -- <VkBufferView.html buffer views> created with the queried
@@ -315,6 +322,12 @@ pattern FORMAT_FEATURE_BLIT_DST_BIT = FormatFeatureFlagBits 0x00000800
 -- /should/ be proportional to, or a weighted average of, the number of
 -- comparison passes or failures.
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = FormatFeatureFlagBits 0x00001000
+-- | 'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
+-- an image view /can/ be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+-- An implementation /must/ not set this feature for formats that with
+-- numeric type other than @*UINT@, or set it as a buffer feature.
+pattern FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = FormatFeatureFlagBits 0x40000000
 -- | 'FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image
 -- view /can/ be used as a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
@@ -417,6 +430,7 @@ instance Show FormatFeatureFlagBits where
     FORMAT_FEATURE_BLIT_SRC_BIT -> showString "FORMAT_FEATURE_BLIT_SRC_BIT"
     FORMAT_FEATURE_BLIT_DST_BIT -> showString "FORMAT_FEATURE_BLIT_DST_BIT"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
+    FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR -> showString "FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
     FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT -> showString "FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT"
     FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR -> showString "FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"
     FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG -> showString "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
@@ -446,6 +460,7 @@ instance Read FormatFeatureFlagBits where
                             , ("FORMAT_FEATURE_BLIT_SRC_BIT", pure FORMAT_FEATURE_BLIT_SRC_BIT)
                             , ("FORMAT_FEATURE_BLIT_DST_BIT", pure FORMAT_FEATURE_BLIT_DST_BIT)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)
+                            , ("FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR", pure FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR)
                             , ("FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT", pure FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT)
                             , ("FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR", pure FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR)
                             , ("FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG", pure FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG)

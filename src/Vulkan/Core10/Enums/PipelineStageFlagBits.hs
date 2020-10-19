@@ -165,7 +165,7 @@ pattern PIPELINE_STAGE_HOST_BIT = PipelineStageFlagBits 0x00004000
 --
 -- -   'PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
--- -   'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+-- -   'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   'PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 pattern PIPELINE_STAGE_ALL_GRAPHICS_BIT = PipelineStageFlagBits 0x00008000
@@ -185,11 +185,7 @@ pattern PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT = PipelineStageFlagBits 
 pattern PIPELINE_STAGE_MESH_SHADER_BIT_NV = PipelineStageFlagBits 0x00100000
 -- | 'PIPELINE_STAGE_TASK_SHADER_BIT_NV' specifies the task shader stage.
 pattern PIPELINE_STAGE_TASK_SHADER_BIT_NV = PipelineStageFlagBits 0x00080000
--- | 'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV' specifies the stage of the
--- pipeline where the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
--- is read to determine the shading rate for portions of a rasterized
--- primitive.
+-- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
 pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV = PipelineStageFlagBits 0x00400000
 -- | 'PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR' specifies the
 -- execution of

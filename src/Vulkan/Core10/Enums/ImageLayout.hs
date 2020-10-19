@@ -156,13 +156,7 @@ pattern IMAGE_LAYOUT_PREINITIALIZED = ImageLayout 8
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
 -- usage bit enabled.
 pattern IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT = ImageLayout 1000218000
--- | 'IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV' /must/ only be used as a
--- read-only
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading-rate-image>.
--- This layout is valid only for image subresources of images created with
--- the
--- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
--- usage bit enabled.
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV"
 pattern IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV = ImageLayout 1000164003
 -- | 'IMAGE_LAYOUT_SHARED_PRESENT_KHR' is valid only for shared presentable
 -- images, and /must/ be used for any usage the image supports.
