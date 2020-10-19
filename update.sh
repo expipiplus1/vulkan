@@ -12,7 +12,7 @@ version=${1:-$latest_version}
 # For GitHub actions
 echo "::set-output name=vulkan_version::$version"
 
-if git -C generate-new/Vulkan-Docs describe --tags | grep $version; then
+if git -C generate-new/Vulkan-Docs describe --tags | grep "$version"; then
   echo "Vulkan-Docs is already at $version"
   exit 0
 fi
