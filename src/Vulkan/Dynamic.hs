@@ -157,6 +157,7 @@ import {-# SOURCE #-} Vulkan.Core10.Enums.Filter (Filter)
 import {-# SOURCE #-} Vulkan.Core10.Enums.Format (Format)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (FormatProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (FormatProperties2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentShadingRateCombinerOpKHR)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Framebuffer)
 import {-# SOURCE #-} Vulkan.Core10.Pass (FramebufferCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (FramebufferMixedSamplesCombinationNV)
@@ -236,6 +237,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabili
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities (PhysicalDeviceExternalSemaphoreInfo)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceFeatures2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateKHR)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (PhysicalDeviceGroupProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceImageFormatInfo2)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceMemoryProperties)
@@ -423,6 +425,7 @@ data InstanceCmds = InstanceCmds
   , pVkCreateHeadlessSurfaceEXT :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr HeadlessSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
   , pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: FunPtr (Ptr PhysicalDevice_T -> ("pCombinationCount" ::: Ptr Word32) -> ("pCombinations" ::: Ptr FramebufferMixedSamplesCombinationNV) -> IO Result)
   , pVkGetPhysicalDeviceToolPropertiesEXT :: FunPtr (Ptr PhysicalDevice_T -> ("pToolCount" ::: Ptr Word32) -> ("pToolProperties" ::: Ptr PhysicalDeviceToolPropertiesEXT) -> IO Result)
+  , pVkGetPhysicalDeviceFragmentShadingRatesKHR :: FunPtr (Ptr PhysicalDevice_T -> ("pFragmentShadingRateCount" ::: Ptr Word32) -> ("pFragmentShadingRates" ::: Ptr PhysicalDeviceFragmentShadingRateKHR) -> IO Result)
   }
 
 deriving instance Eq InstanceCmds
@@ -439,7 +442,7 @@ instance Zero InstanceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr
+    nullFunPtr nullFunPtr
 
 -- | A version of 'getInstanceProcAddr' which can be called
 -- with a null pointer for the instance.
@@ -531,6 +534,7 @@ initInstanceCmds handle = do
   vkCreateHeadlessSurfaceEXT <- getInstanceProcAddr' handle (Ptr "vkCreateHeadlessSurfaceEXT"#)
   vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV"#)
   vkGetPhysicalDeviceToolPropertiesEXT <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceToolPropertiesEXT"#)
+  vkGetPhysicalDeviceFragmentShadingRatesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceFragmentShadingRatesKHR"#)
   pure $ InstanceCmds handle
     (castFunPtr @_ @(Ptr Instance_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyInstance)
     (castFunPtr @_ @(Ptr Instance_T -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr (Ptr PhysicalDevice_T)) -> IO Result) vkEnumeratePhysicalDevices)
@@ -612,6 +616,7 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr HeadlessSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateHeadlessSurfaceEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pCombinationCount" ::: Ptr Word32) -> ("pCombinations" ::: Ptr FramebufferMixedSamplesCombinationNV) -> IO Result) vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pToolCount" ::: Ptr Word32) -> ("pToolProperties" ::: Ptr PhysicalDeviceToolPropertiesEXT) -> IO Result) vkGetPhysicalDeviceToolPropertiesEXT)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pFragmentShadingRateCount" ::: Ptr Word32) -> ("pFragmentShadingRates" ::: Ptr PhysicalDeviceFragmentShadingRateKHR) -> IO Result) vkGetPhysicalDeviceFragmentShadingRatesKHR)
 
 data DeviceCmds = DeviceCmds
   { deviceCmdsHandle :: Ptr Device_T
@@ -925,6 +930,7 @@ data DeviceCmds = DeviceCmds
   , pVkCmdCopyBufferToImage2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pCopyBufferToImageInfo" ::: Ptr CopyBufferToImageInfo2KHR) -> IO ())
   , pVkCmdCopyImageToBuffer2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pCopyImageToBufferInfo" ::: Ptr CopyImageToBufferInfo2KHR) -> IO ())
   , pVkCmdResolveImage2KHR :: FunPtr (Ptr CommandBuffer_T -> ("pResolveImageInfo" ::: Ptr ResolveImageInfo2KHR) -> IO ())
+  , pVkCmdSetFragmentShadingRateKHR :: FunPtr (Ptr CommandBuffer_T -> ("pFragmentSize" ::: Ptr Extent2D) -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -969,7 +975,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1293,6 +1299,7 @@ initDeviceCmds instanceCmds handle = do
   vkCmdCopyBufferToImage2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyBufferToImage2KHR"#)
   vkCmdCopyImageToBuffer2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdCopyImageToBuffer2KHR"#)
   vkCmdResolveImage2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdResolveImage2KHR"#)
+  vkCmdSetFragmentShadingRateKHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetFragmentShadingRateKHR"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1604,4 +1611,5 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pCopyBufferToImageInfo" ::: Ptr CopyBufferToImageInfo2KHR) -> IO ()) vkCmdCopyBufferToImage2KHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pCopyImageToBufferInfo" ::: Ptr CopyImageToBufferInfo2KHR) -> IO ()) vkCmdCopyImageToBuffer2KHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pResolveImageInfo" ::: Ptr ResolveImageInfo2KHR) -> IO ()) vkCmdResolveImage2KHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pFragmentSize" ::: Ptr Extent2D) -> ("combinerOps" ::: Ptr (FixedArray 2 FragmentShadingRateCombinerOpKHR)) -> IO ()) vkCmdSetFragmentShadingRateKHR)
 

@@ -35,6 +35,7 @@ import Vulkan.Zero (Zero)
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.FramebufferMixedSamplesCombinationNV',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRatePropertiesKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceSparseImageFormatInfo2',
 -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo',
 -- 'SampleCountFlags',

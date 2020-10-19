@@ -156,6 +156,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_creation_feedback (Pipel
 import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags (PipelineDepthStencilStateCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_discard_rectangles (PipelineDiscardRectangleStateCreateInfoEXT)
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags (PipelineDynamicStateCreateFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PipelineFragmentShadingRateStateCreateInfoKHR)
 import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags (PipelineInputAssemblyStateCreateFlags)
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags (PipelineMultisampleStateCreateFlags)
@@ -2572,9 +2573,8 @@ instance es ~ '[] => Zero (PipelineMultisampleStateCreateInfo es) where
 --
 -- -   If @colorBlendOp@ or @alphaBlendOp@ is an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>,
---     then 'Vulkan.Core10.Pass.SubpassDescription'::@colorAttachmentCount@
---     of the subpass this pipeline is compiled against /must/ be less than
---     or equal to
+--     then @colorAttachmentCount@ of the subpass this pipeline is compiled
+--     against /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT'::advancedBlendMaxColorAttachments
 --
 -- -   If the @VK_KHR_portability_subset@ extension is enabled, and
@@ -2725,6 +2725,13 @@ instance Zero PipelineColorBlendAttachmentState where
 -- feature is not enabled on the device, all
 -- 'PipelineColorBlendAttachmentState' elements in the @pAttachments@ array
 -- /must/ be identical.
+--
+-- The value of @attachmentCount@ /must/ be greater than the index of all
+-- color attachments that are not
+-- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' in
+-- 'Vulkan.Core10.Pass.SubpassDescription'::@pColorAttachments@ or
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2'::@pColorAttachments@
+-- for the subpass in which this pipeline is used.
 --
 -- == Valid Usage
 --
@@ -3392,6 +3399,13 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     attachments, @pColorBlendState@ /must/ be a valid pointer to a valid
 --     'PipelineColorBlendStateCreateInfo' structure
 --
+-- -   If the @rasterizerDiscardEnable@ member of @pRasterizationState@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE',
+--     @pColorBlendState->attachmentCount@ /must/ be greater than the index
+--     of all color attachments that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' for the @subpass@
+--     index in @renderPass@
+--
 -- -   If the depth bias clamping feature is not enabled, no element of the
 --     @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS', and the
@@ -3697,6 +3711,102 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     or
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
 --
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.width
+--     /must/ be greater than or equal to @1@
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.height
+--     /must/ be greater than or equal to @1@
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.width
+--     /must/ be a power-of-two value
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.height
+--     /must/ be a power-of-two value
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.width
+--     /must/ be less than or equal to @4@
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.height
+--     /must/ be less than or equal to @4@
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate feature>
+--     is not enabled,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.width
+--     and
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::fragmentSize.height
+--     /must/ both be equal to @1@
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
+--     is not enabled,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::@combinerOps@[0]
+--     /must/ be
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
+--
+-- -   If
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
+--     is not enabled,
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::@combinerOps@[1]
+--     /must/ be
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported,
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     is not included in @pDynamicState@->@pDynamicStates@, and
+--     'PipelineViewportStateCreateInfo'::@viewportCount@ is greater than
+--     @1@, entry points specified in @pStages@ /must/ not write to the
+--     @PrimitiveShadingRateKHR@ built-in
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, and entry points specified in @pStages@
+--     write to the @ViewportIndex@ built-in, they /must/ not also write to
+--     the @PrimitiveShadingRateKHR@ built-in
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, and entry points specified in @pStages@
+--     write to the @ViewportMaskNV@ built-in, they /must/ not also write
+--     to the @PrimitiveShadingRateKHR@ built-in
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentShadingRateNonTrivialCombinerOps>
+--     limit is not supported and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
+--     is not included in @pDynamicState@->@pDynamicStates@, elements of
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'::@combinerOps@
+--     /must/ be
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -3709,6 +3819,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_AMD_pipeline_compiler_control.PipelineCompilerControlCreateInfoAMD',
 --     'Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT',
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR',
 --     or
 --     'Vulkan.Extensions.VK_NV_representative_fragment_test.PipelineRepresentativeFragmentTestStateCreateInfoNV'
 --
@@ -3838,6 +3949,7 @@ instance Extensible GraphicsPipelineCreateInfo where
   getNext GraphicsPipelineCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends GraphicsPipelineCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PipelineFragmentShadingRateStateCreateInfoKHR = Just f
     | Just Refl <- eqT @e @PipelineCompilerControlCreateInfoAMD = Just f
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
     | Just Refl <- eqT @e @PipelineRepresentativeFragmentTestStateCreateInfoNV = Just f

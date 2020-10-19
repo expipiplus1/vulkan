@@ -85,10 +85,7 @@ pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT = ImageUsageFlagBits 0x00000080
 -- use as a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymapops fragment density map image>.
 pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT = ImageUsageFlagBits 0x00000200
--- | 'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV' specifies that the image /can/
--- be used to create a 'Vulkan.Core10.Handles.ImageView' suitable for use
--- as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
 pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = ImageUsageFlagBits 0x00000100
 
 type ImageUsageFlags = ImageUsageFlagBits

@@ -132,6 +132,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_fd
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_win32
+                          , module Vulkan.Extensions.VK_KHR_fragment_shading_rate
                           , module Vulkan.Extensions.VK_KHR_get_display_properties2
                           , module Vulkan.Extensions.VK_KHR_get_memory_requirements2
                           , module Vulkan.Extensions.VK_KHR_get_physical_device_properties2
@@ -160,6 +161,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Handles
                           , module Vulkan.Extensions.VK_KHR_shader_float_controls
                           , module Vulkan.Extensions.VK_KHR_shader_non_semantic_info
                           , module Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
+                          , module Vulkan.Extensions.VK_KHR_shader_terminate_invocation
                           , module Vulkan.Extensions.VK_KHR_shared_presentable_image
                           , module Vulkan.Extensions.VK_KHR_spirv_1_4
                           , module Vulkan.Extensions.VK_KHR_storage_buffer_storage_class
@@ -349,6 +351,7 @@ import Vulkan.Extensions.VK_KHR_external_semaphore
 import Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
 import Vulkan.Extensions.VK_KHR_external_semaphore_fd
 import Vulkan.Extensions.VK_KHR_external_semaphore_win32
+import Vulkan.Extensions.VK_KHR_fragment_shading_rate
 import Vulkan.Extensions.VK_KHR_get_display_properties2
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
@@ -377,6 +380,7 @@ import Vulkan.Extensions.VK_KHR_shader_float16_int8
 import Vulkan.Extensions.VK_KHR_shader_float_controls
 import Vulkan.Extensions.VK_KHR_shader_non_semantic_info
 import Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
+import Vulkan.Extensions.VK_KHR_shader_terminate_invocation
 import Vulkan.Extensions.VK_KHR_shared_presentable_image
 import Vulkan.Extensions.VK_KHR_spirv_1_4
 import Vulkan.Extensions.VK_KHR_storage_buffer_storage_class
