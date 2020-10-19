@@ -188,3 +188,18 @@ jobs:
     - run: nix-build -A VulkanMemoryAllocator
     - run: nix-build -A vulkan-utils
     - run: nix-build -A vulkan-examples
+
+  shellcheck:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install shellcheck
+      run: |
+        sudo apt-get install fd-find
+    - name: Check scripts with shellcheck
+      run: |
+        fdfind .sh$ . \
+          --exclude VulkanMemoryAllocator/VulkanMemoryAllocator \
+          --exclude generate-new/Vulkan-Docs \
+          --exec shellcheck
+
