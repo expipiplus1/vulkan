@@ -13,10 +13,8 @@ let
 
   targets = let
     srcFilter = path: type:
-      (baseNameOf path == "package.yaml")
-      || pkgs.lib.hasInfix "/src" path
-      || pkgs.lib.hasInfix "/vk" path
-      || pkgs.lib.hasInfix "/vma" path;
+      (baseNameOf path == "package.yaml") || pkgs.lib.hasInfix "/src" path
+      || pkgs.lib.hasInfix "/vk" path || pkgs.lib.hasInfix "/vma" path;
     filter = builtins.filterSource srcFilter;
   in {
     vulkan = filter ./.;
@@ -31,7 +29,7 @@ let
   haskellPackages = with pkgs.haskell.lib;
     pkgs.haskell.packages.${compiler'}.override {
       overrides = self: super:
-        (pkgs.lib.mapAttrs (n: v: makeDrv n v) targets) // {
+        (pkgs.lib.mapAttrs makeDrv targets) // {
           #
           # Examples
           #
@@ -75,7 +73,7 @@ let
             pkg = "language-c";
             ver = "0.9";
             sha256 = "1dxi56aawabq2ds6crvhhr9dwmbyanjkn9l0yhw7wcqrwx71kliq";
-          } {};
+          } { };
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = p:
@@ -98,9 +96,8 @@ let
   makeDrv = name: src:
     with pkgs.haskell.lib;
     let
-      drv =
-        haskellPackages.callCabal2nix "" src
-        ({ } // pkgs.lib.optionalAttrs (name == "vulkan") {
+      drv = haskellPackages.callCabal2nix "" src ({ }
+        // pkgs.lib.optionalAttrs (name == "vulkan") {
           vulkan = pkgs.vulkan-loader;
         } // pkgs.lib.optionalAttrs ((name == "vulkan-examples" || name
           == "vulkan-utils" || name == "VulkanMemoryAllocator") && forShell) {
