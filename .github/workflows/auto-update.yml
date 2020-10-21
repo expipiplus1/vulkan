@@ -30,7 +30,7 @@ jobs:
         message="${message//$'\r'/'%0D'}"
         echo "$message" > ~/issue_body
         echo >> ~/issue_body
-        echo "::set-env name=pr_message::$message"
+        printf "%s\n" "pr_message=$message" >> "$GITHUB_ENV"
 
     - name: Build dependencies
       run: |
