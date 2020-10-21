@@ -44,7 +44,7 @@ if [ "$vulkan_version" ]; then
 elif [ "$vma_version" ]; then
   tag=vma-v$vma_version
 elif [ "$utils_version" ]; then
-  tag=vulkan-utils-v$utils_version
+  tag=utils-v$utils_version
 else
   echo "running without new version of any package"
   exit 1
