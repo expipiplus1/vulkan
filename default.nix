@@ -50,8 +50,8 @@ let
   makeDrv = name: src:
     with pkgs.haskell.lib;
     let
-      drv = haskellPackages.callCabal2nix "" src ({ }
-        // pkgs.lib.optionalAttrs (name == "vulkan") {
+      drv = haskellPackages.callCabal2nix "" src
+        (pkgs.lib.optionalAttrs (name == "vulkan") {
           vulkan = pkgs.vulkan-loader;
         } // pkgs.lib.optionalAttrs ((name == "vulkan-examples" || name
           == "vulkan-utils" || name == "VulkanMemoryAllocator") && forShell) {
