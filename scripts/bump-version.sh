@@ -11,6 +11,7 @@ vma_version=
 utils_version=
 haddocks=
 tarballs=
+ignoreDirty=
 
 # from https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
 while [[ "$#" -gt 0 ]]; do
@@ -22,6 +23,7 @@ while [[ "$#" -gt 0 ]]; do
         --vma) vma_version="$2"; shift ;;
         --utils) utils_version="$2"; shift ;;
         --standalone-haddocks) haddocks="$2"; shift ;;
+        --ignore-dirty) ignoreDirty=1 ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -55,7 +57,7 @@ if [ $regenerate ]; then
   "$DIR/regenerate.sh"
 fi
 
-if [[ -n $(git status --short --untracked-files=no) ]]; then
+if ! [ $ignoreDirty ] && [[ -n $(git status --short --untracked-files=no) ]]; then
   echo "There are untracked changes in the working tree, please resolve these before making a release"
   exit 1
 fi
