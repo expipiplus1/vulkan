@@ -102,7 +102,7 @@ printf "%s\n\n" "$releaseTitle" >"$releaseNote"
 releaseVulkan() {
   mkdir -p "$assets"
   ln -s "$(nix-build nix/release.nix -A vulkan --no-out-link)"/*.tar.gz "$assets/"
-  ln -s "$(nix-build nix/release.nix -A doc.vulkan.doc --no-out-link)"/*.tar.gz "$assets/"
+  ln -s "$(nix-build nix/release.nix -A docs.vulkan --no-out-link)"/*.tar.gz "$assets/"
   awk '/## WIP/{flag=0;next};/##/{flag=flag+1};flag==1' <changelog.md |
     sed "s/##/## Vulkan/" >>"$releaseNote"
 }
@@ -110,7 +110,7 @@ releaseVulkan() {
 releaseVMA() {
   mkdir -p "$assets"
   ln -s "$(nix-build nix/release.nix -A VulkanMemoryAllocator --no-out-link)"/*.tar.gz "$assets/"
-  ln -s "$(nix-build nix/release.nix -A doc.VulkanMemoryAllocator.doc --no-out-link)"/*.tar.gz "$assets/"
+  ln -s "$(nix-build nix/release.nix -A docs.VulkanMemoryAllocator --no-out-link)"/*.tar.gz "$assets/"
   awk '/## WIP/{flag=0;next};/##/{flag=flag+1};flag==1' <VulkanMemoryAllocator/changelog.md |
     sed "s/##/## VulkanMemoryAllocator/" >>"$releaseNote"
 }
@@ -118,7 +118,7 @@ releaseVMA() {
 releaseUtils() {
   mkdir -p "$assets"
   ln -s "$(nix-build nix/release.nix -A vulkan-utils --no-out-link)"/*.tar.gz "$assets/"
-  ln -s "$(nix-build nix/release.nix -A doc.vulkan-utils.doc --no-out-link)"/*.tar.gz "$assets/"
+  ln -s "$(nix-build nix/release.nix -A docs.vulkan-utils --no-out-link)"/*.tar.gz "$assets/"
   awk '/## WIP/{flag=0;next};/##/{flag=flag+1};flag==1' <utils/changelog.md |
     sed "s/##/## vulkan-utils/" >>"$releaseNote"
 }

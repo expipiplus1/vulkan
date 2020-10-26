@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: be017b1fe407af3d6b6d0f65db4b22abae4b44e3b3dfe2e2f200d2cf87845488
+-- hash: 0b2ad09ad4d6ca2619801a9d07b8214171896654d30bfc414212d12a09feede6
 
 name:           vulkan
 version:        3.6.10
@@ -19,6 +19,7 @@ build-type:     Simple
 extra-source-files:
     readme.md
     changelog.md
+    package.yaml
 
 source-repository head
   type: git

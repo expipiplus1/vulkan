@@ -6,6 +6,7 @@ maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
   - readme.md
+  - package.yaml
 license: BSD-3-Clause
 
 executables:

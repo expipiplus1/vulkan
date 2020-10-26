@@ -48,6 +48,9 @@ default-extensions:
 name: generate-new
 synopsis: A program to generate the vulkan package from the vulkan docs.
 author: Joe Hermaszewski
+extra-source-files:
+  - readme.md
+  - package.yaml
 
 library:
   source-dirs: src

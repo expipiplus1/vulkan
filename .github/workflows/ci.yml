@@ -188,6 +188,9 @@ jobs:
     - run: nix-build -A VulkanMemoryAllocator
     - run: nix-build -A vulkan-utils
     - run: nix-build -A vulkan-examples
+    - run: nix-build nix/release.nix
+    - run: nix-build nix/release.nix -A docs
+    - run: nix-build nix/release.nix -A sdistTest
 
   shellcheck:
     runs-on: ubuntu-20.04
