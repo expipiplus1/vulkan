@@ -12,9 +12,13 @@ let
     (pkgs.lib.splitVersion pkgs.haskellPackages.ghc.version);
 
   targets = let
-    srcFilter = path: type:
-      (baseNameOf path == "package.yaml") || pkgs.lib.hasInfix "/src" path
-      || pkgs.lib.hasInfix "/vk" path || pkgs.lib.hasInfix "/vma" path;
+    srcFilter = path: _type:
+      (pkgs.lib.any (x: baseNameOf path == x) [
+        "package.yaml"
+        "changelog.md"
+        "readme.md"
+      ]) || pkgs.lib.hasInfix "/src" path || pkgs.lib.hasInfix "/vk" path
+      || pkgs.lib.hasInfix "/vma" path;
     filter = builtins.filterSource srcFilter;
   in {
     vulkan = filter ./.;
