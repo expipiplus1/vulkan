@@ -367,6 +367,13 @@ foreign import ccall
 --     then @pData@ and @stride@ /must/ be multiples of the size of
 --     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'
 --
+-- -   If the @queryType@ used to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
+--     then @stride@ /must/ be large enough to contain
+--     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@counterIndexCount@
+--     used to create @queryPool@ times the size of
+--     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'.
+--
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
 --     equal to the number of queries in @queryPool@
 --

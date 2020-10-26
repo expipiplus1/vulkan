@@ -803,9 +803,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
---     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' as a result of this
---     command, then the image view’s
+-- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
+--     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'

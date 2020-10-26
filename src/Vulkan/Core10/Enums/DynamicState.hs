@@ -21,6 +21,7 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_FRONT_FACE_EXT
                                                       , DYNAMIC_STATE_CULL_MODE_EXT
                                                       , DYNAMIC_STATE_LINE_STIPPLE_EXT
+                                                      , DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR
                                                       , DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
                                                       , DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV
                                                       , DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV
@@ -221,6 +222,12 @@ pattern DYNAMIC_STATE_CULL_MODE_EXT = DynamicState 1000267000
 -- member @stippledLineEnable@ set to
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 pattern DYNAMIC_STATE_LINE_STIPPLE_EXT = DynamicState 1000259000
+-- | 'DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR' specifies that state in
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PipelineFragmentShadingRateStateCreateInfoKHR'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.cmdSetFragmentShadingRateKHR'
+-- before any draw commands.
+pattern DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR = DynamicState 1000226000
 -- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' specifies that the
 -- @pExclusiveScissors@ state in
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
@@ -297,6 +304,7 @@ pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_NV = DynamicState 1000087000
              DYNAMIC_STATE_FRONT_FACE_EXT,
              DYNAMIC_STATE_CULL_MODE_EXT,
              DYNAMIC_STATE_LINE_STIPPLE_EXT,
+             DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR,
              DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV,
              DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV,
              DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV,
@@ -328,6 +336,7 @@ instance Show DynamicState where
     DYNAMIC_STATE_FRONT_FACE_EXT -> showString "DYNAMIC_STATE_FRONT_FACE_EXT"
     DYNAMIC_STATE_CULL_MODE_EXT -> showString "DYNAMIC_STATE_CULL_MODE_EXT"
     DYNAMIC_STATE_LINE_STIPPLE_EXT -> showString "DYNAMIC_STATE_LINE_STIPPLE_EXT"
+    DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR -> showString "DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR"
     DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV -> showString "DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"
     DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV -> showString "DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"
     DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV -> showString "DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"
@@ -359,6 +368,7 @@ instance Read DynamicState where
                             , ("DYNAMIC_STATE_FRONT_FACE_EXT", pure DYNAMIC_STATE_FRONT_FACE_EXT)
                             , ("DYNAMIC_STATE_CULL_MODE_EXT", pure DYNAMIC_STATE_CULL_MODE_EXT)
                             , ("DYNAMIC_STATE_LINE_STIPPLE_EXT", pure DYNAMIC_STATE_LINE_STIPPLE_EXT)
+                            , ("DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR", pure DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR)
                             , ("DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV", pure DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV)
                             , ("DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV", pure DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV)
                             , ("DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV", pure DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV)

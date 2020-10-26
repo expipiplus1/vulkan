@@ -4113,14 +4113,16 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- @ConstOffset@, or @ConstOffsets@ image operands of any of the
     -- @OpImage@*@Gather@ image instructions.
     maxTexelGatherOffset :: Word32
-  , -- | @minInterpolationOffset@ is the minimum negative offset value for the
-    -- @offset@ operand of the @InterpolateAtOffset@ extended instruction.
+  , -- | @minInterpolationOffset@ is the base minimum (inclusive) negative offset
+    -- value for the @Offset@ operand of the @InterpolateAtOffset@ extended
+    -- instruction.
     minInterpolationOffset :: Float
-  , -- | @maxInterpolationOffset@ is the maximum positive offset value for the
-    -- @offset@ operand of the @InterpolateAtOffset@ extended instruction.
+  , -- | @maxInterpolationOffset@ is the base maximum (inclusive) positive offset
+    -- value for the @Offset@ operand of the @InterpolateAtOffset@ extended
+    -- instruction.
     maxInterpolationOffset :: Float
-  , -- | @subPixelInterpolationOffsetBits@ is the number of subpixel fractional
-    -- bits that the @x@ and @y@ offsets to the @InterpolateAtOffset@ extended
+  , -- | @subPixelInterpolationOffsetBits@ is the number of fractional bits that
+    -- the @x@ and @y@ offsets to the @InterpolateAtOffset@ extended
     -- instruction /may/ be rounded to as fixed-point values.
     subPixelInterpolationOffsetBits :: Word32
   , -- | @maxFramebufferWidth@ is the maximum width for a framebuffer. The
@@ -4160,8 +4162,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     framebufferNoAttachmentsSampleCounts :: SampleCountFlags
   , -- | @maxColorAttachments@ is the maximum number of color attachments that
     -- /can/ be used by a subpass in a render pass. The @colorAttachmentCount@
-    -- member of the 'Vulkan.Core10.Pass.SubpassDescription' structure /must/
-    -- be less than or equal to this limit.
+    -- member of the 'Vulkan.Core10.Pass.SubpassDescription' or
+    -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2'
+    -- structure /must/ be less than or equal to this limit.
     maxColorAttachments :: Word32
   , -- | @sampledImageColorSampleCounts@ is a bitmask1 of
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' indicating

@@ -72,9 +72,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
---     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' as a result of this
---     command, then the image view’s
+-- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
+--     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
@@ -412,6 +414,20 @@ foreign import ccall
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, the bound graphics pipeline was created with
+--     the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic state enabled, and any of the shader stages of the bound
+--     graphics pipeline write to the @PrimitiveShadingRateKHR@ built-in,
+--     then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @viewportCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ be @1@
 --
 -- -   @taskCount@ /must/ be less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesNV'::@maxDrawMeshTasksCount@
@@ -492,9 +508,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
---     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' as a result of this
---     command, then the image view’s
+-- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
+--     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
@@ -832,6 +850,20 @@ foreign import ccall
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, the bound graphics pipeline was created with
+--     the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic state enabled, and any of the shader stages of the bound
+--     graphics pipeline write to the @PrimitiveShadingRateKHR@ built-in,
+--     then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @viewportCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ be @1@
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
@@ -946,9 +978,11 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If a 'Vulkan.Core10.Handles.ImageView' is sampled with
---     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' as a result of this
---     command, then the image view’s
+-- -   If a 'Vulkan.Core10.Handles.Sampler' created with @magFilter@ or
+--     @minFilter@ equal to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR' and
+--     @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE' is
+--     used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
@@ -1286,6 +1320,20 @@ foreign import ccall
 --     as the pipeline
 --     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
 --     state
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
+--     limit is not supported, the bound graphics pipeline was created with
+--     the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     dynamic state enabled, and any of the shader stages of the bound
+--     graphics pipeline write to the @PrimitiveShadingRateKHR@ built-in,
+--     then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @viewportCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     /must/ be @1@
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
