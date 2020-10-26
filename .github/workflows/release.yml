@@ -1,0 +1,35 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+    - v*
+    - vma-v*
+    - utils-v*
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build project
+      run: |
+        git fetch --tags
+        ref="${{ github.ref }}"
+        ./scripts/release.sh \
+          --require-first ${ref#"refs/tags/"} \
+          --release-note release-note.md \
+          --assets assets
+
+    - name: Create Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if [ -f release-note.md ]; then
+          hub release create \
+            $(find assets -type f -printf "--attach %p ") \
+            --file release-note.md \
+            ${{ github.ref }}
+        fi
