@@ -10,12 +10,14 @@ vulkan_version=
 vma_version=
 utils_version=
 haddocks=
+tarballs=
 
 # from https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -h|--help) help=1 ;;
         -r|--regenerate) regenerate=1 ;;
+        --generate-tarballs) tarballs=1 ;;
         --vulkan) vulkan_version="$2"; shift ;;
         --vma) vma_version="$2"; shift ;;
         --utils) utils_version="$2"; shift ;;
@@ -36,8 +38,6 @@ if [ $help ]; then
 EOF
   exit 0
 fi
-
-ghc --version
 
 if [ "$vulkan_version" ]; then
   tag=v$vulkan_version
@@ -61,7 +61,7 @@ if [[ -n $(git status --short --untracked-files=no) ]]; then
 fi
 
 if [ "$vulkan_version" ]; then
-  echo "Bumping vulkan version and generating tarballs"
+  echo "Bumping vulkan version"
 
   sed -i.bak "s/^version: .*/version: $vulkan_version/g" package.yaml
   sed -i.bak "s/^## WIP$/\0\n\n## [$vulkan_version] - $(date --iso-8601)/" changelog.md
@@ -70,7 +70,7 @@ if [ "$vulkan_version" ]; then
 fi
 
 if [ "$vma_version" ]; then
-  echo "Bumping VulkanMemoryAllocator version and generating tarballs"
+  echo "Bumping VulkanMemoryAllocator version"
 
   vulkan_breaking=$(yq <package.yaml .version --raw-output |
     sed -E 's/([0-9]+\.[0-9]+).*/\1/')
@@ -83,7 +83,7 @@ if [ "$vma_version" ]; then
 fi
 
 if [ "$utils_version" ]; then
-  echo "Bumping vulkan-utils version and generating tarballs"
+  echo "Bumping vulkan-utils version"
 
   vulkan_breaking=$(yq <package.yaml .version --raw-output |
     sed -E 's/([0-9]+\.[0-9]+).*/\1/')
@@ -103,24 +103,26 @@ if [ "$vulkan_version" ]; then
   git tag "$tag"
 fi
 
-if [ "$vulkan_version" ]; then
-  echo "Generating vulkan tarballs"
-  cabal haddock  --haddock-for-hackage --haddock-option="--hyperlinked-source"
-  cabal sdist
-fi
+if [ $tarballs ]; then
 
-if [ "$vma_version" ]; then
-  echo "generating VulkanMemoryAllocator tarballs"
-  cabal haddock --haddock-option="--hyperlinked-source"
-  cabal haddock --haddock-for-hackage --haddock-option="--hyperlinked-source" VulkanMemoryAllocator
-  cabal sdist VulkanMemoryAllocator
-fi
+  if [ "$vulkan_version" ]; then
+    echo "Generating vulkan tarballs"
+    vulkan_tarball="$(nix-build nix/release.nix -A vulkan --no-out-link)/*.tar.gz"
+    vulkan_docs_tarball="$(nix-build nix/release.nix -A docs.vulkan --no-out-link)/*.tar.gz"
+  fi
 
-if [ "$utils_version" ]; then
-  echo "generating vulkan-utils tarballs"
-  cabal haddock --haddock-option="--hyperlinked-source"
-  cabal haddock --haddock-for-hackage --haddock-option="--hyperlinked-source" vulkan-utils
-  cabal sdist vulkan-utils
+  if [ "$vma_version" ]; then
+    echo "generating VulkanMemoryAllocator tarballs"
+    vma_tarball="$(nix-build nix/release.nix -A VulkanMemoryAllocator --no-out-link)/*.tar.gz"
+    vma_docs_tarball="$(nix-build nix/release.nix -A docs.VulkanMemoryAllocator --no-out-link)/*.tar.gz"
+  fi
+
+  if [ "$utils_version" ]; then
+    echo "generating vulkan-utils tarballs"
+    utils_tarball="$(nix-build nix/release.nix -A vulkan-utils --no-out-link)/*.tar.gz"
+    utils_docs_tarball="$(nix-build nix/release.nix -A docs.vulkan-utils --no-out-link)/*.tar.gz"
+  fi
+
 fi
 
 if [ "$haddocks" ]; then
@@ -147,41 +149,44 @@ cat <<EOF
 
 EOF
 
-if [ "$vulkan_version" ]; then
-  cat <<EOF
-  # Upload vulkan-$vulkan_version
-  cabal upload dist-newstyle/sdist/vulkan-$vulkan_version.tar.gz
-  cabal upload --doc dist-newstyle/vulkan-$vulkan_version-docs.tar.gz
+if [ $tarballs ]; then
 
-  # After checking everything's OK
-  cabal upload --publish dist-newstyle/sdist/vulkan-$vulkan_version.tar.gz
-  cabal upload --publish --doc dist-newstyle/vulkan-$vulkan_version-docs.tar.gz
+  if [ "$vulkan_version" ]; then
+    cat <<EOF
+    # Upload vulkan-$vulkan_version
+    cabal upload "$vulkan_tarball"
+    cabal upload --doc "$vulkan_docs_tarball"
+
+    # After checking everything's OK
+    cabal upload --publish "$vulkan_tarball"
+    cabal upload --publish --doc "$vulkan_docs_tarball"
 
 EOF
-fi
+  fi
 
-if [ "$vma_version" ]; then
-  cat <<EOF
-  # Upload VulkanMemoryAllocator-$vma_version
-  cabal upload dist-newstyle/sdist/VulkanMemoryAllocator-$vma_version.tar.gz
-  cabal upload --doc dist-newstyle/VulkanMemoryAllocator-$vma_version-docs.tar.gz
+  if [ "$vma_version" ]; then
+    cat <<EOF
+    # Upload vma-$vma_version
+    cabal upload "$vma_tarball"
+    cabal upload --doc "$vma_docs_tarball"
 
-  # After checking everything's OK
-  cabal upload --publish dist-newstyle/sdist/VulkanMemoryAllocator-$vma_version.tar.gz
-  cabal upload --publish --doc dist-newstyle/VulkanMemoryAllocator-$vma_version-docs.tar.gz
+    # After checking everything's OK
+    cabal upload --publish "$vma_tarball"
+    cabal upload --publish --doc "$vma_docs_tarball"
 EOF
-fi
+  fi
 
-if [ "$utils_version" ]; then
-  cat <<EOF
-  # Upload vulkan-utils-$utils_version
-  cabal upload dist-newstyle/sdist/vulkan-utils-$utils_version.tar.gz
-  cabal upload --doc dist-newstyle/vulkan-utils-$utils_version-docs.tar.gz
+  if [ "$utils_version" ]; then
+    cat <<EOF
+    # Upload utils-$utils_version
+    cabal upload "$utils_tarball"
+    cabal upload --doc "$utils_docs_tarball"
 
-  # After checking everything's OK
-  cabal upload --publish dist-newstyle/sdist/vulkan-utils-$utils_version.tar.gz
-  cabal upload --publish --doc dist-newstyle/vulkan-utils-$utils_version-docs.tar.gz
+    # After checking everything's OK
+    cabal upload --publish "$utils_tarball"
+    cabal upload --publish --doc "$utils_docs_tarball"
 EOF
+  fi
 fi
 
 if [ "$haddocks" ]; then
