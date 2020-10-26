@@ -34,7 +34,7 @@ jobs:
       run: |
         if [ -f release-note.md ]; then
           hub release create \
-            $(find assets -type f -printf "--attach %p ") \
+            $(find assets -type f -o -type l -printf "--attach %p ") \
             --file release-note.md \
             ${{ github.ref }}
         fi
