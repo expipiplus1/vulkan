@@ -1,0 +1,22 @@
+name: Tag Latest Release
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  update:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # Fetch everything
+        token: ${{ secrets.PAT }}
+    - run: |
+        sudo pip3 install yq
+    - run: |
+        ./scripts/tag-latest-release.sh --package package.yaml                       --tag-prefix v
+        ./scripts/tag-latest-release.sh --package VulkanMemoryAllocator/package.yaml --tag-prefix vma-v
+        ./scripts/tag-latest-release.sh --package utils/package.yaml                 --tag-prefix utils-v
+        git push --tags

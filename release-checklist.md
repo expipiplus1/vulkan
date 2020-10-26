@@ -44,7 +44,7 @@
 
 ## gh-pages documentation
 
-- Run `./gen-standalone-haddocks.sh` script pointing to a worktree on the gh-pages branch
+- Run `./scripts/gen-standalone-haddocks.sh` script pointing to a worktree on the gh-pages branch
   - Make sure to clean that directory first
 
 (on my machine)
@@ -52,7 +52,7 @@
 ```bash
 rm -rf ../vulkan-docs/*
 nix-shell stack ghc
-gen-standalone-haddocks.sh ../vulkan-docs
+./scripts/gen-standalone-haddocks.sh ../vulkan-docs
 cd ../vulkan-docs
 git add .
 git commit -m 'vXXX'

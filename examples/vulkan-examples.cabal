@@ -1,10 +1,10 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 67399171b98a84d61f217b567c5a5dc6a097becfb14f912edc556e4b7ed5bab3
+-- hash: 0d14c4c2e9ab5d5d4e7492eb33b3dbd228c2219eb1c6cf50090c771157a37b1b
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -17,6 +17,7 @@ license:        BSD-3-Clause
 build-type:     Simple
 extra-source-files:
     readme.md
+    package.yaml
 
 source-repository head
   type: git

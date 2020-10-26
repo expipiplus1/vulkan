@@ -3,6 +3,8 @@
 set -x
 set -e
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # like v1.4.145
 latest_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/KhronosGroup/Vulkan-Docs/tags |
   jq --raw-output 'map(.name) | .[]' |
@@ -23,7 +25,7 @@ git -C generate-new/Vulkan-Docs checkout "$version"
 
 git add generate-new/Vulkan-Docs
 
-if ! ./regenerate.sh; then
+if ! "$DIR/regenerate.sh"; then
   echo "Failed to regenerate vulkan source"
   git restore --staged src/Vulkan src/Vulkan.hs
   git checkout src/Vulkan src/Vulkan.hs

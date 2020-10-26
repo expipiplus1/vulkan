@@ -2,6 +2,8 @@
 
 set -e
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 help=
 regenerate=
 vulkan_version=
@@ -42,7 +44,7 @@ if [ "$vulkan_version" ]; then
 elif [ "$vma_version" ]; then
   tag=vma-v$vma_version
 elif [ "$utils_version" ]; then
-  tag=vulkan-utils-v$utils_version
+  tag=utils-v$utils_version
 else
   echo "running without new version of any package"
   exit 1
@@ -50,7 +52,7 @@ fi
 
 if [ $regenerate ]; then
   echo "Regenerating source"
-  ./regenerate.sh
+  "$DIR/regenerate.sh"
 fi
 
 if [[ -n $(git status --short --untracked-files=no) ]]; then
@@ -123,7 +125,7 @@ fi
 
 if [ "$haddocks" ]; then
   git -C "$haddocks" rm --quiet -r -- .
-  nix-shell --pure -p stack nix fd --run "NIX_PATH=$NIX_PATH ./gen-standalone-haddocks.sh \"$haddocks\""
+  nix-shell --pure -p stack nix fd --run "NIX_PATH=$NIX_PATH \"$DIR/gen-standalone-haddocks.sh\" \"$haddocks\""
   git -C "$haddocks" add .
   git -C "$haddocks" commit -m "v$vulkan_version"
 fi

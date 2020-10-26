@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 25880478bf00adf1eff57812a7ac503083c38df26cb9334d47f921f42a5d8e18
+-- hash: c32998b0d1cf9ec34ab39ad9485be66993efda09cb046a5f83defc4584d32a73
 
 name:           vulkan-utils
 version:        0.1.2
@@ -19,6 +19,7 @@ build-type:     Simple
 extra-source-files:
     readme.md
     changelog.md
+    package.yaml
     src/Vulkan/Utils/gl_enums.h
 
 source-repository head

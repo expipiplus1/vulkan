@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2409855eee8a648b340f898fbd9f82497d17fa8bc8ca23028fa87888eff1848d
+-- hash: ffdb8e2d09bee73f3d0a555de0083e9c20a9914aee5eb38c9e180609f366c202
 
 name:           VulkanMemoryAllocator
 version:        0.3.7
@@ -19,6 +19,7 @@ build-type:     Simple
 extra-source-files:
     readme.md
     changelog.md
+    package.yaml
     VulkanMemoryAllocator/src/vk_mem_alloc.h
 
 source-repository head

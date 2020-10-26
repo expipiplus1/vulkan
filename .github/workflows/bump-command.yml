@@ -1,10 +1,10 @@
-name: release-command
+name: bump-command
 on:
   repository_dispatch:
-    types: [release-command]
+    types: [bump-command]
 
 jobs:
-  make-release:
+  bump:
     runs-on: ubuntu-20.04
     steps:
       - uses: cachix/install-nix-action@v8
@@ -28,8 +28,17 @@ jobs:
 
       - run: |
           export XDG_DATA_DIRS=
+          vulkan="${{ github.event.client_payload.slash_command.args.named.vulkan }}"
+          [ -z "$vulkan" ] || vulkan="--vulkan $vulkan"
+          vma="${{ github.event.client_payload.slash_command.args.named.vma }}"
+          [ -z "$vma" ] || vma="--vma $vma"
+          utils="${{ github.event.client_payload.slash_command.args.named.utils }}"
+          [ -z "$utils" ] || utils="--utils $utils"
+          echo "vulkan: $vulkan"
+          echo "vma: $vma"
+          echo "utils: $utils"
           nix-shell --arg hoogle false --run \
-            "./release.sh --vulkan ${{ github.event.client_payload.slash_command.args.named.vulkan }}"
+            "./scripts/bump-version.sh $vulkan $vma $utils"
           git push origin HEAD:${{ github.event.client_payload.pull_request.head.ref }}
 
       - name: Add reaction
