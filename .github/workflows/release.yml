@@ -12,6 +12,11 @@ jobs:
     name: Create Release
     runs-on: ubuntu-20.04
     steps:
+    - uses: cachix/install-nix-action@v8
+    - uses: cachix/cachix-action@v6
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
     - uses: actions/checkout@v2
 
     - name: Build project
