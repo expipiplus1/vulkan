@@ -1,5 +1,7 @@
 { pkgs ? import ./nixpkgs.nix, compiler ? "ghc884" }:
 
+with pkgs.haskell.lib;
+
 let
   vulkanPkgs = import ../default.nix {
     inherit pkgs compiler;
@@ -8,18 +10,18 @@ let
   };
 
   docDrv = _name: drv:
-    (pkgs.haskell.lib.overrideCabal drv (drv: {
+    (overrideCabal drv (drv: {
       doHaddock = true;
       haddockFlags = [ "--for-hackage" ];
       postHaddock = ''
         mkdir -p "$doc"
-        tar czf "$doc/${drv.pname}-${drv.version}-docs.tar.gz" -C dist/doc/html "${drv.pname}-${drv.version}-docs"
+        tar --format=ustar -czf "$doc/${drv.pname}-${drv.version}-docs.tar.gz" -C dist/doc/html "${drv.pname}-${drv.version}-docs"
       '';
     })).doc;
 
-  tarballDrv = _name: pkgs.haskell.lib.sdistTarball;
+  tarballDrv = _name: sdistTarball;
 
-  sdistTestDrv = _name: pkgs.haskell.lib.buildFromSdist;
+  sdistTestDrv = _name: buildFromSdist;
 
 in with pkgs.lib;
 mapAttrs tarballDrv vulkanPkgs // {
