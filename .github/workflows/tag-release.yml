@@ -13,10 +13,10 @@ jobs:
       with:
         fetch-depth: 0 # Fetch everything
         token: ${{ secrets.PAT }}
-    - run: |
-        sudo pip3 install yq
-    - run: |
-        ./scripts/tag-latest-release.sh --package package.yaml                       --tag-prefix v
-        ./scripts/tag-latest-release.sh --package VulkanMemoryAllocator/package.yaml --tag-prefix vma-v
-        ./scripts/tag-latest-release.sh --package utils/package.yaml                 --tag-prefix utils-v
-        git push --tags
+    - uses: expipiplus1/action-automation/tag-latest-release@HEAD
+      with:
+        token: ${{ secrets.PAT }}
+        tagsAndFiles: |
+          v package.yaml
+          vma-v VulkanMemoryAllocator/package.yaml
+          utils-v utils/package.yaml
