@@ -18,11 +18,12 @@ let
       ]) || pkgs.lib.hasInfix "/src" path || pkgs.lib.hasInfix "/vk" path
       || pkgs.lib.hasInfix "/vma" path;
     filter = builtins.filterSource srcFilter;
+    filterGit = pkgs.nix-gitignore.gitignoreSourcePure ./.gitignore;
   in {
     vulkan = filter ./.;
-    vulkan-utils = ./utils;
-    vulkan-examples = ./examples;
-    VulkanMemoryAllocator = ./VulkanMemoryAllocator;
+    vulkan-utils = filterGit ./utils;
+    vulkan-examples = filterGit ./examples;
+    VulkanMemoryAllocator = filterGit ./VulkanMemoryAllocator;
   } // pkgs.lib.optionalAttrs (compiler == "ghc884") {
     generate-new = filter ./generate-new;
   };
