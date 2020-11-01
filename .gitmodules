@@ -3,7 +3,7 @@
 	url = https://github.com/KhronosGroup/Vulkan-Docs.git
 [submodule "generate-new/Vulkan-Docs"]
 	path = generate-new/Vulkan-Docs
-	url = git://github.com/KhronosGroup/Vulkan-Docs.git
+	url = https://github.com/KhronosGroup/Vulkan-Docs.git
 [submodule "generate-new/VulkanMemoryAllocator"]
 	path = VulkanMemoryAllocator/VulkanMemoryAllocator
-	url = git://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
