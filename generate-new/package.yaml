@@ -86,8 +86,8 @@ dependencies:
   - containers
   - data-default
   - deepseq
-  - dependent-map
-  - dependent-sum >= 0.7
+  - dependent-map >= 0.4
+  - dependent-sum >= 0.7.1
   - directory
   - extra
   - filepath
@@ -97,7 +97,7 @@ dependencies:
   - pandoc
   - parsec
   - parsers
-  - polysemy
+  - polysemy == 1.3.*
   - polysemy-plugin
   - pretty-show
   - prettyprinter
