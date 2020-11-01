@@ -9,13 +9,19 @@ jobs:
   update:
     runs-on: ubuntu-20.04
     steps:
+    - uses: tibdex/github-app-token@v1
+      id: generate-token
+      with:
+        app_id: ${{ secrets.APP_ID }}
+        private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0 # Fetch everything
-        token: ${{ secrets.PAT }}
+        fetch-depth: 0   # Fetch everything
+        token: ${{ steps.generate-token.outputs.token }}
+
     - uses: expipiplus1/action-automation/tag-latest-release@HEAD
       with:
-        token: ${{ secrets.PAT }}
         tagsAndFiles: |
           v package.yaml
           vma-v VulkanMemoryAllocator/package.yaml
