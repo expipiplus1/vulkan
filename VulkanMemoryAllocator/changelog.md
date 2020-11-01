@@ -2,6 +2,8 @@
 
 ## WIP
 
+## [0.3.7.1] - 2020-11-01
+
 - Bump VMA, just documentation changes
 - Raise bound on base
 

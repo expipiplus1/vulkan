@@ -4,10 +4,10 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7688d599406b0eb8cc67361eb2ab1b6fd71ecabbf7ad4520f8474a2673c39915
+-- hash: bc2600808d2a3ef448255465e2fc5e1165aa7f40e9cb43ec1ab15ec0f8cce272
 
 name:           VulkanMemoryAllocator
-version:        0.3.7
+version:        0.3.7.1
 synopsis:       Bindings to the VulkanMemoryAllocator library
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
