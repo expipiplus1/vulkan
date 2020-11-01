@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c32998b0d1cf9ec34ab39ad9485be66993efda09cb046a5f83defc4584d32a73
+-- hash: 02cd419c730d93f7db6f291f1fac9c67d943c8c7a6d2be902231c4c693a58d51
 
 name:           vulkan-utils
-version:        0.1.2
+version:        0.1.2.1
 synopsis:       Utils for the vulkan package
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -39,7 +39,7 @@ library
   c-sources:
       cbits/DebugCallback.c
   build-depends:
-      base <4.15
+      base <5
     , bytestring
     , extra
     , file-embed

@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [3.6.11.1] - 2020-11-01
+
+- Raise bound on base
+
 ## [3.6.11] - 2020-10-27
   - Bump API version to v1.2.158
 

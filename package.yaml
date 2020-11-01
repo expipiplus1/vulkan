@@ -1,5 +1,5 @@
 name: vulkan
-version: 3.6.11
+version: "3.6.11.1"
 synopsis: Bindings to the Vulkan graphics API.
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -15,7 +15,7 @@ library:
   verbatim:
     other-modules:
   dependencies:
-    - base < 4.15
+    - base <5
     - bytestring
     - transformers
     - vector

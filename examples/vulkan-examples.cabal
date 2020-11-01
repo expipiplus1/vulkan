@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0d14c4c2e9ab5d5d4e7492eb33b3dbd228c2219eb1c6cf50090c771157a37b1b
+-- hash: 362864fd4ef70e0e34ec960348791df3d020e21fd904338016949adb79b7e218
 
 name:           vulkan-examples
 version:        0.1.0.0
@@ -40,7 +40,7 @@ executable compute
       JuicyPixels
     , VulkanMemoryAllocator
     , autoapply >=0.4
-    , base <4.15
+    , base <5
     , bytestring
     , extra
     , resourcet
@@ -64,7 +64,7 @@ executable info
   default-extensions: AllowAmbiguousTypes DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction NumDecimals OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TupleSections TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
-      base <4.15
+      base <5
     , bytestring
     , pretty-simple >=3.3
     , vulkan
@@ -84,7 +84,7 @@ executable offscreen
       JuicyPixels
     , VulkanMemoryAllocator
     , autoapply >=0.4
-    , base <4.15
+    , base <5
     , bytestring
     , extra
     , resourcet
@@ -125,7 +125,7 @@ executable resize
   build-depends:
       VulkanMemoryAllocator
     , autoapply >=0.4
-    , base <4.15
+    , base <5
     , bytestring
     , extra
     , lens
@@ -154,7 +154,7 @@ executable sdl-triangle
   ghc-options: -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
   build-depends:
       async
-    , base <4.15
+    , base <5
     , bytestring
     , extra
     , managed

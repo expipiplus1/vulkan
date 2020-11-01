@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: 0.1.2
+version: "0.1.2.1"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -14,7 +14,7 @@ library:
   source-dirs: src
   c-sources: cbits/DebugCallback.c
   dependencies:
-    - base < 4.15
+    - base <5
     - bytestring
     - extra
     - file-embed

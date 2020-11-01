@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8f8aaaf02a9a79e1a05b086eb8ccfd04f6cdaaa0d781dffb2d1fb8624c440662
+-- hash: 46aba9016a1d6cfcda00132a1bd77337c8df39989e4661dc2651106ca1636296
 
 name:           generate-new
 version:        0.0.0
@@ -95,8 +95,8 @@ library
     , containers
     , data-default
     , deepseq
-    , dependent-map
-    , dependent-sum >=0.7
+    , dependent-map >=0.4
+    , dependent-sum >=0.7.1
     , directory
     , extra
     , filepath
@@ -106,7 +106,7 @@ library
     , pandoc
     , parsec
     , parsers
-    , polysemy
+    , polysemy ==1.3.*
     , polysemy-plugin
     , pretty-show
     , prettyprinter
@@ -154,8 +154,8 @@ executable vk
     , containers
     , data-default
     , deepseq
-    , dependent-map
-    , dependent-sum >=0.7
+    , dependent-map >=0.4
+    , dependent-sum >=0.7.1
     , directory
     , extra
     , filepath
@@ -166,7 +166,7 @@ executable vk
     , pandoc
     , parsec
     , parsers
-    , polysemy
+    , polysemy ==1.3.*
     , polysemy-plugin
     , pretty-show
     , prettyprinter
@@ -215,8 +215,8 @@ executable vma
     , containers
     , data-default
     , deepseq
-    , dependent-map
-    , dependent-sum >=0.7
+    , dependent-map >=0.4
+    , dependent-sum >=0.7.1
     , directory
     , extra
     , filepath
@@ -228,7 +228,7 @@ executable vma
     , pandoc
     , parsec
     , parsers
-    , polysemy
+    , polysemy ==1.3.*
     , polysemy-plugin
     , pretty-show
     , prettyprinter
