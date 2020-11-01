@@ -14,7 +14,7 @@ executables:
     main: Main.hs
     source-dirs: info
     dependencies:
-      - base < 4.15
+      - base <5
       - vulkan
       - pretty-simple >= 3.3
       - bytestring
@@ -24,7 +24,7 @@ executables:
     source-dirs: sdl-triangle
     dependencies:
       - async
-      - base < 4.15
+      - base <5
       - bytestring
       - extra
       - managed
@@ -44,7 +44,7 @@ executables:
       - JuicyPixels
       - VulkanMemoryAllocator
       - autoapply >= 0.4
-      - base < 4.15
+      - base <5
       - bytestring
       - extra
       - resourcet
@@ -70,7 +70,7 @@ executables:
       - JuicyPixels
       - VulkanMemoryAllocator
       - autoapply >= 0.4
-      - base < 4.15
+      - base <5
       - bytestring
       - extra
       - resourcet
@@ -88,7 +88,7 @@ executables:
     dependencies:
       - VulkanMemoryAllocator
       - autoapply >= 0.4
-      - base < 4.15
+      - base <5
       - bytestring
       - extra
       - lens

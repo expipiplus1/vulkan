@@ -14,7 +14,7 @@ library:
   source-dirs: src
   c-sources: cbits/DebugCallback.c
   dependencies:
-    - base < 4.15
+    - base <5
     - bytestring
     - extra
     - file-embed

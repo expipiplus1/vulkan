@@ -15,7 +15,7 @@ library:
   verbatim:
     other-modules:
   dependencies:
-    - base < 4.15
+    - base <5
     - bytestring
     - transformers
     - vector

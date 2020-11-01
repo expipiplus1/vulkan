@@ -1,7 +1,9 @@
 # Change Log
 
 ## WIP
-  - Bump VMA, just documentation changes
+
+- Bump VMA, just documentation changes
+- Raise bound on base
 
 ## [0.3.7] - 2020-08-27
   - Bugfix https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/143
