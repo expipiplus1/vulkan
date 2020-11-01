@@ -18,6 +18,8 @@ jobs:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
 
     - name: Build project
       run: |
