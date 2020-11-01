@@ -23,7 +23,7 @@ jobs:
 
     - name: Build project
       run: |
-        git fetch --tags
+        git fetch --tags --recurse-submodules=no
         ref="${{ github.ref }}"
         ./scripts/release.sh \
           --require-first ${ref#"refs/tags/"} \
