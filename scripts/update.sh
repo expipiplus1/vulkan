@@ -8,7 +8,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # like v1.4.145
 latest_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/KhronosGroup/Vulkan-Docs/tags |
   jq --raw-output 'map(.name) | .[]' |
-  sort | tail -n1)
+  sort --version-sort | tail -n1)
 version=${1:-$latest_version}
 
 # For GitHub actions
