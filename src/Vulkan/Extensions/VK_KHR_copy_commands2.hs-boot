@@ -13,7 +13,11 @@ module Vulkan.Extensions.VK_KHR_copy_commands2  ( BlitImageInfo2KHR
                                                 ) where
 
 import Data.Kind (Type)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct (ToCStruct)
 data BlitImageInfo2KHR
 
@@ -31,12 +35,13 @@ instance Show BufferCopy2KHR
 instance FromCStruct BufferCopy2KHR
 
 
-data BufferImageCopy2KHR
+type role BufferImageCopy2KHR nominal
+data BufferImageCopy2KHR (es :: [Type])
 
-instance ToCStruct BufferImageCopy2KHR
-instance Show BufferImageCopy2KHR
+instance (Extendss BufferImageCopy2KHR es, PokeChain es) => ToCStruct (BufferImageCopy2KHR es)
+instance Show (Chain es) => Show (BufferImageCopy2KHR es)
 
-instance FromCStruct BufferImageCopy2KHR
+instance (Extendss BufferImageCopy2KHR es, PeekChain es) => FromCStruct (BufferImageCopy2KHR es)
 
 
 data CopyBufferInfo2KHR
@@ -71,12 +76,13 @@ instance Show CopyImageToBufferInfo2KHR
 instance FromCStruct CopyImageToBufferInfo2KHR
 
 
-data ImageBlit2KHR
+type role ImageBlit2KHR nominal
+data ImageBlit2KHR (es :: [Type])
 
-instance ToCStruct ImageBlit2KHR
-instance Show ImageBlit2KHR
+instance (Extendss ImageBlit2KHR es, PokeChain es) => ToCStruct (ImageBlit2KHR es)
+instance Show (Chain es) => Show (ImageBlit2KHR es)
 
-instance FromCStruct ImageBlit2KHR
+instance (Extendss ImageBlit2KHR es, PeekChain es) => FromCStruct (ImageBlit2KHR es)
 
 
 data ImageCopy2KHR

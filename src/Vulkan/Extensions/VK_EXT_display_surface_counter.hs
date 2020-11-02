@@ -2,7 +2,7 @@
 module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurfaceCapabilities2EXT
                                                          , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
                                                          , SurfaceCapabilities2EXT(..)
-                                                         , SurfaceCounterFlagBitsEXT( SURFACE_COUNTER_VBLANK_EXT
+                                                         , SurfaceCounterFlagBitsEXT( SURFACE_COUNTER_VBLANK_BIT_EXT
                                                                                     , ..
                                                                                     )
                                                          , SurfaceCounterFlagsEXT
@@ -203,7 +203,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     -- indicating the supported surface counter types.
     --
     -- @supportedSurfaceCounters@ /must/ not include
-    -- 'SURFACE_COUNTER_VBLANK_EXT' unless the surface queried is a
+    -- 'SURFACE_COUNTER_VBLANK_BIT_EXT' unless the surface queried is a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#wsi-display-surfaces display surface>
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT
   }
@@ -284,20 +284,20 @@ instance Zero SurfaceCapabilities2EXT where
 newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- | 'SURFACE_COUNTER_VBLANK_EXT' specifies a counter incrementing once every
--- time a vertical blanking period occurs on the display associated with
--- the surface.
-pattern SURFACE_COUNTER_VBLANK_EXT = SurfaceCounterFlagBitsEXT 0x00000001
+-- | 'SURFACE_COUNTER_VBLANK_BIT_EXT' specifies a counter incrementing once
+-- every time a vertical blanking period occurs on the display associated
+-- with the surface.
+pattern SURFACE_COUNTER_VBLANK_BIT_EXT = SurfaceCounterFlagBitsEXT 0x00000001
 
 type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 
 instance Show SurfaceCounterFlagBitsEXT where
   showsPrec p = \case
-    SURFACE_COUNTER_VBLANK_EXT -> showString "SURFACE_COUNTER_VBLANK_EXT"
+    SURFACE_COUNTER_VBLANK_BIT_EXT -> showString "SURFACE_COUNTER_VBLANK_BIT_EXT"
     SurfaceCounterFlagBitsEXT x -> showParen (p >= 11) (showString "SurfaceCounterFlagBitsEXT 0x" . showHex x)
 
 instance Read SurfaceCounterFlagBitsEXT where
-  readPrec = parens (choose [("SURFACE_COUNTER_VBLANK_EXT", pure SURFACE_COUNTER_VBLANK_EXT)]
+  readPrec = parens (choose [("SURFACE_COUNTER_VBLANK_BIT_EXT", pure SURFACE_COUNTER_VBLANK_BIT_EXT)]
                      +++
                      prec 10 (do
                        expectP (Ident "SurfaceCounterFlagBitsEXT")

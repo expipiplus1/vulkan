@@ -37,8 +37,8 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                                                  , PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR
                                                                                  , ..
                                                                                  )
-                                                   , PerformanceCounterDescriptionFlagBitsKHR( PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR
-                                                                                             , PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR
+                                                   , PerformanceCounterDescriptionFlagBitsKHR( PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR
+                                                                                             , PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR
                                                                                              , ..
                                                                                              )
                                                    , PerformanceCounterDescriptionFlagsKHR
@@ -1082,25 +1082,26 @@ instance Read PerformanceCounterStorageKHR where
 newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescriptionFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR' specifies
--- that recording the counter /may/ have a noticeable performance impact.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000001
--- | 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR' specifies
--- that concurrently recording the counter while other submitted command
--- buffers are running /may/ impact the accuracy of the recording.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000002
+-- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
+-- specifies that recording the counter /may/ have a noticeable performance
+-- impact.
+pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000001
+-- | 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR'
+-- specifies that concurrently recording the counter while other submitted
+-- command buffers are running /may/ impact the accuracy of the recording.
+pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000002
 
 type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
 
 instance Show PerformanceCounterDescriptionFlagBitsKHR where
   showsPrec p = \case
-    PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR"
-    PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR"
+    PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR"
+    PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR -> showString "PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR"
     PerformanceCounterDescriptionFlagBitsKHR x -> showParen (p >= 11) (showString "PerformanceCounterDescriptionFlagBitsKHR 0x" . showHex x)
 
 instance Read PerformanceCounterDescriptionFlagBitsKHR where
-  readPrec = parens (choose [("PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR)
-                            , ("PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR)]
+  readPrec = parens (choose [("PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR)
+                            , ("PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR", pure PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR)]
                      +++
                      prec 10 (do
                        expectP (Ident "PerformanceCounterDescriptionFlagBitsKHR")

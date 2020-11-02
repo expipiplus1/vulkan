@@ -5187,11 +5187,6 @@ foreign import ccall
 -- -   If @commandBuffer@ is a protected command buffer, then @dstImage@
 --     /must/ not be an unprotected image
 --
--- -   @srcBuffer@ /must/ be large enough to contain all buffer locations
---     that are accessed according to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
---     for each element of @pRegions@
---
 -- -   The image region specified by each element of @pRegions@ /must/ be a
 --     region that is contained within @dstImage@ if the @dstImage@’s
 --     'Vulkan.Core10.Enums.Format.Format' is not a
@@ -5199,6 +5194,11 @@ foreign import ccall
 --     and /must/ be a region that is contained within the plane being
 --     copied to if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format' is
 --     a multi-planar format
+--
+-- -   @srcBuffer@ /must/ be large enough to contain all buffer locations
+--     that are accessed according to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
+--     for each element of @pRegions@
 --
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
@@ -5273,18 +5273,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
 --
--- -   If @dstImage@ does not have either a depth\/stencil or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the format’s texel block size
---
--- -   If @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the element size of the compatible format for the format
---     and the @aspectMask@ of the @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
 -- -   For each element of @pRegions@, @imageOffset.x@ and
 --     (@imageExtent.width@ + @imageOffset.x@) /must/ both be greater than
 --     or equal to @0@ and less than or equal to the width of the specified
@@ -5299,6 +5287,18 @@ foreign import ccall
 --     height of the /plane/ of the image involved in the copy in the case
 --     of a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   If @dstImage@ does not have either a depth\/stencil or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the format’s texel block size
+--
+-- -   If @dstImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the element size of the compatible format for the format
+--     and the @aspectMask@ of the @imageSubresource@ as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
 --
 -- -   If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
@@ -5501,11 +5501,6 @@ foreign import ccall
 -- -   If @commandBuffer@ is a protected command buffer, then @dstBuffer@
 --     /must/ not be an unprotected buffer
 --
--- -   @dstBuffer@ /must/ be large enough to contain all buffer locations
---     that are accessed according to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
---     for each element of @pRegions@
---
 -- -   The image region specified by each element of @pRegions@ /must/ be a
 --     region that is contained within @srcImage@ if the @srcImage@’s
 --     'Vulkan.Core10.Enums.Format.Format' is not a
@@ -5513,6 +5508,11 @@ foreign import ccall
 --     and /must/ be a region that is contained within the plane being
 --     copied if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format' is a
 --     multi-planar format
+--
+-- -   @dstBuffer@ /must/ be large enough to contain all buffer locations
+--     that are accessed according to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
+--     for each element of @pRegions@
 --
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
@@ -5578,6 +5578,21 @@ foreign import ccall
 -- -   If @srcImage@ has a depth\/stencil format, the @bufferOffset@ member
 --     of any element of @pRegions@ /must/ be a multiple of @4@
 --
+-- -   For each element of @pRegions@ , @imageOffset.x@ and
+--     (@imageExtent.width@ + @imageOffset.x@) /must/ both be greater than
+--     or equal to @0@ and less than or equal to the width of the specified
+--     @imageSubresource@ of @srcImage@ where this refers to the width of
+--     the /plane/ of the image involved in the copy in the case of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   For each element of @pRegions@ , @imageOffset.y@ and
+--     (imageExtent.height + @imageOffset.y@) /must/ both be greater than
+--     or equal to @0@ and less than or equal to the height of the
+--     specified @imageSubresource@ of @srcImage@ where this refers to the
+--     height of the /plane/ of the image involved in the copy in the case
+--     of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
 -- -   If @srcImage@ does not have either a depth\/stencil or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
@@ -5589,21 +5604,6 @@ foreign import ccall
 --     multiple of the element size of the compatible format for the format
 --     and the @aspectMask@ of the @imageSubresource@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
--- -   For each element of @pRegions@, @imageOffset.x@ and
---     (@imageExtent.width@ + @imageOffset.x@) /must/ both be greater than
---     or equal to @0@ and less than or equal to the width of the specified
---     @imageSubresource@ of @srcImage@ where this refers to the width of
---     the /plane/ of the image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
---
--- -   For each element of @pRegions@, @imageOffset.y@ and
---     (imageExtent.height + @imageOffset.y@) /must/ both be greater than
---     or equal to @0@ and less than or equal to the height of the
---     specified @imageSubresource@ of @srcImage@ where this refers to the
---     height of the /plane/ of the image involved in the copy in the case
---     of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element

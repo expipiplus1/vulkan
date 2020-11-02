@@ -1168,6 +1168,7 @@ instance Read CompositeAlphaFlagBitsKHR where
 -- = See Also
 --
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
+-- 'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
 -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCapabilities2EXT',
