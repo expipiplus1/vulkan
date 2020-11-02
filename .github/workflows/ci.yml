@@ -120,6 +120,7 @@ jobs:
       run: |
         cabal haddock
         cabal haddock VulkanMemoryAllocator
+        cabal haddock vulkan-utils
 
   stack:
 
