@@ -3,6 +3,11 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                    , getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR
                                                    , acquireProfilingLockKHR
                                                    , releaseProfilingLockKHR
+                                                   , pattern QUERY_SCOPE_COMMAND_BUFFER_KHR
+                                                   , pattern QUERY_SCOPE_RENDER_PASS_KHR
+                                                   , pattern QUERY_SCOPE_COMMAND_KHR
+                                                   , pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR
+                                                   , pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR
                                                    , PhysicalDevicePerformanceQueryFeaturesKHR(..)
                                                    , PhysicalDevicePerformanceQueryPropertiesKHR(..)
                                                    , PerformanceCounterKHR(..)
@@ -378,6 +383,26 @@ releaseProfilingLockKHR device = liftIO $ do
   let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR vkReleaseProfilingLockKHRPtr
   vkReleaseProfilingLockKHR' (deviceHandle (device))
   pure $ ()
+
+
+-- No documentation found for TopLevel "VK_QUERY_SCOPE_COMMAND_BUFFER_KHR"
+pattern QUERY_SCOPE_COMMAND_BUFFER_KHR = PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR
+
+
+-- No documentation found for TopLevel "VK_QUERY_SCOPE_RENDER_PASS_KHR"
+pattern QUERY_SCOPE_RENDER_PASS_KHR = PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR
+
+
+-- No documentation found for TopLevel "VK_QUERY_SCOPE_COMMAND_KHR"
+pattern QUERY_SCOPE_COMMAND_KHR = PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR
+
+
+-- No documentation found for TopLevel "VK_PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR"
+pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_KHR = PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR"
+pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR
 
 
 -- | VkPhysicalDevicePerformanceQueryFeaturesKHR - Structure describing

@@ -4,6 +4,7 @@ module Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                          , getPhysicalDeviceSurfaceCapabilitiesKHR
                                          , getPhysicalDeviceSurfaceFormatsKHR
                                          , getPhysicalDeviceSurfacePresentModesKHR
+                                         , pattern COLORSPACE_SRGB_NONLINEAR_KHR
                                          , SurfaceCapabilitiesKHR(..)
                                          , SurfaceFormatKHR(..)
                                          , PresentModeKHR( PRESENT_MODE_IMMEDIATE_KHR
@@ -547,6 +548,10 @@ getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = liftIO . evalCo
   pure $ ((r'), pPresentModes')
 
 
+-- No documentation found for TopLevel "VK_COLORSPACE_SRGB_NONLINEAR_KHR"
+pattern COLORSPACE_SRGB_NONLINEAR_KHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
+
+
 -- | VkSurfaceCapabilitiesKHR - Structure describing capabilities of a
 -- surface
 --
@@ -891,12 +896,11 @@ instance Read PresentModeKHR where
 -- Note
 --
 -- In the initial release of the @VK_KHR_surface@ and @VK_KHR_swapchain@
--- extensions, the token @VK_COLORSPACE_SRGB_NONLINEAR_KHR@ was used.
--- Starting in the 2016-05-13 updates to the extension branches, matching
--- release 1.0.13 of the core API specification,
--- 'COLOR_SPACE_SRGB_NONLINEAR_KHR' is used instead for consistency with
--- Vulkan naming rules. The older enum is still available for backwards
--- compatibility.
+-- extensions, the token 'COLORSPACE_SRGB_NONLINEAR_KHR' was used. Starting
+-- in the 2016-05-13 updates to the extension branches, matching release
+-- 1.0.13 of the core API specification, 'COLOR_SPACE_SRGB_NONLINEAR_KHR'
+-- is used instead for consistency with Vulkan naming rules. The older enum
+-- is still available for backwards compatibility.
 --
 -- Note
 --

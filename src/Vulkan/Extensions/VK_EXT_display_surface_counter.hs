@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalDeviceSurfaceCapabilities2EXT
                                                          , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
+                                                         , pattern SURFACE_COUNTER_VBLANK_EXT
                                                          , SurfaceCapabilities2EXT(..)
                                                          , SurfaceCounterFlagBitsEXT( SURFACE_COUNTER_VBLANK_BIT_EXT
                                                                                     , ..
@@ -154,6 +155,10 @@ getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = liftIO . evalC
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT"
 pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT
+
+
+-- No documentation found for TopLevel "VK_SURFACE_COUNTER_VBLANK_EXT"
+pattern SURFACE_COUNTER_VBLANK_EXT = SURFACE_COUNTER_VBLANK_BIT_EXT
 
 
 -- | VkSurfaceCapabilities2EXT - Structure describing capabilities of a

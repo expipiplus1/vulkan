@@ -49,11 +49,11 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                             , pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV
                                             , pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV
                                             , pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV
+                                            , pattern SHADER_UNUSED_NV
                                             , destroyAccelerationStructureNV
                                             , bindAccelerationStructureMemoryNV
                                             , cmdWriteAccelerationStructuresPropertiesNV
                                             , getRayTracingShaderGroupHandlesNV
-                                            , pattern SHADER_UNUSED_NV
                                             , RayTracingShaderGroupCreateInfoNV(..)
                                             , RayTracingPipelineCreateInfoNV(..)
                                             , GeometryTrianglesNV(..)
@@ -1538,6 +1538,10 @@ pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV = ACCEL
 pattern ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV = ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_KHR
 
 
+-- No documentation found for TopLevel "VK_SHADER_UNUSED_NV"
+pattern SHADER_UNUSED_NV = SHADER_UNUSED_KHR
+
+
 -- No documentation found for TopLevel "vkDestroyAccelerationStructureNV"
 destroyAccelerationStructureNV = destroyAccelerationStructureKHR
 
@@ -1552,10 +1556,6 @@ cmdWriteAccelerationStructuresPropertiesNV = cmdWriteAccelerationStructuresPrope
 
 -- No documentation found for TopLevel "vkGetRayTracingShaderGroupHandlesNV"
 getRayTracingShaderGroupHandlesNV = getRayTracingShaderGroupHandlesKHR
-
-
--- No documentation found for TopLevel "VK_SHADER_UNUSED_NV"
-pattern SHADER_UNUSED_NV = SHADER_UNUSED_KHR
 
 
 -- | VkRayTracingShaderGroupCreateInfoNV - Structure specifying shaders in a
