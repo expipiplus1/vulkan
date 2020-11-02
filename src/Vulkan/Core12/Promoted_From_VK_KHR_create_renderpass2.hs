@@ -743,6 +743,12 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2'
 --
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
+--
 -- -   @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.AttachmentDescriptionFlagBits'
 --     values
@@ -1004,6 +1010,12 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2'
 --
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
+--
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
+--
 -- -   @layout@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
 --
@@ -1220,6 +1232,11 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     @aspectMask@ member /must/ not include
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
 --
+-- -   If the @attachment@ member of any element of @pInputAttachments@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the
+--     @aspectMask@ member /must/ not include
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+--
 -- -   An attachment /must/ not be used in both @pDepthStencilAttachment@
 --     and @pColorAttachments@
 --
@@ -1234,6 +1251,16 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
+--     or
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
+--
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
 --
 -- -   @flags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlagBits'
@@ -1526,6 +1553,8 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2'
+--
+-- -   @pNext@ /must/ be @NULL@
 --
 -- -   @srcStageMask@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'

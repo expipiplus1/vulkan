@@ -14,8 +14,8 @@ module Vulkan.Extensions.VK_KHR_external_memory_capabilities  ( pattern STRUCTUR
                                                               , pattern EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_KHR
                                                               , pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_KHR
                                                               , pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR
-                                                              , getPhysicalDeviceExternalBufferPropertiesKHR
                                                               , pattern LUID_SIZE_KHR
+                                                              , getPhysicalDeviceExternalBufferPropertiesKHR
                                                               , ExternalMemoryHandleTypeFlagsKHR
                                                               , ExternalMemoryFeatureFlagsKHR
                                                               , ExternalMemoryHandleTypeFlagBitsKHR
@@ -130,12 +130,12 @@ pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_KHR = EXTERNAL_MEMORY_FEATURE_EXP
 pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR = EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
 
 
--- No documentation found for TopLevel "vkGetPhysicalDeviceExternalBufferPropertiesKHR"
-getPhysicalDeviceExternalBufferPropertiesKHR = getPhysicalDeviceExternalBufferProperties
-
-
 -- No documentation found for TopLevel "VK_LUID_SIZE_KHR"
 pattern LUID_SIZE_KHR = LUID_SIZE
+
+
+-- No documentation found for TopLevel "vkGetPhysicalDeviceExternalBufferPropertiesKHR"
+getPhysicalDeviceExternalBufferPropertiesKHR = getPhysicalDeviceExternalBufferProperties
 
 
 -- No documentation found for TopLevel "VkExternalMemoryHandleTypeFlagsKHR"

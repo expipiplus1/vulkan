@@ -25,8 +25,10 @@ module Vulkan.Extensions.VK_KHR_copy_commands2  ( cmdCopyBuffer2KHR
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -37,6 +39,7 @@ import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -52,11 +55,16 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
+import Vulkan.CStruct.Extends (peekSomeCStruct)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.Core10.Handles (Buffer)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_rotated_copy_commands (CopyCommandTransformInfoQCOM)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBlitImage2KHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyBuffer2KHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyBufferToImage2KHR))
@@ -64,6 +72,9 @@ import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyImage2KHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyImageToBuffer2KHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdResolveImage2KHR))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Enums.Filter (Filter)
 import Vulkan.CStruct (FromCStruct)
@@ -72,6 +83,11 @@ import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
 import Vulkan.Core10.FundamentalTypes (Offset3D)
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
@@ -781,7 +797,11 @@ instance Zero ImageCopy2KHR where
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_BLIT_2_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
 --
 -- -   @srcSubresource@ /must/ be a valid
 --     'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers'
@@ -797,8 +817,10 @@ instance Zero ImageCopy2KHR where
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data ImageBlit2KHR = ImageBlit2KHR
-  { -- | @srcSubresource@ is the subresource to blit from.
+data ImageBlit2KHR (es :: [Type]) = ImageBlit2KHR
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcSubresource@ is the subresource to blit from.
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffsets@ is a pointer to an array of two
     -- 'Vulkan.Core10.FundamentalTypes.Offset3D' structures specifying the
@@ -813,15 +835,25 @@ data ImageBlit2KHR = ImageBlit2KHR
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (ImageBlit2KHR)
+deriving instance Generic (ImageBlit2KHR (es :: [Type]))
 #endif
-deriving instance Show ImageBlit2KHR
+deriving instance Show (Chain es) => Show (ImageBlit2KHR es)
 
-instance ToCStruct ImageBlit2KHR where
+instance Extensible ImageBlit2KHR where
+  extensibleType = STRUCTURE_TYPE_IMAGE_BLIT_2_KHR
+  setNext x next = x{next = next}
+  getNext ImageBlit2KHR{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageBlit2KHR e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @CopyCommandTransformInfoQCOM = Just f
+    | otherwise = Nothing
+
+instance (Extendss ImageBlit2KHR es, PokeChain es) => ToCStruct (ImageBlit2KHR es) where
   withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageBlit2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource) . ($ ())
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
     case (srcOffsets) of
@@ -839,7 +871,8 @@ instance ToCStruct ImageBlit2KHR where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero) . ($ ())
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
     case ((zero, zero)) of
@@ -854,8 +887,10 @@ instance ToCStruct ImageBlit2KHR where
         ContT $ pokeCStruct (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1) . ($ ())
     lift $ f
 
-instance FromCStruct ImageBlit2KHR where
+instance (Extendss ImageBlit2KHR es, PeekChain es) => FromCStruct (ImageBlit2KHR es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcSubresource <- peekCStruct @ImageSubresourceLayers ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers))
     let psrcOffsets = lowerArrayPtr @Offset3D ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
     srcOffsets0 <- peekCStruct @Offset3D ((psrcOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
@@ -865,10 +900,11 @@ instance FromCStruct ImageBlit2KHR where
     dstOffsets0 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
     dstOffsets1 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 12 :: Ptr Offset3D))
     pure $ ImageBlit2KHR
-             srcSubresource ((srcOffsets0, srcOffsets1)) dstSubresource ((dstOffsets0, dstOffsets1))
+             next srcSubresource ((srcOffsets0, srcOffsets1)) dstSubresource ((dstOffsets0, dstOffsets1))
 
-instance Zero ImageBlit2KHR where
+instance es ~ '[] => Zero (ImageBlit2KHR es) where
   zero = ImageBlit2KHR
+           ()
            zero
            (zero, zero)
            zero
@@ -900,7 +936,11 @@ instance Zero ImageBlit2KHR where
 -- -   @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
 --
 -- -   @imageSubresource@ /must/ be a valid
 --     'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers'
@@ -914,8 +954,10 @@ instance Zero ImageBlit2KHR where
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data BufferImageCopy2KHR = BufferImageCopy2KHR
-  { -- | @bufferOffset@ is the offset in bytes from the start of the buffer
+data BufferImageCopy2KHR (es :: [Type]) = BufferImageCopy2KHR
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @bufferOffset@ is the offset in bytes from the start of the buffer
     -- object where the image data is copied from or to.
     bufferOffset :: DeviceSize
   , -- | @bufferRowLength@ and @bufferImageHeight@ specify in texels a subregion
@@ -940,15 +982,25 @@ data BufferImageCopy2KHR = BufferImageCopy2KHR
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (BufferImageCopy2KHR)
+deriving instance Generic (BufferImageCopy2KHR (es :: [Type]))
 #endif
-deriving instance Show BufferImageCopy2KHR
+deriving instance Show (Chain es) => Show (BufferImageCopy2KHR es)
 
-instance ToCStruct BufferImageCopy2KHR where
+instance Extensible BufferImageCopy2KHR where
+  extensibleType = STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR
+  setNext x next = x{next = next}
+  getNext BufferImageCopy2KHR{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferImageCopy2KHR e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @CopyCommandTransformInfoQCOM = Just f
+    | otherwise = Nothing
+
+instance (Extendss BufferImageCopy2KHR es, PokeChain es) => ToCStruct (BufferImageCopy2KHR es) where
   withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferImageCopy2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (bufferOffset)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (bufferRowLength)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (bufferImageHeight)
@@ -960,7 +1012,8 @@ instance ToCStruct BufferImageCopy2KHR where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
@@ -969,8 +1022,10 @@ instance ToCStruct BufferImageCopy2KHR where
     ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Extent3D)) (zero) . ($ ())
     lift $ f
 
-instance FromCStruct BufferImageCopy2KHR where
+instance (Extendss BufferImageCopy2KHR es, PeekChain es) => FromCStruct (BufferImageCopy2KHR es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     bufferOffset <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
     bufferRowLength <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     bufferImageHeight <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
@@ -978,10 +1033,11 @@ instance FromCStruct BufferImageCopy2KHR where
     imageOffset <- peekCStruct @Offset3D ((p `plusPtr` 48 :: Ptr Offset3D))
     imageExtent <- peekCStruct @Extent3D ((p `plusPtr` 60 :: Ptr Extent3D))
     pure $ BufferImageCopy2KHR
-             bufferOffset bufferRowLength bufferImageHeight imageSubresource imageOffset imageExtent
+             next bufferOffset bufferRowLength bufferImageHeight imageSubresource imageOffset imageExtent
 
-instance Zero BufferImageCopy2KHR where
+instance es ~ '[] => Zero (BufferImageCopy2KHR es) where
   zero = BufferImageCopy2KHR
+           ()
            zero
            zero
            zero
@@ -1814,6 +1870,17 @@ instance Zero CopyImageInfo2KHR where
 --     of @pRegions@, @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z
 --     /must/ be @1@
 --
+-- -   If any element of @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then @srcImage@ and @dstImage@ /must/ not be a
+--     block-compressed image.
+--
+-- -   If any element of @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then the @srcImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and /must/ not be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -1859,7 +1926,7 @@ data BlitImageInfo2KHR = BlitImageInfo2KHR
     dstImageLayout :: ImageLayout
   , -- | @pRegions@ is a pointer to an array of 'ImageBlit2KHR' structures
     -- specifying the regions to blit.
-    regions :: Vector ImageBlit2KHR
+    regions :: Vector (SomeStruct ImageBlit2KHR)
   , -- | @filter@ is a 'Vulkan.Core10.Enums.Filter.Filter' specifying the filter
     -- to apply if the blits require scaling.
     filter' :: Filter
@@ -1880,9 +1947,9 @@ instance ToCStruct BlitImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @ImageBlit2KHR ((Data.Vector.length (regions)) * 96) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (96 * (i)) :: Ptr ImageBlit2KHR) (e) . ($ ())) (regions)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageBlit2KHR))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytesAligned @(ImageBlit2KHR _) ((Data.Vector.length (regions)) * 96) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (96 * (i)) :: Ptr (ImageBlit2KHR _))) (e) . ($ ())) (regions)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR _)))) (pPRegions')
     lift $ poke ((p `plusPtr` 56 :: Ptr Filter)) (filter')
     lift $ f
   cStructSize = 64
@@ -1894,9 +1961,9 @@ instance ToCStruct BlitImageInfo2KHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (zero)
-    pPRegions' <- ContT $ allocaBytesAligned @ImageBlit2KHR ((Data.Vector.length (mempty)) * 96) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (96 * (i)) :: Ptr ImageBlit2KHR) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageBlit2KHR))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytesAligned @(ImageBlit2KHR _) ((Data.Vector.length (mempty)) * 96) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (96 * (i)) :: Ptr (ImageBlit2KHR _))) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR _)))) (pPRegions')
     lift $ poke ((p `plusPtr` 56 :: Ptr Filter)) (zero)
     lift $ f
 
@@ -1907,8 +1974,8 @@ instance FromCStruct BlitImageInfo2KHR where
     dstImage <- peek @Image ((p `plusPtr` 32 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 40 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    pRegions <- peek @(Ptr ImageBlit2KHR) ((p `plusPtr` 48 :: Ptr (Ptr ImageBlit2KHR)))
-    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekCStruct @ImageBlit2KHR ((pRegions `advancePtrBytes` (96 * (i)) :: Ptr ImageBlit2KHR)))
+    pRegions <- peek @(Ptr (ImageBlit2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR a))))
+    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (96 * (i)) :: Ptr (ImageBlit2KHR _)))))
     filter' <- peek @Filter ((p `plusPtr` 56 :: Ptr Filter))
     pure $ BlitImageInfo2KHR
              srcImage srcImageLayout dstImage dstImageLayout pRegions' filter'
@@ -1928,18 +1995,39 @@ instance Zero BlitImageInfo2KHR where
 --
 -- == Valid Usage
 --
--- -   @srcBuffer@ /must/ be large enough to contain all buffer locations
---     that are accessed according to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
---     for each element of @pRegions@
---
--- -   The image region specified by each element of @pRegions@ /must/ be a
---     region that is contained within @dstImage@ if the @dstImage@’s
---     'Vulkan.Core10.Enums.Format.Format' is not a
+-- -   If the image region specified by each element of @pRegions@ does not
+--     contain
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, it /must/ be a region that is contained within
+--     @dstImage@ if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format'
+--     is not a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     and /must/ be a region that is contained within the plane being
 --     copied to if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format' is
 --     a multi-planar format
+--
+-- -   If the image region specified by each element of @pRegions@ does
+--     contain
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, the rotated destination region as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
+--     /must/ be contained within @dstImage@.
+--
+-- -   If any element of @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then the @dstImage@ /must/ not be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>.
+--
+-- -   If any element of @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then the @dstImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and /must/ not be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--
+-- -   @srcBuffer@ /must/ be large enough to contain all buffer locations
+--     that are accessed according to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
+--     for each element of @pRegions@
 --
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
@@ -2014,6 +2102,24 @@ instance Zero BlitImageInfo2KHR where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
 --
+-- -   For each element of @pRegions@ not containing
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, , @imageOffset.x@ and (@imageExtent.width@ +
+--     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the width of the specified @imageSubresource@
+--     of @dstImage@ where this refers to the width of the /plane/ of the
+--     image involved in the copy in the case of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   For each element of @pRegions@ not containing
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, , @imageOffset.y@ and (imageExtent.height +
+--     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the height of the specified @imageSubresource@
+--     of @dstImage@ where this refers to the height of the /plane/ of the
+--     image involved in the copy in the case of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
 -- -   If @dstImage@ does not have either a depth\/stencil or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
@@ -2025,21 +2131,6 @@ instance Zero BlitImageInfo2KHR where
 --     multiple of the element size of the compatible format for the format
 --     and the @aspectMask@ of the @imageSubresource@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
--- -   For each element of @pRegions@, @imageOffset.x@ and
---     (@imageExtent.width@ + @imageOffset.x@) /must/ both be greater than
---     or equal to @0@ and less than or equal to the width of the specified
---     @imageSubresource@ of @dstImage@ where this refers to the width of
---     the /plane/ of the image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
---
--- -   For each element of @pRegions@, @imageOffset.y@ and
---     (imageExtent.height + @imageOffset.y@) /must/ both be greater than
---     or equal to @0@ and less than or equal to the height of the
---     specified @imageSubresource@ of @dstImage@ where this refers to the
---     height of the /plane/ of the image involved in the copy in the case
---     of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
@@ -2158,7 +2249,7 @@ data CopyBufferToImageInfo2KHR = CopyBufferToImageInfo2KHR
     dstImageLayout :: ImageLayout
   , -- | @pRegions@ is a pointer to an array of 'BufferImageCopy2KHR' structures
     -- specifying the regions to copy.
-    regions :: Vector BufferImageCopy2KHR
+    regions :: Vector (SomeStruct BufferImageCopy2KHR)
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -2175,9 +2266,9 @@ instance ToCStruct CopyBufferToImageInfo2KHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 32 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @BufferImageCopy2KHR ((Data.Vector.length (regions)) * 72) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (72 * (i)) :: Ptr BufferImageCopy2KHR) (e) . ($ ())) (regions)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferImageCopy2KHR))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytesAligned @(BufferImageCopy2KHR _) ((Data.Vector.length (regions)) * 72) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2KHR _))) (e) . ($ ())) (regions)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR _)))) (pPRegions')
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
@@ -2187,9 +2278,9 @@ instance ToCStruct CopyBufferToImageInfo2KHR where
     lift $ poke ((p `plusPtr` 16 :: Ptr Buffer)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 32 :: Ptr ImageLayout)) (zero)
-    pPRegions' <- ContT $ allocaBytesAligned @BufferImageCopy2KHR ((Data.Vector.length (mempty)) * 72) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (72 * (i)) :: Ptr BufferImageCopy2KHR) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferImageCopy2KHR))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytesAligned @(BufferImageCopy2KHR _) ((Data.Vector.length (mempty)) * 72) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2KHR _))) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR _)))) (pPRegions')
     lift $ f
 
 instance FromCStruct CopyBufferToImageInfo2KHR where
@@ -2198,8 +2289,8 @@ instance FromCStruct CopyBufferToImageInfo2KHR where
     dstImage <- peek @Image ((p `plusPtr` 24 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 32 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
-    pRegions <- peek @(Ptr BufferImageCopy2KHR) ((p `plusPtr` 40 :: Ptr (Ptr BufferImageCopy2KHR)))
-    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekCStruct @BufferImageCopy2KHR ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr BufferImageCopy2KHR)))
+    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR a))))
+    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2KHR _)))))
     pure $ CopyBufferToImageInfo2KHR
              srcBuffer dstImage dstImageLayout pRegions'
 
@@ -2216,18 +2307,39 @@ instance Zero CopyBufferToImageInfo2KHR where
 --
 -- == Valid Usage
 --
--- -   @dstBuffer@ /must/ be large enough to contain all buffer locations
---     that are accessed according to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
---     for each element of @pRegions@
---
--- -   The image region specified by each element of @pRegions@ /must/ be a
---     region that is contained within @srcImage@ if the @srcImage@’s
---     'Vulkan.Core10.Enums.Format.Format' is not a
+-- -   If the image region specified by each element of @pRegions@ does not
+--     contain
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, it /must/ be a region that is contained within
+--     @srcImage@ if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format'
+--     is not a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     and /must/ be a region that is contained within the plane being
 --     copied if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format' is a
 --     multi-planar format
+--
+-- -   If the image region specified by each element of @pRegions@ does
+--     contain
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, the rotated source region as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
+--     /must/ be contained within @srcImage@.
+--
+-- -   If any element of @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then the @srcImage@ /must/ not be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>
+--
+-- -   If any element of @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then the @srcImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and /must/ not be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--
+-- -   @dstBuffer@ /must/ be large enough to contain all buffer locations
+--     that are accessed according to
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
+--     for each element of @pRegions@
 --
 -- -   The union of all source regions, and the union of all destination
 --     regions, specified by the elements of @pRegions@, /must/ not overlap
@@ -2293,6 +2405,24 @@ instance Zero CopyBufferToImageInfo2KHR where
 -- -   If @srcImage@ has a depth\/stencil format, the @bufferOffset@ member
 --     of any element of @pRegions@ /must/ be a multiple of @4@
 --
+-- -   For each element of @pRegions@ not containing
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, , @imageOffset.x@ and (@imageExtent.width@ +
+--     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the width of the specified @imageSubresource@
+--     of @srcImage@ where this refers to the width of the /plane/ of the
+--     image involved in the copy in the case of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
+-- -   For each element of @pRegions@ not containing
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, , @imageOffset.y@ and (imageExtent.height +
+--     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
+--     less than or equal to the height of the specified @imageSubresource@
+--     of @srcImage@ where this refers to the height of the /plane/ of the
+--     image involved in the copy in the case of a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--
 -- -   If {imageparam} does not have either a depth\/stencil or a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then for each element of @pRegions@, @bufferOffset@ /must/ be a
@@ -2304,21 +2434,6 @@ instance Zero CopyBufferToImageInfo2KHR where
 --     multiple of the element size of the compatible format for the format
 --     and the @aspectMask@ of the @imageSubresource@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
--- -   For each element of @pRegions@, @imageOffset.x@ and
---     (@imageExtent.width@ + @imageOffset.x@) /must/ both be greater than
---     or equal to @0@ and less than or equal to the width of the specified
---     @imageSubresource@ of {imageparam} where this refers to the width of
---     the /plane/ of the image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
---
--- -   For each element of @pRegions@, @imageOffset.y@ and
---     (imageExtent.height + @imageOffset.y@) /must/ both be greater than
---     or equal to @0@ and less than or equal to the height of the
---     specified @imageSubresource@ of {imageparam} where this refers to
---     the height of the /plane/ of the image involved in the copy in the
---     case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   If {imageparam} is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
@@ -2437,7 +2552,7 @@ data CopyImageToBufferInfo2KHR = CopyImageToBufferInfo2KHR
     dstBuffer :: Buffer
   , -- | @pRegions@ is a pointer to an array of 'BufferImageCopy2KHR' structures
     -- specifying the regions to copy.
-    regions :: Vector BufferImageCopy2KHR
+    regions :: Vector (SomeStruct BufferImageCopy2KHR)
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -2454,9 +2569,9 @@ instance ToCStruct CopyImageToBufferInfo2KHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (srcImageLayout)
     lift $ poke ((p `plusPtr` 32 :: Ptr Buffer)) (dstBuffer)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @BufferImageCopy2KHR ((Data.Vector.length (regions)) * 72) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (72 * (i)) :: Ptr BufferImageCopy2KHR) (e) . ($ ())) (regions)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr BufferImageCopy2KHR))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytesAligned @(BufferImageCopy2KHR _) ((Data.Vector.length (regions)) * 72) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2KHR _))) (e) . ($ ())) (regions)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR _)))) (pPRegions')
     lift $ f
   cStructSize = 56
   cStructAlignment = 8
@@ -2466,9 +2581,9 @@ instance ToCStruct CopyImageToBufferInfo2KHR where
     lift $ poke ((p `plusPtr` 16 :: Ptr Image)) (zero)
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (zero)
     lift $ poke ((p `plusPtr` 32 :: Ptr Buffer)) (zero)
-    pPRegions' <- ContT $ allocaBytesAligned @BufferImageCopy2KHR ((Data.Vector.length (mempty)) * 72) 8
-    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions' `plusPtr` (72 * (i)) :: Ptr BufferImageCopy2KHR) (e) . ($ ())) (mempty)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr BufferImageCopy2KHR))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytesAligned @(BufferImageCopy2KHR _) ((Data.Vector.length (mempty)) * 72) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2KHR _))) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR _)))) (pPRegions')
     lift $ f
 
 instance FromCStruct CopyImageToBufferInfo2KHR where
@@ -2477,8 +2592,8 @@ instance FromCStruct CopyImageToBufferInfo2KHR where
     srcImageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
     dstBuffer <- peek @Buffer ((p `plusPtr` 32 :: Ptr Buffer))
     regionCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    pRegions <- peek @(Ptr BufferImageCopy2KHR) ((p `plusPtr` 48 :: Ptr (Ptr BufferImageCopy2KHR)))
-    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekCStruct @BufferImageCopy2KHR ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr BufferImageCopy2KHR)))
+    pRegions <- peek @(Ptr (BufferImageCopy2KHR _)) ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR a))))
+    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2KHR _)))))
     pure $ CopyImageToBufferInfo2KHR
              srcImage srcImageLayout dstBuffer pRegions'
 

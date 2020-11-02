@@ -2,8 +2,8 @@
 module Vulkan.Extensions.VK_KHR_device_group_creation  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES_KHR
                                                        , pattern STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO_KHR
                                                        , pattern MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR
-                                                       , enumeratePhysicalDeviceGroupsKHR
                                                        , pattern MAX_DEVICE_GROUP_SIZE_KHR
+                                                       , enumeratePhysicalDeviceGroupsKHR
                                                        , PhysicalDeviceGroupPropertiesKHR
                                                        , DeviceGroupDeviceCreateInfoKHR
                                                        , KHR_DEVICE_GROUP_CREATION_SPEC_VERSION
@@ -33,12 +33,12 @@ pattern STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO_KHR = STRUCTURE_TYPE_DEVI
 pattern MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR = MEMORY_HEAP_MULTI_INSTANCE_BIT
 
 
--- No documentation found for TopLevel "vkEnumeratePhysicalDeviceGroupsKHR"
-enumeratePhysicalDeviceGroupsKHR = enumeratePhysicalDeviceGroups
-
-
 -- No documentation found for TopLevel "VK_MAX_DEVICE_GROUP_SIZE_KHR"
 pattern MAX_DEVICE_GROUP_SIZE_KHR = MAX_DEVICE_GROUP_SIZE
+
+
+-- No documentation found for TopLevel "vkEnumeratePhysicalDeviceGroupsKHR"
+enumeratePhysicalDeviceGroupsKHR = enumeratePhysicalDeviceGroups
 
 
 -- No documentation found for TopLevel "VkPhysicalDeviceGroupPropertiesKHR"

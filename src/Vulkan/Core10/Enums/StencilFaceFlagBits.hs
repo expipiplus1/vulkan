@@ -1,5 +1,6 @@
 {-# language CPP #-}
-module Vulkan.Core10.Enums.StencilFaceFlagBits  ( StencilFaceFlagBits( STENCIL_FACE_FRONT_BIT
+module Vulkan.Core10.Enums.StencilFaceFlagBits  ( pattern STENCIL_FRONT_AND_BACK
+                                                , StencilFaceFlagBits( STENCIL_FACE_FRONT_BIT
                                                                      , STENCIL_FACE_BACK_BIT
                                                                      , STENCIL_FACE_FRONT_AND_BACK
                                                                      , ..
@@ -22,6 +23,10 @@ import GHC.Read (Read(readPrec))
 import Text.Read.Lex (Lexeme(Ident))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Zero (Zero)
+-- No documentation found for TopLevel "VK_STENCIL_FRONT_AND_BACK"
+pattern STENCIL_FRONT_AND_BACK = STENCIL_FACE_FRONT_AND_BACK
+
+
 -- | VkStencilFaceFlagBits - Bitmask specifying sets of stencil state for
 -- which to update the compare mask
 --
