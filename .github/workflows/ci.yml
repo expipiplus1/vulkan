@@ -24,19 +24,17 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - uses: actions/setup-haskell@v1
+    - uses: actions/setup-haskell@v1.1
+      id: setup-haskell-cabal
       with:
         ghc-version: ${{ matrix.ghc }}
         cabal-version: ${{ matrix.cabal }}
 
-    - name: Cache cabal store
-      uses: actions/cache@v1
+    - uses: actions/cache@v1
+      name: Cache cabal-store
       with:
-        path: ~/.cabal
-        key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('**/*.cabal') }}-${{ hashFiles('**/cabal.project') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.ghc }}-
-          ${{ runner.os }}-
+        path: ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
+        key: ${{ runner.os }}-${{ matrix.ghc }}-cabal
 
     - name: Cache dist-newstyle
       uses: actions/cache@v1
