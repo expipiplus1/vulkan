@@ -173,9 +173,25 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: bash
       run: |
-        stack exec $ARGS -- pacman --noconfirm -S mingw-w64-x86_64-vulkan mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2 mingw-w64-x86_64-glslang
-      env:
-        ARGS: ${{ matrix.args }}
+        choco install pkgconfiglite
+
+        curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
+        SDL2=$(cygpath --windows "$(pwd)/SDL2-2.0.12/x86_64-w64-mingw32")
+        printf "%s" "$SDL2/bin" >> $GITHUB_PATH
+        printf "%s" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> $GITHUB_ENV
+
+        choco install vulkan-sdk
+        VulkanSDK=$(cygpath --windows /c/VulkanSDK/*/)
+        printf "%s" "$VulkanSDK/Bin" >> $GITHUB_PATH
+
+        cat >> stack.yaml <<EOF
+        extra-lib-dirs:
+          - $SDL2/lib/
+          - $VulkanSDK/Lib/
+        extra-include-dirs:
+          - $SDL2/include/SDL2/
+          - $VulkanSDK/Include/
+        EOF
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
