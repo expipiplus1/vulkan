@@ -64,12 +64,12 @@ jobs:
 
         curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
         SDL2=$(cygpath --windows "$(pwd)/SDL2-2.0.12/x86_64-w64-mingw32")
-        printf "%s" "$SDL2/bin" >> $GITHUB_PATH
-        printf "%s" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> $GITHUB_ENV
+        printf "%s\n" "$SDL2/bin" >> $GITHUB_PATH
+        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> $GITHUB_ENV
 
         choco install vulkan-sdk
         VulkanSDK=$(cygpath --windows /c/VulkanSDK/*/)
-        printf "%s" "$VulkanSDK/Bin" >> $GITHUB_PATH
+        printf "%s\n" "$VulkanSDK/Bin" >> $GITHUB_PATH
 
         cat >> cabal.project <<EOF
         package sdl2
@@ -177,12 +177,12 @@ jobs:
 
         curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
         SDL2=$(cygpath --windows "$(pwd)/SDL2-2.0.12/x86_64-w64-mingw32")
-        printf "%s" "$SDL2/bin" >> $GITHUB_PATH
-        printf "%s" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> $GITHUB_ENV
+        printf "%s\n" "$SDL2/bin" >> $GITHUB_PATH
+        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> $GITHUB_ENV
 
         choco install vulkan-sdk
         VulkanSDK=$(cygpath --windows /c/VulkanSDK/*/)
-        printf "%s" "$VulkanSDK/Bin" >> $GITHUB_PATH
+        printf "%s\n" "$VulkanSDK/Bin" >> $GITHUB_PATH
 
         cat >> stack.yaml <<EOF
         extra-lib-dirs:
