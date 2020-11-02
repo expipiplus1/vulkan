@@ -79,7 +79,9 @@ parseSpec bs = do
         typeAliases       <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
-        enumAliases    <- parseEnumAliases requires
+        enumAliases <-
+          (<>) <$> parseEnumAliases (fst <$> requires) <*> parseEnumAliases
+            (V.fromList $ [ c | Element c <- contents n, "enums" == name c ])
         commandAliases <-
           parseCommandAliases . contents =<< oneChild "commands" n
         let specEnums = appendEnumExtensions
@@ -430,7 +432,7 @@ parseTypeAliases categories es =
        , c `elem` categories
        ]
 
-parseEnumAliases :: Vector (Node, Maybe Int) -> P (Vector Alias)
+parseEnumAliases :: Vector Node -> P (Vector Alias)
 parseEnumAliases rs =
   fmap V.fromList
     . sequenceV
@@ -439,7 +441,7 @@ parseEnumAliases rs =
           aTarget <- decodeName alias
           let aType = PatternAlias
           pure Alias { .. }
-      | (r, _)     <- toList rs
+      | r          <- toList rs
       , Element ee <- contents r
       , "enum" == name ee
       , Just alias <- pure $ getAttr "alias" ee
