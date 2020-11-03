@@ -368,37 +368,79 @@ whatever you do to get a haskell environment with nix and simply override the
 source to point to this repo, the dependencies haven't changed for a while, so
 any version of nixpkgs from the last 3 months should do the trick.
 
-### Building on Windows
+### Building on Windows with Cabal
 
 - Clone this repo
-- Install stack
-  - https://docs.haskellstack.org/en/stable/install_and_upgrade/#windows
+- Install GHC and Cabal
+  - I downloaded the GHC binary package from
+    [here](https://www.haskell.org/ghc/download_ghc_8_8_4.html), extracted it
+    and added the `bin` directory to `PATH`.
+  - I downloaded the cabal-install binary package from [here](https://www.haskell.org/cabal/download.html)
 - Make sure your graphics driver has installed `vulkan-1.dll` in `C:/windows/system32`
 - Install the LunarG Vulkan SDK
   - https://vulkan.lunarg.com/sdk/home#windows
   - Remember the installation directory, use in place of `C:/VulkanSDK/1.2.135.0` below
   - We will link against `vulkan-1.lib` from this installation
   - We will use the `glslangValidator` from this installation, make sure it's
-    in your `PATH` or otherwise made available to `stack`
-- Install the system dependencies via stack
-  - pkg-config
-  - SDL2
-  - `stack exec -- pacman -S mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2`
-  - Note that the above command will also install mingw's `libvulkan-1.dll`.
-    Make sure that the Vulkan DLL linked by GHC is the same one that SDL
-    loads at runtime. By default SDL will load
-    `vulkan-1.dll`<sup>[1](#sdl-load)</sup>, so if you intend to use mingw's
-    `libvulkan-1.dll` make sure to either set the `SDL_VULKAN_LIBRARY`
-    environment variable to `"libvulkan-1.dll"` or pass `Just
-    "libvulkan-1.dll"` to [SDL's
-    `vkLoadLibrary`](https://hackage.haskell.org/package/sdl2-2.5.0.0/docs/SDL-Video-Vulkan.html#v:vkLoadLibrary)
-    before creating a window.
-- Build the packages
-  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0/Lib build`
-  - You can add `extra-lib-dirs: [ C:/VulkanSDK/1.2.135.0/Lib ]` to your `stack.yaml` 
-    instead of using the command line option here.
-- Run an example program
-  - `stack --extra-lib-dirs C:/VulkanSDK/1.2.135.0/Lib run resize`
+    in your `PATH` or otherwise made available to `ghc`
+- Install `pkg-config` or `pkg-config-lite` (for the `sdl2` package), perform any one of:
+  - Install using chocolatey: `choco install pkgconfiglite`
+  - Install from SourceForge: Download from
+    [here](https://sourceforge.net/projects/pkgconfiglite/files/) and put the
+    binary in your `PATH`
+  - Install by following the instructions
+    [here](https://stackoverflow.com/questions/1710922/how-to-install-pkg-config-in-windows)
+  - Patch SDL2 to not require pkg-config with [this
+    patch](https://gist.github.com/anonymous/9d1060281ed7127a54d2)
+- Install SDL2 (condensed instructions from
+  [here](https://gist.github.com/anonymous/9d1060281ed7127a54d2)):
+  - Navigate to <https://www.libsdl.org/download-2.0.php>
+  - Download the Mingw64 development library
+  - Extract the `x86_64-w64-mingw32` directory somwhere, I installed it as `~/AppData/Roaming/local/SDL2`
+  - Copy the `lib/pkgconfig/sdl2.pc` file to `~/AppData/Roaming/local/lib/pkgconfig/sdl2.pc`
+- Inform Cabal about header and library locations by adding the following to
+  `cabal.project.local`, changed accodingly for your install paths for SDL2 and
+  the Vulkan SDK.
+  
+    ```
+    package sdl2
+      extra-lib-dirs: C:/Users/ms/AppData/Roaming/local/SDL2/lib/
+      extra-include-dirs: C:/Users/ms/AppData/Roaming/local/SDL2/include/SDL2/
+
+    package vulkan
+      extra-lib-dirs: C:/VulkanSDK/1.2.135.0/lib/
+
+    package vulkan-utils
+      extra-include-dirs: C:/VulkanSDK/1.2.135.0/Include/
+
+    package VulkanMemoryAllocator
+      extra-include-dirs: C:/VulkanSDK/1.2.135.0/Include/
+    ```
+
+- Run `cabal build examples` to build the examples
+- Run `cabal run resize` to run the `resize` example.
+
+### Building on Windows with Stack
+
+Stack is currently (2020-11-02) bundled with an msys2 installation which is
+too old to use the package repositories (see
+https://github.com/commercialhaskell/stack/issues/5300) so installing the
+Vulkan SDK, `SDL2` and `pkg-config` is not possible with the bundled package
+manager.
+
+Nevertheless, it should be possible to use Stack by adding the following to
+`stack.yaml` (changed appropriately according to SDL2 and VulkanSDK install
+locations) and building after following the instructions above.
+
+```yaml
+extra-lib-dirs:
+- C:/Users/ms/AppData/Roaming/local/SDL2/lib/
+- C:/VulkanSDK/1.2.135.0/lib/
+
+extra-include-dirs:
+- C:/Users/ms/AppData/Roaming/local/SDL2/include/SDL2/
+- C:/VulkanSDK/1.2.135.0/Include/
+```
 
 ## Examples
 

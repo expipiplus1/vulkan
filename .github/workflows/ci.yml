@@ -13,8 +13,7 @@ jobs:
     strategy:
       matrix:
         ghc: ['8.10.1', '8.8.4', '8.6.5']
-        cabal: ['3.0']
-        os: [ubuntu-20.04, macOS-latest]
+        os: [ubuntu-20.04, macOS-latest, windows-latest]
         exclude:
           - ghc: 8.10.1
             os: macOS-latest
@@ -25,18 +24,15 @@ jobs:
       with:
         submodules: 'recursive'
     - uses: actions/setup-haskell@v1
+      id: setup-haskell
       with:
         ghc-version: ${{ matrix.ghc }}
-        cabal-version: ${{ matrix.cabal }}
 
-    - name: Cache cabal store
-      uses: actions/cache@v1
+    - uses: actions/cache@v1
+      name: Cache cabal-store
       with:
-        path: ~/.cabal
-        key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('**/*.cabal') }}-${{ hashFiles('**/cabal.project') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.ghc }}-
-          ${{ runner.os }}-
+        path: ${{ steps.setup-haskell.outputs.cabal-store }}
+        key: ${{ runner.os }}-${{ matrix.ghc }}-cabal
 
     - name: Cache dist-newstyle
       uses: actions/cache@v1
@@ -55,8 +51,43 @@ jobs:
       shell: bash
       run: |
         brew install pkg-config sdl2
-        brew tap apenngrace/homebrew-vulkan 
-        brew cask install vulkan-sdk
+        brew tap apenngrace/homebrew-vulkan
+        brew cask install vulkan-sdk --verbose ||
+          brew cask install vulkan-sdk --verbose ||
+          brew cask install vulkan-sdk --verbose
+
+    - name: Install system dependencies Windows
+      if: matrix.os == 'windows-latest'
+      shell: bash
+      run: |
+        choco install pkgconfiglite
+
+        curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
+        SDL2=$(cygpath --windows --absolute "SDL2-2.0.12/x86_64-w64-mingw32")
+        printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
+        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
+
+        choco install vulkan-sdk
+        VulkanSDK=$(cygpath --windows --absolute /c/VulkanSDK/*/)
+        printf "%s\n" "$VulkanSDK/Bin" >> "$GITHUB_PATH"
+        curl -L https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?u= > vulkan-runtime-components.zip
+        unzip vulkan-runtime-components.zip
+        printf "%s\n" "$(cygpath --windows --absolute VulkanRT-*/x64)" >> "$GITHUB_PATH"
+
+        cat >> cabal.project <<EOF
+        package sdl2
+          extra-lib-dirs: $SDL2/lib/
+          extra-include-dirs: $SDL2/include/SDL2/
+
+        package vulkan
+          extra-lib-dirs: $VulkanSDK/Lib/
+
+        package vulkan-utils
+          extra-include-dirs: $VulkanSDK/Include/
+
+        package VulkanMemoryAllocator
+          extra-include-dirs: $VulkanSDK/Include/
+        EOF
 
     - name: Remove examples for 8.6.5
       run: |
@@ -92,6 +123,7 @@ jobs:
       run: |
         cabal haddock
         cabal haddock VulkanMemoryAllocator
+        cabal haddock vulkan-utils
 
   stack:
 
@@ -144,9 +176,28 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: bash
       run: |
-        stack exec $ARGS -- pacman --noconfirm -S mingw-w64-x86_64-vulkan mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2 mingw-w64-x86_64-glslang
-      env:
-        ARGS: ${{ matrix.args }}
+        choco install pkgconfiglite
+
+        curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
+        SDL2=$(cygpath --windows --absolute "SDL2-2.0.12/x86_64-w64-mingw32")
+        printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
+        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
+
+        choco install vulkan-sdk
+        VulkanSDK=$(cygpath --windows --absolute /c/VulkanSDK/*/)
+        printf "%s\n" "$VulkanSDK/Bin" >> "$GITHUB_PATH"
+        curl -L https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?u= > vulkan-runtime-components.zip
+        unzip vulkan-runtime-components.zip
+        printf "%s\n" "$(cygpath --windows --absolute VulkanRT-*/x64)" >> "$GITHUB_PATH"
+
+        cat >> stack.yaml <<EOF
+        extra-lib-dirs:
+          - $SDL2/lib/
+          - $VulkanSDK/Lib/
+        extra-include-dirs:
+          - $SDL2/include/SDL2/
+          - $VulkanSDK/Include/
+        EOF
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
@@ -154,7 +205,9 @@ jobs:
       run: |
         brew install pkg-config sdl2
         brew tap apenngrace/homebrew-vulkan --verbose
-        brew cask install vulkan-sdk --verbose
+        brew cask install vulkan-sdk --verbose ||
+          brew cask install vulkan-sdk --verbose ||
+          brew cask install vulkan-sdk --verbose
 
     - name: Install dependencies
       run: stack build $ARGS --test --bench --only-dependencies $ARGS

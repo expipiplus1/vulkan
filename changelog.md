@@ -1,6 +1,9 @@
 # Change Log
 
 ## WIP
+
+## [3.6.12] - 2020-11-03
+
   - Bump API version to v1.2.159
   - Include enum aliases defined in `<enums>` sections, until now only those
     enum aliases in `features` or `extensions` were used.
