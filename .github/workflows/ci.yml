@@ -63,16 +63,16 @@ jobs:
         choco install pkgconfiglite
 
         curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
-        SDL2=$(cygpath --windows "$(pwd)/SDL2-2.0.12/x86_64-w64-mingw32")
-        printf "%s\n" "$SDL2/bin" >> $GITHUB_PATH
-        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> $GITHUB_ENV
+        SDL2=$(cygpath --windows --absolute "SDL2-2.0.12/x86_64-w64-mingw32")
+        printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
+        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
 
         choco install vulkan-sdk
-        VulkanSDK=$(cygpath --windows /c/VulkanSDK/*/)
-        printf "%s\n" "$VulkanSDK/Bin" >> $GITHUB_PATH
+        VulkanSDK=$(cygpath --windows --absolute /c/VulkanSDK/*/)
+        printf "%s\n" "$VulkanSDK/Bin" >> "$GITHUB_PATH"
         curl -L https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?u= > vulkan-runtime-components.zip
         unzip vulkan-runtime-components.zip
-        printf "%s\n" VulkanRT-*/x64 >> $GITHUB_PATH
+        printf "%s\n" "$(cygpath --windows --absolute VulkanRT-*/x64)" >> "$GITHUB_PATH"
 
         cat >> cabal.project <<EOF
         package sdl2
@@ -179,16 +179,16 @@ jobs:
         choco install pkgconfiglite
 
         curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
-        SDL2=$(cygpath --windows "$(pwd)/SDL2-2.0.12/x86_64-w64-mingw32")
-        printf "%s\n" "$SDL2/bin" >> $GITHUB_PATH
-        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> $GITHUB_ENV
+        SDL2=$(cygpath --windows --absolute "SDL2-2.0.12/x86_64-w64-mingw32")
+        printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
+        printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
 
         choco install vulkan-sdk
-        VulkanSDK=$(cygpath --windows /c/VulkanSDK/*/)
-        printf "%s\n" "$VulkanSDK/Bin" >> $GITHUB_PATH
+        VulkanSDK=$(cygpath --windows --absolute /c/VulkanSDK/*/)
+        printf "%s\n" "$VulkanSDK/Bin" >> "$GITHUB_PATH"
         curl -L https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?u= > vulkan-runtime-components.zip
         unzip vulkan-runtime-components.zip
-        printf "%s\n" VulkanRT-*/x64 >> $GITHUB_PATH
+        printf "%s\n" "$(cygpath --windows --absolute VulkanRT-*/x64)" >> "$GITHUB_PATH"
 
         cat >> stack.yaml <<EOF
         extra-lib-dirs:
