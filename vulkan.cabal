@@ -3,8 +3,6 @@ cabal-version: 2.2
 -- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 30a79cf0dbc39c7f7f21f0a268e70a4c50e9ba9368a4b8cf0417d4c99c002440
 
 name:           vulkan
 version:        3.6.12
@@ -468,6 +466,7 @@ library
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
+      Vulkan.Extensions.VK_QCOM_rotated_copy_commands
       Vulkan.NamedType
       Vulkan.Version
       Vulkan.Zero

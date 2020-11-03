@@ -4,6 +4,8 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                               , destroyDebugReportCallbackEXT
                                               , debugReportMessageEXT
                                               , pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT
+                                              , pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT
+                                              , pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT
                                               , DebugReportCallbackCreateInfoEXT(..)
                                               , DebugReportFlagBitsEXT( DEBUG_REPORT_INFORMATION_BIT_EXT
                                                                       , DEBUG_REPORT_WARNING_BIT_EXT
@@ -366,6 +368,14 @@ debugReportMessageEXT instance' flags objectType object location messageCode lay
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
+
+
+-- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT
+
+
+-- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT = DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
 
 
 -- | VkDebugReportCallbackCreateInfoEXT - Structure specifying parameters of

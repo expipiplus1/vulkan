@@ -98,6 +98,12 @@ foreign import ccall
 
 -- | vkCreatePrivateDataSlotEXT - Create a slot for private data storage
 --
+-- == Valid Usage
+--
+-- -   The
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-privateData privateData>
+--     feature /must/ be enabled
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
