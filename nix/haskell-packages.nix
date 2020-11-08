@@ -17,11 +17,10 @@ self: super:
   #
   # Generate
   #
-  pandoc =
-    appendPatch super.pandoc ../generate-new/patches/pandoc-haddock-tables.patch;
+  pandoc = appendPatch super.pandoc
+    ../generate-new/patches/pandoc-haddock-tables.patch;
   language-c = self.language-c_0_9;
 } // pkgs.lib.optionalAttrs hoogle {
   ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
-  ghcWithPackages = p:
-    self.ghc.withPackages (f: p f ++ (if forShell then [ f.process ] else [ ]));
+  ghcWithPackages = self.ghc.withPackages;
 }

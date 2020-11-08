@@ -115,6 +115,16 @@ fix this pass the `--no-nix-pure` flag to stack thusly:
 stack --system-ghc --nix --no-nix-pure run sdl-triangle
 ```
 
+### Running the examples with SwiftShader
+
+Note that not all of the examples run under SwiftShader.
+
+```bash
+swiftshader=$(nix-build --no-out-link --expr '(import ../nix/nixpkgs.nix).swiftshader')
+export VK_ICD_FILENAMES=$swiftshader/share/vulkan/icd.d/vk_swiftshader_icd.json
+cabal run sdl-triangle
+```
+
 ### Troubleshooting
 
 For the examples using SDL (`resize`, `sdl-triangle`):

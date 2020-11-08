@@ -1,4 +1,5 @@
-{ pkgs ? import ../nix/nixpkgs.nix, compiler ? "ghc884", hoogle ? true }:
+{ pkgs ? import ../nix/nixpkgs.nix, compiler ? "ghc884"
+, forShell ? pkgs.lib.inNixShell, hoogle ? forShell }:
 
 let
   src = ./.;
