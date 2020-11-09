@@ -45,7 +45,6 @@ documentationToHaddock externalDocHTML getModule Documentation {..} =
 prepareForHaddock :: Pandoc -> Pandoc
 prepareForHaddock =
   bottomUp emptyBeforeBullet
-    . topDown removeLeadingSpans
     . topDown haddock801
     . topDown removeEmptySections
     . topDown fixupBlock
@@ -80,15 +79,6 @@ prepareForHaddock =
     DefinitionList ds | all (null . fst) ds, all ((== 1) . length . snd) ds ->
       BulletList (List.head . snd <$> ds)
 
-    b -> b
-
-  removeLeadingSpans :: Block -> Block
-  removeLeadingSpans = \case
-    BulletList bs ->
-      let p = \case
-            Para xs -> Para (dropBeginningSpan xs)
-            xs      -> xs
-      in  BulletList (fmap p <$> bs)
     b -> b
 
 fixLinks :: Maybe Text -> (CName -> DocumenteeLocation) -> Pandoc -> Pandoc
