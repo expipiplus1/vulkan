@@ -100,12 +100,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-pipelineFragmentShadingRate-04576#
+--     If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
 --     is not enabled, @shadingRate@ /must/ be
 --     'FRAGMENT_SHADING_RATE_1_INVOCATION_PER_PIXEL_NV'
 --
--- -   If
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-supersampleFragmentShadingRates-04577#
+--     If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
 --     is not enabled, @shadingRate@ /must/ not be
 --     'FRAGMENT_SHADING_RATE_2_INVOCATIONS_PER_PIXEL_NV',
@@ -113,32 +115,38 @@ foreign import ccall
 --     'FRAGMENT_SHADING_RATE_8_INVOCATIONS_PER_PIXEL_NV', or
 --     'FRAGMENT_SHADING_RATE_16_INVOCATIONS_PER_PIXEL_NV'
 --
--- -   If
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-noInvocationFragmentShadingRates-04578#
+--     If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
 --     is not enabled, @shadingRate@ /must/ not be
 --     'FRAGMENT_SHADING_RATE_NO_INVOCATIONS_NV'
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentShadingRateEnums fragmentShadingRateEnums>
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-fragmentShadingRateEnums-04579#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentShadingRateEnums fragmentShadingRateEnums>
 --     /must/ be enabled
 --
--- -   One of
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-pipelineFragmentShadingRate-04580#
+--     One of
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>,
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
 --     /must/ be enabled
 --
--- -   If the
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-primitiveFragmentShadingRate-04581#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
 --     is not enabled, @combinerOps@[0] /must/ be
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
--- -   If the
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-attachmentFragmentShadingRate-04582#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#feature-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
 --     is not enabled, @combinerOps@[1] /must/ be
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
--- -   If the
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-fragmentSizeNonTrivialCombinerOps-04583#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentSizeNonTrivialCombinerOps>
 --     limit is not supported, elements of @combinerOps@ /must/ be either
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
@@ -147,19 +155,24 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @shadingRate@ /must/ be a valid 'FragmentShadingRateNV' value
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-shadingRate-parameter#
+--     @shadingRate@ /must/ be a valid 'FragmentShadingRateNV' value
 --
--- -   Any given element of @combinerOps@ /must/ be a valid
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-combinerOps-parameter# Any
+--     given element of @combinerOps@ /must/ be a valid
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateCombinerOpKHR'
 --     value
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetFragmentShadingRateEnumNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -245,15 +258,17 @@ cmdSetFragmentShadingRateEnumNV commandBuffer shadingRate combinerOps = liftIO .
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = PhysicalDeviceFragmentShadingRateEnumsFeaturesNV
-  { -- | @fragmentShadingRateEnums@ indicates that the implementation supports
-    -- specifying fragment shading rates using the 'FragmentShadingRateNV'
-    -- enumerated type.
+  { -- | #features-fragmentShadingRateEnums# @fragmentShadingRateEnums@ indicates
+    -- that the implementation supports specifying fragment shading rates using
+    -- the 'FragmentShadingRateNV' enumerated type.
     fragmentShadingRateEnums :: Bool
-  , -- | @supersampleFragmentShadingRates@ indicates that the implementation
+  , -- | #features-supersampleFragmentShadingRates#
+    -- @supersampleFragmentShadingRates@ indicates that the implementation
     -- supports fragment shading rate enum values indicating more than one
     -- invocation per fragment.
     supersampleFragmentShadingRates :: Bool
-  , -- | @noInvocationFragmentShadingRates@ indicates that the implementation
+  , -- | #features-noInvocationFragmentShadingRates#
+    -- @noInvocationFragmentShadingRates@ indicates that the implementation
     -- supports a fragment shading rate enum value indicating that no fragment
     -- shaders should be invoked when that shading rate is used.
     noInvocationFragmentShadingRates :: Bool
@@ -329,10 +344,12 @@ instance Zero PhysicalDeviceFragmentShadingRateEnumsFeaturesNV where
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = PhysicalDeviceFragmentShadingRateEnumsPropertiesNV
-  { -- | @maxFragmentShadingRateInvocationCount@ indicates the maximum number of
+  { -- | #limits-maxFragmentShadingRateInvocationCount#
+    -- @maxFragmentShadingRateInvocationCount@ indicates the maximum number of
     -- fragment shader invocations per fragment supported in pipeline,
     -- primitive, and attachment fragment shading rates.
     --
+    -- #VUID-VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV-maxFragmentShadingRateInvocationCount-parameter#
     -- @maxFragmentShadingRateInvocationCount@ /must/ be a valid
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
     maxFragmentShadingRateInvocationCount :: SampleCountFlagBits }
@@ -395,15 +412,19 @@ instance Zero PhysicalDeviceFragmentShadingRateEnumsPropertiesNV where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineFragmentShadingRateEnumStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV'
 --
--- -   @shadingRateType@ /must/ be a valid 'FragmentShadingRateTypeNV'
+-- -   #VUID-VkPipelineFragmentShadingRateEnumStateCreateInfoNV-shadingRateType-parameter#
+--     @shadingRateType@ /must/ be a valid 'FragmentShadingRateTypeNV'
 --     value
 --
--- -   @shadingRate@ /must/ be a valid 'FragmentShadingRateNV' value
+-- -   #VUID-VkPipelineFragmentShadingRateEnumStateCreateInfoNV-shadingRate-parameter#
+--     @shadingRate@ /must/ be a valid 'FragmentShadingRateNV' value
 --
--- -   Any given element of @combinerOps@ /must/ be a valid
+-- -   #VUID-VkPipelineFragmentShadingRateEnumStateCreateInfoNV-combinerOps-parameter#
+--     Any given element of @combinerOps@ /must/ be a valid
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateCombinerOpKHR'
 --     value
 --

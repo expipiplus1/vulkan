@@ -50,8 +50,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageRobustnessFeaturesEXT = PhysicalDeviceImageRobustnessFeaturesEXT
-  { -- | @robustImageAccess@ indicates whether image accesses are tightly
-    -- bounds-checked against the dimensions of the image view.
+  { -- | #features-robustImageAccess# @robustImageAccess@ indicates whether image
+    -- accesses are tightly bounds-checked against the dimensions of the image
+    -- view.
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-input-validation Invalid texels>
     -- resulting from out of bounds image loads will be replaced as described
     -- in

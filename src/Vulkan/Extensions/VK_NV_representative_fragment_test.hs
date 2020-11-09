@@ -56,8 +56,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRepresentativeFragmentTestFeaturesNV = PhysicalDeviceRepresentativeFragmentTestFeaturesNV
-  { -- | @representativeFragmentTest@ indicates whether the implementation
-    -- supports the representative fragment test. See
+  { -- | #features-representativeFragmentTest# @representativeFragmentTest@
+    -- indicates whether the implementation supports the representative
+    -- fragment test. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
     representativeFragmentTest :: Bool }
   deriving (Typeable, Eq)

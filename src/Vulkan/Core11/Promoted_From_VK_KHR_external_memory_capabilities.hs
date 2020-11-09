@@ -96,6 +96,7 @@ getPhysicalDeviceExternalBufferProperties :: forall io
                                           => -- | @physicalDevice@ is the physical device from which to query the buffer
                                              -- capabilities.
                                              --
+                                             -- #VUID-vkGetPhysicalDeviceExternalBufferProperties-physicalDevice-parameter#
                                              -- @physicalDevice@ /must/ be a valid
                                              -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                              PhysicalDevice
@@ -103,6 +104,7 @@ getPhysicalDeviceExternalBufferProperties :: forall io
                                              -- 'PhysicalDeviceExternalBufferInfo' structure describing the parameters
                                              -- that would be consumed by 'Vulkan.Core10.Buffer.createBuffer'.
                                              --
+                                             -- #VUID-vkGetPhysicalDeviceExternalBufferProperties-pExternalBufferInfo-parameter#
                                              -- @pExternalBufferInfo@ /must/ be a valid pointer to a valid
                                              -- 'PhysicalDeviceExternalBufferInfo' structure
                                              PhysicalDeviceExternalBufferInfo
@@ -215,10 +217,12 @@ instance Zero ExternalMemoryProperties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceExternalImageFormatInfo-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO'
 --
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+-- -   #VUID-VkPhysicalDeviceExternalImageFormatInfo-handleType-parameter#
+--     If @handleType@ is not @0@, @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
@@ -334,7 +338,8 @@ data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
     -- describing additional parameters of the buffer, corresponding to
     -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@.
     --
-    -- @flags@ /must/ be a valid combination of
+    -- #VUID-VkPhysicalDeviceExternalBufferInfo-flags-parameter# @flags@ /must/
+    -- be a valid combination of
     -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits' values
     flags :: BufferCreateFlags
   , -- | @usage@ is a bitmask of
@@ -342,16 +347,19 @@ data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
     -- the intended usage of the buffer, corresponding to
     -- 'Vulkan.Core10.Buffer.BufferCreateInfo'::@usage@.
     --
-    -- @usage@ /must/ be a valid combination of
+    -- #VUID-VkPhysicalDeviceExternalBufferInfo-usage-parameter# @usage@ /must/
+    -- be a valid combination of
     -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits' values
     --
-    -- @usage@ /must/ not be @0@
+    -- #VUID-VkPhysicalDeviceExternalBufferInfo-usage-requiredbitmask# @usage@
+    -- /must/ not be @0@
     usage :: BufferUsageFlags
   , -- | @handleType@ is a
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- value specifying the memory handle type that will be used with the
     -- memory associated with the buffer.
     --
+    -- #VUID-VkPhysicalDeviceExternalBufferInfo-handleType-parameter#
     -- @handleType@ /must/ be a valid
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- value
@@ -559,7 +567,7 @@ instance Zero ExternalBufferProperties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceIDProperties-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES'
 --
 -- = See Also

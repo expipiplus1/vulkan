@@ -62,18 +62,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkSetLocalDimmingAMD-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapChain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-vkSetLocalDimmingAMD-swapChain-parameter# @swapChain@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   Both of @device@, and @swapChain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkSetLocalDimmingAMD-commonparent# Both of @device@, and
+--     @swapChain@ /must/ have been created, allocated, or retrieved from
+--     the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Valid Usage
 --
--- -   It is only valid to call 'setLocalDimmingAMD' if
+-- -   #VUID-vkSetLocalDimmingAMD-XXXXX# It is only valid to call
+--     'setLocalDimmingAMD' if
 --     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
 --     supported
 --
@@ -168,12 +170,14 @@ instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSwapchainDisplayNativeHdrCreateInfoAMD-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD'
 --
 -- == Valid Usage
 --
--- -   It is only valid to set @localDimmingEnable@ to
+-- -   #VUID-VkSwapchainDisplayNativeHdrCreateInfoAMD-localDimmingEnable-04449#
+--     It is only valid to set @localDimmingEnable@ to
 --     'Vulkan.Core10.FundamentalTypes.TRUE' if
 --     'DisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
 --     supported

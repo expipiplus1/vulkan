@@ -53,7 +53,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledImageFeaturesNV
-  { -- | @cornerSampledImage@ specifies whether images can be created with a
+  { -- | #features-cornersampledimage# @cornerSampledImage@ specifies whether
+    -- images can be created with a
     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
     -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'.
     -- See

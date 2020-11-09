@@ -37,7 +37,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_F
 data PresentFrameTokenGGP = PresentFrameTokenGGP
   { -- | @frameToken@ is the Google Games Platform frame token.
     --
-    -- @frameToken@ /must/ be a valid 'GgpFrameToken'
+    -- #VUID-VkPresentFrameTokenGGP-frameToken-02680# @frameToken@ /must/ be a
+    -- valid 'GgpFrameToken'
     frameToken :: GgpFrameToken }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

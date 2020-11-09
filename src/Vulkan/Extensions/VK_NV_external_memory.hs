@@ -46,6 +46,7 @@ data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- specifying one or more external memory handle types.
     --
+    -- #VUID-VkExternalMemoryImageCreateInfoNV-handleTypes-parameter#
     -- @handleTypes@ /must/ be a valid combination of
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- values
@@ -104,7 +105,8 @@ data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
     -- as they are compatible, as reported by
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.getPhysicalDeviceExternalImageFormatPropertiesNV'.
     --
-    -- @handleTypes@ /must/ be a valid combination of
+    -- #VUID-VkExportMemoryAllocateInfoNV-handleTypes-parameter# @handleTypes@
+    -- /must/ be a valid combination of
     -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
     -- values
     handleTypes :: ExternalMemoryHandleTypeFlagsNV }

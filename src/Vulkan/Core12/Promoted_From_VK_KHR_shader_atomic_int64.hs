@@ -35,11 +35,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderAtomicInt64Features = PhysicalDeviceShaderAtomicInt64Features
-  { -- | @shaderBufferInt64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit unsigned and signed integer atomic operations on buffers.
+  { -- | #extension-features-shaderBufferInt64Atomics# @shaderBufferInt64Atomics@
+    -- indicates whether shaders /can/ perform 64-bit unsigned and signed
+    -- integer atomic operations on buffers.
     shaderBufferInt64Atomics :: Bool
-  , -- | @shaderSharedInt64Atomics@ indicates whether shaders /can/ perform
-    -- 64-bit unsigned and signed integer atomic operations on shared memory.
+  , -- | #extension-features-shaderSharedInt64Atomics# @shaderSharedInt64Atomics@
+    -- indicates whether shaders /can/ perform 64-bit unsigned and signed
+    -- integer atomic operations on shared memory.
     shaderSharedInt64Atomics :: Bool
   }
   deriving (Typeable, Eq)

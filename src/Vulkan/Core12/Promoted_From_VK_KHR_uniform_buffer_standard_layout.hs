@@ -50,7 +50,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceUniformBufferStandardLayoutFeatures = PhysicalDeviceUniformBufferStandardLayoutFeatures
-  { -- | @uniformBufferStandardLayout@ indicates that the implementation supports
+  { -- | #extension-features-uniformBufferStandardLayout#
+    -- @uniformBufferStandardLayout@ indicates that the implementation supports
     -- the same layouts for uniform buffers as for storage and other kinds of
     -- buffers. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.

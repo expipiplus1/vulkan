@@ -120,16 +120,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreatePipelineCache-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'PipelineCacheCreateInfo' structure
+-- -   #VUID-vkCreatePipelineCache-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'PipelineCacheCreateInfo'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreatePipelineCache-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pPipelineCache@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreatePipelineCache-pPipelineCache-parameter#
+--     @pPipelineCache@ /must/ be a valid pointer to a
 --     'Vulkan.Core10.Handles.PipelineCache' handle
 --
 -- == Return Codes
@@ -201,27 +204,32 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyPipelineCache-pipelineCache-00771# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @pipelineCache@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyPipelineCache-pipelineCache-00772# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @pipelineCache@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyPipelineCache-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @pipelineCache@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkDestroyPipelineCache-pipelineCache-parameter# If
+--     @pipelineCache@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pipelineCache@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineCache' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyPipelineCache-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @pipelineCache@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkDestroyPipelineCache-pipelineCache-parent# If
+--     @pipelineCache@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -332,19 +340,22 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetPipelineCacheData-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pipelineCache@ /must/ be a valid
+-- -   #VUID-vkGetPipelineCacheData-pipelineCache-parameter#
+--     @pipelineCache@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineCache' handle
 --
--- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
+-- -   #VUID-vkGetPipelineCacheData-pDataSize-parameter# @pDataSize@ /must/
+--     be a valid pointer to a @size_t@ value
 --
--- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
---     not @NULL@, @pData@ /must/ be a valid pointer to an array of
---     @pDataSize@ bytes
+-- -   #VUID-vkGetPipelineCacheData-pData-parameter# If the value
+--     referenced by @pDataSize@ is not @0@, and @pData@ is not @NULL@,
+--     @pData@ /must/ be a valid pointer to an array of @pDataSize@ bytes
 --
--- -   @pipelineCache@ /must/ have been created, allocated, or retrieved
---     from @device@
+-- -   #VUID-vkGetPipelineCacheData-pipelineCache-parent# @pipelineCache@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Return Codes
 --
@@ -407,25 +418,30 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @dstCache@ /must/ not appear in the list of source caches
+-- -   #VUID-vkMergePipelineCaches-dstCache-00770# @dstCache@ /must/ not
+--     appear in the list of source caches
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkMergePipelineCaches-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @dstCache@ /must/ be a valid 'Vulkan.Core10.Handles.PipelineCache'
---     handle
+-- -   #VUID-vkMergePipelineCaches-dstCache-parameter# @dstCache@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.PipelineCache' handle
 --
--- -   @pSrcCaches@ /must/ be a valid pointer to an array of
---     @srcCacheCount@ valid 'Vulkan.Core10.Handles.PipelineCache' handles
+-- -   #VUID-vkMergePipelineCaches-pSrcCaches-parameter# @pSrcCaches@
+--     /must/ be a valid pointer to an array of @srcCacheCount@ valid
+--     'Vulkan.Core10.Handles.PipelineCache' handles
 --
--- -   @srcCacheCount@ /must/ be greater than @0@
+-- -   #VUID-vkMergePipelineCaches-srcCacheCount-arraylength#
+--     @srcCacheCount@ /must/ be greater than @0@
 --
--- -   @dstCache@ /must/ have been created, allocated, or retrieved from
+-- -   #VUID-vkMergePipelineCaches-dstCache-parent# @dstCache@ /must/ have
+--     been created, allocated, or retrieved from @device@
+--
+-- -   #VUID-vkMergePipelineCaches-pSrcCaches-parent# Each element of
+--     @pSrcCaches@ /must/ have been created, allocated, or retrieved from
 --     @device@
---
--- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
---     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -473,30 +489,36 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If @initialDataSize@ is not @0@, it /must/ be equal to the size of
+-- -   #VUID-VkPipelineCacheCreateInfo-initialDataSize-00768# If
+--     @initialDataSize@ is not @0@, it /must/ be equal to the size of
 --     @pInitialData@, as returned by 'getPipelineCacheData' when
 --     @pInitialData@ was originally retrieved
 --
--- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
+-- -   #VUID-VkPipelineCacheCreateInfo-initialDataSize-00769# If
+--     @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
 --     retrieved from a previous call to 'getPipelineCacheData'
 --
--- -   If the
+-- -   #VUID-VkPipelineCacheCreateInfo-pipelineCreationCacheControl-02892#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineCacheCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkPipelineCacheCreateInfo-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkPipelineCacheCreateInfo-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits'
 --     values
 --
--- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
+-- -   #VUID-VkPipelineCacheCreateInfo-pInitialData-parameter# If
+--     @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
 --     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also

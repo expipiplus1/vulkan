@@ -110,12 +110,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @pCombinationCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-pCombinationCount-parameter#
+--     @pCombinationCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pCombinationCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV-pCombinations-parameter#
+--     If the value referenced by @pCombinationCount@ is not @0@, and
 --     @pCombinations@ is not @NULL@, @pCombinations@ /must/ be a valid
 --     pointer to an array of @pCombinationCount@
 --     'FramebufferMixedSamplesCombinationNV' structures
@@ -189,8 +192,8 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReductionModeFeaturesNV
-  { -- | @coverageReductionMode@ indicates whether the implementation supports
-    -- coverage reduction modes. See
+  { -- | #features-coverageReductionMode# @coverageReductionMode@ indicates
+    -- whether the implementation supports coverage reduction modes. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
     coverageReductionMode :: Bool }
   deriving (Typeable, Eq)
@@ -253,12 +256,15 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV'
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-flags-zerobitmask#
+--     @flags@ /must/ be @0@
 --
--- -   @coverageReductionMode@ /must/ be a valid 'CoverageReductionModeNV'
+-- -   #VUID-VkPipelineCoverageReductionStateCreateInfoNV-coverageReductionMode-parameter#
+--     @coverageReductionMode@ /must/ be a valid 'CoverageReductionModeNV'
 --     value
 --
 -- = See Also

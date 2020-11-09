@@ -76,13 +76,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreateDeferredOperationKHR-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateDeferredOperationKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pDeferredOperation@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateDeferredOperationKHR-pDeferredOperation-parameter#
+--     @pDeferredOperation@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.DeferredOperationKHR' handle
 --
 -- == Return Codes
@@ -148,29 +151,36 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDeferredOperationKHR-operation-03434# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @operation@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDeferredOperationKHR-operation-03435# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @operation@ was created, @pAllocator@ /must/ be @NULL@
 --
--- -   @operation@ /must/ be completed
+-- -   #VUID-vkDestroyDeferredOperationKHR-operation-03436# @operation@
+--     /must/ be completed
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyDeferredOperationKHR-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @operation@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkDestroyDeferredOperationKHR-operation-parameter# If
+--     @operation@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @operation@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.DeferredOperationKHR' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyDeferredOperationKHR-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @operation@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   #VUID-vkDestroyDeferredOperationKHR-operation-parent# If @operation@
+--     is a valid handle, it /must/ have been created, allocated, or
+--     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -262,13 +272,16 @@ getDeferredOperationMaxConcurrencyKHR :: forall io
                                        . (MonadIO io)
                                       => -- | @device@ is the device which owns @operation@.
                                          --
-                                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                         -- #VUID-vkGetDeferredOperationMaxConcurrencyKHR-device-parameter# @device@
+                                         -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                          Device
                                       -> -- | @operation@ is the deferred operation to be queried.
                                          --
+                                         -- #VUID-vkGetDeferredOperationMaxConcurrencyKHR-operation-parameter#
                                          -- @operation@ /must/ be a valid
                                          -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' handle
                                          --
+                                         -- #VUID-vkGetDeferredOperationMaxConcurrencyKHR-operation-parent#
                                          -- @operation@ /must/ have been created, allocated, or retrieved from
                                          -- @device@
                                          DeferredOperationKHR
@@ -322,15 +335,17 @@ getDeferredOperationResultKHR :: forall io
                                . (MonadIO io)
                               => -- | @device@ is the device which owns @operation@.
                                  --
-                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 -- #VUID-vkGetDeferredOperationResultKHR-device-parameter# @device@ /must/
+                                 -- be a valid 'Vulkan.Core10.Handles.Device' handle
                                  Device
                               -> -- | @operation@ is the operation whose deferred result is being queried.
                                  --
-                                 -- @operation@ /must/ be a valid
-                                 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' handle
+                                 -- #VUID-vkGetDeferredOperationResultKHR-operation-parameter# @operation@
+                                 -- /must/ be a valid 'Vulkan.Extensions.Handles.DeferredOperationKHR'
+                                 -- handle
                                  --
-                                 -- @operation@ /must/ have been created, allocated, or retrieved from
-                                 -- @device@
+                                 -- #VUID-vkGetDeferredOperationResultKHR-operation-parent# @operation@
+                                 -- /must/ have been created, allocated, or retrieved from @device@
                                  DeferredOperationKHR
                               -> io (Result)
 getDeferredOperationResultKHR device operation = liftIO $ do
@@ -396,13 +411,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDeferredOperationJoinKHR-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @operation@ /must/ be a valid
---     'Vulkan.Extensions.Handles.DeferredOperationKHR' handle
+-- -   #VUID-vkDeferredOperationJoinKHR-operation-parameter# @operation@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.DeferredOperationKHR'
+--     handle
 --
--- -   @operation@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkDeferredOperationJoinKHR-operation-parent# @operation@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Return Codes
 --
@@ -508,12 +525,13 @@ deferredOperationJoinKHR device operation = liftIO $ do
 --
 -- == Valid Usage
 --
--- -   Any previous deferred operation that was associated with
---     @operationHandle@ /must/ be complete
+-- -   #VUID-VkDeferredOperationInfoKHR-operationHandle-03433# Any previous
+--     deferred operation that was associated with @operationHandle@ /must/
+--     be complete
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDeferredOperationInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR'
 --
 -- = See Also

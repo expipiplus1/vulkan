@@ -116,16 +116,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDisplayPowerControlEXT-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
---     handle
+-- -   #VUID-vkDisplayPowerControlEXT-display-parameter# @display@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.DisplayKHR' handle
 --
--- -   @pDisplayPowerInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkDisplayPowerControlEXT-pDisplayPowerInfo-parameter#
+--     @pDisplayPowerInfo@ /must/ be a valid pointer to a valid
 --     'DisplayPowerInfoEXT' structure
 --
--- -   Both of @device@, and @display@ /must/ have been created, allocated,
---     or retrieved from the same 'Vulkan.Core10.Handles.PhysicalDevice'
+-- -   #VUID-vkDisplayPowerControlEXT-commonparent# Both of @device@, and
+--     @display@ /must/ have been created, allocated, or retrieved from the
+--     same 'Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Return Codes
 --
@@ -172,17 +175,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkRegisterDeviceEventEXT-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pDeviceEventInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkRegisterDeviceEventEXT-pDeviceEventInfo-parameter#
+--     @pDeviceEventInfo@ /must/ be a valid pointer to a valid
 --     'DeviceEventInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkRegisterDeviceEventEXT-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pFence@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-vkRegisterDeviceEventEXT-pFence-parameter# @pFence@ /must/ be
+--     a valid pointer to a 'Vulkan.Core10.Handles.Fence' handle
 --
 -- == Return Codes
 --
@@ -238,23 +243,27 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkRegisterDisplayEventEXT-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @display@ /must/ be a valid 'Vulkan.Extensions.Handles.DisplayKHR'
---     handle
+-- -   #VUID-vkRegisterDisplayEventEXT-display-parameter# @display@ /must/
+--     be a valid 'Vulkan.Extensions.Handles.DisplayKHR' handle
 --
--- -   @pDisplayEventInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkRegisterDisplayEventEXT-pDisplayEventInfo-parameter#
+--     @pDisplayEventInfo@ /must/ be a valid pointer to a valid
 --     'DisplayEventInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkRegisterDisplayEventEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pFence@ /must/ be a valid pointer to a
---     'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-vkRegisterDisplayEventEXT-pFence-parameter# @pFence@ /must/ be
+--     a valid pointer to a 'Vulkan.Core10.Handles.Fence' handle
 --
--- -   Both of @device@, and @display@ /must/ have been created, allocated,
---     or retrieved from the same 'Vulkan.Core10.Handles.PhysicalDevice'
+-- -   #VUID-vkRegisterDisplayEventEXT-commonparent# Both of @device@, and
+--     @display@ /must/ have been created, allocated, or retrieved from the
+--     same 'Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Return Codes
 --
@@ -318,25 +327,29 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   One or more present commands on @swapchain@ /must/ have been
---     processed by the presentation engine
+-- -   #VUID-vkGetSwapchainCounterEXT-swapchain-01245# One or more present
+--     commands on @swapchain@ /must/ have been processed by the
+--     presentation engine
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetSwapchainCounterEXT-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
+-- -   #VUID-vkGetSwapchainCounterEXT-swapchain-parameter# @swapchain@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   @counter@ /must/ be a valid
+-- -   #VUID-vkGetSwapchainCounterEXT-counter-parameter# @counter@ /must/
+--     be a valid
 --     'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT'
 --     value
 --
--- -   @pCounterValue@ /must/ be a valid pointer to a @uint64_t@ value
+-- -   #VUID-vkGetSwapchainCounterEXT-pCounterValue-parameter#
+--     @pCounterValue@ /must/ be a valid pointer to a @uint64_t@ value
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetSwapchainCounterEXT-commonparent# Both of @device@, and
+--     @swapchain@ /must/ have been created, allocated, or retrieved from
+--     the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -392,7 +405,8 @@ data DisplayPowerInfoEXT = DisplayPowerInfoEXT
   { -- | @powerState@ is a 'DisplayPowerStateEXT' value specifying the new power
     -- state of the display.
     --
-    -- @powerState@ /must/ be a valid 'DisplayPowerStateEXT' value
+    -- #VUID-VkDisplayPowerInfoEXT-powerState-parameter# @powerState@ /must/ be
+    -- a valid 'DisplayPowerStateEXT' value
     powerState :: DisplayPowerStateEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -441,7 +455,8 @@ instance Zero DisplayPowerInfoEXT where
 -- 'DeviceEventTypeEXT', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'registerDeviceEventEXT'
 data DeviceEventInfoEXT = DeviceEventInfoEXT
-  { -- | @deviceEvent@ /must/ be a valid 'DeviceEventTypeEXT' value
+  { -- | #VUID-VkDeviceEventInfoEXT-deviceEvent-parameter# @deviceEvent@ /must/
+    -- be a valid 'DeviceEventTypeEXT' value
     deviceEvent :: DeviceEventTypeEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -494,7 +509,8 @@ data DisplayEventInfoEXT = DisplayEventInfoEXT
   { -- | @displayEvent@ is a 'DisplayEventTypeEXT' specifying when the fence will
     -- be signaled.
     --
-    -- @displayEvent@ /must/ be a valid 'DisplayEventTypeEXT' value
+    -- #VUID-VkDisplayEventInfoEXT-displayEvent-parameter# @displayEvent@
+    -- /must/ be a valid 'DisplayEventTypeEXT' value
     displayEvent :: DisplayEventTypeEXT }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -538,17 +554,19 @@ instance Zero DisplayEventInfoEXT where
 --
 -- == Valid Usage
 --
--- -   The bits in @surfaceCounters@ /must/ be supported by
+-- -   #VUID-VkSwapchainCounterCreateInfoEXT-surfaceCounters-01244# The
+--     bits in @surfaceCounters@ /must/ be supported by
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@surface@,
 --     as reported by
 --     'Vulkan.Extensions.VK_EXT_display_surface_counter.getPhysicalDeviceSurfaceCapabilities2EXT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSwapchainCounterCreateInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT'
 --
--- -   @surfaceCounters@ /must/ be a valid combination of
+-- -   #VUID-VkSwapchainCounterCreateInfoEXT-surfaceCounters-parameter#
+--     @surfaceCounters@ /must/ be a valid combination of
 --     'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT'
 --     values
 --

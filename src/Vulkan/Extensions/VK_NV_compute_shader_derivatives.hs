@@ -58,11 +58,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceComputeShaderDerivativesFeaturesNV = PhysicalDeviceComputeShaderDerivativesFeaturesNV
-  { -- | @computeDerivativeGroupQuads@ indicates that the implementation supports
-    -- the @ComputeDerivativeGroupQuadsNV@ SPIR-V capability.
+  { -- | #features-computeDerivativeGroupQuads# @computeDerivativeGroupQuads@
+    -- indicates that the implementation supports the
+    -- @ComputeDerivativeGroupQuadsNV@ SPIR-V capability.
     computeDerivativeGroupQuads :: Bool
-  , -- | @computeDerivativeGroupLinear@ indicates that the implementation
-    -- supports the @ComputeDerivativeGroupLinearNV@ SPIR-V capability.
+  , -- | #features-computeDerivativeGroupLinear# @computeDerivativeGroupLinear@
+    -- indicates that the implementation supports the
+    -- @ComputeDerivativeGroupLinearNV@ SPIR-V capability.
     computeDerivativeGroupLinear :: Bool
   }
   deriving (Typeable, Eq)

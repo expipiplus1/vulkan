@@ -101,22 +101,25 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetCullModeEXT-None-03384# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdSetCullModeEXT-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @cullMode@ /must/ be a valid combination of
+-- -   #VUID-vkCmdSetCullModeEXT-cullMode-parameter# @cullMode@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.CullModeFlagBits.CullModeFlagBits' values
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetCullModeEXT-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetCullModeEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -169,22 +172,24 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetFrontFaceEXT-None-03383# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdSetFrontFaceEXT-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @frontFace@ /must/ be a valid
---     'Vulkan.Core10.Enums.FrontFace.FrontFace' value
+-- -   #VUID-vkCmdSetFrontFaceEXT-frontFace-parameter# @frontFace@ /must/
+--     be a valid 'Vulkan.Core10.Enums.FrontFace.FrontFace' value
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetFrontFaceEXT-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetFrontFaceEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -237,22 +242,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetPrimitiveTopologyEXT-None-03347# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetPrimitiveTopologyEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @primitiveTopology@ /must/ be a valid
+-- -   #VUID-vkCmdSetPrimitiveTopologyEXT-primitiveTopology-parameter#
+--     @primitiveTopology@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PrimitiveTopology' value
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetPrimitiveTopologyEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetPrimitiveTopologyEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -305,33 +314,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetViewportWithCountEXT-None-03393# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
--- -   @viewportCount@ /must/ be between @1@ and
+-- -   #VUID-vkCmdSetViewportWithCountEXT-viewportCount-03394#
+--     @viewportCount@ /must/ be between @1@ and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
--- -   If the
+-- -   #VUID-vkCmdSetViewportWithCountEXT-viewportCount-03395# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetViewportWithCountEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pViewports@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCmdSetViewportWithCountEXT-pViewports-parameter#
+--     @pViewports@ /must/ be a valid pointer to an array of
 --     @viewportCount@ valid 'Vulkan.Core10.Pipeline.Viewport' structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetViewportWithCountEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetViewportWithCountEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   @viewportCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdSetViewportWithCountEXT-viewportCount-arraylength#
+--     @viewportCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -384,42 +399,51 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetScissorWithCountEXT-None-03396# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
--- -   @scissorCount@ /must/ be between @1@ and
+-- -   #VUID-vkCmdSetScissorWithCountEXT-scissorCount-03397# @scissorCount@
+--     /must/ be between @1@ and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
--- -   If the
+-- -   #VUID-vkCmdSetScissorWithCountEXT-scissorCount-03398# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @scissorCount@ /must/ be @1@
 --
--- -   The @x@ and @y@ members of @offset@ member of any element of
---     @pScissors@ /must/ be greater than or equal to @0@
+-- -   #VUID-vkCmdSetScissorWithCountEXT-x-03399# The @x@ and @y@ members
+--     of @offset@ member of any element of @pScissors@ /must/ be greater
+--     than or equal to @0@
 --
--- -   Evaluation of (@offset.x@ + @extent.width@) /must/ not cause a
---     signed integer addition overflow for any element of @pScissors@
+-- -   #VUID-vkCmdSetScissorWithCountEXT-offset-03400# Evaluation of
+--     (@offset.x@ + @extent.width@) /must/ not cause a signed integer
+--     addition overflow for any element of @pScissors@
 --
--- -   Evaluation of (@offset.y@ + @extent.height@) /must/ not cause a
---     signed integer addition overflow for any element of @pScissors@
+-- -   #VUID-vkCmdSetScissorWithCountEXT-offset-03401# Evaluation of
+--     (@offset.y@ + @extent.height@) /must/ not cause a signed integer
+--     addition overflow for any element of @pScissors@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetScissorWithCountEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pScissors@ /must/ be a valid pointer to an array of @scissorCount@
+-- -   #VUID-vkCmdSetScissorWithCountEXT-pScissors-parameter# @pScissors@
+--     /must/ be a valid pointer to an array of @scissorCount@
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetScissorWithCountEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetScissorWithCountEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   @scissorCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdSetScissorWithCountEXT-scissorCount-arraylength#
+--     @scissorCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -493,82 +517,95 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstBinding@ /must/ be less than
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-firstBinding-03355# @firstBinding@
+--     /must/ be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
 --
--- -   The sum of @firstBinding@ and @bindingCount@ /must/ be less than or
---     equal to
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-firstBinding-03356# The sum of
+--     @firstBinding@ and @bindingCount@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindings@
 --
--- -   All elements of @pOffsets@ /must/ be less than the size of the
---     corresponding element in @pBuffers@
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pOffsets-03357# All elements of
+--     @pOffsets@ /must/ be less than the size of the corresponding element
+--     in @pBuffers@
 --
--- -   If @pSizes@ is not @NULL@, all elements of @pOffsets@ plus @pSizes@
---     /must/ be less than or equal to the size of the corresponding
---     element in @pBuffers@
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pSizes-03358# If @pSizes@ is not
+--     @NULL@, all elements of @pOffsets@ plus @pSizes@ /must/ be less than
+--     or equal to the size of the corresponding element in @pBuffers@
 --
--- -   All elements of @pBuffers@ /must/ have been created with the
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pBuffers-03359# All elements of
+--     @pBuffers@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_VERTEX_BUFFER_BIT'
 --     flag
 --
--- -   Each element of @pBuffers@ that is non-sparse /must/ be bound
---     completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pBuffers-03360# Each element of
+--     @pBuffers@ that is non-sparse /must/ be bound completely and
+--     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   If the
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pBuffers-04111# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, all elements of @pBuffers@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If an element of @pBuffers@ is
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', then the corresponding
---     element of @pOffsets@ /must/ be zero
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pBuffers-04112# If an element of
+--     @pBuffers@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', then the
+--     corresponding element of @pOffsets@ /must/ be zero
 --
--- -   If the bound pipeline state object was created with the
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-03361# If the bound
+--     pipeline state object was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
 --     dynamic state enabled then @pStrides@ /must/ not be @NULL@,
 --     otherwise @pStrides@ /must/ be @NULL@
 --
--- -   If @pStrides@ is not @NULL@ each element of @pStrides@ /must/ be
---     less than or equal to
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-03362# If @pStrides@ is
+--     not @NULL@ each element of @pStrides@ /must/ be less than or equal
+--     to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindingStride@
 --
--- -   If @pStrides@ is not @NULL@ each element of @pStrides@ /must/ be
---     greater than or equal to the maximum extent of of all vertex input
---     attributes fetched from the corresponding binding, where the extent
---     is calculated as the VkVertexInputAttributeDescription::offset plus
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-03363# If @pStrides@ is
+--     not @NULL@ each element of @pStrides@ /must/ be greater than or
+--     equal to the maximum extent of of all vertex input attributes
+--     fetched from the corresponding binding, where the extent is
+--     calculated as the VkVertexInputAttributeDescription::offset plus
 --     VkVertexInputAttributeDescription::format size
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pBuffers@ /must/ be a valid pointer to an array of @bindingCount@
---     valid 'Vulkan.Core10.Handles.Buffer' handles
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pBuffers-parameter# @pBuffers@
+--     /must/ be a valid pointer to an array of @bindingCount@ valid
+--     'Vulkan.Core10.Handles.Buffer' handles
 --
--- -   @pOffsets@ /must/ be a valid pointer to an array of @bindingCount@
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pOffsets-parameter# @pOffsets@
+--     /must/ be a valid pointer to an array of @bindingCount@
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize' values
 --
--- -   If @pSizes@ is not @NULL@, @pSizes@ /must/ be a valid pointer to an
---     array of @bindingCount@ 'Vulkan.Core10.FundamentalTypes.DeviceSize'
---     values
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pSizes-parameter# If @pSizes@ is
+--     not @NULL@, @pSizes@ /must/ be a valid pointer to an array of
+--     @bindingCount@ 'Vulkan.Core10.FundamentalTypes.DeviceSize' values
 --
--- -   If @pStrides@ is not @NULL@, @pStrides@ /must/ be a valid pointer to
---     an array of @bindingCount@
---     'Vulkan.Core10.FundamentalTypes.DeviceSize' values
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-pStrides-parameter# If @pStrides@
+--     is not @NULL@, @pStrides@ /must/ be a valid pointer to an array of
+--     @bindingCount@ 'Vulkan.Core10.FundamentalTypes.DeviceSize' values
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   If any of @pSizes@, or @pStrides@ are not @NULL@, @bindingCount@
---     /must/ be greater than @0@
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-bindingCount-arraylength# If any of
+--     @pSizes@, or @pStrides@ are not @NULL@, @bindingCount@ /must/ be
+--     greater than @0@
 --
--- -   Both of @commandBuffer@, and the elements of @pBuffers@ /must/ have
---     been created, allocated, or retrieved from the same
+-- -   #VUID-vkCmdBindVertexBuffers2EXT-commonparent# Both of
+--     @commandBuffer@, and the elements of @pBuffers@ /must/ have been
+--     created, allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
@@ -666,19 +703,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetDepthTestEnableEXT-None-03352# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetDepthTestEnableEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetDepthTestEnableEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetDepthTestEnableEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -740,19 +780,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetDepthWriteEnableEXT-None-03354# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetDepthWriteEnableEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetDepthWriteEnableEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetDepthWriteEnableEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -814,22 +857,26 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetDepthCompareOpEXT-None-03353# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetDepthCompareOpEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @depthCompareOp@ /must/ be a valid
+-- -   #VUID-vkCmdSetDepthCompareOpEXT-depthCompareOp-parameter#
+--     @depthCompareOp@ /must/ be a valid
 --     'Vulkan.Core10.Enums.CompareOp.CompareOp' value
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetDepthCompareOpEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetDepthCompareOpEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -891,19 +938,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetDepthBoundsTestEnableEXT-None-03349# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetDepthBoundsTestEnableEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetDepthBoundsTestEnableEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetDepthBoundsTestEnableEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -965,19 +1015,22 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetStencilTestEnableEXT-None-03350# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetStencilTestEnableEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetStencilTestEnableEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetStencilTestEnableEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -1037,36 +1090,40 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetStencilOpEXT-None-03351# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState extendedDynamicState>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkCmdSetStencilOpEXT-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @faceMask@ /must/ be a valid combination of
+-- -   #VUID-vkCmdSetStencilOpEXT-faceMask-parameter# @faceMask@ /must/ be
+--     a valid combination of
 --     'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlagBits' values
 --
--- -   @faceMask@ /must/ not be @0@
+-- -   #VUID-vkCmdSetStencilOpEXT-faceMask-requiredbitmask# @faceMask@
+--     /must/ not be @0@
 --
--- -   @failOp@ /must/ be a valid 'Vulkan.Core10.Enums.StencilOp.StencilOp'
---     value
+-- -   #VUID-vkCmdSetStencilOpEXT-failOp-parameter# @failOp@ /must/ be a
+--     valid 'Vulkan.Core10.Enums.StencilOp.StencilOp' value
 --
--- -   @passOp@ /must/ be a valid 'Vulkan.Core10.Enums.StencilOp.StencilOp'
---     value
+-- -   #VUID-vkCmdSetStencilOpEXT-passOp-parameter# @passOp@ /must/ be a
+--     valid 'Vulkan.Core10.Enums.StencilOp.StencilOp' value
 --
--- -   @depthFailOp@ /must/ be a valid
---     'Vulkan.Core10.Enums.StencilOp.StencilOp' value
+-- -   #VUID-vkCmdSetStencilOpEXT-depthFailOp-parameter# @depthFailOp@
+--     /must/ be a valid 'Vulkan.Core10.Enums.StencilOp.StencilOp' value
 --
--- -   @compareOp@ /must/ be a valid
---     'Vulkan.Core10.Enums.CompareOp.CompareOp' value
+-- -   #VUID-vkCmdSetStencilOpEXT-compareOp-parameter# @compareOp@ /must/
+--     be a valid 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetStencilOpEXT-commandBuffer-recording# @commandBuffer@
+--     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetStencilOpEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
 -- == Host Synchronization
@@ -1150,8 +1207,8 @@ cmdSetStencilOpEXT commandBuffer faceMask failOp passOp depthFailOp compareOp = 
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExtendedDynamicStateFeaturesEXT = PhysicalDeviceExtendedDynamicStateFeaturesEXT
-  { -- | @extendedDynamicState@ indicates that the implementation supports the
-    -- following dynamic states:
+  { -- | #features-extendedDynamicState# @extendedDynamicState@ indicates that
+    -- the implementation supports the following dynamic states:
     --
     -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE_EXT'
     --

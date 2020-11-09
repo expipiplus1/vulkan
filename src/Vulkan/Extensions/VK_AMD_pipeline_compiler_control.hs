@@ -55,6 +55,7 @@ data PipelineCompilerControlCreateInfoAMD = PipelineCompilerControlCreateInfoAMD
     -- 'PipelineCompilerControlFlagBitsAMD' affecting how the pipeline will be
     -- compiled.
     --
+    -- #VUID-VkPipelineCompilerControlCreateInfoAMD-compilerControlFlags-zerobitmask#
     -- @compilerControlFlags@ /must/ be @0@
     compilerControlFlags :: PipelineCompilerControlFlagsAMD }
   deriving (Typeable, Eq)

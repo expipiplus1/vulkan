@@ -35,15 +35,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice16BitStorageFeatures = PhysicalDevice16BitStorageFeatures
-  { -- | @storageBuffer16BitAccess@ specifies whether objects in the
-    -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the
-    -- @Block@ decoration /can/ have 16-bit integer and 16-bit floating-point
-    -- members. If this feature is not enabled, 16-bit integer or 16-bit
-    -- floating-point members /must/ not be used in such objects. This also
-    -- specifies whether shader modules /can/ declare the
-    -- @StorageBuffer16BitAccess@ capability.
+  { -- | #extension-features-storageBuffer16BitAccess# @storageBuffer16BitAccess@
+    -- specifies whether objects in the @StorageBuffer@ or
+    -- @PhysicalStorageBuffer@ storage class with the @Block@ decoration /can/
+    -- have 16-bit integer and 16-bit floating-point members. If this feature
+    -- is not enabled, 16-bit integer or 16-bit floating-point members /must/
+    -- not be used in such objects. This also specifies whether shader modules
+    -- /can/ declare the @StorageBuffer16BitAccess@ capability.
     storageBuffer16BitAccess :: Bool
-  , -- | @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
+  , -- | #extension-features-uniformAndStorageBuffer16BitAccess#
+    -- @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
     -- @Uniform@ storage class with the @Block@ decoration and in the
     -- @StorageBuffer@ or @PhysicalStorageBuffer@ storage class with the same
     -- decoration /can/ have 16-bit integer and 16-bit floating-point members.
@@ -52,19 +53,19 @@ data PhysicalDevice16BitStorageFeatures = PhysicalDevice16BitStorageFeatures
     -- shader modules /can/ declare the @UniformAndStorageBuffer16BitAccess@
     -- capability.
     uniformAndStorageBuffer16BitAccess :: Bool
-  , -- | @storagePushConstant16@ specifies whether objects in the @PushConstant@
-    -- storage class /can/ have 16-bit integer and 16-bit floating-point
-    -- members. If this feature is not enabled, 16-bit integer or
-    -- floating-point members /must/ not be used in such objects. This also
-    -- specifies whether shader modules /can/ declare the
-    -- @StoragePushConstant16@ capability.
+  , -- | #extension-features-storagePushConstant16# @storagePushConstant16@
+    -- specifies whether objects in the @PushConstant@ storage class /can/ have
+    -- 16-bit integer and 16-bit floating-point members. If this feature is not
+    -- enabled, 16-bit integer or floating-point members /must/ not be used in
+    -- such objects. This also specifies whether shader modules /can/ declare
+    -- the @StoragePushConstant16@ capability.
     storagePushConstant16 :: Bool
-  , -- | @storageInputOutput16@ specifies whether objects in the @Input@ and
-    -- @Output@ storage classes /can/ have 16-bit integer and 16-bit
-    -- floating-point members. If this feature is not enabled, 16-bit integer
-    -- or 16-bit floating-point members /must/ not be used in such objects.
-    -- This also specifies whether shader modules /can/ declare the
-    -- @StorageInputOutput16@ capability.
+  , -- | #extension-features-storageInputOutput16# @storageInputOutput16@
+    -- specifies whether objects in the @Input@ and @Output@ storage classes
+    -- /can/ have 16-bit integer and 16-bit floating-point members. If this
+    -- feature is not enabled, 16-bit integer or 16-bit floating-point members
+    -- /must/ not be used in such objects. This also specifies whether shader
+    -- modules /can/ declare the @StorageInputOutput16@ capability.
     storageInputOutput16 :: Bool
   }
   deriving (Typeable, Eq)

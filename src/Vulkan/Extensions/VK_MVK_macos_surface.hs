@@ -107,17 +107,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateMacOSSurfaceMVK-instance-parameter# @instance@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'MacOSSurfaceCreateInfoMVK' structure
+-- -   #VUID-vkCreateMacOSSurfaceMVK-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'MacOSSurfaceCreateInfoMVK'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreateMacOSSurfaceMVK-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+-- -   #VUID-vkCreateMacOSSurfaceMVK-pSurface-parameter# @pSurface@ /must/
+--     be a valid pointer to a 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
 --
 -- == Return Codes
 --
@@ -168,24 +171,27 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If @pView@ is a
+-- -   #VUID-VkMacOSSurfaceCreateInfoMVK-pView-04144# If @pView@ is a
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object, it
 --     /must/ be a valid
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
 --
--- -   If @pView@ is an @NSView@ object, it /must/ be a valid @NSView@,
---     /must/ be backed by a @CALayer@ object of type
+-- -   #VUID-VkMacOSSurfaceCreateInfoMVK-pView-01317# If @pView@ is an
+--     @NSView@ object, it /must/ be a valid @NSView@, /must/ be backed by
+--     a @CALayer@ object of type
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', and
 --     'createMacOSSurfaceMVK' /must/ be called on the main thread.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMacOSSurfaceCreateInfoMVK-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkMacOSSurfaceCreateInfoMVK-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkMacOSSurfaceCreateInfoMVK-flags-zerobitmask# @flags@ /must/
+--     be @0@
 --
 -- = See Also
 --

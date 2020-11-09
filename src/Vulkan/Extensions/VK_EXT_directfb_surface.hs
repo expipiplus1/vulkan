@@ -93,16 +93,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateDirectFBSurfaceEXT-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateDirectFBSurfaceEXT-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DirectFBSurfaceCreateInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateDirectFBSurfaceEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateDirectFBSurfaceEXT-pSurface-parameter# @pSurface@
+--     /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
@@ -174,11 +178,13 @@ getPhysicalDeviceDirectFBPresentationSupportEXT :: forall io
                                                  . (MonadIO io)
                                                 => -- | @physicalDevice@ is the physical device.
                                                    --
+                                                   -- #VUID-vkGetPhysicalDeviceDirectFBPresentationSupportEXT-physicalDevice-parameter#
                                                    -- @physicalDevice@ /must/ be a valid
                                                    -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                                    PhysicalDevice
                                                 -> -- | @queueFamilyIndex@ is the queue family index.
                                                    --
+                                                   -- #VUID-vkGetPhysicalDeviceDirectFBPresentationSupportEXT-queueFamilyIndex-04119#
                                                    -- @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
                                                    -- returned by
                                                    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
@@ -186,6 +192,7 @@ getPhysicalDeviceDirectFBPresentationSupportEXT :: forall io
                                                    ("queueFamilyIndex" ::: Word32)
                                                 -> -- | @dfb@ is a pointer to the 'IDirectFB' main interface of DirectFB.
                                                    --
+                                                   -- #VUID-vkGetPhysicalDeviceDirectFBPresentationSupportEXT-dfb-parameter#
                                                    -- @dfb@ /must/ be a valid pointer to an 'IDirectFB' value
                                                    ("dfb" ::: Ptr IDirectFB)
                                                 -> io (Bool)
@@ -211,15 +218,18 @@ getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex 
 data DirectFBSurfaceCreateInfoEXT = DirectFBSurfaceCreateInfoEXT
   { -- | @flags@ is reserved for future use.
     --
-    -- @flags@ /must/ be @0@
+    -- #VUID-VkDirectFBSurfaceCreateInfoEXT-flags-zerobitmask# @flags@ /must/
+    -- be @0@
     flags :: DirectFBSurfaceCreateFlagsEXT
   , -- | @dfb@ is a pointer to the 'IDirectFB' main interface of DirectFB.
     --
-    -- @dfb@ /must/ point to a valid DirectFB 'IDirectFB'
+    -- #VUID-VkDirectFBSurfaceCreateInfoEXT-dfb-04117# @dfb@ /must/ point to a
+    -- valid DirectFB 'IDirectFB'
     dfb :: Ptr IDirectFB
   , -- | @surface@ is a pointer to a 'IDirectFBSurface' surface interface.
     --
-    -- @surface@ /must/ point to a valid DirectFB 'IDirectFBSurface'
+    -- #VUID-VkDirectFBSurfaceCreateInfoEXT-surface-04118# @surface@ /must/
+    -- point to a valid DirectFB 'IDirectFBSurface'
     surface :: Ptr IDirectFBSurface
   }
   deriving (Typeable, Eq)

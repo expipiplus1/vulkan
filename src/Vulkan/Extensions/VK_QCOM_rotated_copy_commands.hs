@@ -44,7 +44,8 @@ data CopyCommandTransformInfoQCOM = CopyCommandTransformInfoQCOM
     -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
     -- describing the transform to be applied.
     --
-    -- @transform@ /must/ be
+    -- #VUID-VkCopyCommandTransformInfoQCOM-transform-04560# @transform@ /must/
+    -- be
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_90_BIT_KHR',
     -- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_ROTATE_180_BIT_KHR',

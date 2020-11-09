@@ -32,16 +32,17 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage
 --
--- -   The bits in @handleTypes@ /must/ be supported and compatible, as
---     reported by
+-- -   #VUID-VkExportSemaphoreCreateInfo-handleTypes-01124# The bits in
+--     @handleTypes@ /must/ be supported and compatible, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportSemaphoreCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO'
 --
--- -   @handleTypes@ /must/ be a valid combination of
+-- -   #VUID-VkExportSemaphoreCreateInfo-handleTypes-parameter#
+--     @handleTypes@ /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
 --     values
 --

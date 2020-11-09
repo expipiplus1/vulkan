@@ -54,9 +54,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderTerminateInvocationFeaturesKHR = PhysicalDeviceShaderTerminateInvocationFeaturesKHR
-  { -- | @shaderTerminateInvocation@ specifies whether the implementation
-    -- supports SPIR-V modules that use the @SPV_KHR_terminate_invocation@
-    -- extension.
+  { -- | #features-shaderTerminateInvocation# @shaderTerminateInvocation@
+    -- specifies whether the implementation supports SPIR-V modules that use
+    -- the @SPV_KHR_terminate_invocation@ extension.
     shaderTerminateInvocation :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -61,6 +61,7 @@ data PipelineRasterizationStateRasterizationOrderAMD = PipelineRasterizationStat
   { -- | @rasterizationOrder@ is a 'RasterizationOrderAMD' value specifying the
     -- primitive rasterization order to use.
     --
+    -- #VUID-VkPipelineRasterizationStateRasterizationOrderAMD-rasterizationOrder-parameter#
     -- @rasterizationOrder@ /must/ be a valid 'RasterizationOrderAMD' value
     rasterizationOrder :: RasterizationOrderAMD }
   deriving (Typeable, Eq)

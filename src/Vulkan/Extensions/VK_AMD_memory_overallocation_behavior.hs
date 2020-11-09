@@ -55,6 +55,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_ME
 data DeviceMemoryOverallocationCreateInfoAMD = DeviceMemoryOverallocationCreateInfoAMD
   { -- | @overallocationBehavior@ is the desired overallocation behavior.
     --
+    -- #VUID-VkDeviceMemoryOverallocationCreateInfoAMD-overallocationBehavior-parameter#
     -- @overallocationBehavior@ /must/ be a valid
     -- 'MemoryOverallocationBehaviorAMD' value
     overallocationBehavior :: MemoryOverallocationBehaviorAMD }

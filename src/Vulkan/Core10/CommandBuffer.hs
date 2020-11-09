@@ -140,16 +140,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkAllocateCommandBuffers-device-parameter# @device@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkAllocateCommandBuffers-pAllocateInfo-parameter#
+--     @pAllocateInfo@ /must/ be a valid pointer to a valid
 --     'CommandBufferAllocateInfo' structure
 --
--- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkAllocateCommandBuffers-pCommandBuffers-parameter#
+--     @pCommandBuffers@ /must/ be a valid pointer to an array of
 --     @pAllocateInfo->commandBufferCount@
 --     'Vulkan.Core10.Handles.CommandBuffer' handles
 --
--- -   @pAllocateInfo->commandBufferCount@ /must/ be greater than @0@
+-- -   #VUID-vkAllocateCommandBuffers-pAllocateInfo::commandBufferCount-arraylength#
+--     @pAllocateInfo->commandBufferCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -227,27 +231,32 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All elements of @pCommandBuffers@ /must/ not be in the
+-- -   #VUID-vkFreeCommandBuffers-pCommandBuffers-00047# All elements of
+--     @pCommandBuffers@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
---     @commandBufferCount@ 'Vulkan.Core10.Handles.CommandBuffer' handles,
---     each element of which /must/ either be a valid handle or @NULL@
+-- -   #VUID-vkFreeCommandBuffers-pCommandBuffers-00048# @pCommandBuffers@
+--     /must/ be a valid pointer to an array of @commandBufferCount@
+--     'Vulkan.Core10.Handles.CommandBuffer' handles, each element of which
+--     /must/ either be a valid handle or @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkFreeCommandBuffers-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @commandPool@ /must/ be a valid 'Vulkan.Core10.Handles.CommandPool'
---     handle
+-- -   #VUID-vkFreeCommandBuffers-commandPool-parameter# @commandPool@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   @commandBufferCount@ /must/ be greater than @0@
+-- -   #VUID-vkFreeCommandBuffers-commandBufferCount-arraylength#
+--     @commandBufferCount@ /must/ be greater than @0@
 --
--- -   @commandPool@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkFreeCommandBuffers-commandPool-parent# @commandPool@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
--- -   Each element of @pCommandBuffers@ that is a valid handle /must/ have
---     been created, allocated, or retrieved from @commandPool@
+-- -   #VUID-vkFreeCommandBuffers-pCommandBuffers-parent# Each element of
+--     @pCommandBuffers@ that is a valid handle /must/ have been created,
+--     allocated, or retrieved from @commandPool@
 --
 -- == Host Synchronization
 --
@@ -293,29 +302,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ not be in the
+-- -   #VUID-vkBeginCommandBuffer-commandBuffer-00049# @commandBuffer@
+--     /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or pending state>
 --
--- -   If @commandBuffer@ was allocated from a
---     'Vulkan.Core10.Handles.CommandPool' which did not have the
+-- -   #VUID-vkBeginCommandBuffer-commandBuffer-00050# If @commandBuffer@
+--     was allocated from a 'Vulkan.Core10.Handles.CommandPool' which did
+--     not have the
 --     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT'
 --     flag set, @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>
 --
--- -   If @commandBuffer@ is a secondary command buffer, the
---     @pInheritanceInfo@ member of @pBeginInfo@ /must/ be a valid
---     'CommandBufferInheritanceInfo' structure
+-- -   #VUID-vkBeginCommandBuffer-commandBuffer-00051# If @commandBuffer@
+--     is a secondary command buffer, the @pInheritanceInfo@ member of
+--     @pBeginInfo@ /must/ be a valid 'CommandBufferInheritanceInfo'
+--     structure
 --
--- -   If @commandBuffer@ is a secondary command buffer and either the
---     @occlusionQueryEnable@ member of the @pInheritanceInfo@ member of
---     @pBeginInfo@ is 'Vulkan.Core10.FundamentalTypes.FALSE', or the
---     precise occlusion queries feature is not enabled, the @queryFlags@
---     member of the @pInheritanceInfo@ member @pBeginInfo@ /must/ not
---     contain
+-- -   #VUID-vkBeginCommandBuffer-commandBuffer-00052# If @commandBuffer@
+--     is a secondary command buffer and either the @occlusionQueryEnable@
+--     member of the @pInheritanceInfo@ member of @pBeginInfo@ is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', or the precise occlusion
+--     queries feature is not enabled, the @queryFlags@ member of the
+--     @pInheritanceInfo@ member @pBeginInfo@ /must/ not contain
 --     'Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
 --
--- -   If @commandBuffer@ is a primary command buffer, then
---     @pBeginInfo->flags@ /must/ not set both the
+-- -   #VUID-vkBeginCommandBuffer-commandBuffer-02840# If @commandBuffer@
+--     is a primary command buffer, then @pBeginInfo->flags@ /must/ not set
+--     both the
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
 --     and the
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
@@ -323,11 +336,11 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkBeginCommandBuffer-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pBeginInfo@ /must/ be a valid pointer to a valid
---     'CommandBufferBeginInfo' structure
+-- -   #VUID-vkBeginCommandBuffer-pBeginInfo-parameter# @pBeginInfo@ /must/
+--     be a valid pointer to a valid 'CommandBufferBeginInfo' structure
 --
 -- == Host Synchronization
 --
@@ -400,29 +413,32 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkEndCommandBuffer-commandBuffer-00059# @commandBuffer@ /must/
+--     be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   If @commandBuffer@ is a primary command buffer, there /must/ not be
---     an active render pass instance
+-- -   #VUID-vkEndCommandBuffer-commandBuffer-00060# If @commandBuffer@ is
+--     a primary command buffer, there /must/ not be an active render pass
+--     instance
 --
--- -   All queries made
+-- -   #VUID-vkEndCommandBuffer-commandBuffer-00061# All queries made
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
 --     during the recording of @commandBuffer@ /must/ have been made
 --     inactive
 --
--- -   Conditional rendering /must/ not be
+-- -   #VUID-vkEndCommandBuffer-None-01978# Conditional rendering /must/
+--     not be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
 --
--- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
---     be an outstanding
+-- -   #VUID-vkEndCommandBuffer-commandBuffer-01815# If @commandBuffer@ is
+--     a secondary command buffer, there /must/ not be an outstanding
 --     'Vulkan.Extensions.VK_EXT_debug_utils.cmdBeginDebugUtilsLabelEXT'
 --     command recorded to @commandBuffer@ that has not previously been
 --     ended by a call to
 --     'Vulkan.Extensions.VK_EXT_debug_utils.cmdEndDebugUtilsLabelEXT'
 --
--- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
---     be an outstanding
+-- -   #VUID-vkEndCommandBuffer-commandBuffer-00062# If @commandBuffer@ is
+--     a secondary command buffer, there /must/ not be an outstanding
 --     'Vulkan.Extensions.VK_EXT_debug_marker.cmdDebugMarkerBeginEXT'
 --     command recorded to @commandBuffer@ that has not previously been
 --     ended by a call to
@@ -430,8 +446,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkEndCommandBuffer-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- == Host Synchronization
 --
@@ -487,19 +503,21 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ not be in the
+-- -   #VUID-vkResetCommandBuffer-commandBuffer-00045# @commandBuffer@
+--     /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- -   @commandBuffer@ /must/ have been allocated from a pool that was
---     created with the
+-- -   #VUID-vkResetCommandBuffer-commandBuffer-00046# @commandBuffer@
+--     /must/ have been allocated from a pool that was created with the
 --     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
+-- -   #VUID-vkResetCommandBuffer-commandBuffer-parameter# @commandBuffer@
+--     /must/ be a valid 'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-vkResetCommandBuffer-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlagBits'
 --     values
 --
@@ -558,18 +576,19 @@ data CommandBufferAllocateInfo = CommandBufferAllocateInfo
   { -- | @commandPool@ is the command pool from which the command buffers are
     -- allocated.
     --
-    -- @commandPool@ /must/ be a valid 'Vulkan.Core10.Handles.CommandPool'
-    -- handle
+    -- #VUID-VkCommandBufferAllocateInfo-commandPool-parameter# @commandPool@
+    -- /must/ be a valid 'Vulkan.Core10.Handles.CommandPool' handle
     commandPool :: CommandPool
   , -- | @level@ is a 'Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel'
     -- value specifying the command buffer level.
     --
-    -- @level@ /must/ be a valid
-    -- 'Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel' value
+    -- #VUID-VkCommandBufferAllocateInfo-level-parameter# @level@ /must/ be a
+    -- valid 'Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel' value
     level :: CommandBufferLevel
   , -- | @commandBufferCount@ is the number of command buffers to allocate from
     -- the pool.
     --
+    -- #VUID-VkCommandBufferAllocateInfo-commandBufferCount-00044#
     -- @commandBufferCount@ /must/ be greater than @0@
     commandBufferCount :: Word32
   }
@@ -624,48 +643,52 @@ instance Zero CommandBufferAllocateInfo where
 --
 -- == Valid Usage
 --
--- -   If the
+-- -   #VUID-VkCommandBufferInheritanceInfo-occlusionQueryEnable-00056# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is not enabled, @occlusionQueryEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   If the
+-- -   #VUID-VkCommandBufferInheritanceInfo-queryFlags-00057# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is enabled, @queryFlags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
 --     values
 --
--- -   If the
+-- -   #VUID-VkCommandBufferInheritanceInfo-queryFlags-02788# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is not enabled, @queryFlags@ /must/ be @0@
 --
--- -   If the
+-- -   #VUID-VkCommandBufferInheritanceInfo-pipelineStatistics-02789# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is enabled, @pipelineStatistics@ /must/ be a valid
 --     combination of
 --     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
 --     values
 --
--- -   If the
+-- -   #VUID-VkCommandBufferInheritanceInfo-pipelineStatistics-00058# If
+--     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is not enabled, @pipelineStatistics@ /must/ be @0@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCommandBufferInheritanceInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkCommandBufferInheritanceInfo-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT'
 --     or
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkCommandBufferInheritanceInfo-sType-unique# The @sType@ value
+--     of each struct in the @pNext@ chain /must/ be unique
 --
--- -   Both of @framebuffer@, and @renderPass@ that are valid handles of
+-- -   #VUID-VkCommandBufferInheritanceInfo-commonparent# Both of
+--     @framebuffer@, and @renderPass@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
 --     retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
@@ -802,17 +825,17 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --
 -- == Valid Usage
 --
--- -   If @flags@ contains
+-- -   #VUID-VkCommandBufferBeginInfo-flags-00053# If @flags@ contains
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
 --     the @renderPass@ member of @pInheritanceInfo@ /must/ be a valid
 --     'Vulkan.Core10.Handles.RenderPass'
 --
--- -   If @flags@ contains
+-- -   #VUID-VkCommandBufferBeginInfo-flags-00054# If @flags@ contains
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
 --     the @subpass@ member of @pInheritanceInfo@ /must/ be a valid subpass
 --     index within the @renderPass@ member of @pInheritanceInfo@
 --
--- -   If @flags@ contains
+-- -   #VUID-VkCommandBufferBeginInfo-flags-00055# If @flags@ contains
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
 --     the @framebuffer@ member of @pInheritanceInfo@ /must/ be either
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', or a valid
@@ -821,16 +844,18 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkCommandBufferBeginInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkCommandBufferBeginInfo-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupCommandBufferBeginInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkCommandBufferBeginInfo-sType-unique# The @sType@ value of
+--     each struct in the @pNext@ chain /must/ be unique
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkCommandBufferBeginInfo-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.CommandBufferUsageFlagBits'
 --     values
 --

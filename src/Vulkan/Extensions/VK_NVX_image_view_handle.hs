@@ -76,12 +76,13 @@ getImageViewHandleNVX :: forall io
                        . (MonadIO io)
                       => -- | @device@ is the logical device that owns the image view.
                          --
-                         -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                         -- #VUID-vkGetImageViewHandleNVX-device-parameter# @device@ /must/ be a
+                         -- valid 'Vulkan.Core10.Handles.Device' handle
                          Device
                       -> -- | @pInfo@ describes the image view to query and type of handle.
                          --
-                         -- @pInfo@ /must/ be a valid pointer to a valid 'ImageViewHandleInfoNVX'
-                         -- structure
+                         -- #VUID-vkGetImageViewHandleNVX-pInfo-parameter# @pInfo@ /must/ be a valid
+                         -- pointer to a valid 'ImageViewHandleInfoNVX' structure
                          ImageViewHandleInfoNVX
                       -> io (Word32)
 getImageViewHandleNVX device info = liftIO . evalContT $ do
@@ -123,14 +124,16 @@ getImageViewAddressNVX :: forall io
                         . (MonadIO io)
                        => -- | @device@ is the logical device that owns the image view.
                           --
-                          -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                          -- #VUID-vkGetImageViewAddressNVX-device-parameter# @device@ /must/ be a
+                          -- valid 'Vulkan.Core10.Handles.Device' handle
                           Device
                        -> -- | @imageView@ is a handle to the image view.
                           --
-                          -- @imageView@ /must/ be a valid 'Vulkan.Core10.Handles.ImageView' handle
+                          -- #VUID-vkGetImageViewAddressNVX-imageView-parameter# @imageView@ /must/
+                          -- be a valid 'Vulkan.Core10.Handles.ImageView' handle
                           --
-                          -- @imageView@ /must/ have been created, allocated, or retrieved from
-                          -- @device@
+                          -- #VUID-vkGetImageViewAddressNVX-imageView-parent# @imageView@ /must/ have
+                          -- been created, allocated, or retrieved from @device@
                           ImageView
                        -> io (ImageViewAddressPropertiesNVX)
 getImageViewAddressNVX device imageView = liftIO . evalContT $ do
@@ -150,17 +153,18 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @descriptorType@ /must/ be
+-- -   #VUID-VkImageViewHandleInfoNVX-descriptorType-02654#
+--     @descriptorType@ /must/ be
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --
--- -   @sampler@ /must/ be a valid 'Vulkan.Core10.Handles.Sampler' if
---     @descriptorType@ is
+-- -   #VUID-VkImageViewHandleInfoNVX-sampler-02655# @sampler@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Sampler' if @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --
--- -   If descriptorType is
+-- -   #VUID-VkImageViewHandleInfoNVX-imageView-02656# If descriptorType is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -169,7 +173,7 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --     usage bit set
 --
--- -   If descriptorType is
+-- -   #VUID-VkImageViewHandleInfoNVX-imageView-02657# If descriptorType is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     the image that @imageView@ was created from /must/ have been created
 --     with the
@@ -178,23 +182,26 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageViewHandleInfoNVX-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkImageViewHandleInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
 --
--- -   @imageView@ /must/ be a valid 'Vulkan.Core10.Handles.ImageView'
---     handle
+-- -   #VUID-VkImageViewHandleInfoNVX-imageView-parameter# @imageView@
+--     /must/ be a valid 'Vulkan.Core10.Handles.ImageView' handle
 --
--- -   @descriptorType@ /must/ be a valid
+-- -   #VUID-VkImageViewHandleInfoNVX-descriptorType-parameter#
+--     @descriptorType@ /must/ be a valid
 --     'Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
--- -   If @sampler@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @sampler@ /must/ be a valid 'Vulkan.Core10.Handles.Sampler' handle
+-- -   #VUID-VkImageViewHandleInfoNVX-sampler-parameter# If @sampler@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @sampler@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Sampler' handle
 --
--- -   Both of @imageView@, and @sampler@ that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkImageViewHandleInfoNVX-commonparent# Both of @imageView@,
+--     and @sampler@ that are valid handles of non-ignored parameters
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --

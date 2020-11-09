@@ -124,7 +124,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMemoryDedicatedRequirements-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS'
 --
 -- = See Also
@@ -188,34 +188,40 @@ instance Zero MemoryDedicatedRequirements where
 --
 -- == Valid Usage
 --
--- -   At least one of @image@ and @buffer@ /must/ be
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-01432# At least one of
+--     @image@ and @buffer@ /must/ be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the
---     memory is not an imported Android Hardware Buffer,
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-02964# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and the memory is not an
+--     imported Android Hardware Buffer,
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
 --     equal the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
 --     image
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@
---     /must/ have been created without
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-01434# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@ /must/ have been
+--     created without
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
 --     set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the
---     memory is not an imported Android Hardware Buffer,
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-02965# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and the memory is not an
+--     imported Android Hardware Buffer,
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@ /must/
 --     equal the
 --     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ of the
 --     buffer
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @buffer@ /must/ have been created without
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-01436# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ have been
+--     created without
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
 --     set in 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-01876# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
 --     operation with handle type
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
@@ -230,7 +236,8 @@ instance Zero MemoryDedicatedRequirements where
 --     and @image@ must be identical to the image associated with the
 --     imported memory
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-01877# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
 --     operation with handle type
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
@@ -245,7 +252,8 @@ instance Zero MemoryDedicatedRequirements where
 --     and @buffer@ /must/ be identical to the buffer associated with the
 --     imported memory
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-01878# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
 --     operation with handle type
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
@@ -253,7 +261,8 @@ instance Zero MemoryDedicatedRequirements where
 --     allocation and @image@ /must/ be identical to the image associated
 --     with the imported memory
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-01879# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
 --     operation with handle type
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
@@ -261,25 +270,29 @@ instance Zero MemoryDedicatedRequirements where
 --     allocation and @buffer@ /must/ be identical to the buffer associated
 --     with the imported memory
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@
---     /must/ not have been created with
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-01797# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@ /must/ not have
+--     been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO'
 --
--- -   If @image@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@
---     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-parameter# If @image@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @image@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Image' handle
 --
--- -   If @buffer@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-parameter# If @buffer@ is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Buffer' handle
 --
--- -   Both of @buffer@, and @image@ that are valid handles of non-ignored
---     parameters /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-commonparent# Both of @buffer@,
+--     and @image@ that are valid handles of non-ignored parameters /must/
+--     have been created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --

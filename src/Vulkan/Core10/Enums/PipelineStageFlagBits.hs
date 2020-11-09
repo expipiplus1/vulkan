@@ -106,7 +106,8 @@ pattern PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = PipelineStageFlagBits 0x000
 -- | 'PIPELINE_STAGE_COMPUTE_SHADER_BIT' specifies the execution of a compute
 -- shader.
 pattern PIPELINE_STAGE_COMPUTE_SHADER_BIT = PipelineStageFlagBits 0x00000800
--- | 'PIPELINE_STAGE_TRANSFER_BIT' specifies the following commands:
+-- | #synchronization-pipeline-stages-transfer# 'PIPELINE_STAGE_TRANSFER_BIT'
+-- specifies the following commands:
 --
 -- -   All
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>,

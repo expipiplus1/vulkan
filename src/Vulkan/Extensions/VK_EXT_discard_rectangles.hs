@@ -95,40 +95,48 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The sum of @firstDiscardRectangle@ and @discardRectangleCount@
---     /must/ be less than or equal to
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-firstDiscardRectangle-00585# The
+--     sum of @firstDiscardRectangle@ and @discardRectangleCount@ /must/ be
+--     less than or equal to
 --     'PhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@
 --
--- -   The @x@ and @y@ member of @offset@ in each
---     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-x-00587# The @x@ and @y@ member of
+--     @offset@ in each 'Vulkan.Core10.FundamentalTypes.Rect2D' element of
 --     @pDiscardRectangles@ /must/ be greater than or equal to @0@
 --
--- -   Evaluation of (@offset.x@ + @extent.width@) in each
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-offset-00588# Evaluation of
+--     (@offset.x@ + @extent.width@) in each
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
 --
--- -   Evaluation of (@offset.y@ + @extent.height@) in each
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-offset-00589# Evaluation of
+--     (@offset.y@ + @extent.height@) in each
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pDiscardRectangles@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-pDiscardRectangles-parameter#
+--     @pDiscardRectangles@ /must/ be a valid pointer to an array of
 --     @discardRectangleCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D'
 --     structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   @discardRectangleCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-discardRectangleCount-arraylength#
+--     @discardRectangleCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -197,8 +205,8 @@ cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles 
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDiscardRectanglePropertiesEXT = PhysicalDeviceDiscardRectanglePropertiesEXT
-  { -- | @maxDiscardRectangles@ is the maximum number of active discard
-    -- rectangles that /can/ be specified.
+  { -- | #limits-maxDiscardRectangles# @maxDiscardRectangles@ is the maximum
+    -- number of active discard rectangles that /can/ be specified.
     maxDiscardRectangles :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -265,11 +273,13 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateCreateInfoEXT
   { -- | @flags@ is reserved for future use.
     --
+    -- #VUID-VkPipelineDiscardRectangleStateCreateInfoEXT-flags-zerobitmask#
     -- @flags@ /must/ be @0@
     flags :: PipelineDiscardRectangleStateCreateFlagsEXT
   , -- | @discardRectangleMode@ is a 'DiscardRectangleModeEXT' value determining
     -- whether the discard rectangle test is inclusive or exclusive.
     --
+    -- #VUID-VkPipelineDiscardRectangleStateCreateInfoEXT-discardRectangleMode-parameter#
     -- @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
     discardRectangleMode :: DiscardRectangleModeEXT
   , -- | @pDiscardRectangles@ is a pointer to an array of

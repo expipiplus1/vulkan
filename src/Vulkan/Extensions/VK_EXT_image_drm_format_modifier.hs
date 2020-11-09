@@ -95,17 +95,20 @@ getImageDrmFormatModifierPropertiesEXT :: forall io
                                         . (MonadIO io)
                                        => -- | @device@ is the logical device that owns the image.
                                           --
+                                          -- #VUID-vkGetImageDrmFormatModifierPropertiesEXT-device-parameter#
                                           -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                           Device
                                        -> -- | @image@ is the queried image.
                                           --
-                                          -- @image@ /must/ have been created with <VkImageCreateInfo.html tiling>
-                                          -- equal to
+                                          -- #VUID-vkGetImageDrmFormatModifierPropertiesEXT-image-02272# @image@
+                                          -- /must/ have been created with <VkImageCreateInfo.html tiling> equal to
                                           -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
                                           --
-                                          -- @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+                                          -- #VUID-vkGetImageDrmFormatModifierPropertiesEXT-image-parameter# @image@
+                                          -- /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
                                           --
-                                          -- @image@ /must/ have been created, allocated, or retrieved from @device@
+                                          -- #VUID-vkGetImageDrmFormatModifierPropertiesEXT-image-parent# @image@
+                                          -- /must/ have been created, allocated, or retrieved from @device@
                                           Image
                                        -> io (ImageDrmFormatModifierPropertiesEXT)
 getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
@@ -348,16 +351,19 @@ instance Zero DrmFormatModifierPropertiesEXT where
 --
 -- == Valid Usage
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-sharingMode-02314#
+--     If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-sharingMode-02315#
+--     If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', then
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
--- -   If @sharingMode@ is
+-- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-sharingMode-02316#
+--     If @sharingMode@ is
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', each
 --     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
 --     than the @pQueueFamilyPropertyCount@ returned by
@@ -366,10 +372,12 @@ instance Zero DrmFormatModifierPropertiesEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
 --
--- -   @sharingMode@ /must/ be a valid
+-- -   #VUID-VkPhysicalDeviceImageDrmFormatModifierInfoEXT-sharingMode-parameter#
+--     @sharingMode@ /must/ be a valid
 --     'Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
 -- = See Also
@@ -442,7 +450,8 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 --
 -- == Valid Usage
 --
--- -   Each /modifier/ in @pDrmFormatModifiers@ /must/ be compatible with
+-- -   #VUID-VkImageDrmFormatModifierListCreateInfoEXT-pDrmFormatModifiers-02263#
+--     Each /modifier/ in @pDrmFormatModifiers@ /must/ be compatible with
 --     the parameters in 'Vulkan.Core10.Image.ImageCreateInfo' and its
 --     @pNext@ chain, as determined by querying
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
@@ -450,13 +459,16 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageDrmFormatModifierListCreateInfoEXT-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT'
 --
--- -   @pDrmFormatModifiers@ /must/ be a valid pointer to an array of
+-- -   #VUID-VkImageDrmFormatModifierListCreateInfoEXT-pDrmFormatModifiers-parameter#
+--     @pDrmFormatModifiers@ /must/ be a valid pointer to an array of
 --     @drmFormatModifierCount@ @uint64_t@ values
 --
--- -   @drmFormatModifierCount@ /must/ be greater than @0@
+-- -   #VUID-VkImageDrmFormatModifierListCreateInfoEXT-drmFormatModifierCount-arraylength#
+--     @drmFormatModifierCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -530,32 +542,39 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 --
 -- == Valid Usage
 --
--- -   @drmFormatModifier@ /must/ be compatible with the parameters in
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-drmFormatModifier-02264#
+--     @drmFormatModifier@ /must/ be compatible with the parameters in
 --     'Vulkan.Core10.Image.ImageCreateInfo' and its @pNext@ chain, as
 --     determined by querying
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
 --     extended with 'PhysicalDeviceImageDrmFormatModifierInfoEXT'
 --
--- -   @drmFormatModifierPlaneCount@ /must/ be equal to the
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-drmFormatModifierPlaneCount-02265#
+--     @drmFormatModifierPlaneCount@ /must/ be equal to the
 --     'DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
 --     associated with 'Vulkan.Core10.Image.ImageCreateInfo'::@format@ and
 --     @drmFormatModifier@, as found by querying
 --     'DrmFormatModifierPropertiesListEXT'
 --
--- -   For each element of @pPlaneLayouts@, @size@ /must/ be 0
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-size-02267# For
+--     each element of @pPlaneLayouts@, @size@ /must/ be 0
 --
--- -   For each element of @pPlaneLayouts@, @arrayPitch@ /must/ be 0 if
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-arrayPitch-02268#
+--     For each element of @pPlaneLayouts@, @arrayPitch@ /must/ be 0 if
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@arrayLayers@ is 1
 --
--- -   For each element of @pPlaneLayouts@, @depthPitch@ /must/ be 0 if
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-depthPitch-02269#
+--     For each element of @pPlaneLayouts@, @depthPitch@ /must/ be 0 if
 --     'Vulkan.Core10.Image.ImageCreateInfo'::@extent.depth@ is 1
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT'
 --
--- -   If @drmFormatModifierPlaneCount@ is not @0@, @pPlaneLayouts@ /must/
+-- -   #VUID-VkImageDrmFormatModifierExplicitCreateInfoEXT-pPlaneLayouts-parameter#
+--     If @drmFormatModifierPlaneCount@ is not @0@, @pPlaneLayouts@ /must/
 --     be a valid pointer to an array of @drmFormatModifierPlaneCount@
 --     'Vulkan.Core10.Image.SubresourceLayout' structures
 --

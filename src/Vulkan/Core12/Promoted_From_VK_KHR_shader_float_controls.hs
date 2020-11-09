@@ -51,95 +51,112 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFloatControlsProperties = PhysicalDeviceFloatControlsProperties
-  { -- | @denormBehaviorIndependence@ is a
+  { -- | #extension-features-denormBehaviorIndependence#
+    -- @denormBehaviorIndependence@ is a
     -- 'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
     -- value indicating whether, and how, denorm behavior can be set
     -- independently for different bit widths.
     denormBehaviorIndependence :: ShaderFloatControlsIndependence
-  , -- | @roundingModeIndependence@ is a
+  , -- | #extension-features-roundingModeIndependence# @roundingModeIndependence@
+    -- is a
     -- 'Vulkan.Core12.Enums.ShaderFloatControlsIndependence.ShaderFloatControlsIndependence'
     -- value indicating whether, and how, rounding modes can be set
     -- independently for different bit widths.
     roundingModeIndependence :: ShaderFloatControlsIndependence
-  , -- | @shaderSignedZeroInfNanPreserveFloat16@ is a boolean value indicating
+  , -- | #extension-limits-shaderSignedZeroInfNanPreserveFloat16#
+    -- @shaderSignedZeroInfNanPreserveFloat16@ is a boolean value indicating
     -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
     -- 16-bit floating-point computations. It also indicates whether the
     -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 16-bit
     -- floating-point types.
     shaderSignedZeroInfNanPreserveFloat16 :: Bool
-  , -- | @shaderSignedZeroInfNanPreserveFloat32@ is a boolean value indicating
+  , -- | #extension-limits-shaderSignedZeroInfNanPreserveFloat32#
+    -- @shaderSignedZeroInfNanPreserveFloat32@ is a boolean value indicating
     -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
     -- 32-bit floating-point computations. It also indicates whether the
     -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 32-bit
     -- floating-point types.
     shaderSignedZeroInfNanPreserveFloat32 :: Bool
-  , -- | @shaderSignedZeroInfNanPreserveFloat64@ is a boolean value indicating
+  , -- | #extension-limits-shaderSignedZeroInfNanPreserveFloat64#
+    -- @shaderSignedZeroInfNanPreserveFloat64@ is a boolean value indicating
     -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
     -- 64-bit floating-point computations. It also indicates whether the
     -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 64-bit
     -- floating-point types.
     shaderSignedZeroInfNanPreserveFloat64 :: Bool
-  , -- | @shaderDenormPreserveFloat16@ is a boolean value indicating whether
+  , -- | #extension-limits-shaderDenormPreserveFloat16#
+    -- @shaderDenormPreserveFloat16@ is a boolean value indicating whether
     -- denormals /can/ be preserved in 16-bit floating-point computations. It
     -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
     -- for 16-bit floating-point types.
     shaderDenormPreserveFloat16 :: Bool
-  , -- | @shaderDenormPreserveFloat32@ is a boolean value indicating whether
+  , -- | #extension-limits-shaderDenormPreserveFloat32#
+    -- @shaderDenormPreserveFloat32@ is a boolean value indicating whether
     -- denormals /can/ be preserved in 32-bit floating-point computations. It
     -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
     -- for 32-bit floating-point types.
     shaderDenormPreserveFloat32 :: Bool
-  , -- | @shaderDenormPreserveFloat64@ is a boolean value indicating whether
+  , -- | #extension-limits-shaderDenormPreserveFloat64#
+    -- @shaderDenormPreserveFloat64@ is a boolean value indicating whether
     -- denormals /can/ be preserved in 64-bit floating-point computations. It
     -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
     -- for 64-bit floating-point types.
     shaderDenormPreserveFloat64 :: Bool
-  , -- | @shaderDenormFlushToZeroFloat16@ is a boolean value indicating whether
+  , -- | #extension-limits-shaderDenormFlushToZeroFloat16#
+    -- @shaderDenormFlushToZeroFloat16@ is a boolean value indicating whether
     -- denormals /can/ be flushed to zero in 16-bit floating-point
     -- computations. It also indicates whether the @DenormFlushToZero@
     -- execution mode /can/ be used for 16-bit floating-point types.
     shaderDenormFlushToZeroFloat16 :: Bool
-  , -- | @shaderDenormFlushToZeroFloat32@ is a boolean value indicating whether
+  , -- | #extension-limits-shaderDenormFlushToZeroFloat32#
+    -- @shaderDenormFlushToZeroFloat32@ is a boolean value indicating whether
     -- denormals /can/ be flushed to zero in 32-bit floating-point
     -- computations. It also indicates whether the @DenormFlushToZero@
     -- execution mode /can/ be used for 32-bit floating-point types.
     shaderDenormFlushToZeroFloat32 :: Bool
-  , -- | @shaderDenormFlushToZeroFloat64@ is a boolean value indicating whether
+  , -- | #extension-limits-shaderDenormFlushToZeroFloat64#
+    -- @shaderDenormFlushToZeroFloat64@ is a boolean value indicating whether
     -- denormals /can/ be flushed to zero in 64-bit floating-point
     -- computations. It also indicates whether the @DenormFlushToZero@
     -- execution mode /can/ be used for 64-bit floating-point types.
     shaderDenormFlushToZeroFloat64 :: Bool
-  , -- | @shaderRoundingModeRTEFloat16@ is a boolean value indicating whether an
+  , -- | #extension-limits-shaderRoundingModeRTEFloat16#
+    -- @shaderRoundingModeRTEFloat16@ is a boolean value indicating whether an
     -- implementation supports the round-to-nearest-even rounding mode for
     -- 16-bit floating-point arithmetic and conversion instructions. It also
     -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
     -- 16-bit floating-point types.
     shaderRoundingModeRTEFloat16 :: Bool
-  , -- | @shaderRoundingModeRTEFloat32@ is a boolean value indicating whether an
+  , -- | #extension-limits-shaderRoundingModeRTEFloat32#
+    -- @shaderRoundingModeRTEFloat32@ is a boolean value indicating whether an
     -- implementation supports the round-to-nearest-even rounding mode for
     -- 32-bit floating-point arithmetic and conversion instructions. It also
     -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
     -- 32-bit floating-point types.
     shaderRoundingModeRTEFloat32 :: Bool
-  , -- | @shaderRoundingModeRTEFloat64@ is a boolean value indicating whether an
+  , -- | #extension-limits-shaderRoundingModeRTEFloat64#
+    -- @shaderRoundingModeRTEFloat64@ is a boolean value indicating whether an
     -- implementation supports the round-to-nearest-even rounding mode for
     -- 64-bit floating-point arithmetic and conversion instructions. It also
     -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
     -- 64-bit floating-point types.
     shaderRoundingModeRTEFloat64 :: Bool
-  , -- | @shaderRoundingModeRTZFloat16@ is a boolean value indicating whether an
+  , -- | #extension-limits-shaderRoundingModeRTZFloat16#
+    -- @shaderRoundingModeRTZFloat16@ is a boolean value indicating whether an
     -- implementation supports the round-towards-zero rounding mode for 16-bit
     -- floating-point arithmetic and conversion instructions. It also indicates
     -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 16-bit
     -- floating-point types.
     shaderRoundingModeRTZFloat16 :: Bool
-  , -- | @shaderRoundingModeRTZFloat32@ is a boolean value indicating whether an
+  , -- | #extension-limits-shaderRoundingModeRTZFloat32#
+    -- @shaderRoundingModeRTZFloat32@ is a boolean value indicating whether an
     -- implementation supports the round-towards-zero rounding mode for 32-bit
     -- floating-point arithmetic and conversion instructions. It also indicates
     -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 32-bit
     -- floating-point types.
     shaderRoundingModeRTZFloat32 :: Bool
-  , -- | @shaderRoundingModeRTZFloat64@ is a boolean value indicating whether an
+  , -- | #extension-limits-shaderRoundingModeRTZFloat64#
+    -- @shaderRoundingModeRTZFloat64@ is a boolean value indicating whether an
     -- implementation supports the round-towards-zero rounding mode for 64-bit
     -- floating-point arithmetic and conversion instructions. It also indicates
     -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 64-bit

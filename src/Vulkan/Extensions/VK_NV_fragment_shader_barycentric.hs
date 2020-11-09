@@ -58,10 +58,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderBarycentricFeaturesNV = PhysicalDeviceFragmentShaderBarycentricFeaturesNV
-  { -- | @fragmentShaderBarycentric@ indicates that the implementation supports
-    -- the @BaryCoordNV@ and @BaryCoordNoPerspNV@ SPIR-V fragment shader
-    -- built-ins and supports the @PerVertexNV@ SPIR-V decoration on fragment
-    -- shader input variables.
+  { -- | #features-fragmentShaderBarycentric# @fragmentShaderBarycentric@
+    -- indicates that the implementation supports the @BaryCoordNV@ and
+    -- @BaryCoordNoPerspNV@ SPIR-V fragment shader built-ins and supports the
+    -- @PerVertexNV@ SPIR-V decoration on fragment shader input variables.
     fragmentShaderBarycentric :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

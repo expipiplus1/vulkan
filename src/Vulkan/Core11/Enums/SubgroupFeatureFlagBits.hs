@@ -37,35 +37,42 @@ import Vulkan.Zero (Zero)
 newtype SubgroupFeatureFlagBits = SubgroupFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- | 'SUBGROUP_FEATURE_BASIC_BIT' specifies the device will accept SPIR-V
--- shader modules containing the @GroupNonUniform@ capability.
+-- | #features-subgroup-basic# 'SUBGROUP_FEATURE_BASIC_BIT' specifies the
+-- device will accept SPIR-V shader modules containing the
+-- @GroupNonUniform@ capability.
 pattern SUBGROUP_FEATURE_BASIC_BIT = SubgroupFeatureFlagBits 0x00000001
--- | 'SUBGROUP_FEATURE_VOTE_BIT' specifies the device will accept SPIR-V
--- shader modules containing the @GroupNonUniformVote@ capability.
+-- | #features-subgroup-vote# 'SUBGROUP_FEATURE_VOTE_BIT' specifies the
+-- device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformVote@ capability.
 pattern SUBGROUP_FEATURE_VOTE_BIT = SubgroupFeatureFlagBits 0x00000002
--- | 'SUBGROUP_FEATURE_ARITHMETIC_BIT' specifies the device will accept
--- SPIR-V shader modules containing the @GroupNonUniformArithmetic@
--- capability.
+-- | #features-subgroup-arithmetic# 'SUBGROUP_FEATURE_ARITHMETIC_BIT'
+-- specifies the device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformArithmetic@ capability.
 pattern SUBGROUP_FEATURE_ARITHMETIC_BIT = SubgroupFeatureFlagBits 0x00000004
--- | 'SUBGROUP_FEATURE_BALLOT_BIT' specifies the device will accept SPIR-V
--- shader modules containing the @GroupNonUniformBallot@ capability.
+-- | #features-subgroup-ballot# 'SUBGROUP_FEATURE_BALLOT_BIT' specifies the
+-- device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformBallot@ capability.
 pattern SUBGROUP_FEATURE_BALLOT_BIT = SubgroupFeatureFlagBits 0x00000008
--- | 'SUBGROUP_FEATURE_SHUFFLE_BIT' specifies the device will accept SPIR-V
--- shader modules containing the @GroupNonUniformShuffle@ capability.
+-- | #features-subgroup-shuffle# 'SUBGROUP_FEATURE_SHUFFLE_BIT' specifies the
+-- device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformShuffle@ capability.
 pattern SUBGROUP_FEATURE_SHUFFLE_BIT = SubgroupFeatureFlagBits 0x00000010
--- | 'SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT' specifies the device will accept
+-- | #features-subgroup-shuffle-relative#
+-- 'SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT' specifies the device will accept
 -- SPIR-V shader modules containing the @GroupNonUniformShuffleRelative@
 -- capability.
 pattern SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = SubgroupFeatureFlagBits 0x00000020
--- | 'SUBGROUP_FEATURE_CLUSTERED_BIT' specifies the device will accept SPIR-V
--- shader modules containing the @GroupNonUniformClustered@ capability.
+-- | #features-subgroup-clustered# 'SUBGROUP_FEATURE_CLUSTERED_BIT' specifies
+-- the device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformClustered@ capability.
 pattern SUBGROUP_FEATURE_CLUSTERED_BIT = SubgroupFeatureFlagBits 0x00000040
--- | 'SUBGROUP_FEATURE_QUAD_BIT' specifies the device will accept SPIR-V
--- shader modules containing the @GroupNonUniformQuad@ capability.
+-- | #features-subgroup-quad# 'SUBGROUP_FEATURE_QUAD_BIT' specifies the
+-- device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformQuad@ capability.
 pattern SUBGROUP_FEATURE_QUAD_BIT = SubgroupFeatureFlagBits 0x00000080
--- | 'SUBGROUP_FEATURE_PARTITIONED_BIT_NV' specifies the device will accept
--- SPIR-V shader modules containing the @GroupNonUniformPartitionedNV@
--- capability.
+-- | #features-subgroup-partitioned# 'SUBGROUP_FEATURE_PARTITIONED_BIT_NV'
+-- specifies the device will accept SPIR-V shader modules containing the
+-- @GroupNonUniformPartitionedNV@ capability.
 pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV = SubgroupFeatureFlagBits 0x00000100
 
 type SubgroupFeatureFlags = SubgroupFeatureFlagBits

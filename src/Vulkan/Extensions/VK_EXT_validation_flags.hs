@@ -63,6 +63,7 @@ data ValidationFlagsEXT = ValidationFlagsEXT
     -- 'ValidationCheckEXT' values specifying the validation checks to be
     -- disabled.
     --
+    -- #VUID-VkValidationFlagsEXT-pDisabledValidationChecks-parameter#
     -- @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
     -- @disabledValidationCheckCount@ valid 'ValidationCheckEXT' values
     disabledValidationChecks :: Vector ValidationCheckEXT }

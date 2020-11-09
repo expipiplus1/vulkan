@@ -78,50 +78,59 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkCmdSetExclusiveScissorNV-None-02031# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor>
 --     feature /must/ be enabled
 --
--- -   The sum of @firstExclusiveScissor@ and @exclusiveScissorCount@
---     /must/ be between @1@ and
+-- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02034# The
+--     sum of @firstExclusiveScissor@ and @exclusiveScissorCount@ /must/ be
+--     between @1@ and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
--- -   If the
+-- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02035# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @firstExclusiveScissor@ /must/ be @0@
 --
--- -   If the
+-- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-02036# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @1@
 --
--- -   The @x@ and @y@ members of @offset@ in each member of
---     @pExclusiveScissors@ /must/ be greater than or equal to @0@
+-- -   #VUID-vkCmdSetExclusiveScissorNV-x-02037# The @x@ and @y@ members of
+--     @offset@ in each member of @pExclusiveScissors@ /must/ be greater
+--     than or equal to @0@
 --
--- -   Evaluation of (@offset.x@ + @extent.width@) for each member of
+-- -   #VUID-vkCmdSetExclusiveScissorNV-offset-02038# Evaluation of
+--     (@offset.x@ + @extent.width@) for each member of
 --     @pExclusiveScissors@ /must/ not cause a signed integer addition
 --     overflow
 --
--- -   Evaluation of (@offset.y@ + @extent.height@) for each member of
+-- -   #VUID-vkCmdSetExclusiveScissorNV-offset-02039# Evaluation of
+--     (@offset.y@ + @extent.height@) for each member of
 --     @pExclusiveScissors@ /must/ not cause a signed integer addition
 --     overflow
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pExclusiveScissors@ /must/ be a valid pointer to an array of
+-- -   #VUID-vkCmdSetExclusiveScissorNV-pExclusiveScissors-parameter#
+--     @pExclusiveScissors@ /must/ be a valid pointer to an array of
 --     @exclusiveScissorCount@ 'Vulkan.Core10.FundamentalTypes.Rect2D'
 --     structures
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetExclusiveScissorNV-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
--- -   @exclusiveScissorCount@ /must/ be greater than @0@
+-- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-arraylength#
+--     @exclusiveScissorCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -198,8 +207,8 @@ cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors =
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExclusiveScissorFeaturesNV = PhysicalDeviceExclusiveScissorFeaturesNV
-  { -- | @exclusiveScissor@ indicates that the implementation supports the
-    -- exclusive scissor test.
+  { -- | #features-exclusiveScissor# @exclusiveScissor@ indicates that the
+    -- implementation supports the exclusive scissor test.
     exclusiveScissor :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -257,20 +266,24 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 --
 -- == Valid Usage
 --
--- -   If the
+-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02027#
+--     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @0@ or @1@
 --
--- -   @exclusiveScissorCount@ /must/ be less than or equal to
+-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02028#
+--     @exclusiveScissorCount@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
 --
--- -   @exclusiveScissorCount@ /must/ be @0@ or greater than or equal to
+-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02029#
+--     @exclusiveScissorCount@ /must/ be @0@ or greater than or equal to
 --     the @viewportCount@ member of
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-sType-sType#
+--     @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'
 --
 -- = See Also

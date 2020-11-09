@@ -45,8 +45,9 @@ newtype SamplerCreateFlagBits = SamplerCreateFlagBits Flags
 -- the implementation /may/ use approximations when reconstructing a full
 -- color value for texture access from a subsampled image.
 pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = SamplerCreateFlagBits 0x00000002
--- | 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT' specifies that the sampler will read
--- from an image created with @flags@ containing
+-- | #samplers-subsamplesampler# 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
+-- specifies that the sampler will read from an image created with @flags@
+-- containing
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
 pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = SamplerCreateFlagBits 0x00000001
 

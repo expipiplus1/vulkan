@@ -38,11 +38,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
-  { -- | @shaderImageInt64Atomics@ indicates whether shaders /can/ support 64-bit
-    -- unsigned and signed integer atomic operations on images.
+  { -- | #features-shaderImageInt64Atomics# @shaderImageInt64Atomics@ indicates
+    -- whether shaders /can/ support 64-bit unsigned and signed integer atomic
+    -- operations on images.
     shaderImageInt64Atomics :: Bool
-  , -- | @sparseImageInt64Atomics@ indicates whether 64-bit integer atomics /can/
-    -- be used on sparse images.
+  , -- | #features-sparseImageInt64Atomics# @sparseImageInt64Atomics@ indicates
+    -- whether 64-bit integer atomics /can/ be used on sparse images.
     sparseImageInt64Atomics :: Bool
   }
   deriving (Typeable, Eq)

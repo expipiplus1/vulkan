@@ -121,11 +121,13 @@ getSemaphoreWin32HandleKHR :: forall io
                            => -- | @device@ is the logical device that created the semaphore being
                               -- exported.
                               --
-                              -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                              -- #VUID-vkGetSemaphoreWin32HandleKHR-device-parameter# @device@ /must/ be
+                              -- a valid 'Vulkan.Core10.Handles.Device' handle
                               Device
                            -> -- | @pGetWin32HandleInfo@ is a pointer to a 'SemaphoreGetWin32HandleInfoKHR'
                               -- structure containing parameters of the export operation.
                               --
+                              -- #VUID-vkGetSemaphoreWin32HandleKHR-pGetWin32HandleInfo-parameter#
                               -- @pGetWin32HandleInfo@ /must/ be a valid pointer to a valid
                               -- 'SemaphoreGetWin32HandleInfoKHR' structure
                               SemaphoreGetWin32HandleInfoKHR
@@ -183,12 +185,14 @@ importSemaphoreWin32HandleKHR :: forall io
                                . (MonadIO io)
                               => -- | @device@ is the logical device that created the semaphore.
                                  --
-                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 -- #VUID-vkImportSemaphoreWin32HandleKHR-device-parameter# @device@ /must/
+                                 -- be a valid 'Vulkan.Core10.Handles.Device' handle
                                  Device
                               -> -- | @pImportSemaphoreWin32HandleInfo@ is a pointer to a
                                  -- 'ImportSemaphoreWin32HandleInfoKHR' structure specifying the semaphore
                                  -- and import parameters.
                                  --
+                                 -- #VUID-vkImportSemaphoreWin32HandleKHR-pImportSemaphoreWin32HandleInfo-parameter#
                                  -- @pImportSemaphoreWin32HandleInfo@ /must/ be a valid pointer to a valid
                                  -- 'ImportSemaphoreWin32HandleInfoKHR' structure
                                  ImportSemaphoreWin32HandleInfoKHR
@@ -224,34 +228,42 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ be a value included in the
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01140#
+--     @handleType@ /must/ be a value included in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphore-handletypes-win32 Handle Types Supported by >
 --     table
 --
--- -   If @handleType@ is not
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01466# If
+--     @handleType@ is not
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --     or
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT',
 --     @name@ /must/ be @NULL@
 --
--- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
---     name a valid synchronization primitive of the type specified by
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01467# If
+--     @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/ name a
+--     valid synchronization primitive of the type specified by
 --     @handleType@
 --
--- -   If @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be
---     a valid handle of the type specified by @handleType@
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-01468# If
+--     @handleType@ is not @0@ and @name@ is @NULL@, @handle@ /must/ be a
+--     valid handle of the type specified by @handleType@
 --
--- -   If @handle@ is not @NULL@, @name@ /must/ be @NULL@
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handle-01469# If @handle@
+--     is not @NULL@, @name@ /must/ be @NULL@
 --
--- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
---     for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
---
--- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handle-01542# If @handle@
+--     is not @NULL@, it /must/ obey any requirements listed for
 --     @handleType@ in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
--- -   If @handleType@ is
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-name-01543# If @name@ is
+--     not @NULL@, it /must/ obey any requirements listed for @handleType@
+--     in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
+--
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-03261# If
+--     @handleType@ is
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --     or
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
@@ -259,7 +271,8 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     field /must/ match that of the semaphore from which @handle@ or
 --     @name@ was exported
 --
--- -   If @handleType@ is
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-03262# If
+--     @handleType@ is
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --     or
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
@@ -268,7 +281,8 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --     field /must/ match that of the semaphore from which @handle@ or
 --     @name@ was exported
 --
--- -   If @flags@ contains
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-flags-03322# If @flags@
+--     contains
 --     'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SEMAPHORE_IMPORT_TEMPORARY_BIT',
 --     the
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
@@ -278,19 +292,24 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-pNext-pNext# @pNext@
+--     /must/ be @NULL@
 --
--- -   @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore'
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-semaphore-parameter#
+--     @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore'
 --     handle
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-flags-parameter# @flags@
+--     /must/ be a valid combination of
 --     'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlagBits'
 --     values
 --
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+-- -   #VUID-VkImportSemaphoreWin32HandleInfoKHR-handleType-parameter# If
+--     @handleType@ is not @0@, @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
 --     value
 --
@@ -412,7 +431,7 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- == Valid Usage
 --
--- -   If
+-- -   #VUID-VkExportSemaphoreWin32HandleInfoKHR-handleTypes-01125# If
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'::@handleTypes@
 --     does not include
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
@@ -423,11 +442,13 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkExportSemaphoreWin32HandleInfoKHR-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR'
 --
--- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-VkExportSemaphoreWin32HandleInfoKHR-pAttributes-parameter# If
+--     @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid pointer
+--     to a valid
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
 --     value
 --
@@ -524,26 +545,30 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @waitSemaphoreValuesCount@ /must/ be the same value as
+-- -   #VUID-VkD3D12FenceSubmitInfoKHR-waitSemaphoreValuesCount-00079#
+--     @waitSemaphoreValuesCount@ /must/ be the same value as
 --     'Vulkan.Core10.Queue.SubmitInfo'::@waitSemaphoreCount@, where
 --     'Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@ chain of this
 --     'D3D12FenceSubmitInfoKHR' structure
 --
--- -   @signalSemaphoreValuesCount@ /must/ be the same value as
+-- -   #VUID-VkD3D12FenceSubmitInfoKHR-signalSemaphoreValuesCount-00080#
+--     @signalSemaphoreValuesCount@ /must/ be the same value as
 --     'Vulkan.Core10.Queue.SubmitInfo'::@signalSemaphoreCount@, where
 --     'Vulkan.Core10.Queue.SubmitInfo' is in the @pNext@ chain of this
 --     'D3D12FenceSubmitInfoKHR' structure
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkD3D12FenceSubmitInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR'
 --
--- -   If @waitSemaphoreValuesCount@ is not @0@, and @pWaitSemaphoreValues@
---     is not @NULL@, @pWaitSemaphoreValues@ /must/ be a valid pointer to
---     an array of @waitSemaphoreValuesCount@ @uint64_t@ values
+-- -   #VUID-VkD3D12FenceSubmitInfoKHR-pWaitSemaphoreValues-parameter# If
+--     @waitSemaphoreValuesCount@ is not @0@, and @pWaitSemaphoreValues@ is
+--     not @NULL@, @pWaitSemaphoreValues@ /must/ be a valid pointer to an
+--     array of @waitSemaphoreValuesCount@ @uint64_t@ values
 --
--- -   If @signalSemaphoreValuesCount@ is not @0@, and
+-- -   #VUID-VkD3D12FenceSubmitInfoKHR-pSignalSemaphoreValues-parameter# If
+--     @signalSemaphoreValuesCount@ is not @0@, and
 --     @pSignalSemaphoreValues@ is not @NULL@, @pSignalSemaphoreValues@
 --     /must/ be a valid pointer to an array of
 --     @signalSemaphoreValuesCount@ @uint64_t@ values
@@ -651,46 +676,55 @@ instance Zero D3D12FenceSubmitInfoKHR where
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ have been included in
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01126#
+--     @handleType@ /must/ have been included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'::@handleTypes@
 --     when the @semaphore@’s current payload was created
 --
--- -   If @handleType@ is defined as an NT handle,
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01127# If
+--     @handleType@ is defined as an NT handle,
 --     'getSemaphoreWin32HandleKHR' /must/ be called no more than once for
 --     each valid unique combination of @semaphore@ and @handleType@
 --
--- -   @semaphore@ /must/ not currently have its payload replaced by an
---     imported payload as described below in
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-semaphore-01128# @semaphore@
+--     /must/ not currently have its payload replaced by an imported
+--     payload as described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@
 --
--- -   If @handleType@ refers to a handle type with copy payload
---     transference semantics, as defined below in
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01129# If
+--     @handleType@ refers to a handle type with copy payload transference
+--     semantics, as defined below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 --     there /must/ be no queue waiting on @semaphore@
 --
--- -   If @handleType@ refers to a handle type with copy payload
---     transference semantics, @semaphore@ /must/ be signaled, or have an
---     associated
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01130# If
+--     @handleType@ refers to a handle type with copy payload transference
+--     semantics, @semaphore@ /must/ be signaled, or have an associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     pending execution
 --
--- -   @handleType@ /must/ be defined as an NT handle or a global share
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-01131#
+--     @handleType@ /must/ be defined as an NT handle or a global share
 --     handle
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-pNext-pNext# @pNext@ /must/
+--     be @NULL@
 --
--- -   @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore'
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-semaphore-parameter#
+--     @semaphore@ /must/ be a valid 'Vulkan.Core10.Handles.Semaphore'
 --     handle
 --
--- -   @handleType@ /must/ be a valid
+-- -   #VUID-VkSemaphoreGetWin32HandleInfoKHR-handleType-parameter#
+--     @handleType@ /must/ be a valid
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
 --     value
 --

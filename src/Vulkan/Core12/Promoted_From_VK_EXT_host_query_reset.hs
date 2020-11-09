@@ -63,33 +63,36 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The
+-- -   #VUID-vkResetQueryPool-None-02665# The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>
 --     feature /must/ be enabled
 --
--- -   @firstQuery@ /must/ be less than the number of queries in
---     @queryPool@
+-- -   #VUID-vkResetQueryPool-firstQuery-02666# @firstQuery@ /must/ be less
+--     than the number of queries in @queryPool@
 --
--- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in @queryPool@
+-- -   #VUID-vkResetQueryPool-firstQuery-02667# The sum of @firstQuery@ and
+--     @queryCount@ /must/ be less than or equal to the number of queries
+--     in @queryPool@
 --
--- -   Submitted commands that refer to the range specified by @firstQuery@
---     and @queryCount@ in @queryPool@ /must/ have completed execution
+-- -   #VUID-vkResetQueryPool-firstQuery-02741# Submitted commands that
+--     refer to the range specified by @firstQuery@ and @queryCount@ in
+--     @queryPool@ /must/ have completed execution
 --
--- -   The range of queries specified by @firstQuery@ and @queryCount@ in
---     @queryPool@ /must/ not be in use by calls to
---     'Vulkan.Core10.Query.getQueryPoolResults' or 'resetQueryPool' in
---     other threads
+-- -   #VUID-vkResetQueryPool-firstQuery-02742# The range of queries
+--     specified by @firstQuery@ and @queryCount@ in @queryPool@ /must/ not
+--     be in use by calls to 'Vulkan.Core10.Query.getQueryPoolResults' or
+--     'resetQueryPool' in other threads
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkResetQueryPool-device-parameter# @device@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Device' handle
 --
--- -   @queryPool@ /must/ be a valid 'Vulkan.Core10.Handles.QueryPool'
---     handle
+-- -   #VUID-vkResetQueryPool-queryPool-parameter# @queryPool@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   @queryPool@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkResetQueryPool-queryPool-parent# @queryPool@ /must/ have
+--     been created, allocated, or retrieved from @device@
 --
 -- = See Also
 --
@@ -140,8 +143,9 @@ resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceHostQueryResetFeatures = PhysicalDeviceHostQueryResetFeatures
-  { -- | @hostQueryReset@ indicates that the implementation supports resetting
-    -- queries from the host with 'resetQueryPool'.
+  { -- | #extension-features-hostQueryReset# @hostQueryReset@ indicates that the
+    -- implementation supports resetting queries from the host with
+    -- 'resetQueryPool'.
     hostQueryReset :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

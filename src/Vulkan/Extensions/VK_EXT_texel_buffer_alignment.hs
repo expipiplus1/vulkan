@@ -57,9 +57,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentFeaturesEXT = PhysicalDeviceTexelBufferAlignmentFeaturesEXT
-  { -- | @texelBufferAlignment@ indicates whether the implementation uses more
-    -- specific alignment requirements advertised in
-    -- 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT' rather than
+  { -- | #features-texelBufferAlignment# @texelBufferAlignment@ indicates whether
+    -- the implementation uses more specific alignment requirements advertised
+    -- in 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT' rather than
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
     texelBufferAlignment :: Bool }
   deriving (Typeable, Eq)
@@ -140,16 +140,20 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentPropertiesEXT = PhysicalDeviceTexelBufferAlignmentPropertiesEXT
-  { -- | @storageTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
+  { -- | #limits-storageTexelBufferOffsetAlignmentBytes#
+    -- @storageTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
     -- sufficient for a storage texel buffer of any format.
     storageTexelBufferOffsetAlignmentBytes :: DeviceSize
-  , -- | @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
+  , -- | #limits-storageTexelBufferOffsetSingleTexelAlignment#
+    -- @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a storage texel buffer of any format.
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
-  , -- | @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
+  , -- | #limits-uniformTexelBufferOffsetAlignmentBytes#
+    -- @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
     -- sufficient for a uniform texel buffer of any format.
     uniformTexelBufferOffsetAlignmentBytes :: DeviceSize
-  , -- | @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
+  , -- | #limits-uniformTexelBufferOffsetSingleTexelAlignment#
+    -- @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a uniform texel buffer of any format.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }

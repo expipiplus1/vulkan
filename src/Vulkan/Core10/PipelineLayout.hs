@@ -74,16 +74,19 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkCreatePipelineLayout-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'PipelineLayoutCreateInfo' structure
+-- -   #VUID-vkCreatePipelineLayout-pCreateInfo-parameter# @pCreateInfo@
+--     /must/ be a valid pointer to a valid 'PipelineLayoutCreateInfo'
+--     structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkCreatePipelineLayout-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   @pPipelineLayout@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreatePipelineLayout-pPipelineLayout-parameter#
+--     @pPipelineLayout@ /must/ be a valid pointer to a
 --     'Vulkan.Core10.Handles.PipelineLayout' handle
 --
 -- == Return Codes
@@ -155,32 +158,38 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-00299# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @pipelineLayout@ was created, a compatible set of
 --     callbacks /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-00300# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @pipelineLayout@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- -   @pipelineLayout@ /must/ not have been passed to any @vkCmd*@ command
---     for any command buffers that are still in the
+-- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-02004# @pipelineLayout@
+--     /must/ not have been passed to any @vkCmd*@ command for any command
+--     buffers that are still in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --     when 'destroyPipelineLayout' is called
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkDestroyPipelineLayout-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @pipelineLayout@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-parameter# If
+--     @pipelineLayout@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pipelineLayout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroyPipelineLayout-pAllocator-parameter# If @pAllocator@
+--     is not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @pipelineLayout@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-parent# If
+--     @pipelineLayout@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -229,26 +238,30 @@ data PushConstantRange = PushConstantRange
     -- constants from the corresponding shader stage will return undefined
     -- values.
     --
-    -- @stageFlags@ /must/ be a valid combination of
+    -- #VUID-VkPushConstantRange-stageFlags-parameter# @stageFlags@ /must/ be a
+    -- valid combination of
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' values
     --
-    -- @stageFlags@ /must/ not be @0@
+    -- #VUID-VkPushConstantRange-stageFlags-requiredbitmask# @stageFlags@
+    -- /must/ not be @0@
     stageFlags :: ShaderStageFlags
   , -- | @offset@ and @size@ are the start offset and size, respectively,
     -- consumed by the range. Both @offset@ and @size@ are in units of bytes
     -- and /must/ be a multiple of 4. The layout of the push constant variables
     -- is specified in the shader.
     --
-    -- @offset@ /must/ be less than
+    -- #VUID-VkPushConstantRange-offset-00294# @offset@ /must/ be less than
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPushConstantsSize@
     --
-    -- @offset@ /must/ be a multiple of @4@
+    -- #VUID-VkPushConstantRange-offset-00295# @offset@ /must/ be a multiple of
+    -- @4@
     offset :: Word32
-  , -- | @size@ /must/ be greater than @0@
+  , -- | #VUID-VkPushConstantRange-size-00296# @size@ /must/ be greater than @0@
     --
-    -- @size@ /must/ be a multiple of @4@
+    -- #VUID-VkPushConstantRange-size-00297# @size@ /must/ be a multiple of @4@
     --
-    -- @size@ /must/ be less than or equal to
+    -- #VUID-VkPushConstantRange-size-00298# @size@ /must/ be less than or
+    -- equal to
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPushConstantsSize@
     -- minus @offset@
     size :: Word32
@@ -300,11 +313,12 @@ instance Zero PushConstantRange where
 --
 -- == Valid Usage
 --
--- -   @setLayoutCount@ /must/ be less than or equal to
+-- -   #VUID-VkPipelineLayoutCreateInfo-setLayoutCount-00286#
+--     @setLayoutCount@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxBoundDescriptorSets@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03016# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' and
@@ -313,8 +327,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorSamplers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03017# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
@@ -324,8 +338,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorUniformBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03018# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
@@ -335,8 +349,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorStorageBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03019# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -347,8 +361,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorSampledImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03020# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
@@ -358,8 +372,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorStorageImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03021# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
@@ -367,8 +381,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorInputAttachments@
 --
--- -   The total number of bindings in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02214# The total
+--     number of bindings in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
@@ -376,14 +390,16 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxPerStageDescriptorInlineUniformBlocks@
 --
--- -   The total number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03022# The total
+--     number of descriptors with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindSamplers@
 --
--- -   The total number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03023# The total
+--     number of descriptors with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -391,7 +407,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindUniformBuffers@
 --
--- -   The total number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03024# The total
+--     number of descriptors with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
@@ -399,7 +416,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindStorageBuffers@
 --
--- -   The total number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03025# The total
+--     number of descriptors with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -408,7 +426,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindSampledImages@
 --
--- -   The total number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03026# The total
+--     number of descriptors with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -416,20 +435,22 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindStorageImages@
 --
--- -   The total number of descriptors with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03027# The total
+--     number of descriptors with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindInputAttachments@
 --
--- -   The total number of bindings with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02215# The total
+--     number of bindings with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03028# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' and
@@ -438,8 +459,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetSamplers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03029# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
@@ -447,8 +468,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetUniformBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03030# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -456,8 +477,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetUniformBuffersDynamic@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03031# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
@@ -465,8 +486,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetStorageBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03032# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
@@ -474,8 +495,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetStorageBuffersDynamic@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03033# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -486,8 +507,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetSampledImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03034# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
@@ -497,8 +518,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetStorageImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03035# The total
+--     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
@@ -506,8 +527,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxDescriptorSetInputAttachments@
 --
--- -   The total number of bindings in descriptor set layouts created
---     without the
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02216# The total
+--     number of bindings in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
@@ -515,38 +536,44 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxDescriptorSetInlineUniformBlocks@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03036# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindSamplers@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03037# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindUniformBuffers@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03038# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03039# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindStorageBuffers@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03040# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03041# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -555,7 +582,8 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindSampledImages@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03042# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -563,34 +591,39 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindStorageImages@
 --
--- -   The total number of descriptors of the type
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03043# The total number
+--     of descriptors of the type
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindInputAttachments@
 --
--- -   The total number of bindings with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02217# The total
+--     number of bindings with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxDescriptorSetUpdateAfterBindInlineUniformBlocks@
 --
--- -   Any two elements of @pPushConstantRanges@ /must/ not include the
---     same stage in @stageFlags@
+-- -   #VUID-VkPipelineLayoutCreateInfo-pPushConstantRanges-00292# Any two
+--     elements of @pPushConstantRanges@ /must/ not include the same stage
+--     in @stageFlags@
 --
--- -   @pSetLayouts@ /must/ not contain more than one descriptor set layout
---     that was created with
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00293# @pSetLayouts@
+--     /must/ not contain more than one descriptor set layout that was
+--     created with
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --     set
 --
--- -   The total number of bindings with a @descriptorType@ of
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02381# The total
+--     number of bindings with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_KHR_ray_tracing.PhysicalDeviceRayTracingPropertiesKHR'::@maxDescriptorSetAccelerationStructures@
 --
--- -   The total number of @pImmutableSamplers@ created with @flags@
---     containing
+-- -   #VUID-VkPipelineLayoutCreateInfo-pImmutableSamplers-03566# The total
+--     number of @pImmutableSamplers@ created with @flags@ containing
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
 --     or
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
@@ -600,19 +633,23 @@ instance Zero PushConstantRange where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPipelineLayoutCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkPipelineLayoutCreateInfo-pNext-pNext# @pNext@ /must/ be
+--     @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   #VUID-VkPipelineLayoutCreateInfo-flags-zerobitmask# @flags@ /must/
+--     be @0@
 --
--- -   If @setLayoutCount@ is not @0@, @pSetLayouts@ /must/ be a valid
---     pointer to an array of @setLayoutCount@ valid
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-parameter# If
+--     @setLayoutCount@ is not @0@, @pSetLayouts@ /must/ be a valid pointer
+--     to an array of @setLayoutCount@ valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' handles
 --
--- -   If @pushConstantRangeCount@ is not @0@, @pPushConstantRanges@ /must/
---     be a valid pointer to an array of @pushConstantRangeCount@ valid
+-- -   #VUID-VkPipelineLayoutCreateInfo-pPushConstantRanges-parameter# If
+--     @pushConstantRangeCount@ is not @0@, @pPushConstantRanges@ /must/ be
+--     a valid pointer to an array of @pushConstantRangeCount@ valid
 --     'PushConstantRange' structures
 --
 -- = See Also

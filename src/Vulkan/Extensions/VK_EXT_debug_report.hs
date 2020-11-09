@@ -146,16 +146,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkCreateDebugReportCallbackEXT-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCreateDebugReportCallbackEXT-pCreateInfo-parameter#
+--     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DebugReportCallbackCreateInfoEXT' structure
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkCreateDebugReportCallbackEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pCallback@ /must/ be a valid pointer to a
+-- -   #VUID-vkCreateDebugReportCallbackEXT-pCallback-parameter#
+--     @pCallback@ /must/ be a valid pointer to a
 --     'Vulkan.Extensions.Handles.DebugReportCallbackEXT' handle
 --
 -- == Return Codes
@@ -227,27 +231,33 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDebugReportCallbackEXT-instance-01242# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @callback@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroyDebugReportCallbackEXT-instance-01243# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @callback@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkDestroyDebugReportCallbackEXT-instance-parameter# @instance@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   If @callback@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkDestroyDebugReportCallbackEXT-callback-parameter# If
+--     @callback@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @callback@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.DebugReportCallbackEXT' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
+-- -   #VUID-vkDestroyDebugReportCallbackEXT-pAllocator-parameter# If
+--     @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid pointer
+--     to a valid 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @callback@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @instance@
+-- -   #VUID-vkDestroyDebugReportCallbackEXT-callback-parent# If @callback@
+--     is a valid handle, it /must/ have been created, allocated, or
+--     retrieved from @instance@
 --
 -- == Host Synchronization
 --
@@ -303,29 +313,35 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @object@ /must/ be a Vulkan object or
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+-- -   #VUID-vkDebugReportMessageEXT-object-01241# @object@ /must/ be a
+--     Vulkan object or 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If @objectType@ is not 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT' and
---     @object@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @object@
---     /must/ be a Vulkan object of the corresponding type associated with
---     @objectType@ as defined in
+-- -   #VUID-vkDebugReportMessageEXT-objectType-01498# If @objectType@ is
+--     not 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT' and @object@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @object@ /must/ be a
+--     Vulkan object of the corresponding type associated with @objectType@
+--     as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkDebugReportMessageEXT-instance-parameter# @instance@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   @flags@ /must/ be a valid combination of 'DebugReportFlagBitsEXT'
---     values
+-- -   #VUID-vkDebugReportMessageEXT-flags-parameter# @flags@ /must/ be a
+--     valid combination of 'DebugReportFlagBitsEXT' values
 --
--- -   @flags@ /must/ not be @0@
+-- -   #VUID-vkDebugReportMessageEXT-flags-requiredbitmask# @flags@ /must/
+--     not be @0@
 --
--- -   @objectType@ /must/ be a valid 'DebugReportObjectTypeEXT' value
+-- -   #VUID-vkDebugReportMessageEXT-objectType-parameter# @objectType@
+--     /must/ be a valid 'DebugReportObjectTypeEXT' value
 --
--- -   @pLayerPrefix@ /must/ be a null-terminated UTF-8 string
+-- -   #VUID-vkDebugReportMessageEXT-pLayerPrefix-parameter# @pLayerPrefix@
+--     /must/ be a null-terminated UTF-8 string
 --
--- -   @pMessage@ /must/ be a null-terminated UTF-8 string
+-- -   #VUID-vkDebugReportMessageEXT-pMessage-parameter# @pMessage@ /must/
+--     be a null-terminated UTF-8 string
 --
 -- = See Also
 --
@@ -413,10 +429,12 @@ data DebugReportCallbackCreateInfoEXT = DebugReportCallbackCreateInfoEXT
   { -- | @flags@ is a bitmask of 'DebugReportFlagBitsEXT' specifying which
     -- event(s) will cause this callback to be called.
     --
-    -- @flags@ /must/ be a valid combination of 'DebugReportFlagBitsEXT' values
+    -- #VUID-VkDebugReportCallbackCreateInfoEXT-flags-parameter# @flags@ /must/
+    -- be a valid combination of 'DebugReportFlagBitsEXT' values
     flags :: DebugReportFlagsEXT
   , -- | @pfnCallback@ is the application callback function to call.
     --
+    -- #VUID-VkDebugReportCallbackCreateInfoEXT-pfnCallback-parameter#
     -- @pfnCallback@ /must/ be a valid 'PFN_vkDebugReportCallbackEXT' value
     pfnCallback :: PFN_vkDebugReportCallbackEXT
   , -- | @pUserData@ is user data to be passed to the callback.

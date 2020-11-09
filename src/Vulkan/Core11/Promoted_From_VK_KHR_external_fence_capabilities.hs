@@ -72,6 +72,7 @@ getPhysicalDeviceExternalFenceProperties :: forall io
                                          => -- | @physicalDevice@ is the physical device from which to query the fence
                                             -- capabilities.
                                             --
+                                            -- #VUID-vkGetPhysicalDeviceExternalFenceProperties-physicalDevice-parameter#
                                             -- @physicalDevice@ /must/ be a valid
                                             -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                             PhysicalDevice
@@ -79,6 +80,7 @@ getPhysicalDeviceExternalFenceProperties :: forall io
                                             -- structure describing the parameters that would be consumed by
                                             -- 'Vulkan.Core10.Fence.createFence'.
                                             --
+                                            -- #VUID-vkGetPhysicalDeviceExternalFenceProperties-pExternalFenceInfo-parameter#
                                             -- @pExternalFenceInfo@ /must/ be a valid pointer to a valid
                                             -- 'PhysicalDeviceExternalFenceInfo' structure
                                             PhysicalDeviceExternalFenceInfo
@@ -125,6 +127,7 @@ data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
     -- value indicating an external fence handle type for which capabilities
     -- will be returned.
     --
+    -- #VUID-VkPhysicalDeviceExternalFenceInfo-handleType-parameter#
     -- @handleType@ /must/ be a valid
     -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
     -- value

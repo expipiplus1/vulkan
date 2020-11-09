@@ -61,8 +61,8 @@ pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED_EXT
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePipelineCreationCacheControlFeaturesEXT = PhysicalDevicePipelineCreationCacheControlFeaturesEXT
-  { -- | @pipelineCreationCacheControl@ indicates that the implementation
-    -- supports:
+  { -- | #features-pipelineCreationCacheControl# @pipelineCreationCacheControl@
+    -- indicates that the implementation supports:
     --
     -- -   The following /can/ be used in @Vk*PipelineCreateInfo@::@flags@:
     --

@@ -60,12 +60,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DES
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
-  { -- | @inlineUniformBlock@ indicates whether the implementation supports
-    -- inline uniform block descriptors. If this feature is not enabled,
+  { -- | #features-inlineUniformBlock# @inlineUniformBlock@ indicates whether the
+    -- implementation supports inline uniform block descriptors. If this
+    -- feature is not enabled,
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
     -- /must/ not be used.
     inlineUniformBlock :: Bool
-  , -- | @descriptorBindingInlineUniformBlockUpdateAfterBind@ indicates whether
+  , -- | #features-descriptorBindingInlineUniformBlockUpdateAfterBind#
+    -- @descriptorBindingInlineUniformBlockUpdateAfterBind@ indicates whether
     -- the implementation supports updating inline uniform block descriptors
     -- after a set is bound. If this feature is not enabled,
     -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
@@ -137,19 +139,22 @@ instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
-  { -- | @maxInlineUniformBlockSize@ is the maximum size in bytes of an
+  { -- | #limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@ is the
+    -- maximum size in bytes of an
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
     -- binding.
     maxInlineUniformBlockSize :: Word32
   , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorInlineUniformBlocks"
     maxPerStageDescriptorInlineUniformBlocks :: Word32
-  , -- | @maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@ is similar to
+  , -- | #limits-maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks#
+    -- @maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@ is similar to
     -- @maxPerStageDescriptorInlineUniformBlocks@ but counts descriptor
     -- bindings from descriptor sets created with or without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set.
     maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks :: Word32
-  , -- | @maxDescriptorSetInlineUniformBlocks@ is the maximum number of inline
+  , -- | #limits-maxDescriptorSetInlineUniformBlocks#
+    -- @maxDescriptorSetInlineUniformBlocks@ is the maximum number of inline
     -- uniform block bindings that /can/ be included in descriptor bindings in
     -- a pipeline layout across all pipeline shader stages and descriptor set
     -- numbers. Descriptor bindings with a descriptor type of
@@ -159,7 +164,8 @@ data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniform
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit.
     maxDescriptorSetInlineUniformBlocks :: Word32
-  , -- | @maxDescriptorSetUpdateAfterBindInlineUniformBlocks@ is similar to
+  , -- | #limits-maxDescriptorSetUpdateAfterBindInlineUniformBlocks#
+    -- @maxDescriptorSetUpdateAfterBindInlineUniformBlocks@ is similar to
     -- @maxDescriptorSetInlineUniformBlocks@ but counts descriptor bindings
     -- from descriptor sets created with or without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
@@ -232,14 +238,17 @@ data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBl
   { -- | @dataSize@ is the number of bytes of inline uniform block data pointed
     -- to by @pData@.
     --
+    -- #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-dataSize-02222#
     -- @dataSize@ /must/ be an integer multiple of @4@
     --
+    -- #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-dataSize-arraylength#
     -- @dataSize@ /must/ be greater than @0@
     dataSize :: Word32
   , -- | @pData@ is a pointer to @dataSize@ number of bytes of data to write to
     -- the inline uniform block.
     --
-    -- @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+    -- #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-pData-parameter# @pData@
+    -- /must/ be a valid pointer to an array of @dataSize@ bytes
     data' :: Ptr ()
   }
   deriving (Typeable)

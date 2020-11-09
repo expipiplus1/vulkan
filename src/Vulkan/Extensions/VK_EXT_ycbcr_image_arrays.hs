@@ -54,8 +54,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceYcbcrImageArraysFeaturesEXT = PhysicalDeviceYcbcrImageArraysFeaturesEXT
-  { -- | @ycbcrImageArrays@ indicates that the implementation supports creating
-    -- images with a format that requires
+  { -- | #features-ycbcrImageArrays# @ycbcrImageArrays@ indicates that the
+    -- implementation supports creating images with a format that requires
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Y′CBCR conversion>
     -- and has multiple array layers.
     ycbcrImageArrays :: Bool }

@@ -167,11 +167,13 @@ initializePerformanceApiINTEL :: forall io
                                . (MonadIO io)
                               => -- | @device@ is the logical device used for the queries.
                                  --
-                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 -- #VUID-vkInitializePerformanceApiINTEL-device-parameter# @device@ /must/
+                                 -- be a valid 'Vulkan.Core10.Handles.Device' handle
                                  Device
                               -> -- | @pInitializeInfo@ is a pointer to a 'InitializePerformanceApiInfoINTEL'
                                  -- structure specifying initialization parameters.
                                  --
+                                 -- #VUID-vkInitializePerformanceApiINTEL-pInitializeInfo-parameter#
                                  -- @pInitializeInfo@ /must/ be a valid pointer to a valid
                                  -- 'InitializePerformanceApiInfoINTEL' structure
                                  ("initializeInfo" ::: InitializePerformanceApiInfoINTEL)
@@ -205,7 +207,8 @@ uninitializePerformanceApiINTEL :: forall io
                                  . (MonadIO io)
                                 => -- | @device@ is the logical device used for the queries.
                                    --
-                                   -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                   -- #VUID-vkUninitializePerformanceApiINTEL-device-parameter# @device@
+                                   -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                    Device
                                 -> io ()
 uninitializePerformanceApiINTEL device = liftIO $ do
@@ -233,16 +236,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetPerformanceMarkerINTEL-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdSetPerformanceMarkerINTEL-pMarkerInfo-parameter#
+--     @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceMarkerInfoINTEL' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetPerformanceMarkerINTEL-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetPerformanceMarkerINTEL-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, compute, or transfer
 --     operations
 --
@@ -308,16 +315,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-pMarkerInfo-parameter#
+--     @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceStreamMarkerInfoINTEL' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetPerformanceStreamMarkerINTEL-commandBuffer-cmdpool#
+--     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, compute, or transfer
 --     operations
 --
@@ -384,22 +395,27 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pOverrideInfo@ /must/ not be used with a
+-- -   #VUID-vkCmdSetPerformanceOverrideINTEL-pOverrideInfo-02736#
+--     @pOverrideInfo@ /must/ not be used with a
 --     'PerformanceOverrideTypeINTEL' that is not reported available by
 --     'getPerformanceParameterINTEL'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid
+-- -   #VUID-vkCmdSetPerformanceOverrideINTEL-commandBuffer-parameter#
+--     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pOverrideInfo@ /must/ be a valid pointer to a valid
+-- -   #VUID-vkCmdSetPerformanceOverrideINTEL-pOverrideInfo-parameter#
+--     @pOverrideInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceOverrideInfoINTEL' structure
 --
--- -   @commandBuffer@ /must/ be in the
+-- -   #VUID-vkCmdSetPerformanceOverrideINTEL-commandBuffer-recording#
+--     @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+-- -   #VUID-vkCmdSetPerformanceOverrideINTEL-commandBuffer-cmdpool# The
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, compute, or transfer
 --     operations
 --
@@ -487,12 +503,14 @@ acquirePerformanceConfigurationINTEL :: forall io
                                      => -- | @device@ is the logical device that the performance query commands will
                                         -- be submitted to.
                                         --
-                                        -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                        -- #VUID-vkAcquirePerformanceConfigurationINTEL-device-parameter# @device@
+                                        -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                         Device
                                      -> -- | @pAcquireInfo@ is a pointer to a
                                         -- 'PerformanceConfigurationAcquireInfoINTEL' structure, specifying the
                                         -- performance configuration to acquire.
                                         --
+                                        -- #VUID-vkAcquirePerformanceConfigurationINTEL-pAcquireInfo-parameter#
                                         -- @pAcquireInfo@ /must/ be a valid pointer to a valid
                                         -- 'PerformanceConfigurationAcquireInfoINTEL' structure
                                         PerformanceConfigurationAcquireInfoINTEL
@@ -522,19 +540,23 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @configuration@ /must/ not be released before all command buffers
+-- -   #VUID-vkReleasePerformanceConfigurationINTEL-configuration-02737#
+--     @configuration@ /must/ not be released before all command buffers
 --     submitted while the configuration was set are in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkReleasePerformanceConfigurationINTEL-device-parameter#
+--     @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   If @configuration@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   #VUID-vkReleasePerformanceConfigurationINTEL-configuration-parameter#
+--     If @configuration@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @configuration@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle
 --
--- -   If @configuration@ is a valid handle, it /must/ have been created,
+-- -   #VUID-vkReleasePerformanceConfigurationINTEL-configuration-parent#
+--     If @configuration@ is a valid handle, it /must/ have been created,
 --     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
@@ -585,13 +607,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkQueueSetPerformanceConfigurationINTEL-queue-parameter#
+--     @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
 --
--- -   @configuration@ /must/ be a valid
+-- -   #VUID-vkQueueSetPerformanceConfigurationINTEL-configuration-parameter#
+--     @configuration@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL' handle
 --
--- -   Both of @configuration@, and @queue@ /must/ have been created,
---     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkQueueSetPerformanceConfigurationINTEL-commonparent# Both of
+--     @configuration@, and @queue@ /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Command Properties
 --
@@ -665,11 +690,13 @@ getPerformanceParameterINTEL :: forall io
                               . (MonadIO io)
                              => -- | @device@ is the logical device to query.
                                 --
-                                -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                -- #VUID-vkGetPerformanceParameterINTEL-device-parameter# @device@ /must/
+                                -- be a valid 'Vulkan.Core10.Handles.Device' handle
                                 Device
                              -> -- | @parameter@ is the parameter to query.
                                 --
-                                -- @parameter@ /must/ be a valid 'PerformanceParameterTypeINTEL' value
+                                -- #VUID-vkGetPerformanceParameterINTEL-parameter-parameter# @parameter@
+                                -- /must/ be a valid 'PerformanceParameterTypeINTEL' value
                                 PerformanceParameterTypeINTEL
                              -> io (PerformanceValueINTEL)
 getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
@@ -693,11 +720,12 @@ pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_
 --
 -- == Valid Usage (Implicit)
 --
--- -   @type@ /must/ be a valid 'PerformanceValueTypeINTEL' value
+-- -   #VUID-VkPerformanceValueINTEL-type-parameter# @type@ /must/ be a
+--     valid 'PerformanceValueTypeINTEL' value
 --
--- -   If @type@ is 'PERFORMANCE_VALUE_TYPE_STRING_INTEL', the
---     @valueString@ member of @data@ /must/ be a null-terminated UTF-8
---     string
+-- -   #VUID-VkPerformanceValueINTEL-valueString-parameter# If @type@ is
+--     'PERFORMANCE_VALUE_TYPE_STRING_INTEL', the @valueString@ member of
+--     @data@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
 --
@@ -814,6 +842,7 @@ data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateI
   { -- | @performanceCountersSampling@ describe how performance queries should be
     -- captured.
     --
+    -- #VUID-VkQueryPoolPerformanceQueryCreateInfoINTEL-performanceCountersSampling-parameter#
     -- @performanceCountersSampling@ /must/ be a valid
     -- 'QueryPoolSamplingModeINTEL' value
     performanceCountersSampling :: QueryPoolSamplingModeINTEL }
@@ -910,16 +939,19 @@ instance Zero PerformanceMarkerInfoINTEL where
 --
 -- == Valid Usage
 --
--- -   The value written by the application into @marker@ /must/ only used
---     the valid bits as reported by 'getPerformanceParameterINTEL' with
---     the 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL'
+-- -   #VUID-VkPerformanceStreamMarkerInfoINTEL-marker-02735# The value
+--     written by the application into @marker@ /must/ only used the valid
+--     bits as reported by 'getPerformanceParameterINTEL' with the
+--     'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkPerformanceStreamMarkerInfoINTEL-sType-sType# @sType@ /must/
+--     be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   #VUID-VkPerformanceStreamMarkerInfoINTEL-pNext-pNext# @pNext@ /must/
+--     be @NULL@
 --
 -- = See Also
 --
@@ -979,7 +1011,8 @@ instance Zero PerformanceStreamMarkerInfoINTEL where
 data PerformanceOverrideInfoINTEL = PerformanceOverrideInfoINTEL
   { -- | @type@ is the particular 'PerformanceOverrideTypeINTEL' to set.
     --
-    -- @type@ /must/ be a valid 'PerformanceOverrideTypeINTEL' value
+    -- #VUID-VkPerformanceOverrideInfoINTEL-type-parameter# @type@ /must/ be a
+    -- valid 'PerformanceOverrideTypeINTEL' value
     type' :: PerformanceOverrideTypeINTEL
   , -- | @enable@ defines whether the override is enabled.
     enable :: Bool
@@ -1046,7 +1079,8 @@ data PerformanceConfigurationAcquireInfoINTEL = PerformanceConfigurationAcquireI
   { -- | @type@ is one of the 'PerformanceConfigurationTypeINTEL' type of
     -- performance configuration that will be acquired.
     --
-    -- @type@ /must/ be a valid 'PerformanceConfigurationTypeINTEL' value
+    -- #VUID-VkPerformanceConfigurationAcquireInfoINTEL-type-parameter# @type@
+    -- /must/ be a valid 'PerformanceConfigurationTypeINTEL' value
     type' :: PerformanceConfigurationTypeINTEL }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

@@ -111,12 +111,14 @@ getDescriptorSetLayoutSupport :: forall a b io
                               => -- | @device@ is the logical device that would create the descriptor set
                                  -- layout.
                                  --
-                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+                                 -- #VUID-vkGetDescriptorSetLayoutSupport-device-parameter# @device@ /must/
+                                 -- be a valid 'Vulkan.Core10.Handles.Device' handle
                                  Device
                               -> -- | @pCreateInfo@ is a pointer to a
                                  -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
                                  -- specifying the state of the descriptor set layout object.
                                  --
+                                 -- #VUID-vkGetDescriptorSetLayoutSupport-pCreateInfo-parameter#
                                  -- @pCreateInfo@ /must/ be a valid pointer to a valid
                                  -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
                                  (DescriptorSetLayoutCreateInfo a)
@@ -155,16 +157,16 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
-  { -- | @maxPerSetDescriptors@ is a maximum number of descriptors (summed over
-    -- all descriptor types) in a single descriptor set that is guaranteed to
-    -- satisfy any implementation-dependent constraints on the size of a
-    -- descriptor set itself. Applications /can/ query whether a descriptor set
-    -- that goes beyond this limit is supported using
-    -- 'getDescriptorSetLayoutSupport'.
+  { -- | #extension-limits-maxPerSetDescriptors# @maxPerSetDescriptors@ is a
+    -- maximum number of descriptors (summed over all descriptor types) in a
+    -- single descriptor set that is guaranteed to satisfy any
+    -- implementation-dependent constraints on the size of a descriptor set
+    -- itself. Applications /can/ query whether a descriptor set that goes
+    -- beyond this limit is supported using 'getDescriptorSetLayoutSupport'.
     maxPerSetDescriptors :: Word32
-  , -- | @maxMemoryAllocationSize@ is the maximum size of a memory allocation
-    -- that /can/ be created, even if there is more space available in the
-    -- heap.
+  , -- | #extension-limits-maxMemoryAllocationSize# @maxMemoryAllocationSize@ is
+    -- the maximum size of a memory allocation that /can/ be created, even if
+    -- there is more space available in the heap.
     maxMemoryAllocationSize :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -220,14 +222,15 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkDescriptorSetLayoutSupport-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT'
 --
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkDescriptorSetLayoutSupport-pNext-pNext# @pNext@ /must/ be
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetVariableDescriptorCountLayoutSupport'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkDescriptorSetLayoutSupport-sType-unique# The @sType@ value
+--     of each struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --

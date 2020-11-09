@@ -53,9 +53,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
-  { -- | @textureCompressionASTC_HDR@ indicates whether all of the ASTC HDR
-    -- compressed texture formats are supported. If this feature is enabled,
-    -- then the
+  { -- | #features-textureCompressionASTC_HDR# @textureCompressionASTC_HDR@
+    -- indicates whether all of the ASTC HDR compressed texture formats are
+    -- supported. If this feature is enabled, then the
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT',
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
     -- and

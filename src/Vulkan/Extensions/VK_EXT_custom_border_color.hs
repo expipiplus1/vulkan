@@ -43,7 +43,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --
 -- == Valid Usage
 --
--- -   If provided @format@ is not
+-- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04013# If
+--     provided @format@ is not
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' then the
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ type /must/
 --     match the sampled type of the provided @format@, as shown in the
@@ -51,12 +52,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat>
 --     table
 --
--- -   If the
+-- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04014# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
 --     feature is not enabled then @format@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
--- -   If the sampler is used to sample an image view of
+-- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04015# If the
+--     sampler is used to sample an image view of
 --     'Vulkan.Core10.Enums.Format.FORMAT_B4G4R4A4_UNORM_PACK16',
 --     'Vulkan.Core10.Enums.Format.FORMAT_B5G6R5_UNORM_PACK16', or
 --     'Vulkan.Core10.Enums.Format.FORMAT_B5G5R5A1_UNORM_PACK16' format
@@ -65,10 +67,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-sType-sType# @sType@
+--     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT'
 --
--- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+-- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-parameter#
+--     @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
 -- = See Also
 --
@@ -130,8 +134,9 @@ instance Zero SamplerCustomBorderColorCreateInfoEXT where
 --
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCustomBorderColorPropertiesEXT = PhysicalDeviceCustomBorderColorPropertiesEXT
-  { -- | @maxCustomBorderColorSamplers@ indicates the maximum number of samplers
-    -- with custom border colors which /can/ simultaneously exist on a device.
+  { -- | #limits-maxCustomBorderColorSamplers# @maxCustomBorderColorSamplers@
+    -- indicates the maximum number of samplers with custom border colors which
+    -- /can/ simultaneously exist on a device.
     maxCustomBorderColorSamplers :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -186,15 +191,16 @@ instance Zero PhysicalDeviceCustomBorderColorPropertiesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCustomBorderColorFeaturesEXT = PhysicalDeviceCustomBorderColorFeaturesEXT
-  { -- | @customBorderColors@ indicates that the implementation supports
-    -- providing a @borderColor@ value with one of the following values at
-    -- sampler creation time:
+  { -- | #features-customBorderColors# @customBorderColors@ indicates that the
+    -- implementation supports providing a @borderColor@ value with one of the
+    -- following values at sampler creation time:
     --
     -- -   'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT'
     --
     -- -   'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
     customBorderColors :: Bool
-  , -- | @customBorderColorWithoutFormat@ indicates that explicit formats are not
+  , -- | #features-customBorderColorWithoutFormat#
+    -- @customBorderColorWithoutFormat@ indicates that explicit formats are not
     -- required for custom border colors and the value of the @format@ member
     -- of the 'SamplerCustomBorderColorCreateInfoEXT' structure /may/ be
     -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'. If this feature bit is

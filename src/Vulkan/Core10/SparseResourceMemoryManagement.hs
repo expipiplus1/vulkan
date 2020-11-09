@@ -160,21 +160,25 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkGetImageSparseMemoryRequirements-device-parameter# @device@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-vkGetImageSparseMemoryRequirements-image-parameter# @image@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
 --
--- -   @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetImageSparseMemoryRequirements-pSparseMemoryRequirementCount-parameter#
+--     @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
 --     @uint32_t@ value
 --
--- -   If the value referenced by @pSparseMemoryRequirementCount@ is not
+-- -   #VUID-vkGetImageSparseMemoryRequirements-pSparseMemoryRequirements-parameter#
+--     If the value referenced by @pSparseMemoryRequirementCount@ is not
 --     @0@, and @pSparseMemoryRequirements@ is not @NULL@,
 --     @pSparseMemoryRequirements@ /must/ be a valid pointer to an array of
 --     @pSparseMemoryRequirementCount@ 'SparseImageMemoryRequirements'
 --     structures
 --
--- -   @image@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   #VUID-vkGetImageSparseMemoryRequirements-image-parent# @image@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- = See Also
 --
@@ -242,7 +246,8 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @samples@ /must/ be a bit value that is set in
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-samples-01094#
+--     @samples@ /must/ be a bit value that is set in
 --     'Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
 --     returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
@@ -253,28 +258,37 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-format-parameter#
+--     @format@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
--- -   @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType'
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-type-parameter#
+--     @type@ /must/ be a valid 'Vulkan.Core10.Enums.ImageType.ImageType'
 --     value
 --
--- -   @samples@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-samples-parameter#
+--     @samples@ /must/ be a valid
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
 --
--- -   @usage@ /must/ be a valid combination of
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-usage-parameter#
+--     @usage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
 --
--- -   @usage@ /must/ not be @0@
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-usage-requiredbitmask#
+--     @usage@ /must/ not be @0@
 --
--- -   @tiling@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-tiling-parameter#
+--     @tiling@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
 --
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-pPropertyCount-parameter#
+--     @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSparseImageFormatProperties-pProperties-parameter#
+--     If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
 --     to an array of @pPropertyCount@ 'SparseImageFormatProperties'
 --     structures
@@ -356,31 +370,36 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ be unsignaled
+-- -   #VUID-vkQueueBindSparse-fence-01113# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be
+--     unsignaled
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ not be associated with any other queue command that has not
---     yet completed execution on that queue
+-- -   #VUID-vkQueueBindSparse-fence-01114# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ not be
+--     associated with any other queue command that has not yet completed
+--     execution on that queue
 --
--- -   Each element of the @pSignalSemaphores@ member of each element of
---     @pBindInfo@ /must/ be unsignaled when the semaphore signal operation
---     it defines is executed on the device
+-- -   #VUID-vkQueueBindSparse-pSignalSemaphores-01115# Each element of the
+--     @pSignalSemaphores@ member of each element of @pBindInfo@ /must/ be
+--     unsignaled when the semaphore signal operation it defines is
+--     executed on the device
 --
--- -   When a semaphore wait operation referring to a binary semaphore
---     defined by any element of the @pWaitSemaphores@ member of any
---     element of @pBindInfo@ executes on @queue@, there /must/ be no other
---     queues waiting on the same semaphore
+-- -   #VUID-vkQueueBindSparse-pWaitSemaphores-01116# When a semaphore wait
+--     operation referring to a binary semaphore defined by any element of
+--     the @pWaitSemaphores@ member of any element of @pBindInfo@ executes
+--     on @queue@, there /must/ be no other queues waiting on the same
+--     semaphore
 --
--- -   All elements of the @pWaitSemaphores@ member of all elements of
---     @pBindInfo@ member referring to a binary semaphore /must/ be
---     semaphores that are signaled, or have
+-- -   #VUID-vkQueueBindSparse-pWaitSemaphores-01117# All elements of the
+--     @pWaitSemaphores@ member of all elements of @pBindInfo@ member
+--     referring to a binary semaphore /must/ be semaphores that are
+--     signaled, or have
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     previously submitted for execution
 --
--- -   All elements of the @pWaitSemaphores@ member of all elements of
---     @pBindInfo@ created with a
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- -   #VUID-vkQueueBindSparse-pWaitSemaphores-03245# All elements of the
+--     @pWaitSemaphores@ member of all elements of @pBindInfo@ created with
+--     a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY' /must/
 --     reference a semaphore signal operation that has been submitted for
 --     execution and any semaphore signal operations on which it depends
@@ -388,19 +407,24 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @queue@ /must/ be a valid 'Vulkan.Core10.Handles.Queue' handle
+-- -   #VUID-vkQueueBindSparse-queue-parameter# @queue@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Queue' handle
 --
--- -   If @bindInfoCount@ is not @0@, @pBindInfo@ /must/ be a valid pointer
---     to an array of @bindInfoCount@ valid 'BindSparseInfo' structures
+-- -   #VUID-vkQueueBindSparse-pBindInfo-parameter# If @bindInfoCount@ is
+--     not @0@, @pBindInfo@ /must/ be a valid pointer to an array of
+--     @bindInfoCount@ valid 'BindSparseInfo' structures
 --
--- -   If @fence@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@
---     /must/ be a valid 'Vulkan.Core10.Handles.Fence' handle
+-- -   #VUID-vkQueueBindSparse-fence-parameter# If @fence@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @fence@ /must/ be a valid
+--     'Vulkan.Core10.Handles.Fence' handle
 --
--- -   The @queue@ /must/ support sparse binding operations
+-- -   #VUID-vkQueueBindSparse-queuetype# The @queue@ /must/ support sparse
+--     binding operations
 --
--- -   Both of @fence@, and @queue@ that are valid handles of non-ignored
---     parameters /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Device'
+-- -   #VUID-vkQueueBindSparse-commonparent# Both of @fence@, and @queue@
+--     that are valid handles of non-ignored parameters /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -615,10 +639,12 @@ data ImageSubresource = ImageSubresource
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' selecting the
     -- image /aspect/.
     --
-    -- @aspectMask@ /must/ be a valid combination of
+    -- #VUID-VkImageSubresource-aspectMask-parameter# @aspectMask@ /must/ be a
+    -- valid combination of
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' values
     --
-    -- @aspectMask@ /must/ not be @0@
+    -- #VUID-VkImageSubresource-aspectMask-requiredbitmask# @aspectMask@ /must/
+    -- not be @0@
     aspectMask :: ImageAspectFlags
   , -- | @mipLevel@ selects the mipmap level.
     mipLevel :: Word32
@@ -697,30 +723,34 @@ instance Zero ImageSubresource where
 --
 -- == Valid Usage
 --
--- -   If @memory@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @memory@ and @memoryOffset@ /must/ match the memory requirements of
---     the resource, as described in section
+-- -   #VUID-VkSparseMemoryBind-memory-01096# If @memory@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ and
+--     @memoryOffset@ /must/ match the memory requirements of the resource,
+--     as described in section
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-association>
 --
--- -   If @memory@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @memory@ /must/ not have been created with a memory type that
---     reports
+-- -   #VUID-VkSparseMemoryBind-memory-01097# If @memory@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/ not have
+--     been created with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
 --     bit set
 --
--- -   @size@ /must/ be greater than @0@
+-- -   #VUID-VkSparseMemoryBind-size-01098# @size@ /must/ be greater than
+--     @0@
 --
--- -   @resourceOffset@ /must/ be less than the size of the resource
+-- -   #VUID-VkSparseMemoryBind-resourceOffset-01099# @resourceOffset@
+--     /must/ be less than the size of the resource
 --
--- -   @size@ /must/ be less than or equal to the size of the resource
---     minus @resourceOffset@
+-- -   #VUID-VkSparseMemoryBind-size-01100# @size@ /must/ be less than or
+--     equal to the size of the resource minus @resourceOffset@
 --
--- -   @memoryOffset@ /must/ be less than the size of @memory@
+-- -   #VUID-VkSparseMemoryBind-memoryOffset-01101# @memoryOffset@ /must/
+--     be less than the size of @memory@
 --
--- -   @size@ /must/ be less than or equal to the size of @memory@ minus
---     @memoryOffset@
+-- -   #VUID-VkSparseMemoryBind-size-01102# @size@ /must/ be less than or
+--     equal to the size of @memory@ minus @memoryOffset@
 --
--- -   If @memory@ was created with
+-- -   #VUID-VkSparseMemoryBind-memory-02730# If @memory@ was created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     not equal to @0@, at least one handle type it contained /must/ also
 --     have been set in
@@ -729,8 +759,9 @@ instance Zero ImageSubresource where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when the resource was created
 --
--- -   If @memory@ was created by a memory import operation, the external
---     handle type of the imported memory /must/ also have been set in
+-- -   #VUID-VkSparseMemoryBind-memory-02731# If @memory@ was created by a
+--     memory import operation, the external handle type of the imported
+--     memory /must/ also have been set in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
@@ -738,11 +769,12 @@ instance Zero ImageSubresource where
 --
 -- == Valid Usage (Implicit)
 --
--- -   If @memory@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
---     handle
+-- -   #VUID-VkSparseMemoryBind-memory-parameter# If @memory@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/ be a valid
+--     'Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkSparseMemoryBind-flags-parameter# @flags@ /must/ be a valid
+--     combination of
 --     'Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SparseMemoryBindFlagBits'
 --     values
 --
@@ -823,64 +855,76 @@ instance Zero SparseMemoryBind where
 --
 -- == Valid Usage
 --
--- -   If the
+-- -   #VUID-VkSparseImageMemoryBind-memory-01104# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
 --     feature is not enabled, and if any other resources are bound to
 --     ranges of @memory@, the range of @memory@ being bound /must/ not
 --     overlap with those bound ranges
 --
--- -   @memory@ and @memoryOffset@ /must/ match the memory requirements of
---     the calling command’s @image@, as described in section
+-- -   #VUID-VkSparseImageMemoryBind-memory-01105# @memory@ and
+--     @memoryOffset@ /must/ match the memory requirements of the calling
+--     command’s @image@, as described in section
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-association>
 --
--- -   @subresource@ /must/ be a valid image subresource for @image@ (see
+-- -   #VUID-VkSparseImageMemoryBind-subresource-01106# @subresource@
+--     /must/ be a valid image subresource for @image@ (see
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views>)
 --
--- -   @offset.x@ /must/ be a multiple of the sparse image block width
+-- -   #VUID-VkSparseImageMemoryBind-offset-01107# @offset.x@ /must/ be a
+--     multiple of the sparse image block width
 --     ('SparseImageFormatProperties'::@imageGranularity.width@) of the
 --     image
 --
--- -   @extent.width@ /must/ either be a multiple of the sparse image block
---     width of the image, or else (@extent.width@ + @offset.x@) /must/
---     equal the width of the image subresource
+-- -   #VUID-VkSparseImageMemoryBind-extent-01108# @extent.width@ /must/
+--     either be a multiple of the sparse image block width of the image,
+--     or else (@extent.width@ + @offset.x@) /must/ equal the width of the
+--     image subresource
 --
--- -   @offset.y@ /must/ be a multiple of the sparse image block height
+-- -   #VUID-VkSparseImageMemoryBind-offset-01109# @offset.y@ /must/ be a
+--     multiple of the sparse image block height
 --     ('SparseImageFormatProperties'::@imageGranularity.height@) of the
 --     image
 --
--- -   @extent.height@ /must/ either be a multiple of the sparse image
---     block height of the image, or else (@extent.height@ + @offset.y@)
---     /must/ equal the height of the image subresource
+-- -   #VUID-VkSparseImageMemoryBind-extent-01110# @extent.height@ /must/
+--     either be a multiple of the sparse image block height of the image,
+--     or else (@extent.height@ + @offset.y@) /must/ equal the height of
+--     the image subresource
 --
--- -   @offset.z@ /must/ be a multiple of the sparse image block depth
+-- -   #VUID-VkSparseImageMemoryBind-offset-01111# @offset.z@ /must/ be a
+--     multiple of the sparse image block depth
 --     ('SparseImageFormatProperties'::@imageGranularity.depth@) of the
 --     image
 --
--- -   @extent.depth@ /must/ either be a multiple of the sparse image block
---     depth of the image, or else (@extent.depth@ + @offset.z@) /must/
---     equal the depth of the image subresource
+-- -   #VUID-VkSparseImageMemoryBind-extent-01112# @extent.depth@ /must/
+--     either be a multiple of the sparse image block depth of the image,
+--     or else (@extent.depth@ + @offset.z@) /must/ equal the depth of the
+--     image subresource
 --
--- -   If @memory@ was created with
+-- -   #VUID-VkSparseImageMemoryBind-memory-02732# If @memory@ was created
+--     with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     not equal to @0@, at least one handle type it contained /must/ also
 --     have been set in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when the image was created
 --
--- -   If @memory@ was created by a memory import operation, the external
---     handle type of the imported memory /must/ also have been set in
+-- -   #VUID-VkSparseImageMemoryBind-memory-02733# If @memory@ was created
+--     by a memory import operation, the external handle type of the
+--     imported memory /must/ also have been set in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
 --
 -- == Valid Usage (Implicit)
 --
--- -   @subresource@ /must/ be a valid 'ImageSubresource' structure
+-- -   #VUID-VkSparseImageMemoryBind-subresource-parameter# @subresource@
+--     /must/ be a valid 'ImageSubresource' structure
 --
--- -   If @memory@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @memory@ /must/ be a valid 'Vulkan.Core10.Handles.DeviceMemory'
---     handle
+-- -   #VUID-VkSparseImageMemoryBind-memory-parameter# If @memory@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/ be a valid
+--     'Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   @flags@ /must/ be a valid combination of
+-- -   #VUID-VkSparseImageMemoryBind-flags-parameter# @flags@ /must/ be a
+--     valid combination of
 --     'Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SparseMemoryBindFlagBits'
 --     values
 --
@@ -973,12 +1017,14 @@ instance Zero SparseImageMemoryBind where
 data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
   { -- | @buffer@ is the 'Vulkan.Core10.Handles.Buffer' object to be bound.
     --
-    -- @buffer@ /must/ be a valid 'Vulkan.Core10.Handles.Buffer' handle
+    -- #VUID-VkSparseBufferMemoryBindInfo-buffer-parameter# @buffer@ /must/ be
+    -- a valid 'Vulkan.Core10.Handles.Buffer' handle
     buffer :: Buffer
   , -- | @pBinds@ is a pointer to array of 'SparseMemoryBind' structures.
     --
-    -- @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
-    -- 'SparseMemoryBind' structures
+    -- #VUID-VkSparseBufferMemoryBindInfo-pBinds-parameter# @pBinds@ /must/ be
+    -- a valid pointer to an array of @bindCount@ valid 'SparseMemoryBind'
+    -- structures
     binds :: Vector SparseMemoryBind
   }
   deriving (Typeable)
@@ -1025,19 +1071,23 @@ instance Zero SparseBufferMemoryBindInfo where
 --
 -- == Valid Usage
 --
--- -   If the @flags@ member of any element of @pBinds@ contains
+-- -   #VUID-VkSparseImageOpaqueMemoryBindInfo-pBinds-01103# If the @flags@
+--     member of any element of @pBinds@ contains
 --     'Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SPARSE_MEMORY_BIND_METADATA_BIT',
 --     the binding range defined /must/ be within the mip tail region of
 --     the metadata aspect of @image@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-VkSparseImageOpaqueMemoryBindInfo-image-parameter# @image@
+--     /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
 --
--- -   @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
+-- -   #VUID-VkSparseImageOpaqueMemoryBindInfo-pBinds-parameter# @pBinds@
+--     /must/ be a valid pointer to an array of @bindCount@ valid
 --     'SparseMemoryBind' structures
 --
--- -   @bindCount@ /must/ be greater than @0@
+-- -   #VUID-VkSparseImageOpaqueMemoryBindInfo-bindCount-arraylength#
+--     @bindCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -1092,26 +1142,32 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 --
 -- == Valid Usage
 --
--- -   The @subresource.mipLevel@ member of each element of @pBinds@ /must/
---     be less than the @mipLevels@ specified in
+-- -   #VUID-VkSparseImageMemoryBindInfo-subresource-01722# The
+--     @subresource.mipLevel@ member of each element of @pBinds@ /must/ be
+--     less than the @mipLevels@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   The @subresource.arrayLayer@ member of each element of @pBinds@
---     /must/ be less than the @arrayLayers@ specified in
+-- -   #VUID-VkSparseImageMemoryBindInfo-subresource-01723# The
+--     @subresource.arrayLayer@ member of each element of @pBinds@ /must/
+--     be less than the @arrayLayers@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
 --
--- -   @image@ /must/ have been created with
+-- -   #VUID-VkSparseImageMemoryBindInfo-image-02901# @image@ /must/ have
+--     been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     set
 --
 -- == Valid Usage (Implicit)
 --
--- -   @image@ /must/ be a valid 'Vulkan.Core10.Handles.Image' handle
+-- -   #VUID-VkSparseImageMemoryBindInfo-image-parameter# @image@ /must/ be
+--     a valid 'Vulkan.Core10.Handles.Image' handle
 --
--- -   @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
+-- -   #VUID-VkSparseImageMemoryBindInfo-pBinds-parameter# @pBinds@ /must/
+--     be a valid pointer to an array of @bindCount@ valid
 --     'SparseImageMemoryBind' structures
 --
--- -   @bindCount@ /must/ be greater than @0@
+-- -   #VUID-VkSparseImageMemoryBindInfo-bindCount-arraylength# @bindCount@
+--     /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -1165,21 +1221,24 @@ instance Zero SparseImageMemoryBindInfo where
 --
 -- == Valid Usage
 --
--- -   If any element of @pWaitSemaphores@ or @pSignalSemaphores@ was
---     created with a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- -   #VUID-VkBindSparseInfo-pWaitSemaphores-03246# If any element of
+--     @pWaitSemaphores@ or @pSignalSemaphores@ was created with a
+--     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' then the
 --     @pNext@ chain /must/ include a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --     structure
 --
--- -   If the @pNext@ chain of this structure includes a
+-- -   #VUID-VkBindSparseInfo-pNext-03247# If the @pNext@ chain of this
+--     structure includes a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --     structure and any element of @pWaitSemaphores@ was created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' then its
 --     @waitSemaphoreValueCount@ member /must/ equal @waitSemaphoreCount@
 --
--- -   If the @pNext@ chain of this structure includes a
+-- -   #VUID-VkBindSparseInfo-pNext-03248# If the @pNext@ chain of this
+--     structure includes a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --     structure and any element of @pSignalSemaphores@ was created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -1187,7 +1246,8 @@ instance Zero SparseImageMemoryBindInfo where
 --     @signalSemaphoreValueCount@ member /must/ equal
 --     @signalSemaphoreCount@
 --
--- -   For each element of @pSignalSemaphores@ created with a
+-- -   #VUID-VkBindSparseInfo-pSignalSemaphores-03249# For each element of
+--     @pSignalSemaphores@ created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
@@ -1197,7 +1257,8 @@ instance Zero SparseImageMemoryBindInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     is executed
 --
--- -   For each element of @pWaitSemaphores@ created with a
+-- -   #VUID-VkBindSparseInfo-pWaitSemaphores-03250# For each element of
+--     @pWaitSemaphores@ created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
@@ -1207,7 +1268,8 @@ instance Zero SparseImageMemoryBindInfo where
 --     signal operation on that semaphore by more than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
--- -   For each element of @pSignalSemaphores@ created with a
+-- -   #VUID-VkBindSparseInfo-pSignalSemaphores-03251# For each element of
+--     @pSignalSemaphores@ created with a
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
@@ -1219,43 +1281,46 @@ instance Zero SparseImageMemoryBindInfo where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkBindSparseInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BIND_SPARSE_INFO'
 --
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
+-- -   #VUID-VkBindSparseInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupBindSparseInfo'
 --     or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'
 --
--- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
---     unique
+-- -   #VUID-VkBindSparseInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
--- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a
---     valid pointer to an array of @waitSemaphoreCount@ valid
+-- -   #VUID-VkBindSparseInfo-pWaitSemaphores-parameter# If
+--     @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a valid
+--     pointer to an array of @waitSemaphoreCount@ valid
 --     'Vulkan.Core10.Handles.Semaphore' handles
 --
--- -   If @bufferBindCount@ is not @0@, @pBufferBinds@ /must/ be a valid
---     pointer to an array of @bufferBindCount@ valid
---     'SparseBufferMemoryBindInfo' structures
+-- -   #VUID-VkBindSparseInfo-pBufferBinds-parameter# If @bufferBindCount@
+--     is not @0@, @pBufferBinds@ /must/ be a valid pointer to an array of
+--     @bufferBindCount@ valid 'SparseBufferMemoryBindInfo' structures
 --
--- -   If @imageOpaqueBindCount@ is not @0@, @pImageOpaqueBinds@ /must/ be
---     a valid pointer to an array of @imageOpaqueBindCount@ valid
+-- -   #VUID-VkBindSparseInfo-pImageOpaqueBinds-parameter# If
+--     @imageOpaqueBindCount@ is not @0@, @pImageOpaqueBinds@ /must/ be a
+--     valid pointer to an array of @imageOpaqueBindCount@ valid
 --     'SparseImageOpaqueMemoryBindInfo' structures
 --
--- -   If @imageBindCount@ is not @0@, @pImageBinds@ /must/ be a valid
---     pointer to an array of @imageBindCount@ valid
---     'SparseImageMemoryBindInfo' structures
+-- -   #VUID-VkBindSparseInfo-pImageBinds-parameter# If @imageBindCount@ is
+--     not @0@, @pImageBinds@ /must/ be a valid pointer to an array of
+--     @imageBindCount@ valid 'SparseImageMemoryBindInfo' structures
 --
--- -   If @signalSemaphoreCount@ is not @0@, @pSignalSemaphores@ /must/ be
---     a valid pointer to an array of @signalSemaphoreCount@ valid
+-- -   #VUID-VkBindSparseInfo-pSignalSemaphores-parameter# If
+--     @signalSemaphoreCount@ is not @0@, @pSignalSemaphores@ /must/ be a
+--     valid pointer to an array of @signalSemaphoreCount@ valid
 --     'Vulkan.Core10.Handles.Semaphore' handles
 --
--- -   Both of the elements of @pSignalSemaphores@, and the elements of
---     @pWaitSemaphores@ that are valid handles of non-ignored parameters
---     /must/ have been created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Device'
+-- -   #VUID-VkBindSparseInfo-commonparent# Both of the elements of
+--     @pSignalSemaphores@, and the elements of @pWaitSemaphores@ that are
+--     valid handles of non-ignored parameters /must/ have been created,
+--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --

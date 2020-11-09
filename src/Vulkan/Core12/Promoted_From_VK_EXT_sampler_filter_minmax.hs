@@ -80,10 +80,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerFilterMinmaxProperties = PhysicalDeviceSamplerFilterMinmaxProperties
-  { -- | @filterMinmaxSingleComponentFormats@ is a boolean value indicating
+  { -- | #extension-limits-filterMinmaxSingleComponentFormats#
+    -- @filterMinmaxSingleComponentFormats@ is a boolean value indicating
     -- whether a minimum set of required formats support min\/max filtering.
     filterMinmaxSingleComponentFormats :: Bool
-  , -- | @filterMinmaxImageComponentMapping@ is a boolean value indicating
+  , -- | #extension-limits-filterMinmaxImageComponentMapping#
+    -- @filterMinmaxImageComponentMapping@ is a boolean value indicating
     -- whether the implementation supports non-identity component mapping of
     -- the image when doing min\/max filtering.
     filterMinmaxImageComponentMapping :: Bool
@@ -154,6 +156,7 @@ data SamplerReductionModeCreateInfo = SamplerReductionModeCreateInfo
     -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
     -- controlling how texture filtering combines texel values.
     --
+    -- #VUID-VkSamplerReductionModeCreateInfo-reductionMode-parameter#
     -- @reductionMode@ /must/ be a valid
     -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode' value
     reductionMode :: SamplerReductionMode }

@@ -56,7 +56,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage
 --
--- -   If @stencilUsage@ includes
+-- -   #VUID-VkImageStencilUsageCreateInfo-stencilUsage-02539# If
+--     @stencilUsage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
 --     it /must/ not include bits other than
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
@@ -65,13 +66,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageStencilUsageCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO'
 --
--- -   @stencilUsage@ /must/ be a valid combination of
+-- -   #VUID-VkImageStencilUsageCreateInfo-stencilUsage-parameter#
+--     @stencilUsage@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' values
 --
--- -   @stencilUsage@ /must/ not be @0@
+-- -   #VUID-VkImageStencilUsageCreateInfo-stencilUsage-requiredbitmask#
+--     @stencilUsage@ /must/ not be @0@
 --
 -- = See Also
 --

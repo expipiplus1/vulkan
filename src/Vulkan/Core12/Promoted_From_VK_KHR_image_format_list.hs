@@ -41,10 +41,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
+-- -   #VUID-VkImageFormatListCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO'
 --
--- -   If @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
+-- -   #VUID-VkImageFormatListCreateInfo-pViewFormats-parameter# If
+--     @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
 --     pointer to an array of @viewFormatCount@ valid
 --     'Vulkan.Core10.Enums.Format.Format' values
 --

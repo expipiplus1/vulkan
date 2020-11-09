@@ -154,30 +154,35 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All 'Vulkan.Extensions.Handles.SwapchainKHR' objects created for
+-- -   #VUID-vkDestroySurfaceKHR-surface-01266# All
+--     'Vulkan.Extensions.Handles.SwapchainKHR' objects created for
 --     @surface@ /must/ have been destroyed prior to destroying @surface@
 --
--- -   If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySurfaceKHR-surface-01267# If
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @surface@ was created, a compatible set of callbacks
 --     /must/ be provided here
 --
--- -   If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
+-- -   #VUID-vkDestroySurfaceKHR-surface-01268# If no
+--     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @surface@ was created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid 'Vulkan.Core10.Handles.Instance' handle
+-- -   #VUID-vkDestroySurfaceKHR-instance-parameter# @instance@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Instance' handle
 --
--- -   If @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
---     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
+-- -   #VUID-vkDestroySurfaceKHR-surface-parameter# If @surface@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @surface@ /must/ be a
+--     valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
+-- -   #VUID-vkDestroySurfaceKHR-pAllocator-parameter# If @pAllocator@ is
+--     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   If @surface@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @instance@
+-- -   #VUID-vkDestroySurfaceKHR-surface-parent# If @surface@ is a valid
+--     handle, it /must/ have been created, allocated, or retrieved from
+--     @instance@
 --
 -- == Host Synchronization
 --
@@ -222,25 +227,29 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+-- -   #VUID-vkGetPhysicalDeviceSurfaceSupportKHR-queueFamilyIndex-01269#
+--     @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
 --     returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
 --     for the given @physicalDevice@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceSupportKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- -   #VUID-vkGetPhysicalDeviceSurfaceSupportKHR-surface-parameter#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
--- -   @pSupported@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetPhysicalDeviceSurfaceSupportKHR-pSupported-parameter#
+--     @pSupported@ /must/ be a valid pointer to a
 --     'Vulkan.Core10.FundamentalTypes.Bool32' value
 --
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetPhysicalDeviceSurfaceSupportKHR-commonparent# Both of
+--     @physicalDevice@, and @surface@ /must/ have been created, allocated,
+--     or retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -293,16 +302,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-surface-parameter#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
--- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-pSurfaceCapabilities-parameter#
+--     @pSurfaceCapabilities@ /must/ be a valid pointer to a
 --     'SurfaceCapabilitiesKHR' structure
 --
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-commonparent# Both
+--     of @physicalDevice@, and @surface@ /must/ have been created,
 --     allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Instance'
 --
@@ -386,29 +399,34 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @surface@ /must/ be supported by @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-02739# @surface@
+--     /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-parameter#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
--- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-pSurfaceFormatCount-parameter#
+--     @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
 --     value
 --
--- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-pSurfaceFormats-parameter#
+--     If the value referenced by @pSurfaceFormatCount@ is not @0@, and
 --     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
 --     pointer to an array of @pSurfaceFormatCount@ 'SurfaceFormatKHR'
 --     structures
 --
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-commonparent# Both of
+--     @physicalDevice@, and @surface@ /must/ have been created, allocated,
+--     or retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -485,19 +503,24 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-physicalDevice-parameter#
+--     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-parameter#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
--- -   @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-pPresentModeCount-parameter#
+--     @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If the value referenced by @pPresentModeCount@ is not @0@, and
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-pPresentModes-parameter#
+--     If the value referenced by @pPresentModeCount@ is not @0@, and
 --     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
 --     pointer to an array of @pPresentModeCount@ 'PresentModeKHR' values
 --
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-commonparent# Both
+--     of @physicalDevice@, and @surface@ /must/ have been created,
 --     allocated, or retrieved from the same
 --     'Vulkan.Core10.Handles.Instance'
 --

@@ -63,6 +63,7 @@ data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInf
   { -- | @globalPriority@ is the system-wide priority associated to this queue as
     -- specified by 'QueueGlobalPriorityEXT'
     --
+    -- #VUID-VkDeviceQueueGlobalPriorityCreateInfoEXT-globalPriority-parameter#
     -- @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
     globalPriority :: QueueGlobalPriorityEXT }
   deriving (Typeable, Eq)

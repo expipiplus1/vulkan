@@ -64,20 +64,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
+-- -   #VUID-vkSetHdrMetadataEXT-device-parameter# @device@ /must/ be a
+--     valid 'Vulkan.Core10.Handles.Device' handle
 --
--- -   @pSwapchains@ /must/ be a valid pointer to an array of
---     @swapchainCount@ valid 'Vulkan.Extensions.Handles.SwapchainKHR'
---     handles
+-- -   #VUID-vkSetHdrMetadataEXT-pSwapchains-parameter# @pSwapchains@
+--     /must/ be a valid pointer to an array of @swapchainCount@ valid
+--     'Vulkan.Extensions.Handles.SwapchainKHR' handles
 --
--- -   @pMetadata@ /must/ be a valid pointer to an array of
---     @swapchainCount@ valid 'HdrMetadataEXT' structures
+-- -   #VUID-vkSetHdrMetadataEXT-pMetadata-parameter# @pMetadata@ /must/ be
+--     a valid pointer to an array of @swapchainCount@ valid
+--     'HdrMetadataEXT' structures
 --
--- -   @swapchainCount@ /must/ be greater than @0@
+-- -   #VUID-vkSetHdrMetadataEXT-swapchainCount-arraylength#
+--     @swapchainCount@ /must/ be greater than @0@
 --
--- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
---     created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkSetHdrMetadataEXT-commonparent# Both of @device@, and the
+--     elements of @pSwapchains@ /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- = See Also
 --
