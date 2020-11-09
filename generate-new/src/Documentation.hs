@@ -10,6 +10,7 @@ module Documentation
   , iterateSuffixes
   , pattern Section
   , isHeaderLE
+  , dropBeginningSpan
   , main
   ) where
 
@@ -149,7 +150,7 @@ memberDocs parent m blocks =
         let
           enumDoc :: [Block] -> Either Text Documentation
           enumDoc = \case
-            p@(Para (dropBeginningSpan -> q@(Code ("", [], []) memberName : _))) : ps
+            Para (dropBeginningSpan -> q@(Code ("", [], []) memberName : _)) : ps
               -> pure Documentation
                 { dDocumentee    = Nested parent (CName memberName)
                 , dDocumentation = Pandoc m (Para q : ps)
