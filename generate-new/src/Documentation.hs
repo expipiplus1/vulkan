@@ -143,18 +143,30 @@ memberDocs
   -> Either Text ([Documentation], [Block])
   -- ^ The documentation and the leftover blocks
 memberDocs parent m blocks =
-  let extractBulletList = \case
-        BulletList bullets ->
-          let enumDoc :: [Block] -> Either Text Documentation
-              enumDoc = \case
-                p@(Para (Code ("", [], []) memberName : _)) : ps -> pure
-                  Documentation { dDocumentee = Nested parent (CName memberName)
-                                , dDocumentation = Pandoc m (p : ps)
-                                }
-                _ -> Left "Unhandled member documentation declaration"
-          in  (, []) <$> traverse enumDoc bullets
-        d -> Right ([], [d])
+  let
+    extractBulletList = \case
+      BulletList bullets ->
+        let
+          enumDoc :: [Block] -> Either Text Documentation
+          enumDoc = \case
+            p@(Para (dropBeginningSpan -> q@(Code ("", [], []) memberName : _))) : ps
+              -> pure Documentation
+                { dDocumentee    = Nested parent (CName memberName)
+                , dDocumentation = Pandoc m (Para q : ps)
+                }
+            _ -> Left "Unhandled member documentation declaration"
+        in
+          (, []) <$> traverse enumDoc bullets
+      d -> Right ([], [d])
   in  mconcat <$> traverse extractBulletList blocks
+
+-- | Since 1.2.160, sections start with this span listing the valid usage rule,
+-- remove this before identifying member docs.
+dropBeginningSpan :: [Inline] -> [Inline]
+dropBeginningSpan = \case
+  Span _ _ : SoftBreak : xs -> xs
+  Span _ _ : Space     : xs -> xs
+  xs                        -> xs
 
 main :: IO ()
 main = do
