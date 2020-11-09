@@ -380,7 +380,10 @@ foreign import ccall
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
---     this command
+--     this command, except for cases involving read-only access to
+--     depth\/stencil attachments as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
+--     chapter
 --
 -- -   If the draw is recorded in a render pass instance with multiview
 --     enabled, the maximum instance index /must/ be less than or equal to

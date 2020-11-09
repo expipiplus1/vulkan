@@ -362,6 +362,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRatePropertiesKHR)
@@ -472,6 +474,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (P
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineExecutableInternalRepresentationKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineExecutablePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineExecutableStatisticKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PipelineFragmentShadingRateEnumStateCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PipelineFragmentShadingRateStateCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineInputAssemblyStateCreateInfo)
@@ -834,6 +837,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -845,6 +849,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends GraphicsPipelineCreateInfo PipelineCreationFeedbackCreateInfoEXT = ()
   Extends GraphicsPipelineCreateInfo PipelineCompilerControlCreateInfoAMD = ()
   Extends GraphicsPipelineCreateInfo PipelineFragmentShadingRateStateCreateInfoKHR = ()
+  Extends GraphicsPipelineCreateInfo PipelineFragmentShadingRateEnumStateCreateInfoNV = ()
   Extends ImageBlit2KHR CopyCommandTransformInfoQCOM = ()
   Extends ImageCreateInfo DedicatedAllocationImageCreateInfoNV = ()
   Extends ImageCreateInfo ExternalMemoryImageCreateInfoNV = ()
@@ -958,6 +963,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderTerminateInvocationFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1008,6 +1014,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceRobustness2PropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDevicePortabilitySubsetPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShadingRatePropertiesKHR = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends PipelineColorBlendStateCreateInfo PipelineColorBlendAdvancedStateCreateInfoEXT = ()
@@ -1434,6 +1441,9 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR -> go @PhysicalDeviceFragmentShadingRateFeaturesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR -> go @PhysicalDeviceFragmentShadingRatePropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES_KHR -> go @PhysicalDeviceShaderTerminateInvocationFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV -> go @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV -> go @PhysicalDeviceFragmentShadingRateEnumsPropertiesNV
+  STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV -> go @PipelineFragmentShadingRateEnumStateCreateInfoNV
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -1742,6 +1752,9 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceFragmentShadingRateFeaturesKHR #-}
 {-# complete (::&) :: PhysicalDeviceFragmentShadingRatePropertiesKHR #-}
 {-# complete (::&) :: PhysicalDeviceShaderTerminateInvocationFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceFragmentShadingRateEnumsFeaturesNV #-}
+{-# complete (::&) :: PhysicalDeviceFragmentShadingRateEnumsPropertiesNV #-}
+{-# complete (::&) :: PipelineFragmentShadingRateEnumStateCreateInfoNV #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

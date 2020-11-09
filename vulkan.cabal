@@ -446,6 +446,7 @@ library
       Vulkan.Extensions.VK_NV_fill_rectangle
       Vulkan.Extensions.VK_NV_fragment_coverage_to_color
       Vulkan.Extensions.VK_NV_fragment_shader_barycentric
+      Vulkan.Extensions.VK_NV_fragment_shading_rate_enums
       Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
       Vulkan.Extensions.VK_NV_geometry_shader_passthrough
       Vulkan.Extensions.VK_NV_glsl_shader

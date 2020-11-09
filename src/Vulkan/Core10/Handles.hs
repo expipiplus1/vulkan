@@ -559,6 +559,7 @@ data CommandBuffer_T
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent',
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV',
+-- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.cmdSetFragmentShadingRateEnumNV',
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.cmdSetFragmentShadingRateKHR',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT',
 -- 'Vulkan.Extensions.VK_EXT_line_rasterization.cmdSetLineStippleEXT',

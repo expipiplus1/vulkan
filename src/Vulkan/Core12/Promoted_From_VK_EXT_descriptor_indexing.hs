@@ -501,7 +501,12 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- @maxDescriptorSetUniformBuffersDynamic@ but counts descriptors from
     -- descriptor sets created with or without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+    -- bit set. While an application /can/ allocate dynamic uniform buffer
+    -- descriptors from a pool created with the
+    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT',
+    -- bindings for these descriptors /must/ not be present in any descriptor
+    -- set layout that includes bindings created with
+    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'.
     maxDescriptorSetUpdateAfterBindUniformBuffersDynamic :: Word32
   , -- | @maxDescriptorSetUpdateAfterBindStorageBuffers@ is similar to
     -- @maxDescriptorSetStorageBuffers@ but counts descriptors from descriptor
@@ -513,7 +518,12 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- @maxDescriptorSetStorageBuffersDynamic@ but counts descriptors from
     -- descriptor sets created with or without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
+    -- bit set. While an application /can/ allocate dynamic storage buffer
+    -- descriptors from a pool created with the
+    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT',
+    -- bindings for these descriptors /must/ not be present in any descriptor
+    -- set layout that includes bindings created with
+    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'.
     maxDescriptorSetUpdateAfterBindStorageBuffersDynamic :: Word32
   , -- | @maxDescriptorSetUpdateAfterBindSampledImages@ is similar to
     -- @maxDescriptorSetSampledImages@ but counts descriptors from descriptor

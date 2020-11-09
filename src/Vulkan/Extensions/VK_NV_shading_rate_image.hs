@@ -224,9 +224,6 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature /must/ be enabled
 --
--- -   @firstViewport@ /must/ be less than
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
---
 -- -   The sum of @firstViewport@ and @viewportCount@ /must/ be between @1@
 --     and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,

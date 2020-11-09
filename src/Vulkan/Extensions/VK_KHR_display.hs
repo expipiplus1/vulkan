@@ -1179,8 +1179,8 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --     to @displayMode@
 --
 -- -   The @width@ and @height@ members of @imageExtent@ /must/ be less
---     than the @maxImageDimensions2D@ member of
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
+--     than
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxImageDimension2D@
 --
 -- == Valid Usage (Implicit)
 --

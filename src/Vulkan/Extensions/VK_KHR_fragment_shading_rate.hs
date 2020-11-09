@@ -1090,7 +1090,9 @@ instance Zero PhysicalDeviceFragmentShadingRateKHR where
 --
 -- = See Also
 --
+-- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PipelineFragmentShadingRateEnumStateCreateInfoNV',
 -- 'PipelineFragmentShadingRateStateCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.cmdSetFragmentShadingRateEnumNV',
 -- 'cmdSetFragmentShadingRateKHR'
 newtype FragmentShadingRateCombinerOpKHR = FragmentShadingRateCombinerOpKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)

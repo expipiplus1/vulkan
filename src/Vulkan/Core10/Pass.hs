@@ -1924,26 +1924,33 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --
 -- = Description
 --
--- Applications /must/ ensure that all accesses to memory that backs image
--- subresources used as attachments in a given renderpass instance either
--- happen-before the
+-- Other than the exceptions listed below, applications /must/ ensure that
+-- all accesses to memory that backs image subresources used as attachments
+-- in a given renderpass instance either happen-before the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-load-store-ops load operations>
 -- for those attachments, or happen-after the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-load-store-ops store operations>
 -- for those attachments.
 --
--- For depth\/stencil attachments, each aspect /can/ be used separately as
--- attachments and non-attachments as long as the non-attachment accesses
--- are also via an image subresource in either the
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
--- layout or the
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
--- layout, and the attachment resource uses whichever of those two layouts
--- the image accesses do not. Use of non-attachment aspects in this case is
--- only well defined if the attachment is used in the subpass where the
--- non-attachment access is being made, or the layout of the image
--- subresource is constant throughout the entire render pass instance,
--- including the @initialLayout@ and @finalLayout@.
+-- The exceptions to the general rule are:
+--
+-- -   For depth\/stencil attachments, an aspect /can/ be used separately
+--     as attachment and non-attachment if both accesses are read-only.
+--
+-- -   For depth\/stencil attachments, each aspect /can/ be used separately
+--     as attachments and non-attachments as long as the non-attachment
+--     accesses are also via an image subresource in either the
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+--     layout or the
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
+--     layout, and the attachment resource uses whichever of those two
+--     layouts the image accesses do not.
+--
+-- Use of non-attachment aspects in these cases is only well defined if the
+-- attachment is used in the subpass where the non-attachment access is
+-- being made, or the layout of the image subresource is constant
+-- throughout the entire render pass instance, including the
+-- @initialLayout@ and @finalLayout@.
 --
 -- Note
 --

@@ -73,9 +73,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @firstViewport@ /must/ be less than
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@
---
 -- -   The sum of @firstViewport@ and @viewportCount@ /must/ be between @1@
 --     and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxViewports@,
